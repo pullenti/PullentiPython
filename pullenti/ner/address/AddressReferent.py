@@ -1,0 +1,610 @@
+﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
+# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# See www.pullenti.ru/downloadpage.aspx.
+# 
+# 
+
+import typing
+import io
+from pullenti.ntopy.Utils import Utils
+from pullenti.ner.Referent import Referent
+from pullenti.ner.address.AddressHouseType import AddressHouseType
+from pullenti.ner.address.AddressBuildingType import AddressBuildingType
+
+from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
+from pullenti.ner.address.AddressDetailType import AddressDetailType
+
+
+class AddressReferent(Referent):
+    """ Сущность, представляющая адрес """
+    
+    def __init__(self) -> None:
+        from pullenti.ner.address.internal.MetaAddress import MetaAddress
+        super().__init__(AddressReferent.OBJ_TYPENAME)
+        self.instance_of = MetaAddress._global_meta
+    
+    OBJ_TYPENAME = "ADDRESS"
+    
+    ATTR_STREET = "STREET"
+    
+    ATTR_HOUSE = "HOUSE"
+    
+    ATTR_HOUSETYPE = "HOUSETYPE"
+    
+    ATTR_CORPUS = "CORPUS"
+    
+    ATTR_BUILDING = "BUILDING"
+    
+    ATTR_BUILDINGTYPE = "BUILDINGTYPE"
+    
+    ATTR_CORPUSORFLAT = "CORPUSORFLAT"
+    
+    ATTR_PORCH = "PORCH"
+    
+    ATTR_FLOOR = "FLOOR"
+    
+    ATTR_OFFICE = "OFFICE"
+    
+    ATTR_FLAT = "FLAT"
+    
+    ATTR_KILOMETER = "KILOMETER"
+    
+    ATTR_PLOT = "PLOT"
+    
+    ATTR_BLOCK = "BLOCK"
+    
+    ATTR_BOX = "BOX"
+    
+    ATTR_GEO = "GEO"
+    
+    ATTR_ZIP = "ZIP"
+    
+    ATTR_POSTOFFICEBOX = "POSTOFFICEBOX"
+    
+    ATTR_CSP = "CSP"
+    
+    ATTR_METRO = "METRO"
+    
+    ATTR_DETAIL = "DETAIL"
+    
+    ATTR_DETAILPARAM = "DETAILPARAM"
+    
+    ATTR_MISC = "MISC"
+    
+    ATTR_FIAS = "FIAS"
+    
+    ATTR_BTI = "BTI"
+    
+    @property
+    def streets(self) -> typing.List['Referent']:
+        """ Улица (кстати, их может быть несколько) """
+        res = list()
+        for s in self.slots: 
+            if (s.type_name == AddressReferent.ATTR_STREET and isinstance(s.value, Referent)): 
+                res.append(s.value if isinstance(s.value, Referent) else None)
+        return res
+    
+    @property
+    def house(self) -> str:
+        """ Дом """
+        return self.get_string_value(AddressReferent.ATTR_HOUSE)
+    
+    @house.setter
+    def house(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_HOUSE, value, True, 0)
+        return value
+    
+    @property
+    def house_type(self) -> 'AddressHouseType':
+        str0 = self.get_string_value(AddressReferent.ATTR_HOUSETYPE)
+        if (Utils.isNullOrEmpty(str0)): 
+            return AddressHouseType.HOUSE
+        try: 
+            return Utils.valToEnum(str0, AddressHouseType)
+        except Exception as ex340: 
+            return AddressHouseType.HOUSE
+    
+    @house_type.setter
+    def house_type(self, value) -> 'AddressHouseType':
+        self.add_slot(AddressReferent.ATTR_HOUSETYPE, Utils.enumToString(value).upper(), True, 0)
+        return value
+    
+    @property
+    def building(self) -> str:
+        """ Строение """
+        return self.get_string_value(AddressReferent.ATTR_BUILDING)
+    
+    @building.setter
+    def building(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_BUILDING, value, True, 0)
+        return value
+    
+    @property
+    def building_type(self) -> 'AddressBuildingType':
+        """ Тип строения """
+        str0 = self.get_string_value(AddressReferent.ATTR_BUILDINGTYPE)
+        if (Utils.isNullOrEmpty(str0)): 
+            return AddressBuildingType.BUILDING
+        try: 
+            return Utils.valToEnum(str0, AddressBuildingType)
+        except Exception as ex341: 
+            return AddressBuildingType.BUILDING
+    
+    @building_type.setter
+    def building_type(self, value) -> 'AddressBuildingType':
+        self.add_slot(AddressReferent.ATTR_BUILDINGTYPE, Utils.enumToString(value).upper(), True, 0)
+        return value
+    
+    @property
+    def corpus(self) -> str:
+        """ Корпус """
+        return self.get_string_value(AddressReferent.ATTR_CORPUS)
+    
+    @corpus.setter
+    def corpus(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_CORPUS, value, True, 0)
+        return value
+    
+    @property
+    def corpus_or_flat(self) -> str:
+        """ Корпус или квартира """
+        return self.get_string_value(AddressReferent.ATTR_CORPUSORFLAT)
+    
+    @corpus_or_flat.setter
+    def corpus_or_flat(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_CORPUSORFLAT, value, True, 0)
+        return value
+    
+    @property
+    def floor0(self) -> str:
+        """ Этаж """
+        return self.get_string_value(AddressReferent.ATTR_FLOOR)
+    
+    @floor0.setter
+    def floor0(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_FLOOR, value, True, 0)
+        return value
+    
+    @property
+    def potch(self) -> str:
+        """ Подъезд """
+        return self.get_string_value(AddressReferent.ATTR_PORCH)
+    
+    @potch.setter
+    def potch(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_PORCH, value, True, 0)
+        return value
+    
+    @property
+    def flat(self) -> str:
+        """ Квартира """
+        return self.get_string_value(AddressReferent.ATTR_FLAT)
+    
+    @flat.setter
+    def flat(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_FLAT, value, True, 0)
+        return value
+    
+    @property
+    def office(self) -> str:
+        """ Номер офиса """
+        return self.get_string_value(AddressReferent.ATTR_OFFICE)
+    
+    @office.setter
+    def office(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_OFFICE, value, True, 0)
+        return value
+    
+    @property
+    def plot(self) -> str:
+        """ Номер участка """
+        return self.get_string_value(AddressReferent.ATTR_PLOT)
+    
+    @plot.setter
+    def plot(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_PLOT, value, True, 0)
+        return value
+    
+    @property
+    def block(self) -> str:
+        """ Блок (ряд) """
+        return self.get_string_value(AddressReferent.ATTR_BLOCK)
+    
+    @block.setter
+    def block(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_BLOCK, value, True, 0)
+        return value
+    
+    @property
+    def box(self) -> str:
+        """ Бокс (гараж) """
+        return self.get_string_value(AddressReferent.ATTR_BOX)
+    
+    @box.setter
+    def box(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_BOX, value, True, 0)
+        return value
+    
+    @property
+    def metro(self) -> str:
+        """ Станция метро """
+        return self.get_string_value(AddressReferent.ATTR_METRO)
+    
+    @metro.setter
+    def metro(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_METRO, value, True, 0)
+        return value
+    
+    @property
+    def kilometer(self) -> str:
+        """ Километр """
+        return self.get_string_value(AddressReferent.ATTR_KILOMETER)
+    
+    @kilometer.setter
+    def kilometer(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_KILOMETER, value, True, 0)
+        return value
+    
+    @property
+    def zip0(self) -> str:
+        """ Почтовый индекс """
+        return self.get_string_value(AddressReferent.ATTR_ZIP)
+    
+    @zip0.setter
+    def zip0(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_ZIP, value, True, 0)
+        return value
+    
+    @property
+    def post_office_box(self) -> str:
+        """ Почтовый ящик """
+        return self.get_string_value(AddressReferent.ATTR_POSTOFFICEBOX)
+    
+    @post_office_box.setter
+    def post_office_box(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_POSTOFFICEBOX, value, True, 0)
+        return value
+    
+    @property
+    def csp(self) -> str:
+        """ ГСП (абонент городской служебной почты) """
+        return self.get_string_value(AddressReferent.ATTR_CSP)
+    
+    @csp.setter
+    def csp(self, value) -> str:
+        self.add_slot(AddressReferent.ATTR_CSP, value, True, 0)
+        return value
+    
+    @property
+    def geos(self) -> typing.List['GeoReferent']:
+        """ Ссылки на географические объекты (самого нижнего уровня) """
+        from pullenti.ner.geo.GeoReferent import GeoReferent
+        res = list()
+        for a in self.slots: 
+            if (a.type_name == AddressReferent.ATTR_GEO and isinstance(a.value, GeoReferent)): 
+                res.append(a.value if isinstance(a.value, GeoReferent) else None)
+            elif (a.type_name == AddressReferent.ATTR_STREET and isinstance(a.value, Referent)): 
+                for s in (a.value if isinstance(a.value, Referent) else None).slots: 
+                    if (isinstance(s.value, GeoReferent)): 
+                        res.append(s.value if isinstance(s.value, GeoReferent) else None)
+        i = len(res) - 1
+        while i > 0: 
+            for j in range(i - 1, -1, -1):
+                if (AddressReferent.__is_higher(res[i], res[j])): 
+                    del res[i]
+                    break
+                elif (AddressReferent.__is_higher(res[j], res[i])): 
+                    del res[j]
+                    i -= 1
+            i -= 1
+        return res
+    
+    @staticmethod
+    def __is_higher(ghi : 'GeoReferent', glo : 'GeoReferent') -> bool:
+        i = 0
+        while glo is not None and (i < 10): 
+            if (glo.can_be_equals(ghi, Referent.EqualType.WITHINONETEXT)): 
+                return True
+            glo = glo.higher; i += 1
+        return False
+    
+    @property
+    def parent_referent(self) -> 'Referent':
+        sr = (self.get_value(AddressReferent.ATTR_STREET) if isinstance(self.get_value(AddressReferent.ATTR_STREET), Referent) else None)
+        if (sr is not None): 
+            return sr
+        geos_ = self.geos
+        for g in geos_: 
+            if (g.is_city): 
+                return g
+        for g in geos_: 
+            if (g.is_region and not g.is_state): 
+                return g
+        if (len(geos_) > 0): 
+            return geos_[0]
+        return None
+    
+    def add_referent(self, r : 'Referent') -> None:
+        from pullenti.ner.geo.GeoReferent import GeoReferent
+        from pullenti.ner.address.StreetReferent import StreetReferent
+        if (r is None): 
+            return
+        geo = (r if isinstance(r, GeoReferent) else None)
+        if (geo is not None): 
+            for s in self.slots: 
+                if (s.type_name == AddressReferent.ATTR_GEO): 
+                    geo0 = (s.value if isinstance(s.value, GeoReferent) else None)
+                    if (geo0 is None): 
+                        continue
+                    if (GeoOwnerHelper.can_be_higher(geo0, geo)): 
+                        if (geo.higher == geo0 or geo.is_city): 
+                            self.upload_slot(s, geo)
+                            return
+                    if (GeoOwnerHelper.can_be_higher(geo, geo0)): 
+                        return
+            self.add_slot(AddressReferent.ATTR_GEO, r, False, 0)
+        elif (((isinstance(r, StreetReferent))) or r.type_name == "ORGANIZATION"): 
+            self.add_slot(AddressReferent.ATTR_STREET, r, False, 0)
+    
+    @property
+    def detail(self) -> 'AddressDetailType':
+        """ ополнительная детализация места (пересечение, около ...) """
+        s = self.get_string_value(AddressReferent.ATTR_DETAIL)
+        if (s is None): 
+            return AddressDetailType.UNDEFINED
+        try: 
+            res = Utils.valToEnum(s, AddressDetailType)
+            if (isinstance(res, AddressDetailType)): 
+                return Utils.valToEnum(res, AddressDetailType)
+        except Exception as ex342: 
+            pass
+        return AddressDetailType.UNDEFINED
+    
+    @detail.setter
+    def detail(self, value) -> 'AddressDetailType':
+        if (value != AddressDetailType.UNDEFINED): 
+            self.add_slot(AddressReferent.ATTR_DETAIL, Utils.enumToString(value).upper(), True, 0)
+        return value
+    
+    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int) -> str:
+        from pullenti.ner.address.internal.MetaAddress import MetaAddress
+        res = Utils.newStringIO(None)
+        str0 = self.get_string_value(AddressReferent.ATTR_DETAIL)
+        if (str0 is not None): 
+            str0 = (MetaAddress._global_meta.detail_feature.convert_inner_value_to_outer_value(str0, lang) if isinstance(MetaAddress._global_meta.detail_feature.convert_inner_value_to_outer_value(str0, lang), str) else None)
+        if (str0 is not None): 
+            print("[{0}".format(str0.lower()), end="", file=res, flush=True)
+            str0 = self.get_string_value(AddressReferent.ATTR_DETAILPARAM)
+            if ((str0) is not None): 
+                print(", {0}".format(str0), end="", file=res, flush=True)
+            print(']', end="", file=res)
+        strs = self.streets
+        if (len(strs) == 0): 
+            if (self.metro is not None): 
+                if (res.tell() > 0): 
+                    print(' ', end="", file=res)
+                print(Utils.ifNotNull(self.metro, ""), end="", file=res)
+        else: 
+            if (res.tell() > 0): 
+                print(' ', end="", file=res)
+            for i in range(len(strs)):
+                if (i > 0): 
+                    print(", ", end="", file=res)
+                print(strs[i].to_string(True, lang, 0), end="", file=res)
+        if (self.kilometer is not None): 
+            print(" {0}км.".format(self.kilometer), end="", file=res, flush=True)
+        if (self.house is not None): 
+            ty = self.house_type
+            if (ty == AddressHouseType.ESTATE): 
+                print(" влад.", end="", file=res)
+            elif (ty == AddressHouseType.HOUSEESTATE): 
+                print(" домовл.", end="", file=res)
+            else: 
+                print(" д.", end="", file=res)
+            print(("Б/Н" if self.house == "0" else self.house), end="", file=res)
+        if (self.corpus is not None): 
+            print(" корп.{0}".format(("Б/Н" if self.corpus == "0" else self.corpus)), end="", file=res, flush=True)
+        if (self.building is not None): 
+            ty = self.building_type
+            if (ty == AddressBuildingType.CONSTRUCTION): 
+                print(" сооруж.", end="", file=res)
+            elif (ty == AddressBuildingType.LITER): 
+                print(" лит.", end="", file=res)
+            else: 
+                print(" стр.", end="", file=res)
+            print(("Б/Н" if self.building == "0" else self.building), end="", file=res)
+        if (self.potch is not None): 
+            print(" под.{0}".format(self.potch), end="", file=res, flush=True)
+        if (self.floor0 is not None): 
+            print(" эт.{0}".format(self.floor0), end="", file=res, flush=True)
+        if (self.flat is not None): 
+            print(" кв.{0}".format(self.flat), end="", file=res, flush=True)
+        if (self.corpus_or_flat is not None): 
+            print(" корп.(кв.?){0}".format(self.corpus_or_flat), end="", file=res, flush=True)
+        if (self.office is not None): 
+            print(" оф.{0}".format(self.office), end="", file=res, flush=True)
+        if (self.block is not None): 
+            print(" блок {0}".format(self.block), end="", file=res, flush=True)
+        if (self.plot is not None): 
+            print(" уч.{0}".format(self.plot), end="", file=res, flush=True)
+        if (self.box is not None): 
+            print(" бокс {0}".format(self.box), end="", file=res, flush=True)
+        if (self.post_office_box is not None): 
+            print(" а\\я{0}".format(self.post_office_box), end="", file=res, flush=True)
+        if (self.csp is not None): 
+            print(" ГСП-{0}".format(self.csp), end="", file=res, flush=True)
+        kladr = self.get_value(AddressReferent.ATTR_FIAS)
+        if (isinstance(kladr, Referent)): 
+            print(" (ФИАС: {0}".format(Utils.ifNotNull((kladr if isinstance(kladr, Referent) else None).get_string_value("GUID"), "?")), end="", file=res, flush=True)
+            for s in self.slots: 
+                if (s.type_name == AddressReferent.ATTR_FIAS and isinstance(s.value, Referent) and s.value != kladr): 
+                    print(", {0}".format(Utils.ifNotNull((s.value if isinstance(s.value, Referent) else None).get_string_value("GUID"), "?")), end="", file=res, flush=True)
+            print(')', end="", file=res)
+        bti = self.get_string_value(AddressReferent.ATTR_BTI)
+        if (bti is not None): 
+            print(" (БТИ {0})".format(bti), end="", file=res, flush=True)
+        for g in self.geos: 
+            if (res.tell() > 0 and Utils.getCharAtStringIO(res, res.tell() - 1) == ' '): 
+                Utils.setLengthStringIO(res, res.tell() - 1)
+            if (res.tell() > 0 and Utils.getCharAtStringIO(res, res.tell() - 1) == ']'): 
+                pass
+            elif (res.tell() > 0): 
+                print(';', end="", file=res)
+            print(" {0}".format(g.to_string(True, lang, lev + 1)), end="", file=res, flush=True)
+        if (self.zip0 is not None): 
+            print("; {0}".format(self.zip0), end="", file=res, flush=True)
+        return Utils.toStringStringIO(res).strip()
+    
+    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+        addr = (obj if isinstance(obj, AddressReferent) else None)
+        if (addr is None): 
+            return False
+        strs1 = self.streets
+        strs2 = addr.streets
+        if (len(strs1) > 0 or len(strs2) > 0): 
+            ok = False
+            for s in strs1: 
+                for ss in strs2: 
+                    if (ss.can_be_equals(s, typ)): 
+                        ok = True
+                        break
+            if (not ok): 
+                return False
+        if (addr.house is not None or self.house is not None): 
+            if (addr.house != self.house): 
+                return False
+        if (addr.building is not None or self.building is not None): 
+            if (addr.building != self.building): 
+                return False
+        if (addr.plot is not None or self.plot is not None): 
+            if (addr.plot != self.plot): 
+                return False
+        if (addr.box is not None or self.box is not None): 
+            if (addr.box != self.box): 
+                return False
+        if (addr.block is not None or self.block is not None): 
+            if (addr.block != self.block): 
+                return False
+        if (addr.corpus is not None or self.corpus is not None): 
+            if (addr.corpus != self.corpus): 
+                if (addr.corpus is not None and addr.corpus == self.corpus_or_flat): 
+                    pass
+                elif (self.corpus is not None and addr.corpus_or_flat == self.corpus): 
+                    pass
+                else: 
+                    return False
+        if (addr.flat is not None or self.flat is not None): 
+            if (addr.flat != self.flat): 
+                if (addr.flat is not None and addr.flat == self.corpus_or_flat): 
+                    pass
+                elif (self.flat is not None and addr.corpus_or_flat == self.flat): 
+                    pass
+                else: 
+                    return False
+        if (addr.corpus_or_flat is not None or self.corpus_or_flat is not None): 
+            if (self.corpus_or_flat is not None and addr.corpus_or_flat is not None): 
+                if (self.corpus_or_flat != addr.corpus_or_flat): 
+                    return False
+            elif (self.corpus_or_flat is None): 
+                if (self.corpus is None and self.flat is None): 
+                    return False
+            elif (addr.corpus_or_flat is None): 
+                if (addr.corpus is None and addr.flat is None): 
+                    return False
+        if (addr.office is not None or self.office is not None): 
+            if (addr.office != self.office): 
+                return False
+        if (addr.potch is not None or self.potch is not None): 
+            if (addr.potch != self.potch): 
+                return False
+        if (addr.floor0 is not None or self.floor0 is not None): 
+            if (addr.floor0 != self.floor0): 
+                return False
+        if (addr.post_office_box is not None or self.post_office_box is not None): 
+            if (addr.post_office_box != self.post_office_box): 
+                return False
+        if (addr.csp is not None and self.csp is not None): 
+            if (addr.csp != self.csp): 
+                return False
+        geos1 = self.geos
+        geos2 = addr.geos
+        if (len(geos1) > 0 and len(geos2) > 0): 
+            ok = False
+            for g1 in geos1: 
+                for g2 in geos2: 
+                    if (g1.can_be_equals(g2, typ)): 
+                        ok = True
+                        break
+            if (not ok): 
+                return False
+        return True
+    
+    def merge_slots(self, obj : 'Referent', merge_statistic : bool=True) -> None:
+        super().merge_slots(obj, merge_statistic)
+        if (self.corpus_or_flat is not None): 
+            if (self.flat == self.corpus_or_flat): 
+                self.corpus_or_flat = None
+            elif (self.corpus == self.corpus_or_flat): 
+                self.corpus_or_flat = None
+        self._correct()
+    
+    def _correct(self) -> None:
+        from pullenti.ner.geo.GeoReferent import GeoReferent
+        geos_ = list()
+        for a in self.slots: 
+            if (a.type_name == AddressReferent.ATTR_GEO and isinstance(a.value, GeoReferent)): 
+                geos_.append(a.value if isinstance(a.value, GeoReferent) else None)
+            elif (a.type_name == AddressReferent.ATTR_STREET and isinstance(a.value, Referent)): 
+                for s in (a.value if isinstance(a.value, Referent) else None).slots: 
+                    if (isinstance(s.value, GeoReferent)): 
+                        geos_.append(s.value if isinstance(s.value, GeoReferent) else None)
+        i = len(geos_) - 1
+        while i > 0: 
+            for j in range(i - 1, -1, -1):
+                if (AddressReferent.__is_higher(geos_[i], geos_[j])): 
+                    s = self.find_slot(AddressReferent.ATTR_GEO, geos_[i], True)
+                    if (s is not None): 
+                        self.slots.remove(s)
+                    del geos_[i]
+                    break
+                elif (AddressReferent.__is_higher(geos_[j], geos_[i])): 
+                    s = self.find_slot(AddressReferent.ATTR_GEO, geos_[j], True)
+                    if (s is not None): 
+                        self.slots.remove(s)
+                    del geos_[j]
+                    i -= 1
+            i -= 1
+        if (len(geos_) == 2): 
+            reg = None
+            cit = None
+            for ii in range(len(geos_)):
+                if (geos_[ii].is_territory and geos_[ii].higher is not None): 
+                    geos_[ii] = geos_[ii].higher
+            if (geos_[0].is_city and geos_[1].is_region): 
+                cit = geos_[0]
+                reg = geos_[1]
+            elif (geos_[1].is_city and geos_[0].is_region): 
+                cit = geos_[1]
+                reg = geos_[0]
+            if (cit is not None and cit.higher is None and GeoOwnerHelper.can_be_higher(reg, cit)): 
+                cit.higher = reg
+                ss = self.find_slot(AddressReferent.ATTR_GEO, reg, True)
+                if (ss is not None): 
+                    self.slots.remove(ss)
+                geos_ = self.geos
+            else: 
+                stat = None
+                geo = None
+                if (geos_[0].is_state and not geos_[1].is_state): 
+                    stat = geos_[0]
+                    geo = geos_[1]
+                elif (geos_[1].is_state and not geos_[0].is_state): 
+                    stat = geos_[1]
+                    geo = geos_[0]
+                if (stat is not None): 
+                    geo = geo.top_higher
+                    if (geo.higher is None): 
+                        geo.higher = stat
+                        s = self.find_slot(AddressReferent.ATTR_GEO, stat, True)
+                        if (s is not None): 
+                            self.slots.remove(s)

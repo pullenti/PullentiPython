@@ -1,0 +1,64 @@
+﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
+# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# See www.pullenti.ru/downloadpage.aspx.
+# 
+# 
+
+import io
+from pullenti.ntopy.Utils import Utils
+from pullenti.morph.MorphAspect import MorphAspect
+from pullenti.morph.MorphVoice import MorphVoice
+from pullenti.morph.MorphTense import MorphTense
+
+
+class DerivateWord:
+    """ Слово толкового словаря """
+    
+    def __init__(self, gr : 'DerivateGroup') -> None:
+        from pullenti.morph.ExplanWordAttr import ExplanWordAttr
+        self.group = None
+        self.spelling = None
+        self.class0 = None
+        self.aspect = MorphAspect.UNDEFINED
+        self.voice = MorphVoice.UNDEFINED
+        self.tense = MorphTense.UNDEFINED
+        self.reflexive = False
+        self.lang = None
+        self.attrs = ExplanWordAttr()
+        self.nexts = None
+        self.tag = None
+        self.group = gr
+    
+    def __str__(self) -> str:
+        tmp = Utils.newStringIO(None)
+        print(self.spelling, end="", file=tmp)
+        if (self.class0 is not None and not self.class0.is_undefined): 
+            print(", {0}".format(str(self.class0)), end="", file=tmp, flush=True)
+        if (self.aspect != MorphAspect.UNDEFINED): 
+            print(", {0}".format(("соверш." if self.aspect == MorphAspect.PERFECTIVE else "несоверш.")), end="", file=tmp, flush=True)
+        if (self.voice != MorphVoice.UNDEFINED): 
+            print(", {0}".format(("действ." if self.voice == MorphVoice.ACTIVE else ("страдат." if self.voice == MorphVoice.PASSIVE else "средн."))), end="", file=tmp, flush=True)
+        if (self.tense != MorphTense.UNDEFINED): 
+            print(", {0}".format(("прош." if self.tense == MorphTense.PAST else ("настоящ." if self.tense == MorphTense.PRESENT else "будущ."))), end="", file=tmp, flush=True)
+        if (self.reflexive): 
+            print(", возвр.", end="", file=tmp)
+        if (self.attrs._value != 0): 
+            print(", {0}".format(str(self.attrs)), end="", file=tmp, flush=True)
+        if (self.nexts is not None): 
+            for v in self.nexts.items(): 
+                print(" -{0}[{1}];".format(v[0], v[1]), end="", file=tmp, flush=True)
+        return Utils.toStringStringIO(tmp)
+
+    
+    @staticmethod
+    def _new41(_arg1 : 'DerivateGroup', _arg2 : str, _arg3 : 'MorphLang', _arg4 : 'MorphClass', _arg5 : 'MorphAspect', _arg6 : bool, _arg7 : 'MorphTense', _arg8 : 'MorphVoice', _arg9 : 'ExplanWordAttr') -> 'DerivateWord':
+        res = DerivateWord(_arg1)
+        res.spelling = _arg2
+        res.lang = _arg3
+        res.class0 = _arg4
+        res.aspect = _arg5
+        res.reflexive = _arg6
+        res.tense = _arg7
+        res.voice = _arg8
+        res.attrs = _arg9
+        return res
