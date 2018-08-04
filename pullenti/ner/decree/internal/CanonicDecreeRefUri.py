@@ -22,7 +22,7 @@ class CanonicDecreeRefUri:
 
     
     @staticmethod
-    def _new782(_arg1 : str, _arg2 : 'Referent', _arg3 : int, _arg4 : int) -> 'CanonicDecreeRefUri':
+    def _new822(_arg1 : str, _arg2 : 'Referent', _arg3 : int, _arg4 : int) -> 'CanonicDecreeRefUri':
         res = CanonicDecreeRefUri(_arg1)
         res.ref = _arg2
         res.begin_char = _arg3
@@ -30,7 +30,7 @@ class CanonicDecreeRefUri:
         return res
     
     @staticmethod
-    def _new784(_arg1 : str, _arg2 : 'Referent', _arg3 : int, _arg4 : int, _arg5 : bool) -> 'CanonicDecreeRefUri':
+    def _new824(_arg1 : str, _arg2 : 'Referent', _arg3 : int, _arg4 : int, _arg5 : bool) -> 'CanonicDecreeRefUri':
         res = CanonicDecreeRefUri(_arg1)
         res.ref = _arg2
         res.begin_char = _arg3

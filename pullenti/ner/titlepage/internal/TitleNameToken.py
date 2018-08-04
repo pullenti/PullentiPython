@@ -57,23 +57,23 @@ class TitleNameToken(MetaToken):
         from pullenti.ner.TextToken import TextToken
         if (begin.is_value("СОДЕРЖАНИЕ", "ЗМІСТ") or begin.is_value("ОГЛАВЛЕНИЕ", None) or begin.is_value("СОДЕРЖИМОЕ", None)): 
             t = begin
-            if (t.next0 is not None and t.next0.is_char_of(":.")): 
-                t = t.next0
+            if (t.next0_ is not None and t.next0_.is_char_of(":.")): 
+                t = t.next0_
             if (t == end): 
                 return True
-        if (begin.is_value("ОТ", "ВІД") and begin.next0 is not None and begin.next0.is_value("РЕДАКЦИЯ", "РЕДАКЦІЯ")): 
-            if (begin.next0.next0 is not None and begin.next0.next0.is_char(':')): 
+        if (begin.is_value("ОТ", "ВІД") and begin.next0_ is not None and begin.next0_.is_value("РЕДАКЦИЯ", "РЕДАКЦІЯ")): 
+            if (begin.next0_.next0_ is not None and begin.next0_.next0_.is_char(':')): 
                 return True
         words = 0
         verbs = 0
         t = begin
-        while t != end.next0: 
+        while t != end.next0_: 
             if (isinstance(t, TextToken)): 
                 if (t.chars.is_letter): 
                     words += 1
                 if (t.chars.is_all_lower and (t if isinstance(t, TextToken) else None).is_pure_verb): 
                     verbs += 1
-            t = t.next0
+            t = t.next0_
         if (words > 10 and verbs > 1): 
             return True
         return False
@@ -92,7 +92,7 @@ class TitleNameToken(MetaToken):
         from pullenti.ner.booklink.internal.BookLinkToken import BookLinkToken
         from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+        from pullenti.ner._org.OrganizationReferent import OrganizationReferent
         from pullenti.ner.geo.GeoReferent import GeoReferent
         from pullenti.ner.person.PersonReferent import PersonReferent
         from pullenti.ner.NumberToken import NumberToken
@@ -101,7 +101,7 @@ class TitleNameToken(MetaToken):
         from pullenti.ner.uri.UriReferent import UriReferent
         from pullenti.ner.phone.PhoneReferent import PhoneReferent
         from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
-        from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
+        from pullenti.ner._org.internal.OrgItemTypeToken import OrgItemTypeToken
         from pullenti.ner.TextToken import TextToken
         self.rank = 0
         if (self.begin_token.chars.is_all_lower): 
@@ -113,11 +113,11 @@ class TitleNameToken(MetaToken):
         tstart = self.begin_token
         tend = self.end_token
         t = self.begin_token
-        first_pass2886 = True
+        first_pass3054 = True
         while True:
-            if first_pass2886: first_pass2886 = False
-            else: t = t.next0
-            if (not (t != self.end_token.next0 and t is not None and t.end_char <= self.end_token.end_char)): break
+            if first_pass3054: first_pass3054 = False
+            else: t = t.next0_
+            if (not (t != self.end_token.next0_ and t is not None and t.end_char <= self.end_token.end_char)): break
             if (t.is_newline_before): 
                 pass
             tit = TitleItemToken.try_attach(t)
@@ -129,15 +129,15 @@ class TitleNameToken(MetaToken):
                         notwords = 0
                         up_words = notwords
                         words = up_words
-                        tstart = tit.end_token.next0
+                        tstart = tit.end_token.next0_
                     t = tit.end_token
-                    if (t.next0 is None): 
+                    if (t.next0_ is None): 
                         return False
-                    if (t.next0.chars.is_letter and t.next0.chars.is_all_lower): 
+                    if (t.next0_.chars.is_letter and t.next0_.chars.is_all_lower): 
                         self.rank += 20
                     else: 
                         self.rank += 100
-                    tstart = t.next0
+                    tstart = t.next0_
                     if (tit.typ == TitleItemToken.Types.TYPANDTHEME): 
                         self.type_value = tit.value
                     continue
@@ -146,7 +146,7 @@ class TitleNameToken(MetaToken):
                         if (tit.end_token.is_newline_after): 
                             self.type_value = tit.value
                             self.rank += 5
-                            tstart = tit.end_token.next0
+                            tstart = tit.end_token.next0_
                     t = tit.end_token
                     words += 1
                     if (tit.begin_token != tit.end_token): 
@@ -164,7 +164,7 @@ class TitleNameToken(MetaToken):
                     continue
                 if (tit.typ == TitleItemToken.Types.CONSULTANT or tit.typ == TitleItemToken.Types.BOSS or tit.typ == TitleItemToken.Types.EDITOR): 
                     t = tit.end_token
-                    if (t.next0 is not None and ((t.next0.is_char_of(":") or t.next0.is_hiphen or t.whitespaces_after_count > 4))): 
+                    if (t.next0_ is not None and ((t.next0_.is_char_of(":") or t.next0_.is_hiphen or t.whitespaces_after_count > 4))): 
                         self.rank -= 10
                     else: 
                         self.rank -= 2
@@ -214,9 +214,9 @@ class TitleNameToken(MetaToken):
                     if (isinstance(r, GeoReferent) or isinstance(r, PersonReferent)): 
                         if (t.is_newline_before): 
                             self.rank -= 5
-                            if (t.is_newline_after or t.next0 is None): 
+                            if (t.is_newline_after or t.next0_ is None): 
                                 self.rank -= 20
-                            elif (t.next0.is_hiphen or isinstance(t.next0, NumberToken) or isinstance(t.next0.get_referent(), DateReferent)): 
+                            elif (t.next0_.is_hiphen or isinstance(t.next0_, NumberToken) or isinstance(t.next0_.get_referent(), DateReferent)): 
                                 self.rank -= 20
                             elif (t != self.begin_token): 
                                 self.rank -= 20
@@ -237,7 +237,7 @@ class TitleNameToken(MetaToken):
                 if (t == self.begin_token): 
                     if (t.is_newline_after): 
                         self.rank -= 10
-                    elif (t.next0 is not None and t.next0.is_char('.') and t.next0.is_newline_after): 
+                    elif (t.next0_ is not None and t.next0_.is_char('.') and t.next0_.is_newline_after): 
                         self.rank -= 10
                 continue
             if (isinstance(t, NumberToken)): 
@@ -265,7 +265,7 @@ class TitleNameToken(MetaToken):
                         up_words += 1
                     if (t == pat.end_token): 
                         break
-                    t = t.next0
+                    t = t.next0_
                 continue
             oitt = OrgItemTypeToken.try_attach(t, True, None)
             if (oitt is not None): 
@@ -302,7 +302,7 @@ class TitleNameToken(MetaToken):
                     words -= 1
                     break
                 if (tt == self.end_token): 
-                    if (tt.morph.class0.is_preposition or tt.morph.class0.is_conjunction): 
+                    if (tt.morph.class0_.is_preposition or tt.morph.class0_.is_conjunction): 
                         self.rank -= 10
                     elif (tt.is_char('.')): 
                         self.rank += 5
@@ -316,7 +316,7 @@ class TitleNameToken(MetaToken):
             return False
         if (tstart.end_char > tend.end_char): 
             return False
-        tit1 = TitleItemToken.try_attach(self.end_token.next0)
+        tit1 = TitleItemToken.try_attach(self.end_token.next0_)
         if (tit1 is not None and ((tit1.typ == TitleItemToken.Types.TYP or tit1.typ == TitleItemToken.Types.SPECIALITY))): 
             if (tit1.end_token.is_newline_after): 
                 self.rank += 15

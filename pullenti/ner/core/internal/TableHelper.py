@@ -21,10 +21,10 @@ class TableHelper:
     
     class TableTypes(IntEnum):
         UNDEFINED = 0
-        TABLESTART = 1
-        TABLEEND = 2
-        ROWEND = 3
-        CELLEND = 4
+        TABLESTART = 0 + 1
+        TABLEEND = (0 + 1) + 1
+        ROWEND = ((0 + 1) + 1) + 1
+        CELLEND = (((0 + 1) + 1) + 1) + 1
     
     class TableInfo:
         
@@ -86,18 +86,18 @@ class TableHelper:
             if (not t.is_char(chr(0x1E))): 
                 return None
             is_tab = True
-        inoutarg467 = RefOutArgWrapper(is_tab)
-        rw = TableHelper.__parse(t, max_char, None, inoutarg467)
-        is_tab = inoutarg467.value
+        inoutarg485 = RefOutArgWrapper(is_tab)
+        rw = TableHelper.__parse(t, max_char, None, inoutarg485)
+        is_tab = inoutarg485.value
         if (rw is None): 
             return None
         res = list()
         res.append(rw)
-        t = rw.end_token.next0
+        t = rw.end_token.next0_
         while t is not None: 
-            inoutarg466 = RefOutArgWrapper(is_tab)
-            rw0 = TableHelper.__parse(t, max_char, rw, inoutarg466)
-            is_tab = inoutarg466.value
+            inoutarg484 = RefOutArgWrapper(is_tab)
+            rw0 = TableHelper.__parse(t, max_char, rw, inoutarg484)
+            is_tab = inoutarg484.value
             if (rw0 is None): 
                 break
             rw = rw0
@@ -105,7 +105,7 @@ class TableHelper:
             t = rw0.end_token
             if (rw0._last_row): 
                 break
-            t = t.next0
+            t = t.next0_
         rla = res[len(res) - 1]
         if (((rla._last_row and len(rla.cells) == 2 and rla.cells[0].col_span == 1) and rla.cells[0].row_span == 1 and rla.cells[1].col_span == 1) and rla.cells[1].row_span == 1): 
             lines0 = rla.cells[0]._lines
@@ -134,9 +134,9 @@ class TableHelper:
             return None
         txt = t.kit.sofa.text
         t0 = t
-        if (t.is_char(chr(0x1E)) and t.next0 is not None): 
+        if (t.is_char(chr(0x1E)) and t.next0_ is not None): 
             is_tab.value = True
-            t = t.next0
+            t = t.next0_
         cell_info = None
         tt = t
         while tt is not None and ((tt.end_char <= max_char or max_char == 0)): 
@@ -156,12 +156,12 @@ class TableHelper:
                 if (tt.whitespaces_after_count > 15): 
                     if (not is_tab.value): 
                         break
-            tt = tt.next0
+            tt = tt.next0_
         if (cell_info is None): 
             return None
         res = TableRowToken(t0, tt)
-        res.cells.append(TableCellToken._new468(t, tt, cell_info.row_span, cell_info.col_span))
-        tt = tt.next0
+        res.cells.append(TableCellToken._new486(t, tt, cell_info.row_span, cell_info.col_span))
+        tt = tt.next0_
         while tt is not None and ((tt.end_char <= max_char or max_char == 0)): 
             t0 = tt
             cell_info = None
@@ -180,7 +180,7 @@ class TableHelper:
                     if (tt.whitespaces_after_count > 15): 
                         if (not is_tab.value): 
                             break
-                tt = tt.next0
+                tt = tt.next0_
             if (cell_info is None): 
                 break
             if (cell_info.typ == TableHelper.TableTypes.ROWEND and tt == t0): 
@@ -189,14 +189,14 @@ class TableHelper:
                 break
             if (cell_info.typ != TableHelper.TableTypes.CELLEND): 
                 break
-            res.cells.append(TableCellToken._new468(t0, tt, cell_info.row_span, cell_info.col_span))
+            res.cells.append(TableCellToken._new486(t0, tt, cell_info.row_span, cell_info.col_span))
             res.end_token = tt
-            tt = tt.next0
+            tt = tt.next0_
         if ((len(res.cells) < 2) and not res._eor): 
             return None
-        if (res.end_token.next0 is not None and res.end_token.next0.is_char(chr(0x1F))): 
+        if (res.end_token.next0_ is not None and res.end_token.next0_.is_char(chr(0x1F))): 
             res._last_row = True
-            res.end_token = res.end_token.next0
+            res.end_token = res.end_token.next0_
         return res
     
     @staticmethod

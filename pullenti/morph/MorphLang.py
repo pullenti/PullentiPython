@@ -122,31 +122,31 @@ class MorphLang:
         return self.value
     
     @staticmethod
-    def try_parse(str0 : str, lang : 'MorphLang') -> bool:
+    def try_parse(str0_ : str, lang : 'MorphLang') -> bool:
         """ Преобразовать из строки
         
         Args:
-            str0(str): 
+            str0_(str): 
             lang(MorphLang): 
         
         """
         lang.value = MorphLang()
-        while not Utils.isNullOrEmpty(str0):
+        while not Utils.isNullOrEmpty(str0_):
             i = 0
             while i < len(MorphLang.__m_names): 
-                if (str0.upper().startswith(MorphLang.__m_names[i].upper())): 
+                if (str0_.upper().startswith(MorphLang.__m_names[i].upper())): 
                     break
                 i += 1
             if (i >= len(MorphLang.__m_names)): 
                 break
             lang.value.value |= (1 << i)
-            for i in range(2, len(str0), 1):
-                if (str0[i].isalpha()): 
+            for i in range(2, len(str0_), 1):
+                if (str0_[i].isalpha()): 
                     break
-            else: i = len(str0)
-            if (i >= len(str0)): 
+            else: i = len(str0_)
+            if (i >= len(str0_)): 
                 break
-            str0 = str0[i : ]
+            str0_ = str0_[i : ]
         if (lang.value.is_undefined): 
             return False
         return True

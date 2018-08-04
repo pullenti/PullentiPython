@@ -513,16 +513,16 @@ class DecreePartReferent(Referent):
         return True
     
     def _get_min_level(self) -> int:
-        min0 = 0
+        min0_ = 0
         for s in self.slots: 
             l_ = self.__get_level(s.type_name)
             if (l_ <= 0): 
                 continue
-            if (min0 == 0): 
-                min0 = l_
-            elif (min0 > l_): 
-                min0 = l_
-        return min0
+            if (min0_ == 0): 
+                min0_ = l_
+            elif (min0_ > l_): 
+                min0_ = l_
+        return min0_
     
     def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
         b = self.__can_be_equals(obj, typ, False)
@@ -627,16 +627,16 @@ class DecreePartReferent(Referent):
         return True
     
     @staticmethod
-    def create_range_referent(min0 : 'DecreePartReferent', max0 : 'DecreePartReferent') -> 'DecreePartReferent':
-        res = (min0.clone() if isinstance(min0.clone(), DecreePartReferent) else None)
+    def create_range_referent(min0_ : 'DecreePartReferent', max0_ : 'DecreePartReferent') -> 'DecreePartReferent':
+        res = (min0_.clone() if isinstance(min0_.clone(), DecreePartReferent) else None)
         cou = 0
         for s in res.slots: 
-            ss = max0.find_slot(s.type_name, None, True)
+            ss = max0_.find_slot(s.type_name, None, True)
             if (ss is None): 
                 return None
             if (ss.value == s.value): 
                 continue
-            if (max0.find_slot(s.type_name, s.value, True) is not None): 
+            if (max0_.find_slot(s.type_name, s.value, True) is not None): 
                 continue
             cou += 1
             if ((cou) > 1): 
@@ -648,7 +648,7 @@ class DecreePartReferent(Referent):
 
     
     @staticmethod
-    def _new1029(_arg1 : 'DecreeReferent') -> 'DecreePartReferent':
+    def _new1070(_arg1 : 'DecreeReferent') -> 'DecreePartReferent':
         res = DecreePartReferent()
         res.owner = _arg1
         return res

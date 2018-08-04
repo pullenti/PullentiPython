@@ -8,13 +8,13 @@
 class ProgressPeace:
     
     def __init__(self) -> None:
-        self.min0 = 0
-        self.max0 = 0
+        self.min0_ = 0
+        self.max0_ = 0
 
     
     @staticmethod
-    def _new2477(_arg1 : float, _arg2 : float) -> 'ProgressPeace':
+    def _new2630(_arg1 : float, _arg2 : float) -> 'ProgressPeace':
         res = ProgressPeace()
-        res.min0 = _arg1
-        res.max0 = _arg2
+        res.min0_ = _arg1
+        res.max0_ = _arg2
         return res

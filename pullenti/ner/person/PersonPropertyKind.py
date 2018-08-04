@@ -10,13 +10,13 @@ from enum import IntEnum
 class PersonPropertyKind(IntEnum):
     """ Типы свойств """
     UNDEFINED = 0
-    BOSS = 1
+    BOSS = 0 + 1
     """ Начальник """
-    KING = 2
+    KING = (0 + 1) + 1
     """ Вельможные и духовные особы """
-    KIN = 3
+    KIN = ((0 + 1) + 1) + 1
     """ Родственники """
-    MILITARYRANK = 4
+    MILITARYRANK = (((0 + 1) + 1) + 1) + 1
     """ Воинское звание """
-    NATIONALITY = 5
+    NATIONALITY = ((((0 + 1) + 1) + 1) + 1) + 1
     """ Национальность """

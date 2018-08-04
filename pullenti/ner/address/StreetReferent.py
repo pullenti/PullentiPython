@@ -216,14 +216,14 @@ class StreetReferent(Referent):
     
     def add_slot(self, attr_name : str, attr_value : object, clear_old_value : bool, stat_count : int=0) -> 'Slot':
         if (attr_name == StreetReferent.ATTR_NAME and isinstance(attr_value, str)): 
-            str0 = (attr_value if isinstance(attr_value, str) else None)
-            if (str0.find('.') > 0): 
+            str0_ = (attr_value if isinstance(attr_value, str) else None)
+            if (str0_.find('.') > 0): 
                 i = 1
-                while i < (len(str0) - 1): 
-                    if (str0[i] == '.' and str0[i + 1] != ' '): 
-                        str0 = (str0[0 : (i + 1)] + " " + str0[i + 1 : ])
+                while i < (len(str0_) - 1): 
+                    if (str0_[i] == '.' and str0_[i + 1] != ' '): 
+                        str0_ = (str0_[0 : (i + 1)] + " " + str0_[i + 1 : ])
                     i += 1
-            attr_value = str0
+            attr_value = str0_
         return super().add_slot(attr_name, attr_value, clear_old_value, stat_count)
     
     def merge_slots(self, obj : 'Referent', merge_statistic : bool=True) -> None:

@@ -54,9 +54,9 @@ class GeoAnalyzer(Analyzer):
                             elif (LanguageHelper.ends_with_ex(typ, "область", "территория", None, None)): 
                                 gen = Utils.valToEnum(gen | MorphGender.FEMINIE, MorphGender)
                     i = 0
-                    first_pass2692 = True
+                    first_pass2852 = True
                     while True:
-                        if first_pass2692: first_pass2692 = False
+                        if first_pass2852: first_pass2852 = False
                         else: i += 1
                         if (not (i < len(names))): break
                         n = names[i]
@@ -127,7 +127,7 @@ class GeoAnalyzer(Analyzer):
         return ["PHONE"]
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         from pullenti.ner.geo.internal.MetaGeo import MetaGeo
         res = dict()
         res[MetaGeo.COUNTRY_CITY_IMAGE_ID] = ResourceHelper.get_bytes("countrycity.png")
@@ -139,9 +139,9 @@ class GeoAnalyzer(Analyzer):
         res[MetaGeo.UNION_IMAGE_ID] = ResourceHelper.get_bytes("union.png")
         return res
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.geo.GeoReferent import GeoReferent
-        if (type0 == GeoReferent.OBJ_TYPENAME): 
+        if (type0_ == GeoReferent.OBJ_TYPENAME): 
             return GeoReferent()
         return None
     
@@ -168,26 +168,26 @@ class GeoAnalyzer(Analyzer):
         t = kit.first_token
         while t is not None: 
             t.inner_bool = False
-            t = t.next0
+            t = t.next0_
         non_registered = list()
         for step in range(2):
             t = kit.first_token
-            first_pass2693 = True
+            first_pass2853 = True
             while True:
-                if first_pass2693: first_pass2693 = False
-                else: t = t.next0
+                if first_pass2853: first_pass2853 = False
+                else: t = t.next0_
                 if (not (t is not None)): break
                 if (len(ad.referents) >= 2000): 
                     break
                 if (step > 0 and isinstance(t, ReferentToken)): 
                     geo_ = (t.get_referent() if isinstance(t.get_referent(), GeoReferent) else None)
-                    if (((geo_ is not None and t.next0 is not None and t.next0.is_char('(')) and t.next0.next0 is not None and geo_.can_be_equals(t.next0.next0.get_referent(), Referent.EqualType.WITHINONETEXT)) and t.next0.next0.next0 is not None and t.next0.next0.next0.is_char(')')): 
-                        rt0 = ReferentToken._new695(geo_, t, t.next0.next0.next0, t.morph)
+                    if (((geo_ is not None and t.next0_ is not None and t.next0_.is_char('(')) and t.next0_.next0_ is not None and geo_.can_be_equals(t.next0_.next0_.get_referent(), Referent.EqualType.WITHINONETEXT)) and t.next0_.next0_.next0_ is not None and t.next0_.next0_.next0_.is_char(')')): 
+                        rt0 = ReferentToken._new735(geo_, t, t.next0_.next0_.next0_, t.morph)
                         kit.embed_token(rt0)
                         t = rt0
                         continue
-                    if ((geo_ is not None and t.next0 is not None and t.next0.is_hiphen) and t.next0.next0 is not None and geo_.can_be_equals(t.next0.next0.get_referent(), Referent.EqualType.WITHINONETEXT)): 
-                        rt0 = ReferentToken._new695(geo_, t, t.next0.next0, t.morph)
+                    if ((geo_ is not None and t.next0_ is not None and t.next0_.is_hiphen) and t.next0_.next0_ is not None and geo_.can_be_equals(t.next0_.next0_.get_referent(), Referent.EqualType.WITHINONETEXT)): 
+                        rt0 = ReferentToken._new735(geo_, t, t.next0_.next0_, t.morph)
                         kit.embed_token(rt0)
                         t = rt0
                         continue
@@ -204,14 +204,14 @@ class GeoAnalyzer(Analyzer):
                 t.inner_bool = True
                 rt = TerrAttachHelper.try_attach_territory(cli, ad, False, None, non_registered)
                 if ((rt is None and len(cli) == 1 and cli[0].is_adjective) and cli[0].onto_item is not None): 
-                    tt = cli[0].end_token.next0
+                    tt = cli[0].end_token.next0_
                     if (tt is not None): 
                         if (tt.is_char(',')): 
-                            tt = tt.next0
-                        elif (tt.morph.class0.is_conjunction): 
-                            tt = tt.next0
-                            if (tt is not None and tt.morph.class0.is_conjunction): 
-                                tt = tt.next0
+                            tt = tt.next0_
+                        elif (tt.morph.class0_.is_conjunction): 
+                            tt = tt.next0_
+                            if (tt is not None and tt.morph.class0_.is_conjunction): 
+                                tt = tt.next0_
                         cli1 = TerrItemToken.try_parse_list(tt, ad.local_ontology, 2)
                         if (cli1 is not None and cli1[0].onto_item is not None): 
                             g0 = (cli[0].onto_item.referent if isinstance(cli[0].onto_item.referent, GeoReferent) else None)
@@ -223,7 +223,7 @@ class GeoAnalyzer(Analyzer):
                             if ((rt is None and tt is not None and isinstance(tt.get_referent(), GeoReferent)) and tt.whitespaces_before_count == 1): 
                                 geo2 = (tt.get_referent() if isinstance(tt.get_referent(), GeoReferent) else None)
                                 if (GeoOwnerHelper.can_be_higher(cli[0].onto_item.referent if isinstance(cli[0].onto_item.referent, GeoReferent) else None, geo2)): 
-                                    rt = ReferentToken._new695(cli[0].onto_item.referent.clone(), cli[0].begin_token, cli[0].end_token, cli[0].morph)
+                                    rt = ReferentToken._new735(cli[0].onto_item.referent.clone(), cli[0].begin_token, cli[0].end_token, cli[0].morph)
                             if (rt is None and step == 0): 
                                 npt = NounPhraseHelper.try_parse(cli[0].begin_token, NounPhraseParseAttr.NO, 0)
                                 if (npt is not None and npt.end_char >= tt.begin_char): 
@@ -232,16 +232,16 @@ class GeoAnalyzer(Analyzer):
                                     if (cits is not None and (rt1) is not None): 
                                         rt1.referent = ad.register_referent(rt1.referent)
                                         kit.embed_token(rt1)
-                                        rt = ReferentToken._new695(cli[0].onto_item.referent.clone(), cli[0].begin_token, cli[0].end_token, cli[0].morph)
+                                        rt = ReferentToken._new735(cli[0].onto_item.referent.clone(), cli[0].begin_token, cli[0].end_token, cli[0].morph)
                 if (rt is None): 
                     cits = self.__try_parse_city_list_back(t.previous)
                     if (cits is not None): 
                         rt = TerrAttachHelper.try_attach_territory(cli, ad, False, cits, None)
                 if (rt is None and len(cli) > 1): 
-                    te = cli[len(cli) - 1].end_token.next0
+                    te = cli[len(cli) - 1].end_token.next0_
                     if (te is not None): 
-                        if (te.morph.class0.is_preposition or te.is_char(',')): 
-                            te = te.next0
+                        if (te.morph.class0_.is_preposition or te.is_char(',')): 
+                            te = te.next0_
                     li = AddressItemToken.try_parse_list(te, None, 2)
                     if (li is not None and len(li) > 0): 
                         if (li[0].typ == AddressItemToken.ItemType.STREET or li[0].typ == AddressItemToken.ItemType.KILOMETER or li[0].typ == AddressItemToken.ItemType.HOUSE): 
@@ -282,8 +282,8 @@ class GeoAnalyzer(Analyzer):
                                 rr.referent = ad.register_referent(geo_)
                             kit.embed_token(rr)
                             tt = rr
-                        if (t.next0 is not None and ((t.next0.is_comma or t.next0.is_char('(')))): 
-                            rt1 = TerrAttachHelper.try_attach_stateusaterritory(t.next0.next0)
+                        if (t.next0_ is not None and ((t.next0_.is_comma or t.next0_.is_char('(')))): 
+                            rt1 = TerrAttachHelper.try_attach_stateusaterritory(t.next0_.next0_)
                             if (rt1 is not None): 
                                 rt1.referent = ad.register_referent(rt1.referent)
                                 kit.embed_token(rt1)
@@ -298,10 +298,10 @@ class GeoAnalyzer(Analyzer):
                 if (len(ad.referents) == 0 and len(non_registered) == 0): 
                     break
         t = kit.first_token
-        first_pass2694 = True
+        first_pass2854 = True
         while True:
-            if first_pass2694: first_pass2694 = False
-            else: t = (None if t is None else t.next0)
+            if first_pass2854: first_pass2854 = False
+            else: t = (None if t is None else t.next0_)
             if (not (t is not None)): break
             g = (t.get_referent() if isinstance(t.get_referent(), GeoReferent) else None)
             if (g is None): 
@@ -327,11 +327,11 @@ class GeoAnalyzer(Analyzer):
             uni.add_slot(GeoReferent.ATTR_REF, g, False, 0)
             t1 = t
             i = 1
-            t = t.next0
-            first_pass2695 = True
+            t = t.next0_
+            first_pass2855 = True
             while True:
-                if first_pass2695: first_pass2695 = False
-                else: t = t.next0
+                if first_pass2855: first_pass2855 = False
+                else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_comma_and): 
                     continue
@@ -354,10 +354,10 @@ class GeoAnalyzer(Analyzer):
         new_cities = False
         is_city_before = False
         t = kit.first_token
-        first_pass2696 = True
+        first_pass2856 = True
         while True:
-            if first_pass2696: first_pass2696 = False
-            else: t = t.next0
+            if first_pass2856: first_pass2856 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char_of(".,")): 
                 continue
@@ -421,10 +421,10 @@ class GeoAnalyzer(Analyzer):
             is_city_before = False
         if (new_cities and len(ad.local_ontology.items) > 0): 
             t = kit.first_token
-            first_pass2697 = True
+            first_pass2857 = True
             while True:
-                if first_pass2697: first_pass2697 = False
-                else: t = t.next0
+                if first_pass2857: first_pass2857 = False
+                else: t = t.next0_
                 if (not (t is not None)): break
                 if (not ((isinstance(t, TextToken)))): 
                     continue
@@ -436,11 +436,11 @@ class GeoAnalyzer(Analyzer):
                 mc = t.get_morph_class_in_dictionary()
                 if (mc.is_proper_surname or mc.is_proper_name or mc.is_proper_secname): 
                     continue
-                if (t.morph.class0.is_adjective): 
+                if (t.morph.class0_.is_adjective): 
                     continue
                 geo_ = (li[0].item.referent if isinstance(li[0].item.referent, GeoReferent) else None)
                 if (geo_ is not None): 
-                    rt = ReferentToken._new695(geo_, li[0].begin_token, li[0].end_token, t.morph)
+                    rt = ReferentToken._new735(geo_, li[0].begin_token, li[0].end_token, t.morph)
                     if (rt.begin_token == rt.end_token): 
                         geo_._add_name((t if isinstance(t, TextToken) else None).term)
                     if (rt.begin_token.previous is not None and rt.begin_token.previous.is_value("СЕЛО", None) and geo_.is_city): 
@@ -451,10 +451,10 @@ class GeoAnalyzer(Analyzer):
                     t = li[0].end_token
         go_back = False
         t = kit.first_token
-        first_pass2698 = True
+        first_pass2858 = True
         while True:
-            if first_pass2698: first_pass2698 = False
-            else: t = t.next0
+            if first_pass2858: first_pass2858 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (go_back): 
                 go_back = False
@@ -464,16 +464,16 @@ class GeoAnalyzer(Analyzer):
             if (geo_ is None): 
                 continue
             geo1 = None
-            tt = t.next0
+            tt = t.next0_
             bra = False
             comma1 = False
             comma2 = False
             inp = False
             adj = False
-            first_pass2699 = True
+            first_pass2859 = True
             while True:
-                if first_pass2699: first_pass2699 = False
-                else: tt = tt.next0
+                if first_pass2859: first_pass2859 = False
+                else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_char_of(",")): 
                     comma1 = True
@@ -483,16 +483,16 @@ class GeoAnalyzer(Analyzer):
                     continue
                 if (MiscHelper.is_eng_adj_suffix(tt)): 
                     adj = True
-                    tt = tt.next0
+                    tt = tt.next0_
                     continue
                 det = AddressItemToken.try_attach_detail(tt)
                 if (det is not None): 
                     tt = det.end_token
                     comma1 = True
                     continue
-                if (tt.morph.class0.is_preposition): 
+                if (tt.morph.class0_.is_preposition): 
                     continue
-                if (tt.is_char('(') and tt == t.next0): 
+                if (tt.is_char('(') and tt == t.next0_): 
                     bra = True
                     continue
                 geo1 = (tt.get_referent() if isinstance(tt.get_referent(), GeoReferent) else None)
@@ -501,12 +501,12 @@ class GeoAnalyzer(Analyzer):
                 continue
             if (tt.whitespaces_before_count > 15): 
                 continue
-            ttt = tt.next0
+            ttt = tt.next0_
             geo2 = None
-            first_pass2700 = True
+            first_pass2860 = True
             while True:
-                if first_pass2700: first_pass2700 = False
-                else: ttt = ttt.next0
+                if first_pass2860: first_pass2860 = False
+                else: ttt = ttt.next0_
                 if (not (ttt is not None)): break
                 if (ttt.is_comma_and): 
                     comma2 = True
@@ -516,7 +516,7 @@ class GeoAnalyzer(Analyzer):
                     ttt = det.end_token
                     comma2 = True
                     continue
-                if (ttt.morph.class0.is_preposition): 
+                if (ttt.morph.class0_.is_preposition): 
                     continue
                 geo2 = (ttt.get_referent() if isinstance(ttt.get_referent(), GeoReferent) else None)
                 break
@@ -526,7 +526,7 @@ class GeoAnalyzer(Analyzer):
                 if ((comma1 and comma2 and GeoOwnerHelper._can_be_higher(t, tt)) and GeoOwnerHelper._can_be_higher(tt, ttt)): 
                     geo2.higher = geo1
                     geo1.higher = geo_
-                    rt = ReferentToken._new695(geo2, t, ttt, ttt.morph)
+                    rt = ReferentToken._new735(geo2, t, ttt, ttt.morph)
                     kit.embed_token(rt)
                     t = rt
                     go_back = True
@@ -535,7 +535,7 @@ class GeoAnalyzer(Analyzer):
                     if (GeoOwnerHelper._can_be_higher(t, ttt)): 
                         geo2.higher = geo_
                         geo1.higher = geo2
-                        rt = ReferentToken._new695(geo1, t, ttt, t.morph)
+                        rt = ReferentToken._new735(geo1, t, ttt, t.morph)
                         kit.embed_token(rt)
                         t = rt
                         go_back = True
@@ -543,7 +543,7 @@ class GeoAnalyzer(Analyzer):
                     if (GeoOwnerHelper._can_be_higher(ttt, t) and GeoOwnerHelper._can_be_higher(t, tt)): 
                         geo_.higher = geo2
                         geo1.higher = geo_
-                        rt = ReferentToken._new695(geo1, t, ttt, tt.morph)
+                        rt = ReferentToken._new735(geo1, t, ttt, tt.morph)
                         kit.embed_token(rt)
                         t = rt
                         go_back = True
@@ -551,7 +551,7 @@ class GeoAnalyzer(Analyzer):
                     if (GeoOwnerHelper._can_be_higher(tt, t)): 
                         geo_.higher = geo1
                         geo1.higher = geo2
-                        rt = ReferentToken._new695(geo_, t, ttt, t.morph)
+                        rt = ReferentToken._new735(geo_, t, ttt, t.morph)
                         kit.embed_token(rt)
                         t = rt
                         go_back = True
@@ -560,7 +560,7 @@ class GeoAnalyzer(Analyzer):
                     continue
             if (GeoOwnerHelper._can_be_higher(t, tt) and ((not GeoOwnerHelper._can_be_higher(tt, t) or adj))): 
                 geo1.higher = geo_
-                rt = ReferentToken._new695(geo1, t, tt, tt.morph)
+                rt = ReferentToken._new735(geo1, t, tt, tt.morph)
                 if ((geo1.is_city and not geo_.is_city and t.previous is not None) and t.previous.is_value("СТОЛИЦА", "СТОЛИЦЯ")): 
                     rt.begin_token = t.previous
                     rt.morph = t.previous.morph
@@ -576,19 +576,19 @@ class GeoAnalyzer(Analyzer):
                     geo_.higher = geo1
                 else: 
                     geo_.higher = geo1
-                if (bra and tt.next0 is not None and tt.next0.is_char(')')): 
-                    tt = tt.next0
-                rt = ReferentToken._new695(geo_, t, tt, t.morph)
+                if (bra and tt.next0_ is not None and tt.next0_.is_char(')')): 
+                    tt = tt.next0_
+                rt = ReferentToken._new735(geo_, t, tt, t.morph)
                 kit.embed_token(rt)
                 t = rt
                 go_back = True
                 continue
-            if ((not tt.morph.class0.is_adjective and not t.morph.class0.is_adjective and tt.chars.is_cyrillic_letter) and t.chars.is_cyrillic_letter and not tt.morph.case.is_instrumental): 
+            if ((not tt.morph.class0_.is_adjective and not t.morph.class0_.is_adjective and tt.chars.is_cyrillic_letter) and t.chars.is_cyrillic_letter and not tt.morph.case.is_instrumental): 
                 geo0 = geo_
                 while geo0 is not None: 
                     if (GeoOwnerHelper.can_be_higher(geo1, geo0)): 
                         geo0.higher = geo1
-                        rt = ReferentToken._new695(geo_, t, tt, t.morph)
+                        rt = ReferentToken._new735(geo_, t, tt, t.morph)
                         kit.embed_token(rt)
                         t = rt
                         go_back = True
@@ -623,10 +623,10 @@ class GeoAnalyzer(Analyzer):
                 oc.occurence_of = rg
                 rg.add_occurence(oc)
         t = kit.first_token
-        first_pass2701 = True
+        first_pass2861 = True
         while True:
-            if first_pass2701: first_pass2701 = False
-            else: t = t.next0
+            if first_pass2861: first_pass2861 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             geo_ = (t.get_referent() if isinstance(t.get_referent(), GeoReferent) else None)
             if (geo_ is None): 
@@ -657,7 +657,7 @@ class GeoAnalyzer(Analyzer):
                     GeoAnalyzer.__replace_terrs(t if isinstance(t, ReferentToken) else None)
                 if (t == mt.end_token): 
                     break
-            t = t.next0
+            t = t.next0_
     
     @staticmethod
     def __geo_comp(x : 'GeoReferent', y : 'GeoReferent') -> int:
@@ -683,7 +683,7 @@ class GeoAnalyzer(Analyzer):
         from pullenti.ner.geo.internal.CityItemToken import CityItemToken
         if (t is None): 
             return None
-        while t is not None and ((t.morph.class0.is_preposition or t.is_char_of(",.") or t.morph.class0.is_conjunction)):
+        while t is not None and ((t.morph.class0_.is_preposition or t.is_char_of(",.") or t.morph.class0_.is_conjunction)):
             t = t.previous
         if (t is None): 
             return None
@@ -713,7 +713,7 @@ class GeoAnalyzer(Analyzer):
         if (isinstance(t, ReferentToken)): 
             t = t.previous
         while t is not None: 
-            if (not t.is_char_of(",.") and not t.morph.class0.is_preposition): 
+            if (not t.is_char_of(",.") and not t.morph.class0_.is_preposition): 
                 break
             t = t.previous
         if (t is None): 
@@ -721,9 +721,9 @@ class GeoAnalyzer(Analyzer):
         i = 0
         res = None
         tt = t
-        first_pass2702 = True
+        first_pass2862 = True
         while True:
-            if first_pass2702: first_pass2702 = False
+            if first_pass2862: first_pass2862 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             i += 1
@@ -756,9 +756,9 @@ class GeoAnalyzer(Analyzer):
             return None
         if (not city.is_city): 
             return None
-        if (t.next0 is None or not t.next0.is_comma or t.next0.whitespaces_after_count > 1): 
+        if (t.next0_ is None or not t.next0_.is_comma or t.next0_.whitespaces_after_count > 1): 
             return None
-        tt = t.next0.next0
+        tt = t.next0_.next0_
         if (tt is None or not tt.chars.is_capital_upper or not ((isinstance(tt, TextToken)))): 
             return None
         if (tt.chars.is_latin_letter): 
@@ -789,14 +789,14 @@ class GeoAnalyzer(Analyzer):
             else: 
                 tt = tit0.end_token
                 t1 = tt
-            if (tt.next0 is None): 
+            if (tt.next0_ is None): 
                 return None
-            if (tt.next0.is_comma): 
-                tt = tt.next0.next0
+            if (tt.next0_.is_comma): 
+                tt = tt.next0_.next0_
                 break
             if (i > 0): 
                 return None
-            tt = tt.next0
+            tt = tt.next0_
         ait = AddressItemToken.try_parse(tt, None, False, False, None)
         if (ait is None): 
             return None
@@ -835,10 +835,10 @@ class GeoAnalyzer(Analyzer):
                 city = GeoReferent()
                 city._add_name(cit.canonic_text)
                 city._add_typ_city(begin.kit.base_language)
-                return ReferentToken._new1188(city, tok.begin_token, tok.end_token, tok.morph, begin.kit.get_analyzer_data(self))
+                return ReferentToken._new1231(city, tok.begin_token, tok.end_token, tok.morph, begin.kit.get_analyzer_data(self))
             return None
         ad = (begin.kit.get_analyzer_data(self) if isinstance(begin.kit.get_analyzer_data(self), AnalyzerDataWithOntology) else None)
-        if (not begin.morph.class0.is_adjective): 
+        if (not begin.morph.class0_.is_adjective): 
             te = (begin if isinstance(begin, TextToken) else None)
             if ((te.chars.is_all_upper and te.chars.is_cyrillic_letter and te.length_char == 2) and te.get_morph_class_in_dictionary().is_undefined): 
                 abbr = te.term
@@ -857,7 +857,7 @@ class GeoAnalyzer(Analyzer):
                     return ReferentToken._new115(geo0, begin, begin, ad)
             tt0 = TerrItemToken.try_parse(begin, ad.local_ontology, True, False)
             if (tt0 is not None and tt0.termin_item is not None and tt0.termin_item.canonic_text == "РАЙОН"): 
-                tt1 = TerrItemToken.try_parse(tt0.end_token.next0, ad.local_ontology, True, False)
+                tt1 = TerrItemToken.try_parse(tt0.end_token.next0_, ad.local_ontology, True, False)
                 if ((tt1 is not None and tt1.chars.is_capital_upper and tt1.termin_item is None) and tt1.onto_item is None): 
                     li = list()
                     li.append(tt0)
@@ -870,8 +870,8 @@ class GeoAnalyzer(Analyzer):
                     return res
             begin.kit.recurse_level += 1
             ctoks = CityItemToken.try_parse_list(begin, None, 3)
-            if (ctoks is None and begin.morph.class0.is_preposition): 
-                ctoks = CityItemToken.try_parse_list(begin.next0, None, 3)
+            if (ctoks is None and begin.morph.class0_.is_preposition): 
+                ctoks = CityItemToken.try_parse_list(begin.next0_, None, 3)
             begin.kit.recurse_level -= 1
             if (ctoks is not None): 
                 if (((len(ctoks) == 2 and ctoks[0].typ == CityItemToken.ItemType.NOUN and ctoks[1].typ == CityItemToken.ItemType.PROPERNAME)) or ((len(ctoks) == 1 and ctoks[0].typ == CityItemToken.ItemType.CITY))): 
@@ -888,9 +888,9 @@ class GeoAnalyzer(Analyzer):
             if ((ctoks is not None and len(ctoks) == 1 and ctoks[0].typ == CityItemToken.ItemType.NOUN) and ctoks[0].value == "ГОРОД"): 
                 cou = 0
                 t = begin.previous
-                first_pass2703 = True
+                first_pass2863 = True
                 while True:
-                    if first_pass2703: first_pass2703 = False
+                    if first_pass2863: first_pass2863 = False
                     else: t = t.previous
                     if (not (t is not None)): break
                     cou += 1
@@ -905,9 +905,9 @@ class GeoAnalyzer(Analyzer):
                         gg = (g if isinstance(g, GeoReferent) else None)
                         if (gg is not None): 
                             if (gg.is_city): 
-                                return ReferentToken._new1188(gg, begin, ctoks[0].end_token, ctoks[0].morph, ad)
+                                return ReferentToken._new1231(gg, begin, ctoks[0].end_token, ctoks[0].morph, ad)
                             if (gg.higher is not None and gg.higher.is_city): 
-                                return ReferentToken._new1188(gg.higher, begin, ctoks[0].end_token, ctoks[0].morph, ad)
+                                return ReferentToken._new1231(gg.higher, begin, ctoks[0].end_token, ctoks[0].morph, ad)
             return None
         begin.kit.recurse_level += 1
         tt = TerrItemToken.try_parse(begin, ad.local_ontology, True, False)
@@ -915,7 +915,7 @@ class GeoAnalyzer(Analyzer):
         if (tt is None or tt.onto_item is None): 
             tok = TerrItemToken._m_terr_ontology.try_attach(begin, None, False)
             if ((tok is not None and tok[0].item is not None and isinstance(tok[0].item.referent, GeoReferent)) and (tok[0].item.referent if isinstance(tok[0].item.referent, GeoReferent) else None).is_state): 
-                tt = TerrItemToken._new1099(tok[0].begin_token, tok[0].end_token, tok[0].item)
+                tt = TerrItemToken._new1142(tok[0].begin_token, tok[0].end_token, tok[0].item)
         if (tt is None): 
             return None
         if (tt.onto_item is not None): 
@@ -937,7 +937,7 @@ class GeoAnalyzer(Analyzer):
         if (not tt.is_adjective): 
             return None
         if (tt.onto_item is None): 
-            t1 = tt.end_token.next0
+            t1 = tt.end_token.next0_
             if (t1 is None): 
                 return None
             begin.kit.recurse_level += 1
@@ -994,15 +994,15 @@ class GeoAnalyzer(Analyzer):
             if (rt is None): 
                 return None
             city = (rt.referent if isinstance(rt.referent, GeoReferent) else None)
-            t = rt.end_token.next0
-            first_pass2704 = True
+            t = rt.end_token.next0_
+            first_pass2864 = True
             while True:
-                if first_pass2704: first_pass2704 = False
-                else: t = t.next0
+                if first_pass2864: first_pass2864 = False
+                else: t = t.next0_
                 if (not (t is not None)): break
                 if (not t.is_char(';')): 
                     continue
-                t = t.next0
+                t = t.next0_
                 if (t is None): 
                     break
                 li = CityItemToken.try_parse_list(t, None, 4)
@@ -1019,11 +1019,11 @@ class GeoAnalyzer(Analyzer):
                             break
                         else: 
                             tt = ttt
-                        ttt = ttt.next0
+                        ttt = ttt.next0_
                     if (tt is not None): 
-                        str0 = MiscHelper.get_text_value(t, tt, GetTextAttr.NO)
-                        if (str0 is not None): 
-                            city._add_name(str0)
+                        str0_ = MiscHelper.get_text_value(t, tt, GetTextAttr.NO)
+                        if (str0_ is not None): 
+                            city._add_name(str0_)
                         rt.end_token = tt
                         t = rt.end_token
             return rt
@@ -1031,20 +1031,20 @@ class GeoAnalyzer(Analyzer):
         terr = None
         te = None
         t = begin
-        first_pass2705 = True
+        first_pass2865 = True
         while True:
-            if first_pass2705: first_pass2705 = False
-            else: t = t.next0
+            if first_pass2865: first_pass2865 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             t0 = t
             t1 = None
             tn0 = None
             tn1 = None
             tt = t0
-            first_pass2706 = True
+            first_pass2866 = True
             while True:
-                if first_pass2706: first_pass2706 = False
-                else: tt = tt.next0
+                if first_pass2866: first_pass2866 = False
+                else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_char_of(";")): 
                     break

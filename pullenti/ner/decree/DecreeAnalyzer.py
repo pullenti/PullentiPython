@@ -10,30 +10,30 @@ from pullenti.ntopy.Misc import RefOutArgWrapper
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.MetaToken import MetaToken
 
-from pullenti.ner.decree.DecreeKind import DecreeKind
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-
-
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.decree.internal.ResourceHelper import ResourceHelper
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+
+from pullenti.ner.decree.DecreeKind import DecreeKind
 from pullenti.ner.decree.internal.DecreeChangeTokenTyp import DecreeChangeTokenTyp
 from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.Slot import Slot
+from pullenti.morph.LanguageHelper import LanguageHelper
+
 
 
 class DecreeAnalyzer(Analyzer):
     
     class ThisDecree(MetaToken):
         
-        def __init__(self, b : 'Token', e0 : 'Token') -> None:
+        def __init__(self, b : 'Token', e0_ : 'Token') -> None:
             self.typ = None
             self.has_this_ref = False
             self.has_other_ref = False
             self.real = None
-            super().__init__(b, e0, None)
+            super().__init__(b, e0_, None)
         
         def __str__(self) -> str:
             return "{0} ({1})".format(Utils.ifNotNull(self.typ, "?"), ("This" if self.has_this_ref else (("Other" if self.has_other_ref else "?"))))
@@ -46,12 +46,12 @@ class DecreeAnalyzer(Analyzer):
                 return None
             ukaz = None
             tt = t
-            first_pass2647 = True
+            first_pass2807 = True
             while True:
-                if first_pass2647: first_pass2647 = False
+                if first_pass2807: first_pass2807 = False
                 else: tt = tt.previous
                 if (not (tt is not None)): break
-                if (tt.is_char_of(",") or tt.morph.class0.is_preposition or tt.morph.class0.is_conjunction): 
+                if (tt.is_char_of(",") or tt.morph.class0_.is_preposition or tt.morph.class0_.is_conjunction): 
                     continue
                 if ((((((tt.is_value("ОПРЕДЕЛЕННЫЙ", "ПЕВНИЙ") or tt.is_value("ЗАДАННЫЙ", "ЗАДАНИЙ") or tt.is_value("ПРЕДУСМОТРЕННЫЙ", "ПЕРЕДБАЧЕНИЙ")) or tt.is_value("УКАЗАННЫЙ", "ЗАЗНАЧЕНИЙ") or tt.is_value("ПЕРЕЧИСЛЕННЫЙ", "ПЕРЕРАХОВАНИЙ")) or tt.is_value("ОПРЕДЕЛИТЬ", "ВИЗНАЧИТИ") or tt.is_value("ОПРЕДЕЛЯТЬ", None)) or tt.is_value("ЗАДАВАТЬ", "ЗАДАВАТИ") or tt.is_value("ПРЕДУСМАТРИВАТЬ", "ПЕРЕДБАЧАТИ")) or tt.is_value("УКАЗЫВАТЬ", "ВКАЗУВАТИ") or tt.is_value("УКАЗАТЬ", "ВКАЗАТИ")) or tt.is_value("СИЛА", "ЧИННІСТЬ")): 
                     ukaz = tt
@@ -66,7 +66,7 @@ class DecreeAnalyzer(Analyzer):
                 res = DecreeAnalyzer.ThisDecree(tt, tt)
                 res.typ = (tt if isinstance(tt, TextToken) else None).get_lemma()
                 t = tt.previous
-                if (t is not None and ((t.morph.class0.is_adjective or t.morph.class0.is_pronoun))): 
+                if (t is not None and ((t.morph.class0_.is_adjective or t.morph.class0_.is_pronoun))): 
                     if (t.is_value("НАСТОЯЩИЙ", "СПРАВЖНІЙ") or t.is_value("ТЕКУЩИЙ", "ПОТОЧНИЙ") or t.is_value("ДАННЫЙ", "ДАНИЙ")): 
                         res.has_this_ref = True
                         res.begin_token = t
@@ -80,7 +80,7 @@ class DecreeAnalyzer(Analyzer):
                 return res
             if (ukaz is not None): 
                 if (base_typ is not None and base_typ.value is not None and (("ДОГОВОР" in base_typ.value or "ДОГОВІР" in base_typ.value))): 
-                    return DecreeAnalyzer.ThisDecree._new1034(ukaz, ukaz, True, base_typ.value)
+                    return DecreeAnalyzer.ThisDecree._new1075(ukaz, ukaz, True, base_typ.value)
             return None
         
         @staticmethod
@@ -90,7 +90,7 @@ class DecreeAnalyzer(Analyzer):
             from pullenti.ner.core.BracketHelper import BracketHelper
             from pullenti.ner.TextToken import TextToken
             from pullenti.ner.ReferentToken import ReferentToken
-            t = dtok.end_token.next0
+            t = dtok.end_token.next0_
             if (t is None): 
                 return None
             if (t.is_newline_before): 
@@ -99,23 +99,23 @@ class DecreeAnalyzer(Analyzer):
                 else: 
                     return None
             t0 = t
-            if (t.is_char('.') and t.next0 is not None and not t.is_newline_after): 
+            if (t.is_char('.') and t.next0_ is not None and not t.is_newline_after): 
                 if (dtok.is_newline_before): 
                     return None
-                t = t.next0
-            if (t.is_value("К", None) and t.next0 is not None): 
-                t = t.next0
+                t = t.next0_
+            if (t.is_value("К", None) and t.next0_ is not None): 
+                t = t.next0_
             if (t is not None and isinstance(t.get_referent(), DecreeReferent)): 
                 return None
             tt = DecreeToken.is_keyword(t, False)
             br = False
             if (tt is None and BracketHelper.can_be_start_of_sequence(t, True, False)): 
-                tt = DecreeToken.is_keyword(t.next0, False)
-                if (isinstance(tt, TextToken) and BracketHelper.can_be_end_of_sequence(tt.next0, False, None, False)): 
+                tt = DecreeToken.is_keyword(t.next0_, False)
+                if (isinstance(tt, TextToken) and BracketHelper.can_be_end_of_sequence(tt.next0_, False, None, False)): 
                     br = True
             if (not ((isinstance(tt, TextToken)))): 
                 if (isinstance(tt, ReferentToken) and isinstance(tt.get_referent(), DecreeReferent)): 
-                    return DecreeAnalyzer.ThisDecree._new1035(t, tt, (tt.get_referent() if isinstance(tt.get_referent(), DecreeReferent) else None))
+                    return DecreeAnalyzer.ThisDecree._new1076(t, tt, (tt.get_referent() if isinstance(tt.get_referent(), DecreeReferent) else None))
                 return None
             if (tt.chars.is_all_lower): 
                 if (DecreeToken.is_keyword(tt, True) is not None): 
@@ -125,20 +125,20 @@ class DecreeAnalyzer(Analyzer):
                         return None
             if (not ((isinstance(t, TextToken)))): 
                 return None
-            res = DecreeAnalyzer.ThisDecree(t0, (tt.next0 if br else tt))
+            res = DecreeAnalyzer.ThisDecree(t0, (tt.next0_ if br else tt))
             res.typ = (tt if isinstance(tt, TextToken) else None).get_lemma()
             if (tt.is_char('.') and isinstance(tt.previous, TextToken)): 
                 res.typ = (tt.previous if isinstance(tt.previous, TextToken) else None).get_lemma()
-            if (t.morph.class0.is_adjective or t.morph.class0.is_pronoun): 
+            if (t.morph.class0_.is_adjective or t.morph.class0_.is_pronoun): 
                 if (t.is_value("НАСТОЯЩИЙ", "СПРАВЖНІЙ") or t.is_value("ТЕКУЩИЙ", "ПОТОЧНИЙ") or t.is_value("ДАННЫЙ", "ДАНИЙ")): 
                     res.has_this_ref = True
                 elif ((t.is_value("ЭТОТ", "ЦЕЙ") or t.is_value("ВЫШЕУКАЗАННЫЙ", "ВИЩЕВКАЗАНИЙ") or t.is_value("УКАЗАННЫЙ", "ЗАЗНАЧЕНИЙ")) or t.is_value("НАЗВАННЫЙ", "НАЗВАНИЙ")): 
                     res.has_other_ref = True
             if (not tt.is_newline_after and not res.has_this_ref): 
-                dt = DecreeToken.try_attach(tt.next0, None, False)
+                dt = DecreeToken.try_attach(tt.next0_, None, False)
                 if (dt is not None and dt.typ != DecreeToken.ItemType.MISC): 
                     return None
-                if (DecreeToken.try_attach_name(tt.next0, res.typ, False, False) is not None): 
+                if (DecreeToken.try_attach_name(tt.next0_, res.typ, False, False) is not None): 
                     return None
             if (base_typ is not None and base_typ.value == res.typ): 
                 res.has_this_ref = True
@@ -146,636 +146,23 @@ class DecreeAnalyzer(Analyzer):
     
         
         @staticmethod
-        def _new1034(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool, _arg4 : str) -> 'ThisDecree':
+        def _new1075(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool, _arg4 : str) -> 'ThisDecree':
             res = DecreeAnalyzer.ThisDecree(_arg1, _arg2)
             res.has_this_ref = _arg3
             res.typ = _arg4
             return res
         
         @staticmethod
-        def _new1035(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DecreeReferent') -> 'ThisDecree':
+        def _new1076(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DecreeReferent') -> 'ThisDecree':
             res = DecreeAnalyzer.ThisDecree(_arg1, _arg2)
             res.real = _arg3
             return res
-    
-    @staticmethod
-    def _try_attach(dts : typing.List['DecreeToken'], base_typ : 'DecreeToken', ad : 'AnalyzerData') -> typing.List['ReferentToken']:
-        
-        res = DecreeAnalyzer.__try_attach(dts, base_typ, False, ad)
-        return res
-    
-    @staticmethod
-    def __try_attach(dts : typing.List['DecreeToken'], base_typ : 'DecreeToken', after_decree : bool, ad : 'AnalyzerData') -> typing.List['ReferentToken']:
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        if (dts is None or (len(dts) < 1)): 
-            return None
-        if (dts[0].typ == DecreeToken.ItemType.EDITION and len(dts) > 1): 
-            del dts[0]
-        if (len(dts) == 1): 
-            if (dts[0].typ == DecreeToken.ItemType.DECREEREF and dts[0].ref is not None): 
-                if (base_typ is not None): 
-                    re = dts[0].ref.get_referent()
-                    dre = (re if isinstance(re, DecreeReferent) else None)
-                    if (dre is None and isinstance(re, DecreePartReferent)): 
-                        dre = (re if isinstance(re, DecreePartReferent) else None).owner
-                    if (dre is not None): 
-                        if (dre.typ == base_typ.value or dre.typ0 == base_typ.value): 
-                            return None
-                reli = list()
-                reli.append(ReferentToken(dts[0].ref.referent, dts[0].begin_token, dts[0].end_token))
-                return reli
-        dec0 = None
-        kodeks = False
-        max_empty = 30
-        t = dts[0].begin_token.previous
-        first_pass2648 = True
-        while True:
-            if first_pass2648: first_pass2648 = False
-            else: t = t.previous
-            if (not (t is not None)): break
-            if (t.is_comma_and): 
-                continue
-            if (t.is_char(')')): 
-                cou = 0
-                t = t.previous
-                while t is not None: 
-                    if (t.is_char('(')): 
-                        break
-                    else: 
-                        cou += 1
-                        if ((cou) > 200): 
-                            break
-                    t = t.previous
-                if (t is not None and t.is_char('(')): 
-                    continue
-                break
-            max_empty -= 1
-            if ((max_empty) < 0): 
-                break
-            if (not t.chars.is_letter): 
-                continue
-            dec0 = (t.get_referent() if isinstance(t.get_referent(), DecreeReferent) else None)
-            if (dec0 is not None): 
-                if (DecreeToken.get_kind(dec0.typ) == DecreeKind.KODEX): 
-                    kodeks = True
-                elif (dec0.kind == DecreeKind.PUBLISHER): 
-                    dec0 = None
-            break
-        dec = DecreeReferent()
-        i = 0
-        morph_ = None
-        is_noun_doubt = False
-        num_tok = None
-        i = 0
-        first_pass2649 = True
-        while True:
-            if first_pass2649: first_pass2649 = False
-            else: i += 1
-            if (not (i < len(dts))): break
-            if (dts[i].typ == DecreeToken.ItemType.TYP): 
-                if (dts[i].value is None): 
-                    break
-                if (dts[i].is_newline_before): 
-                    if (dec.date is not None or dec.number is not None): 
-                        break
-                if (dec.typ is not None): 
-                    if (((dec.typ == "РЕШЕНИЕ" or dec.typ == "РІШЕННЯ")) and dts[i].value == "ПРОТОКОЛ"): 
-                        pass
-                    elif (dec.typ == dts[i].value and dec.typ == "ГОСТ"): 
-                        continue
-                    else: 
-                        break
-                if (DecreeToken.get_kind(dts[i].value) == DecreeKind.KODEX): 
-                    if (i > 0): 
-                        break
-                    if (dts[i].value != "ОСНОВЫ ЗАКОНОДАТЕЛЬСТВА" and dts[i].value != "ОСНОВИ ЗАКОНОДАВСТВА"): 
-                        kodeks = True
-                    else: 
-                        kodeks = False
-                else: 
-                    kodeks = False
-                morph_ = dts[i].morph
-                dec.typ = dts[i].value
-                if (dts[i].full_value is not None): 
-                    dec._add_name_str(dts[i].full_value)
-                is_noun_doubt = dts[i].is_doubtful
-                if (is_noun_doubt and i == 0): 
-                    if (PartToken.is_part_before(dts[i].begin_token)): 
-                        is_noun_doubt = False
-                if (dts[i].ref is not None): 
-                    if (dec.find_slot(DecreeReferent.ATTR_GEO, None, True) is None): 
-                        dec.add_slot(DecreeReferent.ATTR_GEO, dts[i].ref.referent, False, 0)
-                        dec.add_ext_referent(dts[i].ref)
-            elif (dts[i].typ == DecreeToken.ItemType.DATE): 
-                if (dec.date is not None): 
-                    break
-                if (kodeks): 
-                    if (i > 0 and dts[i - 1].typ == DecreeToken.ItemType.NUMBER): 
-                        pass
-                    else: 
-                        break
-                if (i == (len(dts) - 1)): 
-                    if (not dts[i].begin_token.is_value("ОТ", "ВІД")): 
-                        ty = DecreeToken.get_kind(dec.typ)
-                        if ((ty == DecreeKind.KONVENTION or ty == DecreeKind.CONTRACT or dec.typ0 == "ПИСЬМО") or dec.typ0 == "ЛИСТ"): 
-                            pass
-                        else: 
-                            break
-                dec._add_date(dts[i])
-                dec.add_ext_referent(dts[i].ref)
-            elif (dts[i].typ == DecreeToken.ItemType.DATERANGE): 
-                if (dec.kind != DecreeKind.PROGRAM): 
-                    break
-                dec._add_date(dts[i])
-                dec.add_ext_referent(dts[i].ref)
-            elif (dts[i].typ == DecreeToken.ItemType.EDITION): 
-                if (dts[i].is_newline_before and not dts[i].begin_token.chars.is_all_lower and dts[i].begin_token.chars.is_letter): 
-                    break
-            elif (dts[i].typ == DecreeToken.ItemType.NUMBER): 
-                if (kodeks): 
-                    if (((i + 1) < len(dts)) and dts[i + 1].typ == DecreeToken.ItemType.DATE): 
-                        pass
-                    else: 
-                        break
-                num_tok = dts[i]
-                if (dts[i].is_delo): 
-                    if (dec.case_number is not None): 
-                        break
-                    dec.add_slot(DecreeReferent.ATTR_CASENUMBER, dts[i].value, True, 0)
-                    continue
-                if (dec.number is not None): 
-                    if (i > 2 and ((dts[i - 1].typ == DecreeToken.ItemType.OWNER or dts[i - 1].typ == DecreeToken.ItemType.ORG)) and dts[i - 2].typ == DecreeToken.ItemType.NUMBER): 
-                        pass
-                    else: 
-                        break
-                if (dts[i].is_newline_before): 
-                    if (dec.typ is None and dec0 is None): 
-                        break
-                if (LanguageHelper.ends_with(dts[i].value, "ФЗ")): 
-                    dec.typ = "ФЕДЕРАЛЬНЫЙ ЗАКОН"
-                if (LanguageHelper.ends_with(dts[i].value, "ФКЗ")): 
-                    dec.typ = "ФЕДЕРАЛЬНЫЙ КОНСТИТУЦИОННЫЙ ЗАКОН"
-                if (dts[i].value is not None and dts[i].value.upper().startswith("ПР".upper()) and dec.typ is None): 
-                    dec.typ = "ПОРУЧЕНИЕ"
-                if (dec.typ is None): 
-                    if (dec0 is None and not after_decree): 
-                        break
-                dec._add_number(dts[i])
-                if (dts[i].children is not None): 
-                    cou = 0
-                    for s in dec.slots: 
-                        if (s.type_name == DecreeReferent.ATTR_SOURCE): 
-                            cou += 1
-                    if (cou == (len(dts[i].children) + 1)): 
-                        for dd in dts[i].children: 
-                            dec._add_number(dd)
-                        dts[i].children = None
-                continue
-            elif (dts[i].typ == DecreeToken.ItemType.NAME): 
-                if (dec.typ is None and dec.number is None and dec0 is None): 
-                    break
-                if (dec.get_string_value(DecreeReferent.ATTR_NAME) is not None): 
-                    if (kodeks): 
-                        break
-                    if (i > 0 and dts[i - 1].end_token.next0 == dts[i].begin_token): 
-                        pass
-                    else: 
-                        break
-                nam = dts[i].value
-                if (kodeks and not "КОДЕКС" in nam.upper()): 
-                    nam = ("Кодекс " + nam)
-                dec._add_name_str(nam)
-            elif (dts[i].typ == DecreeToken.ItemType.BETWEEN): 
-                if (dec.kind != DecreeKind.CONTRACT): 
-                    break
-                for chh in dts[i].children: 
-                    dec.add_slot(DecreeReferent.ATTR_SOURCE, chh.ref.referent, False, 0).tag = chh.get_source_text()
-                    if (isinstance(chh.ref.referent, PersonPropertyReferent)): 
-                        dec.add_ext_referent(chh.ref)
-            elif (dts[i].typ == DecreeToken.ItemType.OWNER): 
-                if (kodeks): 
-                    break
-                if (dec.name is not None): 
-                    break
-                if (((i == 0 or i == (len(dts) - 1))) and dts[i].begin_token.chars.is_all_lower): 
-                    break
-                if (i == 0 and len(dts) > 1 and dts[1].typ == DecreeToken.ItemType.TYP): 
-                    break
-                if (dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is not None): 
-                    pass
-                if (dts[i].ref is not None): 
-                    ty = DecreeToken.get_kind(dec.typ)
-                    if (ty == DecreeKind.USTAV): 
-                        if (not ((isinstance(dts[i].ref.referent, OrganizationReferent)))): 
-                            break
-                    dec.add_slot(DecreeReferent.ATTR_SOURCE, dts[i].ref.referent, False, 0).tag = dts[i].get_source_text()
-                    if (isinstance(dts[i].ref.referent, PersonPropertyReferent)): 
-                        dec.add_ext_referent(dts[i].ref)
-                else: 
-                    dec.add_slot(DecreeReferent.ATTR_SOURCE, MiscHelper.convert_first_char_upper_and_other_lower(dts[i].value), False, 0).tag = dts[i].get_source_text()
-            elif (dts[i].typ == DecreeToken.ItemType.ORG): 
-                if (kodeks): 
-                    break
-                if (dec.name is not None): 
-                    break
-                if (dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is not None): 
-                    if (i > 2 and dts[i - 1].typ == DecreeToken.ItemType.NUMBER and ((dts[i - 2].typ == DecreeToken.ItemType.ORG or dts[i - 2].typ == DecreeToken.ItemType.OWNER))): 
-                        pass
-                    elif (dts[i].begin_token.previous is not None and dts[i].begin_token.previous.is_and): 
-                        pass
-                    elif (i > 0 and ((dts[i - 1].typ == DecreeToken.ItemType.OWNER or dts[i - 1].typ == DecreeToken.ItemType.ORG))): 
-                        pass
-                    else: 
-                        break
-                sl = dec.add_slot(DecreeReferent.ATTR_SOURCE, dts[i].ref.referent, False, 0)
-                sl.tag = dts[i].get_source_text()
-                if (((i + 2) < len(dts)) and dts[i + 1].typ == DecreeToken.ItemType.UNKNOWN and (dts[i + 1].whitespaces_before_count < 2)): 
-                    if (dts[i + 2].typ == DecreeToken.ItemType.NUMBER or dts[i + 2].typ == DecreeToken.ItemType.DATE): 
-                        sl.tag = (MetaToken(dts[i].begin_token, dts[i + 1].end_token)).get_source_text()
-                        i += 1
-            elif (dts[i].typ == DecreeToken.ItemType.TERR): 
-                if (dec.find_slot(DecreeReferent.ATTR_GEO, None, True) is not None): 
-                    break
-                if (i > 0 and dts[i - 1].typ == DecreeToken.ItemType.NAME): 
-                    break
-                if (dts[i].is_newline_before and ((i + 1) < len(dts)) and dts[i + 1].typ == DecreeToken.ItemType.DATE): 
-                    break
-                dec.add_slot(DecreeReferent.ATTR_GEO, dts[i].ref.referent, False, 0)
-            elif (dts[i].typ == DecreeToken.ItemType.UNKNOWN): 
-                if (dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is not None): 
-                    break
-                if (kodeks): 
-                    break
-                if ((dec.kind == DecreeKind.CONTRACT and i == 1 and ((i + 1) < len(dts))) and dts[i + 1].typ == DecreeToken.ItemType.NUMBER): 
-                    dec._add_name_str(MiscHelper.get_text_value_of_meta_token(dts[i], GetTextAttr.KEEPREGISTER))
-                    continue
-                if (i == 0): 
-                    if (dec0 is None and not after_decree): 
-                        break
-                    ok1 = False
-                    if (((i + 1) < len(dts)) and dts[i + 1].typ == DecreeToken.ItemType.NUMBER): 
-                        ok1 = True
-                    elif (((i + 2) < len(dts)) and dts[i + 1].typ == DecreeToken.ItemType.TERR and dts[i + 2].typ == DecreeToken.ItemType.NUMBER): 
-                        ok1 = True
-                    if (not ok1): 
-                        break
-                elif (dts[i - 1].typ == DecreeToken.ItemType.OWNER or dts[i - 1].typ == DecreeToken.ItemType.ORG): 
-                    continue
-                if ((i + 1) >= len(dts)): 
-                    break
-                if (dts[0].typ == DecreeToken.ItemType.TYP and dts[0].is_doubtful): 
-                    break
-                if (dts[i + 1].typ == DecreeToken.ItemType.NUMBER or dts[i + 1].typ == DecreeToken.ItemType.DATE or dts[i + 1].typ == DecreeToken.ItemType.NAME): 
-                    dec.add_slot(DecreeReferent.ATTR_SOURCE, dts[i].value, False, 0).tag = dts[i].get_source_text()
-                    continue
-                if (dts[i + 1].typ == DecreeToken.ItemType.TERR): 
-                    dec.add_slot(DecreeReferent.ATTR_SOURCE, dts[i].value, False, 0).tag = dts[i].get_source_text()
-                    continue
-                if (dts[i + 1].typ == DecreeToken.ItemType.OWNER): 
-                    s = MiscHelper.get_text_value(dts[i].begin_token, dts[i + 1].end_token, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
-                    dts[i].end_token = dts[i + 1].end_token
-                    dec.add_slot(DecreeReferent.ATTR_SOURCE, s, False, 0).tag = dts[i].get_source_text()
-                    i += 1
-                    continue
-                break
-            elif (dts[i].typ == DecreeToken.ItemType.MISC): 
-                if (i == 0 or kodeks): 
-                    break
-                if ((i + 1) >= len(dts)): 
-                    if (BracketHelper.can_be_start_of_sequence(dts[i].end_token.next0, True, False)): 
-                        continue
-                    if (i > 0 and dts[i - 1].typ == DecreeToken.ItemType.NUMBER): 
-                        if (DecreeToken.try_attach_name(dts[i].end_token.next0, None, True, False) is not None): 
-                            continue
-                elif (dts[i + 1].typ == DecreeToken.ItemType.NAME or dts[i + 1].typ == DecreeToken.ItemType.NUMBER or dts[i + 1].typ == DecreeToken.ItemType.DATE): 
-                    continue
-                break
-            else: 
-                break
-        if (i == 0): 
-            return None
-        if (dec.typ is None or ((dec0 is not None and dts[0].typ != DecreeToken.ItemType.TYP))): 
-            if (dec0 is not None): 
-                if (dec.number is None and dec.date is None and dec.find_slot(DecreeReferent.ATTR_NAME, None, True) is None): 
-                    return None
-                if (dec.typ is None): 
-                    dec.typ = dec0.typ
-                if (dec.find_slot(DecreeReferent.ATTR_GEO, None, True) is None): 
-                    dec.add_slot(DecreeReferent.ATTR_GEO, dec0.get_string_value(DecreeReferent.ATTR_GEO), False, 0)
-                if (dec.find_slot(DecreeReferent.ATTR_DATE, None, True) is None and dec0.date is not None): 
-                    dec.add_slot(DecreeReferent.ATTR_DATE, dec0.get_value(DecreeReferent.ATTR_DATE), False, 0)
-                sl = dec0.find_slot(DecreeReferent.ATTR_SOURCE, None, True)
-                if (dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is None and (sl) is not None): 
-                    dec.add_slot(DecreeReferent.ATTR_SOURCE, sl.value, False, 0).tag = sl.tag
-            elif (base_typ is not None and after_decree): 
-                dec.typ = base_typ.value
-            else: 
-                return None
-        et = dts[i - 1].end_token
-        if ((((not after_decree and len(dts) == i and i == 3) and dts[0].typ == DecreeToken.ItemType.TYP and dts[i - 1].typ == DecreeToken.ItemType.NUMBER) and dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is not None and et.next0 is not None) and et.next0.is_comma and dec.number is not None): 
-            tt = et.next0
-            while tt is not None: 
-                if (not tt.is_char(',')): 
-                    break
-                ddd = DecreeToken.try_attach_list(tt.next0, dts[0], 10, False)
-                if (ddd is None or (len(ddd) < 2) or ddd[0].typ == DecreeToken.ItemType.TYP): 
-                    break
-                has_num = False
-                for d in ddd: 
-                    if (d.typ == DecreeToken.ItemType.NUMBER): 
-                        has_num = True
-                    elif (d.typ == DecreeToken.ItemType.TYP): 
-                        has_num = False
-                        break
-                if (not has_num): 
-                    break
-                rtt = DecreeAnalyzer.__try_attach(ddd, dts[0], True, ad)
-                if (rtt is None): 
-                    break
-                dec.merge_slots(rtt[0].referent, True)
-                tt = rtt[0].end_token
-                et = tt
-                tt = tt.next0
-        if (((et.next0 is not None and et.next0.is_char('<') and isinstance(et.next0.next0, ReferentToken)) and et.next0.next0.next0 is not None and et.next0.next0.next0.is_char('>')) and et.next0.next0.get_referent().type_name == "URI"): 
-            et = et.next0.next0.next0
-        num = dec.number
-        if ((dec.find_slot(DecreeReferent.ATTR_NAME, None, True) is None and (i < len(dts)) and dts[i].typ == DecreeToken.ItemType.TYP) and dec.kind == DecreeKind.PROJECT): 
-            dts1 = list(dts)
-            del dts1[0:0+i]
-            rt1 = DecreeAnalyzer.__try_attach(dts1, None, True, ad)
-            if (rt1 is not None): 
-                dec._add_name_str(MiscHelper.get_text_value_of_meta_token(rt1[0], GetTextAttr.KEEPREGISTER))
-                et = rt1[0].end_token
-        if (dec.find_slot(DecreeReferent.ATTR_NAME, None, True) is None and not kodeks and et.next0 is not None): 
-            dn = DecreeToken.try_attach_name((et.next0.next0 if et.next0.is_char(':') else et.next0), dec.typ, False, False)
-            if (dn is not None and et.next0.chars.is_all_lower and num is not None): 
-                if (ad is not None): 
-                    for r in ad.referents: 
-                        if (r.find_slot(DecreeReferent.ATTR_NUMBER, num, True) is not None): 
-                            if (r.can_be_equals(dec, Referent.EqualType.WITHINONETEXT)): 
-                                if (r.find_slot(DecreeReferent.ATTR_NAME, dn.value, True) is None): 
-                                    dn = None
-                                break
-            if (dn is not None): 
-                if (dec.kind == DecreeKind.PROGRAM): 
-                    tt1 = dn.end_token.previous
-                    while tt1 is not None and tt1.begin_char > dn.begin_char: 
-                        if (tt1.is_char(')') and tt1.previous is not None): 
-                            tt1 = tt1.previous
-                        if (isinstance(tt1.get_referent(), DateRangeReferent)): 
-                            dec.add_slot(DecreeReferent.ATTR_DATE, tt1.get_referent(), False, 0)
-                        elif (isinstance(tt1.get_referent(), DateReferent) and tt1.previous is not None and tt1.previous.is_value("ДО", None)): 
-                            rt11 = tt1.kit.process_referent("DATE", tt1.previous)
-                            if (rt11 is not None and isinstance(rt11.referent, DateRangeReferent)): 
-                                dec.add_slot(DecreeReferent.ATTR_DATE, rt11.referent, False, 0)
-                                dec.add_ext_referent(rt11)
-                                tt1 = tt1.previous
-                            else: 
-                                break
-                        elif (isinstance(tt1.get_referent(), DateReferent) and tt1.previous is not None and ((tt1.previous.is_value("НА", None) or tt1.previous.is_value("В", None)))): 
-                            dec.add_slot(DecreeReferent.ATTR_DATE, tt1.get_referent(), False, 0)
-                            tt1 = tt1.previous
-                        else: 
-                            break
-                        tt1 = tt1.previous
-                        first_pass2650 = True
-                        while True:
-                            if first_pass2650: first_pass2650 = False
-                            else: tt1 = (None if tt1 is None else tt1.previous)
-                            if (not (tt1 is not None and tt1.begin_char > dn.begin_char)): break
-                            if (tt1.morph.class0.is_conjunction or tt1.morph.class0.is_preposition): 
-                                continue
-                            if (tt1.is_value("ПЕРИОД", "ПЕРІОД") or tt1.is_value("ПЕРСПЕКТИВА", None)): 
-                                continue
-                            if (tt1.is_char('(')): 
-                                continue
-                            break
-                        if (tt1 is not None and tt1.end_char > dn.begin_char): 
-                            if (dn.full_value is None): 
-                                dn.full_value = dn.value
-                            dn.value = MiscHelper.get_text_value(dn.begin_token, tt1, GetTextAttr.KEEPREGISTER)
-                        tt1 = tt1.next0
-                        tt1 = (None if tt1 is None else tt1.previous)
-                if (dn.full_value is not None): 
-                    dec._add_name_str(dn.full_value)
-                dec._add_name_str(dn.value)
-                et = dn.end_token
-                while True:
-                    dn = DecreeToken.try_attach(et.next0, None, False)
-                    if (dn is None): 
-                        break
-                    if (dn.typ == DecreeToken.ItemType.DATE and dec.date is None): 
-                        if (dec._add_date(dn)): 
-                            et = dn.end_token
-                            continue
-                    if (dn.typ == DecreeToken.ItemType.NUMBER and dec.number is None): 
-                        dec._add_number(dn)
-                        et = dn.end_token
-                        continue
-                    if (dn.typ == DecreeToken.ItemType.DATERANGE and dec.kind == DecreeKind.PROGRAM): 
-                        if (dec._add_date(dn)): 
-                            et = dn.end_token
-                            continue
-                    break
-        if (dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is None): 
-            tt0 = dts[0].begin_token.previous
-            if ((tt0 is not None and tt0.is_value("В", "У") and tt0.previous is not None) and isinstance(tt0.previous.get_referent(), OrganizationReferent)): 
-                dec.add_slot(DecreeReferent.ATTR_SOURCE, tt0.previous.get_referent(), False, 0)
-        if (not dec._check_correction(is_noun_doubt)): 
-            ty = dec.typ
-            sl = None
-            if (dec0 is not None and dec.date is not None and dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is None): 
-                sl = dec0.find_slot(DecreeReferent.ATTR_SOURCE, None, True)
-            if (sl is not None and (((((ty == "ПОСТАНОВЛЕНИЕ" or ty == "ПОСТАНОВА" or ty == "ОПРЕДЕЛЕНИЕ") or ty == "ВИЗНАЧЕННЯ" or ty == "РЕШЕНИЕ") or ty == "РІШЕННЯ" or ty == "ПРИГОВОР") or ty == "ВИРОК"))): 
-                dec.add_slot(sl.type_name, sl.value, False, 0).tag = sl.tag
-            else: 
-                eq_decs = 0
-                dr0 = None
-                if (num is not None): 
-                    if (ad is not None): 
-                        for r in ad.referents: 
-                            if (r.find_slot(DecreeReferent.ATTR_NUMBER, num, True) is not None): 
-                                if (r.can_be_equals(dec, Referent.EqualType.WITHINONETEXT)): 
-                                    eq_decs += 1
-                                    dr0 = (r if isinstance(r, DecreeReferent) else None)
-                if (eq_decs == 1): 
-                    dec.merge_slots(dr0, True)
-                else: 
-                    ok1 = False
-                    if (num is not None): 
-                        tt = dts[0].begin_token.previous
-                        while tt is not None: 
-                            if (tt.is_char_of(":,") or tt.is_hiphen or BracketHelper.can_be_start_of_sequence(tt, False, False)): 
-                                pass
-                            else: 
-                                if (tt.is_value("ДАЛЕЕ", "ДАЛІ")): 
-                                    ok1 = True
-                                break
-                            tt = tt.previous
-                    if (not ok1): 
-                        return None
-        rt = ReferentToken(dec, dts[0].begin_token, et)
-        if (morph_ is not None): 
-            rt.morph = morph_
-        if (rt.chars.is_all_lower): 
-            if (dec.typ0 == "ДЕКЛАРАЦИЯ" or dec.typ0 == "ДЕКЛАРАЦІЯ"): 
-                return None
-            if (((dec.typ0 == "КОНСТИТУЦИЯ" or dec.typ0 == "КОНСТИТУЦІЯ")) and rt.begin_token == rt.end_token): 
-                ok1 = False
-                cou = 10
-                tt = rt.begin_token.previous
-                while tt is not None and cou > 0: 
-                    if (tt.is_newline_after): 
-                        break
-                    pt = PartToken.try_attach(tt, None, False, False)
-                    if (pt is not None and pt.typ != PartToken.ItemType.PREFIX and pt.end_token.next0 == rt.begin_token): 
-                        ok1 = True
-                        break
-                    tt = tt.previous; cou -= 1
-                if (not ok1): 
-                    return None
-        if (num is not None and ((num.find('/') > 0 or num.find(',') > 0))): 
-            cou = 0
-            for s in dec.slots: 
-                if (s.type_name == DecreeReferent.ATTR_NUMBER): 
-                    cou += 1
-            if (cou == 1): 
-                owns = 0
-                for s in dec.slots: 
-                    if (s.type_name == DecreeReferent.ATTR_SOURCE): 
-                        owns += 1
-                if (owns > 1): 
-                    nums = Utils.splitString(num, '/', False)
-                    nums2 = Utils.splitString(num, ',', False)
-                    str_num = None
-                    for ii in range(len(dts)):
-                        if (dts[ii].typ == DecreeToken.ItemType.NUMBER): 
-                            str_num = dts[ii].get_source_text()
-                            break
-                    if (len(nums2) == owns and owns > 1): 
-                        dec.add_slot(DecreeReferent.ATTR_NUMBER, None, True, 0)
-                        for n in nums2: 
-                            dec.add_slot(DecreeReferent.ATTR_NUMBER, n.strip(), False, 0).tag = str_num
-                    elif (len(nums) == owns and owns > 1): 
-                        dec.add_slot(DecreeReferent.ATTR_NUMBER, None, True, 0)
-                        for n in nums: 
-                            dec.add_slot(DecreeReferent.ATTR_NUMBER, n.strip(), False, 0).tag = str_num
-        if (BracketHelper.can_be_start_of_sequence(rt.begin_token.previous, False, False) and BracketHelper.can_be_end_of_sequence(rt.end_token.next0, False, None, False)): 
-            rt.begin_token = rt.begin_token.previous
-            rt.end_token = rt.end_token.next0
-            dts1 = DecreeToken.try_attach_list(rt.end_token.next0, None, 10, False)
-            if (dts1 is not None and dts1[0].typ == DecreeToken.ItemType.DATE and dec.find_slot(DecreeReferent.ATTR_DATE, None, True) is None): 
-                dec._add_date(dts1[0])
-                rt.end_token = dts1[0].end_token
-        if (dec.kind == DecreeKind.STANDARD and dec.name is None and BracketHelper.can_be_start_of_sequence(rt.end_token.next0, True, False)): 
-            br = BracketHelper.try_parse(rt.end_token.next0, BracketParseAttr.NO, 100)
-            if (br is not None): 
-                dec._add_name_str(MiscHelper.get_text_value_of_meta_token(br, GetTextAttr.KEEPREGISTER))
-                rt.end_token = br.end_token
-        if (dec.kind == DecreeKind.PROGRAM and dec.find_slot(DecreeReferent.ATTR_DATE, None, True) is None): 
-            if (rt.begin_token.previous is not None and rt.begin_token.previous.is_value("ПАСПОРТ", None)): 
-                cou = 0
-                tt = rt.end_token.next0
-                first_pass2651 = True
-                while True:
-                    if first_pass2651: first_pass2651 = False
-                    else: tt = (None if tt is None else tt.next0)
-                    if (not (tt is not None and (cou < 1000))): break
-                    if (tt.is_value("СРОК", "ТЕРМІН") and tt.next0 is not None and tt.next0.is_value("РЕАЛИЗАЦИЯ", "РЕАЛІЗАЦІЯ")): 
-                        pass
-                    else: 
-                        continue
-                    tt = tt.next0.next0
-                    if (tt is None): 
-                        break
-                    dtok = DecreeToken.try_attach(tt, None, False)
-                    if (dtok is not None and dtok.typ == DecreeToken.ItemType.TYP and ((dtok.value == "ПРОГРАММА" or dtok.value == "ПРОГРАМА"))): 
-                        tt = dtok.end_token.next0
-                    while tt is not None: 
-                        if (tt.is_hiphen or tt.is_table_control_char or tt.is_value("ПРОГРАММА", "ПРОГРАМА")): 
-                            pass
-                        elif (isinstance(tt.get_referent(), DateRangeReferent)): 
-                            dec.add_slot(DecreeReferent.ATTR_DATE, tt.get_referent(), False, 0)
-                            break
-                        else: 
-                            break
-                        tt = tt.next0
-                    break
-        if (rt.end_token.next0 is not None and rt.end_token.next0.is_char('(')): 
-            dt = None
-            tt = rt.end_token.next0.next0
-            first_pass2652 = True
-            while True:
-                if first_pass2652: first_pass2652 = False
-                else: tt = tt.next0
-                if (not (tt is not None)): break
-                r = tt.get_referent()
-                if (isinstance(r, GeoReferent)): 
-                    continue
-                if (isinstance(r, DateReferent)): 
-                    dt = (r if isinstance(r, DateReferent) else None)
-                    continue
-                if (tt.morph.class0.is_preposition): 
-                    continue
-                if (tt.morph.class0.is_verb): 
-                    continue
-                if (tt.is_char(')') and dt is not None): 
-                    dec.add_slot(DecreeReferent.ATTR_DATE, dt, False, 0)
-                    rt.end_token = tt
-                break
-        rt_li = list()
-        rt_li.append(rt)
-        if (num_tok is not None and num_tok.children is not None): 
-            end = rt.end_token
-            rt.end_token = num_tok.children[0].begin_token.previous
-            if (rt.end_token.is_comma_and): 
-                rt.end_token = rt.end_token.previous
-            for ii in range(len(num_tok.children)):
-                dr1 = DecreeReferent()
-                for s in rt.referent.slots: 
-                    if (s.type_name == DecreeReferent.ATTR_NUMBER): 
-                        dr1.add_slot(s.type_name, num_tok.children[ii].value, False, 0).tag = num_tok.children[ii].get_source_text()
-                    else: 
-                        ss = dr1.add_slot(s.type_name, s.value, False, 0)
-                        if (ss is not None): 
-                            ss.tag = s.tag
-                rt1 = ReferentToken(dr1, num_tok.children[ii].begin_token, num_tok.children[ii].end_token)
-                if (ii == (len(num_tok.children) - 1)): 
-                    rt1.end_token = end
-                rt_li.append(rt1)
-        if ((len(dts) == 2 and dts[0].typ == DecreeToken.ItemType.TYP and dts[0].typ_kind == DecreeKind.STANDARD) and dts[1].typ == DecreeToken.ItemType.NUMBER): 
-            ttt = dts[1].end_token.next0
-            while ttt is not None: 
-                if (not ttt.is_comma_and): 
-                    break
-                nu = DecreeToken.try_attach(ttt.next0, dts[0], False)
-                if (nu is None or nu.typ != DecreeToken.ItemType.NUMBER): 
-                    break
-                dr1 = DecreeReferent._new1022(dec.typ)
-                dr1._add_number(nu)
-                rt_li.append(ReferentToken(dr1, ttt.next0, nu.end_token))
-                if (not ttt.is_comma): 
-                    break
-                ttt = nu.end_token
-                ttt = ttt.next0
-        return rt_li
     
     ANALYZER_NAME = "DECREE"
     
     @property
     def name(self) -> str:
+        
         return DecreeAnalyzer.ANALYZER_NAME
     
     @property
@@ -798,7 +185,7 @@ class DecreeAnalyzer(Analyzer):
         return [MetaDecree.GLOBAL_META, MetaDecreePart.GLOBAL_META, MetaDecreeChange.GLOBAL_META, MetaDecreeChangeValue.GLOBAL_META]
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         from pullenti.ner.decree.internal.MetaDecree import MetaDecree
         from pullenti.ner.decree.internal.MetaDecreePart import MetaDecreePart
         from pullenti.ner.decree.internal.MetaDecreeChange import MetaDecreeChange
@@ -817,22 +204,22 @@ class DecreeAnalyzer(Analyzer):
     def used_extern_object_types(self) -> typing.List[str]:
         from pullenti.ner.date.DateReferent import DateReferent
         from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+        from pullenti.ner._org.OrganizationReferent import OrganizationReferent
         from pullenti.ner.person.PersonReferent import PersonReferent
         return [DateReferent.OBJ_TYPENAME, GeoReferent.OBJ_TYPENAME, OrganizationReferent.OBJ_TYPENAME, PersonReferent.OBJ_TYPENAME]
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
         from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
         from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
         from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
-        if (type0 == DecreeReferent.OBJ_TYPENAME): 
+        if (type0_ == DecreeReferent.OBJ_TYPENAME): 
             return DecreeReferent()
-        if (type0 == DecreePartReferent.OBJ_TYPENAME): 
+        if (type0_ == DecreePartReferent.OBJ_TYPENAME): 
             return DecreePartReferent()
-        if (type0 == DecreeChangeReferent.OBJ_TYPENAME): 
+        if (type0_ == DecreeChangeReferent.OBJ_TYPENAME): 
             return DecreeChangeReferent()
-        if (type0 == DecreeChangeValueReferent.OBJ_TYPENAME): 
+        if (type0_ == DecreeChangeValueReferent.OBJ_TYPENAME): 
             return DecreeChangeValueReferent()
         return None
     
@@ -866,10 +253,10 @@ class DecreeAnalyzer(Analyzer):
         aliases = TerminCollection()
         last_dec_dist = 0
         t = kit.first_token
-        first_pass2653 = True
+        first_pass2808 = True
         while True:
-            if first_pass2653: first_pass2653 = False
-            else: t = t.next0; last_dec_dist += 1
+            if first_pass2808: first_pass2808 = False
+            else: t = t.next0_; last_dec_dist += 1
             if (not (t is not None)): break
             dts = DecreeToken.try_attach_list(t, None, 10, last_dec_dist > 1000)
             tok = aliases.try_parse(t, TerminParseAttr.NO)
@@ -878,7 +265,7 @@ class DecreeAnalyzer(Analyzer):
                 tt = t.previous
                 while tt is not None and ((t.end_char - tt.end_char) < 20): 
                     p = PartToken.try_attach(tt, None, False, False)
-                    if (p is not None and p.typ != PartToken.ItemType.PREFIX and p.end_token.next0 == t): 
+                    if (p is not None and p.typ != PartToken.ItemType.PREFIX and p.end_token.next0_ == t): 
                         ok = True
                         break
                     tt = tt.previous
@@ -891,14 +278,14 @@ class DecreeAnalyzer(Analyzer):
             if (tok is not None): 
                 dec0 = (tok.termin.tag if isinstance(tok.termin.tag, DecreeReferent) else None)
                 rt0 = ReferentToken(tok.termin.tag if isinstance(tok.termin.tag, Referent) else None, tok.begin_token, tok.end_token)
-                if (dec0 is not None and isinstance(rt0.end_token.next0, ReferentToken) and isinstance(rt0.end_token.next0.get_referent(), GeoReferent)): 
+                if (dec0 is not None and isinstance(rt0.end_token.next0_, ReferentToken) and isinstance(rt0.end_token.next0_.get_referent(), GeoReferent)): 
                     geo0 = (dec0.get_value(DecreeReferent.ATTR_GEO) if isinstance(dec0.get_value(DecreeReferent.ATTR_GEO), GeoReferent) else None)
-                    geo1 = (rt0.end_token.next0.get_referent() if isinstance(rt0.end_token.next0.get_referent(), GeoReferent) else None)
+                    geo1 = (rt0.end_token.next0_.get_referent() if isinstance(rt0.end_token.next0_.get_referent(), GeoReferent) else None)
                     if (geo0 is None): 
                         dec0.add_slot(DecreeReferent.ATTR_GEO, geo1, False, 0)
-                        rt0.end_token = rt0.end_token.next0
+                        rt0.end_token = rt0.end_token.next0_
                     elif (geo0 == geo1): 
-                        rt0.end_token = rt0.end_token.next0
+                        rt0.end_token = rt0.end_token.next0_
                     else: 
                         continue
                 kit.embed_token(rt0)
@@ -910,7 +297,7 @@ class DecreeAnalyzer(Analyzer):
                 rt0 = DecreeAnalyzer._try_attach_approved(t, ad)
                 if (rt0 is not None): 
                     rt0.referent = ad.register_referent(rt0.referent)
-                    mt = DecreeAnalyzer._check_alias_after(rt0.end_token.next0)
+                    mt = DecreeAnalyzer._check_alias_after(rt0.end_token.next0_)
                     if (mt is not None): 
                         if (aliases is not None): 
                             term = Termin()
@@ -956,12 +343,12 @@ class DecreeAnalyzer(Analyzer):
                         if (isinstance(rtt.referent, DecreeReferent) and ((i + 1) < len(rts)) and isinstance(rts[i + 1].referent, DecreePartReferent)): 
                             rts[i + 1].begin_token = t
                         last_dec_dist = 0
-                    mt = DecreeAnalyzer._check_alias_after(t.next0)
+                    mt = DecreeAnalyzer._check_alias_after(t.next0_)
                     if (mt is not None): 
                         tt = dts[0].begin_token.previous
-                        first_pass2654 = True
+                        first_pass2809 = True
                         while True:
-                            if first_pass2654: first_pass2654 = False
+                            if first_pass2809: first_pass2809 = False
                             else: tt = tt.previous
                             if (not (tt is not None)): break
                             if (tt.is_comma): 
@@ -976,7 +363,7 @@ class DecreeAnalyzer(Analyzer):
                             break
                 continue
             rtli = DecreeAnalyzer._try_attach(dts, base_typ, ad)
-            if (rtli is None): 
+            if (rtli is None or ((len(rtli) == 1 and (len(dts) < 3) and dts[0].value == "РЕГЛАМЕНТ"))): 
                 rt = DecreeAnalyzer._try_attach_approved(t, ad)
                 if (rt is not None): 
                     rtli = list()
@@ -986,7 +373,7 @@ class DecreeAnalyzer(Analyzer):
                     rt = rtli[ii]
                     last_dec_dist = 0
                     rt.referent = ad.register_referent(rt.referent)
-                    mt = DecreeAnalyzer._check_alias_after(rt.end_token.next0)
+                    mt = DecreeAnalyzer._check_alias_after(rt.end_token.next0_)
                     if (mt is not None): 
                         if (aliases is not None): 
                             term = Termin()
@@ -1004,7 +391,7 @@ class DecreeAnalyzer(Analyzer):
                     kit.embed_token(rt)
                     t = rt
                     if ((ii + 1) < len(rtli)): 
-                        if (rt.end_token.next0 == rtli[ii + 1].begin_token): 
+                        if (rt.end_token.next0_ == rtli[ii + 1].begin_token): 
                             rtli[ii + 1].begin_token = rt
             elif (len(dts) == 1 and dts[0].typ == DecreeToken.ItemType.TYP): 
                 if (dts[0].chars.is_capital_upper and not dts[0].is_doubtful): 
@@ -1022,28 +409,28 @@ class DecreeAnalyzer(Analyzer):
                         rt.tag = rt0.referent
         if (len(ad.referents) > 0): 
             t = kit.first_token
-            first_pass2655 = True
+            first_pass2810 = True
             while True:
-                if first_pass2655: first_pass2655 = False
-                else: t = t.next0
+                if first_pass2810: first_pass2810 = False
+                else: t = t.next0_
                 if (not (t is not None)): break
                 dr = (t.get_referent() if isinstance(t.get_referent(), DecreeReferent) else None)
                 if (dr is None): 
                     continue
                 li = None
-                tt = t.next0
+                tt = t.next0_
                 while tt is not None: 
                     if (not tt.is_comma_and): 
                         break
-                    if (tt.next0 is None or not ((isinstance(tt.next0.get_referent(), DecreeReferent)))): 
+                    if (tt.next0_ is None or not ((isinstance(tt.next0_.get_referent(), DecreeReferent)))): 
                         break
                     if (li is None): 
                         li = list()
                         li.append(dr)
-                    dr = (tt.next0.get_referent() if isinstance(tt.next0.get_referent(), DecreeReferent) else None)
+                    dr = (tt.next0_.get_referent() if isinstance(tt.next0_.get_referent(), DecreeReferent) else None)
                     li.append(dr)
-                    tt = tt.next0
-                    tt = tt.next0
+                    tt = tt.next0_
+                    tt = tt.next0_
                 if (li is None): 
                     continue
                 for i in range(len(li) - 1, 0, -1):
@@ -1074,10 +461,10 @@ class DecreeAnalyzer(Analyzer):
         expire_regime = False
         has_start_change = 0
         t = kit.first_token
-        first_pass2656 = True
+        first_pass2811 = True
         while True:
-            if first_pass2656: first_pass2656 = False
-            else: t = t.next0
+            if first_pass2811: first_pass2811 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             dts = None
             dcht = None
@@ -1089,7 +476,7 @@ class DecreeAnalyzer(Analyzer):
                     has_start_change = 3
                     root_change = None
                 elif (dcht.typ == DecreeChangeTokenTyp.SINGLE): 
-                    dcht1 = DecreeChangeToken.try_attach(dcht.end_token.next0, root_change, False, change_stack, False)
+                    dcht1 = DecreeChangeToken.try_attach(dcht.end_token.next0_, root_change, False, change_stack, False)
                     if (dcht1 is not None and dcht1.is_start): 
                         has_start_change = 2
                         if (dcht.decree_tok is not None and dcht.decree is not None): 
@@ -1217,7 +604,7 @@ class DecreeAnalyzer(Analyzer):
                             change_stack.append(dprs[0].owner)
                         change_stack.insert(0, dprs[0])
                     if (len(change_stack) > 0 or dcht.decree is not None): 
-                        root_change = (ad.register_referent(DecreeChangeReferent._new1023(DecreeChangeKind.CONTAINER)) if isinstance(ad.register_referent(DecreeChangeReferent._new1023(DecreeChangeKind.CONTAINER)), DecreeChangeReferent) else None)
+                        root_change = (ad.register_referent(DecreeChangeReferent._new1064(DecreeChangeKind.CONTAINER)) if isinstance(ad.register_referent(DecreeChangeReferent._new1064(DecreeChangeKind.CONTAINER)), DecreeChangeReferent) else None)
                         if (len(change_stack) > 0): 
                             root_change.add_slot(DecreeChangeReferent.ATTR_OWNER, change_stack[0], False, 0)
                         else: 
@@ -1227,8 +614,8 @@ class DecreeAnalyzer(Analyzer):
                             rt.end_token = rt.end_token.previous
                         kit.embed_token(rt)
                         t = rt
-                        if (t.next0 is not None and t.next0.is_char(':')): 
-                            t = t.next0
+                        if (t.next0_ is not None and t.next0_.is_char(':')): 
+                            t = t.next0_
                     continue
                 if (dcht.typ == DecreeChangeTokenTyp.SINGLE and dprs is not None and len(dprs) == 1): 
                     while len(change_stack) > 0:
@@ -1249,7 +636,7 @@ class DecreeAnalyzer(Analyzer):
                     chrt = DecreeChangeToken.attach_referents(dprs[0], dcht)
                     if (chrt is None and expire_regime): 
                         chrt = list()
-                        dcr = DecreeChangeReferent._new1023(DecreeChangeKind.EXPIRE)
+                        dcr = DecreeChangeReferent._new1064(DecreeChangeKind.EXPIRE)
                         chrt.append(ReferentToken(dcr, dcht.begin_token, dcht.end_token))
                 elif (dcht.act_kind == DecreeChangeKind.APPEND): 
                     ee = False
@@ -1270,16 +657,16 @@ class DecreeAnalyzer(Analyzer):
                     chrt = DecreeChangeToken.attach_referents(change_stack[0], dcht)
                 if ((chrt is None and ((expire_regime or dcht.act_kind == DecreeChangeKind.EXPIRE)) and dcht.decree is not None) and dprs is None): 
                     chrt = list()
-                    dcr = DecreeChangeReferent._new1023(DecreeChangeKind.EXPIRE)
+                    dcr = DecreeChangeReferent._new1064(DecreeChangeKind.EXPIRE)
                     dcr.add_slot(DecreeChangeReferent.ATTR_OWNER, dcht.decree, False, 0)
                     chrt.append(ReferentToken(dcr, dcht.begin_token, dcht.end_token))
-                    tt = dcht.end_token.next0
-                    first_pass2657 = True
+                    tt = dcht.end_token.next0_
+                    first_pass2812 = True
                     while True:
-                        if first_pass2657: first_pass2657 = False
-                        else: tt = tt.next0
+                        if first_pass2812: first_pass2812 = False
+                        else: tt = tt.next0_
                         if (not (tt is not None)): break
-                        if (tt.next0 is None): 
+                        if (tt.next0_ is None): 
                             break
                         if (tt.is_char('(')): 
                             br = BracketHelper.try_parse(tt, BracketParseAttr.NO, 100)
@@ -1289,13 +676,13 @@ class DecreeAnalyzer(Analyzer):
                                 continue
                         if (not tt.is_comma_and and not tt.is_char(';')): 
                             break
-                        tt = tt.next0
+                        tt = tt.next0_
                         if (isinstance(tt.get_referent(), DecreeReferent)): 
-                            dcr = DecreeChangeReferent._new1023(DecreeChangeKind.EXPIRE)
+                            dcr = DecreeChangeReferent._new1064(DecreeChangeKind.EXPIRE)
                             dcr.add_slot(DecreeChangeReferent.ATTR_OWNER, tt.get_referent(), False, 0)
                             rt = ReferentToken(dcr, tt, tt)
-                            if (tt.next0 is not None and tt.next0.is_char('(')): 
-                                br = BracketHelper.try_parse(tt.next0, BracketParseAttr.NO, 100)
+                            if (tt.next0_ is not None and tt.next0_.is_char('(')): 
+                                br = BracketHelper.try_parse(tt.next0_, BracketParseAttr.NO, 100)
                                 if (br is not None): 
                                     tt = br.end_token
                                     rt.end_token = tt
@@ -1348,22 +735,22 @@ class DecreeAnalyzer(Analyzer):
                 t = kit.debed_token(t)
                 if (t is None): 
                     break
-            t = t.next0
+            t = t.next0_
     
     @staticmethod
     def _check_alias_after(t : 'Token') -> 'MetaToken':
-        if ((t is not None and t.is_char('<') and t.next0 is not None) and t.next0.next0 is not None and t.next0.next0.is_char('>')): 
-            t = t.next0.next0.next0
-        if (t is None or t.next0 is None or not t.is_char('(')): 
+        if ((t is not None and t.is_char('<') and t.next0_ is not None) and t.next0_.next0_ is not None and t.next0_.next0_.is_char('>')): 
+            t = t.next0_.next0_.next0_
+        if (t is None or t.next0_ is None or not t.is_char('(')): 
             return None
-        t = t.next0
+        t = t.next0_
         if (t.is_value("ДАЛЕЕ", "ДАЛІ")): 
             pass
         else: 
             return None
-        t = t.next0
+        t = t.next0_
         if (t is not None and not t.chars.is_letter): 
-            t = t.next0
+            t = t.next0_
         if (t is None): 
             return None
         t1 = None
@@ -1374,10 +761,10 @@ class DecreeAnalyzer(Analyzer):
             elif (tt.is_char(')')): 
                 t1 = tt.previous
                 break
-            tt = tt.next0
+            tt = tt.next0_
         if (t1 is None): 
             return None
-        return MetaToken(t, t1.next0)
+        return MetaToken(t, t1.next0_)
     
     @staticmethod
     def _try_attach_approved(t : 'Token', ad : 'AnalyzerData') -> 'ReferentToken':
@@ -1391,34 +778,34 @@ class DecreeAnalyzer(Analyzer):
         if (BracketHelper.can_be_start_of_sequence(t, True, False)): 
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
             if (br is not None): 
-                rt0 = DecreeAnalyzer.__try_attach_approved(br.end_token.next0, ad)
+                rt0 = DecreeAnalyzer.__try_attach_approved(br.end_token.next0_, ad)
                 if (rt0 is None): 
                     return None
                 dr = (rt0.referent if isinstance(rt0.referent, DecreeReferent) else None)
                 rt0.begin_token = t
                 nam = MiscHelper.get_text_value_of_meta_token(br, GetTextAttr.KEEPREGISTER)
                 if (dr.typ is None): 
-                    dt = DecreeToken.try_attach(br.begin_token.next0, None, False)
+                    dt = DecreeToken.try_attach(br.begin_token.next0_, None, False)
                     if (dt is not None and dt.typ == DecreeToken.ItemType.TYP): 
                         dr.typ = dt.value
-                        if (dt.end_token.next0 is not None and dt.end_token.next0.is_value("О", None)): 
-                            nam = MiscHelper.get_text_value(dt.end_token.next0, br.end_token, GetTextAttr.KEEPREGISTER)
+                        if (dt.end_token.next0_ is not None and dt.end_token.next0_.is_value("О", None)): 
+                            nam = MiscHelper.get_text_value(dt.end_token.next0_, br.end_token, GetTextAttr.KEEPREGISTER)
                 if (nam is not None): 
                     dr._add_name_str(nam)
                 return rt0
         if (not t.chars.is_cyrillic_letter or t.chars.is_all_lower): 
             return None
         tt = DecreeToken.is_keyword(t, False)
-        if (tt is None or tt.next0 is None): 
+        if (tt is None or tt.next0_ is None): 
             return None
         cou = 0
         alias = None
         aliast0 = None
-        tt = tt.next0
-        first_pass2658 = True
+        tt = tt.next0_
+        first_pass2813 = True
         while True:
-            if first_pass2658: first_pass2658 = False
-            else: tt = tt.next0
+            if first_pass2813: first_pass2813 = False
+            else: tt = tt.next0_
             if (not (tt is not None)): break
             cou += 1
             if ((cou) > 100): 
@@ -1427,7 +814,7 @@ class DecreeAnalyzer(Analyzer):
                 if (tt.is_value("ИСТОЧНИК", None)): 
                     break
             if (((isinstance(tt, NumberToken) and (tt if isinstance(tt, NumberToken) else None).value == 1)) or tt.is_value("ДРУГОЙ", None)): 
-                if (tt.next0 is not None and tt.next0.is_value("СТОРОНА", None)): 
+                if (tt.next0_ is not None and tt.next0_.is_value("СТОРОНА", None)): 
                     return None
             if (tt.whitespaces_before_count > 15): 
                 break
@@ -1449,8 +836,8 @@ class DecreeAnalyzer(Analyzer):
                 dt = DecreeToken.try_attach(t, None, False)
                 if (dt is not None and dt.typ == DecreeToken.ItemType.TYP and (rt0.referent if isinstance(rt0.referent, DecreeReferent) else None).typ is None): 
                     (rt0.referent if isinstance(rt0.referent, DecreeReferent) else None).typ = dt.value
-                    if (dt.end_token.next0 is not None and dt.end_token.next0.is_value("О", "ПРО")): 
-                        nam = MiscHelper.get_text_value(dt.end_token.next0, t1, GetTextAttr.KEEPREGISTER)
+                    if (dt.end_token.next0_ is not None and dt.end_token.next0_.is_value("О", "ПРО")): 
+                        nam = MiscHelper.get_text_value(dt.end_token.next0_, t1, GetTextAttr.KEEPREGISTER)
                 if (nam is not None): 
                     (rt0.referent if isinstance(rt0.referent, DecreeReferent) else None)._add_name_str(nam)
                 rt0.begin_token = t
@@ -1472,24 +859,24 @@ class DecreeAnalyzer(Analyzer):
         from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
-        if (not t.is_char_of("(,") or t.next0 is None): 
+        if (not t.is_char_of("(,") or t.next0_ is None): 
             return None
         t0 = t
-        t = t.next0
+        t = t.next0_
         ok = False
-        first_pass2659 = True
+        first_pass2814 = True
         while True:
-            if first_pass2659: first_pass2659 = False
-            else: t = t.next0
+            if first_pass2814: first_pass2814 = False
+            else: t = t.next0_
             if (not (t is not None)): break
-            if (t.is_comma_and or t.morph.class0.is_preposition): 
+            if (t.is_comma_and or t.morph.class0_.is_preposition): 
                 continue
             if (isinstance(t.get_referent(), GeoReferent) and (t.get_referent() if isinstance(t.get_referent(), GeoReferent) else None).is_city): 
                 continue
             if ((((((((t.is_value("УТВ", None) or t.is_value("УТВЕРЖДАТЬ", "СТВЕРДЖУВАТИ") or t.is_value("УТВЕРДИТЬ", "ЗАТВЕРДИТИ")) or t.is_value("УТВЕРЖДЕННЫЙ", "ЗАТВЕРДЖЕНИЙ") or t.is_value("ЗАТВЕРДЖУВАТИ", None)) or t.is_value("СТВЕРДИТИ", None) or t.is_value("ЗАТВЕРДИТИ", None)) or t.is_value("ПРИНЯТЬ", "ПРИЙНЯТИ") or t.is_value("ПРИНЯТЫЙ", "ПРИЙНЯТИЙ")) or t.is_value("ВВОДИТЬ", "ВВОДИТИ") or t.is_value("ВВЕСТИ", None)) or t.is_value("ВВЕДЕННЫЙ", "ВВЕДЕНИЙ") or t.is_value("ПОДПИСАТЬ", "ПІДПИСАТИ")) or t.is_value("ПОДПИСЫВАТЬ", "ПІДПИСУВАТИ") or t.is_value("ЗАКЛЮЧИТЬ", "УКЛАСТИ")) or t.is_value("ЗАКЛЮЧАТЬ", "УКЛАДАТИ")): 
                 ok = True
-                if (t.next0 is not None and t.next0.is_char('.')): 
-                    t = t.next0
+                if (t.next0_ is not None and t.next0_.is_char('.')): 
+                    t = t.next0_
             elif (t.is_value("ДЕЙСТВИЕ", None) or t.is_value("ДІЯ", None)): 
                 pass
             else: 
@@ -1501,10 +888,10 @@ class DecreeAnalyzer(Analyzer):
         kit = t.kit
         olev = None
         lev = 0
-        inoutarg1027 = RefOutArgWrapper(None)
-        inoutres1028 = Utils.tryGetValue(kit.misc_data, "dovr", inoutarg1027)
-        olev = inoutarg1027.value
-        if (not inoutres1028): 
+        inoutarg1068 = RefOutArgWrapper(None)
+        inoutres1069 = Utils.tryGetValue(kit.misc_data, "dovr", inoutarg1068)
+        olev = inoutarg1068.value
+        if (not inoutres1069): 
             lev = 1
             kit.misc_data["dovr"] = lev
         else: 
@@ -1555,8 +942,8 @@ class DecreeAnalyzer(Analyzer):
                 rt.append(ReferentToken(dr, dts[0].begin_token, dts[len(dts) - 1].end_token))
             if (rt is None): 
                 return None
-            if (t0.is_char('(') and rt[0].end_token.next0 is not None and rt[0].end_token.next0.is_char(')')): 
-                rt[0].end_token = rt[0].end_token.next0
+            if (t0.is_char('(') and rt[0].end_token.next0_ is not None and rt[0].end_token.next0_.is_char(')')): 
+                rt[0].end_token = rt[0].end_token.next0_
             rt[0].begin_token = t0
             return rt[0]
         finally: 
@@ -1621,7 +1008,7 @@ class DecreeAnalyzer(Analyzer):
         t1 = None
         typ = None
         geo = None
-        org = None
+        org0_ = None
         date_ = None
         for i in range(len(dts)):
             if (dts[i].typ == DecreeToken.ItemType.TYP and DecreeToken.get_kind(dts[i].value) == DecreeKind.PUBLISHER): 
@@ -1635,29 +1022,29 @@ class DecreeAnalyzer(Analyzer):
                 date_ = dts[i]
                 t1 = dts[i].end_token
             elif (dts[i].typ == DecreeToken.ItemType.ORG): 
-                org = dts[i].ref
+                org0_ = dts[i].ref
                 t1 = dts[i].end_token
             else: 
                 break
         else: i = len(dts)
         if (typ is None): 
             return None
-        t = dts[i - 1].end_token.next0
+        t = dts[i - 1].end_token.next0_
         if (t is None): 
             return None
         res = list()
         num = None
         t0 = dts[0].begin_token
         if (BracketHelper.can_be_end_of_sequence(t, False, None, False)): 
-            t = t.next0
+            t = t.next0_
             if (BracketHelper.can_be_start_of_sequence(t0.previous, False, False)): 
                 t0 = t0.previous
         pub0 = None
         pub_part0 = None
-        first_pass2660 = True
+        first_pass2815 = True
         while True:
-            if first_pass2660: first_pass2660 = False
-            else: t = t.next0
+            if first_pass2815: first_pass2815 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char_of(",;.") or t.is_and): 
                 continue
@@ -1685,10 +1072,10 @@ class DecreeAnalyzer(Analyzer):
                     break
             pt = PartToken.try_attach(t, None, False, False)
             if (pt is None and t.is_char('(')): 
-                pt = PartToken.try_attach(t.next0, None, False, False)
+                pt = PartToken.try_attach(t.next0_, None, False, False)
                 if (pt is not None): 
-                    if (pt.end_token.next0 is not None and pt.end_token.next0.is_char(')')): 
-                        pt.end_token = pt.end_token.next0
+                    if (pt.end_token.next0_ is not None and pt.end_token.next0_.is_char(')')): 
+                        pt.end_token = pt.end_token.next0_
                     else: 
                         pt = None
             if (pt is not None): 
@@ -1713,14 +1100,14 @@ class DecreeAnalyzer(Analyzer):
                     pub.typ = typ
                     if (geo is not None): 
                         pub.add_slot(DecreeReferent.ATTR_GEO, geo.referent, False, 0)
-                    if (org is not None): 
-                        pub.add_slot(DecreeReferent.ATTR_SOURCE, org.referent, False, 0).tag = org.get_source_text()
+                    if (org0_ is not None): 
+                        pub.add_slot(DecreeReferent.ATTR_SOURCE, org0_.referent, False, 0).tag = org0_.get_source_text()
                     if (date_ is not None): 
                         pub._add_date(date_)
                     pub._add_number(num)
                     res.append(ReferentToken(pub, Utils.ifNotNull(t0, t), pt.begin_token.previous))
                 if (pub_part is None): 
-                    pub_part = DecreePartReferent._new1029(pub)
+                    pub_part = DecreePartReferent._new1070(pub)
                     res.append(ReferentToken(pub_part, pt.begin_token, pt.end_token))
                 pub0 = pub
                 if (len(pt.values) == 1): 
@@ -1731,7 +1118,7 @@ class DecreeAnalyzer(Analyzer):
                 elif (len(pt.values) > 1): 
                     for ii in range(len(pt.values)):
                         if (ii > 0): 
-                            pub_part = DecreePartReferent._new1029(pub)
+                            pub_part = DecreePartReferent._new1070(pub)
                             res.append(ReferentToken(pub_part, pt.values[ii].begin_token, pt.values[ii].end_token))
                         else: 
                             res[len(res) - 1].end_token = pt.values[ii].end_token
@@ -1749,7 +1136,7 @@ class DecreeAnalyzer(Analyzer):
             if (isinstance(t, NumberToken)): 
                 rt = t.kit.process_referent("DATE", t)
                 if (rt is not None): 
-                    date_ = DecreeToken._new791(rt.begin_token, rt.end_token, DecreeToken.ItemType.DATE)
+                    date_ = DecreeToken._new831(rt.begin_token, rt.end_token, DecreeToken.ItemType.DATE)
                     date_.ref = rt
                     pub0 = None
                     pub_part0 = None
@@ -1758,7 +1145,7 @@ class DecreeAnalyzer(Analyzer):
                     t = rt.end_token
                     t1 = t
                     continue
-                if (t.next0 is not None and t.next0.is_char(';')): 
+                if (t.next0_ is not None and t.next0_.is_char(';')): 
                     if (pub_part0 is not None and pub_part0.clause is not None and pub0 is not None): 
                         pub_part = DecreePartReferent()
                         for s in pub_part0.slots: 
@@ -1767,11 +1154,11 @@ class DecreeAnalyzer(Analyzer):
                         pub_part0.clause = str((t if isinstance(t, NumberToken) else None).value)
                         res.append(ReferentToken(pub_part0, t, t))
                         continue
-            if ((isinstance(t, TextToken) and t.chars.is_letter and (t.length_char < 3)) and isinstance(t.next0, NumberToken)): 
-                t = t.next0
+            if ((isinstance(t, TextToken) and t.chars.is_letter and (t.length_char < 3)) and isinstance(t.next0_, NumberToken)): 
+                t = t.next0_
                 continue
-            if ((t.is_char('(') and t.next0 is not None and t.next0.next0 is not None) and t.next0.next0.is_char(')')): 
-                t = t.next0.next0
+            if ((t.is_char('(') and t.next0_ is not None and t.next0_.next0_ is not None) and t.next0_.next0_.is_char(')')): 
+                t = t.next0_.next0_
                 continue
             break
         if ((len(res) == 0 and date_ is not None and num is not None) and t1 is not None): 
@@ -1779,8 +1166,8 @@ class DecreeAnalyzer(Analyzer):
             pub.typ = typ
             if (geo is not None): 
                 pub.add_slot(DecreeReferent.ATTR_GEO, geo.referent, False, 0)
-            if (org is not None): 
-                pub.add_slot(DecreeReferent.ATTR_SOURCE, org.referent, False, 0).tag = org.get_source_text()
+            if (org0_ is not None): 
+                pub.add_slot(DecreeReferent.ATTR_SOURCE, org0_.referent, False, 0).tag = org0_.get_source_text()
             if (date_ is not None): 
                 pub._add_date(date_)
             pub._add_number(num)
@@ -1804,6 +1191,7 @@ class DecreeAnalyzer(Analyzer):
     def _try_attach_parts(parts : typing.List['PartToken'], base_typ : 'DecreeToken', _def_owner : 'Referent') -> typing.List['MetaToken']:
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
+        from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         from pullenti.ner.decree.internal.PartToken import PartToken
         
         from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
@@ -1816,16 +1204,29 @@ class DecreeAnalyzer(Analyzer):
         from pullenti.morph.MorphClass import MorphClass
         if (parts is None or len(parts) == 0): 
             return None
-        tt = parts[len(parts) - 1].end_token.next0
+        tt = parts[len(parts) - 1].end_token.next0_
         if (_def_owner is not None and tt is not None): 
             if (BracketHelper.is_bracket(tt, False)): 
                 br = BracketHelper.try_parse(tt, BracketParseAttr.NO, 100)
-                if (br is not None and br.end_token.next0 is not None): 
-                    tt = br.end_token.next0
+                if (br is not None and br.end_token.next0_ is not None): 
+                    tt = br.end_token.next0_
             if (isinstance(tt.get_referent(), DecreeReferent)): 
                 _def_owner = None
-            elif (tt.is_value("К", None) and tt.next0 is not None and isinstance(tt.next0.get_referent(), DecreeReferent)): 
+            elif (tt.is_value("К", None) and tt.next0_ is not None and isinstance(tt.next0_.get_referent(), DecreeReferent)): 
                 _def_owner = None
+        if ((len(parts) == 1 and parts[0].is_newline_before and parts[0].begin_token.chars.is_letter) and not parts[0].begin_token.chars.is_all_lower): 
+            t1 = parts[0].end_token.next0_
+            br = BracketHelper.try_parse(t1, BracketParseAttr.NO, 100)
+            if (br is not None): 
+                t1 = br.end_token.next0_
+            if (t1 is not None and isinstance(t1.get_referent(), DecreeReferent) and not parts[0].is_newline_after): 
+                pass
+            else: 
+                li = InstrToken1.parse(parts[0].begin_token, True, None, 0, None, False, 0, False)
+                if (li is not None and li.has_verb): 
+                    pass
+                else: 
+                    return None
         this_dec = None
         is_program = False
         is_add_agree = False
@@ -1851,7 +1252,7 @@ class DecreeAnalyzer(Analyzer):
                                 has_clause = True
                         if (not has_clause): 
                             p.typ = PartToken.ItemType.DOCPART
-                        elif ((((p == parts[len(parts) - 1] and p.end_token.next0 is not None and len(p.values) == 1) and isinstance(p.end_token.next0.get_referent(), DecreeReferent) and isinstance(p.begin_token, TextToken)) and (p.begin_token if isinstance(p.begin_token, TextToken) else None).term == "ЧАСТИ" and isinstance(p.end_token, NumberToken)) and p.begin_token.next0 == p.end_token): 
+                        elif ((((p == parts[len(parts) - 1] and p.end_token.next0_ is not None and len(p.values) == 1) and isinstance(p.end_token.next0_.get_referent(), DecreeReferent) and isinstance(p.begin_token, TextToken)) and (p.begin_token if isinstance(p.begin_token, TextToken) else None).term == "ЧАСТИ" and isinstance(p.end_token, NumberToken)) and p.begin_token.next0_ == p.end_token): 
                             p.typ = PartToken.ItemType.DOCPART
         elif (parts[len(parts) - 1].typ == PartToken.ItemType.ADDAGREE): 
             is_add_agree = True
@@ -1874,18 +1275,18 @@ class DecreeAnalyzer(Analyzer):
                 return None
             if (parts[0].is_newline_before and len(parts[0].values) <= 1): 
                 tt1 = parts[0].end_token
-                if (tt1.next0 is None): 
+                if (tt1.next0_ is None): 
                     return None
-                tt1 = tt1.next0
+                tt1 = tt1.next0_
                 if (BracketHelper.can_be_start_of_sequence(tt1, False, False)): 
                     br = BracketHelper.try_parse(tt1, BracketParseAttr.NO, 100)
-                    if (br is not None and br.end_token.next0 is not None): 
-                        tt1 = br.end_token.next0
+                    if (br is not None and br.end_token.next0_ is not None): 
+                        tt1 = br.end_token.next0_
                 if (tt1.is_char(',')): 
                     pass
                 elif (isinstance(tt1.get_referent(), DecreeReferent)): 
                     pass
-                elif (tt1.is_value("К", None) and tt1.next0 is not None and isinstance(tt1.next0.get_referent(), DecreeReferent)): 
+                elif (tt1.is_value("К", None) and tt1.next0_ is not None and isinstance(tt1.next0_.get_referent(), DecreeReferent)): 
                     pass
                 elif (_def_owner is None): 
                     return None
@@ -1910,9 +1311,9 @@ class DecreeAnalyzer(Analyzer):
                 terminators += 1
             i += 1
         i = 0
-        first_pass2661 = True
+        first_pass2816 = True
         while True:
-            if first_pass2661: first_pass2661 = False
+            if first_pass2816: first_pass2816 = False
             else: i += 1
             if (not (i < len(parts))): break
             if (parts[i].typ == PartToken.ItemType.PREFIX): 
@@ -1978,7 +1379,7 @@ class DecreeAnalyzer(Analyzer):
                 for p in li: 
                     nam = PartToken._get_attr_name_by_typ(p.typ)
                     if (nam is not None): 
-                        sl = Slot._new1032(nam, p, 1)
+                        sl = Slot._new1073(nam, p, 1)
                         sl_list.append(sl)
                         if (p.ind < len(p.values)): 
                             sl.value = p.values[p.ind]
@@ -2015,15 +1416,15 @@ class DecreeAnalyzer(Analyzer):
         else: j = 0
         tt = parts[i - 1].end_token
         owner = def_owner
-        te = tt.next0
+        te = tt.next0_
         if ((te is not None and owner is None and te.is_char('(')) and parts[0].typ != PartToken.ItemType.SUBPROGRAM and parts[0].typ != PartToken.ItemType.ADDAGREE): 
             br = BracketHelper.try_parse(te, BracketParseAttr.NO, 100)
             if (br is not None): 
-                if (te.next0.morph.class0.is_adverb): 
+                if (te.next0_.morph.class0_.is_adverb): 
                     pass
-                elif (isinstance(te.next0.get_referent(), DecreeReferent)): 
-                    if (owner is None and te.next0.next0 == br.end_token): 
-                        owner = (te.next0.get_referent() if isinstance(te.next0.get_referent(), DecreeReferent) else None)
+                elif (isinstance(te.next0_.get_referent(), DecreeReferent)): 
+                    if (owner is None and te.next0_.next0_ == br.end_token): 
+                        owner = (te.next0_.get_referent() if isinstance(te.next0_.get_referent(), DecreeReferent) else None)
                         te = br.end_token
                 else: 
                     s = MiscHelper.get_text_value_of_meta_token(br, GetTextAttr.NO)
@@ -2031,9 +1432,9 @@ class DecreeAnalyzer(Analyzer):
                         rt = res[len(res) - 1]
                         (rt.referent if isinstance(rt.referent, DecreePartReferent) else None)._add_name(s)
                         rt.end_token = br.end_token
-                        te = rt.end_token.next0
+                        te = rt.end_token.next0_
         if (te is not None and te.is_char_of(",;")): 
-            te = te.next0
+            te = te.next0_
         if (owner is None and isinstance(te, ReferentToken)): 
             owner = (te.get_referent() if isinstance(te.get_referent(), DecreeReferent) else None)
             if ((owner) is not None): 
@@ -2045,9 +1446,9 @@ class DecreeAnalyzer(Analyzer):
                 if ((owner) is not None): 
                     break
                 j += 1
-        if (te is not None and te.is_value("К", None) and te.next0 is not None): 
-            if (isinstance(te.next0.get_referent(), DecreeReferent)): 
-                te = te.next0
+        if (te is not None and te.is_value("К", None) and te.next0_ is not None): 
+            if (isinstance(te.next0_.get_referent(), DecreeReferent)): 
+                te = te.next0_
                 res[len(res) - 1].end_token = te
                 owner = (te.get_referent() if isinstance(te.get_referent(), DecreeReferent) else None)
             elif (owner is not None and this_dec is not None and this_dec.end_char > te.end_char): 
@@ -2078,7 +1479,7 @@ class DecreeAnalyzer(Analyzer):
                 if ((anafor_ref) is not None): 
                     break
             is_change_word_after = False
-            tt2 = res[len(res) - 1].end_token.next0
+            tt2 = res[len(res) - 1].end_token.next0_
             if (tt2 is not None): 
                 if (((tt2.is_char(':') or tt2.is_value("ДОПОЛНИТЬ", None) or tt2.is_value("СЛОВО", None)) or tt2.is_value("ИСКЛЮЧИТЬ", None) or tt2.is_value("ИЗЛОЖИТЬ", None)) or tt2.is_value("СЧИТАТЬ", None) or tt2.is_value("ПРИЗНАТЬ", None)): 
                     is_change_word_after = True
@@ -2093,7 +1494,7 @@ class DecreeAnalyzer(Analyzer):
             coef_before = 0
             is_over_brr = False
             if (parts[0].begin_token.previous is not None and parts[0].begin_token.previous.is_char('(')): 
-                if (parts[len(parts) - 1].end_token.next0 is not None and parts[len(parts) - 1].end_token.next0.is_char(')')): 
+                if (parts[len(parts) - 1].end_token.next0_ is not None and parts[len(parts) - 1].end_token.next0_.is_char(')')): 
                     if (len(parts) == 1 and parts[0].typ == PartToken.ItemType.APPENDIX): 
                         pass
                     else: 
@@ -2101,9 +1502,9 @@ class DecreeAnalyzer(Analyzer):
                         if (owner is not None and DecreeAnalyzer.__get_decree(parts[0].begin_token.previous.previous) is not None): 
                             owner = None
             tt = parts[0].begin_token.previous
-            first_pass2662 = True
+            first_pass2817 = True
             while True:
-                if first_pass2662: first_pass2662 = False
+                if first_pass2817: first_pass2817 = False
                 else: tt = tt.previous; coef_before += 1
                 if (not (tt is not None)): break
                 if (tt.is_newline_after): 
@@ -2113,7 +1514,9 @@ class DecreeAnalyzer(Analyzer):
                             break
                 if (this_dec is not None and this_dec.has_this_ref): 
                     break
-                if (tt.morph.class0.is_preposition): 
+                if (tt.is_table_control_char): 
+                    break
+                if (tt.morph.class0_.is_preposition): 
                     coef_before -= 1
                     continue
                 if (isinstance(tt, TextToken)): 
@@ -2140,7 +1543,7 @@ class DecreeAnalyzer(Analyzer):
                     else: 
                         break
                 if (cou < 4): 
-                    if (tt.is_value("УГОЛОВНЫЙ", "КРИМІНАЛЬНИЙ") and tt.next0 is not None and tt.next0.is_value("ДЕЛО", "СПРАВА")): 
+                    if (tt.is_value("УГОЛОВНЫЙ", "КРИМІНАЛЬНИЙ") and tt.next0_ is not None and tt.next0_.is_value("ДЕЛО", "СПРАВА")): 
                         ugol_delo = True
                 if (tt.is_char_of(".")): 
                     coef_before += 50
@@ -2202,22 +1605,24 @@ class DecreeAnalyzer(Analyzer):
             at = None
             coef_after = 0
             aloc_typ = None
-            tt0 = parts[len(parts) - 1].end_token.next0
+            tt0 = parts[len(parts) - 1].end_token.next0_
             has_newline = False
             ttt = parts[len(parts) - 1].begin_token
             while ttt.end_char < parts[len(parts) - 1].end_char: 
                 if (ttt.is_newline_after): 
                     has_newline = True
-                ttt = ttt.next0
+                ttt = ttt.next0_
             tt = tt0
-            first_pass2663 = True
+            first_pass2818 = True
             while True:
-                if first_pass2663: first_pass2663 = False
-                else: tt = tt.next0; coef_after += 1
+                if first_pass2818: first_pass2818 = False
+                else: tt = tt.next0_; coef_after += 1
                 if (not (tt is not None)): break
                 if (owner is not None and coef_after > 0): 
                     break
                 if (tt.is_newline_before): 
+                    break
+                if (tt.is_table_control_char): 
                     break
                 if (tt.is_value("СМ", None)): 
                     break
@@ -2227,10 +1632,10 @@ class DecreeAnalyzer(Analyzer):
                     break
                 if (InstrToken._check_entered(tt) is not None): 
                     break
-                if (tt.morph.class0.is_preposition or tt.is_comma_and): 
+                if (tt.morph.class0_.is_preposition or tt.is_comma_and): 
                     coef_after -= 1
                     continue
-                if (tt.morph.class0 == MorphClass.VERB): 
+                if (tt.morph.class0_ == MorphClass.VERB): 
                     break
                 if (BracketHelper.can_be_end_of_sequence(tt, False, None, False)): 
                     break
@@ -2238,9 +1643,9 @@ class DecreeAnalyzer(Analyzer):
                 if (pts is not None): 
                     tt = pts[len(pts) - 1].end_token
                     coef_after -= 1
-                    ttnn = tt.next0
+                    ttnn = tt.next0_
                     if (ttnn is not None and ttnn.is_char('.')): 
-                        ttnn = ttnn.next0
+                        ttnn = ttnn.next0_
                     dit = DecreeToken.try_attach(ttnn, None, False)
                     if (dit is not None and dit.typ == DecreeToken.ItemType.TYP): 
                         loc_typ = dit.value
@@ -2320,7 +1725,7 @@ class DecreeAnalyzer(Analyzer):
             if (this_dec is None and loc_typ is None): 
                 if ((len(parts) == 1 and len(parts[0].values) == 1 and parts[0].typ == PartToken.ItemType.APPENDIX) and parts[0].begin_token.chars.is_capital_upper): 
                     pass
-                elif ((parts[0].begin_token.previous is not None and parts[0].begin_token.previous.is_char('(') and parts[len(parts) - 1].end_token.next0 is not None) and parts[len(parts) - 1].end_token.next0.is_char(')')): 
+                elif ((parts[0].begin_token.previous is not None and parts[0].begin_token.previous.is_char('(') and parts[len(parts) - 1].end_token.next0_ is not None) and parts[len(parts) - 1].end_token.next0_.is_char(')')): 
                     if (parts[0].typ == PartToken.ItemType.PAGE): 
                         return None
                 else: 
@@ -2342,12 +1747,12 @@ class DecreeAnalyzer(Analyzer):
                         r.end_token = this_dec.end_token
         if (len(res) > 0): 
             rt = res[len(res) - 1]
-            tt = rt.end_token.next0
+            tt = rt.end_token.next0_
             if (owner is not None and tt is not None and tt.get_referent() == owner): 
                 rt.end_token = tt
-                tt = tt.next0
+                tt = tt.next0_
             if (tt is not None and ((tt.is_hiphen or tt.is_char(':')))): 
-                tt = tt.next0
+                tt = tt.next0_
             br = BracketHelper.try_parse(tt, (BracketParseAttr.CANBEMANYLINES if is_program else BracketParseAttr.NO), 100)
             if (br is not None): 
                 ok = True
@@ -2355,34 +1760,34 @@ class DecreeAnalyzer(Analyzer):
                     if (parts[0].typ == PartToken.ItemType.SUBPROGRAM): 
                         ok = False
                     else: 
-                        ttt = tt.next0
+                        ttt = tt.next0_
                         while ttt is not None and (ttt.end_char < br.end_char): 
-                            if (ttt == tt.next0 and tt.next0.morph.class0.is_adverb): 
+                            if (ttt == tt.next0_ and tt.next0_.morph.class0_.is_adverb): 
                                 ok = False
                             if (isinstance(ttt.get_referent(), DecreeReferent) or isinstance(ttt.get_referent(), DecreePartReferent)): 
                                 ok = False
                             if (ttt.is_value("РЕДАКЦИЯ", None) and ttt == br.end_token.previous): 
                                 ok = False
-                            ttt = ttt.next0
+                            ttt = ttt.next0_
                 if (ok): 
                     s = MiscHelper.get_text_value_of_meta_token(br, GetTextAttr.NO)
                     if (s is not None): 
                         (rt.referent if isinstance(rt.referent, DecreePartReferent) else None)._add_name(s)
                         rt.end_token = br.end_token
-                        if (isinstance(rt.end_token.next0, ReferentToken) and rt.end_token.next0.get_referent() == owner): 
-                            rt.end_token = rt.end_token.next0
-            elif ((is_program and len(parts[0].values) > 0 and tt.is_table_control_char) and MiscHelper.can_be_start_of_sentence(tt.next0)): 
-                tt1 = tt.next0
+                        if (isinstance(rt.end_token.next0_, ReferentToken) and rt.end_token.next0_.get_referent() == owner): 
+                            rt.end_token = rt.end_token.next0_
+            elif ((is_program and len(parts[0].values) > 0 and tt.is_table_control_char) and MiscHelper.can_be_start_of_sentence(tt.next0_)): 
+                tt1 = tt.next0_
                 while tt1 is not None: 
                     if (tt1.is_table_control_char): 
-                        s = MiscHelper.get_text_value(tt.next0, tt1.previous, GetTextAttr.NO)
+                        s = MiscHelper.get_text_value(tt.next0_, tt1.previous, GetTextAttr.NO)
                         if (s is not None): 
                             (rt.referent if isinstance(rt.referent, DecreePartReferent) else None)._add_name(s)
                             rt.end_token = tt1
                         break
                     elif (tt1.is_newline_before): 
                         break
-                    tt1 = tt1.next0
+                    tt1 = tt1.next0_
             if (this_dec is not None): 
                 if (this_dec.end_char > res[len(res) - 1].end_char): 
                     res[len(res) - 1].end_token = this_dec.end_token
@@ -2390,17 +1795,17 @@ class DecreeAnalyzer(Analyzer):
             for ii in range(len(res)):
                 (res[ii].referent if isinstance(res[ii].referent, DecreePartReferent) else None)._add_high_level_info((owner_paer if ii == 0 else (res[ii - 1].referent if isinstance(res[ii - 1].referent, DecreePartReferent) else None)))
         if (len(res) == 1 and (res[0].referent if isinstance(res[0].referent, DecreePartReferent) else None).name is None): 
-            if ((res[0].begin_token.previous is not None and res[0].begin_token.previous.is_char('(') and res[0].end_token.next0 is not None) and res[0].end_token.next0.is_char(')')): 
+            if ((res[0].begin_token.previous is not None and res[0].begin_token.previous.is_char('(') and res[0].end_token.next0_ is not None) and res[0].end_token.next0_.is_char(')')): 
                 if (BracketHelper.can_be_end_of_sequence(res[0].begin_token.previous.previous, False, None, False)): 
                     tt = res[0].begin_token.previous.previous.previous
                     while tt is not None: 
                         if (tt.is_newline_after): 
                             break
                         if (BracketHelper.can_be_start_of_sequence(tt, False, False)): 
-                            if (tt.next0.chars.is_letter and not tt.next0.chars.is_all_lower): 
+                            if (tt.next0_.chars.is_letter and not tt.next0_.chars.is_all_lower): 
                                 (res[0].referent if isinstance(res[0].referent, DecreePartReferent) else None)._add_name(MiscHelper.get_text_value(tt, res[0].begin_token.previous.previous, GetTextAttr.NO))
                                 res[0].begin_token = tt
-                                res[0].end_token = res[0].end_token.next0
+                                res[0].end_token = res[0].end_token.next0_
                             break
                         tt = tt.previous
         if (is_program): 
@@ -2434,13 +1839,626 @@ class DecreeAnalyzer(Analyzer):
             else: 
                 et = res[len(res) - 1].end_token
             while et.begin_char > res[i].begin_char:
-                if (et.is_char(',') or et.morph.class0.is_conjunction or et.is_hiphen): 
+                if (et.is_char(',') or et.morph.class0_.is_conjunction or et.is_hiphen): 
                     et = et.previous
                 elif (MiscHelper.check_number_prefix(et) is not None): 
                     et = et.previous
                 else: 
                     break
-            res1.append(MetaToken._new785(res[i].begin_token, et, li))
+            res1.append(MetaToken._new825(res[i].begin_token, et, li))
             i = (j - 1)
             i += 1
         return res1
+    
+    @staticmethod
+    def _try_attach(dts : typing.List['DecreeToken'], base_typ : 'DecreeToken', ad : 'AnalyzerData') -> typing.List['ReferentToken']:
+        res = DecreeAnalyzer.__try_attach(dts, base_typ, False, ad)
+        return res
+    
+    @staticmethod
+    def __try_attach(dts : typing.List['DecreeToken'], base_typ : 'DecreeToken', after_decree : bool, ad : 'AnalyzerData') -> typing.List['ReferentToken']:
+        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
+        from pullenti.ner.Referent import Referent
+        from pullenti.ner.decree.DecreeReferent import DecreeReferent
+        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+        from pullenti.ner.ReferentToken import ReferentToken
+        from pullenti.ner.decree.internal.PartToken import PartToken
+        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+        from pullenti.ner._org.OrganizationReferent import OrganizationReferent
+        from pullenti.ner.core.MiscHelper import MiscHelper
+        from pullenti.ner.core.BracketHelper import BracketHelper
+        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
+        from pullenti.ner.date.DateReferent import DateReferent
+        from pullenti.ner.geo.GeoReferent import GeoReferent
+        if (dts is None or (len(dts) < 1)): 
+            return None
+        if (dts[0].typ == DecreeToken.ItemType.EDITION and len(dts) > 1): 
+            del dts[0]
+        if (len(dts) == 1): 
+            if (dts[0].typ == DecreeToken.ItemType.DECREEREF and dts[0].ref is not None): 
+                if (base_typ is not None): 
+                    re = dts[0].ref.get_referent()
+                    dre = (re if isinstance(re, DecreeReferent) else None)
+                    if (dre is None and isinstance(re, DecreePartReferent)): 
+                        dre = (re if isinstance(re, DecreePartReferent) else None).owner
+                    if (dre is not None): 
+                        if (dre.typ == base_typ.value or dre.typ0 == base_typ.value): 
+                            return None
+                reli = list()
+                reli.append(ReferentToken(dts[0].ref.referent, dts[0].begin_token, dts[0].end_token))
+                return reli
+        dec0 = None
+        kodeks = False
+        max_empty = 30
+        t = dts[0].begin_token.previous
+        first_pass2819 = True
+        while True:
+            if first_pass2819: first_pass2819 = False
+            else: t = t.previous
+            if (not (t is not None)): break
+            if (t.is_comma_and): 
+                continue
+            if (t.is_char(')')): 
+                cou = 0
+                t = t.previous
+                while t is not None: 
+                    if (t.is_char('(')): 
+                        break
+                    else: 
+                        cou += 1
+                        if ((cou) > 200): 
+                            break
+                    t = t.previous
+                if (t is not None and t.is_char('(')): 
+                    continue
+                break
+            max_empty -= 1
+            if ((max_empty) < 0): 
+                break
+            if (not t.chars.is_letter): 
+                continue
+            dec0 = (t.get_referent() if isinstance(t.get_referent(), DecreeReferent) else None)
+            if (dec0 is not None): 
+                if (DecreeToken.get_kind(dec0.typ) == DecreeKind.KODEX): 
+                    kodeks = True
+                elif (dec0.kind == DecreeKind.PUBLISHER): 
+                    dec0 = None
+            break
+        dec = DecreeReferent()
+        i = 0
+        morph_ = None
+        is_noun_doubt = False
+        num_tok = None
+        i = 0
+        first_pass2820 = True
+        while True:
+            if first_pass2820: first_pass2820 = False
+            else: i += 1
+            if (not (i < len(dts))): break
+            if (dts[i].typ == DecreeToken.ItemType.TYP): 
+                if (dts[i].value is None): 
+                    break
+                if (dts[i].is_newline_before): 
+                    if (dec.date is not None or dec.number is not None): 
+                        break
+                if (dec.typ is not None): 
+                    if (((dec.typ == "РЕШЕНИЕ" or dec.typ == "РІШЕННЯ")) and dts[i].value == "ПРОТОКОЛ"): 
+                        pass
+                    elif (dec.typ == dts[i].value and dec.typ == "ГОСТ"): 
+                        continue
+                    else: 
+                        break
+                if (DecreeToken.get_kind(dts[i].value) == DecreeKind.KODEX): 
+                    if (i > 0): 
+                        break
+                    if (dts[i].value != "ОСНОВЫ ЗАКОНОДАТЕЛЬСТВА" and dts[i].value != "ОСНОВИ ЗАКОНОДАВСТВА"): 
+                        kodeks = True
+                    else: 
+                        kodeks = False
+                else: 
+                    kodeks = False
+                morph_ = dts[i].morph
+                dec.typ = dts[i].value
+                if (dts[i].full_value is not None): 
+                    dec._add_name_str(dts[i].full_value)
+                is_noun_doubt = dts[i].is_doubtful
+                if (is_noun_doubt and i == 0): 
+                    if (PartToken.is_part_before(dts[i].begin_token)): 
+                        is_noun_doubt = False
+                if (dts[i].ref is not None): 
+                    if (dec.find_slot(DecreeReferent.ATTR_GEO, None, True) is None): 
+                        dec.add_slot(DecreeReferent.ATTR_GEO, dts[i].ref.referent, False, 0)
+                        dec.add_ext_referent(dts[i].ref)
+            elif (dts[i].typ == DecreeToken.ItemType.DATE): 
+                if (dec.date is not None): 
+                    break
+                if (kodeks): 
+                    if (i > 0 and dts[i - 1].typ == DecreeToken.ItemType.NUMBER): 
+                        pass
+                    else: 
+                        break
+                if (i == (len(dts) - 1)): 
+                    if (not dts[i].begin_token.is_value("ОТ", "ВІД")): 
+                        ty = DecreeToken.get_kind(dec.typ)
+                        if ((ty == DecreeKind.KONVENTION or ty == DecreeKind.CONTRACT or dec.typ0 == "ПИСЬМО") or dec.typ0 == "ЛИСТ"): 
+                            pass
+                        else: 
+                            break
+                dec._add_date(dts[i])
+                dec.add_ext_referent(dts[i].ref)
+            elif (dts[i].typ == DecreeToken.ItemType.DATERANGE): 
+                if (dec.kind != DecreeKind.PROGRAM): 
+                    break
+                dec._add_date(dts[i])
+                dec.add_ext_referent(dts[i].ref)
+            elif (dts[i].typ == DecreeToken.ItemType.EDITION): 
+                if (dts[i].is_newline_before and not dts[i].begin_token.chars.is_all_lower and dts[i].begin_token.chars.is_letter): 
+                    break
+            elif (dts[i].typ == DecreeToken.ItemType.NUMBER): 
+                if (kodeks): 
+                    if (((i + 1) < len(dts)) and dts[i + 1].typ == DecreeToken.ItemType.DATE): 
+                        pass
+                    else: 
+                        break
+                num_tok = dts[i]
+                if (dts[i].is_delo): 
+                    if (dec.case_number is not None): 
+                        break
+                    dec.add_slot(DecreeReferent.ATTR_CASENUMBER, dts[i].value, True, 0)
+                    continue
+                if (dec.number is not None): 
+                    if (i > 2 and ((dts[i - 1].typ == DecreeToken.ItemType.OWNER or dts[i - 1].typ == DecreeToken.ItemType.ORG)) and dts[i - 2].typ == DecreeToken.ItemType.NUMBER): 
+                        pass
+                    else: 
+                        break
+                if (dts[i].is_newline_before): 
+                    if (dec.typ is None and dec0 is None): 
+                        break
+                if (LanguageHelper.ends_with(dts[i].value, "ФЗ")): 
+                    dec.typ = "ФЕДЕРАЛЬНЫЙ ЗАКОН"
+                if (LanguageHelper.ends_with(dts[i].value, "ФКЗ")): 
+                    dec.typ = "ФЕДЕРАЛЬНЫЙ КОНСТИТУЦИОННЫЙ ЗАКОН"
+                if (dts[i].value is not None and dts[i].value.upper().startswith("ПР".upper()) and dec.typ is None): 
+                    dec.typ = "ПОРУЧЕНИЕ"
+                if (dec.typ is None): 
+                    if (dec0 is None and not after_decree): 
+                        break
+                dec._add_number(dts[i])
+                if (dts[i].children is not None): 
+                    cou = 0
+                    for s in dec.slots: 
+                        if (s.type_name == DecreeReferent.ATTR_SOURCE): 
+                            cou += 1
+                    if (cou == (len(dts[i].children) + 1)): 
+                        for dd in dts[i].children: 
+                            dec._add_number(dd)
+                        dts[i].children = None
+                continue
+            elif (dts[i].typ == DecreeToken.ItemType.NAME): 
+                if (dec.typ is None and dec.number is None and dec0 is None): 
+                    break
+                if (dec.get_string_value(DecreeReferent.ATTR_NAME) is not None): 
+                    if (kodeks): 
+                        break
+                    if (i > 0 and dts[i - 1].end_token.next0_ == dts[i].begin_token): 
+                        pass
+                    else: 
+                        break
+                nam = dts[i].value
+                if (kodeks and not "КОДЕКС" in nam.upper()): 
+                    nam = ("Кодекс " + nam)
+                dec._add_name_str(nam)
+            elif (dts[i].typ == DecreeToken.ItemType.BETWEEN): 
+                if (dec.kind != DecreeKind.CONTRACT): 
+                    break
+                for chh in dts[i].children: 
+                    dec.add_slot(DecreeReferent.ATTR_SOURCE, chh.ref.referent, False, 0).tag = chh.get_source_text()
+                    if (isinstance(chh.ref.referent, PersonPropertyReferent)): 
+                        dec.add_ext_referent(chh.ref)
+            elif (dts[i].typ == DecreeToken.ItemType.OWNER): 
+                if (kodeks): 
+                    break
+                if (dec.name is not None): 
+                    break
+                if (((i == 0 or i == (len(dts) - 1))) and dts[i].begin_token.chars.is_all_lower): 
+                    break
+                if (i == 0 and len(dts) > 1 and dts[1].typ == DecreeToken.ItemType.TYP): 
+                    break
+                if (dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is not None): 
+                    pass
+                if (dts[i].ref is not None): 
+                    ty = DecreeToken.get_kind(dec.typ)
+                    if (ty == DecreeKind.USTAV): 
+                        if (not ((isinstance(dts[i].ref.referent, OrganizationReferent)))): 
+                            break
+                    dec.add_slot(DecreeReferent.ATTR_SOURCE, dts[i].ref.referent, False, 0).tag = dts[i].get_source_text()
+                    if (isinstance(dts[i].ref.referent, PersonPropertyReferent)): 
+                        dec.add_ext_referent(dts[i].ref)
+                else: 
+                    dec.add_slot(DecreeReferent.ATTR_SOURCE, MiscHelper.convert_first_char_upper_and_other_lower(dts[i].value), False, 0).tag = dts[i].get_source_text()
+            elif (dts[i].typ == DecreeToken.ItemType.ORG): 
+                if (kodeks): 
+                    break
+                if (dec.name is not None): 
+                    break
+                if (dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is not None): 
+                    if (i > 2 and dts[i - 1].typ == DecreeToken.ItemType.NUMBER and ((dts[i - 2].typ == DecreeToken.ItemType.ORG or dts[i - 2].typ == DecreeToken.ItemType.OWNER))): 
+                        pass
+                    elif (dts[i].begin_token.previous is not None and dts[i].begin_token.previous.is_and): 
+                        pass
+                    elif (i > 0 and ((dts[i - 1].typ == DecreeToken.ItemType.OWNER or dts[i - 1].typ == DecreeToken.ItemType.ORG))): 
+                        pass
+                    else: 
+                        break
+                sl = dec.add_slot(DecreeReferent.ATTR_SOURCE, dts[i].ref.referent, False, 0)
+                sl.tag = dts[i].get_source_text()
+                if (((i + 2) < len(dts)) and dts[i + 1].typ == DecreeToken.ItemType.UNKNOWN and (dts[i + 1].whitespaces_before_count < 2)): 
+                    if (dts[i + 2].typ == DecreeToken.ItemType.NUMBER or dts[i + 2].typ == DecreeToken.ItemType.DATE): 
+                        sl.tag = (MetaToken(dts[i].begin_token, dts[i + 1].end_token)).get_source_text()
+                        i += 1
+            elif (dts[i].typ == DecreeToken.ItemType.TERR): 
+                if (dec.find_slot(DecreeReferent.ATTR_GEO, None, True) is not None): 
+                    break
+                if (i > 0 and dts[i - 1].typ == DecreeToken.ItemType.NAME): 
+                    break
+                if (dts[i].is_newline_before and ((i + 1) < len(dts)) and dts[i + 1].typ == DecreeToken.ItemType.DATE): 
+                    break
+                dec.add_slot(DecreeReferent.ATTR_GEO, dts[i].ref.referent, False, 0)
+            elif (dts[i].typ == DecreeToken.ItemType.UNKNOWN): 
+                if (dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is not None): 
+                    break
+                if (kodeks): 
+                    break
+                if ((dec.kind == DecreeKind.CONTRACT and i == 1 and ((i + 1) < len(dts))) and dts[i + 1].typ == DecreeToken.ItemType.NUMBER): 
+                    dec._add_name_str(MiscHelper.get_text_value_of_meta_token(dts[i], GetTextAttr.KEEPREGISTER))
+                    continue
+                if (i == 0): 
+                    if (dec0 is None and not after_decree): 
+                        break
+                    ok1 = False
+                    if (((i + 1) < len(dts)) and dts[i + 1].typ == DecreeToken.ItemType.NUMBER): 
+                        ok1 = True
+                    elif (((i + 2) < len(dts)) and dts[i + 1].typ == DecreeToken.ItemType.TERR and dts[i + 2].typ == DecreeToken.ItemType.NUMBER): 
+                        ok1 = True
+                    if (not ok1): 
+                        break
+                elif (dts[i - 1].typ == DecreeToken.ItemType.OWNER or dts[i - 1].typ == DecreeToken.ItemType.ORG): 
+                    continue
+                if ((i + 1) >= len(dts)): 
+                    break
+                if (dts[0].typ == DecreeToken.ItemType.TYP and dts[0].is_doubtful): 
+                    break
+                if (dts[i + 1].typ == DecreeToken.ItemType.NUMBER or dts[i + 1].typ == DecreeToken.ItemType.DATE or dts[i + 1].typ == DecreeToken.ItemType.NAME): 
+                    dec.add_slot(DecreeReferent.ATTR_SOURCE, dts[i].value, False, 0).tag = dts[i].get_source_text()
+                    continue
+                if (dts[i + 1].typ == DecreeToken.ItemType.TERR): 
+                    dec.add_slot(DecreeReferent.ATTR_SOURCE, dts[i].value, False, 0).tag = dts[i].get_source_text()
+                    continue
+                if (dts[i + 1].typ == DecreeToken.ItemType.OWNER): 
+                    s = MiscHelper.get_text_value(dts[i].begin_token, dts[i + 1].end_token, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
+                    dts[i].end_token = dts[i + 1].end_token
+                    dec.add_slot(DecreeReferent.ATTR_SOURCE, s, False, 0).tag = dts[i].get_source_text()
+                    i += 1
+                    continue
+                break
+            elif (dts[i].typ == DecreeToken.ItemType.MISC): 
+                if (i == 0 or kodeks): 
+                    break
+                if ((i + 1) >= len(dts)): 
+                    if (BracketHelper.can_be_start_of_sequence(dts[i].end_token.next0_, True, False)): 
+                        continue
+                    if (i > 0 and dts[i - 1].typ == DecreeToken.ItemType.NUMBER): 
+                        if (DecreeToken.try_attach_name(dts[i].end_token.next0_, None, True, False) is not None): 
+                            continue
+                elif (dts[i + 1].typ == DecreeToken.ItemType.NAME or dts[i + 1].typ == DecreeToken.ItemType.NUMBER or dts[i + 1].typ == DecreeToken.ItemType.DATE): 
+                    continue
+                break
+            else: 
+                break
+        if (i == 0): 
+            return None
+        if (dec.typ is None or ((dec0 is not None and dts[0].typ != DecreeToken.ItemType.TYP))): 
+            if (dec0 is not None): 
+                if (dec.number is None and dec.date is None and dec.find_slot(DecreeReferent.ATTR_NAME, None, True) is None): 
+                    return None
+                if (dec.typ is None): 
+                    dec.typ = dec0.typ
+                if (dec.find_slot(DecreeReferent.ATTR_GEO, None, True) is None): 
+                    dec.add_slot(DecreeReferent.ATTR_GEO, dec0.get_string_value(DecreeReferent.ATTR_GEO), False, 0)
+                if (dec.find_slot(DecreeReferent.ATTR_DATE, None, True) is None and dec0.date is not None): 
+                    dec.add_slot(DecreeReferent.ATTR_DATE, dec0.get_value(DecreeReferent.ATTR_DATE), False, 0)
+                sl = dec0.find_slot(DecreeReferent.ATTR_SOURCE, None, True)
+                if (dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is None and (sl) is not None): 
+                    dec.add_slot(DecreeReferent.ATTR_SOURCE, sl.value, False, 0).tag = sl.tag
+            elif (base_typ is not None and after_decree): 
+                dec.typ = base_typ.value
+            else: 
+                return None
+        et = dts[i - 1].end_token
+        if ((((not after_decree and len(dts) == i and i == 3) and dts[0].typ == DecreeToken.ItemType.TYP and dts[i - 1].typ == DecreeToken.ItemType.NUMBER) and dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is not None and et.next0_ is not None) and et.next0_.is_comma and dec.number is not None): 
+            tt = et.next0_
+            while tt is not None: 
+                if (not tt.is_char(',')): 
+                    break
+                ddd = DecreeToken.try_attach_list(tt.next0_, dts[0], 10, False)
+                if (ddd is None or (len(ddd) < 2) or ddd[0].typ == DecreeToken.ItemType.TYP): 
+                    break
+                has_num = False
+                for d in ddd: 
+                    if (d.typ == DecreeToken.ItemType.NUMBER): 
+                        has_num = True
+                    elif (d.typ == DecreeToken.ItemType.TYP): 
+                        has_num = False
+                        break
+                if (not has_num): 
+                    break
+                rtt = DecreeAnalyzer.__try_attach(ddd, dts[0], True, ad)
+                if (rtt is None): 
+                    break
+                dec.merge_slots(rtt[0].referent, True)
+                tt = rtt[0].end_token
+                et = tt
+                tt = tt.next0_
+        if (((et.next0_ is not None and et.next0_.is_char('<') and isinstance(et.next0_.next0_, ReferentToken)) and et.next0_.next0_.next0_ is not None and et.next0_.next0_.next0_.is_char('>')) and et.next0_.next0_.get_referent().type_name == "URI"): 
+            et = et.next0_.next0_.next0_
+        num = dec.number
+        if ((dec.find_slot(DecreeReferent.ATTR_NAME, None, True) is None and (i < len(dts)) and dts[i].typ == DecreeToken.ItemType.TYP) and dec.kind == DecreeKind.PROJECT): 
+            dts1 = list(dts)
+            del dts1[0:0+i]
+            rt1 = DecreeAnalyzer.__try_attach(dts1, None, True, ad)
+            if (rt1 is not None): 
+                dec._add_name_str(MiscHelper.get_text_value_of_meta_token(rt1[0], GetTextAttr.KEEPREGISTER))
+                et = rt1[0].end_token
+        if (dec.find_slot(DecreeReferent.ATTR_NAME, None, True) is None and not kodeks and et.next0_ is not None): 
+            dn = DecreeToken.try_attach_name((et.next0_.next0_ if et.next0_.is_char(':') else et.next0_), dec.typ, False, False)
+            if (dn is not None and et.next0_.chars.is_all_lower and num is not None): 
+                if (ad is not None): 
+                    for r in ad.referents: 
+                        if (r.find_slot(DecreeReferent.ATTR_NUMBER, num, True) is not None): 
+                            if (r.can_be_equals(dec, Referent.EqualType.WITHINONETEXT)): 
+                                if (r.find_slot(DecreeReferent.ATTR_NAME, dn.value, True) is None): 
+                                    dn = None
+                                break
+            if (dn is not None): 
+                if (dec.kind == DecreeKind.PROGRAM): 
+                    tt1 = dn.end_token.previous
+                    while tt1 is not None and tt1.begin_char > dn.begin_char: 
+                        if (tt1.is_char(')') and tt1.previous is not None): 
+                            tt1 = tt1.previous
+                        if (isinstance(tt1.get_referent(), DateRangeReferent)): 
+                            dec.add_slot(DecreeReferent.ATTR_DATE, tt1.get_referent(), False, 0)
+                        elif (isinstance(tt1.get_referent(), DateReferent) and tt1.previous is not None and tt1.previous.is_value("ДО", None)): 
+                            rt11 = tt1.kit.process_referent("DATE", tt1.previous)
+                            if (rt11 is not None and isinstance(rt11.referent, DateRangeReferent)): 
+                                dec.add_slot(DecreeReferent.ATTR_DATE, rt11.referent, False, 0)
+                                dec.add_ext_referent(rt11)
+                                tt1 = tt1.previous
+                            else: 
+                                break
+                        elif (isinstance(tt1.get_referent(), DateReferent) and tt1.previous is not None and ((tt1.previous.is_value("НА", None) or tt1.previous.is_value("В", None)))): 
+                            dec.add_slot(DecreeReferent.ATTR_DATE, tt1.get_referent(), False, 0)
+                            tt1 = tt1.previous
+                        else: 
+                            break
+                        tt1 = tt1.previous
+                        first_pass2821 = True
+                        while True:
+                            if first_pass2821: first_pass2821 = False
+                            else: tt1 = (None if tt1 is None else tt1.previous)
+                            if (not (tt1 is not None and tt1.begin_char > dn.begin_char)): break
+                            if (tt1.morph.class0_.is_conjunction or tt1.morph.class0_.is_preposition): 
+                                continue
+                            if (tt1.is_value("ПЕРИОД", "ПЕРІОД") or tt1.is_value("ПЕРСПЕКТИВА", None)): 
+                                continue
+                            if (tt1.is_char('(')): 
+                                continue
+                            break
+                        if (tt1 is not None and tt1.end_char > dn.begin_char): 
+                            if (dn.full_value is None): 
+                                dn.full_value = dn.value
+                            dn.value = MiscHelper.get_text_value(dn.begin_token, tt1, GetTextAttr.KEEPREGISTER)
+                        tt1 = tt1.next0_
+                        tt1 = (None if tt1 is None else tt1.previous)
+                if (dn.full_value is not None): 
+                    dec._add_name_str(dn.full_value)
+                dec._add_name_str(dn.value)
+                et = dn.end_token
+                while True:
+                    dn = DecreeToken.try_attach(et.next0_, None, False)
+                    if (dn is None): 
+                        break
+                    if (dn.typ == DecreeToken.ItemType.DATE and dec.date is None): 
+                        if (dec._add_date(dn)): 
+                            et = dn.end_token
+                            continue
+                    if (dn.typ == DecreeToken.ItemType.NUMBER and dec.number is None): 
+                        dec._add_number(dn)
+                        et = dn.end_token
+                        continue
+                    if (dn.typ == DecreeToken.ItemType.DATERANGE and dec.kind == DecreeKind.PROGRAM): 
+                        if (dec._add_date(dn)): 
+                            et = dn.end_token
+                            continue
+                    break
+        if (dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is None): 
+            tt0 = dts[0].begin_token.previous
+            if ((tt0 is not None and tt0.is_value("В", "У") and tt0.previous is not None) and isinstance(tt0.previous.get_referent(), OrganizationReferent)): 
+                dec.add_slot(DecreeReferent.ATTR_SOURCE, tt0.previous.get_referent(), False, 0)
+        if (not dec._check_correction(is_noun_doubt)): 
+            ty = dec.typ
+            sl = None
+            if (dec0 is not None and dec.date is not None and dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is None): 
+                sl = dec0.find_slot(DecreeReferent.ATTR_SOURCE, None, True)
+            if (sl is not None and (((((ty == "ПОСТАНОВЛЕНИЕ" or ty == "ПОСТАНОВА" or ty == "ОПРЕДЕЛЕНИЕ") or ty == "ВИЗНАЧЕННЯ" or ty == "РЕШЕНИЕ") or ty == "РІШЕННЯ" or ty == "ПРИГОВОР") or ty == "ВИРОК"))): 
+                dec.add_slot(sl.type_name, sl.value, False, 0).tag = sl.tag
+            else: 
+                eq_decs = 0
+                dr0 = None
+                if (num is not None): 
+                    if (ad is not None): 
+                        for r in ad.referents: 
+                            if (r.find_slot(DecreeReferent.ATTR_NUMBER, num, True) is not None): 
+                                if (r.can_be_equals(dec, Referent.EqualType.WITHINONETEXT)): 
+                                    eq_decs += 1
+                                    dr0 = (r if isinstance(r, DecreeReferent) else None)
+                if (eq_decs == 1): 
+                    dec.merge_slots(dr0, True)
+                else: 
+                    ok1 = False
+                    if (num is not None): 
+                        tt = dts[0].begin_token.previous
+                        while tt is not None: 
+                            if (tt.is_char_of(":,") or tt.is_hiphen or BracketHelper.can_be_start_of_sequence(tt, False, False)): 
+                                pass
+                            else: 
+                                if (tt.is_value("ДАЛЕЕ", "ДАЛІ")): 
+                                    ok1 = True
+                                break
+                            tt = tt.previous
+                    if (not ok1): 
+                        return None
+        rt = ReferentToken(dec, dts[0].begin_token, et)
+        if (morph_ is not None): 
+            rt.morph = morph_
+        if (rt.chars.is_all_lower): 
+            if (dec.typ0 == "ДЕКЛАРАЦИЯ" or dec.typ0 == "ДЕКЛАРАЦІЯ"): 
+                return None
+            if (((dec.typ0 == "КОНСТИТУЦИЯ" or dec.typ0 == "КОНСТИТУЦІЯ")) and rt.begin_token == rt.end_token): 
+                ok1 = False
+                cou = 10
+                tt = rt.begin_token.previous
+                while tt is not None and cou > 0: 
+                    if (tt.is_newline_after): 
+                        break
+                    pt = PartToken.try_attach(tt, None, False, False)
+                    if (pt is not None and pt.typ != PartToken.ItemType.PREFIX and pt.end_token.next0_ == rt.begin_token): 
+                        ok1 = True
+                        break
+                    tt = tt.previous; cou -= 1
+                if (not ok1): 
+                    return None
+        if (num is not None and ((num.find('/') > 0 or num.find(',') > 0))): 
+            cou = 0
+            for s in dec.slots: 
+                if (s.type_name == DecreeReferent.ATTR_NUMBER): 
+                    cou += 1
+            if (cou == 1): 
+                owns = 0
+                for s in dec.slots: 
+                    if (s.type_name == DecreeReferent.ATTR_SOURCE): 
+                        owns += 1
+                if (owns > 1): 
+                    nums = Utils.splitString(num, '/', False)
+                    nums2 = Utils.splitString(num, ',', False)
+                    str_num = None
+                    for ii in range(len(dts)):
+                        if (dts[ii].typ == DecreeToken.ItemType.NUMBER): 
+                            str_num = dts[ii].get_source_text()
+                            break
+                    if (len(nums2) == owns and owns > 1): 
+                        dec.add_slot(DecreeReferent.ATTR_NUMBER, None, True, 0)
+                        for n in nums2: 
+                            dec.add_slot(DecreeReferent.ATTR_NUMBER, n.strip(), False, 0).tag = str_num
+                    elif (len(nums) == owns and owns > 1): 
+                        dec.add_slot(DecreeReferent.ATTR_NUMBER, None, True, 0)
+                        for n in nums: 
+                            dec.add_slot(DecreeReferent.ATTR_NUMBER, n.strip(), False, 0).tag = str_num
+        if (BracketHelper.can_be_start_of_sequence(rt.begin_token.previous, False, False) and BracketHelper.can_be_end_of_sequence(rt.end_token.next0_, False, None, False)): 
+            rt.begin_token = rt.begin_token.previous
+            rt.end_token = rt.end_token.next0_
+            dts1 = DecreeToken.try_attach_list(rt.end_token.next0_, None, 10, False)
+            if (dts1 is not None and dts1[0].typ == DecreeToken.ItemType.DATE and dec.find_slot(DecreeReferent.ATTR_DATE, None, True) is None): 
+                dec._add_date(dts1[0])
+                rt.end_token = dts1[0].end_token
+        if (dec.kind == DecreeKind.STANDARD and dec.name is None and BracketHelper.can_be_start_of_sequence(rt.end_token.next0_, True, False)): 
+            br = BracketHelper.try_parse(rt.end_token.next0_, BracketParseAttr.NO, 100)
+            if (br is not None): 
+                dec._add_name_str(MiscHelper.get_text_value_of_meta_token(br, GetTextAttr.KEEPREGISTER))
+                rt.end_token = br.end_token
+        if (dec.kind == DecreeKind.PROGRAM and dec.find_slot(DecreeReferent.ATTR_DATE, None, True) is None): 
+            if (rt.begin_token.previous is not None and rt.begin_token.previous.is_value("ПАСПОРТ", None)): 
+                cou = 0
+                tt = rt.end_token.next0_
+                first_pass2822 = True
+                while True:
+                    if first_pass2822: first_pass2822 = False
+                    else: tt = (None if tt is None else tt.next0_)
+                    if (not (tt is not None and (cou < 1000))): break
+                    if (tt.is_value("СРОК", "ТЕРМІН") and tt.next0_ is not None and tt.next0_.is_value("РЕАЛИЗАЦИЯ", "РЕАЛІЗАЦІЯ")): 
+                        pass
+                    else: 
+                        continue
+                    tt = tt.next0_.next0_
+                    if (tt is None): 
+                        break
+                    dtok = DecreeToken.try_attach(tt, None, False)
+                    if (dtok is not None and dtok.typ == DecreeToken.ItemType.TYP and ((dtok.value == "ПРОГРАММА" or dtok.value == "ПРОГРАМА"))): 
+                        tt = dtok.end_token.next0_
+                    while tt is not None: 
+                        if (tt.is_hiphen or tt.is_table_control_char or tt.is_value("ПРОГРАММА", "ПРОГРАМА")): 
+                            pass
+                        elif (isinstance(tt.get_referent(), DateRangeReferent)): 
+                            dec.add_slot(DecreeReferent.ATTR_DATE, tt.get_referent(), False, 0)
+                            break
+                        else: 
+                            break
+                        tt = tt.next0_
+                    break
+        if (rt.end_token.next0_ is not None and rt.end_token.next0_.is_char('(')): 
+            dt = None
+            tt = rt.end_token.next0_.next0_
+            first_pass2823 = True
+            while True:
+                if first_pass2823: first_pass2823 = False
+                else: tt = tt.next0_
+                if (not (tt is not None)): break
+                r = tt.get_referent()
+                if (isinstance(r, GeoReferent)): 
+                    continue
+                if (isinstance(r, DateReferent)): 
+                    dt = (r if isinstance(r, DateReferent) else None)
+                    continue
+                if (tt.morph.class0_.is_preposition): 
+                    continue
+                if (tt.morph.class0_.is_verb): 
+                    continue
+                if (tt.is_char(')') and dt is not None): 
+                    dec.add_slot(DecreeReferent.ATTR_DATE, dt, False, 0)
+                    rt.end_token = tt
+                break
+        rt_li = list()
+        rt_li.append(rt)
+        if (num_tok is not None and num_tok.children is not None): 
+            end = rt.end_token
+            rt.end_token = num_tok.children[0].begin_token.previous
+            if (rt.end_token.is_comma_and): 
+                rt.end_token = rt.end_token.previous
+            for ii in range(len(num_tok.children)):
+                dr1 = DecreeReferent()
+                for s in rt.referent.slots: 
+                    if (s.type_name == DecreeReferent.ATTR_NUMBER): 
+                        dr1.add_slot(s.type_name, num_tok.children[ii].value, False, 0).tag = num_tok.children[ii].get_source_text()
+                    else: 
+                        ss = dr1.add_slot(s.type_name, s.value, False, 0)
+                        if (ss is not None): 
+                            ss.tag = s.tag
+                rt1 = ReferentToken(dr1, num_tok.children[ii].begin_token, num_tok.children[ii].end_token)
+                if (ii == (len(num_tok.children) - 1)): 
+                    rt1.end_token = end
+                rt_li.append(rt1)
+        if ((len(dts) == 2 and dts[0].typ == DecreeToken.ItemType.TYP and dts[0].typ_kind == DecreeKind.STANDARD) and dts[1].typ == DecreeToken.ItemType.NUMBER): 
+            ttt = dts[1].end_token.next0_
+            while ttt is not None: 
+                if (not ttt.is_comma_and): 
+                    break
+                nu = DecreeToken.try_attach(ttt.next0_, dts[0], False)
+                if (nu is None or nu.typ != DecreeToken.ItemType.NUMBER): 
+                    break
+                dr1 = DecreeReferent._new1077(dec.typ)
+                dr1._add_number(nu)
+                rt_li.append(ReferentToken(dr1, ttt.next0_, nu.end_token))
+                if (not ttt.is_comma): 
+                    break
+                ttt = nu.end_token
+                ttt = ttt.next0_
+        return rt_li

@@ -47,11 +47,11 @@ class InstrumentReferent(InstrumentBlockReferent):
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         res = Utils.newStringIO(None)
-        str0 = self.get_string_value(InstrumentReferent.ATTR_APPENDIX)
-        if ((str0) is not None): 
+        str0_ = self.get_string_value(InstrumentReferent.ATTR_APPENDIX)
+        if ((str0_) is not None): 
             strs = self.get_string_values(InstrumentReferent.ATTR_APPENDIX)
             if (len(strs) == 1): 
-                print("Приложение{0}{1}; ".format(("" if len(str0) == 0 else " "), str0), end="", file=res, flush=True)
+                print("Приложение{0}{1}; ".format(("" if len(str0_) == 0 else " "), str0_), end="", file=res, flush=True)
             else: 
                 print("Приложения ", end="", file=res)
                 for i in range(len(strs)):
@@ -59,9 +59,9 @@ class InstrumentReferent(InstrumentBlockReferent):
                         print(",", end="", file=res)
                     print(strs[i], end="", file=res)
                 print("; ", end="", file=res)
-        str0 = self.get_string_value(InstrumentReferent.ATTR_PART)
-        if ((str0) is not None): 
-            print("Часть {0}; ".format(str0), end="", file=res, flush=True)
+        str0_ = self.get_string_value(InstrumentReferent.ATTR_PART)
+        if ((str0_) is not None): 
+            print("Часть {0}; ".format(str0_), end="", file=res, flush=True)
         if (self.typ is not None): 
             print(MiscHelper.convert_first_char_upper_and_other_lower(self.typ), end="", file=res)
         else: 
@@ -76,14 +76,14 @@ class InstrumentReferent(InstrumentBlockReferent):
         dt = self.get_string_value(InstrumentReferent.ATTR_DATE)
         if (dt is not None): 
             print(" от {0}".format(dt), end="", file=res, flush=True)
-        str0 = self.get_string_value(InstrumentBlockReferent.ATTR_NAME)
-        if ((str0) is not None): 
-            if (len(str0) > 100): 
-                str0 = (str0[0 : 100] + "...")
-            print(" \"{0}\"".format(str0), end="", file=res, flush=True)
-        str0 = self.get_string_value(InstrumentReferent.ATTR_GEO)
-        if ((str0) is not None): 
-            print(" ({0})".format(str0), end="", file=res, flush=True)
+        str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_NAME)
+        if ((str0_) is not None): 
+            if (len(str0_) > 100): 
+                str0_ = (str0_[0 : 100] + "...")
+            print(" \"{0}\"".format(str0_), end="", file=res, flush=True)
+        str0_ = self.get_string_value(InstrumentReferent.ATTR_GEO)
+        if ((str0_) is not None): 
+            print(" ({0})".format(str0_), end="", file=res, flush=True)
         return Utils.toStringStringIO(res).strip()
     
     @property

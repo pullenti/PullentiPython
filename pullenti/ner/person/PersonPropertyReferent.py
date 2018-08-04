@@ -302,7 +302,7 @@ class PersonPropertyReferent(Referent):
 
     
     @staticmethod
-    def _new2064(_arg1 : str) -> 'PersonPropertyReferent':
+    def _new2217(_arg1 : str) -> 'PersonPropertyReferent':
         res = PersonPropertyReferent()
         res.name = _arg1
         return res

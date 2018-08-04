@@ -49,12 +49,12 @@ class Token:
         return value
     
     @property
-    def next0(self) -> 'Token':
+    def next0_(self) -> 'Token':
         """ Следующий токен """
         return self._m_next
     
-    @next0.setter
-    def next0(self, value) -> 'Token':
+    @next0_.setter
+    def next0_(self, value) -> 'Token':
         self._m_next = value
         if (value is not None): 
             value._m_previous = self
@@ -225,11 +225,11 @@ class Token:
     @property
     def whitespaces_after_count(self) -> int:
         """ Количество пробелов перед, переход на новую строку = 10, табуляция = 5 """
-        if (self.next0 is None): 
+        if (self.next0_ is None): 
             return 100
-        if ((self.end_char + 1) == self.next0.begin_char): 
+        if ((self.end_char + 1) == self.next0_.begin_char): 
             return 0
-        return self.__calc_whitespaces(self.end_char + 1, self.next0.begin_char - 1)
+        return self.__calc_whitespaces(self.end_char + 1, self.next0_.begin_char - 1)
     
     def __calc_whitespaces(self, p0 : int, p1 : int) -> int:
         if ((p0 < 0) or p0 > p1 or p1 >= len(self.kit.sofa.text)): 
@@ -270,7 +270,7 @@ class Token:
     def is_and(self) -> bool:
         """ Это соединительный союз И (на всех языках) """
         from pullenti.ner.TextToken import TextToken
-        if (not self.morph.class0.is_conjunction): 
+        if (not self.morph.class0_.is_conjunction): 
             if (self.length_char == 1 and self.is_char('&')): 
                 return True
             return False
@@ -289,7 +289,7 @@ class Token:
     def is_or(self) -> bool:
         """ Это соединительный союз ИЛИ (на всех языках) """
         from pullenti.ner.TextToken import TextToken
-        if (not self.morph.class0.is_conjunction): 
+        if (not self.morph.class0_.is_conjunction): 
             return False
         tt = (self if isinstance(self, TextToken) else None)
         if (tt is None): 
@@ -379,10 +379,10 @@ class Token:
         if (isinstance(rt, ReferentToken) and (rt if isinstance(rt, ReferentToken) else None).referent is not None): 
             res.append((rt if isinstance(rt, ReferentToken) else None).referent)
         t = rt.begin_token
-        first_pass2921 = True
+        first_pass3089 = True
         while True:
-            if first_pass2921: first_pass2921 = False
-            else: t = t.next0
+            if first_pass3089: first_pass3089 = False
+            else: t = t.next0_
             if (not (t is not None and t.end_char <= self.end_char)): break
             li = t.get_referents()
             if (li is None): 
@@ -406,12 +406,12 @@ class Token:
         """ Получить чистый фрагмент исходного текста
         
         """
-        len0 = (self.end_char + 1) - self.begin_char
-        if ((len0 < 1) or (self.begin_char < 0)): 
+        len0_ = (self.end_char + 1) - self.begin_char
+        if ((len0_ < 1) or (self.begin_char < 0)): 
             return None
-        if ((self.begin_char + len0) > len(self.kit.sofa.text)): 
+        if ((self.begin_char + len0_) > len(self.kit.sofa.text)): 
             return None
-        return self.kit.sofa.text[self.begin_char : (self.begin_char) + (len0)]
+        return self.kit.sofa.text[self.begin_char : (self.begin_char) + (len0_)]
     
     def get_morph_class_in_dictionary(self) -> 'MorphClass':
         """ Проверка, что это текстовый токен и есть в словаре соотв. тип
@@ -424,11 +424,11 @@ class Token:
         from pullenti.morph.MorphWordForm import MorphWordForm
         tt = (self if isinstance(self, TextToken) else None)
         if (tt is None): 
-            return self.morph.class0
+            return self.morph.class0_
         res = MorphClass()
         for wf in tt.morph.items: 
             if (isinstance(wf, MorphWordForm) and (wf if isinstance(wf, MorphWordForm) else None).is_in_dictionary): 
-                res |= wf.class0
+                res |= wf.class0_
         return res
     
     def _serialize(self, stream : io.IOBase) -> None:
@@ -445,6 +445,6 @@ class Token:
         self.begin_char = SerializerHelper.deserialize_int(stream)
         self.end_char = SerializerHelper.deserialize_int(stream)
         self.__m_attrs = SerializerHelper.deserialize_int(stream)
-        self.chars = CharsInfo._new2508(SerializerHelper.deserialize_int(stream))
+        self.chars = CharsInfo._new2661(SerializerHelper.deserialize_int(stream))
         self.__m_morph = MorphCollection()
         self.__m_morph._deserialize(stream)

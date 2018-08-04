@@ -9,7 +9,7 @@ from enum import IntEnum
 
 class PhoneKind(IntEnum):
     UNDEFINED = 0
-    HOME = 1
-    MOBILE = 2
-    WORK = 3
-    FAX = 4
+    HOME = 0 + 1
+    MOBILE = (0 + 1) + 1
+    WORK = ((0 + 1) + 1) + 1
+    FAX = (((0 + 1) + 1) + 1) + 1

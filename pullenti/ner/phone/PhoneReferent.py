@@ -90,11 +90,11 @@ class PhoneReferent(Referent):
     @property
     def kind(self) -> 'PhoneKind':
         """ Тип телефона """
-        str0 = self.get_string_value(PhoneReferent.ATTR_KIND)
-        if (str0 is None): 
+        str0_ = self.get_string_value(PhoneReferent.ATTR_KIND)
+        if (str0_ is None): 
             return PhoneKind.UNDEFINED
         try: 
-            return Utils.valToEnum(str0, PhoneKind)
+            return Utils.valToEnum(str0_, PhoneKind)
         except Exception as ex: 
             return PhoneKind.UNDEFINED
     

@@ -18,7 +18,7 @@ class DerivateWord:
         from pullenti.morph.ExplanWordAttr import ExplanWordAttr
         self.group = None
         self.spelling = None
-        self.class0 = None
+        self.class0_ = None
         self.aspect = MorphAspect.UNDEFINED
         self.voice = MorphVoice.UNDEFINED
         self.tense = MorphTense.UNDEFINED
@@ -32,8 +32,8 @@ class DerivateWord:
     def __str__(self) -> str:
         tmp = Utils.newStringIO(None)
         print(self.spelling, end="", file=tmp)
-        if (self.class0 is not None and not self.class0.is_undefined): 
-            print(", {0}".format(str(self.class0)), end="", file=tmp, flush=True)
+        if (self.class0_ is not None and not self.class0_.is_undefined): 
+            print(", {0}".format(str(self.class0_)), end="", file=tmp, flush=True)
         if (self.aspect != MorphAspect.UNDEFINED): 
             print(", {0}".format(("соверш." if self.aspect == MorphAspect.PERFECTIVE else "несоверш.")), end="", file=tmp, flush=True)
         if (self.voice != MorphVoice.UNDEFINED): 
@@ -55,7 +55,7 @@ class DerivateWord:
         res = DerivateWord(_arg1)
         res.spelling = _arg2
         res.lang = _arg3
-        res.class0 = _arg4
+        res.class0_ = _arg4
         res.aspect = _arg5
         res.reflexive = _arg6
         res.tense = _arg7

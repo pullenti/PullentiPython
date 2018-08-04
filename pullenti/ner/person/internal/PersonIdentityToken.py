@@ -83,7 +83,7 @@ class PersonIdentityToken(MetaToken):
             return None
         if (pit.lastname is not None and ((pit.lastname.is_in_dictionary or pit.lastname.is_lastname_has_std_tail))): 
             p = PersonReferent()
-            p.add_slot(PersonReferent.ATTR_LASTNAME, pit.lastname.vars0[0].value, False, 0)
+            p.add_slot(PersonReferent.ATTR_LASTNAME, pit.lastname.vars0_[0].value, False, 0)
             return p
         return None
     
@@ -103,13 +103,13 @@ class PersonIdentityToken(MetaToken):
             if (isinstance(p.referent, PersonReferent)): 
                 p00 = None
                 if (pit.firstname is not None): 
-                    for v in pit.firstname.vars0: 
+                    for v in pit.firstname.vars0_: 
                         if (p.referent.find_slot(PersonReferent.ATTR_FIRSTNAME, v.value, True) is not None): 
                             p00 = (p.referent if isinstance(p.referent, PersonReferent) else None)
                             fi = True
                             break
                 if (pit.lastname is not None): 
-                    for v in pit.lastname.vars0: 
+                    for v in pit.lastname.vars0_: 
                         if (p.referent.find_slot(PersonReferent.ATTR_LASTNAME, v.value, True) is not None): 
                             p00 = (p.referent if isinstance(p.referent, PersonReferent) else None)
                             sur = True
@@ -145,10 +145,10 @@ class PersonIdentityToken(MetaToken):
         cou = 0
         for p in ontos.items: 
             if (p.referent is not None): 
-                for v in pit0.firstname.vars0: 
+                for v in pit0.firstname.vars0_: 
                     if (p.referent.find_slot(PersonReferent.ATTR_FIRSTNAME, v.value, True) is None): 
                         continue
-                    if (p.referent.find_slot(PersonReferent.ATTR_MIDDLENAME, pit1.middlename.vars0[0].value, True) is None): 
+                    if (p.referent.find_slot(PersonReferent.ATTR_MIDDLENAME, pit1.middlename.vars0_[0].value, True) is None): 
                         continue
                     p0 = (p.referent if isinstance(p.referent, PersonReferent) else None)
                     cou += 1
@@ -217,54 +217,54 @@ class PersonIdentityToken(MetaToken):
                     elif (inf.gender == MorphGender.FEMINIE): 
                         if (pers.is_male): 
                             continue
-                    inf0 = MorphBaseInfo._new2152(inf.case, inf.gender)
+                    inf0 = MorphBaseInfo._new2305(inf.case, inf.gender)
                     if (not ot.morph.case.is_undefined and inf0.case == MorphCase.ALL_CASES and ot.begin_token == ot.end_token): 
                         inf0.case = ot.morph.case
                     if (pers.is_male): 
                         inf0.gender = MorphGender.MASCULINE
                     elif (pers.is_female): 
                         inf0.gender = MorphGender.FEMINIE
-                    vars0 = list()
+                    vars0_ = list()
                     if (ind > 1): 
                         pit = PersonIdentityToken.__try_attachiisurname(pits, ind - 2, inf0)
                         if ((pit) is not None): 
-                            vars0.append(pit)
+                            vars0_.append(pit)
                         pit = PersonIdentityToken.__try_attach_name_secname_surname(pits, ind - 2, inf0, False)
                         if ((pit) is not None): 
-                            vars0.append(pit)
+                            vars0_.append(pit)
                     if (ind > 0): 
                         pit = PersonIdentityToken.__try_attachiisurname(pits, ind - 1, inf0)
                         if ((pit) is not None): 
-                            vars0.append(pit)
+                            vars0_.append(pit)
                         pit = PersonIdentityToken.__try_attach_name_surname(pits, ind - 1, inf0, False, is_attr_before)
                         if ((pit) is not None): 
-                            vars0.append(pit)
+                            vars0_.append(pit)
                     if ((ind + 2) < len(pits)): 
                         pit = PersonIdentityToken.__try_attach_surnameii(pits, ind, inf0)
                         if ((pit) is not None): 
-                            vars0.append(pit)
+                            vars0_.append(pit)
                         pit = PersonIdentityToken.__try_attach_surname_name_secname(pits, ind, inf0, False, False)
                         if ((pit) is not None): 
-                            vars0.append(pit)
+                            vars0_.append(pit)
                     if ((ind + 1) < len(pits)): 
                         pit = PersonIdentityToken.__try_attach_surname_name(pits, ind, inf0, False)
                         if ((pit) is not None): 
                             pit0 = None
-                            for v in vars0: 
+                            for v in vars0_: 
                                 if (v.typ == FioTemplateType.SURNAMENAMESECNAME): 
                                     pit0 = v
                                     break
                             if (pit0 is None or (pit0.coef < pit.coef)): 
-                                vars0.append(pit)
+                                vars0_.append(pit)
                     pit = PersonIdentityToken.__try_attach_asian(pits, ind, inf0, 3, False)
                     if ((pit) is not None): 
-                        vars0.append(pit)
+                        vars0_.append(pit)
                     else: 
                         pit = PersonIdentityToken.__try_attach_asian(pits, ind, inf0, 2, False)
                         if ((pit) is not None): 
-                            vars0.append(pit)
+                            vars0_.append(pit)
                     pit = None
-                    for v in vars0: 
+                    for v in vars0_: 
                         if (v.coef < 0): 
                             continue
                         p = PersonReferent()
@@ -327,7 +327,7 @@ class PersonIdentityToken(MetaToken):
         pit = None
         if (len(pits) == 3): 
             if (pits[0].typ == PersonItemToken.ItemType.VALUE and pits[1].typ == PersonItemToken.ItemType.INITIAL and pits[2].typ == PersonItemToken.ItemType.VALUE): 
-                pit = PersonIdentityToken._new2153(pits[0].begin_token, pits[2].end_token, FioTemplateType.NAMEISURNAME)
+                pit = PersonIdentityToken._new2306(pits[0].begin_token, pits[2].end_token, FioTemplateType.NAMEISURNAME)
                 PersonIdentityToken.manage_firstname(pit, pits[0], None)
                 PersonIdentityToken.manage_lastname(pit, pits[2], None)
                 PersonIdentityToken.__manage_middlename(pit, pits[1], None)
@@ -339,7 +339,7 @@ class PersonIdentityToken(MetaToken):
                 elif (pits[0].firstname is not None and ((pits[0].firstname.is_lastname_has_std_tail or pits[0].firstname.is_in_dictionary))): 
                     ok = True
                 if (ok): 
-                    pit = PersonIdentityToken._new2153(pits[0].begin_token, pits[2].end_token, FioTemplateType.SURNAMENAMESECNAME)
+                    pit = PersonIdentityToken._new2306(pits[0].begin_token, pits[2].end_token, FioTemplateType.SURNAMENAMESECNAME)
                     PersonIdentityToken.manage_firstname(pit, pits[1], None)
                     PersonIdentityToken.manage_lastname(pit, pits[0], None)
                     PersonIdentityToken.__manage_middlename(pit, pits[2], None)
@@ -353,7 +353,7 @@ class PersonIdentityToken(MetaToken):
                     sur = pits[i ^ 1]
                     break
             if (nam is not None): 
-                pit = PersonIdentityToken._new2153(pits[0].begin_token, pits[1].end_token, (FioTemplateType.NAMESURNAME if nam == pits[0] else FioTemplateType.SURNAMENAME))
+                pit = PersonIdentityToken._new2306(pits[0].begin_token, pits[1].end_token, (FioTemplateType.NAMESURNAME if nam == pits[0] else FioTemplateType.SURNAMENAME))
                 PersonIdentityToken.manage_firstname(pit, nam, None)
                 PersonIdentityToken.manage_lastname(pit, sur, None)
                 pit.coef = 2
@@ -433,17 +433,17 @@ class PersonIdentityToken(MetaToken):
             while tt != r.end_token: 
                 if (tt.is_newline_after): 
                     r.coef -= 1
-                tt = tt.next0
+                tt = tt.next0_
             ttt = r.begin_token.previous
-            if (ttt is not None and ttt.morph.class0 == MorphClass.VERB): 
-                tte = r.end_token.next0
+            if (ttt is not None and ttt.morph.class0_ == MorphClass.VERB): 
+                tte = r.end_token.next0_
                 if (tte is None or tte.is_char('.') or tte.is_newline_before): 
                     pass
                 else: 
                     continue
                 r.coef += 1
             if (r.coef >= 0 and ind == 0 and r.end_token == pits[len(pits) - 1].end_token): 
-                r.coef += PersonIdentityToken.__calc_coef_after(pits[len(pits) - 1].end_token.next0)
+                r.coef += PersonIdentityToken.__calc_coef_after(pits[len(pits) - 1].end_token.next0_)
         if (ty != FioTemplateType.UNDEFINED and ind == 0): 
             for r in res: 
                 if (r.typ == ty): 
@@ -482,7 +482,7 @@ class PersonIdentityToken(MetaToken):
                 if (res.morph.case.is_undefined or res.morph.case.is_nominative): 
                     if (not pit.lastname.is_in_dictionary and not pit.lastname.term in res.lastname.values): 
                         if (inf.case.is_nominative or inf.case.is_undefined): 
-                            if (pit.lastname.morph.class0.is_adjective and inf.gender == MorphGender.FEMINIE): 
+                            if (pit.lastname.morph.class0_.is_adjective and inf.gender == MorphGender.FEMINIE): 
                                 pass
                             else: 
                                 res.lastname.add(pit.lastname.term, None, pit.morph.gender, False)
@@ -549,7 +549,7 @@ class PersonIdentityToken(MetaToken):
                 res.coef -= 1
             if (((ind + 1) < len(pits)) and ((not pits[ind + 1].is_in_dictionary or pits[ind + 1].typ == PersonItemToken.ItemType.INITIAL or pits[ind + 1].firstname is not None))): 
                 res.coef -= 1
-        res.morph = PersonIdentityToken.__accord_morph(inf, pits[ind].lastname, None, None, pits[ind].end_token.next0)
+        res.morph = PersonIdentityToken.__accord_morph(inf, pits[ind].lastname, None, None, pits[ind].end_token.next0_)
         PersonIdentityToken.manage_lastname(res, pits[ind], inf)
         return res
     
@@ -572,7 +572,7 @@ class PersonIdentityToken(MetaToken):
                         return None
                     if (pits[ind + 1].is_newline_after): 
                         pass
-                    elif (pits[ind + 1].end_token.next0 is not None and pits[ind + 1].end_token.next0.is_char_of(",.)")): 
+                    elif (pits[ind + 1].end_token.next0_ is not None and pits[ind + 1].end_token.next0_.is_char_of(",.)")): 
                         pass
                     else: 
                         return None
@@ -582,9 +582,9 @@ class PersonIdentityToken(MetaToken):
             return None
         if (PersonIdentityToken.__is_both_surnames(pits[ind], pits[ind + 1])): 
             return None
-        res = PersonIdentityToken._new2153(pits[ind].begin_token, pits[ind + 1].end_token, FioTemplateType.NAMESURNAME)
+        res = PersonIdentityToken._new2306(pits[ind].begin_token, pits[ind + 1].end_token, FioTemplateType.NAMESURNAME)
         res.coef -= ind
-        res.morph = PersonIdentityToken.__accord_morph(inf, pits[ind + 1].lastname, pits[ind].firstname, None, pits[ind + 1].end_token.next0)
+        res.morph = PersonIdentityToken.__accord_morph(inf, pits[ind + 1].lastname, pits[ind].firstname, None, pits[ind + 1].end_token.next0_)
         if (res.morph.gender == MorphGender.MASCULINE or res.morph.gender == MorphGender.FEMINIE): 
             if (pits[ind + 1].lastname is not None and not pits[ind + 1].lastname.morph.case.is_undefined): 
                 if ((pits[ind].lastname is not None and pits[ind].lastname.is_lastname_has_std_tail and pits[ind + 1].firstname is not None) and pits[ind + 1].firstname.is_in_dictionary): 
@@ -598,7 +598,7 @@ class PersonIdentityToken(MetaToken):
             res.coef += 1
         if (pits[ind].begin_token.get_morph_class_in_dictionary().is_verb): 
             res.coef -= 1
-        if (pits[ind].firstname is not None and ((pits[ind + 1].is_newline_after or ((pits[ind + 1].end_token.next0 is not None and ((pits[ind + 1].end_token.next0.is_char_of(",."))))))) and not pits[ind + 1].is_newline_before): 
+        if (pits[ind].firstname is not None and ((pits[ind + 1].is_newline_after or ((pits[ind + 1].end_token.next0_ is not None and ((pits[ind + 1].end_token.next0_.is_char_of(",."))))))) and not pits[ind + 1].is_newline_before): 
             if (pits[ind + 1].firstname is None and pits[ind + 1].middlename is None): 
                 res.coef += 1
             elif (pits[ind + 1].chars.is_latin_letter and (ind + 2) == len(pits)): 
@@ -613,7 +613,7 @@ class PersonIdentityToken(MetaToken):
                     if (pits[ind + 1].lastname is not None and ((pits[ind + 1].lastname.is_in_dictionary or pits[ind + 1].lastname.is_in_ontology))): 
                         pass
                     else: 
-                        for v in pits[ind + 1].middlename.vars0: 
+                        for v in pits[ind + 1].middlename.vars0_: 
                             if (((v.gender & res.morph.gender)) != MorphGender.UNDEFINED): 
                                 res.coef -= 1
                                 break
@@ -631,7 +631,7 @@ class PersonIdentityToken(MetaToken):
                 res.coef -= 2
                 if (pits[ind + 1].is_newline_after): 
                     res.coef += 1
-                elif (pits[ind + 1].end_token.next0 is not None and pits[ind + 1].end_token.next0.is_char_of(".,:")): 
+                elif (pits[ind + 1].end_token.next0_ is not None and pits[ind + 1].end_token.next0_.is_char_of(".,:")): 
                     res.coef += 1
                 if (pits[ind].is_in_dictionary and pits[ind].firstname is None): 
                     res.coef -= 1
@@ -652,12 +652,12 @@ class PersonIdentityToken(MetaToken):
         if (ind > 0 and res.coef > 0 and pits[ind].is_hiphen_before): 
             b1 = pits[ind].kit.statistics.get_bigramm_info(pits[ind - 1].begin_token, pits[ind].begin_token)
             if (b1 is not None and b1.second_count == b1.pair_count): 
-                res0 = PersonIdentityToken._new2153(pits[ind].begin_token, pits[ind + 1].end_token, FioTemplateType.NAMESURNAME)
+                res0 = PersonIdentityToken._new2306(pits[ind].begin_token, pits[ind + 1].end_token, FioTemplateType.NAMESURNAME)
                 PersonIdentityToken.manage_firstname(res0, pits[ind - 1], inf)
                 res.firstname = PersonMorphCollection.add_prefix(res0.firstname, res.firstname)
                 res.coef += 1
                 res.begin_token = pits[ind - 1].begin_token
-        if (BracketHelper.can_be_start_of_sequence(res.begin_token.previous, False, False) and BracketHelper.can_be_end_of_sequence(res.end_token.next0, False, None, False)): 
+        if (BracketHelper.can_be_start_of_sequence(res.begin_token.previous, False, False) and BracketHelper.can_be_end_of_sequence(res.end_token.next0_, False, None, False)): 
             res.coef -= 2
         bi = pits[0].begin_token.kit.statistics.get_initial_info(pits[ind].value, pits[ind + 1].begin_token)
         if (bi is not None and bi.pair_count > 0): 
@@ -759,16 +759,16 @@ class PersonIdentityToken(MetaToken):
         res = PersonIdentityToken(pits[ind].begin_token, pits[ind + 2].end_token)
         res.typ = (FioTemplateType.NAMEISURNAME if pits[ind + 1].typ == PersonItemToken.ItemType.INITIAL else FioTemplateType.NAMESECNAMESURNAME)
         res.coef -= ind
-        res.morph = PersonIdentityToken.__accord_morph(inf, pits[ind + 2].lastname, pits[ind].firstname, pits[ind + 1].middlename, pits[ind + 2].end_token.next0)
+        res.morph = PersonIdentityToken.__accord_morph(inf, pits[ind + 2].lastname, pits[ind].firstname, pits[ind + 1].middlename, pits[ind + 2].end_token.next0_)
         if (res.morph.gender == MorphGender.MASCULINE or res.morph.gender == MorphGender.FEMINIE): 
             res.coef += 1
             inf = res.morph
         PersonIdentityToken.manage_firstname(res, pits[ind], inf)
         PersonIdentityToken.manage_lastname(res, pits[ind + 2], inf)
-        if (pits[ind + 1].middlename is not None and len(pits[ind + 1].middlename.vars0) > 0): 
+        if (pits[ind + 1].middlename is not None and len(pits[ind + 1].middlename.vars0_) > 0): 
             res.coef += 1
-            res.middlename = pits[ind + 1].middlename.vars0[0].value
-            if (len(pits[ind + 1].middlename.vars0) > 1): 
+            res.middlename = pits[ind + 1].middlename.vars0_[0].value
+            if (len(pits[ind + 1].middlename.vars0_) > 1): 
                 res.middlename = PersonMorphCollection()
                 PersonIdentityToken.__set_value2(res.middlename if isinstance(res.middlename, PersonMorphCollection) else None, pits[ind + 1].middlename, inf)
             if (pits[ind + 2].lastname is not None): 
@@ -811,7 +811,7 @@ class PersonIdentityToken(MetaToken):
             return None
         res = PersonIdentityToken(pits[ind].begin_token, pits[ind + 1].end_token)
         res.typ = FioTemplateType.NAMESECNAME
-        res.morph = PersonIdentityToken.__accord_morph(inf, None, pits[ind].firstname, pits[ind + 1].middlename, pits[ind + 1].end_token.next0)
+        res.morph = PersonIdentityToken.__accord_morph(inf, None, pits[ind].firstname, pits[ind + 1].middlename, pits[ind + 1].end_token.next0_)
         if (res.morph.gender == MorphGender.MASCULINE or res.morph.gender == MorphGender.FEMINIE): 
             res.coef += 1
             inf = res.morph
@@ -836,7 +836,7 @@ class PersonIdentityToken(MetaToken):
             if (stat is not None): 
                 if (stat.has_before_person_attr): 
                     res.coef += 1
-            te = pits[ind - 1].end_token.next0
+            te = pits[ind - 1].end_token.next0_
             if (te is None): 
                 return
             if (PersonHelper.is_person_say_or_attr_after(te)): 
@@ -890,7 +890,7 @@ class PersonIdentityToken(MetaToken):
         in_dic = False
         has_std = False
         for wf in tt.morph.items: 
-            if (wf.class0.is_proper_surname): 
+            if (wf.class0_.is_proper_surname): 
                 pass
             elif ((wf if isinstance(wf, MorphWordForm) else None).is_in_dictionary): 
                 in_dic = True
@@ -910,13 +910,13 @@ class PersonIdentityToken(MetaToken):
             return None
         if (PersonIdentityToken.__is_both_surnames(pits[ind], pits[ind + 1])): 
             return None
-        res = PersonIdentityToken._new2153(pits[ind].begin_token, pits[ind + 1].end_token, FioTemplateType.SURNAMENAME)
+        res = PersonIdentityToken._new2306(pits[ind].begin_token, pits[ind + 1].end_token, FioTemplateType.SURNAMENAME)
         res.coef -= ind
         if (pits[ind].is_newline_after): 
             res.coef -= 1
             if (pits[ind].whitespaces_after_count > 15): 
                 res.coef -= 1
-        res.morph = PersonIdentityToken.__accord_morph(inf, pits[ind].lastname, pits[ind + 1].firstname, None, pits[ind + 1].end_token.next0)
+        res.morph = PersonIdentityToken.__accord_morph(inf, pits[ind].lastname, pits[ind + 1].firstname, None, pits[ind + 1].end_token.next0_)
         if (res.morph.gender == MorphGender.MASCULINE or res.morph.gender == MorphGender.FEMINIE): 
             if (pits[ind].lastname is not None and not pits[ind].lastname.morph.case.is_undefined): 
                 res.coef += 1
@@ -938,9 +938,9 @@ class PersonIdentityToken(MetaToken):
             res.coef -= 1
         if (ind == 0): 
             PersonIdentityToken.__correct_coefsns(res, pits, ind + 2)
-        if (pits[ind].end_token.next0.is_hiphen): 
+        if (pits[ind].end_token.next0_.is_hiphen): 
             res.coef -= 2
-        if (BracketHelper.can_be_start_of_sequence(res.begin_token.previous, False, False) and BracketHelper.can_be_end_of_sequence(res.end_token.next0, False, None, False)): 
+        if (BracketHelper.can_be_start_of_sequence(res.begin_token.previous, False, False) and BracketHelper.can_be_end_of_sequence(res.end_token.next0_, False, None, False)): 
             res.coef -= 2
         if (pits[ind].is_in_dictionary): 
             mc = pits[ind].begin_token.get_morph_class_in_dictionary()
@@ -961,12 +961,12 @@ class PersonIdentityToken(MetaToken):
                 if (stat.like_chars_after_words is not None and stat.like_chars_before_words is not None): 
                     coua = 0
                     coub = 0
-                    inoutarg2160 = RefOutArgWrapper(None)
-                    Utils.tryGetValue0(stat.like_chars_after_words, stata, inoutarg2160)
-                    coua = inoutarg2160.value
-                    inoutarg2159 = RefOutArgWrapper(None)
-                    Utils.tryGetValue0(stat.like_chars_before_words, statb, inoutarg2159)
-                    coub = inoutarg2159.value
+                    inoutarg2313 = RefOutArgWrapper(0)
+                    Utils.tryGetValue(stat.like_chars_after_words, stata, inoutarg2313)
+                    coua = inoutarg2313.value
+                    inoutarg2312 = RefOutArgWrapper(0)
+                    Utils.tryGetValue(stat.like_chars_before_words, statb, inoutarg2312)
+                    coub = inoutarg2312.value
                     if (coua == stat.total_count and (coub < stat.total_count)): 
                         res.coef -= 2
             return
@@ -981,7 +981,7 @@ class PersonIdentityToken(MetaToken):
             res.coef -= 1
         if (pits[ind_after].lastname is None or not pits[ind_after].lastname.is_lastname_has_std_tail): 
             return
-        mi2 = PersonIdentityToken.__accord_morph(inf, pits[ind_after].lastname, pits[1].firstname, middle, pits[ind_after].end_token.next0)
+        mi2 = PersonIdentityToken.__accord_morph(inf, pits[ind_after].lastname, pits[1].firstname, middle, pits[ind_after].end_token.next0_)
         if (not mi2.case.is_undefined): 
             res.coef -= 1
     
@@ -996,9 +996,9 @@ class PersonIdentityToken(MetaToken):
             if (ind > 0): 
                 return None
             if (len(pits) == 3 and not always): 
-                tt1 = pits[2].end_token.next0
+                tt1 = pits[2].end_token.next0_
                 if (tt1 is not None and tt1.is_comma): 
-                    tt1 = tt1.next0
+                    tt1 = tt1.next0_
                 if (tt1 is not None and not tt1.is_newline_before and PersonAttrToken.try_attach(tt1, None, PersonAttrToken.PersonAttrAttachAttrs.ONLYKEYWORD) is not None): 
                     pass
                 else: 
@@ -1006,7 +1006,7 @@ class PersonIdentityToken(MetaToken):
         if (not always): 
             if (PersonIdentityToken.__is_both_surnames(pits[ind], pits[ind + 2]) or PersonIdentityToken.__is_both_surnames(pits[ind], pits[ind + 1])): 
                 return None
-        res = PersonIdentityToken._new2153(pits[ind].begin_token, pits[ind + 2].end_token, FioTemplateType.SURNAMENAMESECNAME)
+        res = PersonIdentityToken._new2306(pits[ind].begin_token, pits[ind + 2].end_token, FioTemplateType.SURNAMENAMESECNAME)
         if (pits[ind + 2].middlename is None): 
             if ((ind + 2) == (len(pits) - 1) and prev_has_this_typ): 
                 res.coef += 1
@@ -1027,17 +1027,17 @@ class PersonIdentityToken(MetaToken):
                 res.coef -= 1
                 if (pits[ind + 1].whitespaces_after_count > 15): 
                     res.coef -= 1
-        res.morph = PersonIdentityToken.__accord_morph(inf, pits[ind].lastname, pits[ind + 1].firstname, pits[ind + 2].middlename, pits[ind + 2].end_token.next0)
+        res.morph = PersonIdentityToken.__accord_morph(inf, pits[ind].lastname, pits[ind + 1].firstname, pits[ind + 2].middlename, pits[ind + 2].end_token.next0_)
         if (res.morph.gender == MorphGender.MASCULINE or res.morph.gender == MorphGender.FEMINIE): 
             res.coef += 1.5
             inf = res.morph
         PersonIdentityToken.manage_lastname(res, pits[ind], inf)
         PersonIdentityToken.__correct_coef_for_lastname(res, pits[ind])
         PersonIdentityToken.manage_firstname(res, pits[ind + 1], inf)
-        if (pits[ind + 2].middlename is not None and len(pits[ind + 2].middlename.vars0) > 0): 
+        if (pits[ind + 2].middlename is not None and len(pits[ind + 2].middlename.vars0_) > 0): 
             res.coef += 1
-            res.middlename = pits[ind + 2].middlename.vars0[0].value
-            if (len(pits[ind + 2].middlename.vars0) > 1): 
+            res.middlename = pits[ind + 2].middlename.vars0_[0].value
+            if (len(pits[ind + 2].middlename.vars0_) > 1): 
                 res.middlename = PersonMorphCollection()
                 PersonIdentityToken.__set_value2(res.middlename if isinstance(res.middlename, PersonMorphCollection) else None, pits[ind + 2].middlename, inf)
             if (pits[ind + 1].firstname is not None and len(pits) == 3 and not pits[ind].is_in_dictionary): 
@@ -1071,9 +1071,9 @@ class PersonIdentityToken(MetaToken):
         elif (pits[ind - 1].whitespaces_before_count == pits[ind - 1].whitespaces_after_count): 
             if (pits[ind].lastname is not None or pits[ind].firstname is not None or pits[ind].middlename is not None): 
                 res.coef -= 1
-        t = pits[ind - 1].end_token.next0
-        if (t is not None and t.next0 is not None and t.next0.is_char(',')): 
-            t = t.next0
+        t = pits[ind - 1].end_token.next0_
+        if (t is not None and t.next0_ is not None and t.next0_.is_char(',')): 
+            t = t.next0_
         if (t is not None): 
             if (PersonAttrToken.try_attach(t, None, PersonAttrToken.PersonAttrAttachAttrs.ONLYKEYWORD) is not None): 
                 res.coef += 1
@@ -1082,13 +1082,13 @@ class PersonIdentityToken(MetaToken):
     def __calc_coef_after(tt : 'Token') -> float:
         from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
         if (tt is not None and tt.is_comma): 
-            tt = tt.next0
+            tt = tt.next0_
         attr = PersonAttrToken.try_attach(tt, None, PersonAttrToken.PersonAttrAttachAttrs.ONLYKEYWORD)
         if (attr is not None and attr.age is not None): 
             return 3
         if (tt is not None and tt.get_referent() is not None and tt.get_referent().type_name == "DATE"): 
             co = 1
-            if (tt.next0 is not None and tt.next0.is_value("Р", None)): 
+            if (tt.next0_ is not None and tt.next0_.is_value("Р", None)): 
                 co += 2
             return co
         return 0
@@ -1104,7 +1104,7 @@ class PersonIdentityToken(MetaToken):
             return None
         if (pits[ind].lastname is None): 
             return None
-        res = PersonIdentityToken._new2153(pits[ind].begin_token, pits[ind + 1].end_token, FioTemplateType.SURNAMEI)
+        res = PersonIdentityToken._new2306(pits[ind].begin_token, pits[ind + 1].end_token, FioTemplateType.SURNAMEI)
         res.coef -= ind
         PersonIdentityToken.manage_lastname(res, pits[ind], inf)
         if (pits[ind].is_asian_item(False) and pits[ind].lastname is not None and pits[ind].lastname.is_china_surname): 
@@ -1169,7 +1169,7 @@ class PersonIdentityToken(MetaToken):
                 return None
         if (pits[ind].is_newline_after): 
             return None
-        res = PersonIdentityToken._new2153(pits[ind].begin_token, pits[ind + 1].end_token, FioTemplateType.ISURNAME)
+        res = PersonIdentityToken._new2306(pits[ind].begin_token, pits[ind + 1].end_token, FioTemplateType.ISURNAME)
         res.coef -= ind
         res.firstname = PersonMorphCollection()
         res.firstname.add(pits[ind].value, None, MorphGender.UNDEFINED, False)
@@ -1221,7 +1221,7 @@ class PersonIdentityToken(MetaToken):
         if (prev is None): 
             if (pits[ind].is_newline_before and pits[i1].is_newline_after): 
                 res.coef += 1
-            elif (pits[i1].end_token.next0 is not None and ((pits[i1].end_token.next0.is_char_of(";,.") or pits[i1].end_token.next0.morph.class0.is_conjunction))): 
+            elif (pits[i1].end_token.next0_ is not None and ((pits[i1].end_token.next0_.is_char_of(";,.") or pits[i1].end_token.next0_.morph.class0_.is_conjunction))): 
                 res.coef += 1
             return res
         if (prev.whitespaces_after_count < pits[i1].whitespaces_before_count): 
@@ -1250,12 +1250,12 @@ class PersonIdentityToken(MetaToken):
         num = 0
         roman = False
         ok = False
-        t = pits[i].end_token.next0
+        t = pits[i].end_token.next0_
         if (isinstance(t, NumberToken)): 
             if (t.chars.is_all_lower): 
                 return None
             num = (t if isinstance(t, NumberToken) else None).value
-            if (not t.morph.class0.is_adjective): 
+            if (not t.morph.class0_.is_adjective): 
                 return None
         else: 
             if (((i + 2) < len(pits)) and pits[i + 1].typ == PersonItemToken.ItemType.INITIAL): 
@@ -1269,12 +1269,12 @@ class PersonIdentityToken(MetaToken):
             if (pits[0].firstname is not None and prev_has_this_typ): 
                 if (len(pits) == 1): 
                     ok = True
-                elif (len(pits) == 2 and pits[0].end_token.next0.is_hiphen): 
+                elif (len(pits) == 2 and pits[0].end_token.next0_.is_hiphen): 
                     ok = True
             if (not ok): 
                 return None
-        res = PersonIdentityToken._new2153(pits[0].begin_token, pits[0].end_token, FioTemplateType.KING)
-        res.morph = PersonIdentityToken.__accord_morph(inf, None, pits[0].firstname, ((Utils.ifNotNull(pits[1].middlename, pits[1].firstname)) if len(pits) == 2 else None), pits[(1 if len(pits) == 2 else 0)].end_token.next0)
+        res = PersonIdentityToken._new2306(pits[0].begin_token, pits[0].end_token, FioTemplateType.KING)
+        res.morph = PersonIdentityToken.__accord_morph(inf, None, pits[0].firstname, ((Utils.ifNotNull(pits[1].middlename, pits[1].firstname)) if len(pits) == 2 else None), pits[(1 if len(pits) == 2 else 0)].end_token.next0_)
         if (res.morph.gender == MorphGender.MASCULINE or res.morph.gender == MorphGender.FEMINIE): 
             inf = res.morph
         if (inf.gender != MorphGender.FEMINIE and inf.gender != MorphGender.MASCULINE and not roman): 
@@ -1321,9 +1321,9 @@ class PersonIdentityToken(MetaToken):
                 return None
         cou -= 1
         is_chine_sur = pits[0].lastname is not None and pits[0].lastname.is_china_surname
-        res = PersonIdentityToken._new2153(pits[0].begin_token, pits[cou].end_token, FioTemplateType.ASIANNAME)
+        res = PersonIdentityToken._new2306(pits[0].begin_token, pits[cou].end_token, FioTemplateType.ASIANNAME)
         if (pits[cou].lastname is not None): 
-            res.morph = PersonIdentityToken.__accord_morph(inf, pits[cou].lastname, None, None, pits[cou].end_token.next0)
+            res.morph = PersonIdentityToken.__accord_morph(inf, pits[cou].lastname, None, None, pits[cou].end_token.next0_)
         if (not res.morph.case.is_undefined): 
             inf = res.morph
         if (is_chine_sur): 
@@ -1390,7 +1390,7 @@ class PersonIdentityToken(MetaToken):
             if (pits[1].value == pits[2].value): 
                 res.coef -= 0.5
         if (not pits[cou].is_whitespace_after): 
-            t = pits[cou].end_token.next0
+            t = pits[cou].end_token.next0_
             if (t is not None and t.is_hiphen): 
                 res.coef -= 0.5
             if (BracketHelper.can_be_end_of_sequence(t, False, None, False)): 
@@ -1427,10 +1427,10 @@ class PersonIdentityToken(MetaToken):
             return None
         tmp = Utils.newStringIO(None)
         t = begin
-        first_pass2863 = True
+        first_pass3031 = True
         while True:
-            if first_pass2863: first_pass2863 = False
-            else: t = t.next0
+            if first_pass3031: first_pass3031 = False
+            else: t = t.next0_
             if (not (t is not None and t.previous != end)): break
             tt = (t if isinstance(t, TextToken) else None)
             if (tt is None): 
@@ -1615,7 +1615,7 @@ class PersonIdentityToken(MetaToken):
         return None
     
     @staticmethod
-    def __accord_morph(inf : 'MorphBaseInfo', p1 : 'MorphPersonItem', p2 : 'MorphPersonItem', p3 : 'MorphPersonItem', next0_ : 'Token') -> 'MorphCollection':
+    def __accord_morph(inf : 'MorphBaseInfo', p1 : 'MorphPersonItem', p2 : 'MorphPersonItem', p3 : 'MorphPersonItem', next0__ : 'Token') -> 'MorphCollection':
         from pullenti.morph.MorphBaseInfo import MorphBaseInfo
         from pullenti.ner.MorphCollection import MorphCollection
         from pullenti.morph.MorphCase import MorphCase
@@ -1645,7 +1645,7 @@ class PersonIdentityToken(MetaToken):
             cas = MorphCase.ALL_CASES
             for p in pp: 
                 ca = MorphCase()
-                for v in p.vars0: 
+                for v in p.vars0_: 
                     if (v.gender != MorphGender.UNDEFINED): 
                         if (((v.gender & g)) == MorphGender.UNDEFINED): 
                             continue
@@ -1660,12 +1660,12 @@ class PersonIdentityToken(MetaToken):
             if (not cas.is_undefined): 
                 if (inf is not None and not inf.case.is_undefined and not (inf.case & cas).is_undefined): 
                     cas &= inf.case
-                res.add_item(MorphBaseInfo._new2166(g, cas))
+                res.add_item(MorphBaseInfo._new2319(g, cas))
         verb_gend = MorphGender.UNDEFINED
-        if ((next0_ is not None and isinstance(next0_, TextToken) and next0_.chars.is_all_lower) and next0_.morph.class0 == MorphClass.VERB and next0_.morph.number == MorphNumber.SINGULAR): 
-            if (next0_.morph.gender == MorphGender.FEMINIE or next0_.morph.gender == MorphGender.MASCULINE): 
-                verb_gend = next0_.morph.gender
-                npt = NounPhraseHelper.try_parse(next0_.next0, NounPhraseParseAttr.NO, 0)
+        if ((next0__ is not None and isinstance(next0__, TextToken) and next0__.chars.is_all_lower) and next0__.morph.class0_ == MorphClass.VERB and next0__.morph.number == MorphNumber.SINGULAR): 
+            if (next0__.morph.gender == MorphGender.FEMINIE or next0__.morph.gender == MorphGender.MASCULINE): 
+                verb_gend = next0__.morph.gender
+                npt = NounPhraseHelper.try_parse(next0__.next0_, NounPhraseParseAttr.NO, 0)
                 if ((npt is not None and npt.morph.case.is_nominative and npt.morph.gender == verb_gend) and npt.morph.number == MorphNumber.SINGULAR): 
                     verb_gend = MorphGender.UNDEFINED
         if (verb_gend != MorphGender.UNDEFINED and res.items_count > 1): 
@@ -1683,9 +1683,9 @@ class PersonIdentityToken(MetaToken):
     def __is_accords(mt : 'MorphPersonItem', inf : 'MorphBaseInfo') -> bool:
         if (inf is None): 
             return True
-        if (len(mt.vars0) == 0): 
+        if (len(mt.vars0_) == 0): 
             return True
-        for wf in mt.vars0: 
+        for wf in mt.vars0_: 
             ok = True
             if (not inf.case.is_undefined and not wf.case.is_undefined): 
                 if ((wf.case & inf.case).is_undefined): 
@@ -1722,7 +1722,7 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __get_value(mt : 'MorphPersonItem', inf : 'MorphBaseInfo') -> str:
-        for wf in mt.vars0: 
+        for wf in mt.vars0_: 
             if (inf is not None): 
                 if (not inf.case.is_undefined and not wf.case.is_undefined): 
                     if ((wf.case & inf.case).is_undefined): 
@@ -1736,7 +1736,7 @@ class PersonIdentityToken(MetaToken):
     @staticmethod
     def __set_value2(res : 'PersonMorphCollection', mt : 'MorphPersonItem', inf : 'MorphBaseInfo') -> None:
         ok = False
-        for wf in mt.vars0: 
+        for wf in mt.vars0_: 
             if (inf is not None): 
                 if (not inf.case.is_undefined and not wf.case.is_undefined): 
                     if ((wf.case & inf.case).is_undefined): 
@@ -1747,8 +1747,8 @@ class PersonIdentityToken(MetaToken):
                 ok = True
             res.add(wf.value, wf.short_value, wf.gender, False)
         if (len(res.values) == 0): 
-            if ((inf is not None and not inf.case.is_undefined and len(mt.vars0) > 0) and mt.is_lastname_has_std_tail): 
-                for wf in mt.vars0: 
+            if ((inf is not None and not inf.case.is_undefined and len(mt.vars0_) > 0) and mt.is_lastname_has_std_tail): 
+                for wf in mt.vars0_: 
                     res.add(wf.value, wf.short_value, wf.gender, False)
             res.add(mt.term, None, inf.gender, False)
     
@@ -1761,7 +1761,7 @@ class PersonIdentityToken(MetaToken):
         if (tt is None): 
             return
         for wf in tt.morph.items: 
-            if (wf.class0.is_verb): 
+            if (wf.class0_.is_verb): 
                 continue
             if (wf.contains_attr("к.ф.", MorphClass())): 
                 continue
@@ -1771,8 +1771,8 @@ class PersonIdentityToken(MetaToken):
             if (inf is not None and not inf.case.is_undefined and not wf.case.is_undefined): 
                 if ((wf.case & inf.case).is_undefined): 
                     continue
-            str0 = (tt.term if t.chars.is_latin_letter else (wf if isinstance(wf, MorphWordForm) else None).normal_case)
-            res.add(str0, None, wf.gender, False)
+            str0_ = (tt.term if t.chars.is_latin_letter else (wf if isinstance(wf, MorphWordForm) else None).normal_case)
+            res.add(str0_, None, wf.gender, False)
         res.add(tt.term, None, (MorphGender.UNDEFINED if inf is None else inf.gender), False)
     
     @staticmethod
@@ -1806,9 +1806,9 @@ class PersonIdentityToken(MetaToken):
         while tt != p1.end_token: 
             if (tt.is_newline_after): 
                 return False
-            tt = tt.next0
+            tt = tt.next0_
         if (not p1.end_token.is_newline_after): 
-            if (PersonItemToken.try_attach(p1.end_token.next0, None, PersonItemToken.ParseAttr.NO, None) is not None): 
+            if (PersonItemToken.try_attach(p1.end_token.next0_, None, PersonItemToken.ParseAttr.NO, None) is not None): 
                 return False
         if (p0.lastname is None or p1.lastname is None): 
             return False
@@ -1819,7 +1819,7 @@ class PersonIdentityToken(MetaToken):
         if (attrs is None or len(attrs) == 0): 
             if (not p1.lastname.has_lastname_standard_tail and p0.lastname.has_lastname_standard_tail): 
                 return False
-        t = p1.end_token.next0
+        t = p1.end_token.next0_
         if (t is not None and not t.chars.is_capital_upper and not t.chars.is_all_upper): 
             npt = NounPhraseHelper.try_parse(p1.end_token, NounPhraseParseAttr.NO, 0)
             if (npt is not None and npt.end_token != npt.begin_token): 
@@ -1837,27 +1837,27 @@ class PersonIdentityToken(MetaToken):
         from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         if (pit is None): 
             return None
-        t = pit.end_token.next0
+        t = pit.end_token.next0_
         if (t is None or not t.is_char('(')): 
             return None
-        t = t.next0
+        t = t.next0_
         p1 = PersonItemToken.try_attach_latin(t)
         if (p1 is None): 
             return None
-        p2 = PersonItemToken.try_attach_latin(p1.end_token.next0)
+        p2 = PersonItemToken.try_attach_latin(p1.end_token.next0_)
         if (p2 is None): 
             return None
-        if (p2.end_token.next0 is None): 
+        if (p2.end_token.next0_ is None): 
             return None
         p3 = None
-        et = p2.end_token.next0
-        if (p2.end_token.next0.is_char(')')): 
+        et = p2.end_token.next0_
+        if (p2.end_token.next0_.is_char(')')): 
             pass
         else: 
             p3 = PersonItemToken.try_attach_latin(et)
             if (p3 is None): 
                 return None
-            et = p3.end_token.next0
+            et = p3.end_token.next0_
             if (et is None or not et.is_char(')')): 
                 return None
         sur = None
@@ -1898,7 +1898,7 @@ class PersonIdentityToken(MetaToken):
                 return None
         if (nam is None or sur is None): 
             return None
-        res = PersonIdentityToken._new2153(t, et, pit.typ)
+        res = PersonIdentityToken._new2306(t, et, pit.typ)
         res.lastname = PersonMorphCollection()
         res.lastname.add(sur.value, None, MorphGender.UNDEFINED, False)
         res.firstname = PersonMorphCollection()
@@ -1910,7 +1910,7 @@ class PersonIdentityToken(MetaToken):
 
     
     @staticmethod
-    def _new2153(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'FioTemplateType') -> 'PersonIdentityToken':
+    def _new2306(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'FioTemplateType') -> 'PersonIdentityToken':
         res = PersonIdentityToken(_arg1, _arg2)
         res.typ = _arg3
         return res

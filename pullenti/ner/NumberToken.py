@@ -51,7 +51,7 @@ class NumberToken(MetaToken):
 
     
     @staticmethod
-    def _new559(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : 'NumberSpellingType', _arg5 : 'MorphCollection') -> 'NumberToken':
+    def _new585(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : 'NumberSpellingType', _arg5 : 'MorphCollection') -> 'NumberToken':
         res = NumberToken(_arg1, _arg2, _arg3, _arg4)
         res.morph = _arg5
         return res

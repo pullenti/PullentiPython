@@ -41,13 +41,13 @@ class PersonIdentityReferent(Referent):
             print(", {0}".format(self.state.to_string(True, lang, lev + 1)), end="", file=res, flush=True)
         if (not short_variant): 
             dat = self.get_string_value(PersonIdentityReferent.ATTR_DATE)
-            org_ = self.get_string_value(PersonIdentityReferent.ATTR_ORG)
-            if (dat is not None or org_ is not None): 
+            org0_ = self.get_string_value(PersonIdentityReferent.ATTR_ORG)
+            if (dat is not None or org0_ is not None): 
                 print(", выдан", end="", file=res)
                 if (dat is not None): 
                     print(" {0}".format(dat), end="", file=res, flush=True)
-                if (org_ is not None): 
-                    print(" {0}".format(org_), end="", file=res, flush=True)
+                if (org0_ is not None): 
+                    print(" {0}".format(org0_), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
     @property
@@ -91,14 +91,14 @@ class PersonIdentityReferent(Referent):
         return value
     
     def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
-        id0 = (obj if isinstance(obj, PersonIdentityReferent) else None)
-        if (id0 is None): 
+        id0_ = (obj if isinstance(obj, PersonIdentityReferent) else None)
+        if (id0_ is None): 
             return False
-        if (self.typ != id0.typ): 
+        if (self.typ != id0_.typ): 
             return False
-        if (self.number != id0.number): 
+        if (self.number != id0_.number): 
             return False
-        if (self.state is not None and id0.state is not None): 
-            if (self.state != id0.state): 
+        if (self.state is not None and id0_.state is not None): 
+            if (self.state != id0_.state): 
                 return False
         return True

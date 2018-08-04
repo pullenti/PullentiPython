@@ -64,29 +64,29 @@ class SourceOfAnalysis:
         cou = 0
         total_len = 0
         i = 0
-        first_pass2920 = True
+        first_pass3088 = True
         while True:
-            if first_pass2920: first_pass2920 = False
+            if first_pass3088: first_pass3088 = False
             else: i += 1
             if (not (i < len(txt))): break
             ch = txt[i]
             if (ord(ch) != 0xD and ord(ch) != 0xA): 
                 continue
-            len0 = 0
+            len0_ = 0
             last_char = ch
             for j in range(i + 1, len(txt), 1):
                 ch = txt[j]
                 if (ord(ch) == 0xD or ord(ch) == 0xA): 
                     break
                 elif (ord(ch) == 0x9): 
-                    len0 += 5
+                    len0_ += 5
                 else: 
                     last_char = ch
-                    len0 += 1
+                    len0_ += 1
             else: j = len(txt)
             if (j >= len(txt)): 
                 break
-            if (len0 < 30): 
+            if (len0_ < 30): 
                 continue
             if (last_char != '.' and last_char != ':' and last_char != ';'): 
                 next_is_dig = False
@@ -97,7 +97,7 @@ class SourceOfAnalysis:
                         break
                 if (not next_is_dig): 
                     cou += 1
-                    total_len += len0
+                    total_len += len0_
             i = j
         if (cou < 4): 
             return txt
@@ -108,7 +108,7 @@ class SourceOfAnalysis:
         i = 0
         while i < tmp.tell(): 
             ch = Utils.getCharAtStringIO(tmp, i)
-            len0 = 0
+            len0_ = 0
             last_char = ch
             j = (i + 1)
             while j < tmp.tell(): 
@@ -116,10 +116,10 @@ class SourceOfAnalysis:
                 if (ord(ch) == 0xD or ord(ch) == 0xA): 
                     break
                 elif (ord(ch) == 0x9): 
-                    len0 += 5
+                    len0_ += 5
                 else: 
                     last_char = ch
-                    len0 += 1
+                    len0_ += 1
                 j += 1
             if (j >= tmp.tell()): 
                 break
@@ -140,7 +140,7 @@ class SourceOfAnalysis:
                     not_single = True
                     break
                 jj += 1
-            if (((not not_single and len0 > (total_len - 20) and (len0 < (total_len + 10))) and last_char != '.' and last_char != ':') and last_char != ';'): 
+            if (((not not_single and len0_ > (total_len - 20) and (len0_ < (total_len + 10))) and last_char != '.' and last_char != ':') and last_char != ';'): 
                 Utils.setCharAtStringIO(tmp, j, ' ')
                 self.crlf_corrected_count += 1
                 if ((j + 1) < tmp.tell()): 

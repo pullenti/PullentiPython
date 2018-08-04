@@ -52,12 +52,12 @@ class NamedEntityReferent(Referent):
     @property
     def kind(self) -> 'NamedEntityKind':
         """ Класс сущности """
-        str0 = self.get_string_value(NamedEntityReferent.ATTR_KIND)
-        if (str0 is None): 
+        str0_ = self.get_string_value(NamedEntityReferent.ATTR_KIND)
+        if (str0_ is None): 
             return NamedEntityKind.UNDEFINED
         try: 
-            return Utils.valToEnum(str0, NamedEntityKind)
-        except Exception as ex1467: 
+            return Utils.valToEnum(str0_, NamedEntityKind)
+        except Exception as ex1618: 
             pass
         return NamedEntityKind.UNDEFINED
     
@@ -74,13 +74,13 @@ class NamedEntityReferent(Referent):
         res = list()
         for s in self.slots: 
             if (s.type_name == NamedEntityReferent.ATTR_NAME): 
-                str0 = str(s.value)
-                if (not str0 in res): 
-                    res.append(str0)
-                if (str0.find(' ') > 0 or str0.find('-') > 0): 
-                    str0 = str0.replace(" ", "").replace("-", "")
-                    if (not str0 in res): 
-                        res.append(str0)
+                str0_ = str(s.value)
+                if (not str0_ in res): 
+                    res.append(str0_)
+                if (str0_.find(' ') > 0 or str0_.find('-') > 0): 
+                    str0_ = str0_.replace(" ", "").replace("-", "")
+                    if (not str0_ in res): 
+                        res.append(str0_)
         if (len(res) == 0): 
             for s in self.slots: 
                 if (s.type_name == NamedEntityReferent.ATTR_TYPE): 
@@ -134,13 +134,13 @@ class NamedEntityReferent(Referent):
     def _create_ontology_item(self, min_len : int, only_names : bool=False, pure_names : bool=False) -> 'IntOntologyItem':
         from pullenti.ner.core.Termin import Termin
         oi = IntOntologyItem(self)
-        vars0 = list()
+        vars0_ = list()
         typs = Utils.ifNotNull(self.get_string_values(NamedEntityReferent.ATTR_TYPE), list())
         for a in self.slots: 
             if (a.type_name == NamedEntityReferent.ATTR_NAME): 
                 s = str(a.value).upper()
-                if (not s in vars0): 
-                    vars0.append(s)
+                if (not s in vars0_): 
+                    vars0_.append(s)
                 if (not pure_names): 
                     sp = 0
                     for jj in range(len(s)):
@@ -148,21 +148,21 @@ class NamedEntityReferent(Referent):
                             sp += 1
                     if (sp == 1): 
                         s = s.replace(" ", "")
-                        if (not s in vars0): 
-                            vars0.append(s)
+                        if (not s in vars0_): 
+                            vars0_.append(s)
         if (not only_names): 
-            if (len(vars0) == 0): 
+            if (len(vars0_) == 0): 
                 for t in typs: 
                     up = t.upper()
-                    if (not up in vars0): 
-                        vars0.append(up)
-        max0 = 20
+                    if (not up in vars0_): 
+                        vars0_.append(up)
+        max0_ = 20
         cou = 0
-        for v in vars0: 
+        for v in vars0_: 
             if (len(v) >= min_len): 
                 oi.termins.append(Termin(v))
                 cou += 1
-                if ((cou) >= max0): 
+                if ((cou) >= max0_): 
                     break
         if (len(oi.termins) == 0): 
             return None
@@ -170,7 +170,7 @@ class NamedEntityReferent(Referent):
 
     
     @staticmethod
-    def _new1466(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
+    def _new1617(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
         res = NamedEntityReferent()
         res.kind = _arg1
         return res

@@ -61,12 +61,12 @@ class LanguageHelper:
         return ui.is_latin
     
     @staticmethod
-    def is_latin(str0 : str) -> bool:
-        if (str0 is None): 
+    def is_latin(str0_ : str) -> bool:
+        if (str0_ is None): 
             return False
-        for i in range(len(str0)):
-            if (not LanguageHelper.is_latin_char(str0[i])): 
-                if (not Utils.isWhitespace(str0[i]) and str0[i] != '-'): 
+        for i in range(len(str0_)):
+            if (not LanguageHelper.is_latin_char(str0_[i])): 
+                if (not Utils.isWhitespace(str0_[i]) and str0_[i] != '-'): 
                     return False
         return True
     
@@ -76,12 +76,12 @@ class LanguageHelper:
         return ui.is_cyrillic
     
     @staticmethod
-    def is_cyrillic(str0 : str) -> bool:
-        if (str0 is None): 
+    def is_cyrillic(str0_ : str) -> bool:
+        if (str0_ is None): 
             return False
-        for i in range(len(str0)):
-            if (not LanguageHelper.is_cyrillic_char(str0[i])): 
-                if (not Utils.isWhitespace(str0[i]) and str0[i] != '-'): 
+        for i in range(len(str0_)):
+            if (not LanguageHelper.is_cyrillic_char(str0_[i])): 
+                if (not Utils.isWhitespace(str0_[i]) and str0_[i] != '-'): 
                     return False
         return True
     
@@ -216,9 +216,9 @@ class LanguageHelper:
                 return value
         tmp = Utils.newStringIO(value)
         i = 0
-        first_pass2523 = True
+        first_pass2676 = True
         while True:
-            if first_pass2523: first_pass2523 = False
+            if first_pass2676: first_pass2676 = False
             else: i += 1
             if (not (i < tmp.tell())): break
             if (Utils.getCharAtStringIO(tmp, i) == 'Ь' and ((i + 1) < tmp.tell()) and Utils.getCharAtStringIO(tmp, i + 1) == 'I'): 
@@ -307,39 +307,39 @@ class LanguageHelper:
             return prep
     
     @staticmethod
-    def ends_with(str0 : str, substr : str) -> bool:
+    def ends_with(str0_ : str, substr : str) -> bool:
         """ Замена стандартной функции, которая очень тормозит
         
         Args:
-            str0(str): 
+            str0_(str): 
             substr(str): 
         
         """
-        if (str0 is None or substr is None): 
+        if (str0_ is None or substr is None): 
             return False
-        i = len(str0) - 1
+        i = len(str0_) - 1
         j = len(substr) - 1
         if (j > i or (j < 0)): 
             return False
         while j >= 0: 
-            if (str0[i] != substr[j]): 
+            if (str0_[i] != substr[j]): 
                 return False
             j -= 1; i -= 1
         return True
     
     @staticmethod
-    def ends_with_ex(str0 : str, substr : str, substr2 : str, substr3 : str=None, substr4 : str=None) -> bool:
+    def ends_with_ex(str0_ : str, substr : str, substr2 : str, substr3 : str=None, substr4 : str=None) -> bool:
         """ Проверка окончания строки на одну из заданных подстрок
         
         Args:
-            str0(str): 
+            str0_(str): 
             substr(str): 
             substr2(str): 
             substr3(str): 
             substr4(str): 
         
         """
-        if (str0 is None): 
+        if (str0_ is None): 
             return False
         for k in range(4):
             if (k == 1): 
@@ -350,12 +350,12 @@ class LanguageHelper:
                 substr = substr4
             if (substr is None): 
                 continue
-            i = len(str0) - 1
+            i = len(str0_) - 1
             j = len(substr) - 1
             if (j > i or (j < 0)): 
                 continue
             while j >= 0: 
-                if (str0[i] != substr[j]): 
+                if (str0_[i] != substr[j]): 
                     break
                 j -= 1; i -= 1
             if (j < 0): 
@@ -525,10 +525,10 @@ class LanguageHelper:
             i += 1
         LanguageHelper.__m_prep_norms = dict()
         for s in LanguageHelper.__m_prep_norms_src: 
-            vars0 = Utils.splitString(s, ';', False)
+            vars0_ = Utils.splitString(s, ';', False)
             i = 1
-            while i < len(vars0): 
-                LanguageHelper.__m_prep_norms[vars0[i]] = vars0[0]
+            while i < len(vars0_): 
+                LanguageHelper.__m_prep_norms[vars0_[i]] = vars0_[0]
                 i += 1
 
 LanguageHelper._static_ctor()

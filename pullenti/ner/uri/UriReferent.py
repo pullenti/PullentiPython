@@ -74,14 +74,14 @@ class UriReferent(Referent):
 
     
     @staticmethod
-    def _new2373(_arg1 : str, _arg2 : str) -> 'UriReferent':
+    def _new2526(_arg1 : str, _arg2 : str) -> 'UriReferent':
         res = UriReferent()
         res.scheme = _arg1
         res.value = _arg2
         return res
     
     @staticmethod
-    def _new2376(_arg1 : str, _arg2 : str) -> 'UriReferent':
+    def _new2529(_arg1 : str, _arg2 : str) -> 'UriReferent':
         res = UriReferent()
         res.value = _arg1
         res.scheme = _arg2

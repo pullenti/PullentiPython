@@ -57,7 +57,7 @@ class Analyzer:
         return list()
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         """ Список изображений объектов """
         return None
     
@@ -67,11 +67,11 @@ class Analyzer:
          Специфические анализаторы по умолчанию не добавляются в процессор (Processor) """
         return False
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         """ Создать объект указанного типа
         
         Args:
-            type0(str): 
+            type0_(str): 
         
         """
         return None
@@ -88,13 +88,13 @@ class Analyzer:
         """ Сколько примерно времени работает анализатор по сравнению с другими (в условных единицах) """
         return 0
     
-    def _on_progress(self, pos : int, max0 : int, kit : 'AnalysisKit') -> bool:
+    def _on_progress(self, pos : int, max0_ : int, kit : 'AnalysisKit') -> bool:
         ret = True
         if (self._progress.__len__() > 0): 
-            if (pos >= 0 and pos <= max0 and max0 > 0): 
+            if (pos >= 0 and pos <= max0_ and max0_ > 0): 
                 percent = pos
                 percent *= 100
-                percent = math.floor(percent / max0)
+                percent = math.floor(percent / max0_)
                 if (percent != self.__last_percent): 
                     arg = ProgressEventArgs(percent, None)
                     for iiid in range(len(self._progress)): self._progress[iiid].call(self, arg)

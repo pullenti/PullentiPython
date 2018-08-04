@@ -53,7 +53,7 @@ class DocumentStructureAnalyzer(Analyzer):
         return [MetaDocBlockInfo._global_meta, MetaDocument._global_meta]
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         from pullenti.ner.old.internal.MetaDocBlockInfo import MetaDocBlockInfo
         from pullenti.ner.old.internal.MetaDocument import MetaDocument
         res = dict()
@@ -63,12 +63,12 @@ class DocumentStructureAnalyzer(Analyzer):
         res[MetaDocument.DOC_IMAGE_ID] = ResourceHelper.get_bytes("block_doc.png")
         return res
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.old.DocumentBlockReferent import DocumentBlockReferent
         from pullenti.ner.old.DocumentReferent import DocumentReferent
-        if (type0 == DocumentBlockReferent.OBJ_TYPENAME): 
+        if (type0_ == DocumentBlockReferent.OBJ_TYPENAME): 
             return DocumentBlockReferent()
-        if (type0 == DocumentReferent.OBJ_TYPENAME): 
+        if (type0_ == DocumentReferent.OBJ_TYPENAME): 
             return DocumentReferent()
         return None
     
@@ -83,10 +83,10 @@ class DocumentStructureAnalyzer(Analyzer):
         items = list()
         last_token = None
         t = kit.first_token
-        first_pass2810 = True
+        first_pass2976 = True
         while True:
-            if first_pass2810: first_pass2810 = False
-            else: t = t.next0
+            if first_pass2976: first_pass2976 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             last_token = t
             ds = DocStructItem.try_attach(t, None, False)
@@ -104,11 +104,11 @@ class DocumentStructureAnalyzer(Analyzer):
                 if (ogl.begin_token.previous is not None): 
                     tr = self.__m_title_page_analyzer.process_referent1(kit.first_token, ogl.begin_token.previous)
                 items.clear()
-                t = ogl.end_token.next0
-                first_pass2811 = True
+                t = ogl.end_token.next0_
+                first_pass2977 = True
                 while True:
-                    if first_pass2811: first_pass2811 = False
-                    else: t = t.next0
+                    if first_pass2977: first_pass2977 = False
+                    else: t = t.next0_
                     if (not (t is not None)): break
                     if (not t.is_newline_before): 
                         continue
@@ -130,13 +130,13 @@ class DocumentStructureAnalyzer(Analyzer):
                     ds = DocStructItem.try_attach(t, ogl.content_items, False)
                     if (ds is not None and ds.typ != DocStructItem.Typs.INDEX): 
                         items.append(ds)
-                    t = t.next0
-                if (ogl.end_token.next0 is not None and ((ogl.end_token.next0.begin_char + 10) < last_token.end_char)): 
-                    ttt = kit.sofa.substring(ogl.end_token.next0.begin_char, (last_token.end_char - ogl.end_token.next0.begin_char) + 1).strip()
+                    t = t.next0_
+                if (ogl.end_token.next0_ is not None and ((ogl.end_token.next0_.begin_char + 10) < last_token.end_char)): 
+                    ttt = kit.sofa.substring(ogl.end_token.next0_.begin_char, (last_token.end_char - ogl.end_token.next0_.begin_char) + 1).strip()
                     if (ttt is not None and len(ttt) > 10): 
-                        bt = DocumentBlockReferent._new1478(DocumentBlockType.TAIL)
+                        bt = DocumentBlockReferent._new1629(DocumentBlockType.TAIL)
                         bt.add_slot(DocumentBlockReferent.ATTR_CONTENT, ttt, True, 0)
-                        tail = ReferentToken(bt, ogl.end_token.next0, last_token)
+                        tail = ReferentToken(bt, ogl.end_token.next0_, last_token)
                 if (ogl.begin_token.previous is not None): 
                     last_token = ogl.begin_token.previous
             else: 
@@ -168,14 +168,14 @@ class DocumentStructureAnalyzer(Analyzer):
             blk._add_parent(res)
             blk.add_slot(DocumentBlockReferent.ATTR_NAME, items[i].value, True, 0)
             blk.add_occurence(TextAnnotation(items[i].begin_token, items[i].end_token, blk))
-            cou = (last.end_char - items[i].end_token.next0.begin_char) + 1
-            txt = kit.sofa.substring(items[i].end_token.next0.begin_char, cou).strip()
+            cou = (last.end_char - items[i].end_token.next0_.begin_char) + 1
+            txt = kit.sofa.substring(items[i].end_token.next0_.begin_char, cou).strip()
             if (not Utils.isNullOrEmpty(txt) and len(txt) > 20): 
                 cnt = DocumentBlockReferent()
                 cnt = (ad.register_referent(cnt) if isinstance(ad.register_referent(cnt), DocumentBlockReferent) else None)
                 cnt._add_parent(blk)
                 cnt.add_slot(DocumentBlockReferent.ATTR_CONTENT, txt, True, 0)
-                cnt.add_occurence(TextAnnotation(items[i].end_token.next0, last, cnt))
+                cnt.add_occurence(TextAnnotation(items[i].end_token.next0_, last, cnt))
                 swichVal = items[i].typ
                 if (swichVal == DocStructItem.Typs.INTRO): 
                     cnt.typ = DocumentBlockType.INTRODUCTION

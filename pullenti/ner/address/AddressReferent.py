@@ -96,12 +96,12 @@ class AddressReferent(Referent):
     
     @property
     def house_type(self) -> 'AddressHouseType':
-        str0 = self.get_string_value(AddressReferent.ATTR_HOUSETYPE)
-        if (Utils.isNullOrEmpty(str0)): 
+        str0_ = self.get_string_value(AddressReferent.ATTR_HOUSETYPE)
+        if (Utils.isNullOrEmpty(str0_)): 
             return AddressHouseType.HOUSE
         try: 
-            return Utils.valToEnum(str0, AddressHouseType)
-        except Exception as ex340: 
+            return Utils.valToEnum(str0_, AddressHouseType)
+        except Exception as ex341: 
             return AddressHouseType.HOUSE
     
     @house_type.setter
@@ -122,12 +122,12 @@ class AddressReferent(Referent):
     @property
     def building_type(self) -> 'AddressBuildingType':
         """ Тип строения """
-        str0 = self.get_string_value(AddressReferent.ATTR_BUILDINGTYPE)
-        if (Utils.isNullOrEmpty(str0)): 
+        str0_ = self.get_string_value(AddressReferent.ATTR_BUILDINGTYPE)
+        if (Utils.isNullOrEmpty(str0_)): 
             return AddressBuildingType.BUILDING
         try: 
-            return Utils.valToEnum(str0, AddressBuildingType)
-        except Exception as ex341: 
+            return Utils.valToEnum(str0_, AddressBuildingType)
+        except Exception as ex342: 
             return AddressBuildingType.BUILDING
     
     @building_type.setter
@@ -156,12 +156,12 @@ class AddressReferent(Referent):
         return value
     
     @property
-    def floor0(self) -> str:
+    def floor0_(self) -> str:
         """ Этаж """
         return self.get_string_value(AddressReferent.ATTR_FLOOR)
     
-    @floor0.setter
-    def floor0(self, value) -> str:
+    @floor0_.setter
+    def floor0_(self, value) -> str:
         self.add_slot(AddressReferent.ATTR_FLOOR, value, True, 0)
         return value
     
@@ -246,12 +246,12 @@ class AddressReferent(Referent):
         return value
     
     @property
-    def zip0(self) -> str:
+    def zip0_(self) -> str:
         """ Почтовый индекс """
         return self.get_string_value(AddressReferent.ATTR_ZIP)
     
-    @zip0.setter
-    def zip0(self, value) -> str:
+    @zip0_.setter
+    def zip0_(self, value) -> str:
         self.add_slot(AddressReferent.ATTR_ZIP, value, True, 0)
         return value
     
@@ -356,7 +356,7 @@ class AddressReferent(Referent):
             res = Utils.valToEnum(s, AddressDetailType)
             if (isinstance(res, AddressDetailType)): 
                 return Utils.valToEnum(res, AddressDetailType)
-        except Exception as ex342: 
+        except Exception as ex343: 
             pass
         return AddressDetailType.UNDEFINED
     
@@ -369,14 +369,14 @@ class AddressReferent(Referent):
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int) -> str:
         from pullenti.ner.address.internal.MetaAddress import MetaAddress
         res = Utils.newStringIO(None)
-        str0 = self.get_string_value(AddressReferent.ATTR_DETAIL)
-        if (str0 is not None): 
-            str0 = (MetaAddress._global_meta.detail_feature.convert_inner_value_to_outer_value(str0, lang) if isinstance(MetaAddress._global_meta.detail_feature.convert_inner_value_to_outer_value(str0, lang), str) else None)
-        if (str0 is not None): 
-            print("[{0}".format(str0.lower()), end="", file=res, flush=True)
-            str0 = self.get_string_value(AddressReferent.ATTR_DETAILPARAM)
-            if ((str0) is not None): 
-                print(", {0}".format(str0), end="", file=res, flush=True)
+        str0_ = self.get_string_value(AddressReferent.ATTR_DETAIL)
+        if (str0_ is not None): 
+            str0_ = (MetaAddress._global_meta.detail_feature.convert_inner_value_to_outer_value(str0_, lang) if isinstance(MetaAddress._global_meta.detail_feature.convert_inner_value_to_outer_value(str0_, lang), str) else None)
+        if (str0_ is not None): 
+            print("[{0}".format(str0_.lower()), end="", file=res, flush=True)
+            str0_ = self.get_string_value(AddressReferent.ATTR_DETAILPARAM)
+            if ((str0_) is not None): 
+                print(", {0}".format(str0_), end="", file=res, flush=True)
             print(']', end="", file=res)
         strs = self.streets
         if (len(strs) == 0): 
@@ -415,8 +415,8 @@ class AddressReferent(Referent):
             print(("Б/Н" if self.building == "0" else self.building), end="", file=res)
         if (self.potch is not None): 
             print(" под.{0}".format(self.potch), end="", file=res, flush=True)
-        if (self.floor0 is not None): 
-            print(" эт.{0}".format(self.floor0), end="", file=res, flush=True)
+        if (self.floor0_ is not None): 
+            print(" эт.{0}".format(self.floor0_), end="", file=res, flush=True)
         if (self.flat is not None): 
             print(" кв.{0}".format(self.flat), end="", file=res, flush=True)
         if (self.corpus_or_flat is not None): 
@@ -451,8 +451,8 @@ class AddressReferent(Referent):
             elif (res.tell() > 0): 
                 print(';', end="", file=res)
             print(" {0}".format(g.to_string(True, lang, lev + 1)), end="", file=res, flush=True)
-        if (self.zip0 is not None): 
-            print("; {0}".format(self.zip0), end="", file=res, flush=True)
+        if (self.zip0_ is not None): 
+            print("; {0}".format(self.zip0_), end="", file=res, flush=True)
         return Utils.toStringStringIO(res).strip()
     
     def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
@@ -517,8 +517,8 @@ class AddressReferent(Referent):
         if (addr.potch is not None or self.potch is not None): 
             if (addr.potch != self.potch): 
                 return False
-        if (addr.floor0 is not None or self.floor0 is not None): 
-            if (addr.floor0 != self.floor0): 
+        if (addr.floor0_ is not None or self.floor0_ is not None): 
+            if (addr.floor0_ != self.floor0_): 
                 return False
         if (addr.post_office_box is not None or self.post_office_box is not None): 
             if (addr.post_office_box != self.post_office_box): 

@@ -35,10 +35,10 @@ class PhoneHelper:
             return
         PhoneHelper.__m_phone_root = PhoneHelper.PhoneNode()
         PhoneHelper.__m_all_country_codes = dict()
-        str0 = ResourceHelper.get_string("CountryPhoneCodes.txt")
-        if (str0 is None): 
+        str0_ = ResourceHelper.get_string("CountryPhoneCodes.txt")
+        if (str0_ is None): 
             raise Utils.newException("Can't file resource file {0} in Organization analyzer".format("CountryPhoneCodes.txt"), None)
-        with io.StringIO(str0) as r: 
+        with io.StringIO(str0_) as r: 
             while True:
                 line = Utils.readLineIO(r)
                 if (line is None): 
@@ -56,10 +56,10 @@ class PhoneHelper:
                 tn = PhoneHelper.__m_phone_root
                 for i in range(len(cod)):
                     dig = cod[i]
-                    inoutarg2278 = RefOutArgWrapper(None)
-                    inoutres2279 = Utils.tryGetValue(tn.children, dig, inoutarg2278)
-                    nn = inoutarg2278.value
-                    if (not inoutres2279): 
+                    inoutarg2431 = RefOutArgWrapper(None)
+                    inoutres2432 = Utils.tryGetValue(tn.children, dig, inoutarg2431)
+                    nn = inoutarg2431.value
+                    if (not inoutres2432): 
                         nn = PhoneHelper.PhoneNode()
                         nn.pref = cod[0 : (i + 1)]
                         tn.children[dig] = nn
@@ -71,7 +71,7 @@ class PhoneHelper:
     __m_all_country_codes = None
     
     @staticmethod
-    def get_all_country_codes() -> typing.List['java.util.Map.Entry']:
+    def get_all_country_codes() -> typing.List[tuple]:
         return PhoneHelper.__m_all_country_codes
     
     __m_phone_root = None
@@ -90,10 +90,10 @@ class PhoneHelper:
         max_ind = -1
         for i in range(len(full_number)):
             dig = full_number[i]
-            inoutarg2280 = RefOutArgWrapper(None)
-            inoutres2281 = Utils.tryGetValue(nod.children, dig, inoutarg2280)
-            nn = inoutarg2280.value
-            if (not inoutres2281): 
+            inoutarg2433 = RefOutArgWrapper(None)
+            inoutres2434 = Utils.tryGetValue(nod.children, dig, inoutarg2433)
+            nn = inoutarg2433.value
+            if (not inoutres2434): 
                 break
             if (nn.countries is not None and len(nn.countries) > 0): 
                 max_ind = i

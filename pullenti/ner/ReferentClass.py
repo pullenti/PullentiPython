@@ -46,7 +46,7 @@ class ReferentClass:
         
         """
         from pullenti.ner.Feature import Feature
-        res = Feature._new2498(attr_name, attr_caption, low_bound, up_bound)
+        res = Feature._new2651(attr_name, attr_caption, low_bound, up_bound)
         self.__m_features.append(res)
         if (not attr_name in self.__m_attrs): 
             self.__m_attrs[attr_name] = res
@@ -61,10 +61,10 @@ class ReferentClass:
             name_(str): 
         
         """
-        inoutarg2499 = RefOutArgWrapper(None)
-        inoutres2500 = Utils.tryGetValue(self.__m_attrs, name_, inoutarg2499)
-        res = inoutarg2499.value
-        if (not inoutres2500): 
+        inoutarg2652 = RefOutArgWrapper(None)
+        inoutres2653 = Utils.tryGetValue(self.__m_attrs, name_, inoutarg2652)
+        res = inoutarg2652.value
+        if (not inoutres2653): 
             return None
         else: 
             return res

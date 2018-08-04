@@ -10,20 +10,20 @@ import typing
 from pullenti.ntopy.Utils import Utils
 from pullenti.ntopy.Misc import RefOutArgWrapper
 from pullenti.ner.Referent import Referent
-from pullenti.ner.org.OrganizationKind import OrganizationKind
+from pullenti.ner._org.OrganizationKind import OrganizationKind
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.org.OrgProfile import OrgProfile
+from pullenti.ner._org.OrgProfile import OrgProfile
 
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-from pullenti.ner.org.internal.OrgOwnershipHelper import OrgOwnershipHelper
+from pullenti.ner._org.internal.OrgOwnershipHelper import OrgOwnershipHelper
 
 
 class OrganizationReferent(Referent):
     """ Организация как сущность """
     
     def __init__(self) -> None:
-        from pullenti.ner.org.internal.MetaOrganization import MetaOrganization
+        from pullenti.ner._org.internal.MetaOrganization import MetaOrganization
         self.__m_number_calc = False
         self.__m_number = None
         self.__m_parent = None
@@ -66,29 +66,29 @@ class OrganizationReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
+        from pullenti.ner._org.internal.OrgItemTypeToken import OrgItemTypeToken
         res = Utils.newStringIO(None)
         is_dep = self.kind == OrganizationKind.DEPARTMENT
         name = None
         altname = None
         names_count = 0
-        len0 = 0
+        len0_ = 0
         no_type = False
         for s in self.slots: 
             if (s.type_name == OrganizationReferent.ATTR_NAME): 
                 n = str(s.value)
                 names_count += 1
-                len0 += len(n)
+                len0_ += len(n)
         if (names_count > 0): 
-            len0 = math.floor(len0 / names_count)
-            if (len0 > 10): 
-                len0 -= ((math.floor(len0 / 7)))
+            len0_ = math.floor(len0_ / names_count)
+            if (len0_ > 10): 
+                len0_ -= ((math.floor(len0_ / 7)))
             cou = 0
             altcou = 0
             for s in self.slots: 
                 if (s.type_name == OrganizationReferent.ATTR_NAME): 
                     n = str(s.value)
-                    if (len(n) >= len0): 
+                    if (len(n) >= len0_): 
                         if (s.count > cou): 
                             name = n
                             cou = s.count
@@ -218,13 +218,13 @@ class OrganizationReferent(Referent):
         res = list()
         for s in self.slots: 
             if (s.type_name == OrganizationReferent.ATTR_NAME or s.type_name == OrganizationReferent.ATTR_EPONYM): 
-                str0 = str(s.value)
-                if (not str0 in res): 
-                    res.append(str0)
-                if (str0.find(' ') > 0 or str0.find('-') > 0): 
-                    str0 = str0.replace(" ", "").replace("-", "")
-                    if (not str0 in res): 
-                        res.append(str0)
+                str0_ = str(s.value)
+                if (not str0_ in res): 
+                    res.append(str0_)
+                if (str0_.find(' ') > 0 or str0_.find('-') > 0): 
+                    str0_ = str0_.replace(" ", "").replace("-", "")
+                    if (not str0_ in res): 
+                        res.append(str0_)
             elif (s.type_name == OrganizationReferent.ATTR_NUMBER): 
                 res.append("{0} {1}".format(Utils.enumToString(self.kind), str(s.value)))
         if (len(res) == 0): 
@@ -303,9 +303,9 @@ class OrganizationReferent(Referent):
                         if (val == pref): 
                             return r.get_string_value("VALUE")
                 elif (isinstance(s.value, str)): 
-                    str0 = (s.value if isinstance(s.value, str) else None)
-                    if (str0.startswith(pref) and len(str0) > (len(pref) + 1)): 
-                        return str0[len(pref) + 1 : ]
+                    str0_ = (s.value if isinstance(s.value, str) else None)
+                    if (str0_.startswith(pref) and len(str0_) > (len(pref) + 1)): 
+                        return str0_[len(pref) + 1 : ]
         return None
     
     __m_empty_names = None
@@ -326,10 +326,10 @@ class OrganizationReferent(Referent):
         if (name is None or (len(name) < 1)): 
             return None
         if (name[0].isdigit() and name.find(' ') > 0): 
-            inoutarg2053 = RefOutArgWrapper(None)
-            inoutres2054 = Utils.tryParseInt(name[0 : (name.find(' '))], inoutarg2053)
-            i = inoutarg2053.value
-            if (inoutres2054): 
+            inoutarg2206 = RefOutArgWrapper(0)
+            inoutres2207 = Utils.tryParseInt(name[0 : (name.find(' '))], inoutarg2206)
+            i = inoutarg2206.value
+            if (inoutres2207): 
                 if (i > 1): 
                     num.value = i
                     name = name[name.find(' ') : ].strip()
@@ -341,8 +341,8 @@ class OrganizationReferent(Referent):
             if (i >= 0 and name[i] == '.'): 
                 pass
             else: 
-                inoutres2055 = Utils.tryParseInt(name[i + 1 : ], num)
-                if (i > 0 and inoutres2055 and num.value > 0): 
+                inoutres2208 = Utils.tryParseInt(name[i + 1 : ], num)
+                if (i > 0 and inoutres2208 and num.value > 0): 
                     if (i < 1): 
                         return None
                     name = name[0 : (i)].strip()
@@ -395,9 +395,9 @@ class OrganizationReferent(Referent):
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner.TextToken import TextToken
         from pullenti.morph.Morphology import Morphology
-        inoutarg2056 = RefOutArgWrapper(None)
-        s = self.__correct_name(name, inoutarg2056)
-        num = inoutarg2056.value
+        inoutarg2209 = RefOutArgWrapper(0)
+        s = self.__correct_name(name, inoutarg2209)
+        num = inoutarg2209.value
         if (s is None): 
             if (num > 0 and self.number is None): 
                 self.number = str(num)
@@ -422,7 +422,7 @@ class OrganizationReferent(Referent):
                 s = "{0}{1}".format(s, num)
         cou = 1
         if (t is not None and not t.chars.is_letter and BracketHelper.is_bracket(t, False)): 
-            t = t.next0
+            t = t.next0_
         if ((isinstance(t, TextToken) and ((' ') not in s) and len(s) > 3) and s == (t if isinstance(t, TextToken) else None).term): 
             mt = Morphology.process(s, t.morph.language, None)
             if (mt is not None and len(mt) == 1): 
@@ -467,9 +467,9 @@ class OrganizationReferent(Referent):
                 return
             if (typ.name is not None and len(typ.name) > len(typ.typ)): 
                 num = 0
-                inoutarg2057 = RefOutArgWrapper(None)
-                s = self.__correct_name(typ.name, inoutarg2057)
-                num = inoutarg2057.value
+                inoutarg2210 = RefOutArgWrapper(0)
+                s = self.__correct_name(typ.name, inoutarg2210)
+                num = inoutarg2210.value
                 if (len(s) > len(typ.typ)): 
                     self.add_slot(OrganizationReferent.ATTR_NAME, s, False, cou)
                 if (num > 0 and typ.is_dep and self.number is None): 
@@ -484,9 +484,9 @@ class OrganizationReferent(Referent):
                 self.add_slot(OrganizationReferent.ATTR_NAME, "{0} {1}".format(typ.typ.upper(), s), False, cou)
                 if (typ.name is not None): 
                     num = 0
-                    inoutarg2058 = RefOutArgWrapper(None)
-                    ss = self.__correct_name(typ.name, inoutarg2058)
-                    num = inoutarg2058.value
+                    inoutarg2211 = RefOutArgWrapper(0)
+                    ss = self.__correct_name(typ.name, inoutarg2211)
+                    num = inoutarg2211.value
                     if (ss is not None): 
                         self.add_type_str(ss)
                         self.add_slot(OrganizationReferent.ATTR_NAME, "{0} {1}".format(ss, s), False, cou)
@@ -504,14 +504,14 @@ class OrganizationReferent(Referent):
         for s in self.slots: 
             if (s.type_name == OrganizationReferent.ATTR_PROFILE): 
                 try: 
-                    str0 = (s.value if isinstance(s.value, str) else None)
-                    if (str0 == "Politics"): 
-                        str0 = "Policy"
-                    elif (str0 == "PartOf"): 
-                        str0 = "Unit"
-                    v = Utils.valToEnum(str0, OrgProfile)
+                    str0_ = (s.value if isinstance(s.value, str) else None)
+                    if (str0_ == "Politics"): 
+                        str0_ = "Policy"
+                    elif (str0_ == "PartOf"): 
+                        str0_ = "Unit"
+                    v = Utils.valToEnum(str0_, OrgProfile)
                     res.append(v)
-                except Exception as ex2059: 
+                except Exception as ex2212: 
                     pass
         return res
     
@@ -619,9 +619,9 @@ class OrganizationReferent(Referent):
         res = list(self.types)
         res.sort()
         i = 0
-        first_pass2850 = True
+        first_pass3018 = True
         while True:
-            if first_pass2850: first_pass2850 = False
+            if first_pass3018: first_pass3018 = False
             else: i += 1
             if (not (i < len(res))): break
             if (res[i][0].islower()): 
@@ -791,7 +791,7 @@ class OrganizationReferent(Referent):
         return False
     
     @property
-    def _name_vars(self) -> typing.List['java.util.Map.Entry']:
+    def _name_vars(self) -> typing.List[tuple]:
         from pullenti.ner.core.MiscHelper import MiscHelper
         if (self.__m_name_vars is not None): 
             return self.__m_name_vars
@@ -831,9 +831,9 @@ class OrganizationReferent(Referent):
                 a = n.replace(" ", "")
                 if (not a in self.__m_name_vars): 
                     self.__m_name_vars[a] = False
-        for e0 in self.eponyms: 
+        for e0_ in self.eponyms: 
             for ty in self.types: 
-                na = "{0} {1}".format(ty, e0).upper()
+                na = "{0} {1}".format(ty, e0_).upper()
                 if (not na in self.__m_name_vars): 
                     self.__m_name_vars[na] = False
         new_vars = list()
@@ -877,32 +877,32 @@ class OrganizationReferent(Referent):
                     return True
         return False
     
-    def __check_eq_eponyms(self, org_ : 'OrganizationReferent') -> bool:
-        if (self.find_slot(OrganizationReferent.ATTR_EPONYM, None, True) is None and org_.find_slot(OrganizationReferent.ATTR_EPONYM, None, True) is None): 
+    def __check_eq_eponyms(self, org0_ : 'OrganizationReferent') -> bool:
+        if (self.find_slot(OrganizationReferent.ATTR_EPONYM, None, True) is None and org0_.find_slot(OrganizationReferent.ATTR_EPONYM, None, True) is None): 
             return False
         eps = self.eponyms
-        eps1 = org_.eponyms
-        for e0 in eps: 
-            if (e0 in eps1): 
+        eps1 = org0_.eponyms
+        for e0_ in eps: 
+            if (e0_ in eps1): 
                 return True
-            if (not LanguageHelper.ends_with(e0, "а")): 
-                if (e0 + "а" in eps1): 
+            if (not LanguageHelper.ends_with(e0_, "а")): 
+                if (e0_ + "а" in eps1): 
                     return True
-        for e0 in eps1: 
-            if (e0 in eps): 
+        for e0_ in eps1: 
+            if (e0_ in eps): 
                 return True
-            if (not LanguageHelper.ends_with(e0, "а")): 
-                if (e0 + "а" in eps): 
+            if (not LanguageHelper.ends_with(e0_, "а")): 
+                if (e0_ + "а" in eps): 
                     return True
-        if (self.find_slot(OrganizationReferent.ATTR_EPONYM, None, True) is not None and org_.find_slot(OrganizationReferent.ATTR_EPONYM, None, True) is not None): 
+        if (self.find_slot(OrganizationReferent.ATTR_EPONYM, None, True) is not None and org0_.find_slot(OrganizationReferent.ATTR_EPONYM, None, True) is not None): 
             return False
-        s = org_.to_string(True, MorphLang.UNKNOWN, 0)
-        for e0 in self.eponyms: 
-            if (e0 in s): 
+        s = org0_.to_string(True, MorphLang.UNKNOWN, 0)
+        for e0_ in self.eponyms: 
+            if (e0_ in s): 
                 return True
         s = self.to_string(True, MorphLang.UNKNOWN, 0)
-        for e0 in org_.eponyms: 
-            if (e0 in s): 
+        for e0_ in org0_.eponyms: 
+            if (e0_ in s): 
                 return True
         return False
     
@@ -913,20 +913,20 @@ class OrganizationReferent(Referent):
         return ret
     
     def __can_be_equals(self, obj : 'Referent', ignore_geo_objects : bool, typ : 'EqualType', lev : int) -> bool:
-        from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
-        org_ = (obj if isinstance(obj, OrganizationReferent) else None)
-        if (org_ is None): 
+        from pullenti.ner._org.internal.OrgItemTypeToken import OrgItemTypeToken
+        org0_ = (obj if isinstance(obj, OrganizationReferent) else None)
+        if (org0_ is None): 
             return False
-        if (org_ == self): 
+        if (org0_ == self): 
             return True
         if (lev > 4): 
             return False
         empty = True
         geo_not_equals = False
         k1 = self.kind
-        k2 = org_.kind
+        k2 = org0_.kind
         geos1 = self._geo_objects
-        geos2 = org_._geo_objects
+        geos2 = org0_._geo_objects
         if (len(geos1) > 0 and len(geos2) > 0): 
             geo_not_equals = True
             for g1 in geos1: 
@@ -949,33 +949,33 @@ class OrganizationReferent(Referent):
                     if (not eq): 
                         return False
         inn_ = self.inn
-        inn2 = org_.inn
+        inn2 = org0_.inn
         if (inn_ is not None and inn2 is not None): 
             return inn_ == inn2
         ogrn_ = self.ogrn
-        ogrn2 = org_.ogrn
+        ogrn2 = org0_.ogrn
         if (ogrn_ is not None and ogrn2 is not None): 
             return ogrn_ == ogrn2
         hi1 = Utils.ifNotNull(self.higher, self._m_temp_parent_org)
-        hi2 = Utils.ifNotNull(org_.higher, org_._m_temp_parent_org)
+        hi2 = Utils.ifNotNull(org0_.higher, org0_._m_temp_parent_org)
         hi_eq = False
         if (hi1 is not None and hi2 is not None): 
-            if (org_.find_slot(OrganizationReferent.ATTR_HIGHER, hi1, False) is None): 
+            if (org0_.find_slot(OrganizationReferent.ATTR_HIGHER, hi1, False) is None): 
                 if (hi1.__can_be_equals(hi2, ignore_geo_objects, typ, lev + 1)): 
                     pass
                 else: 
                     return False
             hi_eq = True
-        if (self.owner is not None or org_.owner is not None): 
-            if (self.owner is None or org_.owner is None): 
+        if (self.owner is not None or org0_.owner is not None): 
+            if (self.owner is None or org0_.owner is None): 
                 return False
-            if (not self.owner.can_be_equals(org_.owner, typ)): 
+            if (not self.owner.can_be_equals(org0_.owner, typ)): 
                 return False
             hi_eq = True
         if (typ == Referent.EqualType.DIFFERENTTEXTS and not hi_eq): 
-            if (self.higher is not None or org_.higher is not None): 
+            if (self.higher is not None or org0_.higher is not None): 
                 return False
-        if (OrgItemTypeToken.is_types_antagonisticoo(self, org_)): 
+        if (OrgItemTypeToken.is_types_antagonisticoo(self, org0_)): 
             return False
         if (typ == Referent.EqualType.DIFFERENTTEXTS): 
             if (k1 == OrganizationKind.DEPARTMENT or k2 == OrganizationKind.DEPARTMENT): 
@@ -985,13 +985,13 @@ class OrganizationReferent(Referent):
                     return False
             elif (k1 != k2): 
                 return False
-        eq_eponyms = self.__check_eq_eponyms(org_)
+        eq_eponyms = self.__check_eq_eponyms(org0_)
         eq_number = False
-        if (self.number is not None or org_.number is not None): 
-            if (org_.number != self.number): 
-                if (((org_.number is None or self.number is None)) and eq_eponyms): 
+        if (self.number is not None or org0_.number is not None): 
+            if (org0_.number != self.number): 
+                if (((org0_.number is None or self.number is None)) and eq_eponyms): 
                     pass
-                elif (typ == Referent.EqualType.FORMERGING and ((org_.number is None or self.number is None))): 
+                elif (typ == Referent.EqualType.FORMERGING and ((org0_.number is None or self.number is None))): 
                     pass
                 else: 
                     return False
@@ -1003,20 +1003,20 @@ class OrganizationReferent(Referent):
                             eq_number = True
                             break
         if (typ == Referent.EqualType.DIFFERENTTEXTS): 
-            if (self.number is not None or org_.number is not None): 
+            if (self.number is not None or org0_.number is not None): 
                 if (not eq_number and not eq_eponyms): 
                     return False
         if (k1 != OrganizationKind.UNDEFINED and k2 != OrganizationKind.UNDEFINED): 
             if (k1 != k2): 
                 oo = False
                 for ty1 in self.types: 
-                    if (ty1 in org_.types): 
+                    if (ty1 in org0_.types): 
                         oo = True
                         break
                 if (not oo): 
                     has_pr = False
                     for p in self.profiles: 
-                        if (org_.contains_profile(p)): 
+                        if (org0_.contains_profile(p)): 
                             has_pr = True
                             break
                     if (not has_pr): 
@@ -1025,10 +1025,10 @@ class OrganizationReferent(Referent):
             if (k1 == OrganizationKind.UNDEFINED): 
                 k1 = k2
             if ((k1 == OrganizationKind.BANK or k1 == OrganizationKind.MEDICAL or k1 == OrganizationKind.PARTY) or k1 == OrganizationKind.CULTURE): 
-                if (len(self.types) > 0 and len(org_.types) > 0): 
+                if (len(self.types) > 0 and len(org0_.types) > 0): 
                     return False
         if ((k1 == OrganizationKind.GOVENMENT or k2 == OrganizationKind.GOVENMENT or k1 == OrganizationKind.MILITARY) or k2 == OrganizationKind.MILITARY): 
-            typs = org_.types
+            typs = org0_.types
             ok = False
             for ty in self.types: 
                 if (ty in typs): 
@@ -1038,8 +1038,8 @@ class OrganizationReferent(Referent):
                 return False
         if (typ == Referent.EqualType.FORMERGING): 
             pass
-        elif (self.find_slot(OrganizationReferent.ATTR_NAME, None, True) is not None or org_.find_slot(OrganizationReferent.ATTR_NAME, None, True) is not None): 
-            if (((eq_number or eq_eponyms)) and ((self.find_slot(OrganizationReferent.ATTR_NAME, None, True) is None or org_.find_slot(OrganizationReferent.ATTR_NAME, None, True) is None))): 
+        elif (self.find_slot(OrganizationReferent.ATTR_NAME, None, True) is not None or org0_.find_slot(OrganizationReferent.ATTR_NAME, None, True) is not None): 
+            if (((eq_number or eq_eponyms)) and ((self.find_slot(OrganizationReferent.ATTR_NAME, None, True) is None or org0_.find_slot(OrganizationReferent.ATTR_NAME, None, True) is None))): 
                 pass
             else: 
                 empty = False
@@ -1047,10 +1047,10 @@ class OrganizationReferent(Referent):
                 for v in self._name_vars.items(): 
                     if (typ == Referent.EqualType.DIFFERENTTEXTS and v[1]): 
                         continue
-                    inoutarg2060 = RefOutArgWrapper(None)
-                    inoutres2061 = Utils.tryGetValue(org_._name_vars, v[0], inoutarg2060)
-                    b = inoutarg2060.value
-                    if (not inoutres2061): 
+                    inoutarg2213 = RefOutArgWrapper(False)
+                    inoutres2214 = Utils.tryGetValue(org0_._name_vars, v[0], inoutarg2213)
+                    b = inoutarg2213.value
+                    if (not inoutres2214): 
                         continue
                     if (typ == Referent.EqualType.DIFFERENTTEXTS and b): 
                         continue
@@ -1058,18 +1058,18 @@ class OrganizationReferent(Referent):
                         continue
                     if (b and len(self.names) > 1 and (len(v[0]) < 4)): 
                         continue
-                    if (v[1] and len(org_.names) > 1 and (len(v[0]) < 4)): 
+                    if (v[1] and len(org0_.names) > 1 and (len(v[0]) < 4)): 
                         continue
                     if (len(v[0]) > max_len): 
                         max_len = len(v[0])
                 if (typ != Referent.EqualType.DIFFERENTTEXTS): 
                     for v in self.__m_name_hashs: 
-                        if (v in org_.__m_name_hashs): 
+                        if (v in org0_.__m_name_hashs): 
                             if (len(v) > max_len): 
                                 max_len = len(v)
                 if ((max_len < 2) and ((k1 == OrganizationKind.GOVENMENT or typ == Referent.EqualType.FORMERGING)) and typ != Referent.EqualType.DIFFERENTTEXTS): 
                     if (len(geos1) == len(geos2)): 
-                        nams = (org_._name_vars.keys() if typ == Referent.EqualType.FORMERGING else org_.names)
+                        nams = (org0_._name_vars.keys() if typ == Referent.EqualType.FORMERGING else org0_.names)
                         nams0 = (self._name_vars.keys() if typ == Referent.EqualType.FORMERGING else self.names)
                         for n in nams0: 
                             for nn in nams: 
@@ -1086,7 +1086,7 @@ class OrganizationReferent(Referent):
                     if (not ok): 
                         if (len(self.names) == 1 and (len(self.names[0]) < 4)): 
                             ok = True
-                        elif (len(org_.names) == 1 and (len(org_.names[0]) < 4)): 
+                        elif (len(org0_.names) == 1 and (len(org0_.names[0]) < 4)): 
                             ok = True
                     if (not ok): 
                         return False
@@ -1098,36 +1098,36 @@ class OrganizationReferent(Referent):
             else: 
                 ok = False
                 eps = self.eponyms
-                eps1 = org_.eponyms
-                for e0 in eps: 
-                    if (e0 in eps1): 
+                eps1 = org0_.eponyms
+                for e0_ in eps: 
+                    if (e0_ in eps1): 
                         ok = True
                         break
-                    if (not LanguageHelper.ends_with(e0, "а")): 
-                        if (e0 + "а" in eps1): 
+                    if (not LanguageHelper.ends_with(e0_, "а")): 
+                        if (e0_ + "а" in eps1): 
                             ok = True
                             break
                 if (not ok): 
-                    for e0 in eps1: 
-                        if (e0 in eps): 
+                    for e0_ in eps1: 
+                        if (e0_ in eps): 
                             ok = True
                             break
-                        if (not LanguageHelper.ends_with(e0, "а")): 
-                            if (e0 + "а" in eps): 
+                        if (not LanguageHelper.ends_with(e0_, "а")): 
+                            if (e0_ + "а" in eps): 
                                 ok = True
                                 break
                 if (ok): 
                     return True
                 if (self.find_slot(OrganizationReferent.ATTR_EPONYM, None, True) is None or obj.find_slot(OrganizationReferent.ATTR_EPONYM, None, True) is None): 
                     s = obj.to_string(True, MorphLang.UNKNOWN, 0)
-                    for e0 in self.eponyms: 
-                        if (e0 in s): 
+                    for e0_ in self.eponyms: 
+                        if (e0_ in s): 
                             ok = True
                             break
                     if (not ok): 
                         s = self.to_string(True, MorphLang.UNKNOWN, 0)
-                        for e0 in org_.eponyms: 
-                            if (e0 in s): 
+                        for e0_ in org0_.eponyms: 
+                            if (e0_ in s): 
                                 ok = True
                                 break
                     if (ok): 
@@ -1143,24 +1143,24 @@ class OrganizationReferent(Referent):
             if (not empty): 
                 return True
             if (hi_eq): 
-                typs = org_.types
+                typs = org0_.types
                 for ty in self.types: 
                     if (ty in typs): 
                         return True
         if (typ == Referent.EqualType.DIFFERENTTEXTS): 
-            return self.__str__() == str(org_)
+            return self.__str__() == str(org0_)
         if (empty): 
             if (((len(geos1) > 0 and len(geos2) > 0)) or k1 == OrganizationKind.DEPARTMENT or k1 == OrganizationKind.JUSTICE): 
-                typs = org_.types
+                typs = org0_.types
                 for ty in self.types: 
                     if (ty in typs): 
                         return True
             full_not_eq = False
             for s in self.slots: 
-                if (org_.find_slot(s.type_name, s.value, True) is None): 
+                if (org0_.find_slot(s.type_name, s.value, True) is None): 
                     full_not_eq = True
                     break
-            for s in org_.slots: 
+            for s in org0_.slots: 
                 if (self.find_slot(s.type_name, s.value, True) is None): 
                     full_not_eq = True
                     break
@@ -1207,13 +1207,13 @@ class OrganizationReferent(Referent):
         for i in range(len(self.slots) - 1, -1, -1):
             if (self.slots[i].type_name == OrganizationReferent.ATTR_TYPE): 
                 ty = str(self.slots[i]).upper()
-                del0 = False
+                del0_ = False
                 for s in self.slots: 
                     if (s.type_name == OrganizationReferent.ATTR_NAME): 
                         na = str(s.value)
                         if (LanguageHelper.ends_with(ty, na)): 
-                            del0 = True
-                if (del0): 
+                            del0_ = True
+                if (del0_): 
                     del self.slots[i]
         for t in self.types: 
             n = self.find_slot(OrganizationReferent.ATTR_NAME, t.upper(), True)
@@ -1230,17 +1230,17 @@ class OrganizationReferent(Referent):
                     self.slots.remove(n)
         eps = self.eponyms
         if (len(eps) > 1): 
-            for e0 in eps: 
+            for e0_ in eps: 
                 for ee in eps: 
-                    if (e0 != ee and e0.startswith(ee)): 
+                    if (e0_ != ee and e0_.startswith(ee)): 
                         s = self.find_slot(OrganizationReferent.ATTR_EPONYM, ee, True)
                         if (s is not None): 
                             s.delete()
         typs = self.types
         epons = self.eponyms
         for t in typs: 
-            for e0 in epons: 
-                n = self.find_slot(OrganizationReferent.ATTR_NAME, "{0} {1}".format(t.upper(), e0.upper()), True)
+            for e0_ in epons: 
+                n = self.find_slot(OrganizationReferent.ATTR_NAME, "{0} {1}".format(t.upper(), e0_.upper()), True)
                 if (n is not None): 
                     self.slots.remove(n)
         if (remove_long_gov_names and self.kind == OrganizationKind.GOVENMENT): 
@@ -1308,21 +1308,21 @@ class OrganizationReferent(Referent):
         self._ext_ontology_attached = False
     
     def _get_pure_names(self) -> typing.List[str]:
-        vars0 = list()
+        vars0_ = list()
         typs = self.types
         for a in self.slots: 
             if (a.type_name == OrganizationReferent.ATTR_NAME): 
                 s = str(a.value).upper()
-                if (not s in vars0): 
-                    vars0.append(s)
+                if (not s in vars0_): 
+                    vars0_.append(s)
                 for t in typs: 
                     if (s.upper().startswith(t.upper())): 
                         if ((len(s) < (len(t) + 4)) or s[len(t)] != ' '): 
                             continue
                         ss = s[len(t) + 1 : ]
-                        if (not ss in vars0): 
-                            vars0.append(ss)
-        return vars0
+                        if (not ss in vars0_): 
+                            vars0_.append(ss)
+        return vars0_
     
     def create_ontology_item(self) -> 'IntOntologyItem':
         return self.create_ontology_item_ex(2, False, False)
@@ -1330,13 +1330,13 @@ class OrganizationReferent(Referent):
     def create_ontology_item_ex(self, min_len : int, only_names : bool=False, pure_names : bool=False) -> 'IntOntologyItem':
         from pullenti.ner.core.Termin import Termin
         oi = IntOntologyItem(self)
-        vars0 = list()
+        vars0_ = list()
         typs = self.types
         for a in self.slots: 
             if (a.type_name == OrganizationReferent.ATTR_NAME): 
                 s = str(a.value).upper()
-                if (not s in vars0): 
-                    vars0.append(s)
+                if (not s in vars0_): 
+                    vars0_.append(s)
                 if (not pure_names): 
                     sp = 0
                     for jj in range(len(s)):
@@ -1344,31 +1344,31 @@ class OrganizationReferent(Referent):
                             sp += 1
                     if (sp == 1): 
                         s = s.replace(" ", "")
-                        if (not s in vars0): 
-                            vars0.append(s)
+                        if (not s in vars0_): 
+                            vars0_.append(s)
         if (not pure_names): 
             for v in self._name_vars.keys(): 
-                if (not v in vars0): 
-                    vars0.append(v)
+                if (not v in vars0_): 
+                    vars0_.append(v)
         if (not only_names): 
             if (self.number is not None): 
                 for a in self.slots: 
                     if (a.type_name == OrganizationReferent.ATTR_TYPE): 
                         s = str(a.value).upper()
-                        if (not s in vars0): 
-                            vars0.append(s)
-            if (len(vars0) == 0): 
+                        if (not s in vars0_): 
+                            vars0_.append(s)
+            if (len(vars0_) == 0): 
                 for t in self.types: 
                     up = t.upper()
-                    if (not up in vars0): 
-                        vars0.append(up)
+                    if (not up in vars0_): 
+                        vars0_.append(up)
             if (self.inn is not None): 
-                vars0.insert(0, "ИНН:" + self.inn)
+                vars0_.insert(0, "ИНН:" + self.inn)
             if (self.ogrn is not None): 
-                vars0.insert(0, "ОГРН:" + self.ogrn)
-        max0 = 20
+                vars0_.insert(0, "ОГРН:" + self.ogrn)
+        max0_ = 20
         cou = 0
-        for v in vars0: 
+        for v in vars0_: 
             if (len(v) >= min_len): 
                 if (pure_names): 
                     term = Termin()
@@ -1377,7 +1377,7 @@ class OrganizationReferent(Referent):
                     term = Termin(v)
                 oi.termins.append(term)
                 cou += 1
-                if ((cou) >= max0): 
+                if ((cou) >= max0_): 
                     break
         if (len(oi.termins) == 0): 
             return None
@@ -1386,7 +1386,7 @@ class OrganizationReferent(Referent):
     @property
     def kind(self) -> 'OrganizationKind':
         """ Коласс организации (некоторая экспертная оценка на основе названия и типов) """
-        from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
+        from pullenti.ner._org.internal.OrgItemTypeToken import OrgItemTypeToken
         if (not self.__m_kind_calc): 
             self.__m_kind = OrgItemTypeToken.check_kind(self)
             if (self.__m_kind == OrganizationKind.UNDEFINED): 

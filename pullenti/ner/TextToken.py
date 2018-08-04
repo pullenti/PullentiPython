@@ -76,36 +76,36 @@ class TextToken(Token):
             print(", {0}".format(str(l_)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
-    def check_value(self, dict0 : typing.List['java.util.Map.Entry']) -> object:
+    def check_value(self, dict0_ : typing.List[tuple]) -> object:
         """ Попробовать привязать словарь
         
         Args:
-            dict0(typing.List[java.util.Map.Entry]): 
+            dict0_(typing.List[tuple]): 
         
         """
         from pullenti.morph.MorphWordForm import MorphWordForm
-        if (dict0 is None): 
+        if (dict0_ is None): 
             return None
-        inoutarg2505 = RefOutArgWrapper(None)
-        inoutres2506 = Utils.tryGetValue(dict0, self.term, inoutarg2505)
-        res = inoutarg2505.value
-        if (inoutres2506): 
+        inoutarg2658 = RefOutArgWrapper(None)
+        inoutres2659 = Utils.tryGetValue(dict0_, self.term, inoutarg2658)
+        res = inoutarg2658.value
+        if (inoutres2659): 
             return res
         if (self.morph is not None): 
             for it in self.morph.items: 
                 mf = (it if isinstance(it, MorphWordForm) else None)
                 if (mf is not None): 
                     if (mf.normal_case is not None): 
-                        inoutarg2501 = RefOutArgWrapper(None)
-                        inoutres2502 = Utils.tryGetValue(dict0, mf.normal_case, inoutarg2501)
-                        res = inoutarg2501.value
-                        if (inoutres2502): 
+                        inoutarg2654 = RefOutArgWrapper(None)
+                        inoutres2655 = Utils.tryGetValue(dict0_, mf.normal_case, inoutarg2654)
+                        res = inoutarg2654.value
+                        if (inoutres2655): 
                             return res
                     if (mf.normal_full is not None and mf.normal_case != mf.normal_full): 
-                        inoutarg2503 = RefOutArgWrapper(None)
-                        inoutres2504 = Utils.tryGetValue(dict0, mf.normal_full, inoutarg2503)
-                        res = inoutarg2503.value
-                        if (inoutres2504): 
+                        inoutarg2656 = RefOutArgWrapper(None)
+                        inoutres2657 = Utils.tryGetValue(dict0_, mf.normal_full, inoutarg2656)
+                        res = inoutarg2656.value
+                        if (inoutres2657): 
                             return res
         return None
     
@@ -138,10 +138,10 @@ class TextToken(Token):
         empty = True
         for it in self.morph.items: 
             if (mc is not None and not mc.is_undefined): 
-                cc = it.class0.value & mc.value
+                cc = it.class0_.value & mc.value
                 if (cc == 0): 
                     continue
-                if (MorphClass.is_misc_int(cc) and not MorphClass.is_proper_int(cc) and mc.value != it.class0.value): 
+                if (MorphClass.is_misc_int(cc) and not MorphClass.is_proper_int(cc) and mc.value != it.class0_.value): 
                     continue
             wf = (it if isinstance(it, MorphWordForm) else None)
             normal_full = False
@@ -149,7 +149,7 @@ class TextToken(Token):
                 if (((it.gender & gender)) == MorphGender.UNDEFINED): 
                     if ((gender == MorphGender.MASCULINE and ((it.gender != MorphGender.UNDEFINED or it.number == MorphNumber.PLURAL)) and wf is not None) and wf.normal_full is not None): 
                         normal_full = True
-                    elif (gender == MorphGender.MASCULINE and it.class0.is_personal_pronoun): 
+                    elif (gender == MorphGender.MASCULINE and it.class0_.is_personal_pronoun): 
                         pass
                     else: 
                         continue
@@ -177,10 +177,10 @@ class TextToken(Token):
             return None
         te = None
         if (single_number and mc is not None): 
-            bi = MorphBaseInfo._new486(MorphClass(mc), gender, MorphNumber.SINGULAR, self.morph.language)
-            vars0 = Morphology.get_wordform(self.term, bi)
-            if (vars0 is not None): 
-                te = vars0
+            bi = MorphBaseInfo._new504(MorphClass(mc), gender, MorphNumber.SINGULAR, self.morph.language)
+            vars0_ = Morphology.get_wordform(self.term, bi)
+            if (vars0_ is not None): 
+                te = vars0_
         if (self.chars.is_cyrillic_letter and te is None and len(self.term) > 3): 
             ch0 = self.term[len(self.term) - 1]
             ch1 = self.term[len(self.term) - 2]
@@ -202,12 +202,12 @@ class TextToken(Token):
         from pullenti.ner.MetaToken import MetaToken
         res = list()
         t = begin
-        while t is not None and t != end.next0 and t.end_char <= end.end_char: 
+        while t is not None and t != end.next0_ and t.end_char <= end.end_char: 
             if (isinstance(t, TextToken)): 
                 res.append(t if isinstance(t, TextToken) else None)
             elif (isinstance(t, MetaToken)): 
                 res.extend(TextToken.get_source_text_tokens((t if isinstance(t, MetaToken) else None).begin_token, (t if isinstance(t, MetaToken) else None).end_token))
-            t = t.next0
+            t = t.next0_
         return res
     
     @property
@@ -219,10 +219,10 @@ class TextToken(Token):
             return True
         for it in self.morph.items: 
             if (isinstance(it, MorphWordForm) and (it if isinstance(it, MorphWordForm) else None).is_in_dictionary): 
-                if (it.class0.is_verb and it.case.is_undefined): 
+                if (it.class0_.is_verb and it.case.is_undefined): 
                     ret = True
-                elif (not it.class0.is_verb): 
-                    if (it.class0.is_adjective and it.contains_attr("к.ф.", MorphClass())): 
+                elif (not it.class0_.is_verb): 
+                    if (it.class0_.is_adjective and it.contains_attr("к.ф.", MorphClass())): 
                         pass
                     else: 
                         return False
@@ -255,13 +255,13 @@ class TextToken(Token):
 
     
     @staticmethod
-    def _new475(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : str) -> 'TextToken':
+    def _new493(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : str) -> 'TextToken':
         res = TextToken(_arg1, _arg2)
         res.term0 = _arg3
         return res
     
     @staticmethod
-    def _new478(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : 'CharsInfo', _arg4 : int, _arg5 : int, _arg6 : str) -> 'TextToken':
+    def _new496(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : 'CharsInfo', _arg4 : int, _arg5 : int, _arg6 : str) -> 'TextToken':
         res = TextToken(_arg1, _arg2)
         res.chars = _arg3
         res.begin_char = _arg4

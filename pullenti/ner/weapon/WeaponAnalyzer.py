@@ -39,15 +39,15 @@ class WeaponAnalyzer(Analyzer):
         return [MetaWeapon._global_meta]
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         from pullenti.ner.weapon.internal.MetaWeapon import MetaWeapon
         res = dict()
         res[MetaWeapon.IMAGE_ID] = ResourceHelper.get_bytes("weapon.jpg")
         return res
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.weapon.WeaponReferent import WeaponReferent
-        if (type0 == WeaponReferent.OBJ_TYPENAME): 
+        if (type0_ == WeaponReferent.OBJ_TYPENAME): 
             return WeaponReferent()
         return None
     
@@ -75,10 +75,10 @@ class WeaponAnalyzer(Analyzer):
         objs_by_model = dict()
         obj_by_names = TerminCollection()
         t = kit.first_token
-        first_pass2915 = True
+        first_pass3083 = True
         while True:
-            if first_pass2915: first_pass2915 = False
-            else: t = t.next0
+            if first_pass3083: first_pass3083 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             its = WeaponItemToken.try_parse_list(t, 10)
             if (its is None): 
@@ -95,10 +95,10 @@ class WeaponAnalyzer(Analyzer):
                             for k in range(2):
                                 if (not mod[0].isdigit()): 
                                     li = [ ]
-                                    inoutarg2449 = RefOutArgWrapper(None)
-                                    inoutres2450 = Utils.tryGetValue(objs_by_model, mod, inoutarg2449)
-                                    li = inoutarg2449.value
-                                    if (not inoutres2450): 
+                                    inoutarg2602 = RefOutArgWrapper(None)
+                                    inoutres2603 = Utils.tryGetValue(objs_by_model, mod, inoutarg2602)
+                                    li = inoutarg2602.value
+                                    if (not inoutres2603): 
                                         li = list()
                                         objs_by_model[mod] = li
                                     if (not rt.referent in li): 
@@ -115,15 +115,15 @@ class WeaponAnalyzer(Analyzer):
         if (len(objs_by_model) == 0 and len(obj_by_names.termins) == 0): 
             return
         t = kit.first_token
-        first_pass2916 = True
+        first_pass3084 = True
         while True:
-            if first_pass2916: first_pass2916 = False
-            else: t = t.next0
+            if first_pass3084: first_pass3084 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 10)
             if (br is not None): 
-                toks = obj_by_names.try_parse(t.next0, TerminParseAttr.NO)
-                if (toks is not None and toks.end_token.next0 == br.end_token): 
+                toks = obj_by_names.try_parse(t.next0_, TerminParseAttr.NO)
+                if (toks is not None and toks.end_token.next0_ == br.end_token): 
                     rt0 = ReferentToken(toks.termin.tag if isinstance(toks.termin.tag, Referent) else None, br.begin_token, br.end_token)
                     kit.embed_token(rt0)
                     t = rt0
@@ -139,8 +139,8 @@ class WeaponAnalyzer(Analyzer):
                 if (tok is None): 
                     continue
             if (not tok.is_whitespace_after): 
-                if (tok.end_token.next0 is None or not tok.end_token.next0.is_char_of(",.)")): 
-                    if (not BracketHelper.is_bracket(tok.end_token.next0, False)): 
+                if (tok.end_token.next0_ is None or not tok.end_token.next0_.is_char_of(",.)")): 
+                    if (not BracketHelper.is_bracket(tok.end_token.next0_, False)): 
                         continue
             tr = None
             li = (tok.termin.tag if isinstance(tok.termin.tag, list) else None)
@@ -254,7 +254,7 @@ class WeaponAnalyzer(Analyzer):
                         tr.add_slot(s.type_name, s.value, False, 0)
                     has_good_noun = True
                     break
-                elif (isinstance(tt, TextToken) and ((not tt.chars.is_letter or tt.morph.class0.is_conjunction))): 
+                elif (isinstance(tt, TextToken) and ((not tt.chars.is_letter or tt.morph.class0_.is_conjunction))): 
                     pass
                 else: 
                     break
@@ -262,9 +262,9 @@ class WeaponAnalyzer(Analyzer):
         if (noun is None and model is not None): 
             cou = 0
             tt = its[0].begin_token.previous
-            first_pass2917 = True
+            first_pass3085 = True
             while True:
-                if first_pass2917: first_pass2917 = False
+                if first_pass3085: first_pass3085 = False
                 else: tt = tt.previous; cou += 1
                 if (not (tt is not None and (cou < 100))): break
                 prev = (tt.get_referent() if isinstance(tt.get_referent(), WeaponReferent) else None)

@@ -26,13 +26,13 @@ class ShortNameHelper:
     
         
         @staticmethod
-        def _new2259(_arg1 : str, _arg2 : 'MorphGender') -> 'ShortnameVar':
+        def _new2412(_arg1 : str, _arg2 : 'MorphGender') -> 'ShortnameVar':
             res = ShortNameHelper.ShortnameVar()
             res.name = _arg1
             res.gender = _arg2
             return res
     
-    __m_shorts_names = dict()
+    __m_shorts_names = None
     
     @staticmethod
     def get_shortnames_for_name(name : str) -> typing.List[str]:
@@ -47,10 +47,10 @@ class ShortNameHelper:
     @staticmethod
     def get_names_for_shortname(shortname : str) -> typing.List['ShortnameVar']:
         res = [ ]
-        inoutarg2257 = RefOutArgWrapper(None)
-        inoutres2258 = Utils.tryGetValue(ShortNameHelper.__m_shorts_names, shortname, inoutarg2257)
-        res = inoutarg2257.value
-        if (not inoutres2258): 
+        inoutarg2410 = RefOutArgWrapper(None)
+        inoutres2411 = Utils.tryGetValue(ShortNameHelper.__m_shorts_names, shortname, inoutarg2410)
+        res = inoutarg2410.value
+        if (not inoutres2411): 
             return None
         else: 
             return res
@@ -71,26 +71,33 @@ class ShortNameHelper:
             while t is not None: 
                 if (t.is_newline_before): 
                     g = (MorphGender.FEMINIE if t.is_value("F", None) else MorphGender.MASCULINE)
-                    t = t.next0
+                    t = t.next0_
                     nam = (t if isinstance(t, TextToken) else None).term
                     shos = list()
-                    t = t.next0
+                    t = t.next0_
                     while t is not None: 
                         if (t.is_newline_before): 
                             break
                         else: 
                             shos.append((t if isinstance(t, TextToken) else None).term)
-                        t = t.next0
+                        t = t.next0_
                     for s in shos: 
                         li = None
-                        inoutarg2260 = RefOutArgWrapper(None)
-                        inoutres2261 = Utils.tryGetValue(ShortNameHelper.__m_shorts_names, s, inoutarg2260)
-                        li = inoutarg2260.value
-                        if (not inoutres2261): 
+                        inoutarg2413 = RefOutArgWrapper(None)
+                        inoutres2414 = Utils.tryGetValue(ShortNameHelper.__m_shorts_names, s, inoutarg2413)
+                        li = inoutarg2413.value
+                        if (not inoutres2414): 
                             li = list()
                             ShortNameHelper.__m_shorts_names[s] = li
-                        li.append(ShortNameHelper.ShortnameVar._new2259(nam, g))
+                        li.append(ShortNameHelper.ShortnameVar._new2412(nam, g))
                     if (t is None): 
                         break
                     t = t.previous
-                t = t.next0
+                t = t.next0_
+    
+    # static constructor for class ShortNameHelper
+    @staticmethod
+    def _static_ctor():
+        ShortNameHelper.__m_shorts_names = dict()
+
+ShortNameHelper._static_ctor()

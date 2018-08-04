@@ -140,7 +140,7 @@ class Slot:
 
     
     @staticmethod
-    def _new1032(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
+    def _new1073(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
         res = Slot()
         res.type_name = _arg1
         res.tag = _arg2
@@ -148,7 +148,7 @@ class Slot:
         return res
     
     @staticmethod
-    def _new2496(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
+    def _new2649(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
         res = Slot()
         res.type_name = _arg1
         res.value = _arg2

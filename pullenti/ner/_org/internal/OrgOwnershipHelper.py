@@ -6,8 +6,8 @@
 
 import typing
 
-from pullenti.ner.org.OrganizationKind import OrganizationKind
-from pullenti.ner.org.OrgProfile import OrgProfile
+from pullenti.ner._org.OrganizationKind import OrganizationKind
+from pullenti.ner._org.OrgProfile import OrgProfile
 
 
 class OrgOwnershipHelper:
@@ -22,7 +22,7 @@ class OrgOwnershipHelper:
         
         """
         from pullenti.ner.Referent import Referent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+        from pullenti.ner._org.OrganizationReferent import OrganizationReferent
         if (higher is None or lower is None or higher == lower): 
             return False
         if (lower.owner is not None): 

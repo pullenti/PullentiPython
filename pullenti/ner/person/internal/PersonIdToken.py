@@ -17,20 +17,20 @@ class PersonIdToken(MetaToken):
     
     class Typs(IntEnum):
         KEYWORD = 0
-        SERIA = 1
-        NUMBER = 2
-        DATE = 3
-        ORG = 4
-        VIDAN = 5
-        CODE = 6
-        ADDRESS = 7
+        SERIA = 0 + 1
+        NUMBER = (0 + 1) + 1
+        DATE = ((0 + 1) + 1) + 1
+        ORG = (((0 + 1) + 1) + 1) + 1
+        VIDAN = ((((0 + 1) + 1) + 1) + 1) + 1
+        CODE = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
+        ADDRESS = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
     
-    def __init__(self, b : 'Token', e0 : 'Token') -> None:
+    def __init__(self, b : 'Token', e0_ : 'Token') -> None:
         self.typ = PersonIdToken.Typs.KEYWORD
         self.value = None
         self.referent = None
         self.has_prefix = False
-        super().__init__(b, e0, None)
+        super().__init__(b, e0_, None)
     
     @staticmethod
     def try_attach(t : 'Token') -> 'ReferentToken':
@@ -43,11 +43,11 @@ class PersonIdToken(MetaToken):
         if (noun is None): 
             return None
         li = list()
-        t = noun.end_token.next0
-        first_pass2864 = True
+        t = noun.end_token.next0_
+        first_pass3032 = True
         while True:
-            if first_pass2864: first_pass2864 = False
-            else: t = t.next0
+            if first_pass3032: first_pass3032 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
                 break
@@ -121,13 +121,13 @@ class PersonIdToken(MetaToken):
             tt1 = t
             ip = False
             reg = False
-            tt = t.next0
-            first_pass2865 = True
+            tt = t.next0_
+            first_pass3033 = True
             while True:
-                if first_pass2865: first_pass2865 = False
-                else: tt = tt.next0
+                if first_pass3033: first_pass3033 = False
+                else: tt = tt.next0_
                 if (not (tt is not None)): break
-                if (tt.is_comma_and or tt.morph.class0.is_preposition): 
+                if (tt.is_comma_and or tt.morph.class0_.is_preposition): 
                     continue
                 if (tt.is_value("РЕГИСТРАЦИЯ", None) or tt.is_value("РЕЕСТР", None) or tt.is_value("ЗАРЕГИСТРИРОВАТЬ", None)): 
                     reg = True
@@ -142,28 +142,28 @@ class PersonIdToken(MetaToken):
                 else: 
                     break
             if (reg and ip): 
-                return PersonIdToken._new2168(t, tt1, PersonIdToken.Typs.KEYWORD, "СВИДЕТЕЛЬСТВО О ГОСУДАРСТВЕННОЙ РЕГИСТРАЦИИ ФИЗИЧЕСКОГО ЛИЦА В КАЧЕСТВЕ ИНДИВИДУАЛЬНОГО ПРЕДПРИНИМАТЕЛЯ")
+                return PersonIdToken._new2321(t, tt1, PersonIdToken.Typs.KEYWORD, "СВИДЕТЕЛЬСТВО О ГОСУДАРСТВЕННОЙ РЕГИСТРАЦИИ ФИЗИЧЕСКОГО ЛИЦА В КАЧЕСТВЕ ИНДИВИДУАЛЬНОГО ПРЕДПРИНИМАТЕЛЯ")
         tok = PersonIdToken.__m_ontology.try_parse(t, TerminParseAttr.NO)
         if (tok is not None): 
             ty = Utils.valToEnum(tok.termin.tag, PersonIdToken.Typs)
-            res = PersonIdToken._new2168(tok.begin_token, tok.end_token, ty, tok.termin.canonic_text)
+            res = PersonIdToken._new2321(tok.begin_token, tok.end_token, ty, tok.termin.canonic_text)
             if (prev is None): 
                 if (ty != PersonIdToken.Typs.KEYWORD): 
                     return None
-                t = tok.end_token.next0
-                first_pass2866 = True
+                t = tok.end_token.next0_
+                first_pass3034 = True
                 while True:
-                    if first_pass2866: first_pass2866 = False
-                    else: t = t.next0
+                    if first_pass3034: first_pass3034 = False
+                    else: t = t.next0_
                     if (not (t is not None)): break
                     r = t.get_referent()
                     if (r is not None and isinstance(r, GeoReferent)): 
                         res.referent = r
                         res.end_token = t
                         continue
-                    if (t.is_value("ГРАЖДАНИН", None) and t.next0 is not None and isinstance(t.next0.get_referent(), GeoReferent)): 
-                        res.referent = t.next0.get_referent()
-                        res.end_token = t.next0
+                    if (t.is_value("ГРАЖДАНИН", None) and t.next0_ is not None and isinstance(t.next0_.get_referent(), GeoReferent)): 
+                        res.referent = t.next0_.get_referent()
+                        res.end_token = t.next0_
                         t = res.end_token
                         continue
                     if (r is not None): 
@@ -182,9 +182,9 @@ class PersonIdToken(MetaToken):
                 return res
             if (ty == PersonIdToken.Typs.NUMBER): 
                 tmp = Utils.newStringIO(None)
-                tt = tok.end_token.next0
+                tt = tok.end_token.next0_
                 if (tt is not None and tt.is_char(':')): 
-                    tt = tt.next0
+                    tt = tt.next0_
                 while tt is not None: 
                     if (tt.is_newline_before): 
                         break
@@ -192,7 +192,7 @@ class PersonIdToken(MetaToken):
                         break
                     print(tt.get_source_text(), end="", file=tmp)
                     res.end_token = tt
-                    tt = tt.next0
+                    tt = tt.next0_
                 if (tmp.tell() < 1): 
                     return None
                 res.value = Utils.toStringStringIO(tmp)
@@ -200,14 +200,14 @@ class PersonIdToken(MetaToken):
                 return res
             if (ty == PersonIdToken.Typs.SERIA): 
                 tmp = Utils.newStringIO(None)
-                tt = tok.end_token.next0
+                tt = tok.end_token.next0_
                 if (tt is not None and tt.is_char(':')): 
-                    tt = tt.next0
+                    tt = tt.next0_
                 next_num = False
-                first_pass2867 = True
+                first_pass3035 = True
                 while True:
-                    if first_pass2867: first_pass2867 = False
-                    else: tt = tt.next0
+                    if first_pass3035: first_pass3035 = False
+                    else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_newline_before): 
                         break
@@ -228,8 +228,8 @@ class PersonIdToken(MetaToken):
                         else: 
                             print((tt if isinstance(tt, TextToken) else None).term, end="", file=tmp)
                             res.end_token = tt
-                        if (tt.next0 is not None and tt.next0.is_hiphen): 
-                            tt = tt.next0
+                        if (tt.next0_ is not None and tt.next0_.is_hiphen): 
+                            tt = tt.next0_
                         continue
                     if (tmp.tell() >= 4): 
                         break
@@ -242,11 +242,11 @@ class PersonIdToken(MetaToken):
                 res.has_prefix = True
                 return res
             if (ty == PersonIdToken.Typs.CODE): 
-                tt = res.end_token.next0
-                first_pass2868 = True
+                tt = res.end_token.next0_
+                first_pass3036 = True
                 while True:
-                    if first_pass2868: first_pass2868 = False
-                    else: tt = tt.next0
+                    if first_pass3036: first_pass3036 = False
+                    else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_char_of(":") or tt.is_hiphen): 
                         continue
@@ -259,13 +259,13 @@ class PersonIdToken(MetaToken):
                     res.referent = t.get_referent()
                     res.end_token = t
                     return res
-                tt = res.end_token.next0
-                first_pass2869 = True
+                tt = res.end_token.next0_
+                first_pass3037 = True
                 while True:
-                    if first_pass2869: first_pass2869 = False
-                    else: tt = tt.next0
+                    if first_pass3037: first_pass3037 = False
+                    else: tt = tt.next0_
                     if (not (tt is not None)): break
-                    if (tt.is_char_of(":") or tt.is_hiphen or tt.morph.class0.is_preposition): 
+                    if (tt.is_char_of(":") or tt.is_hiphen or tt.morph.class0_.is_preposition): 
                         continue
                     if (isinstance(tt.get_referent(), AddressReferent)): 
                         res.referent = tt.get_referent()
@@ -282,20 +282,20 @@ class PersonIdToken(MetaToken):
             t = t1
         if (isinstance(t, NumberToken)): 
             tmp = Utils.newStringIO(None)
-            res = PersonIdToken._new2170(t0, t, PersonIdToken.Typs.NUMBER)
+            res = PersonIdToken._new2323(t0, t, PersonIdToken.Typs.NUMBER)
             tt = t
             while tt is not None: 
                 if (tt.is_newline_before or not ((isinstance(tt, NumberToken)))): 
                     break
                 print(tt.get_source_text(), end="", file=tmp)
                 res.end_token = tt
-                tt = tt.next0
+                tt = tt.next0_
             if (tmp.tell() < 4): 
                 if (tmp.tell() < 2): 
                     return None
                 if (prev is None or prev.typ != PersonIdToken.Typs.KEYWORD): 
                     return None
-                ne = PersonIdToken.__try_parse(res.end_token.next0, prev)
+                ne = PersonIdToken.__try_parse(res.end_token.next0_, prev)
                 if (ne is not None and ne.typ == PersonIdToken.Typs.NUMBER): 
                     res.typ = PersonIdToken.Typs.SERIA
                 else: 
@@ -308,17 +308,17 @@ class PersonIdToken(MetaToken):
             r = t.get_referent()
             if (r is not None): 
                 if (r.type_name == "DATE"): 
-                    return PersonIdToken._new2171(t, t, PersonIdToken.Typs.DATE, r)
+                    return PersonIdToken._new2324(t, t, PersonIdToken.Typs.DATE, r)
                 if (r.type_name == "ORGANIZATION"): 
-                    return PersonIdToken._new2171(t, t, PersonIdToken.Typs.ORG, r)
+                    return PersonIdToken._new2324(t, t, PersonIdToken.Typs.ORG, r)
                 if (r.type_name == "ADDRESS"): 
-                    return PersonIdToken._new2171(t, t, PersonIdToken.Typs.ADDRESS, r)
+                    return PersonIdToken._new2324(t, t, PersonIdToken.Typs.ADDRESS, r)
         if ((prev is not None and prev.typ == PersonIdToken.Typs.KEYWORD and isinstance(t, TextToken)) and not t.chars.is_all_lower and t.chars.is_letter): 
-            rr = PersonIdToken.__try_parse(t.next0, prev)
+            rr = PersonIdToken.__try_parse(t.next0_, prev)
             if (rr is not None and rr.typ == PersonIdToken.Typs.NUMBER): 
-                return PersonIdToken._new2168(t, t, PersonIdToken.Typs.SERIA, (t if isinstance(t, TextToken) else None).term)
-        if ((t is not None and t.is_value("ОТ", "ВІД") and isinstance(t.next0, ReferentToken)) and t.next0.get_referent().type_name == "DATE"): 
-            return PersonIdToken._new2171(t, t.next0, PersonIdToken.Typs.DATE, t.next0.get_referent())
+                return PersonIdToken._new2321(t, t, PersonIdToken.Typs.SERIA, (t if isinstance(t, TextToken) else None).term)
+        if ((t is not None and t.is_value("ОТ", "ВІД") and isinstance(t.next0_, ReferentToken)) and t.next0_.get_referent().type_name == "DATE"): 
+            return PersonIdToken._new2324(t, t.next0_, PersonIdToken.Typs.DATE, t.next0_.get_referent())
         return None
     
     __m_ontology = None
@@ -380,20 +380,20 @@ class PersonIdToken(MetaToken):
 
     
     @staticmethod
-    def _new2168(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str) -> 'PersonIdToken':
+    def _new2321(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str) -> 'PersonIdToken':
         res = PersonIdToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new2170(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs') -> 'PersonIdToken':
+    def _new2323(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs') -> 'PersonIdToken':
         res = PersonIdToken(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new2171(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent') -> 'PersonIdToken':
+    def _new2324(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent') -> 'PersonIdToken':
         res = PersonIdToken(_arg1, _arg2)
         res.typ = _arg3
         res.referent = _arg4

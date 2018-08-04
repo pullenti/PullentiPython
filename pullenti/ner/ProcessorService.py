@@ -20,12 +20,12 @@ class ProcessorService:
     @staticmethod
     def _get_version() -> str:
         """ Версия системы """
-        return "3.8"
+        return "3.9"
     
     @staticmethod
     def _get_version_date() -> datetime.datetime:
         """ Дата-время текущей версии """
-        return datetime.datetime(2018, 5, 3)
+        return datetime.datetime(2018, 7, 19)
     
     @staticmethod
     def initialize(lang : 'MorphLang'=MorphLang()) -> None:
@@ -111,7 +111,7 @@ class ProcessorService:
             if (img is not None): 
                 for kp in img.items(): 
                     if (not kp[0] in ProcessorService.__m_images): 
-                        ProcessorService.__m_images[kp[0]] = ImageWrapper._new2488(kp[0], kp[1])
+                        ProcessorService.__m_images[kp[0]] = ImageWrapper._new2641(kp[0], kp[1])
         except Exception as ex: 
             pass
         ProcessorService.__reorder_cartridges()
@@ -125,9 +125,9 @@ class ProcessorService:
         k = 0
         while k < len(ProcessorService.__m_analizer_instances): 
             i = 0
-            first_pass2919 = True
+            first_pass3087 = True
             while True:
-                if first_pass2919: first_pass2919 = False
+                if first_pass3087: first_pass3087 = False
                 else: i += 1
                 if (not (i < (len(ProcessorService.__m_analizer_instances) - 1))): break
                 max_ind = -1
@@ -186,13 +186,13 @@ class ProcessorService:
         
         """
         if (image_id is not None): 
-            inoutarg2489 = RefOutArgWrapper(None)
-            inoutres2490 = Utils.tryGetValue(ProcessorService.__m_images, image_id, inoutarg2489)
-            res = inoutarg2489.value
-            if (inoutres2490): 
+            inoutarg2642 = RefOutArgWrapper(None)
+            inoutres2643 = Utils.tryGetValue(ProcessorService.__m_images, image_id, inoutarg2642)
+            res = inoutarg2642.value
+            if (inoutres2643): 
                 return res
         if (ProcessorService.__m_unknown_image is None): 
-            ProcessorService.__m_unknown_image = ImageWrapper._new2488("unknown", ResourceHelper.get_bytes("unknown.png"))
+            ProcessorService.__m_unknown_image = ImageWrapper._new2641("unknown", ResourceHelper.get_bytes("unknown.png"))
         return ProcessorService.__m_unknown_image
     
     __m_empty_processor = None

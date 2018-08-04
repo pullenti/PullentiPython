@@ -56,7 +56,7 @@ class NounPhraseToken(MetaToken):
             r = self.noun.get_normal_case_text(MorphClass.NOUN | MorphClass.PRONOUN, single_number, gender, keep_chars)
         if (r is None or r == "?"): 
             r = self.noun.get_normal_case_text(MorphClass(), single_number, MorphGender.UNDEFINED, False)
-        print(Utils.ifNotNull(r, (str(self.noun) if self.noun is not None else None)), end="", file=res)
+        print(Utils.ifNotNull(r, str(self.noun)), end="", file=res)
         return Utils.toStringStringIO(res)
     
     def get_normal_case_text_without_adjective(self, adj_index : int) -> str:
@@ -68,7 +68,7 @@ class NounPhraseToken(MetaToken):
         r = self.noun.get_normal_case_text(MorphClass.NOUN | MorphClass.PRONOUN, False, MorphGender.UNDEFINED, False)
         if (r is None): 
             r = self.noun.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False)
-        print(Utils.ifNotNull(r, (str(self.noun) if self.noun is not None else None)), end="", file=res)
+        print(Utils.ifNotNull(r, str(self.noun)), end="", file=res)
         return Utils.toStringStringIO(res)
     
     def get_morph_variant(self, cas : 'MorphCase', plural : bool) -> str:
@@ -84,7 +84,7 @@ class NounPhraseToken(MetaToken):
         from pullenti.ner.core.MiscHelper import MiscHelper
         from pullenti.ner.TextToken import TextToken
         from pullenti.morph.Morphology import Morphology
-        mi = MorphBaseInfo._new488(cas, MorphLang.RU)
+        mi = MorphBaseInfo._new506(cas, MorphLang.RU)
         if (plural): 
             mi.number = MorphNumber.PLURAL
         else: 

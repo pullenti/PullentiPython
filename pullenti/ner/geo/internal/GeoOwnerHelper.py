@@ -35,7 +35,7 @@ class GeoOwnerHelper:
             if (hi.find_slot(GeoReferent.ATTR_TYPE, "город", True) is not None or hi.find_slot(GeoReferent.ATTR_TYPE, "місто", True) is not None or hi.find_slot(GeoReferent.ATTR_TYPE, "city", True) is not None): 
                 s = GeoOwnerHelper.__get_types_string(lo)
                 if ((("район" in s or "административный округ" in s or "муниципальный округ" in s) or "адміністративний округ" in s or "муніципальний округ" in s) or lo.find_slot(GeoReferent.ATTR_TYPE, "округ", True) is not None): 
-                    if (rhi.next0 == rlo and rlo.morph.case.is_genitive): 
+                    if (rhi.next0_ == rlo and rlo.morph.case.is_genitive): 
                         citi_in_reg = True
         if (hi.is_region and lo.is_city): 
             if (lo.find_slot(GeoReferent.ATTR_TYPE, "город", True) is not None or lo.find_slot(GeoReferent.ATTR_TYPE, "місто", True) is not None or lo.find_slot(GeoReferent.ATTR_TYPE, "city", True) is not None): 
@@ -43,14 +43,14 @@ class GeoOwnerHelper:
                 if (s == "район;"): 
                     if (hi.higher is not None and hi.higher.is_region): 
                         citi_in_reg = True
-                    elif (rhi.end_char <= rlo.begin_char and rhi.next0.is_comma and not rlo.morph.case.is_genitive): 
+                    elif (rhi.end_char <= rlo.begin_char and rhi.next0_.is_comma and not rlo.morph.case.is_genitive): 
                         citi_in_reg = True
-                    elif (rhi.end_char <= rlo.begin_char and rhi.next0.is_comma): 
+                    elif (rhi.end_char <= rlo.begin_char and rhi.next0_.is_comma): 
                         citi_in_reg = True
             else: 
                 citi_in_reg = True
         if (rhi.end_char <= rlo.begin_char): 
-            if (not rhi.morph.class0.is_adjective): 
+            if (not rhi.morph.class0_.is_adjective): 
                 if (hi.is_state and not rhi.chars.is_latin_letter): 
                     return False
             if (rhi.is_newline_after or rlo.is_newline_before): 
@@ -58,7 +58,7 @@ class GeoOwnerHelper:
                     return False
         else: 
             pass
-        if (rlo.previous is not None and rlo.previous.morph.class0.is_preposition): 
+        if (rlo.previous is not None and rlo.previous.morph.class0_.is_preposition): 
             if (rlo.previous.morph.language.is_ua): 
                 if ((rlo.previous.is_value("У", None) and not rlo.morph.case.is_dative and not rlo.morph.case.is_prepositional) and not rlo.morph.case.is_undefined): 
                     return False

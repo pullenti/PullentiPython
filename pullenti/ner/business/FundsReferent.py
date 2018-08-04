@@ -58,8 +58,8 @@ class FundsReferent(Referent):
         if (self.percent > 0): 
             print("; {0}%".format(self.percent), end="", file=res, flush=True)
         if (not short_variant): 
-            if (self.sum0 is not None): 
-                print("; {0}".format(self.sum0.to_string(False, lang, 0)), end="", file=res, flush=True)
+            if (self.sum0_ is not None): 
+                print("; {0}".format(self.sum0_.to_string(False, lang, 0)), end="", file=res, flush=True)
             if (self.price is not None): 
                 print("; номинал {0}".format(self.price.to_string(False, lang, 0)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
@@ -78,7 +78,7 @@ class FundsReferent(Referent):
             res = Utils.valToEnum(s, FundsKind)
             if (isinstance(res, FundsKind)): 
                 return Utils.valToEnum(res, FundsKind)
-        except Exception as ex449: 
+        except Exception as ex450: 
             pass
         return FundsKind.UNDEFINED
     
@@ -93,7 +93,7 @@ class FundsReferent(Referent):
     @property
     def source(self) -> 'OrganizationReferent':
         """ Эмитент """
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+        from pullenti.ner._org.OrganizationReferent import OrganizationReferent
         return (self.get_value(FundsReferent.ATTR_SOURCE) if isinstance(self.get_value(FundsReferent.ATTR_SOURCE), OrganizationReferent) else None)
     
     @source.setter
@@ -117,14 +117,14 @@ class FundsReferent(Referent):
         val = self.get_string_value(FundsReferent.ATTR_PERCENT)
         if (val is None): 
             return 0
-        inoutarg452 = RefOutArgWrapper(None)
-        inoutres453 = Utils.tryParseFloat(val, inoutarg452)
-        f = inoutarg452.value
-        if (not inoutres453): 
-            inoutarg450 = RefOutArgWrapper(None)
-            inoutres451 = Utils.tryParseFloat(val.replace('.', ','), inoutarg450)
-            f = inoutarg450.value
-            if (not inoutres451): 
+        inoutarg453 = RefOutArgWrapper(0)
+        inoutres454 = Utils.tryParseFloat(val, inoutarg453)
+        f = inoutarg453.value
+        if (not inoutres454): 
+            inoutarg451 = RefOutArgWrapper(0)
+            inoutres452 = Utils.tryParseFloat(val.replace('.', ','), inoutarg451)
+            f = inoutarg451.value
+            if (not inoutres452): 
                 return 0
         return f
     
@@ -142,10 +142,10 @@ class FundsReferent(Referent):
         val = self.get_string_value(FundsReferent.ATTR_COUNT)
         if (val is None): 
             return 0
-        inoutarg454 = RefOutArgWrapper(None)
-        inoutres455 = Utils.tryParseInt(val, inoutarg454)
-        v = inoutarg454.value
-        if (not inoutres455): 
+        inoutarg455 = RefOutArgWrapper(0)
+        inoutres456 = Utils.tryParseInt(val, inoutarg455)
+        v = inoutarg455.value
+        if (not inoutres456): 
             return 0
         return v
     
@@ -155,13 +155,13 @@ class FundsReferent(Referent):
         return value
     
     @property
-    def sum0(self) -> 'MoneyReferent':
+    def sum0_(self) -> 'MoneyReferent':
         """ Сумма за все акции """
         from pullenti.ner.money.MoneyReferent import MoneyReferent
         return (self.get_value(FundsReferent.ATTR_SUM) if isinstance(self.get_value(FundsReferent.ATTR_SUM), MoneyReferent) else None)
     
-    @sum0.setter
-    def sum0(self, value) -> 'MoneyReferent':
+    @sum0_.setter
+    def sum0_(self, value) -> 'MoneyReferent':
         self.add_slot(FundsReferent.ATTR_SUM, value, True, 0)
         return value
     
@@ -191,7 +191,7 @@ class FundsReferent(Referent):
             return False
         if (self.percent != f.percent): 
             return False
-        if (self.sum0 != f.sum0): 
+        if (self.sum0_ != f.sum0_): 
             return False
         return True
     

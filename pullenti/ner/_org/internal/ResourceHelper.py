@@ -19,14 +19,14 @@ class ResourceHelper:
         
         """
         # ignored: assembly = ResourceHelper.
-        names = Utils.getResourcesNames('pullenti.ner.org.properties', '.png;.dat')
+        names = Utils.getResourcesNames('pullenti.ner._org.properties', '.png;.dat')
         for n in names: 
             if (n.upper().endswith(name.upper())): 
                 try: 
-                    inf = Utils.getResourceInfo('pullenti.ner.org.properties', n)
+                    inf = Utils.getResourceInfo('pullenti.ner._org.properties', n)
                     if (inf is None): 
                         continue
-                    with Utils.getResourceStream('pullenti.ner.org.properties', n) as stream: 
+                    with Utils.getResourceStream('pullenti.ner._org.properties', n) as stream: 
                         buf = Utils.newArrayOfBytes(Utils.getLengthIO(stream), 0)
                         Utils.readIO(stream, buf, 0, len(buf))
                         return buf

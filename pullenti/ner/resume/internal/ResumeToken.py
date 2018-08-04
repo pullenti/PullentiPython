@@ -11,10 +11,10 @@ from pullenti.ner.resume.internal.ResumeTokenType import ResumeTokenType
 class ResumeToken(MetaToken):
     """ Это для поддержки резюме """
     
-    def __init__(self, b : 'Token', e0 : 'Token') -> None:
+    def __init__(self, b : 'Token', e0_ : 'Token') -> None:
         self.typ = ResumeTokenType.UNDEFINED
         self.refs = list()
-        super().__init__(b, e0, None)
+        super().__init__(b, e0_, None)
     
     @staticmethod
     def try_parse(t : 'Token', prev : 'ResumeToken'=None) -> 'ResumeToken':

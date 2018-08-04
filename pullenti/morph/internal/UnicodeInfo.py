@@ -150,9 +150,11 @@ class UnicodeInfo:
             ui = UnicodeInfo(i)
             if (Utils.isWhitespace(ch)): 
                 ui.is_whitespace = True
-            if (ch.isdigit()): 
+            elif (ch.isdigit()): 
                 ui.is_digit = True
-            if (ch.isalpha()): 
+            elif (ch == 'º' or ch == '°'): 
+                pass
+            elif (ch.isalpha()): 
                 ui.is_letter = True
                 if (i >= 0x400 and (i < 0x500)): 
                     ui.is_cyrillic = True

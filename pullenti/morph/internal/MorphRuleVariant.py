@@ -45,7 +45,7 @@ class MorphRuleVariant(MorphBaseInfo):
         return Utils.toStringStringIO(res).strip()
     
     def compare(self, mrv : 'MorphRuleVariant') -> bool:
-        if ((mrv.class0 != self.class0 or mrv.gender != self.gender or mrv.number != self.number) or mrv.case != self.case): 
+        if ((mrv.class0_ != self.class0_ or mrv.gender != self.gender or mrv.number != self.number) or mrv.case != self.case): 
             return False
         if (mrv.misc_info != self.misc_info): 
             return False
@@ -54,7 +54,7 @@ class MorphRuleVariant(MorphBaseInfo):
         return True
     
     def calc_eq_coef(self, wf : 'MorphWordForm') -> int:
-        if (self.class0 != wf.class0): 
+        if (self.class0_ != wf.class0_): 
             return -1
         if (self.misc_info != wf.misc): 
             return -1

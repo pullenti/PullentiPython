@@ -21,3 +21,5 @@ class CanBeEqualsAttrs(IntEnum):
     """ Даже если указано IgnoreNonletters, кавычки проверять! """
     IGNOREUPPERCASEFIRSTWORD = 0x10
     """ Игнорировать регистр символов только первого слова """
+    FIRSTCANBESHORTER = 0x20
+    """ Первое слово может быть короче (то есть второе должно начинаться на первое слово) """

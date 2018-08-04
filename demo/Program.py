@@ -34,16 +34,16 @@ class Program:
         with ProcessorService.create_processor() as proc: 
             ar = proc.process(SourceOfAnalysis(txt), None, MorphLang())
             print("\r\n==========================================\r\nEntities: ", flush=True)
-            for e0 in ar.entities: 
-                print("{0}: {1}".format(e0.type_name, str(e0)), flush=True)
-                for s in e0.slots: 
+            for e0_ in ar.entities: 
+                print("{0}: {1}".format(e0_.type_name, str(e0_)), flush=True)
+                for s in e0_.slots: 
                     print("   {0}: {1}".format(s.type_name, s.value), flush=True)
             print("\r\n==========================================\r\nNoun groups: ", flush=True)
             t = ar.first_token
-            first_pass2509 = True
+            first_pass2662 = True
             while True:
-                if first_pass2509: first_pass2509 = False
-                else: t = t.next0
+                if first_pass2662: first_pass2662 = False
+                else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.get_referent() is not None): 
                     continue
@@ -55,15 +55,15 @@ class Program:
         with ProcessorService.create_specific_processor(KeywordAnalyzer.ANALYZER_NAME) as proc: 
             ar = proc.process(SourceOfAnalysis(txt), None, MorphLang())
             print("\r\n==========================================\r\nKeywords1: ", flush=True)
-            for e0 in ar.entities: 
-                if (isinstance(e0, KeywordReferent)): 
-                    print(str(e0), flush=True)
+            for e0_ in ar.entities: 
+                if (isinstance(e0_, KeywordReferent)): 
+                    print(str(e0_), flush=True)
             print("\r\n==========================================\r\nKeywords2: ", flush=True)
             t = ar.first_token
-            first_pass2510 = True
+            first_pass2663 = True
             while True:
-                if first_pass2510: first_pass2510 = False
-                else: t = t.next0
+                if first_pass2663: first_pass2663 = False
+                else: t = t.next0_
                 if (not (t is not None)): break
                 if (isinstance(t, ReferentToken)): 
                     kw = (t.get_referent() if isinstance(t.get_referent(), KeywordReferent) else None)

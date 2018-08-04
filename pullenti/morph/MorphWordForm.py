@@ -77,21 +77,21 @@ class MorphWordForm(MorphBaseInfo):
         return Utils.toStringStringIO(res)
     
     @staticmethod
-    def _has_morph_equals(list0 : typing.List['MorphWordForm'], mv : 'MorphWordForm') -> bool:
-        for mr in list0: 
-            if ((mv.class0 == mr.class0 and mv.number == mr.number and mv.gender == mr.gender) and mv.normal_case == mr.normal_case and mv.normal_full == mr.normal_full): 
+    def _has_morph_equals(list0_ : typing.List['MorphWordForm'], mv : 'MorphWordForm') -> bool:
+        for mr in list0_: 
+            if ((mv.class0_ == mr.class0_ and mv.number == mr.number and mv.gender == mr.gender) and mv.normal_case == mr.normal_case and mv.normal_full == mr.normal_full): 
                 mr.case |= mv.case
                 p = mv.misc.person
                 if (p != MorphPerson.UNDEFINED and p != mr.misc.person): 
                     mr.misc = mr.misc.clone()
                     mr.misc.person = (mr.misc.person | mv.misc.person)
                 return True
-        for mr in list0: 
-            if ((mv.class0 == mr.class0 and mv.number == mr.number and mv.case == mr.case) and mv.normal_case == mr.normal_case and mv.normal_full == mr.normal_full): 
+        for mr in list0_: 
+            if ((mv.class0_ == mr.class0_ and mv.number == mr.number and mv.case == mr.case) and mv.normal_case == mr.normal_case and mv.normal_full == mr.normal_full): 
                 mr.gender |= mv.gender
                 return True
-        for mr in list0: 
-            if ((mv.class0 == mr.class0 and mv.gender == mr.gender and mv.case == mr.case) and mv.normal_case == mr.normal_case and mv.normal_full == mr.normal_full): 
+        for mr in list0_: 
+            if ((mv.class0_ == mr.class0_ and mv.gender == mr.gender and mv.case == mr.case) and mv.normal_case == mr.normal_case and mv.normal_full == mr.normal_full): 
                 mr.number |= mv.number
                 return True
         return False
@@ -101,6 +101,6 @@ class MorphWordForm(MorphBaseInfo):
     def _new12(_arg1 : str, _arg2 : 'MorphClass', _arg3 : int) -> 'MorphWordForm':
         res = MorphWordForm()
         res.normal_case = _arg1
-        res.class0 = _arg2
+        res.class0_ = _arg2
         res.undef_coef = _arg3
         return res

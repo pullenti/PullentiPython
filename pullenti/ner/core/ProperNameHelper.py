@@ -17,15 +17,15 @@ class ProperNameHelper:
     """ Поддержка работы с собственными именами """
     
     @staticmethod
-    def __corr_chars(str0 : str, ci : 'CharsInfo', keep_chars : bool) -> str:
+    def __corr_chars(str0_ : str, ci : 'CharsInfo', keep_chars : bool) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         if (not keep_chars): 
-            return str0
+            return str0_
         if (ci.is_all_lower): 
-            return str0.lower()
+            return str0_.lower()
         if (ci.is_capital_upper): 
-            return MiscHelper.convert_first_char_upper_and_other_lower(str0)
-        return str0
+            return MiscHelper.convert_first_char_upper_and_other_lower(str0_)
+        return str0_
     
     @staticmethod
     def __get_name_without_brackets(begin : 'Token', end : 'Token', normalize_first_noun_group : bool=False, normal_first_group_single : bool=False, ignore_geo_referent : bool=False) -> str:
@@ -49,9 +49,9 @@ class ProperNameHelper:
         from pullenti.morph.MorphCase import MorphCase
         res = None
         if (BracketHelper.can_be_start_of_sequence(begin, False, False) and BracketHelper.can_be_end_of_sequence(end, False, begin, False)): 
-            begin = begin.next0
+            begin = begin.next0_
             end = end.previous
-        if (normalize_first_noun_group and not begin.morph.class0.is_preposition): 
+        if (normalize_first_noun_group and not begin.morph.class0_.is_preposition): 
             npt = NounPhraseHelper.try_parse(begin, NounPhraseParseAttr.REFERENTCANBENOUN, 0)
             if (npt is not None): 
                 if (npt.noun.get_morph_class_in_dictionary().is_undefined and len(npt.adjectives) == 0): 
@@ -60,20 +60,20 @@ class ProperNameHelper:
                 npt = None
             if (npt is not None): 
                 res = npt.get_normal_case_text(MorphClass(), normal_first_group_single, MorphGender.UNDEFINED, False)
-                te = npt.end_token.next0
-                if (((te is not None and te.next0 is not None and te.is_comma) and isinstance(te.next0, TextToken) and te.next0.end_char <= end.end_char) and te.next0.morph.class0.is_verb and te.next0.morph.class0.is_adjective): 
-                    for it in te.next0.morph.items: 
+                te = npt.end_token.next0_
+                if (((te is not None and te.next0_ is not None and te.is_comma) and isinstance(te.next0_, TextToken) and te.next0_.end_char <= end.end_char) and te.next0_.morph.class0_.is_verb and te.next0_.morph.class0_.is_adjective): 
+                    for it in te.next0_.morph.items: 
                         if (it.gender == npt.morph.gender or ((it.gender & npt.morph.gender)) != MorphGender.UNDEFINED): 
                             if (not (it.case & npt.morph.case).is_undefined): 
                                 if (it.number == npt.morph.number or ((it.number & npt.morph.number)) != MorphNumber.UNDEFINED): 
-                                    var = (te.next0 if isinstance(te.next0, TextToken) else None).term
+                                    var = (te.next0_ if isinstance(te.next0_, TextToken) else None).term
                                     if (isinstance(it, MorphWordForm)): 
                                         var = (it if isinstance(it, MorphWordForm) else None).normal_case
-                                    bi = MorphBaseInfo._new486(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
+                                    bi = MorphBaseInfo._new504(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
                                     var = Morphology.get_wordform(var, bi)
                                     if (var is not None): 
                                         res = "{0}, {1}".format(res, var)
-                                        te = te.next0.next0
+                                        te = te.next0_.next0_
                                     break
                 if (te is not None and te.end_char <= end.end_char): 
                     s = ProperNameHelper.get_name(te, end, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, True, ignore_geo_referent)
@@ -87,7 +87,7 @@ class ProperNameHelper:
                 if (not mm.is_undefined): 
                     res = begin.get_normal_case_text(mm, False, MorphGender.UNDEFINED, False)
                     if (begin.end_char < end.end_char): 
-                        res = "{0} {1}".format(res, ProperNameHelper.get_name(begin.next0, end, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, True, False))
+                        res = "{0} {1}".format(res, ProperNameHelper.get_name(begin.next0_, end, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, True, False))
         if (res is None): 
             res = ProperNameHelper.get_name(begin, end, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, True, ignore_geo_referent)
         if (not Utils.isNullOrEmpty(res)): 
@@ -136,10 +136,10 @@ class ProperNameHelper:
         res = Utils.newStringIO(None)
         prefix = None
         t = begin
-        first_pass2607 = True
+        first_pass2765 = True
         while True:
-            if first_pass2607: first_pass2607 = False
-            else: t = t.next0
+            if first_pass2765: first_pass2765 = False
+            else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             if (res.tell() > 1000): 
                 break
@@ -152,9 +152,9 @@ class ProperNameHelper:
                     if (t.is_char_of("(<[")): 
                         br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
                         if (br is not None and br.end_char <= end.end_char): 
-                            tmp = ProperNameHelper.get_name(br.begin_token.next0, br.end_token.previous, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, ignore_brackets_and_hiphens, False)
+                            tmp = ProperNameHelper.get_name(br.begin_token.next0_, br.end_token.previous, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, ignore_brackets_and_hiphens, False)
                             if (tmp is not None): 
-                                if ((br.end_char == end.end_char and br.begin_token.next0 == br.end_token.previous and not br.begin_token.next0.chars.is_letter) and not ((isinstance(br.begin_token.next0, ReferentToken)))): 
+                                if ((br.end_char == end.end_char and br.begin_token.next0_ == br.end_token.previous and not br.begin_token.next0_.chars.is_letter) and not ((isinstance(br.begin_token.next0_, ReferentToken)))): 
                                     pass
                                 else: 
                                     print(" {0}{1}{2}".format(t.get_source_text(), tmp, br.end_token.get_source_text()), end="", file=res, flush=True)
@@ -168,12 +168,12 @@ class ProperNameHelper:
             tt = (t if isinstance(t, TextToken) else None)
             if (tt is not None): 
                 if (not ignore_brackets_and_hiphens): 
-                    if ((tt.next0 is not None and tt.next0.is_hiphen and isinstance(tt.next0.next0, TextToken)) and tt != end and tt.next0 != end): 
+                    if ((tt.next0_ is not None and tt.next0_.is_hiphen and isinstance(tt.next0_.next0_, TextToken)) and tt != end and tt.next0_ != end): 
                         if (prefix is None): 
                             prefix = tt.term
                         else: 
                             prefix = "{0}-{1}".format(prefix, tt.term)
-                        t = tt.next0
+                        t = tt.next0_
                         if (t == end): 
                             break
                         else: 
@@ -185,7 +185,7 @@ class ProperNameHelper:
                         if (wf is None): 
                             continue
                         if (cla.value != 0): 
-                            if (((wf.class0.value & cla.value)) == 0): 
+                            if (((wf.class0_.value & cla.value)) == 0): 
                                 continue
                         if (not mc.is_undefined): 
                             if ((wf.case & mc).is_undefined): 
@@ -201,7 +201,7 @@ class ProperNameHelper:
                             if (wf is None): 
                                 continue
                             if (cla.value != 0): 
-                                if (((wf.class0.value & cla.value)) == 0): 
+                                if (((wf.class0_.value & cla.value)) == 0): 
                                     continue
                             if (not mc.is_undefined): 
                                 if ((wf.case & mc).is_undefined): 
@@ -239,7 +239,7 @@ class ProperNameHelper:
                     else: 
                         print(' ', end="", file=res)
                 nt = (t if isinstance(t, NumberToken) else None)
-                if ((t.morph.class0.is_adjective and nt.typ == NumberSpellingType.WORDS and nt.begin_token == nt.end_token) and isinstance(nt.begin_token, TextToken)): 
+                if ((t.morph.class0_.is_adjective and nt.typ == NumberSpellingType.WORDS and nt.begin_token == nt.end_token) and isinstance(nt.begin_token, TextToken)): 
                     print((nt.begin_token if isinstance(nt.begin_token, TextToken) else None).term, end="", file=res)
                 else: 
                     print(nt.value, end="", file=res)

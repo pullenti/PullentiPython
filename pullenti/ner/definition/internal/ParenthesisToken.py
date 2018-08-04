@@ -12,9 +12,9 @@ from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 class ParenthesisToken(MetaToken):
     """ Анализ вводных слов и словосочетаний """
     
-    def __init__(self, b : 'Token', e0 : 'Token') -> None:
+    def __init__(self, b : 'Token', e0_ : 'Token') -> None:
         self.ref = None
-        super().__init__(b, e0, None)
+        super().__init__(b, e0_, None)
     
     @staticmethod
     def try_attach(t : 'Token') -> 'ParenthesisToken':
@@ -37,42 +37,42 @@ class ParenthesisToken(MetaToken):
         elif (mc.is_adjective): 
             if (t.morph.contains_attr("сравн.", MorphClass()) and t.morph.contains_attr("кач.прил.", MorphClass())): 
                 ok = True
-        if (ok and t.next0 is not None): 
-            if (t.next0.is_char(',')): 
+        if (ok and t.next0_ is not None): 
+            if (t.next0_.is_char(',')): 
                 return ParenthesisToken(t, t)
-            t1 = t.next0
+            t1 = t.next0_
             if (t1.get_morph_class_in_dictionary() == MorphClass.VERB): 
                 if (t1.morph.contains_attr("н.вр.", MorphClass()) and t1.morph.contains_attr("нес.в.", MorphClass()) and t1.morph.contains_attr("дейст.з.", MorphClass())): 
                     return ParenthesisToken(t, t1)
         t1 = None
-        if ((t.is_value("В", None) and t.next0 is not None and t.next0.is_value("СООТВЕТСТВИЕ", None)) and t.next0.next0 is not None and t.next0.next0.morph.class0.is_preposition): 
-            t1 = t.next0.next0.next0
+        if ((t.is_value("В", None) and t.next0_ is not None and t.next0_.is_value("СООТВЕТСТВИЕ", None)) and t.next0_.next0_ is not None and t.next0_.next0_.morph.class0_.is_preposition): 
+            t1 = t.next0_.next0_.next0_
         elif (t.is_value("СОГЛАСНО", None)): 
-            t1 = t.next0
-        elif (t.is_value("В", None) and t.next0 is not None): 
-            if (t.next0.is_value("СИЛА", None)): 
-                t1 = t.next0.next0
-            elif (t.next0.morph.class0.is_adjective or t.next0.morph.class0.is_pronoun): 
-                npt = NounPhraseHelper.try_parse(t.next0, NounPhraseParseAttr.NO, 0)
+            t1 = t.next0_
+        elif (t.is_value("В", None) and t.next0_ is not None): 
+            if (t.next0_.is_value("СИЛА", None)): 
+                t1 = t.next0_.next0_
+            elif (t.next0_.morph.class0_.is_adjective or t.next0_.morph.class0_.is_pronoun): 
+                npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
                 if (npt is not None): 
                     if (npt.noun.is_value("ВИД", None) or npt.noun.is_value("СЛУЧАЙ", None) or npt.noun.is_value("СФЕРА", None)): 
                         return ParenthesisToken(t, npt.end_token)
         if (t1 is not None): 
-            if (t1.next0 is not None): 
+            if (t1.next0_ is not None): 
                 npt1 = NounPhraseHelper.try_parse(t1, NounPhraseParseAttr.NO, 0)
                 if (npt1 is not None): 
                     if (npt1.noun.is_value("НОРМА", None) or npt1.noun.is_value("ПОЛОЖЕНИЕ", None) or npt1.noun.is_value("УКАЗАНИЕ", None)): 
-                        t1 = npt1.end_token.next0
+                        t1 = npt1.end_token.next0_
             r = t1.get_referent()
             if (r is not None): 
-                res = ParenthesisToken._new1040(t, t1, r)
-                if (t1.next0 is not None and t1.next0.is_comma): 
+                res = ParenthesisToken._new1082(t, t1, r)
+                if (t1.next0_ is not None and t1.next0_.is_comma): 
                     sila = False
-                    ttt = t1.next0.next0
-                    first_pass2664 = True
+                    ttt = t1.next0_.next0_
+                    first_pass2824 = True
                     while True:
-                        if first_pass2664: first_pass2664 = False
-                        else: ttt = ttt.next0
+                        if first_pass2824: first_pass2824 = False
+                        else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_value("СИЛА", None) or ttt.is_value("ДЕЙСТВИЕ", None)): 
                             sila = True
@@ -89,14 +89,14 @@ class ParenthesisToken(MetaToken):
                 return ParenthesisToken(t, npt.end_token)
         tt = t
         if (tt.is_value("НЕ", None) and t is not None): 
-            tt = tt.next0
-        if (tt.morph.class0.is_preposition and tt is not None): 
-            tt = tt.next0
+            tt = tt.next0_
+        if (tt.morph.class0_.is_preposition and tt is not None): 
+            tt = tt.next0_
             npt1 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
             if (npt1 is not None): 
                 tt = npt1.end_token
-                if (tt.next0 is not None and tt.next0.is_comma): 
-                    return ParenthesisToken(t, tt.next0)
+                if (tt.next0_ is not None and tt.next0_.is_comma): 
+                    return ParenthesisToken(t, tt.next0_)
                 if (npt1.noun.is_value("ОЧЕРЕДЬ", None)): 
                     return ParenthesisToken(t, tt)
         if (t.is_value("ВЕДЬ", None)): 
@@ -118,7 +118,7 @@ class ParenthesisToken(MetaToken):
 
     
     @staticmethod
-    def _new1040(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent') -> 'ParenthesisToken':
+    def _new1082(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent') -> 'ParenthesisToken':
         res = ParenthesisToken(_arg1, _arg2)
         res.ref = _arg3
         return res

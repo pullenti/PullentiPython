@@ -49,7 +49,7 @@ class NounPhraseItemTextVar(MorphBaseInfo):
         if (t is None): 
             return
         for v in t.morph.items: 
-            if (v.class0 == self.class0 and self.check_accord(v, ignore_gender)): 
+            if (v.class0_ == self.class0_ and self.check_accord(v, ignore_gender)): 
                 self.normal_value = "{0}-{1}".format((v if isinstance(v, MorphWordForm) else None).normal_case, self.normal_value)
                 if (self.single_number_value is not None): 
                     self.single_number_value = "{0}-{1}".format(Utils.ifNotNull((v if isinstance(v, MorphWordForm) else None).normal_full, (v if isinstance(v, MorphWordForm) else None).normal_case), self.single_number_value)

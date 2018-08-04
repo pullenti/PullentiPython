@@ -21,7 +21,7 @@ class DerivateGroup:
         self.is_generated = False
         self.m_transitive = -1
         self.deleted = False
-        self.id0 = None
+        self.id0_ = None
         self.modified = None
         self.changed = False
         self._lazy = None
@@ -76,7 +76,7 @@ class DerivateGroup:
         for w in self.words: 
             if (not lang.is_undefined and (w.lang & lang).is_undefined): 
                 continue
-            rw = DerivateWord._new41(res, pref + w.spelling, w.lang, w.class0, w.aspect, w.reflexive, w.tense, w.voice, w.attrs)
+            rw = DerivateWord._new41(res, pref + w.spelling, w.lang, w.class0_, w.aspect, w.reflexive, w.tense, w.voice, w.attrs)
             res.words.append(rw)
         return res
 

@@ -35,7 +35,7 @@ class MailReferent(Referent):
         try: 
             if (val is not None): 
                 return Utils.valToEnum(val, MailKind)
-        except Exception as ex1450: 
+        except Exception as ex1501: 
             pass
         return MailKind.UNDEFINED
     
@@ -60,11 +60,11 @@ class MailReferent(Referent):
             if (s.type_name == MailReferent.ATTR_REF and isinstance(s.value, Referent)): 
                 print("{0}, ".format((s.value if isinstance(s.value, Referent) else None).to_string(True, lang, lev + 1)), end="", file=res, flush=True)
         if (res.tell() < 100): 
-            str0 = Utils.ifNotNull(self.text, "")
-            str0 = str0.replace('\r', ' ').replace('\n', ' ')
-            if (len(str0) > 100): 
-                str0 = (str0[0 : 100] + "...")
-            print(str0, end="", file=res)
+            str0_ = Utils.ifNotNull(self.text, "")
+            str0_ = str0_.replace('\r', ' ').replace('\n', ' ')
+            if (len(str0_) > 100): 
+                str0_ = (str0_[0 : 100] + "...")
+            print(str0_, end="", file=res)
         return Utils.toStringStringIO(res)
     
     def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
@@ -85,7 +85,7 @@ class MailReferent(Referent):
 
     
     @staticmethod
-    def _new1446(_arg1 : 'MailKind') -> 'MailReferent':
+    def _new1497(_arg1 : 'MailKind') -> 'MailReferent':
         res = MailReferent()
         res.kind = _arg1
         return res

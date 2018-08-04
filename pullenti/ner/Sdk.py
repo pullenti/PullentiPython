@@ -30,10 +30,11 @@ class Sdk:
         from pullenti.ner.keyword.KeywordAnalyzer import KeywordAnalyzer
         from pullenti.ner.definition.DefinitionAnalyzer import DefinitionAnalyzer
         from pullenti.ner.denomination.DenominationAnalyzer import DenominationAnalyzer
+        from pullenti.ner.measure.MeasureAnalyzer import MeasureAnalyzer
         from pullenti.ner.bank.BankAnalyzer import BankAnalyzer
         from pullenti.ner.geo.GeoAnalyzer import GeoAnalyzer
         from pullenti.ner.address.AddressAnalyzer import AddressAnalyzer
-        from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
+        from pullenti.ner._org.OrganizationAnalyzer import OrganizationAnalyzer
         from pullenti.ner.person.PersonAnalyzer import PersonAnalyzer
         from pullenti.ner.mail.MailAnalyzer import MailAnalyzer
         from pullenti.ner.transport.TransportAnalyzer import TransportAnalyzer
@@ -52,6 +53,7 @@ class Sdk:
         KeywordAnalyzer.initialize()
         DefinitionAnalyzer.initialize()
         DenominationAnalyzer.initialize()
+        MeasureAnalyzer.initialize()
         BankAnalyzer.initialize()
         GeoAnalyzer.initialize()
         AddressAnalyzer.initialize()

@@ -123,12 +123,12 @@ class StreetItemToken(MetaToken):
             tn = t
         elif (t.is_value("ИМ", None) or t.is_value("ІМ", None)): 
             tn = t
-            if (tn.next0 is not None and tn.next0.is_char('.')): 
-                tn = tn.next0
+            if (tn.next0_ is not None and tn.next0_.is_char('.')): 
+                tn = tn.next0_
         if (tn is not None): 
-            if (tn.next0 is None or tn.whitespaces_after_count > 2): 
+            if (tn.next0_ is None or tn.whitespaces_after_count > 2): 
                 return None
-            t = tn.next0
+            t = tn.next0_
         nt = NumberHelper.try_parse_age(t)
         if (nt is not None): 
             return StreetItemToken._new218(nt.begin_token, nt.end_token, StreetItemType.AGE, nt)
@@ -137,8 +137,8 @@ class StreetItemToken(MetaToken):
             if ((nt if isinstance(nt, NumberToken) else None).value == 0): 
                 return None
             res = StreetItemToken._new219(nt, nt, StreetItemType.NUMBER, nt, nt.morph)
-            if ((t.next0 is not None and t.next0.is_hiphen and t.next0.next0 is not None) and t.next0.next0.is_value("Я", None)): 
-                res.end_token = t.next0.next0
+            if ((t.next0_ is not None and t.next0_.is_hiphen and t.next0_.next0_ is not None) and t.next0_.next0_.is_value("Я", None)): 
+                res.end_token = t.next0_.next0_
             nex = NumberHelper.try_parse_number_with_postfix(t)
             if (nex is not None): 
                 if (nex.ex_typ == NumberExType.KILOMETER): 
@@ -154,10 +154,10 @@ class StreetItemToken(MetaToken):
                     res.number = None
                 else: 
                     return None
-            if (nt.typ == NumberSpellingType.WORDS and nt.morph.class0.is_adjective): 
+            if (nt.typ == NumberSpellingType.WORDS and nt.morph.class0_.is_adjective): 
                 npt2 = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
                 if (npt2 is not None and npt2.end_char > t.end_char and npt2.morph.number != MorphNumber.SINGULAR): 
-                    if (t.next0 is not None and not t.next0.chars.is_all_lower): 
+                    if (t.next0_ is not None and not t.next0_.chars.is_all_lower): 
                         pass
                     else: 
                         return None
@@ -166,12 +166,12 @@ class StreetItemToken(MetaToken):
         if (ntt is not None and isinstance(ntt, NumberToken) and prev is not None): 
             return StreetItemToken._new220(t, ntt, StreetItemType.NUMBER, (ntt if isinstance(ntt, NumberToken) else None), True)
         tt = (t if isinstance(t, TextToken) else None)
-        if (tt is not None and tt.morph.class0.is_adjective): 
+        if (tt is not None and tt.morph.class0_.is_adjective): 
             if (tt.chars.is_capital_upper or ((prev is not None and prev.typ == StreetItemType.NUMBER and tt.is_value("ТРАНСПОРТНЫЙ", None)))): 
                 npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
                 if (npt is not None and "-" in MiscHelper.get_text_value_of_meta_token(npt.noun, GetTextAttr.NO)): 
                     npt = None
-                tte = tt.next0
+                tte = tt.next0_
                 if (npt is not None and len(npt.adjectives) == 1): 
                     tte = npt.end_token
                 if (tte is not None): 
@@ -187,9 +187,9 @@ class StreetItemToken(MetaToken):
                             sit.termin = tok2.termin
                         return sit
                 if (npt is not None and npt.begin_token != npt.end_token and len(npt.adjectives) <= 1): 
-                    tt1 = npt.end_token.next0
+                    tt1 = npt.end_token.next0_
                     if (tt1 is not None and tt1.is_comma): 
-                        tt1 = tt1.next0
+                        tt1 = tt1.next0_
                     ok = False
                     sti1 = (None if recurse else StreetItemToken.try_parse(tt1, loc_streets, True, None, False))
                     if (sti1 is not None and sti1.typ == StreetItemType.NOUN): 
@@ -213,9 +213,9 @@ class StreetItemToken(MetaToken):
                         sit.value = MiscHelper.get_text_value(tt, npt.end_token, GetTextAttr.NO)
                         sit.alt_value = npt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False)
                         return sit
-        if ((tt is not None and isinstance(tt.next0, TextToken) and tt.next0.chars.is_capital_upper) and not recurse): 
+        if ((tt is not None and isinstance(tt.next0_, TextToken) and tt.next0_.chars.is_capital_upper) and not recurse): 
             if ((tt.is_value("ВАЛ", None) or tt.is_value("ТРАКТ", None) or tt.is_value("ПОЛЕ", None)) or tt.is_value("КОЛЬЦО", None) or tt.is_value("КІЛЬЦЕ", None)): 
-                sit = StreetItemToken.try_parse(tt.next0, loc_streets, True, None, False)
+                sit = StreetItemToken.try_parse(tt.next0_, loc_streets, True, None, False)
                 if (sit is not None and sit.typ == StreetItemType.NAME): 
                     if (sit.value is not None): 
                         sit.value = "{0} {1}".format(sit.value, tt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False))
@@ -225,12 +225,12 @@ class StreetItemToken(MetaToken):
                         sit.alt_value = "{0} {1}".format(sit.alt_value, tt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False))
                     sit.begin_token = tt
                     return sit
-        if (((tt is not None and tt.length_char == 1 and tt.chars.is_all_lower) and tt.next0 is not None and tt.next0.is_char('.')) and tt.kit.base_language.is_ru): 
+        if (((tt is not None and tt.length_char == 1 and tt.chars.is_all_lower) and tt.next0_ is not None and tt.next0_.is_char('.')) and tt.kit.base_language.is_ru): 
             if (tt.is_value("М", None) or tt.is_value("M", None)): 
                 if (prev is not None and prev.typ == StreetItemType.NOUN): 
                     pass
                 else: 
-                    return StreetItemToken._new222(tt, tt.next0, StreetItemToken.__m_metro, StreetItemType.NOUN, True)
+                    return StreetItemToken._new222(tt, tt.next0_, StreetItemToken.__m_metro, StreetItemType.NOUN, True)
         ot = None
         if (loc_streets is not None): 
             ots = loc_streets.try_attach(t, None, False)
@@ -240,7 +240,7 @@ class StreetItemToken(MetaToken):
             ots = t.kit.ontology.attach_token(AddressReferent.OBJ_TYPENAME, t)
             if (ots is not None): 
                 ot = ots[0]
-        if (ot is not None and ot.begin_token == ot.end_token and ot.morph.class0.is_adjective): 
+        if (ot is not None and ot.begin_token == ot.end_token and ot.morph.class0_.is_adjective): 
             tok0 = StreetItemToken.__m_ontology.try_parse(t, TerminParseAttr.NO)
             if (tok0 is not None): 
                 if (Utils.valToEnum(tok0.termin.tag, StreetItemType) == StreetItemType.STDADJECTIVE): 
@@ -250,7 +250,7 @@ class StreetItemToken(MetaToken):
             return res0
         tok = StreetItemToken.__m_ontology.try_parse(t, TerminParseAttr.NO)
         if (tok is not None and tok.termin.canonic_text == "НАБЕРЕЖНАЯ" and not tok.chars.is_all_lower): 
-            nex = StreetItemToken.try_parse(tok.end_token.next0, None, False, None, False)
+            nex = StreetItemToken.try_parse(tok.end_token.next0_, None, False, None, False)
             if (nex is not None and ((nex.typ == StreetItemType.NOUN or nex.typ == StreetItemType.STDADJECTIVE))): 
                 tok = None
             elif (((t.morph.gender & MorphGender.FEMINIE)) == MorphGender.UNDEFINED and t.length_char > 7): 
@@ -259,8 +259,8 @@ class StreetItemToken(MetaToken):
             tok = None
         if (tok is not None and not ignore_onto): 
             if (Utils.valToEnum(tok.termin.tag, StreetItemType) == StreetItemType.NUMBER): 
-                if (isinstance(tok.end_token.next0, NumberToken)): 
-                    return StreetItemToken._new224(t, tok.end_token.next0, StreetItemType.NUMBER, (tok.end_token.next0 if isinstance(tok.end_token.next0, NumberToken) else None), True, tok.morph)
+                if (isinstance(tok.end_token.next0_, NumberToken)): 
+                    return StreetItemToken._new224(t, tok.end_token.next0_, StreetItemType.NUMBER, (tok.end_token.next0_ if isinstance(tok.end_token.next0_, NumberToken) else None), True, tok.morph)
                 return None
             if (tt is None): 
                 return None
@@ -282,17 +282,17 @@ class StreetItemToken(MetaToken):
                             if (tok.end_token.is_newline_after and prev is not None): 
                                 oo2 = True
                             else: 
-                                next0_ = StreetItemToken.try_parse(tok.end_token.next0, None, False, None, False)
-                                if (next0_ is not None and ((next0_.typ == StreetItemType.NAME or next0_.typ == StreetItemType.NOUN))): 
+                                next0__ = StreetItemToken.try_parse(tok.end_token.next0_, None, False, None, False)
+                                if (next0__ is not None and ((next0__.typ == StreetItemType.NAME or next0__.typ == StreetItemType.NOUN))): 
                                     oo2 = True
-                                elif (AddressItemToken.check_house_after(tok.end_token.next0, False, True) and prev is not None): 
+                                elif (AddressItemToken.check_house_after(tok.end_token.next0_, False, True) and prev is not None): 
                                     oo2 = True
                             if (oo2): 
                                 return StreetItemToken._new225(tok.begin_token, tok.end_token, StreetItemType.STDADJECTIVE, tok.termin, abr, tok.morph)
                             break
-                        tt2 = tok.end_token.next0
+                        tt2 = tok.end_token.next0_
                         if (tt2 is not None and tt2.is_hiphen): 
-                            tt2 = tt2.next0
+                            tt2 = tt2.next0_
                         if (isinstance(tt2, TextToken)): 
                             if (tt2.length_char == 1 and tt2.chars.is_all_upper): 
                                 break
@@ -303,7 +303,7 @@ class StreetItemToken(MetaToken):
                                     is_sur = True
                                 else: 
                                     for wf in tt2.morph.items: 
-                                        if (wf.class0.is_proper_surname and (wf if isinstance(wf, MorphWordForm) else None).is_in_dictionary): 
+                                        if (wf.class0_.is_proper_surname and (wf if isinstance(wf, MorphWordForm) else None).is_in_dictionary): 
                                             if (wf.case.is_genitive): 
                                                 is_sur = True
                                                 break
@@ -314,7 +314,7 @@ class StreetItemToken(MetaToken):
                 while True:
                     if (tt.is_value(tok.termin.canonic_text, None) or tok.end_token.is_value(tok.termin.canonic_text, None) or tt.is_value("УЛ", None)): 
                         abr = False
-                    elif (tok.begin_token != tok.end_token and ((tok.begin_token.next0.is_hiphen or tok.begin_token.next0.is_char_of("/\\")))): 
+                    elif (tok.begin_token != tok.end_token and ((tok.begin_token.next0_.is_hiphen or tok.begin_token.next0_.is_char_of("/\\")))): 
                         pass
                     elif (not tt.chars.is_all_lower and tt.length_char == 1): 
                         break
@@ -326,7 +326,7 @@ class StreetItemToken(MetaToken):
                                 return None
                         if (tok.end_token.is_char('.')): 
                             pass
-                        elif (tok.begin_token != tok.end_token and tok.begin_token.next0 is not None and ((tok.begin_token.next0.is_hiphen or tok.begin_token.next0.is_char_of("/\\")))): 
+                        elif (tok.begin_token != tok.end_token and tok.begin_token.next0_ is not None and ((tok.begin_token.next0_.is_hiphen or tok.begin_token.next0_.is_char_of("/\\")))): 
                             pass
                         elif (tok.length_char > 5): 
                             pass
@@ -334,7 +334,7 @@ class StreetItemToken(MetaToken):
                             if (prev is not None and ((prev.typ == StreetItemType.NAME or prev.typ == StreetItemType.STDNAME or prev.typ == StreetItemType.STDPARTOFNAME))): 
                                 pass
                             else: 
-                                sii = StreetItemToken.try_parse(tt.next0, None, False, None, False)
+                                sii = StreetItemToken.try_parse(tt.next0_, None, False, None, False)
                                 if (sii is not None and (((sii.typ == StreetItemType.NAME or sii.typ == StreetItemType.STDNAME or sii.typ == StreetItemType.STDPARTOFNAME) or sii.typ == StreetItemType.AGE))): 
                                     pass
                                 else: 
@@ -343,13 +343,13 @@ class StreetItemToken(MetaToken):
                             return None
                     elif (((tt.term == "КВ" or tt.term == "КВАРТ")) and not tok.end_token.is_value("Л", None)): 
                         pass
-                    if (not t.chars.is_all_lower and t.morph.class0.is_proper_surname and t.chars.is_cyrillic_letter): 
+                    if (not t.chars.is_all_lower and t.morph.class0_.is_proper_surname and t.chars.is_cyrillic_letter): 
                         if (((t.morph.number & MorphNumber.PLURAL)) != MorphNumber.UNDEFINED): 
                             return None
                     if (tt.term == "ДОРОГОЙ"): 
                         return None
                     alt = None
-                    if (tok.begin_token.is_value("ПР", None) and ((tok.begin_token == tok.end_token or tok.begin_token.next0.is_char('.')))): 
+                    if (tok.begin_token.is_value("ПР", None) and ((tok.begin_token == tok.end_token or tok.begin_token.next0_.is_char('.')))): 
                         alt = StreetItemToken.__m_prospect
                     return StreetItemToken._new227(tok.begin_token, tok.end_token, StreetItemType.NOUN, tok.termin, alt, abr, tok.morph, (tok.termin.tag2 if isinstance(tok.termin.tag2, int) else 0))
             elif (swichVal == StreetItemType.STDNAME): 
@@ -365,9 +365,9 @@ class StreetItemToken(MetaToken):
                         else: 
                             sits.alt_value = sits.value
                             sits.value = vv
-                    if (((StreetItemToken.__m_std_ont_misc.try_parse(tok.begin_token, TerminParseAttr.NO) is not None or tok.begin_token.get_morph_class_in_dictionary().is_proper_name or (tok.begin_token.length_char < 4))) and ((tok.end_token.morph.class0.is_proper_surname or not tok.end_token.get_morph_class_in_dictionary().is_proper_name))): 
+                    if (((StreetItemToken.__m_std_ont_misc.try_parse(tok.begin_token, TerminParseAttr.NO) is not None or tok.begin_token.get_morph_class_in_dictionary().is_proper_name or (tok.begin_token.length_char < 4))) and ((tok.end_token.morph.class0_.is_proper_surname or not tok.end_token.get_morph_class_in_dictionary().is_proper_name))): 
                         sits.alt_value2 = MiscHelper.get_text_value(tok.end_token, tok.end_token, GetTextAttr.NO)
-                    elif (((tok.end_token.get_morph_class_in_dictionary().is_proper_name or StreetItemToken.__m_std_ont_misc.try_parse(tok.end_token, TerminParseAttr.NO) is not None)) and ((tok.begin_token.morph.class0.is_proper_surname or not tok.begin_token.get_morph_class_in_dictionary().is_proper_name))): 
+                    elif (((tok.end_token.get_morph_class_in_dictionary().is_proper_name or StreetItemToken.__m_std_ont_misc.try_parse(tok.end_token, TerminParseAttr.NO) is not None)) and ((tok.begin_token.morph.class0_.is_proper_surname or not tok.begin_token.get_morph_class_in_dictionary().is_proper_name))): 
                         sits.alt_value2 = MiscHelper.get_text_value(tok.begin_token, tok.begin_token, GetTextAttr.NO)
                 return sits
             elif (swichVal == StreetItemType.STDPARTOFNAME): 
@@ -379,15 +379,19 @@ class StreetItemToken(MetaToken):
                         prev.alt_value = "{0} {1}".format(tok.termin.canonic_text, prev.alt_value)
                     prev.end_token = tok.end_token
                     prev.value = nam
-                    return StreetItemToken.try_parse(tok.end_token.next0, loc_streets, recurse, prev, False)
-                sit = StreetItemToken.try_parse(tok.end_token.next0, loc_streets, False, None, False)
-                if (sit is None or ((sit.typ != StreetItemType.NAME and sit.typ != StreetItemType.NOUN))): 
+                    return StreetItemToken.try_parse(tok.end_token.next0_, loc_streets, recurse, prev, False)
+                sit = StreetItemToken.try_parse(tok.end_token.next0_, loc_streets, False, None, False)
+                if (sit is None): 
+                    if (tok.morph.number == MorphNumber.PLURAL): 
+                        return StreetItemToken._new228(tok.begin_token, tok.end_token, StreetItemType.NAME, tok.morph, MiscHelper.get_text_value_of_meta_token(tok, GetTextAttr.NO))
+                    return None
+                if (sit.typ != StreetItemType.NAME and sit.typ != StreetItemType.NOUN): 
                     return None
                 if (sit.typ == StreetItemType.NOUN): 
                     if (tok.morph.number == MorphNumber.PLURAL): 
                         return StreetItemToken._new228(tok.begin_token, tok.end_token, StreetItemType.NAME, tok.morph, MiscHelper.get_text_value_of_meta_token(tok, GetTextAttr.NO))
                     else: 
-                        return StreetItemToken._new230(tok.begin_token, tok.end_token, StreetItemType.NAME, tok.morph, tok.termin)
+                        return StreetItemToken._new231(tok.begin_token, tok.end_token, StreetItemType.NAME, tok.morph, tok.termin)
                 if (sit.value is not None): 
                     if (sit.alt_value is None): 
                         sit.alt_value = "{0} {1}".format(tok.termin.canonic_text, sit.value)
@@ -402,16 +406,16 @@ class StreetItemToken(MetaToken):
                 if (tok.begin_token.chars.is_all_lower): 
                     if (prev is not None and prev.typ == StreetItemType.STDADJECTIVE): 
                         pass
-                    elif (prev is not None and prev.typ == StreetItemType.NOUN and AddressItemToken.check_house_after(tok.end_token.next0, True, False)): 
+                    elif (prev is not None and prev.typ == StreetItemType.NOUN and AddressItemToken.check_house_after(tok.end_token.next0_, True, False)): 
                         pass
                     elif (t.is_value("ПРОЕКТИРУЕМЫЙ", None) or t.is_value("МИРА", None)): 
                         pass
                     else: 
-                        nex = StreetItemToken.try_parse(tok.end_token.next0, None, True, None, False)
+                        nex = StreetItemToken.try_parse(tok.end_token.next0_, None, True, None, False)
                         if (nex is not None and nex.typ == StreetItemType.NOUN): 
-                            tt2 = nex.end_token.next0
+                            tt2 = nex.end_token.next0_
                             while tt2 is not None and tt2.is_char_of(",."):
-                                tt2 = tt2.next0
+                                tt2 = tt2.next0_
                             if (tt2 is None or tt2.whitespaces_before_count > 1): 
                                 return None
                             if (AddressItemToken.check_house_after(tt2, False, True)): 
@@ -424,81 +428,81 @@ class StreetItemToken(MetaToken):
                 if (sit0 is not None and sit0.typ == StreetItemType.NAME and sit0.end_char > tok.end_char): 
                     sit0.is_in_dictionary = True
                     return sit0
-                sit1 = StreetItemToken._new231(tok.begin_token, tok.end_token, StreetItemType.NAME, tok.morph, True)
-                if ((not tok.is_whitespace_after and tok.end_token.next0 is not None and tok.end_token.next0.is_hiphen) and not tok.end_token.next0.is_whitespace_after): 
-                    sit2 = StreetItemToken.try_parse(tok.end_token.next0.next0, loc_streets, False, None, False)
+                sit1 = StreetItemToken._new232(tok.begin_token, tok.end_token, StreetItemType.NAME, tok.morph, True)
+                if ((not tok.is_whitespace_after and tok.end_token.next0_ is not None and tok.end_token.next0_.is_hiphen) and not tok.end_token.next0_.is_whitespace_after): 
+                    sit2 = StreetItemToken.try_parse(tok.end_token.next0_.next0_, loc_streets, False, None, False)
                     if (sit2 is not None and ((sit2.typ == StreetItemType.NAME or sit2.typ == StreetItemType.STDPARTOFNAME or sit2.typ == StreetItemType.STDNAME))): 
                         sit1.end_token = sit2.end_token
                 return sit1
             elif (swichVal == StreetItemType.FIX): 
-                return StreetItemToken._new232(tok.begin_token, tok.end_token, StreetItemType.FIX, tok.morph, True, tok.termin)
+                return StreetItemToken._new233(tok.begin_token, tok.end_token, StreetItemType.FIX, tok.morph, True, tok.termin)
         if (tt is not None): 
             if ((prev is not None and prev.typ == StreetItemType.NUMBER and prev.number is not None) and prev.number.value == 26): 
                 if (tt.is_value("БАКИНСКИЙ", None) or "БАКИНСК".startswith((tt if isinstance(tt, TextToken) else None).term)): 
                     tt2 = tt
-                    if (tt2.next0 is not None and tt2.next0.is_char('.')): 
-                        tt2 = tt2.next0
-                    if (isinstance(tt2.next0, TextToken)): 
-                        tt2 = tt2.next0
+                    if (tt2.next0_ is not None and tt2.next0_.is_char('.')): 
+                        tt2 = tt2.next0_
+                    if (isinstance(tt2.next0_, TextToken)): 
+                        tt2 = tt2.next0_
                         if (tt2.is_value("КОМИССАР", None) or tt2.is_value("КОММИССАР", None) or "КОМИС".startswith((tt2 if isinstance(tt2, TextToken) else None).term)): 
-                            if (tt2.next0 is not None and tt2.next0.is_char('.')): 
-                                tt2 = tt2.next0
-                            sit = StreetItemToken._new233(tt, tt2, StreetItemType.STDNAME, True, "БАКИНСКИХ КОМИССАРОВ", tt2.morph)
+                            if (tt2.next0_ is not None and tt2.next0_.is_char('.')): 
+                                tt2 = tt2.next0_
+                            sit = StreetItemToken._new234(tt, tt2, StreetItemType.STDNAME, True, "БАКИНСКИХ КОМИССАРОВ", tt2.morph)
                             return sit
-            if ((tt.next0 is not None and tt.next0.is_char('.') and not tt.chars.is_all_lower) and (tt.next0.whitespaces_after_count < 3) and isinstance(tt.next0.next0, TextToken)): 
-                tt1 = tt.next0.next0
+            if ((tt.next0_ is not None and tt.next0_.is_char('.') and not tt.chars.is_all_lower) and (tt.next0_.whitespaces_after_count < 3) and isinstance(tt.next0_.next0_, TextToken)): 
+                tt1 = tt.next0_.next0_
                 if (tt1 is not None and tt1.is_hiphen): 
-                    tt1 = tt1.next0
-                if (tt.length_char == 1 and tt1.length_char == 1 and isinstance(tt1.next0, TextToken)): 
-                    if (tt1.is_and and tt1.next0.chars.is_all_upper and tt1.next0.length_char == 1): 
-                        tt1 = tt1.next0
-                    if ((tt1.chars.is_all_upper and tt1.next0.is_char('.') and (tt1.next0.whitespaces_after_count < 3)) and isinstance(tt1.next0.next0, TextToken)): 
-                        tt1 = tt1.next0.next0
+                    tt1 = tt1.next0_
+                if (tt.length_char == 1 and tt1.length_char == 1 and isinstance(tt1.next0_, TextToken)): 
+                    if (tt1.is_and and tt1.next0_.chars.is_all_upper and tt1.next0_.length_char == 1): 
+                        tt1 = tt1.next0_
+                    if ((tt1.chars.is_all_upper and tt1.next0_.is_char('.') and (tt1.next0_.whitespaces_after_count < 3)) and isinstance(tt1.next0_.next0_, TextToken)): 
+                        tt1 = tt1.next0_.next0_
                 sit = StreetItemToken.try_parse(tt1, loc_streets, False, None, False)
                 if (sit is not None and isinstance(tt1, TextToken)): 
-                    str0 = (tt1 if isinstance(tt1, TextToken) else None).term
+                    str0_ = (tt1 if isinstance(tt1, TextToken) else None).term
                     ok = False
-                    cla = tt.next0.next0.get_morph_class_in_dictionary()
+                    cla = tt.next0_.next0_.get_morph_class_in_dictionary()
                     if (sit.is_in_dictionary): 
                         ok = True
                     elif (sit.__is_surname() or cla.is_proper_surname): 
                         ok = True
-                    elif (LanguageHelper.ends_with(str0, "ОЙ") and ((cla.is_proper_surname or ((sit.typ == StreetItemType.NAME and sit.is_in_dictionary))))): 
+                    elif (LanguageHelper.ends_with(str0_, "ОЙ") and ((cla.is_proper_surname or ((sit.typ == StreetItemType.NAME and sit.is_in_dictionary))))): 
                         ok = True
-                    elif (LanguageHelper.ends_with_ex(str0, "ГО", "ИХ", None, None)): 
+                    elif (LanguageHelper.ends_with_ex(str0_, "ГО", "ИХ", None, None)): 
                         ok = True
                     elif (tt1.is_whitespace_before and not tt1.get_morph_class_in_dictionary().is_undefined): 
                         pass
                     elif (prev is not None and prev.typ == StreetItemType.NOUN and ((not prev.is_abridge or prev.length_char > 2))): 
                         ok = True
-                    elif ((prev is not None and prev.typ == StreetItemType.NAME and sit.typ == StreetItemType.NOUN) and AddressItemToken.check_house_after(sit.end_token.next0, False, True)): 
+                    elif ((prev is not None and prev.typ == StreetItemType.NAME and sit.typ == StreetItemType.NOUN) and AddressItemToken.check_house_after(sit.end_token.next0_, False, True)): 
                         ok = True
-                    elif (sit.typ == StreetItemType.NAME and AddressItemToken.check_house_after(sit.end_token.next0, False, True)): 
+                    elif (sit.typ == StreetItemType.NAME and AddressItemToken.check_house_after(sit.end_token.next0_, False, True)): 
                         if (MiscLocationHelper.check_geo_object_before(tt)): 
                             ok = True
                     if (ok): 
                         sit.begin_token = tt
-                        sit.value = str0
+                        sit.value = str0_
                         sit.alt_value = MiscHelper.get_text_value(tt, sit.end_token, GetTextAttr.NO)
                         if (sit.alt_value is not None): 
                             sit.alt_value = sit.alt_value.replace("-", "")
                         return sit
-            if (tt.chars.is_cyrillic_letter and tt.length_char > 1 and not tt.morph.class0.is_preposition): 
+            if (tt.chars.is_cyrillic_letter and tt.length_char > 1 and not tt.morph.class0_.is_preposition): 
                 if (tt.is_value("ГЕРОЙ", None) or tt.is_value("ЗАЩИТНИК", "ЗАХИСНИК")): 
-                    if (isinstance(tt.next0, ReferentToken) and isinstance(tt.next0.get_referent(), GeoReferent)): 
-                        re = StreetItemToken._new234(tt, tt.next0, StreetItemType.STDPARTOFNAME, MiscHelper.get_text_value(tt, tt.next0, GetTextAttr.NO))
-                        sit = StreetItemToken.try_parse(tt.next0.next0, loc_streets, False, None, False)
+                    if (isinstance(tt.next0_, ReferentToken) and isinstance(tt.next0_.get_referent(), GeoReferent)): 
+                        re = StreetItemToken._new235(tt, tt.next0_, StreetItemType.STDPARTOFNAME, MiscHelper.get_text_value(tt, tt.next0_, GetTextAttr.NO))
+                        sit = StreetItemToken.try_parse(tt.next0_.next0_, loc_streets, False, None, False)
                         if (sit is None or sit.typ != StreetItemType.NAME): 
                             ok2 = False
                             if (sit is not None and ((sit.typ == StreetItemType.STDADJECTIVE or sit.typ == StreetItemType.NOUN))): 
                                 ok2 = True
-                            elif (AddressItemToken.check_house_after(tt.next0.next0, False, True)): 
+                            elif (AddressItemToken.check_house_after(tt.next0_.next0_, False, True)): 
                                 ok2 = True
-                            elif (tt.next0.is_newline_after): 
+                            elif (tt.next0_.is_newline_after): 
                                 ok2 = True
                             if (ok2): 
-                                sit = StreetItemToken._new235(tt, tt.next0, StreetItemType.NAME)
-                                sit.value = MiscHelper.get_text_value(tt, tt.next0, GetTextAttr.NO)
+                                sit = StreetItemToken._new236(tt, tt.next0_, StreetItemType.NAME)
+                                sit.value = MiscHelper.get_text_value(tt, tt.next0_, GetTextAttr.NO)
                                 return sit
                             return re
                         if (sit.value is None): 
@@ -512,7 +516,7 @@ class StreetItemToken(MetaToken):
                         return sit
                 ani = NumberHelper.try_parse_anniversary(t)
                 if (ani is not None): 
-                    return StreetItemToken._new236(t, ani.end_token, StreetItemType.AGE, ani, str(ani.value))
+                    return StreetItemToken._new237(t, ani.end_token, StreetItemType.AGE, ani, str(ani.value))
                 ok1 = False
                 if (not tt.chars.is_all_lower): 
                     ait = AddressItemToken.try_parse(tt, None, False, True, None)
@@ -526,11 +530,11 @@ class StreetItemToken(MetaToken):
                         tt1 = tt1.previous
                     if (tt1 is not None and isinstance(tt1.get_referent(), GeoReferent)): 
                         ok1 = True
-                    elif (AddressItemToken.check_house_after(tt.next0, False, False)): 
+                    elif (AddressItemToken.check_house_after(tt.next0_, False, False)): 
                         if (not AddressItemToken.check_house_after(tt, False, False)): 
                             ok1 = True
                 elif (tt.whitespaces_after_count < 2): 
-                    nex = StreetItemToken.try_parse(tt.next0, None, True, None, False)
+                    nex = StreetItemToken.try_parse(tt.next0_, None, True, None, False)
                     if (nex is not None and nex.typ == StreetItemType.NOUN): 
                         if (nex.termin.canonic_text == "ПЛОЩАДЬ"): 
                             if (tt.is_value("ОБЩИЙ", None)): 
@@ -540,30 +544,30 @@ class StreetItemToken(MetaToken):
                             tt1 = tt1.previous
                         if (tt1 is not None and isinstance(tt1.get_referent(), GeoReferent)): 
                             ok1 = True
-                        elif (AddressItemToken.check_house_after(nex.end_token.next0, False, False)): 
+                        elif (AddressItemToken.check_house_after(nex.end_token.next0_, False, False)): 
                             ok1 = True
                 if (ok1): 
                     dc = tt.get_morph_class_in_dictionary()
                     if (dc.is_adverb): 
                         if (not ((dc.is_proper))): 
                             return None
-                    res = StreetItemToken._new237(tt, tt, StreetItemType.NAME, tt.morph)
-                    if ((tt.next0 is not None and ((tt.next0.is_hiphen or tt.next0.is_char_of("\\/"))) and isinstance(tt.next0.next0, TextToken)) and not tt.is_whitespace_after and not tt.next0.is_whitespace_after): 
-                        ok2 = AddressItemToken.check_house_after(tt.next0.next0.next0, False, False) or tt.next0.next0.is_newline_after
+                    res = StreetItemToken._new238(tt, tt, StreetItemType.NAME, tt.morph)
+                    if ((tt.next0_ is not None and ((tt.next0_.is_hiphen or tt.next0_.is_char_of("\\/"))) and isinstance(tt.next0_.next0_, TextToken)) and not tt.is_whitespace_after and not tt.next0_.is_whitespace_after): 
+                        ok2 = AddressItemToken.check_house_after(tt.next0_.next0_.next0_, False, False) or tt.next0_.next0_.is_newline_after
                         if (not ok2): 
-                            te2 = StreetItemToken.try_parse(tt.next0.next0.next0, None, False, None, False)
+                            te2 = StreetItemToken.try_parse(tt.next0_.next0_.next0_, None, False, None, False)
                             if (te2 is not None and te2.typ == StreetItemType.NOUN): 
                                 ok2 = True
                         if (ok2): 
-                            res.end_token = tt.next0.next0
+                            res.end_token = tt.next0_.next0_
                             res.value = "{0} {1}".format(MiscHelper.get_text_value(res.begin_token, res.begin_token, GetTextAttr.NO), MiscHelper.get_text_value(res.end_token, res.end_token, GetTextAttr.NO))
-                    elif ((tt.whitespaces_after_count < 2) and isinstance(tt.next0, TextToken) and tt.next0.chars.is_letter): 
-                        if (not AddressItemToken.check_house_after(tt.next0, False, False) or tt.next0.is_newline_after): 
-                            tt1 = tt.next0
+                    elif ((tt.whitespaces_after_count < 2) and isinstance(tt.next0_, TextToken) and tt.next0_.chars.is_letter): 
+                        if (not AddressItemToken.check_house_after(tt.next0_, False, False) or tt.next0_.is_newline_after): 
+                            tt1 = tt.next0_
                             is_pref = False
                             if (isinstance(tt1, TextToken) and tt1.chars.is_all_lower): 
                                 if (tt1.is_value("ДЕ", None) or tt1.is_value("ЛА", None)): 
-                                    tt1 = tt1.next0
+                                    tt1 = tt1.next0_
                                     is_pref = True
                             nn = StreetItemToken.try_parse(tt1, loc_streets, False, None, False)
                             if (nn is None or nn.typ == StreetItemType.NAME): 
@@ -571,7 +575,7 @@ class StreetItemToken(MetaToken):
                                 if (npt is not None): 
                                     if (npt.begin_token == npt.end_token): 
                                         npt = None
-                                if (npt is not None and ((npt.is_newline_after or AddressItemToken.check_house_after(npt.end_token.next0, False, False)))): 
+                                if (npt is not None and ((npt.is_newline_after or AddressItemToken.check_house_after(npt.end_token.next0_, False, False)))): 
                                     res.end_token = npt.end_token
                                     if (npt.morph.case.is_genitive): 
                                         res.value = MiscHelper.get_text_value_of_meta_token(npt, GetTextAttr.NO)
@@ -579,8 +583,8 @@ class StreetItemToken(MetaToken):
                                     else: 
                                         res.value = npt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False)
                                         res.alt_value = MiscHelper.get_text_value_of_meta_token(npt, GetTextAttr.NO)
-                                elif (AddressItemToken.check_house_after(tt1.next0, False, False) and tt1.chars.is_cyrillic_letter == tt.chars.is_cyrillic_letter and (t.whitespaces_after_count < 2)): 
-                                    if (tt1.morph.class0.is_verb and not tt1.is_value("ДАЛИ", None)): 
+                                elif (AddressItemToken.check_house_after(tt1.next0_, False, False) and tt1.chars.is_cyrillic_letter == tt.chars.is_cyrillic_letter and (t.whitespaces_after_count < 2)): 
+                                    if (tt1.morph.class0_.is_verb and not tt1.is_value("ДАЛИ", None)): 
                                         pass
                                     elif (npt is None and not tt1.chars.is_all_lower and not is_pref): 
                                         pass
@@ -591,35 +595,35 @@ class StreetItemToken(MetaToken):
                                 npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
                                 if (npt is not None and npt.end_token == nn.end_token): 
                                     res.value = MiscHelper.get_text_value(res.begin_token, res.end_token, GetTextAttr.NO)
-                                    var = Morphology.get_wordform(res.value, MorphBaseInfo._new238(MorphCase.NOMINATIVE, MorphClass.ADJECTIVE, MorphNumber.SINGULAR, npt.morph.gender))
+                                    var = Morphology.get_wordform(res.value, MorphBaseInfo._new239(MorphCase.NOMINATIVE, MorphClass.ADJECTIVE, MorphNumber.SINGULAR, npt.morph.gender))
                                     if (var is not None and var != res.value): 
                                         res.alt_value = res.value
                                         res.value = var
                     return res
-            if (((tt.is_value("РЕКА", None) or tt.is_value("РІЧКА", None))) and tt.next0 is not None and tt.next0.chars.is_capital_upper): 
-                return StreetItemToken._new239(tt, tt.next0, StreetItemType.NAME, tt.morph, tt.next0.get_source_text().upper())
+            if (((tt.is_value("РЕКА", None) or tt.is_value("РІЧКА", None))) and tt.next0_ is not None and tt.next0_.chars.is_capital_upper): 
+                return StreetItemToken._new240(tt, tt.next0_, StreetItemType.NAME, tt.morph, tt.next0_.get_source_text().upper())
             if (tt.is_value("№", None) or tt.is_value("НОМЕР", None) or tt.is_value("НОМ", None)): 
-                tt1 = tt.next0
+                tt1 = tt.next0_
                 if (tt1 is not None and tt1.is_char('.')): 
-                    tt1 = tt1.next0
+                    tt1 = tt1.next0_
                 if (isinstance(tt1, NumberToken)): 
                     return StreetItemToken._new220(tt, tt1, StreetItemType.NUMBER, (tt1 if isinstance(tt1, NumberToken) else None), True)
-            if (tt.is_hiphen and isinstance(tt.next0, NumberToken)): 
+            if (tt.is_hiphen and isinstance(tt.next0_, NumberToken)): 
                 if (prev is not None and prev.typ == StreetItemType.NOUN): 
                     if (prev.termin.canonic_text == "МИКРОРАЙОН" or LanguageHelper.ends_with(prev.termin.canonic_text, "ГОРОДОК")): 
-                        return StreetItemToken._new220(tt, tt.next0, StreetItemType.NUMBER, (tt.next0 if isinstance(tt.next0, NumberToken) else None), True)
+                        return StreetItemToken._new220(tt, tt.next0_, StreetItemType.NUMBER, (tt.next0_ if isinstance(tt.next0_, NumberToken) else None), True)
         r = (None if t is None else t.get_referent())
         if (isinstance(r, GeoReferent)): 
             geo = (r if isinstance(r, GeoReferent) else None)
             if (prev is not None and prev.typ == StreetItemType.NOUN): 
-                if (AddressItemToken.check_house_after(t.next0, False, False)): 
-                    return StreetItemToken._new234(t, t, StreetItemType.NAME, MiscHelper.get_text_value(t, t, GetTextAttr.NO))
+                if (AddressItemToken.check_house_after(t.next0_, False, False)): 
+                    return StreetItemToken._new235(t, t, StreetItemType.NAME, MiscHelper.get_text_value(t, t, GetTextAttr.NO))
         if ((isinstance(tt, TextToken) and tt.chars.is_capital_upper and tt.chars.is_latin_letter) and (tt.whitespaces_after_count < 2)): 
             if (MiscHelper.is_eng_article(tt)): 
                 return None
-            tt2 = tt.next0
+            tt2 = tt.next0_
             if (MiscHelper.is_eng_adj_suffix(tt2)): 
-                tt2 = tt2.next0.next0
+                tt2 = tt2.next0_.next0_
             tok1 = StreetItemToken.__m_ontology.try_parse(tt2, TerminParseAttr.NO)
             if (tok1 is not None): 
                 return StreetItemToken._new228(tt, tt2.previous, StreetItemType.NAME, tt.morph, (tt if isinstance(tt, TextToken) else None).term)
@@ -644,14 +648,14 @@ class StreetItemToken(MetaToken):
                 res.append(StreetItemToken._new218(t, t, StreetItemType.NUMBER, NumberToken(t, t, dr.day, NumberSpellingType.DIGIT)))
                 tmp = dr.to_string(False, t.morph.language, 0)
                 i = tmp.find(' ')
-                sit = StreetItemToken._new234(t, t, StreetItemType.STDNAME, tmp[i + 1 : ].upper())
+                sit = StreetItemToken._new235(t, t, StreetItemType.STDNAME, tmp[i + 1 : ].upper())
                 res.append(sit)
                 sit.chars.is_capital_upper = True
                 return res
             if (dr.year > 0 and dr.month == 0): 
                 res = list()
                 res.append(StreetItemToken._new218(t, t, StreetItemType.NUMBER, NumberToken(t, t, dr.year, NumberSpellingType.DIGIT)))
-                sit = StreetItemToken._new234(t, t, StreetItemType.STDNAME, ("РОКУ" if t.morph.language.is_ua else "ГОДА"))
+                sit = StreetItemToken._new235(t, t, StreetItemType.STDNAME, ("РОКУ" if t.morph.language.is_ua else "ГОДА"))
                 res.append(sit)
                 sit.chars.is_capital_upper = True
                 return res
@@ -659,10 +663,10 @@ class StreetItemToken(MetaToken):
         if (prev is not None and prev.typ == StreetItemType.AGE): 
             res = list()
             if (isinstance(t.get_referent(), GeoReferent)): 
-                sit = StreetItemToken._new248(t, t, StreetItemType.NAME, t.get_source_text().upper(), t.get_referent().to_string(True, t.kit.base_language, 0).upper())
+                sit = StreetItemToken._new249(t, t, StreetItemType.NAME, t.get_source_text().upper(), t.get_referent().to_string(True, t.kit.base_language, 0).upper())
                 res.append(sit)
             elif (t.is_value("ГОРОД", None) or t.is_value("МІСТО", None)): 
-                sit = StreetItemToken._new234(t, t, StreetItemType.NAME, "ГОРОДА")
+                sit = StreetItemToken._new235(t, t, StreetItemType.NAME, "ГОРОДА")
                 res.append(sit)
             else: 
                 return None
@@ -673,7 +677,7 @@ class StreetItemToken(MetaToken):
                 res = list()
                 sit = StreetItemToken._new218(num.begin_token, num.end_token, StreetItemType.NUMBER, num)
                 res.append(sit)
-                t = num.end_token.next0
+                t = num.end_token.next0_
                 if ((num.typ == NumberSpellingType.DIGIT and isinstance(t, TextToken) and not t.is_whitespace_before) and t.length_char == 1): 
                     sit.end_token = t
                     sit.value = "{0}{1}".format(num.value, (t if isinstance(t, TextToken) else None).term)
@@ -696,13 +700,13 @@ class StreetItemToken(MetaToken):
         if (sit is not None): 
             res = list()
             res.append(sit)
-            t = sit.end_token.next0
+            t = sit.end_token.next0_
         else: 
             res = StreetItemToken._try_parse_spec(t, None)
             if (res is None): 
                 return None
             sit = res[len(res) - 1]
-            t = sit.end_token.next0
+            t = sit.end_token.next0_
             sit2 = StreetItemToken.try_parse(t, loc_streets, False, None, False)
             if (sit2 is not None and sit2.typ == StreetItemType.NOUN): 
                 pass
@@ -710,10 +714,10 @@ class StreetItemToken(MetaToken):
                 pass
             else: 
                 return None
-        first_pass2537 = True
+        first_pass2690 = True
         while True:
-            if first_pass2537: first_pass2537 = False
-            else: t = t.next0
+            if first_pass2690: first_pass2690 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (max_count > 0 and len(res) >= max_count): 
                 break
@@ -725,13 +729,13 @@ class StreetItemToken(MetaToken):
                 else: 
                     break
             if (t.is_hiphen and sit is not None and ((sit.typ == StreetItemType.NAME or ((sit.typ == StreetItemType.STDADJECTIVE and not sit.is_abridge))))): 
-                sit1 = StreetItemToken.try_parse(t.next0, loc_streets, False, sit, False)
+                sit1 = StreetItemToken.try_parse(t.next0_, loc_streets, False, sit, False)
                 if (sit1 is None): 
                     break
                 if (sit1.typ == StreetItemType.NUMBER): 
-                    tt = sit1.end_token.next0
+                    tt = sit1.end_token.next0_
                     if (tt is not None and tt.is_comma): 
-                        tt = tt.next0
+                        tt = tt.next0_
                     ok = False
                     ait = AddressItemToken.try_parse(tt, loc_streets, False, True, None)
                     if (ait is not None): 
@@ -760,7 +764,7 @@ class StreetItemToken(MetaToken):
                 t = sit.end_token
                 continue
             elif (t.is_hiphen and sit is not None and sit.typ == StreetItemType.NUMBER): 
-                sit1 = StreetItemToken.try_parse(t.next0, loc_streets, False, None, False)
+                sit1 = StreetItemToken.try_parse(t.next0_, loc_streets, False, None, False)
                 if (sit1 is not None and ((sit1.typ == StreetItemType.STDADJECTIVE or sit1.typ == StreetItemType.STDNAME or sit1.typ == StreetItemType.NAME))): 
                     sit.number_has_prefix = True
                     sit = sit1
@@ -770,11 +774,11 @@ class StreetItemToken(MetaToken):
             if (t.is_char('.') and sit is not None and sit.typ == StreetItemType.NOUN): 
                 if (t.whitespaces_after_count > 1): 
                     break
-                sit = StreetItemToken.try_parse(t.next0, loc_streets, False, None, False)
+                sit = StreetItemToken.try_parse(t.next0_, loc_streets, False, None, False)
                 if (sit is None): 
                     break
                 if (sit.typ == StreetItemType.NUMBER or sit.typ == StreetItemType.STDADJECTIVE): 
-                    sit1 = StreetItemToken.try_parse(sit.end_token.next0, None, False, None, False)
+                    sit1 = StreetItemToken.try_parse(sit.end_token.next0_, None, False, None, False)
                     if (sit1 is not None and ((sit1.typ == StreetItemType.STDADJECTIVE or sit1.typ == StreetItemType.STDNAME or sit1.typ == StreetItemType.NAME))): 
                         pass
                     else: 
@@ -783,12 +787,12 @@ class StreetItemToken(MetaToken):
                     break
                 if (t.previous.get_morph_class_in_dictionary().is_noun): 
                     if (not sit.is_in_dictionary): 
-                        tt = sit.end_token.next0
+                        tt = sit.end_token.next0_
                         has_house = False
-                        first_pass2538 = True
+                        first_pass2691 = True
                         while True:
-                            if first_pass2538: first_pass2538 = False
-                            else: tt = tt.next0
+                            if first_pass2691: first_pass2691 = False
+                            else: tt = tt.next0_
                             if (not (tt is not None)): break
                             if (tt.is_newline_before): 
                                 break
@@ -818,7 +822,7 @@ class StreetItemToken(MetaToken):
                         t = spli[len(spli) - 1].end_token
                         continue
                     if ((isinstance(t, TextToken) and ((len(res) == 2 or len(res) == 3)) and res[0].typ == StreetItemType.NOUN) and res[1].typ == StreetItemType.NUMBER and ((((t if isinstance(t, TextToken) else None).term == "ГОДА" or (t if isinstance(t, TextToken) else None).term == "МАЯ" or (t if isinstance(t, TextToken) else None).term == "МАРТА") or (t if isinstance(t, TextToken) else None).term == "СЪЕЗДА"))): 
-                        sit = StreetItemToken._new234(t, t, StreetItemType.STDNAME, (t if isinstance(t, TextToken) else None).term)
+                        sit = StreetItemToken._new235(t, t, StreetItemType.STDNAME, (t if isinstance(t, TextToken) else None).term)
                         res.append(sit)
                         continue
                     sit = res[len(res) - 1]
@@ -826,28 +830,28 @@ class StreetItemToken(MetaToken):
                         break
                     if (sit.typ == StreetItemType.NOUN and ((sit.termin.canonic_text == "МИКРОРАЙОН" or sit.termin.canonic_text == "МІКРОРАЙОН")) and (t.whitespaces_before_count < 2)): 
                         tt1 = t
-                        if (tt1.is_hiphen and tt1.next0 is not None): 
-                            tt1 = tt1.next0
-                        if (BracketHelper.is_bracket(tt1, True) and tt1.next0 is not None): 
-                            tt1 = tt1.next0
-                        tt2 = tt1.next0
+                        if (tt1.is_hiphen and tt1.next0_ is not None): 
+                            tt1 = tt1.next0_
+                        if (BracketHelper.is_bracket(tt1, True) and tt1.next0_ is not None): 
+                            tt1 = tt1.next0_
+                        tt2 = tt1.next0_
                         br = False
                         if (BracketHelper.is_bracket(tt2, True)): 
-                            tt2 = tt2.next0
+                            tt2 = tt2.next0_
                             br = True
                         if ((isinstance(tt1, TextToken) and tt1.length_char == 1 and tt1.chars.is_letter) and ((AddressItemToken.check_house_after(tt2, False, True) or tt2 is None))): 
-                            sit = StreetItemToken._new234(t, (tt1.next0 if br else tt1), StreetItemType.NAME, (tt1 if isinstance(tt1, TextToken) else None).term)
+                            sit = StreetItemToken._new235(t, (tt1.next0_ if br else tt1), StreetItemType.NAME, (tt1 if isinstance(tt1, TextToken) else None).term)
                             ch1 = AddressItemToken.correct_char(sit.value[0])
                             if (ord(ch1) != 0 and ch1 != sit.value[0]): 
                                 sit.alt_value = "{0}".format(ch1)
                             res.append(sit)
                             break
                     if (t.is_comma and (((sit.typ == StreetItemType.NAME or sit.typ == StreetItemType.STDNAME or sit.typ == StreetItemType.STDPARTOFNAME) or sit.typ == StreetItemType.STDADJECTIVE or ((sit.typ == StreetItemType.NUMBER and len(res) > 1 and (((res[len(res) - 2].typ == StreetItemType.NAME or res[len(res) - 2].typ == StreetItemType.STDNAME or res[len(res) - 2].typ == StreetItemType.STDADJECTIVE) or res[len(res) - 2].typ == StreetItemType.STDPARTOFNAME))))))): 
-                        sit = StreetItemToken.try_parse(t.next0, None, False, None, False)
+                        sit = StreetItemToken.try_parse(t.next0_, None, False, None, False)
                         if (sit is not None and sit.typ == StreetItemType.NOUN): 
-                            ttt = sit.end_token.next0
+                            ttt = sit.end_token.next0_
                             if (ttt is not None and ttt.is_comma): 
-                                ttt = ttt.next0
+                                ttt = ttt.next0_
                             add = AddressItemToken.try_parse(ttt, None, False, True, None)
                             if (add is not None and ((add.typ == AddressItemToken.ItemType.HOUSE or add.typ == AddressItemToken.ItemType.CORPUS or add.typ == AddressItemToken.ItemType.BUILDING))): 
                                 res.append(sit)
@@ -855,11 +859,11 @@ class StreetItemToken(MetaToken):
                                 continue
                     if (BracketHelper.can_be_start_of_sequence(t, True, False)): 
                         sit1 = res[len(res) - 1]
-                        if (sit1.typ == StreetItemType.NOUN and ((sit1.noun_is_doubt_coef == 0 or ((isinstance(t.next0, TextToken) and not t.next0.chars.is_all_lower))))): 
+                        if (sit1.typ == StreetItemType.NOUN and ((sit1.noun_is_doubt_coef == 0 or ((isinstance(t.next0_, TextToken) and not t.next0_.chars.is_all_lower))))): 
                             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
                             if (br is not None and (br.length_char < 50)): 
-                                sit2 = StreetItemToken.try_parse(t.next0, loc_streets, False, None, False)
-                                if (sit2 is not None and sit2.end_token.next0 == br.end_token): 
+                                sit2 = StreetItemToken.try_parse(t.next0_, loc_streets, False, None, False)
+                                if (sit2 is not None and sit2.end_token.next0_ == br.end_token): 
                                     if (sit2.value is None and sit2.typ == StreetItemType.NAME): 
                                         sit2.value = MiscHelper.get_text_value(sit2.begin_token, sit2.end_token, GetTextAttr.NO)
                                     sit2.begin_token = t
@@ -868,15 +872,15 @@ class StreetItemToken(MetaToken):
                                     t = sit2.end_token
                                     res.append(sit2)
                                     continue
-                                res.append(StreetItemToken._new253(t, br.end_token, StreetItemType.NAME, MiscHelper.get_text_value(t, br.end_token, GetTextAttr.NO), True))
+                                res.append(StreetItemToken._new254(t, br.end_token, StreetItemType.NAME, MiscHelper.get_text_value(t, br.end_token, GetTextAttr.NO), True))
                                 t = br.end_token
                                 continue
-                    if (t.is_hiphen and isinstance(t.next0, NumberToken)): 
+                    if (t.is_hiphen and isinstance(t.next0_, NumberToken)): 
                         sit = res[len(res) - 1]
                         if (sit.typ == StreetItemType.NOUN and (((sit.termin.canonic_text == "КВАРТАЛ" or sit.termin.canonic_text == "МИКРОРАЙОН" or sit.termin.canonic_text == "ГОРОДОК") or sit.termin.canonic_text == "МІКРОРАЙОН"))): 
-                            sit = StreetItemToken._new220(t, t.next0, StreetItemType.NUMBER, (t.next0 if isinstance(t.next0, NumberToken) else None), True)
+                            sit = StreetItemToken._new220(t, t.next0_, StreetItemType.NUMBER, (t.next0_ if isinstance(t.next0_, NumberToken) else None), True)
                             res.append(sit)
-                            t = t.next0
+                            t = t.next0_
                             continue
                     break
                 res.append(sit)
@@ -895,30 +899,30 @@ class StreetItemToken(MetaToken):
                         break
             t = sit.end_token
         i = 0
-        first_pass2539 = True
+        first_pass2692 = True
         while True:
-            if first_pass2539: first_pass2539 = False
+            if first_pass2692: first_pass2692 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].typ == StreetItemType.NAME and res[i + 1].typ == StreetItemType.NAME and (res[i].whitespaces_after_count < 3)): 
                 is_prop = False
                 is_pers = False
-                if (res[i].begin_token.morph.class0.is_noun): 
+                if (res[i].begin_token.morph.class0_.is_noun): 
                     rt = res[i].kit.process_referent("PERSON", res[i].begin_token)
                     if (rt is not None): 
                         if (rt.referent.type_name == "PERSONPROPERTY"): 
                             is_prop = True
                         elif (rt.end_token == res[i + 1].end_token): 
                             is_pers = True
-                if ((i == 0 and ((not is_prop and not is_pers)) and ((i + 2) < len(res))) and res[i + 2].typ == StreetItemType.NOUN and not res[i].begin_token.morph.class0.is_adjective): 
-                    if (MiscLocationHelper.check_geo_object_before(res[0].begin_token) and res[0].end_token.next0 == res[1].begin_token and (res[0].whitespaces_after_count < 2)): 
+                if ((i == 0 and ((not is_prop and not is_pers)) and ((i + 2) < len(res))) and res[i + 2].typ == StreetItemType.NOUN and not res[i].begin_token.morph.class0_.is_adjective): 
+                    if (MiscLocationHelper.check_geo_object_before(res[0].begin_token) and res[0].end_token.next0_ == res[1].begin_token and (res[0].whitespaces_after_count < 2)): 
                         pass
                     else: 
                         del res[i]
                         i -= 1
                         continue
-                if (res[i].morph.class0.is_adjective and res[i + 1].morph.class0.is_adjective): 
-                    if (res[i].end_token.next0.is_hiphen): 
+                if (res[i].morph.class0_.is_adjective and res[i + 1].morph.class0_.is_adjective): 
+                    if (res[i].end_token.next0_.is_hiphen): 
                         pass
                     elif (i == 1 and res[0].typ == StreetItemType.NOUN and len(res) == 3): 
                         pass
@@ -929,7 +933,7 @@ class StreetItemToken(MetaToken):
                 res[i].value = MiscHelper.get_text_value(res[i].begin_token, res[i + 1].end_token, GetTextAttr.NO)
                 if ("-" in res[i].value): 
                     res[i].value = res[i].value.replace('-', ' ')
-                if (not res[i + 1].begin_token.previous.is_hiphen and ((not res[i].begin_token.morph.class0.is_adjective or is_prop or is_pers))): 
+                if (not res[i + 1].begin_token.previous.is_hiphen and ((not res[i].begin_token.morph.class0_.is_adjective or is_prop or is_pers))): 
                     if (is_pers and res[i + 1].end_token.get_morph_class_in_dictionary().is_proper_name): 
                         res[i].alt_value = MiscHelper.get_text_value(res[i].begin_token, res[i].end_token, GetTextAttr.NO)
                     else: 
@@ -960,9 +964,9 @@ class StreetItemToken(MetaToken):
                         break
             i += 1
         i = 0
-        first_pass2540 = True
+        first_pass2693 = True
         while True:
-            if first_pass2540: first_pass2540 = False
+            if first_pass2693: first_pass2693 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].typ == StreetItemType.NAME or res[i].typ == StreetItemType.STDNAME or res[i].typ == StreetItemType.STDADJECTIVE): 
@@ -1000,7 +1004,7 @@ class StreetItemToken(MetaToken):
                 del res[2]
         if (len(res) >= 3 and res[0].typ == StreetItemType.NUMBER and res[1].typ == StreetItemType.NOUN): 
             nt = (res[0].begin_token if isinstance(res[0].begin_token, NumberToken) else None)
-            if (nt is not None and nt.typ == NumberSpellingType.DIGIT and nt.morph.class0.is_undefined): 
+            if (nt is not None and nt.typ == NumberSpellingType.DIGIT and nt.morph.class0_.is_undefined): 
                 return None
         ii0 = -1
         ii1 = -1
@@ -1014,32 +1018,32 @@ class StreetItemToken(MetaToken):
             ii0 = ii1
         if (ii0 >= 0): 
             if (len(res) == (ii0 + 1)): 
-                tt = res[ii0].end_token.next0
+                tt = res[ii0].end_token.next0_
                 num = StreetItemToken.__try_attach_road_num(tt)
                 if (num is not None): 
                     res.append(num)
-                    tt = num.end_token.next0
+                    tt = num.end_token.next0_
                     res[0].is_abridge = False
                 if (tt is not None and isinstance(tt.get_referent(), GeoReferent)): 
                     g1 = (tt.get_referent() if isinstance(tt.get_referent(), GeoReferent) else None)
-                    tt = tt.next0
+                    tt = tt.next0_
                     if (tt is not None and tt.is_hiphen): 
-                        tt = tt.next0
+                        tt = tt.next0_
                     g2 = (None if tt is None else (tt.get_referent() if isinstance(tt.get_referent(), GeoReferent) else None))
                     if (g2 is not None): 
                         if (g1.is_city and g2.is_city): 
-                            nam = StreetItemToken._new235(res[0].end_token.next0, tt, StreetItemType.NAME)
+                            nam = StreetItemToken._new236(res[0].end_token.next0_, tt, StreetItemType.NAME)
                             nam.value = "{0} - {1}".format(g1.to_string(True, tt.kit.base_language, 0), g2.to_string(True, tt.kit.base_language, 0)).upper()
                             nam.alt_value = "{0} - {1}".format(g2.to_string(True, tt.kit.base_language, 0), g1.to_string(True, tt.kit.base_language, 0)).upper()
                             res.append(nam)
                 elif (BracketHelper.is_bracket(tt, False)): 
                     br = BracketHelper.try_parse(tt, BracketParseAttr.NO, 100)
                     if (br is not None): 
-                        nam = StreetItemToken._new256(tt, br.end_token, StreetItemType.NAME, True)
-                        nam.value = MiscHelper.get_text_value(tt.next0, br.end_token, GetTextAttr.NO)
+                        nam = StreetItemToken._new257(tt, br.end_token, StreetItemType.NAME, True)
+                        nam.value = MiscHelper.get_text_value(tt.next0_, br.end_token, GetTextAttr.NO)
                         res.append(nam)
-            elif ((len(res) == (ii0 + 2) and res[ii0 + 1].typ == StreetItemType.NAME and res[ii0 + 1].end_token.next0 is not None) and res[ii0 + 1].end_token.next0.is_hiphen): 
-                tt = res[ii0 + 1].end_token.next0.next0
+            elif ((len(res) == (ii0 + 2) and res[ii0 + 1].typ == StreetItemType.NAME and res[ii0 + 1].end_token.next0_ is not None) and res[ii0 + 1].end_token.next0_.is_hiphen): 
+                tt = res[ii0 + 1].end_token.next0_.next0_
                 g2 = (None if tt is None else (tt.get_referent() if isinstance(tt.get_referent(), GeoReferent) else None))
                 te = None
                 name2 = None
@@ -1061,7 +1065,7 @@ class StreetItemToken(MetaToken):
                     res[ii0 + 1].alt_value = "{0} - {1}".format(name2, Utils.ifNotNull(res[ii0 + 1].value, res[ii0 + 1].get_source_text())).upper()
                     res[ii0 + 1].value = "{0} - {1}".format(Utils.ifNotNull(res[ii0 + 1].value, res[ii0 + 1].get_source_text()), name2).upper()
                     res[ii0 + 1].end_token = te
-            nn = StreetItemToken.__try_attach_road_num(res[len(res) - 1].end_token.next0)
+            nn = StreetItemToken.__try_attach_road_num(res[len(res) - 1].end_token.next0_)
             if (nn is not None): 
                 res.append(nn)
                 res[ii1].is_abridge = False
@@ -1074,8 +1078,8 @@ class StreetItemToken(MetaToken):
             it0 = (res[len(res) - 2] if len(res) > 1 else None)
             if (it.typ == StreetItemType.NUMBER and not it.number_has_prefix): 
                 if (isinstance(it.begin_token, NumberToken)): 
-                    if (not it.begin_token.morph.class0.is_adjective or it.begin_token.morph.class0.is_noun): 
-                        if (AddressItemToken.check_house_after(it.end_token.next0, False, True)): 
+                    if (not it.begin_token.morph.class0_.is_adjective or it.begin_token.morph.class0_.is_noun): 
+                        if (AddressItemToken.check_house_after(it.end_token.next0_, False, True)): 
                             it.number_has_prefix = True
                         elif (it0 is not None and it0.typ == StreetItemType.NOUN and (((it0.termin.canonic_text == "МИКРОРАЙОН" or it0.termin.canonic_text == "МІКРОРАЙОН" or it0.termin.canonic_text == "КВАРТАЛ") or it0.termin.canonic_text == "ГОРОДОК"))): 
                             ait = AddressItemToken.try_parse(it.begin_token, loc_streets, False, True, None)
@@ -1106,9 +1110,9 @@ class StreetItemToken(MetaToken):
                     res[i].typ = StreetItemType.NAME
         last = res[len(res) - 1]
         for kk in range(2):
-            ttt = last.end_token.next0
-            if (((last.typ == StreetItemType.NAME and ttt is not None and ttt.length_char == 1) and ttt.chars.is_all_upper and (ttt.whitespaces_before_count < 2)) and ttt.next0 is not None and ttt.next0.is_char('.')): 
-                last.end_token = ttt.next0
+            ttt = last.end_token.next0_
+            if (((last.typ == StreetItemType.NAME and ttt is not None and ttt.length_char == 1) and ttt.chars.is_all_upper and (ttt.whitespaces_before_count < 2)) and ttt.next0_ is not None and ttt.next0_.is_char('.')): 
+                last.end_token = ttt.next0_
         return res
     
     @staticmethod
@@ -1118,12 +1122,12 @@ class StreetItemToken(MetaToken):
             return None
         if (not t.chars.is_letter or t.length_char != 1): 
             return None
-        tt = t.next0
+        tt = t.next0_
         if (tt is not None and tt.is_hiphen): 
-            tt = tt.next0
+            tt = tt.next0_
         if (not ((isinstance(tt, NumberToken)))): 
             return None
-        res = StreetItemToken._new235(t, tt, StreetItemType.NAME)
+        res = StreetItemToken._new236(t, tt, StreetItemType.NAME)
         res.value = "{0}{1}".format(t.get_source_text().upper(), (tt if isinstance(tt, NumberToken) else None).value)
         return res
     
@@ -1136,40 +1140,40 @@ class StreetItemToken(MetaToken):
             return
         StreetItemToken.__m_ontology = TerminCollection()
         StreetItemToken.__m_std_ont_misc = TerminCollection()
-        t = Termin._new258("УЛИЦА", StreetItemType.NOUN, MorphGender.FEMINIE)
+        t = Termin._new259("УЛИЦА", StreetItemType.NOUN, MorphGender.FEMINIE)
         t.add_abridge("УЛ.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new259("ВУЛИЦЯ", StreetItemType.NOUN, MorphLang.UA, MorphGender.FEMINIE)
+        t = Termin._new260("ВУЛИЦЯ", StreetItemType.NOUN, MorphLang.UA, MorphGender.FEMINIE)
         t.add_abridge("ВУЛ.")
         StreetItemToken.__m_ontology.add(t)
         t = Termin._new118("STREET", StreetItemType.NOUN)
         t.add_abridge("ST.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ПЛОЩАДЬ", StreetItemType.NOUN, 1, MorphGender.FEMINIE)
+        t = Termin._new262("ПЛОЩАДЬ", StreetItemType.NOUN, 1, MorphGender.FEMINIE)
         t.add_abridge("ПЛ.")
         t.add_abridge("ПЛОЩ.")
         t.add_abridge("ПЛ-ДЬ")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new262("ПЛОЩА", StreetItemType.NOUN, MorphLang.UA, 1, MorphGender.FEMINIE)
+        t = Termin._new263("ПЛОЩА", StreetItemType.NOUN, MorphLang.UA, 1, MorphGender.FEMINIE)
         t.add_abridge("ПЛ.")
         t.add_abridge("ПЛОЩ.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("МАЙДАН", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
+        t = Termin._new262("МАЙДАН", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
         StreetItemToken.__m_ontology.add(t)
         t = Termin._new118("SQUARE", StreetItemType.NOUN)
         t.add_abridge("SQ.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ПРОЕЗД", StreetItemType.NOUN, 1, MorphGender.MASCULINE)
+        t = Termin._new262("ПРОЕЗД", StreetItemType.NOUN, 1, MorphGender.MASCULINE)
         t.add_abridge("ПР.")
         t.add_abridge("П-Д")
         t.add_abridge("ПР-Д")
         t.add_abridge("ПР-ЗД")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ЛИНИЯ", StreetItemType.NOUN, 2, MorphGender.FEMINIE)
+        t = Termin._new262("ЛИНИЯ", StreetItemType.NOUN, 2, MorphGender.FEMINIE)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new262("ЛІНІЯ", StreetItemType.NOUN, MorphLang.UA, 2, MorphGender.FEMINIE)
+        t = Termin._new263("ЛІНІЯ", StreetItemType.NOUN, MorphLang.UA, 2, MorphGender.FEMINIE)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ПРОСПЕКТ", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
+        t = Termin._new262("ПРОСПЕКТ", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
         StreetItemToken.__m_prospect = t
         t.add_abridge("ПРОС.")
         t.add_abridge("ПРКТ")
@@ -1178,29 +1182,30 @@ class StreetItemToken(MetaToken):
         t.add_abridge("ПР-КТ")
         t.add_abridge("П-Т")
         t.add_abridge("П-КТ")
+        t.add_abridge("ПР Т")
         t.add_abridge("ПР-ТЕ")
         t.add_abridge("ПР-КТЕ")
         t.add_abridge("П-ТЕ")
         t.add_abridge("П-КТЕ")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ПЕРЕУЛОК", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
+        t = Termin._new262("ПЕРЕУЛОК", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
         t.add_abridge("ПЕР.")
         t.add_abridge("ПЕР-К")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ПРОУЛОК", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
+        t = Termin._new262("ПРОУЛОК", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
         t.add_abridge("ПРОУЛ.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new262("ПРОВУЛОК", StreetItemType.NOUN, MorphLang.UA, 0, MorphGender.MASCULINE)
+        t = Termin._new263("ПРОВУЛОК", StreetItemType.NOUN, MorphLang.UA, 0, MorphGender.MASCULINE)
         t.add_abridge("ПРОВ.")
         StreetItemToken.__m_ontology.add(t)
         t = Termin._new120("LANE", StreetItemType.NOUN, 0)
         t.add_abridge("LN.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ТУПИК", StreetItemType.NOUN, 1, MorphGender.MASCULINE)
+        t = Termin._new262("ТУПИК", StreetItemType.NOUN, 1, MorphGender.MASCULINE)
         t.add_abridge("ТУП.")
         t.add_abridge("Т.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("БУЛЬВАР", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
+        t = Termin._new262("БУЛЬВАР", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
         t.add_abridge("БУЛЬВ.")
         t.add_abridge("БУЛ.")
         t.add_abridge("Б-Р")
@@ -1211,38 +1216,38 @@ class StreetItemToken(MetaToken):
         StreetItemToken.__m_ontology.add(t)
         t = Termin._new120("СКВЕР", StreetItemType.NOUN, 1)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("НАБЕРЕЖНАЯ", StreetItemType.NOUN, 0, MorphGender.FEMINIE)
+        t = Termin._new262("НАБЕРЕЖНАЯ", StreetItemType.NOUN, 0, MorphGender.FEMINIE)
         t.add_abridge("НАБ.")
         t.add_abridge("НАБЕР.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new262("НАБЕРЕЖНА", StreetItemType.NOUN, MorphLang.UA, 0, MorphGender.FEMINIE)
+        t = Termin._new263("НАБЕРЕЖНА", StreetItemType.NOUN, MorphLang.UA, 0, MorphGender.FEMINIE)
         t.add_abridge("НАБ.")
         t.add_abridge("НАБЕР.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("АЛЛЕЯ", StreetItemType.NOUN, 0, MorphGender.FEMINIE)
+        t = Termin._new262("АЛЛЕЯ", StreetItemType.NOUN, 0, MorphGender.FEMINIE)
         t.add_abridge("АЛ.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new262("АЛЕЯ", StreetItemType.NOUN, MorphLang.UA, 0, MorphGender.FEMINIE)
+        t = Termin._new263("АЛЕЯ", StreetItemType.NOUN, MorphLang.UA, 0, MorphGender.FEMINIE)
         t.add_abridge("АЛ.")
         StreetItemToken.__m_ontology.add(t)
         t = Termin._new120("ALLEY", StreetItemType.NOUN, 0)
         t.add_abridge("ALY.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ПРОСЕКА", StreetItemType.NOUN, 1, MorphGender.FEMINIE)
+        t = Termin._new262("ПРОСЕКА", StreetItemType.NOUN, 1, MorphGender.FEMINIE)
         t.add_variant("ПРОСЕК", False)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new262("ПРОСІКА", StreetItemType.NOUN, MorphLang.UA, 1, MorphGender.FEMINIE)
+        t = Termin._new263("ПРОСІКА", StreetItemType.NOUN, MorphLang.UA, 1, MorphGender.FEMINIE)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ШОССЕ", StreetItemType.NOUN, 1, MorphGender.NEUTER)
+        t = Termin._new262("ШОССЕ", StreetItemType.NOUN, 1, MorphGender.NEUTER)
         t.add_abridge("Ш.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new262("ШОСЕ", StreetItemType.NOUN, MorphLang.UA, 1, MorphGender.NEUTER)
+        t = Termin._new263("ШОСЕ", StreetItemType.NOUN, MorphLang.UA, 1, MorphGender.NEUTER)
         t.add_abridge("Ш.")
         StreetItemToken.__m_ontology.add(t)
         t = Termin._new120("ROAD", StreetItemType.NOUN, 1)
         t.add_abridge("RD.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("МИКРОРАЙОН", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
+        t = Termin._new262("МИКРОРАЙОН", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
         t.add_abridge("МКР.")
         t.add_abridge("МИКР-Н")
         t.add_abridge("МКР-Н")
@@ -1252,87 +1257,87 @@ class StreetItemToken(MetaToken):
         t.add_abridge("М/Р")
         t.add_variant("МІКРОРАЙОН", False)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("КВАРТАЛ", StreetItemType.NOUN, 2, MorphGender.MASCULINE)
+        t = Termin._new262("КВАРТАЛ", StreetItemType.NOUN, 2, MorphGender.MASCULINE)
         t.add_abridge("КВАРТ.")
         t.add_abridge("КВ-Л")
         t.add_abridge("КВ.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new289("ЖИЛОЙ КОМПЛЕКС", StreetItemType.NOUN, "ЖК", 0, MorphGender.MASCULINE)
+        t = Termin._new290("ЖИЛОЙ КОМПЛЕКС", StreetItemType.NOUN, "ЖК", 0, MorphGender.MASCULINE)
         t.add_variant("ЖИЛКОМПЛЕКС", False)
         t.add_abridge("ЖИЛ.К.")
         t.add_abridge("Ж/К")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ГОРОДОК", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
+        t = Termin._new262("ГОРОДОК", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new262("МІСТЕЧКО", StreetItemType.NOUN, MorphLang.UA, 0, MorphGender.NEUTER)
+        t = Termin._new263("МІСТЕЧКО", StreetItemType.NOUN, MorphLang.UA, 0, MorphGender.NEUTER)
         StreetItemToken.__m_ontology.add(t)
         t = Termin._new120("HILL", StreetItemType.NOUN, 0)
         t.add_abridge("HL.")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ВОЕННЫЙ ГОРОДОК", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
+        t = Termin._new262("ВОЕННЫЙ ГОРОДОК", StreetItemType.NOUN, 0, MorphGender.MASCULINE)
         t.add_abridge("В.ГОРОДОК")
         t.add_abridge("В/Г")
         t.add_abridge("В/ГОРОДОК")
         t.add_abridge("В/ГОР")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ПРОМЗОНА", StreetItemType.NOUN, 1, MorphGender.FEMINIE)
+        t = Termin._new262("ПРОМЗОНА", StreetItemType.NOUN, 1, MorphGender.FEMINIE)
         t.add_variant("ПРОМЫШЛЕННАЯ ЗОНА", False)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ЖИЛАЯ ЗОНА", StreetItemType.NOUN, 1, MorphGender.FEMINIE)
+        t = Termin._new262("ЖИЛАЯ ЗОНА", StreetItemType.NOUN, 1, MorphGender.FEMINIE)
         t.add_variant("ЖИЛЗОНА", False)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("КОММУНАЛЬНАЯ ЗОНА", StreetItemType.NOUN, 1, MorphGender.FEMINIE)
+        t = Termin._new262("КОММУНАЛЬНАЯ ЗОНА", StreetItemType.NOUN, 1, MorphGender.FEMINIE)
         t.add_variant("КОМЗОНА", False)
         t.add_abridge("КОММУН. ЗОНА")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("МАССИВ", StreetItemType.NOUN, 2, MorphGender.MASCULINE)
+        t = Termin._new262("МАССИВ", StreetItemType.NOUN, 2, MorphGender.MASCULINE)
         t.add_variant("ЖИЛОЙ МАССИВ", False)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("МОСТ", StreetItemType.NOUN, 2, MorphGender.MASCULINE)
+        t = Termin._new262("МОСТ", StreetItemType.NOUN, 2, MorphGender.MASCULINE)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new262("МІСТ", StreetItemType.NOUN, MorphLang.UA, 2, MorphGender.MASCULINE)
+        t = Termin._new263("МІСТ", StreetItemType.NOUN, MorphLang.UA, 2, MorphGender.MASCULINE)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("ПАРК", StreetItemType.NOUN, 2, MorphGender.MASCULINE)
+        t = Termin._new262("ПАРК", StreetItemType.NOUN, 2, MorphGender.MASCULINE)
         StreetItemToken.__m_ontology.add(t)
         t = Termin._new120("PLAZA", StreetItemType.NOUN, 1)
         t.add_abridge("PLZ")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new302("СТАНЦИЯ МЕТРО", "МЕТРО", StreetItemType.NOUN, 0, MorphGender.FEMINIE)
+        t = Termin._new303("СТАНЦИЯ МЕТРО", "МЕТРО", StreetItemType.NOUN, 0, MorphGender.FEMINIE)
         StreetItemToken.__m_metro = t
         t.add_variant("СТАНЦІЯ МЕТРО", False)
         t.add_abridge("СТ.МЕТРО")
         t.add_abridge("СТ.М.")
         t.add_abridge("МЕТРО")
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new261("АВТОДОРОГА", StreetItemType.NOUN, 0, MorphGender.FEMINIE)
+        t = Termin._new262("АВТОДОРОГА", StreetItemType.NOUN, 0, MorphGender.FEMINIE)
         t.add_variant("ФЕДЕРАЛЬНАЯ АВТОДОРОГА", False)
         t.add_variant("АВТОМОБИЛЬНАЯ ДОРОГА", False)
         t.add_variant("АВТОТРАССА", False)
         t.add_variant("ФЕДЕРАЛЬНАЯ ТРАССА", False)
         t.add_variant("АВТОМАГИСТРАЛЬ", False)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new302("ДОРОГА", "АВТОДОРОГА", StreetItemType.NOUN, 1, MorphGender.FEMINIE)
+        t = Termin._new303("ДОРОГА", "АВТОДОРОГА", StreetItemType.NOUN, 1, MorphGender.FEMINIE)
         t.add_variant("ТРАССА", False)
         t.add_variant("МАГИСТРАЛЬ", False)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new262("АВТОДОРОГА", StreetItemType.NOUN, MorphLang.UA, 0, MorphGender.FEMINIE)
+        t = Termin._new263("АВТОДОРОГА", StreetItemType.NOUN, MorphLang.UA, 0, MorphGender.FEMINIE)
         t.add_variant("ФЕДЕРАЛЬНА АВТОДОРОГА", False)
         t.add_variant("АВТОМОБІЛЬНА ДОРОГА", False)
         t.add_variant("АВТОТРАСА", False)
         t.add_variant("ФЕДЕРАЛЬНА ТРАСА", False)
         t.add_variant("АВТОМАГІСТРАЛЬ", False)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new306("ДОРОГА", "АВТОДОРОГА", StreetItemType.NOUN, MorphLang.UA, 1, MorphGender.FEMINIE)
+        t = Termin._new307("ДОРОГА", "АВТОДОРОГА", StreetItemType.NOUN, MorphLang.UA, 1, MorphGender.FEMINIE)
         t.add_variant("ТРАСА", False)
         t.add_variant("МАГІСТРАЛЬ", False)
         StreetItemToken.__m_ontology.add(t)
-        t = Termin._new307("МОСКОВСКАЯ КОЛЬЦЕВАЯ АВТОМОБИЛЬНАЯ ДОРОГА", "МКАД", StreetItemType.FIX, MorphGender.FEMINIE)
+        t = Termin._new308("МОСКОВСКАЯ КОЛЬЦЕВАЯ АВТОМОБИЛЬНАЯ ДОРОГА", "МКАД", StreetItemType.FIX, MorphGender.FEMINIE)
         t.add_variant("МОСКОВСКАЯ КОЛЬЦЕВАЯ АВТОДОРОГА", False)
         StreetItemToken.__m_ontology.add(t)
         StreetItemToken.__m_ontology.add(Termin._new118("САДОВОЕ КОЛЬЦО", StreetItemType.FIX))
         StreetItemToken.__m_ontology.add(Termin._new118("БУЛЬВАРНОЕ КОЛЬЦО", StreetItemType.FIX))
         StreetItemToken.__m_ontology.add(Termin._new118("ТРАНСПОРТНОЕ КОЛЬЦО", StreetItemType.FIX))
-        t = Termin._new258("ПОЧТОВОЕ ОТДЕЛЕНИЕ", StreetItemType.STDNAME, MorphGender.NEUTER)
+        t = Termin._new259("ПОЧТОВОЕ ОТДЕЛЕНИЕ", StreetItemType.STDNAME, MorphGender.NEUTER)
         t.add_abridge("П.О.")
         t.add_abridge("ПОЧТ.ОТД.")
         t.add_abridge("ПОЧТОВ.ОТД.")
@@ -1438,14 +1443,14 @@ class StreetItemToken(MetaToken):
                     continue
                 if ((';') in line): 
                     parts = Utils.splitString(line, ';', False)
-                    t = Termin._new330(StreetItemType.NAME, True)
+                    t = Termin._new331(StreetItemType.NAME, True)
                     t.init_by_normal_text(parts[0], MorphLang())
                     j = 1
                     while j < len(parts): 
                         t.add_variant(parts[j], True)
                         j += 1
                 else: 
-                    t = Termin._new330(StreetItemType.NAME, True)
+                    t = Termin._new331(StreetItemType.NAME, True)
                     t.init_by_normal_text(line, MorphLang())
                 if (len(t.terms) > 1): 
                     t.tag = StreetItemType.STDNAME
@@ -1544,7 +1549,7 @@ class StreetItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new230(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : 'MorphCollection', _arg5 : 'Termin') -> 'StreetItemToken':
+    def _new231(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : 'MorphCollection', _arg5 : 'Termin') -> 'StreetItemToken':
         res = StreetItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.morph = _arg4
@@ -1552,7 +1557,7 @@ class StreetItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new231(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : 'MorphCollection', _arg5 : bool) -> 'StreetItemToken':
+    def _new232(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : 'MorphCollection', _arg5 : bool) -> 'StreetItemToken':
         res = StreetItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.morph = _arg4
@@ -1560,7 +1565,7 @@ class StreetItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new232(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : 'MorphCollection', _arg5 : bool, _arg6 : 'Termin') -> 'StreetItemToken':
+    def _new233(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : 'MorphCollection', _arg5 : bool, _arg6 : 'Termin') -> 'StreetItemToken':
         res = StreetItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.morph = _arg4
@@ -1569,7 +1574,7 @@ class StreetItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new233(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : bool, _arg5 : str, _arg6 : 'MorphCollection') -> 'StreetItemToken':
+    def _new234(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : bool, _arg5 : str, _arg6 : 'MorphCollection') -> 'StreetItemToken':
         res = StreetItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.is_in_dictionary = _arg4
@@ -1578,20 +1583,20 @@ class StreetItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new234(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : str) -> 'StreetItemToken':
+    def _new235(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : str) -> 'StreetItemToken':
         res = StreetItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new235(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType') -> 'StreetItemToken':
+    def _new236(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType') -> 'StreetItemToken':
         res = StreetItemToken(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new236(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : 'NumberToken', _arg5 : str) -> 'StreetItemToken':
+    def _new237(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : 'NumberToken', _arg5 : str) -> 'StreetItemToken':
         res = StreetItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.number = _arg4
@@ -1599,14 +1604,14 @@ class StreetItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new237(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : 'MorphCollection') -> 'StreetItemToken':
+    def _new238(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : 'MorphCollection') -> 'StreetItemToken':
         res = StreetItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.morph = _arg4
         return res
     
     @staticmethod
-    def _new239(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : 'MorphCollection', _arg5 : str) -> 'StreetItemToken':
+    def _new240(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : 'MorphCollection', _arg5 : str) -> 'StreetItemToken':
         res = StreetItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.morph = _arg4
@@ -1614,7 +1619,7 @@ class StreetItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new248(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : str, _arg5 : str) -> 'StreetItemToken':
+    def _new249(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : str, _arg5 : str) -> 'StreetItemToken':
         res = StreetItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
@@ -1622,7 +1627,7 @@ class StreetItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new253(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : str, _arg5 : bool) -> 'StreetItemToken':
+    def _new254(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : str, _arg5 : bool) -> 'StreetItemToken':
         res = StreetItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
@@ -1630,7 +1635,7 @@ class StreetItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new256(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : bool) -> 'StreetItemToken':
+    def _new257(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'StreetItemType', _arg4 : bool) -> 'StreetItemToken':
         res = StreetItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.is_in_brackets = _arg4

@@ -107,10 +107,10 @@ class TerminCollection:
             ch = ord(key[i])
             if (nod.children is None): 
                 nod.children = dict()
-            inoutarg603 = RefOutArgWrapper(None)
-            inoutres604 = Utils.tryGetValue(nod.children, ch, inoutarg603)
-            nn = inoutarg603.value
-            if (not inoutres604): 
+            inoutarg629 = RefOutArgWrapper(None)
+            inoutres630 = Utils.tryGetValue(nod.children, ch, inoutarg629)
+            nn = inoutarg629.value
+            if (not inoutres630): 
                 nn = TerminCollection.CharNode()
                 nod.children[ch] = nn
             nod = nn
@@ -127,10 +127,10 @@ class TerminCollection:
             ch = ord(key[i])
             if (nod.children is None): 
                 return
-            inoutarg605 = RefOutArgWrapper(None)
-            inoutres606 = Utils.tryGetValue(nod.children, ch, inoutarg605)
-            nn = inoutarg605.value
-            if (not inoutres606): 
+            inoutarg631 = RefOutArgWrapper(None)
+            inoutres632 = Utils.tryGetValue(nod.children, ch, inoutarg631)
+            nn = inoutarg631.value
+            if (not inoutres632): 
                 return
             nod = nn
         if (nod.termins is None): 
@@ -146,20 +146,20 @@ class TerminCollection:
             ch = ord(key[i])
             if (nod.children is None): 
                 return None
-            inoutarg607 = RefOutArgWrapper(None)
-            inoutres608 = Utils.tryGetValue(nod.children, ch, inoutarg607)
-            nn = inoutarg607.value
-            if (not inoutres608): 
+            inoutarg633 = RefOutArgWrapper(None)
+            inoutres634 = Utils.tryGetValue(nod.children, ch, inoutarg633)
+            nn = inoutarg633.value
+            if (not inoutres634): 
                 return None
             nod = nn
         return nod.termins
     
     def __add_to_hash1(self, key : int, t : 'Termin') -> None:
         li = None
-        inoutarg609 = RefOutArgWrapper(None)
-        inoutres610 = Utils.tryGetValue(self.__m_hash1, key, inoutarg609)
-        li = inoutarg609.value
-        if (not inoutres610): 
+        inoutarg635 = RefOutArgWrapper(None)
+        inoutres636 = Utils.tryGetValue(self.__m_hash1, key, inoutarg635)
+        li = inoutarg635.value
+        if (not inoutres636): 
             li = list()
             self.__m_hash1[key] = li
         if (not t in li): 
@@ -237,24 +237,24 @@ class TerminCollection:
                     if (nod.children is None): 
                         no_vars = True
                         break
-                    inoutarg611 = RefOutArgWrapper(None)
-                    inoutres612 = Utils.tryGetValue(nod.children, ch, inoutarg611)
-                    nn = inoutarg611.value
-                    if (not inoutres612): 
+                    inoutarg637 = RefOutArgWrapper(None)
+                    inoutres638 = Utils.tryGetValue(nod.children, ch, inoutarg637)
+                    nn = inoutarg637.value
+                    if (not inoutres638): 
                         no_vars = True
                         break
                     nod = nn
                     i += 1
             if (not no_vars): 
-                inoutarg617 = RefOutArgWrapper(res)
-                inoutres618 = self.__manage_var(token, pars, s, nod, len0, inoutarg617)
-                res = inoutarg617.value
-                if (inoutres618): 
+                inoutarg643 = RefOutArgWrapper(res)
+                inoutres644 = self.__manage_var(token, pars, s, nod, len0, inoutarg643)
+                res = inoutarg643.value
+                if (inoutres644): 
                     was_vars = True
                 i = 0
-                first_pass2610 = True
+                first_pass2768 = True
                 while True:
-                    if first_pass2610: first_pass2610 = False
+                    if first_pass2768: first_pass2768 = False
                     else: i += 1
                     if (not (i < tt.morph.items_count)): break
                     if (((pars & TerminParseAttr.TERMONLY)) != TerminParseAttr.NO): 
@@ -279,10 +279,10 @@ class TerminCollection:
                         if (j < i): 
                             ok = False
                     if (ok): 
-                        inoutarg613 = RefOutArgWrapper(res)
-                        inoutres614 = self.__manage_var(token, pars, wf.normal_case, nod, tt.invariant_prefix_length, inoutarg613)
-                        res = inoutarg613.value
-                        if (inoutres614): 
+                        inoutarg639 = RefOutArgWrapper(res)
+                        inoutres640 = self.__manage_var(token, pars, wf.normal_case, nod, tt.invariant_prefix_length, inoutarg639)
+                        res = inoutarg639.value
+                        if (inoutres640): 
                             was_vars = True
                     if (wf.normal_full is None or wf.normal_full == wf.normal_case or wf.normal_full == s): 
                         continue
@@ -294,26 +294,26 @@ class TerminCollection:
                         j += 1
                     if (j < i): 
                         continue
-                    inoutarg615 = RefOutArgWrapper(res)
-                    inoutres616 = self.__manage_var(token, pars, wf.normal_full, nod, tt.invariant_prefix_length, inoutarg615)
-                    res = inoutarg615.value
-                    if (inoutres616): 
+                    inoutarg641 = RefOutArgWrapper(res)
+                    inoutres642 = self.__manage_var(token, pars, wf.normal_full, nod, tt.invariant_prefix_length, inoutarg641)
+                    res = inoutarg641.value
+                    if (inoutres642): 
                         was_vars = True
         elif (isinstance(token, NumberToken)): 
-            inoutarg619 = RefOutArgWrapper(res)
-            inoutres620 = self.__manage_var(token, pars, str((token if isinstance(token, NumberToken) else None).value), root, 0, inoutarg619)
-            res = inoutarg619.value
-            if (inoutres620): 
+            inoutarg645 = RefOutArgWrapper(res)
+            inoutres646 = self.__manage_var(token, pars, str((token if isinstance(token, NumberToken) else None).value), root, 0, inoutarg645)
+            res = inoutarg645.value
+            if (inoutres646): 
                 was_vars = True
         else: 
             return None
         if (not was_vars and s is not None and len(s) == 1): 
-            vars0 = [ ]
-            inoutarg621 = RefOutArgWrapper(None)
-            inoutres622 = Utils.tryGetValue(self.__m_hash1, ord(s[0]), inoutarg621)
-            vars0 = inoutarg621.value
-            if (inoutres622): 
-                for t in vars0: 
+            vars0_ = [ ]
+            inoutarg647 = RefOutArgWrapper(None)
+            inoutres648 = Utils.tryGetValue(self.__m_hash1, ord(s[0]), inoutarg647)
+            vars0_ = inoutarg647.value
+            if (inoutres648): 
+                for t in vars0_: 
                     if (not t.lang.is_undefined): 
                         if (not token.morph.language.is_undefined): 
                             if ((token.morph.language & t.lang).is_undefined): 
@@ -332,10 +332,10 @@ class TerminCollection:
                         res.append(ar)
         if (res is not None): 
             ii = 0
-            max0 = 0
+            max0_ = 0
             for i in range(len(res)):
-                if (res[i].length_char > max0): 
-                    max0 = res[i].length_char
+                if (res[i].length_char > max0_): 
+                    max0_ = res[i].length_char
                     ii = i
             if (ii > 0): 
                 v = res[ii]
@@ -348,16 +348,16 @@ class TerminCollection:
             ch = ord(v[i])
             if (nod.children is None): 
                 return False
-            inoutarg623 = RefOutArgWrapper(None)
-            inoutres624 = Utils.tryGetValue(nod.children, ch, inoutarg623)
-            nn = inoutarg623.value
-            if (not inoutres624): 
+            inoutarg649 = RefOutArgWrapper(None)
+            inoutres650 = Utils.tryGetValue(nod.children, ch, inoutarg649)
+            nn = inoutarg649.value
+            if (not inoutres650): 
                 return False
             nod = nn
-        vars0 = nod.termins
-        if (vars0 is None or len(vars0) == 0): 
+        vars0_ = nod.termins
+        if (vars0_ is None or len(vars0_) == 0): 
             return False
-        for t in vars0: 
+        for t in vars0_: 
             ar = t.try_parse(token, pars)
             if (ar is not None): 
                 ar.termin = t
@@ -404,10 +404,10 @@ class TerminCollection:
         """
         res = None
         for v in termin._get_hash_variants(): 
-            vars0 = self.__find_in_tree(v, termin.lang)
-            if (vars0 is None): 
+            vars0_ = self.__find_in_tree(v, termin.lang)
+            if (vars0_ is None): 
                 continue
-            for t in vars0: 
+            for t in vars0_: 
                 if (t.is_equal(termin)): 
                     if (res is None): 
                         res = list()
@@ -424,19 +424,19 @@ class TerminCollection:
             for t in self.termins: 
                 ct = t.canonic_text
                 li = [ ]
-                inoutarg625 = RefOutArgWrapper(None)
-                inoutres626 = Utils.tryGetValue(self.__m_hash_canonic, ct, inoutarg625)
-                li = inoutarg625.value
-                if (not inoutres626): 
+                inoutarg651 = RefOutArgWrapper(None)
+                inoutres652 = Utils.tryGetValue(self.__m_hash_canonic, ct, inoutarg651)
+                li = inoutarg651.value
+                if (not inoutres652): 
                     li = list()
                     self.__m_hash_canonic[ct] = li
                 if (not t in li): 
                     li.append(t)
         res = [ ]
-        inoutarg627 = RefOutArgWrapper(None)
-        inoutres628 = Utils.tryGetValue(self.__m_hash_canonic, text, inoutarg627)
-        res = inoutarg627.value
-        if (not inoutres628): 
+        inoutarg653 = RefOutArgWrapper(None)
+        inoutres654 = Utils.tryGetValue(self.__m_hash_canonic, text, inoutarg653)
+        res = inoutarg653.value
+        if (not inoutres654): 
             return None
         else: 
             return res

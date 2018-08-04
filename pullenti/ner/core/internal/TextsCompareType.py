@@ -9,9 +9,9 @@ from enum import IntEnum
 
 class TextsCompareType(IntEnum):
     NONCOMPARABLE = 0
-    EQUIVALENT = 1
-    EARLY = 2
-    LATER = 3
-    IN = 4
-    CONTAINS = 5
-    INTERSECT = 6
+    EQUIVALENT = 0 + 1
+    EARLY = (0 + 1) + 1
+    LATER = ((0 + 1) + 1) + 1
+    IN = (((0 + 1) + 1) + 1) + 1
+    CONTAINS = ((((0 + 1) + 1) + 1) + 1) + 1
+    INTERSECT = (((((0 + 1) + 1) + 1) + 1) + 1) + 1

@@ -57,7 +57,7 @@ class GeneralRelationHelper:
     
         
         @staticmethod
-        def _new1425(_arg1 : 'Referent', _arg2 : 'AnalyzerData') -> 'Node':
+        def _new1476(_arg1 : 'Referent', _arg2 : 'AnalyzerData') -> 'Node':
             res = GeneralRelationHelper.Node()
             res.ref = _arg1
             res.ad = _arg2
@@ -66,32 +66,32 @@ class GeneralRelationHelper:
     @staticmethod
     def refresh_generals(proc : 'Processor', kit : 'AnalysisKit') -> None:
         from pullenti.ner.Referent import Referent
-        all0 = dict()
+        all0_ = dict()
         all_refs = list()
         for a in proc.analyzers: 
             ad = kit.get_analyzer_data(a)
             if (ad is None): 
                 continue
             for r in ad.referents: 
-                nod = GeneralRelationHelper.Node._new1425(r, ad)
+                nod = GeneralRelationHelper.Node._new1476(r, ad)
                 all_refs.append(nod)
                 r.tag = nod
                 si = [ ]
-                inoutarg1428 = RefOutArgWrapper(None)
-                inoutres1429 = Utils.tryGetValue(all0, a.name, inoutarg1428)
-                si = inoutarg1428.value
-                if (not inoutres1429): 
+                inoutarg1479 = RefOutArgWrapper(None)
+                inoutres1480 = Utils.tryGetValue(all0_, a.name, inoutarg1479)
+                si = inoutarg1479.value
+                if (not inoutres1480): 
                     si = dict()
-                    all0[a.name] = si
+                    all0_[a.name] = si
                 strs = r.get_compare_strings()
                 if (strs is None or len(strs) == 0): 
                     continue
                 for s in strs: 
                     li = [ ]
-                    inoutarg1426 = RefOutArgWrapper(None)
-                    inoutres1427 = Utils.tryGetValue(si, s, inoutarg1426)
-                    li = inoutarg1426.value
-                    if (not inoutres1427): 
+                    inoutarg1477 = RefOutArgWrapper(None)
+                    inoutres1478 = Utils.tryGetValue(si, s, inoutarg1477)
+                    li = inoutarg1477.value
+                    if (not inoutres1478): 
                         li = list()
                         si[s] = li
                     li.append(r)
@@ -108,7 +108,7 @@ class GeneralRelationHelper:
                     if (r.refs_to is None): 
                         r.refs_to = list()
                     r.refs_to.append(tn)
-        for ty in all0.values(): 
+        for ty in all0_.values(): 
             for li in ty.values(): 
                 if (len(li) < 2): 
                     continue
@@ -135,11 +135,11 @@ class GeneralRelationHelper:
             if (n.gen_to is not None and len(n.gen_to) > 1): 
                 for i in range(len(n.gen_to) - 1, -1, -1):
                     p = n.gen_to[i]
-                    del0 = False
+                    del0_ = False
                     for j in range(len(n.gen_to)):
                         if (j != i and n.gen_to[j].is_in_gen_parents_or_higher(p)): 
-                            del0 = True
-                    if (del0): 
+                            del0_ = True
+                    if (del0_): 
                         p.gen_from.remove(n)
                         del n.gen_to[i]
         for n in all_refs: 
@@ -157,7 +157,7 @@ class GeneralRelationHelper:
         t = kit.first_token
         while t is not None: 
             GeneralRelationHelper.__correct_referents(t)
-            t = t.next0
+            t = t.next0_
         for n in all_refs: 
             if (n.deleted): 
                 n.ad.remove_referent(n.ref)
@@ -175,4 +175,4 @@ class GeneralRelationHelper:
         tt = rt.begin_token
         while tt is not None and tt.end_char <= rt.end_char: 
             GeneralRelationHelper.__correct_referents(tt)
-            tt = tt.next0
+            tt = tt.next0_

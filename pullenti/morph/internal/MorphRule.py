@@ -14,7 +14,7 @@ from pullenti.morph.LanguageHelper import LanguageHelper
 class MorphRule:
     
     def __init__(self) -> None:
-        self._id0 = 0
+        self._id0_ = 0
         self.variants = dict()
         self.variants_list = list()
         self.variants_key = list()
@@ -30,7 +30,7 @@ class MorphRule:
     
     def add(self, tail : str, var : 'MorphRuleVariant') -> None:
         tail = LanguageHelper.correct_word(tail)
-        if (var.class0.is_undefined): 
+        if (var.class0_.is_undefined): 
             pass
         li = [ ]
         inoutarg33 = RefOutArgWrapper(None)

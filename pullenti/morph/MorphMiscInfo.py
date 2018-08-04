@@ -21,7 +21,7 @@ class MorphMiscInfo:
     def __init__(self) -> None:
         self.__m_attrs = list()
         self._m_value = 0
-        self._id0 = 0
+        self._id0_ = 0
     
     @property
     def attrs(self) -> typing.List[str]:

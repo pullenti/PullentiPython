@@ -76,21 +76,21 @@ class AnalyzerData:
                 eq[0].merge_slots(referent, True)
                 return eq[0]
             if (len(eq) > 1): 
-                for e0 in eq: 
-                    if (len(e0.slots) != len(referent.slots)): 
+                for e0_ in eq: 
+                    if (len(e0_.slots) != len(referent.slots)): 
                         continue
                     ok = True
                     for s in referent.slots: 
-                        if (e0.find_slot(s.type_name, s.value, True) is None): 
+                        if (e0_.find_slot(s.type_name, s.value, True) is None): 
                             ok = False
                             break
                     if (ok): 
-                        for s in e0.slots: 
+                        for s in e0_.slots: 
                             if (referent.find_slot(s.type_name, s.value, True) is None): 
                                 ok = False
                                 break
                     if (ok): 
-                        return e0
+                        return e0_
         self._m_referents.append(referent)
         return referent
     

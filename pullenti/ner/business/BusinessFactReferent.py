@@ -46,7 +46,7 @@ class BusinessFactReferent(Referent):
             res = Utils.valToEnum(s, BusinessFactKind)
             if (isinstance(res, BusinessFactKind)): 
                 return Utils.valToEnum(res, BusinessFactKind)
-        except Exception as ex448: 
+        except Exception as ex449: 
             pass
         return BusinessFactKind.UNDEFINED
     
@@ -182,13 +182,13 @@ class BusinessFactReferent(Referent):
 
     
     @staticmethod
-    def _new436(_arg1 : 'BusinessFactKind') -> 'BusinessFactReferent':
+    def _new437(_arg1 : 'BusinessFactKind') -> 'BusinessFactReferent':
         res = BusinessFactReferent()
         res.kind = _arg1
         return res
     
     @staticmethod
-    def _new447(_arg1 : 'BusinessFactKind', _arg2 : str) -> 'BusinessFactReferent':
+    def _new448(_arg1 : 'BusinessFactKind', _arg2 : str) -> 'BusinessFactReferent':
         res = BusinessFactReferent()
         res.kind = _arg1
         res.typ = _arg2

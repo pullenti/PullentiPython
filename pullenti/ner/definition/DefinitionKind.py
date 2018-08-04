@@ -11,9 +11,9 @@ class DefinitionKind(IntEnum):
     """ Тип определения """
     UNDEFINED = 0
     """ Непонятно """
-    ASSERTATION = 1
+    ASSERTATION = 0 + 1
     """ Просто утрерждение """
-    DEFINITION = 2
+    DEFINITION = (0 + 1) + 1
     """ Строгое определение """
-    NEGATION = 3
+    NEGATION = ((0 + 1) + 1) + 1
     """ Отрицание """

@@ -9,14 +9,14 @@ from enum import IntEnum
 
 class ILTypes(IntEnum):
     UNDEFINED = 0
-    APPENDIX = 1
-    APPROVED = 2
-    ORGANIZATION = 3
-    REGNUMBER = 4
-    DATE = 5
-    GEO = 6
-    PERSON = 7
-    TYP = 8
-    VERB = 9
-    DIRECTIVE = 10
-    QUESTION = 11
+    APPENDIX = 0 + 1
+    APPROVED = (0 + 1) + 1
+    ORGANIZATION = ((0 + 1) + 1) + 1
+    REGNUMBER = (((0 + 1) + 1) + 1) + 1
+    DATE = ((((0 + 1) + 1) + 1) + 1) + 1
+    GEO = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
+    PERSON = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
+    TYP = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+    VERB = ((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+    DIRECTIVE = (((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+    QUESTION = ((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1

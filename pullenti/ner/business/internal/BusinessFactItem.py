@@ -14,11 +14,11 @@ from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
 class BusinessFactItem(MetaToken):
     
-    def __init__(self, b : 'Token', e0 : 'Token') -> None:
+    def __init__(self, b : 'Token', e0_ : 'Token') -> None:
         self.typ = BusinessFactItemTyp.BASE
         self.base_kind = BusinessFactKind.UNDEFINED
         self.is_base_passive = False
-        super().__init__(b, e0, None)
+        super().__init__(b, e0_, None)
     
     @staticmethod
     def try_parse(t : 'Token') -> 'BusinessFactItem':
@@ -29,13 +29,13 @@ class BusinessFactItem(MetaToken):
         res = BusinessFactItem.__try_parse(t)
         if (res is None): 
             return None
-        tt = res.end_token.next0
-        first_pass2563 = True
+        tt = res.end_token.next0_
+        first_pass2716 = True
         while True:
-            if first_pass2563: first_pass2563 = False
-            else: tt = tt.next0
+            if first_pass2716: first_pass2716 = False
+            else: tt = tt.next0_
             if (not (tt is not None)): break
-            if (tt.morph.class0.is_preposition): 
+            if (tt.morph.class0_.is_preposition): 
                 continue
             if (not ((isinstance(tt, TextToken)))): 
                 break
@@ -63,34 +63,34 @@ class BusinessFactItem(MetaToken):
     def __try_parse(t : 'Token') -> 'BusinessFactItem':
         from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         tok = BusinessFactItem.__m_base_onto.try_parse(t, TerminParseAttr.NO)
-        if (tok is None and t.morph.class0.is_verb and t.next0 is not None): 
-            tok = BusinessFactItem.__m_base_onto.try_parse(t.next0, TerminParseAttr.NO)
+        if (tok is None and t.morph.class0_.is_verb and t.next0_ is not None): 
+            tok = BusinessFactItem.__m_base_onto.try_parse(t.next0_, TerminParseAttr.NO)
         if (tok is not None): 
             ki = Utils.valToEnum(tok.termin.tag, BusinessFactKind)
             if (ki != BusinessFactKind.UNDEFINED): 
-                return BusinessFactItem._new402(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph, tok.termin.tag2 is not None)
-            tt = tok.end_token.next0
-            first_pass2564 = True
+                return BusinessFactItem._new403(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph, tok.termin.tag2 is not None)
+            tt = tok.end_token.next0_
+            first_pass2717 = True
             while True:
-                if first_pass2564: first_pass2564 = False
-                else: tt = tt.next0
+                if first_pass2717: first_pass2717 = False
+                else: tt = tt.next0_
                 if (not (tt is not None)): break
-                if (tt.morph.class0.is_preposition): 
+                if (tt.morph.class0_.is_preposition): 
                     continue
                 tok = BusinessFactItem.__m_base_onto.try_parse(tt, TerminParseAttr.NO)
                 if (tok is None): 
                     continue
                 ki = Utils.valToEnum(tok.termin.tag, BusinessFactKind)
                 if (ki != BusinessFactKind.UNDEFINED): 
-                    return BusinessFactItem._new403(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph)
+                    return BusinessFactItem._new404(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph)
                 tt = tok.end_token
         npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
         if (npt is not None): 
             if (((((npt.noun.is_value("АКЦИОНЕР", None) or npt.noun.is_value("ВЛАДЕЛЕЦ", None) or npt.noun.is_value("ВЛАДЕЛИЦА", None)) or npt.noun.is_value("СОВЛАДЕЛЕЦ", None) or npt.noun.is_value("СОВЛАДЕЛИЦА", None)) or npt.noun.is_value("АКЦІОНЕР", None) or npt.noun.is_value("ВЛАСНИК", None)) or npt.noun.is_value("ВЛАСНИЦЯ", None) or npt.noun.is_value("СПІВВЛАСНИК", None)) or npt.noun.is_value("СПІВВЛАСНИЦЯ", None)): 
-                return BusinessFactItem._new403(t, npt.end_token, BusinessFactItemTyp.BASE, BusinessFactKind.HAVE, npt.morph)
+                return BusinessFactItem._new404(t, npt.end_token, BusinessFactItemTyp.BASE, BusinessFactKind.HAVE, npt.morph)
         if (npt is not None): 
             if ((npt.noun.is_value("ОСНОВАТЕЛЬ", None) or npt.noun.is_value("ОСНОВАТЕЛЬНИЦА", None) or npt.noun.is_value("ЗАСНОВНИК", None)) or npt.noun.is_value("ЗАСНОВНИЦЯ", None)): 
-                return BusinessFactItem._new403(t, npt.end_token, BusinessFactItemTyp.BASE, BusinessFactKind.CREATE, npt.morph)
+                return BusinessFactItem._new404(t, npt.end_token, BusinessFactItemTyp.BASE, BusinessFactKind.CREATE, npt.morph)
         return None
     
     @staticmethod
@@ -120,7 +120,7 @@ class BusinessFactItem(MetaToken):
         for s in ["ПРИНАДЛЕЖАЩИЙ", "КОНТРОЛИРУЕМЫЙ", "ВЛАДЕЕМЫЙ", "ПЕРЕЙТИ ПОД КОНТРОЛЬ"]: 
             BusinessFactItem.__m_base_onto.add(Termin._new120(s, BusinessFactKind.HAVE, s))
         for s in ["НАЛЕЖНИЙ", "КОНТРОЛЬОВАНИЙ", "ВЛАДЕЕМЫЙ", "ПЕРЕЙТИ ПІД КОНТРОЛЬ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new415(s, BusinessFactKind.HAVE, s, MorphLang.UA))
+            BusinessFactItem.__m_base_onto.add(Termin._new416(s, BusinessFactKind.HAVE, s, MorphLang.UA))
         for s in ["ЗАКРЫТЬ СДЕЛКУ", "СОВЕРШИТЬ СДЕЛКУ", "ЗАВЕРШИТЬ СДЕЛКУ", "ЗАКЛЮЧИТЬ"]: 
             BusinessFactItem.__m_base_onto.add(Termin._new118(s, BusinessFactKind.UNDEFINED))
         for s in ["ЗАКРИТИ ОПЕРАЦІЮ", "ЗДІЙСНИТИ ОПЕРАЦІЮ", "ЗАВЕРШИТИ ОПЕРАЦІЮ", "УКЛАСТИ"]: 
@@ -150,7 +150,7 @@ class BusinessFactItem(MetaToken):
 
     
     @staticmethod
-    def _new402(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BusinessFactItemTyp', _arg4 : 'BusinessFactKind', _arg5 : 'MorphCollection', _arg6 : bool) -> 'BusinessFactItem':
+    def _new403(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BusinessFactItemTyp', _arg4 : 'BusinessFactKind', _arg5 : 'MorphCollection', _arg6 : bool) -> 'BusinessFactItem':
         res = BusinessFactItem(_arg1, _arg2)
         res.typ = _arg3
         res.base_kind = _arg4
@@ -159,7 +159,7 @@ class BusinessFactItem(MetaToken):
         return res
     
     @staticmethod
-    def _new403(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BusinessFactItemTyp', _arg4 : 'BusinessFactKind', _arg5 : 'MorphCollection') -> 'BusinessFactItem':
+    def _new404(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BusinessFactItemTyp', _arg4 : 'BusinessFactKind', _arg5 : 'MorphCollection') -> 'BusinessFactItem':
         res = BusinessFactItem(_arg1, _arg2)
         res.typ = _arg3
         res.base_kind = _arg4

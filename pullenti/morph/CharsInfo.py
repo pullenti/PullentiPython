@@ -170,26 +170,26 @@ class CharsInfo:
         return res
     
     @staticmethod
-    def _new2051(_arg1 : bool) -> 'CharsInfo':
+    def _new2197(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_capital_upper = _arg1
         return res
     
     @staticmethod
-    def _new2208(_arg1 : bool) -> 'CharsInfo':
+    def _new2361(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_cyrillic_letter = _arg1
         return res
     
     @staticmethod
-    def _new2214(_arg1 : bool, _arg2 : bool) -> 'CharsInfo':
+    def _new2367(_arg1 : bool, _arg2 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_cyrillic_letter = _arg1
         res.is_capital_upper = _arg2
         return res
     
     @staticmethod
-    def _new2219(_arg1 : bool, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'CharsInfo':
+    def _new2372(_arg1 : bool, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_capital_upper = _arg1
         res.is_cyrillic_letter = _arg2
@@ -198,13 +198,13 @@ class CharsInfo:
         return res
     
     @staticmethod
-    def _new2241(_arg1 : bool) -> 'CharsInfo':
+    def _new2394(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_latin_letter = _arg1
         return res
     
     @staticmethod
-    def _new2508(_arg1 : int) -> 'CharsInfo':
+    def _new2661(_arg1 : int) -> 'CharsInfo':
         res = CharsInfo()
         res.value = _arg1
         return res

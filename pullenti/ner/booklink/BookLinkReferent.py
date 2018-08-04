@@ -101,10 +101,10 @@ class BookLinkReferent(Referent):
     
     @property
     def year(self) -> int:
-        inoutarg395 = RefOutArgWrapper(None)
-        inoutres396 = Utils.tryParseInt(Utils.ifNotNull(self.get_string_value(BookLinkReferent.ATTR_YEAR), ""), inoutarg395)
-        year_ = inoutarg395.value
-        if (inoutres396): 
+        inoutarg396 = RefOutArgWrapper(0)
+        inoutres397 = Utils.tryParseInt(Utils.ifNotNull(self.get_string_value(BookLinkReferent.ATTR_YEAR), ""), inoutarg396)
+        year_ = inoutarg396.value
+        if (inoutres397): 
             return year_
         else: 
             return 0

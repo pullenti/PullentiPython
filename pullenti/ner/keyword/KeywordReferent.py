@@ -49,11 +49,11 @@ class KeywordReferent(Referent):
     
     @property
     def typ(self) -> 'KeywordType':
-        str0 = self.get_string_value(KeywordReferent.ATTR_TYPE)
-        if (str0 is None): 
+        str0_ = self.get_string_value(KeywordReferent.ATTR_TYPE)
+        if (str0_ is None): 
             return KeywordType.UNDEFINED
         try: 
-            return Utils.valToEnum(str0, KeywordType)
+            return Utils.valToEnum(str0_, KeywordType)
         except Exception as ex: 
             return KeywordType.UNDEFINED
     
@@ -149,7 +149,7 @@ class KeywordReferent(Referent):
 
     
     @staticmethod
-    def _new1436(_arg1 : 'KeywordType') -> 'KeywordReferent':
+    def _new1487(_arg1 : 'KeywordType') -> 'KeywordReferent':
         res = KeywordReferent()
         res.typ = _arg1
         return res

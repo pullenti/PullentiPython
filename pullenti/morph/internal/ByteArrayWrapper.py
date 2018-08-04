@@ -34,9 +34,9 @@ class ByteArrayWrapper:
     def deserialize_byte(self) -> int:
         if (self.__m_pos >= self.__m_len): 
             return 0
-        retVal2511 = self.__m_array[self.__m_pos]
+        retVal2664 = self.__m_array[self.__m_pos]
         self.__m_pos += 1
-        return retVal2511
+        return retVal2664
     
     def deserialize_short(self) -> int:
         if ((self.__m_pos + 1) >= self.__m_len): 
@@ -71,14 +71,14 @@ class ByteArrayWrapper:
     def deserialize_string(self) -> str:
         if (self.__m_pos >= self.__m_len): 
             return None
-        len0 = self.__m_array[self.__m_pos]
+        len0_ = self.__m_array[self.__m_pos]
         self.__m_pos += 1
-        if (len0 == 0xFF): 
+        if (len0_ == 0xFF): 
             return None
-        if (len0 == 0): 
+        if (len0_ == 0): 
             return ""
-        if ((self.__m_pos + len0) > self.__m_len): 
+        if ((self.__m_pos + len0_) > self.__m_len): 
             return None
-        res = self.__m_array[self.__m_pos:self.__m_pos+len0].decode('utf-8', 'ignore')
-        self.__m_pos += len0
+        res = self.__m_array[self.__m_pos:self.__m_pos+len0_].decode('utf-8', 'ignore')
+        self.__m_pos += len0_
         return res

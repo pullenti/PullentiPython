@@ -25,7 +25,7 @@ class StatisticCollection:
     
         
         @staticmethod
-        def _new586(_arg1 : int, _arg2 : int) -> 'BigrammInfo':
+        def _new612(_arg1 : int, _arg2 : int) -> 'BigrammInfo':
             res = StatisticCollection.BigrammInfo()
             res.first_count = _arg1
             res.second_count = _arg2
@@ -67,7 +67,7 @@ class StatisticCollection:
     
         
         @staticmethod
-        def _new573(_arg1 : str) -> 'WordInfo':
+        def _new599(_arg1 : str) -> 'WordInfo':
             res = StatisticCollection.WordInfo()
             res.normal = _arg1
             return res
@@ -84,19 +84,19 @@ class StatisticCollection:
         prev = None
         prevt = None
         t = first
-        first_pass2608 = True
+        first_pass2766 = True
         while True:
-            if first_pass2608: first_pass2608 = False
-            else: t = t.next0
+            if first_pass2766: first_pass2766 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_hiphen): 
                 continue
             it = None
             if ((isinstance(t, TextToken) and t.chars.is_letter and t.length_char > 1) and not t.chars.is_all_lower): 
                 it = self.__add_token(t if isinstance(t, TextToken) else None)
-            elif (((isinstance(t, TextToken) and (t if isinstance(t, TextToken) else None).length_char == 1 and t.chars.is_all_upper) and t.next0 is not None and t.next0.is_char('.')) and not t.is_whitespace_after): 
+            elif (((isinstance(t, TextToken) and (t if isinstance(t, TextToken) else None).length_char == 1 and t.chars.is_all_upper) and t.next0_ is not None and t.next0_.is_char('.')) and not t.is_whitespace_after): 
                 it = self.__add_token(t if isinstance(t, TextToken) else None)
-                t = t.next0
+                t = t.next0_
             if (prev is not None and it is not None): 
                 self.__add_bigramm(prev, it)
                 if (prevt.chars == t.chars): 
@@ -115,41 +115,41 @@ class StatisticCollection:
                         it.upper_count += 1
                     elif (t.chars.is_capital_upper): 
                         it.capital_count += 1
-            t = t.next0
+            t = t.next0_
     
     def __add_token(self, tt : 'TextToken') -> 'WordInfo':
         from pullenti.ner.core.MiscHelper import MiscHelper
         from pullenti.morph.MorphWordForm import MorphWordForm
         from pullenti.ner.TextToken import TextToken
-        vars0 = list()
-        vars0.append(tt.term)
+        vars0_ = list()
+        vars0_.append(tt.term)
         s = MiscHelper.get_absolute_normal_value(tt.term, False)
-        if (s is not None and not s in vars0): 
-            vars0.append(s)
+        if (s is not None and not s in vars0_): 
+            vars0_.append(s)
         for wff in tt.morph.items: 
             wf = (wff if isinstance(wff, MorphWordForm) else None)
             if (wf is None): 
                 continue
-            if (wf.normal_case is not None and not wf.normal_case in vars0): 
-                vars0.append(wf.normal_case)
-            if (wf.normal_full is not None and not wf.normal_full in vars0): 
-                vars0.append(wf.normal_full)
+            if (wf.normal_case is not None and not wf.normal_case in vars0_): 
+                vars0_.append(wf.normal_case)
+            if (wf.normal_full is not None and not wf.normal_full in vars0_): 
+                vars0_.append(wf.normal_full)
         res = None
-        for v in vars0: 
-            inoutarg571 = RefOutArgWrapper(None)
-            inoutres572 = Utils.tryGetValue(self.__m_items, v, inoutarg571)
-            res = inoutarg571.value
-            if (inoutres572): 
+        for v in vars0_: 
+            inoutarg597 = RefOutArgWrapper(None)
+            inoutres598 = Utils.tryGetValue(self.__m_items, v, inoutarg597)
+            res = inoutarg597.value
+            if (inoutres598): 
                 break
         if (res is None): 
-            res = StatisticCollection.WordInfo._new573(tt.lemma)
-        for v in vars0: 
+            res = StatisticCollection.WordInfo._new599(tt.lemma)
+        for v in vars0_: 
             if (not v in self.__m_items): 
                 self.__m_items[v] = res
         res.total_count += 1
-        if (isinstance(tt.next0, TextToken) and tt.next0.chars.is_all_lower): 
-            if (tt.next0.chars.is_cyrillic_letter and tt.next0.get_morph_class_in_dictionary().is_verb): 
-                g = tt.next0.morph.gender
+        if (isinstance(tt.next0_, TextToken) and tt.next0_.chars.is_all_lower): 
+            if (tt.next0_.chars.is_cyrillic_letter and tt.next0_.get_morph_class_in_dictionary().is_verb): 
+                g = tt.next0_.morph.gender
                 if (g == MorphGender.FEMINIE): 
                     res.female_verbs_after_count += 1
                 elif (((g & MorphGender.MASCULINE)) != MorphGender.UNDEFINED): 
@@ -166,51 +166,51 @@ class StatisticCollection:
         from pullenti.morph.MorphWordForm import MorphWordForm
         if (tt is None): 
             return None
-        inoutarg580 = RefOutArgWrapper(None)
-        inoutres581 = Utils.tryGetValue(self.__m_items, tt.term, inoutarg580)
-        res = inoutarg580.value
-        if (inoutres581): 
+        inoutarg606 = RefOutArgWrapper(None)
+        inoutres607 = Utils.tryGetValue(self.__m_items, tt.term, inoutarg606)
+        res = inoutarg606.value
+        if (inoutres607): 
             return res
         if (do_absolute): 
             s = MiscHelper.get_absolute_normal_value(tt.term, False)
             if (s is not None): 
-                inoutarg574 = RefOutArgWrapper(None)
-                inoutres575 = Utils.tryGetValue(self.__m_items, s, inoutarg574)
-                res = inoutarg574.value
-                if (inoutres575): 
+                inoutarg600 = RefOutArgWrapper(None)
+                inoutres601 = Utils.tryGetValue(self.__m_items, s, inoutarg600)
+                res = inoutarg600.value
+                if (inoutres601): 
                     return res
         for wff in tt.morph.items: 
             wf = (wff if isinstance(wff, MorphWordForm) else None)
             if (wf is None): 
                 continue
-            inoutarg578 = RefOutArgWrapper(None)
-            inoutres579 = Utils.tryGetValue(self.__m_items, Utils.ifNotNull(wf.normal_case, ""), inoutarg578)
-            res = inoutarg578.value
-            if (inoutres579): 
+            inoutarg604 = RefOutArgWrapper(None)
+            inoutres605 = Utils.tryGetValue(self.__m_items, Utils.ifNotNull(wf.normal_case, ""), inoutarg604)
+            res = inoutarg604.value
+            if (inoutres605): 
                 return res
-            inoutarg576 = RefOutArgWrapper(None)
-            inoutres577 = Utils.tryGetValue(self.__m_items, wf.normal_full, inoutarg576)
-            res = inoutarg576.value
-            if (wf.normal_full is not None and inoutres577): 
+            inoutarg602 = RefOutArgWrapper(None)
+            inoutres603 = Utils.tryGetValue(self.__m_items, wf.normal_full, inoutarg602)
+            res = inoutarg602.value
+            if (wf.normal_full is not None and inoutres603): 
                 return res
         return None
     
     def __add_bigramm(self, b1 : 'WordInfo', b2 : 'WordInfo') -> None:
         di = [ ]
-        inoutarg584 = RefOutArgWrapper(None)
-        inoutres585 = Utils.tryGetValue(self.__m_bigramms, b1.normal, inoutarg584)
-        di = inoutarg584.value
-        if (not inoutres585): 
+        inoutarg610 = RefOutArgWrapper(None)
+        inoutres611 = Utils.tryGetValue(self.__m_bigramms, b1.normal, inoutarg610)
+        di = inoutarg610.value
+        if (not inoutres611): 
             di = dict()
             self.__m_bigramms[b1.normal] = di
         if (b2.normal in di): 
             di[b2.normal] += 1
         else: 
             di[b2.normal] = 1
-        inoutarg582 = RefOutArgWrapper(None)
-        inoutres583 = Utils.tryGetValue(self.__m_bigramms_rev, b2.normal, inoutarg582)
-        di = inoutarg582.value
-        if (not inoutres583): 
+        inoutarg608 = RefOutArgWrapper(None)
+        inoutres609 = Utils.tryGetValue(self.__m_bigramms_rev, b2.normal, inoutarg608)
+        di = inoutarg608.value
+        if (not inoutres609): 
             di = dict()
             self.__m_bigramms_rev[b2.normal] = di
         if (b1.normal in di): 
@@ -227,15 +227,15 @@ class StatisticCollection:
         return self.__get_bigrams_info(si1, si2)
     
     def __get_bigrams_info(self, si1 : 'WordInfo', si2 : 'WordInfo') -> 'BigrammInfo':
-        res = StatisticCollection.BigrammInfo._new586(si1.total_count, si2.total_count)
+        res = StatisticCollection.BigrammInfo._new612(si1.total_count, si2.total_count)
         di12 = None
-        inoutarg588 = RefOutArgWrapper(None)
-        Utils.tryGetValue(self.__m_bigramms, si1.normal, inoutarg588)
-        di12 = inoutarg588.value
+        inoutarg614 = RefOutArgWrapper(None)
+        Utils.tryGetValue(self.__m_bigramms, si1.normal, inoutarg614)
+        di12 = inoutarg614.value
         di21 = None
-        inoutarg587 = RefOutArgWrapper(None)
-        Utils.tryGetValue(self.__m_bigramms_rev, si2.normal, inoutarg587)
-        di21 = inoutarg587.value
+        inoutarg613 = RefOutArgWrapper(None)
+        Utils.tryGetValue(self.__m_bigramms_rev, si2.normal, inoutarg613)
+        di21 = inoutarg613.value
         if (di12 is not None): 
             if (not si2.normal in di12): 
                 res.first_has_other_second = True
@@ -260,10 +260,10 @@ class StatisticCollection:
         if (si2 is None): 
             return None
         si1 = None
-        inoutarg589 = RefOutArgWrapper(None)
-        inoutres590 = Utils.tryGetValue(self.__m_items, ini[0 : 1], inoutarg589)
-        si1 = inoutarg589.value
-        if (not inoutres590): 
+        inoutarg615 = RefOutArgWrapper(None)
+        inoutres616 = Utils.tryGetValue(self.__m_items, ini[0 : 1], inoutarg615)
+        si1 = inoutarg615.value
+        if (not inoutres616): 
             return None
         if (si1 is None): 
             return None

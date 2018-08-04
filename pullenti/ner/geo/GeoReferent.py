@@ -45,7 +45,7 @@ class GeoReferent(Referent):
     
     def __to_string(self, short_variant : bool, lang : 'MorphLang', out_cladr : bool, lev : int) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        if (self.is_union): 
+        if (self.is_union and not self.is_state): 
             res = Utils.newStringIO(None)
             print(self.get_string_value(GeoReferent.ATTR_TYPE), end="", file=res)
             for s in self.slots: 
@@ -566,20 +566,20 @@ class GeoReferent(Referent):
             return True
         return False
     
-    def _add_org_referent(self, org : 'Referent') -> None:
+    def _add_org_referent(self, org0_ : 'Referent') -> None:
         """ Добавляем ссылку на организацию, также добавляем имена
         
         Args:
-            org(Referent): 
+            org0_(Referent): 
         """
-        if (org is None): 
+        if (org0_ is None): 
             return
         nam = False
-        self.add_slot(GeoReferent.ATTR_REF, org, False, 0)
+        self.add_slot(GeoReferent.ATTR_REF, org0_, False, 0)
         geo_ = None
         spec_typ = None
-        num = org.get_string_value("NUMBER")
-        for s in org.slots: 
+        num = org0_.get_string_value("NUMBER")
+        for s in org0_.slots: 
             if (s.type_name == "NAME"): 
                 if (num is None): 
                     self._add_name(s.value if isinstance(s.value, str) else None)
@@ -599,7 +599,7 @@ class GeoReferent(Referent):
             elif (s.type_name == "GEO" and isinstance(s.value, GeoReferent)): 
                 geo_ = (s.value if isinstance(s.value, GeoReferent) else None)
         if (not nam): 
-            for s in org.slots: 
+            for s in org0_.slots: 
                 if (s.type_name == "EPONYM"): 
                     if (num is None): 
                         self._add_name((s.value if isinstance(s.value, str) else None).upper())
@@ -607,7 +607,7 @@ class GeoReferent(Referent):
                         self._add_name("{0}-{1}".format((s.value if isinstance(s.value, str) else None).upper(), num))
                     nam = True
         if (not nam and num is not None): 
-            for s in org.slots: 
+            for s in org0_.slots: 
                 if (s.type_name == "TYPE"): 
                     self._add_name("{0}-{1}".format((s.value if isinstance(s.value, str) else None).upper(), num))
                     nam = True
@@ -619,4 +619,4 @@ class GeoReferent(Referent):
                     self._add_name("{0} {1}".format(spec_typ, n))
                 nam = True
         if (not nam): 
-            self._add_name(org.to_string(True, MorphLang.UNKNOWN, 0).upper())
+            self._add_name(org0_.to_string(True, MorphLang.UNKNOWN, 0).upper())

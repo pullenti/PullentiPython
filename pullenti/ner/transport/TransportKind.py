@@ -10,8 +10,8 @@ from enum import IntEnum
 class TransportKind(IntEnum):
     """ Разновидности организаций """
     UNDEFINED = 0
-    AUTO = 1
-    TRAIN = 2
-    SHIP = 3
-    FLY = 4
-    SPACE = 5
+    AUTO = 0 + 1
+    TRAIN = (0 + 1) + 1
+    SHIP = ((0 + 1) + 1) + 1
+    FLY = (((0 + 1) + 1) + 1) + 1
+    SPACE = ((((0 + 1) + 1) + 1) + 1) + 1

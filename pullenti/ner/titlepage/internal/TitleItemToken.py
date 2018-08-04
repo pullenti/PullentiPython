@@ -19,20 +19,20 @@ class TitleItemToken(MetaToken):
     
     class Types(IntEnum):
         UNDEFINED = 0
-        TYP = 1
-        THEME = 2
-        TYPANDTHEME = 3
-        BOSS = 4
-        WORKER = 5
-        EDITOR = 6
-        CONSULTANT = 7
-        OPPONENT = 8
-        OTHERROLE = 9
-        TRANSLATE = 10
-        ADOPT = 11
-        DUST = 12
-        SPECIALITY = 13
-        KEYWORDS = 14
+        TYP = 0 + 1
+        THEME = (0 + 1) + 1
+        TYPANDTHEME = ((0 + 1) + 1) + 1
+        BOSS = (((0 + 1) + 1) + 1) + 1
+        WORKER = ((((0 + 1) + 1) + 1) + 1) + 1
+        EDITOR = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
+        CONSULTANT = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        OPPONENT = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        OTHERROLE = ((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        TRANSLATE = (((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        ADOPT = ((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        DUST = (((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        SPECIALITY = ((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        KEYWORDS = (((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
     
     def __init__(self, begin : 'Token', end : 'Token', typ_ : 'Types') -> None:
         self.typ = TitleItemToken.Types.UNDEFINED
@@ -55,56 +55,56 @@ class TitleItemToken(MetaToken):
         if (tt is not None): 
             t1 = tt
             if (tt.term == "ТЕМА"): 
-                tit = TitleItemToken.try_attach(tt.next0)
+                tit = TitleItemToken.try_attach(tt.next0_)
                 if (tit is not None and tit.typ == TitleItemToken.Types.TYP): 
                     t1 = tit.end_token
-                    if (t1.next0 is not None and t1.next0.is_char(':')): 
-                        t1 = t1.next0
-                    return TitleItemToken._new2317(t, t1, TitleItemToken.Types.TYPANDTHEME, tit.value)
-                if (tt.next0 is not None and tt.next0.is_char(':')): 
-                    t1 = tt.next0
+                    if (t1.next0_ is not None and t1.next0_.is_char(':')): 
+                        t1 = t1.next0_
+                    return TitleItemToken._new2470(t, t1, TitleItemToken.Types.TYPANDTHEME, tit.value)
+                if (tt.next0_ is not None and tt.next0_.is_char(':')): 
+                    t1 = tt.next0_
                 return TitleItemToken(tt, t1, TitleItemToken.Types.THEME)
             if (tt.term == "ПО" or tt.term == "НА"): 
-                if (tt.next0 is not None and tt.next0.is_value("ТЕМА", None)): 
-                    t1 = tt.next0
-                    if (t1.next0 is not None and t1.next0.is_char(':')): 
-                        t1 = t1.next0
+                if (tt.next0_ is not None and tt.next0_.is_value("ТЕМА", None)): 
+                    t1 = tt.next0_
+                    if (t1.next0_ is not None and t1.next0_.is_char(':')): 
+                        t1 = t1.next0_
                     return TitleItemToken(tt, t1, TitleItemToken.Types.THEME)
             if (tt.term == "ПЕРЕВОД" or tt.term == "ПЕР"): 
-                tt2 = tt.next0
+                tt2 = tt.next0_
                 if (tt2 is not None and tt2.is_char('.')): 
-                    tt2 = tt2.next0
+                    tt2 = tt2.next0_
                 if (isinstance(tt2, TextToken)): 
                     if ((tt2 if isinstance(tt2, TextToken) else None).term == "C" or (tt2 if isinstance(tt2, TextToken) else None).term == "С"): 
-                        tt2 = tt2.next0
+                        tt2 = tt2.next0_
                         if (isinstance(tt2, TextToken)): 
                             return TitleItemToken(t, tt2, TitleItemToken.Types.TRANSLATE)
             if (tt.term == "СЕКЦИЯ" or tt.term == "SECTION" or tt.term == "СЕКЦІЯ"): 
-                t1 = tt.next0
+                t1 = tt.next0_
                 if (t1 is not None and t1.is_char(':')): 
-                    t1 = t1.next0
+                    t1 = t1.next0_
                 br = BracketHelper.try_parse(t1, BracketParseAttr.NO, 100)
                 if (br is not None): 
                     t1 = br.end_token
-                elif (t1 != tt.next0): 
+                elif (t1 != tt.next0_): 
                     while t1 is not None: 
                         if (t1.is_newline_after): 
                             break
-                        t1 = t1.next0
+                        t1 = t1.next0_
                     if (t1 is None): 
                         return None
-                if (t1 != tt.next0): 
+                if (t1 != tt.next0_): 
                     return TitleItemToken(tt, t1, TitleItemToken.Types.DUST)
             t1 = None
             if (tt.is_value("СПЕЦИАЛЬНОСТЬ", "СПЕЦІАЛЬНІСТЬ")): 
-                t1 = tt.next0
-            elif (tt.morph.class0.is_preposition and tt.next0 is not None and tt.next0.is_value("СПЕЦИАЛЬНОСТЬ", "СПЕЦІАЛЬНІСТЬ")): 
-                t1 = tt.next0.next0
+                t1 = tt.next0_
+            elif (tt.morph.class0_.is_preposition and tt.next0_ is not None and tt.next0_.is_value("СПЕЦИАЛЬНОСТЬ", "СПЕЦІАЛЬНІСТЬ")): 
+                t1 = tt.next0_.next0_
             elif (tt.is_char('/') and tt.is_newline_before): 
-                t1 = tt.next0
+                t1 = tt.next0_
             if (t1 is not None): 
                 if (t1.is_char_of(":") or t1.is_hiphen): 
-                    t1 = t1.next0
+                    t1 = t1.next0_
                 spec = TitleItemToken.__try_attach_speciality(t1, True)
                 if (spec is not None): 
                     spec.begin_token = t
@@ -121,21 +121,21 @@ class TitleItemToken(MetaToken):
             if (tok is not None): 
                 ty = Utils.valToEnum(tok.termin.tag, TitleItemToken.Types)
                 if (ty == TitleItemToken.Types.TYP): 
-                    tit = TitleItemToken.try_attach(tok.end_token.next0)
+                    tit = TitleItemToken.try_attach(tok.end_token.next0_)
                     if (tit is not None and tit.typ == TitleItemToken.Types.THEME): 
-                        return TitleItemToken._new2317(npt.begin_token, tit.end_token, TitleItemToken.Types.TYPANDTHEME, s)
+                        return TitleItemToken._new2470(npt.begin_token, tit.end_token, TitleItemToken.Types.TYPANDTHEME, s)
                     if (s == "РАБОТА" or s == "РОБОТА" or s == "ПРОЕКТ"): 
                         return None
                     t1 = tok.end_token
                     if (s == "ДИССЕРТАЦИЯ" or s == "ДИСЕРТАЦІЯ"): 
                         err = 0
-                        ttt = t1.next0
-                        first_pass2884 = True
+                        ttt = t1.next0_
+                        first_pass3052 = True
                         while True:
-                            if first_pass2884: first_pass2884 = False
-                            else: ttt = ttt.next0
+                            if first_pass3052: first_pass3052 = False
+                            else: ttt = ttt.next0_
                             if (not (ttt is not None)): break
-                            if (ttt.morph.class0.is_preposition): 
+                            if (ttt.morph.class0_.is_preposition): 
                                 continue
                             if (ttt.is_value("СОИСКАНИЕ", "")): 
                                 continue
@@ -161,7 +161,7 @@ class TitleItemToken(MetaToken):
                                     break
                             if (ttt.is_value("ДОКТОР", None) or ttt.is_value("КАНДИДАТ", None) or ttt.is_value("МАГИСТР", "МАГІСТР")): 
                                 t1 = ttt
-                                npt1 = NounPhraseHelper.try_parse(ttt.next0, NounPhraseParseAttr.NO, 0)
+                                npt1 = NounPhraseHelper.try_parse(ttt.next0_, NounPhraseParseAttr.NO, 0)
                                 if (npt1 is not None and npt1.end_token.is_value("НАУК", None)): 
                                     t1 = npt1.end_token
                                 s = ("МАГИСТЕРСКАЯ ДИССЕРТАЦИЯ" if ttt.is_value("МАГИСТР", "МАГІСТР") else ("ДОКТОРСКАЯ ДИССЕРТАЦИЯ" if ttt.is_value("ДОКТОР", None) else "КАНДИДАТСКАЯ ДИССЕРТАЦИЯ"))
@@ -169,22 +169,22 @@ class TitleItemToken(MetaToken):
                             err += 1
                             if ((err) > 3): 
                                 break
-                    if (t1.next0 is not None and t1.next0.is_char('.')): 
-                        t1 = t1.next0
-                    if (s.endswith("ОТЧЕТ") and t1.next0 is not None and t1.next0.is_value("О", None)): 
-                        npt1 = NounPhraseHelper.try_parse(t1.next0, NounPhraseParseAttr.PARSEPREPOSITION, 0)
+                    if (t1.next0_ is not None and t1.next0_.is_char('.')): 
+                        t1 = t1.next0_
+                    if (s.endswith("ОТЧЕТ") and t1.next0_ is not None and t1.next0_.is_value("О", None)): 
+                        npt1 = NounPhraseHelper.try_parse(t1.next0_, NounPhraseParseAttr.PARSEPREPOSITION, 0)
                         if (npt1 is not None and npt1.morph.case.is_prepositional): 
                             t1 = npt1.end_token
-                    return TitleItemToken._new2317(npt.begin_token, t1, ty, s)
+                    return TitleItemToken._new2470(npt.begin_token, t1, ty, s)
         tok1 = TitleItemToken.__m_termins.try_parse(t, TerminParseAttr.NO)
         if (tok1 is not None): 
             t1 = tok1.end_token
             re = TitleItemToken(tok1.begin_token, t1, Utils.valToEnum(tok1.termin.tag, TitleItemToken.Types))
             return re
         if (BracketHelper.can_be_start_of_sequence(t, False, False)): 
-            tok1 = TitleItemToken.__m_termins.try_parse(t.next0, TerminParseAttr.NO)
-            if (tok1 is not None and BracketHelper.can_be_end_of_sequence(tok1.end_token.next0, False, None, False)): 
-                t1 = tok1.end_token.next0
+            tok1 = TitleItemToken.__m_termins.try_parse(t.next0_, TerminParseAttr.NO)
+            if (tok1 is not None and BracketHelper.can_be_end_of_sequence(tok1.end_token.next0_, False, None, False)): 
+                t1 = tok1.end_token.next0_
                 return TitleItemToken(tok1.begin_token, t1, Utils.valToEnum(tok1.termin.tag, TitleItemToken.Types))
         return None
     
@@ -205,7 +205,7 @@ class TitleItemToken(MetaToken):
             nt = (t if isinstance(t, NumberToken) else None)
             if (nt is None): 
                 break
-            if (nt.typ != NumberSpellingType.DIGIT or nt.morph.class0.is_adjective): 
+            if (nt.typ != NumberSpellingType.DIGIT or nt.morph.class0_.is_adjective): 
                 break
             if (val is None): 
                 val = Utils.newStringIO(None)
@@ -214,15 +214,15 @@ class TitleItemToken(MetaToken):
             digs = nt.get_source_text()
             dig_count += len(digs)
             print(digs, end="", file=val)
-            if (t.next0 is None): 
+            if (t.next0_ is None): 
                 break
-            t = t.next0
+            t = t.next0_
             if (t.is_char_of(".,") or t.is_hiphen): 
                 if (susp and (i < 2)): 
                     if (not t.is_char('.') or t.is_whitespace_after or t.is_whitespace_before): 
                         return None
-                if (t.next0 is not None): 
-                    t = t.next0
+                if (t.next0_ is not None): 
+                    t = t.next0_
         if (val is None or (dig_count < 5)): 
             return None
         if (dig_count != 6): 
@@ -231,11 +231,11 @@ class TitleItemToken(MetaToken):
         else: 
             Utils.insertStringIO(val, 4, '.')
             Utils.insertStringIO(val, 2, '.')
-        tt = t.next0
-        first_pass2885 = True
+        tt = t.next0_
+        first_pass3053 = True
         while True:
-            if first_pass2885: first_pass2885 = False
-            else: tt = tt.next0
+            if first_pass3053: first_pass3053 = False
+            else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 
                 break
@@ -245,7 +245,7 @@ class TitleItemToken(MetaToken):
                 t = tt
                 continue
             t = tt
-        return TitleItemToken._new2317(t0, t, TitleItemToken.Types.SPECIALITY, Utils.toStringStringIO(val))
+        return TitleItemToken._new2470(t0, t, TitleItemToken.Types.SPECIALITY, Utils.toStringStringIO(val))
     
     __m_termins = None
     
@@ -260,11 +260,11 @@ class TitleItemToken(MetaToken):
         for s in ["РАБОТА", "ДИССЕРТАЦИЯ", "ОТЧЕТ", "ОБЗОР", "ДИПЛОМ", "ПРОЕКТ", "СПРАВКА", "АВТОРЕФЕРАТ", "РЕФЕРАТ", "TECHNOLOGY ISSUES", "TECHNOLOGY COURSE", "УЧЕБНИК", "УЧЕБНОЕ ПОСОБИЕ"]: 
             TitleItemToken.__m_termins.add(Termin._new118(s, TitleItemToken.Types.TYP))
         for s in ["РОБОТА", "ДИСЕРТАЦІЯ", "ЗВІТ", "ОГЛЯД", "ДИПЛОМ", "ПРОЕКТ", "ДОВІДКА", "АВТОРЕФЕРАТ", "РЕФЕРАТ"]: 
-            TitleItemToken.__m_termins.add(Termin._new459(s, MorphLang.UA, TitleItemToken.Types.TYP))
+            TitleItemToken.__m_termins.add(Termin._new477(s, MorphLang.UA, TitleItemToken.Types.TYP))
         for s in ["ДОПУСТИТЬ К ЗАЩИТА", "РЕКОМЕНДОВАТЬ К ЗАЩИТА", "ДОЛЖНОСТЬ", "ЦЕЛЬ РАБОТЫ", "НА ПРАВАХ РУКОПИСИ", "ПО ИЗДАНИЮ", "ПОЛУЧЕНО"]: 
             TitleItemToken.__m_termins.add(Termin._new118(s, TitleItemToken.Types.DUST))
         for s in ["ДОПУСТИТИ ДО ЗАХИСТУ", "РЕКОМЕНДУВАТИ ДО ЗАХИСТ", "ПОСАДА", "МЕТА РОБОТИ", "НА ПРАВАХ РУКОПИСУ", "ПО ВИДАННЮ", "ОТРИМАНО"]: 
-            TitleItemToken.__m_termins.add(Termin._new459(s, MorphLang.UA, TitleItemToken.Types.DUST))
+            TitleItemToken.__m_termins.add(Termin._new477(s, MorphLang.UA, TitleItemToken.Types.DUST))
         for s in ["УТВЕРЖДАТЬ", "СОГЛАСЕН", "СТВЕРДЖУВАТИ", "ЗГОДЕН"]: 
             TitleItemToken.__m_termins.add(Termin._new118(s, TitleItemToken.Types.ADOPT))
         for s in ["НАУЧНЫЙ РУКОВОДИТЕЛЬ", "РУКОВОДИТЕЛЬ РАБОТА", "НАУКОВИЙ КЕРІВНИК", "КЕРІВНИК РОБОТА"]: 
@@ -278,13 +278,13 @@ class TitleItemToken(MetaToken):
         for s in ["ИСПОЛНИТЕЛЬ", "ОТВЕТСТВЕННЫЙ ИСПОЛНИТЕЛЬ", "АВТОР", "ДИПЛОМНИК", "КОЛЛЕКТТИВ ИСПОЛНИТЕЛЕЙ", "ВЫПОЛНИТЬ", "ИСПОЛНИТЬ"]: 
             TitleItemToken.__m_termins.add(Termin._new118(s, TitleItemToken.Types.WORKER))
         for s in ["ВИКОНАВЕЦЬ", "ВІДПОВІДАЛЬНИЙ ВИКОНАВЕЦЬ", "АВТОР", "ДИПЛОМНИК", "КОЛЛЕКТТИВ ВИКОНАВЦІВ", "ВИКОНАТИ", "ВИКОНАТИ"]: 
-            TitleItemToken.__m_termins.add(Termin._new459(s, MorphLang.UA, TitleItemToken.Types.WORKER))
+            TitleItemToken.__m_termins.add(Termin._new477(s, MorphLang.UA, TitleItemToken.Types.WORKER))
         for s in ["КЛЮЧЕВЫЕ СЛОВА", "KEYWORDS", "КЛЮЧОВІ СЛОВА"]: 
             TitleItemToken.__m_termins.add(Termin._new118(s, TitleItemToken.Types.KEYWORDS))
 
     
     @staticmethod
-    def _new2317(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Types', _arg4 : str) -> 'TitleItemToken':
+    def _new2470(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Types', _arg4 : str) -> 'TitleItemToken':
         res = TitleItemToken(_arg1, _arg2, _arg3)
         res.value = _arg4
         return res

@@ -40,7 +40,7 @@ class TransportAnalyzer(Analyzer):
         return [MetaTransport._global_meta]
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         from pullenti.ner.transport.internal.MetaTransport import MetaTransport
         res = dict()
         res[Utils.enumToString(TransportKind.FLY)] = ResourceHelper.get_bytes("fly.png")
@@ -51,9 +51,9 @@ class TransportAnalyzer(Analyzer):
         res[MetaTransport.IMAGE_ID] = ResourceHelper.get_bytes("transport.png")
         return res
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.transport.TransportReferent import TransportReferent
-        if (type0 == TransportReferent.OBJ_TYPENAME): 
+        if (type0_ == TransportReferent.OBJ_TYPENAME): 
             return TransportReferent()
         return None
     
@@ -81,10 +81,10 @@ class TransportAnalyzer(Analyzer):
         objs_by_model = dict()
         obj_by_names = TerminCollection()
         t = kit.first_token
-        first_pass2895 = True
+        first_pass3063 = True
         while True:
-            if first_pass2895: first_pass2895 = False
-            else: t = t.next0
+            if first_pass3063: first_pass3063 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             its = TransItemToken.try_parse_list(t, 10)
             if (its is None): 
@@ -94,9 +94,9 @@ class TransportAnalyzer(Analyzer):
                 for rt in rts: 
                     cou = 0
                     tt = t.previous
-                    first_pass2896 = True
+                    first_pass3064 = True
                     while True:
-                        if first_pass2896: first_pass2896 = False
+                        if first_pass3064: first_pass3064 = False
                         else: tt = tt.previous; cou += 1
                         if (not (tt is not None and (cou < 1000))): break
                         tr = (tt.get_referent() if isinstance(tt.get_referent(), TransportReferent) else None)
@@ -119,10 +119,10 @@ class TransportAnalyzer(Analyzer):
                             for k in range(2):
                                 if (not mod[0].isdigit()): 
                                     li = [ ]
-                                    inoutarg2362 = RefOutArgWrapper(None)
-                                    inoutres2363 = Utils.tryGetValue(objs_by_model, mod, inoutarg2362)
-                                    li = inoutarg2362.value
-                                    if (not inoutres2363): 
+                                    inoutarg2515 = RefOutArgWrapper(None)
+                                    inoutres2516 = Utils.tryGetValue(objs_by_model, mod, inoutarg2515)
+                                    li = inoutarg2515.value
+                                    if (not inoutres2516): 
                                         li = list()
                                         objs_by_model[mod] = li
                                     if (not rt.referent in li): 
@@ -139,15 +139,15 @@ class TransportAnalyzer(Analyzer):
         if (len(objs_by_model) == 0 and len(obj_by_names.termins) == 0): 
             return
         t = kit.first_token
-        first_pass2897 = True
+        first_pass3065 = True
         while True:
-            if first_pass2897: first_pass2897 = False
-            else: t = t.next0
+            if first_pass3065: first_pass3065 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 10)
             if (br is not None): 
-                toks = obj_by_names.try_parse(t.next0, TerminParseAttr.NO)
-                if (toks is not None and toks.end_token.next0 == br.end_token): 
+                toks = obj_by_names.try_parse(t.next0_, TerminParseAttr.NO)
+                if (toks is not None and toks.end_token.next0_ == br.end_token): 
                     rt0 = ReferentToken(toks.termin.tag if isinstance(toks.termin.tag, Referent) else None, br.begin_token, br.end_token)
                     kit.embed_token(rt0)
                     t = rt0
@@ -163,8 +163,8 @@ class TransportAnalyzer(Analyzer):
                 if (tok is None): 
                     continue
             if (not tok.is_whitespace_after): 
-                if (tok.end_token.next0 is None or not tok.end_token.next0.is_char_of(",.)")): 
-                    if (not BracketHelper.is_bracket(tok.end_token.next0, False)): 
+                if (tok.end_token.next0_ is None or not tok.end_token.next0_.is_char_of(",.)")): 
+                    if (not BracketHelper.is_bracket(tok.end_token.next0_, False)): 
                         continue
             tr = None
             li = (tok.termin.tag if isinstance(tok.termin.tag, list) else None)

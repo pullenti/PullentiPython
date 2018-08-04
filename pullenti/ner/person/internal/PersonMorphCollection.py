@@ -33,7 +33,7 @@ class PersonMorphCollection:
     
         
         @staticmethod
-        def _new2252(_arg1 : str, _arg2 : 'MorphGender', _arg3 : str) -> 'PersonMorphVariant':
+        def _new2405(_arg1 : str, _arg2 : 'MorphGender', _arg3 : str) -> 'PersonMorphVariant':
             res = PersonMorphCollection.PersonMorphVariant()
             res.value = _arg1
             res.gender = _arg2
@@ -106,12 +106,12 @@ class PersonMorphCollection:
             for it in self.items: 
                 if (it.value == val and it.gender == gen): 
                     return
-            self.items.append(PersonMorphCollection.PersonMorphVariant._new2252(val, gen, shortval))
+            self.items.append(PersonMorphCollection.PersonMorphVariant._new2405(val, gen, shortval))
             if (add_other_gender_var): 
                 g0 = (MorphGender.MASCULINE if gen == MorphGender.FEMINIE else MorphGender.FEMINIE)
-                v = Morphology.get_wordform(val, MorphBaseInfo._new211(MorphClass._new2233(True), g0))
+                v = Morphology.get_wordform(val, MorphBaseInfo._new211(MorphClass._new2386(True), g0))
                 if (v is not None): 
-                    self.items.append(PersonMorphCollection.PersonMorphVariant._new2252(v, g0, shortval))
+                    self.items.append(PersonMorphCollection.PersonMorphVariant._new2405(v, g0, shortval))
         else: 
             self.add(val, shortval, MorphGender.MASCULINE, False)
             self.add(val, shortval, MorphGender.FEMINIE, False)
@@ -223,18 +223,18 @@ class PersonMorphCollection:
         return ret
     
     @staticmethod
-    def intersect(list0 : typing.List['PersonMorphCollection']) -> bool:
+    def intersect(list0_ : typing.List['PersonMorphCollection']) -> bool:
         ret = False
         while True:
             ch = False
             i = 0
-            while i < (len(list0) - 1): 
+            while i < (len(list0_) - 1): 
                 j = i + 1
-                while j < len(list0): 
-                    if (PersonMorphCollection.__intersect2(list0[i], list0[j])): 
+                while j < len(list0_): 
+                    if (PersonMorphCollection.__intersect2(list0_[i], list0_[j])): 
                         ch = True
-                    if (PersonMorphCollection.is_equals(list0[i], list0[j])): 
-                        del list0[j]
+                    if (PersonMorphCollection.is_equals(list0_[i], list0_[j])): 
+                        del list0_[j]
                         j -= 1
                         ch = True
                     j += 1
@@ -246,8 +246,8 @@ class PersonMorphCollection:
         return ret
     
     @staticmethod
-    def set_gender(list0 : typing.List['PersonMorphCollection'], gen : 'MorphGender') -> None:
-        for li in list0: 
+    def set_gender(list0_ : typing.List['PersonMorphCollection'], gen : 'MorphGender') -> None:
+        for li in list0_: 
             li.remove(None, (MorphGender.FEMINIE if gen == MorphGender.MASCULINE else MorphGender.MASCULINE))
     
     # static constructor for class PersonMorphCollection

@@ -42,17 +42,17 @@ class ContentAnalyzeWhapper:
                 elif ("ДОГОВОР" in ty or "ДОГОВІР" in ty or "КОНТРАКТ" in ty): 
                     self.doc_typ = DecreeKind.CONTRACT
         t = root.begin_token
-        first_pass2707 = True
+        first_pass2867 = True
         while True:
-            if first_pass2707: first_pass2707 = False
-            else: t = t.next0
+            if first_pass2867: first_pass2867 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (t.begin_char > root.end_token.end_char): 
                 break
             dpr = (t.get_referent() if isinstance(t.get_referent(), DecreePartReferent) else None)
             if (dpr is not None and dpr.local_typ is not None and (((dpr.chapter is not None or dpr.clause is not None or dpr.section is not None) or dpr.sub_section is not None))): 
                 t = t.kit.debed_token(t)
-            if (len(lines_) == 62): 
+            if (len(lines_) == 7): 
                 pass
             lt = InstrToken1.parse(t, False, top_doc_, 0, (lines_[len(lines_) - 1] if len(lines_) > 0 else None), is_citat and t == root.begin_token, root.end_token.end_char, False)
             if (lt is None): 
@@ -62,8 +62,8 @@ class ContentAnalyzeWhapper:
             if (lt.num_typ == NumberTypes.DIGIT and len(lt.numbers) == 1 and lt.numbers[0] == "10"): 
                 pass
             if (lt.typ == InstrToken1.Types.EDITIONS): 
-                if ((not lt.is_newline_after and lt.end_token.next0 is not None and lt.end_token.next0.is_newline_after) and isinstance(lt.end_token.next0, TextToken) and not lt.end_token.next0.chars.is_letter): 
-                    lt.end_token = lt.end_token.next0
+                if ((not lt.is_newline_after and lt.end_token.next0_ is not None and lt.end_token.next0_.is_newline_after) and isinstance(lt.end_token.next0_, TextToken) and not lt.end_token.next0_.chars.is_letter): 
+                    lt.end_token = lt.end_token.next0_
             if (len(lt.numbers) > 0): 
                 pass
             if (len(lines_) == 0 and root_kind != InstrumentKind.UNDEFINED): 
@@ -144,9 +144,9 @@ class ContentAnalyzeWhapper:
         if (((root.kind == InstrumentKind.PARAGRAPH and len(lines_) > 10 and lines_[0].typ == InstrToken1.Types.LINE) and len(lines_[0].numbers) > 0 and not lines_[0].has_verb) and lines_[1].typ == InstrToken1.Types.CLAUSE): 
             nums.append(lines_[0])
             ii = 2
-            first_pass2708 = True
+            first_pass2868 = True
             while True:
-                if first_pass2708: first_pass2708 = False
+                if first_pass2868: first_pass2868 = False
                 else: ii += 1
                 if (not (ii < (len(lines_) - 1))): break
                 ch = lines_[ii]
@@ -195,9 +195,9 @@ class ContentAnalyzeWhapper:
                     if (li.typ_container_rank == lev): 
                         nums.append(li)
             i = 0
-            first_pass2709 = True
+            first_pass2869 = True
             while True:
-                if first_pass2709: first_pass2709 = False
+                if first_pass2869: first_pass2869 = False
                 else: i += 1
                 if (not (i < len(nums))): break
                 d0 = (NumberingHelper.calc_delta(nums[i - 1], nums[i], True) if i > 0 else 0)
@@ -244,16 +244,16 @@ class ContentAnalyzeWhapper:
         fr = None
         blk = list()
         i = 0
-        first_pass2710 = True
+        first_pass2870 = True
         while True:
-            if first_pass2710: first_pass2710 = False
+            if first_pass2870: first_pass2870 = False
             else: i += 1
             if (not (i <= len(lines_))): break
             li = (lines_[i] if i < len(lines_) else None)
             if (li is None or (((n < len(nums)) and li == nums[n]))): 
                 if (len(blk) > 0): 
                     if (fr is None): 
-                        fr = FragToken._new1193(blk[0].begin_token, blk[len(blk) - 1].end_token, InstrumentKind.CONTENT)
+                        fr = FragToken._new1236(blk[0].begin_token, blk[len(blk) - 1].end_token, InstrumentKind.CONTENT)
                         if (len(blk) == 1): 
                             fr._itok = blk[0]
                         root.children.append(fr)
@@ -265,7 +265,7 @@ class ContentAnalyzeWhapper:
                 break
             if ((n < len(nums)) and li == nums[n]): 
                 n += 1
-                fr = FragToken._new1194(li.begin_token, li.end_token, li, li.is_expired)
+                fr = FragToken._new1237(li.begin_token, li.end_token, li, li.is_expired)
                 root.children.append(fr)
                 if (li.typ == InstrToken1.Types.DOCPART): 
                     fr.kind = InstrumentKind.DOCPART
@@ -286,15 +286,15 @@ class ContentAnalyzeWhapper:
                 elif (li.typ == InstrToken1.Types.NOTICE): 
                     fr.kind = InstrumentKind.NOTICE
                 if (li.begin_token != li.num_begin_token and li.num_begin_token is not None): 
-                    fr.children.append(FragToken._new1195(li.begin_token, li.num_begin_token.previous, InstrumentKind.KEYWORD, True, li))
+                    fr.children.append(FragToken._new1238(li.begin_token, li.num_begin_token.previous, InstrumentKind.KEYWORD, True, li))
                 NumberingHelper.create_number(fr, li)
                 if (li.num_end_token != li.end_token and li.num_end_token is not None): 
                     if (not li.all_upper and ((((li.has_verb and names == 0 and li.end_token.is_char_of(".:"))) or li.end_token.is_char(':')))): 
-                        fr.children.append(FragToken._new1193(li.num_end_token.next0, li.end_token, InstrumentKind.CONTENT))
+                        fr.children.append(FragToken._new1236(li.num_end_token.next0_, li.end_token, InstrumentKind.CONTENT))
                     else: 
-                        fr_name = FragToken._new1195(li.num_end_token.next0, li.end_token, InstrumentKind.NAME, True, li)
+                        fr_name = FragToken._new1238(li.num_end_token.next0_, li.end_token, InstrumentKind.NAME, True, li)
                         fr.children.append(fr_name)
-                        fr.name = FragToken._get_restored_namemt(fr_name)
+                        fr.name = FragToken._get_restored_namemt(fr_name, False)
                         i = ContentAnalyzeWhapper.__correct_name(fr, fr_name, lines_, i)
                         names += 1
                 elif ((((i + 1) < len(lines_)) and len(lines_[i + 1].numbers) == 0 and not lines_[i + 1].has_verb) and not lines_[i + 1].has_many_spec_chars): 
@@ -302,14 +302,14 @@ class ContentAnalyzeWhapper:
                         i += 1
                         li = lines_[i]
                         fr.end_token = li.end_token
-                        fr_name = FragToken._new1195(li.begin_token, li.end_token, InstrumentKind.NAME, True, li)
+                        fr_name = FragToken._new1238(li.begin_token, li.end_token, InstrumentKind.NAME, True, li)
                         fr.children.append(fr_name)
-                        fr.name = FragToken._get_restored_namemt(fr_name)
+                        fr.name = FragToken._get_restored_namemt(fr_name, False)
                         i = ContentAnalyzeWhapper.__correct_name(fr, fr_name, lines_, i)
                         names += 1
                 continue
             if (li.typ == InstrToken1.Types.EDITIONS and len(blk) == 0 and fr is not None): 
-                fr.children.append(FragToken._new1193(li.begin_token, li.end_token, InstrumentKind.EDITIONS))
+                fr.children.append(FragToken._new1236(li.begin_token, li.end_token, InstrumentKind.EDITIONS))
             else: 
                 blk.append(li)
     
@@ -317,11 +317,12 @@ class ContentAnalyzeWhapper:
     def __correct_name(fr : 'FragToken', fr_name : 'FragToken', lines_ : typing.List['InstrToken1'], i : int) -> int:
         from pullenti.ner.MetaToken import MetaToken
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
+        from pullenti.ner.TextToken import TextToken
         from pullenti.ner.instrument.internal.FragToken import FragToken
         if ((i + 1) >= len(lines_)): 
             return i
         li = lines_[i]
-        if (li.typ == InstrToken1.Types.SECTION): 
+        if (li.typ == InstrToken1.Types.SUBSECTION): 
             pass
         if (fr.name is not None and (len(fr.name) < 100)): 
             while (i + 1) < len(lines_): 
@@ -347,17 +348,24 @@ class ContentAnalyzeWhapper:
                     break
                 if (lii.begin_token.whitespaces_before_count > 15): 
                     break
+                if (lii.begin_token.is_value("НЕТ", None) or lii.begin_token.is_value("ОТСУТСТВОВАТЬ", None)): 
+                    break
+                if (not ((isinstance(lii.begin_token, TextToken)))): 
+                    break
+                mc = lii.begin_token.get_morph_class_in_dictionary()
+                if (mc.is_undefined): 
+                    break
                 tt = lii.begin_token
                 while isinstance(tt, MetaToken):
                     tt = (tt if isinstance(tt, MetaToken) else None).begin_token
-                if (tt.chars.is_capital_upper or not tt.chars.is_letter): 
-                    if (not li.end_token.is_char(',') and not li.end_token.is_hiphen and not li.end_token.morph.class0.is_conjunction): 
+                if (tt.chars.is_capital_upper or not tt.chars.is_letter or mc.is_preposition): 
+                    if (not li.end_token.is_char(',') and not li.end_token.is_hiphen and not li.end_token.morph.class0_.is_conjunction): 
                         break
                 li = lii
                 fr_name.end_token = li.end_token
                 fr.end_token = fr_name.end_token
                 fr_name._def_val2 = True
-                fr.name = FragToken._get_restored_namemt(fr_name)
+                fr.name = FragToken._get_restored_namemt(fr_name, False)
                 i += 1
         return i
     
@@ -407,16 +415,16 @@ class ContentAnalyzeWhapper:
         blk = list()
         childs = list()
         i = 0
-        first_pass2711 = True
+        first_pass2871 = True
         while True:
-            if first_pass2711: first_pass2711 = False
+            if first_pass2871: first_pass2871 = False
             else: i += 1
             if (not (i <= len(lines_))): break
             li = (lines_[i] if i < len(lines_) else None)
             if (li is None or (((n < len(nums)) and li == nums[n])) or ((n >= len(nums) and li.is_standard_title))): 
                 if (len(blk) > 0): 
                     if (fr is None): 
-                        fr = FragToken._new1193(blk[0].begin_token, blk[len(blk) - 1].end_token, InstrumentKind.CONTENT)
+                        fr = FragToken._new1236(blk[0].begin_token, blk[len(blk) - 1].end_token, InstrumentKind.CONTENT)
                         if (len(blk) == 1): 
                             fr._itok = blk[0]
                         childs.append(fr)
@@ -434,30 +442,30 @@ class ContentAnalyzeWhapper:
                     else: 
                         blk.append(li)
                         continue
-                fr = FragToken._new1201(li.begin_token, li.end_token, li)
+                fr = FragToken._new1244(li.begin_token, li.end_token, li)
                 childs.append(fr)
                 fr.kind = InstrumentKind.CHAPTER
                 NumberingHelper.create_number(fr, li)
                 if (li.num_end_token != li.end_token and li.num_end_token is not None): 
                     if (li.has_many_spec_chars): 
-                        fr.children.append(FragToken._new1202(li.num_end_token.next0, li.end_token, InstrumentKind.CONTENT, li))
+                        fr.children.append(FragToken._new1245(li.num_end_token.next0_, li.end_token, InstrumentKind.CONTENT, li))
                     else: 
-                        fr_name = FragToken._new1195(li.num_end_token.next0, li.end_token, InstrumentKind.NAME, True, li)
+                        fr_name = FragToken._new1238(li.num_end_token.next0_, li.end_token, InstrumentKind.NAME, True, li)
                         fr.children.append(fr_name)
-                        fr.name = FragToken._get_restored_namemt(fr_name)
+                        fr.name = FragToken._get_restored_namemt(fr_name, False)
                         i = ContentAnalyzeWhapper.__correct_name(fr, fr_name, lines_, i)
                 elif (is_contract_struct): 
-                    fr_name = FragToken._new1195(li.begin_token, li.end_token, InstrumentKind.NAME, True, li)
+                    fr_name = FragToken._new1238(li.begin_token, li.end_token, InstrumentKind.NAME, True, li)
                     fr.children.append(fr_name)
-                    fr.name = FragToken._get_restored_namemt(fr_name)
+                    fr.name = FragToken._get_restored_namemt(fr_name, False)
                 continue
             elif (n >= len(nums) and li.is_standard_title): 
-                fr = FragToken._new1201(li.begin_token, li.end_token, li)
+                fr = FragToken._new1244(li.begin_token, li.end_token, li)
                 fr.kind = childs[len(childs) - 1].kind
                 childs.append(fr)
-                fr_name = FragToken._new1195(li.begin_token, li.end_token, InstrumentKind.NAME, True, li)
+                fr_name = FragToken._new1238(li.begin_token, li.end_token, InstrumentKind.NAME, True, li)
                 fr.children.append(fr_name)
-                fr.name = FragToken._get_restored_namemt(fr_name)
+                fr.name = FragToken._get_restored_namemt(fr_name, False)
                 i = ContentAnalyzeWhapper.__correct_name(fr, fr_name, lines_, i)
                 continue
             if (len(blk) == 0 and li.has_many_spec_chars): 
@@ -476,8 +484,8 @@ class ContentAnalyzeWhapper:
                     coef -= (math.floor(len(nam) / 300))
                 else: 
                     coef += 1
-                    len0 = chap.length_char - len(nam)
-                    if (len0 > 200): 
+                    len0_ = chap.length_char - len(nam)
+                    if (len0_ > 200): 
                         coef += 1
                     elif (len(chap.children) < 3): 
                         coef -= 1
@@ -516,9 +524,9 @@ class ContentAnalyzeWhapper:
         from pullenti.ner.instrument.internal.FragToken import FragToken
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
         if (li.typ == InstrToken1.Types.COMMENT): 
-            fr.children.append(FragToken._new1202(li.begin_token, li.end_token, InstrumentKind.COMMENT, li))
+            fr.children.append(FragToken._new1245(li.begin_token, li.end_token, InstrumentKind.COMMENT, li))
         elif (li.typ == InstrToken1.Types.EDITIONS): 
-            edt = FragToken._new1202(li.begin_token, li.end_token, InstrumentKind.EDITIONS, li)
+            edt = FragToken._new1245(li.begin_token, li.end_token, InstrumentKind.EDITIONS, li)
             fr.children.append(edt)
             edt.referents = list()
             tt = li.begin_token
@@ -529,7 +537,7 @@ class ContentAnalyzeWhapper:
                 if (dr is not None): 
                     if (not dr in edt.referents): 
                         edt.referents.append(dr)
-                tt = tt.next0
+                tt = tt.next0_
     
     def __analize_content_without_containers(self, root : 'FragToken', lines_ : typing.List['InstrToken1'], is_subitem : bool, is_preamble : bool=False, is_kodex : bool=False) -> None:
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
@@ -573,7 +581,7 @@ class ContentAnalyzeWhapper:
                                 tmp.clear()
                                 part = None
                     if (part is None): 
-                        part = FragToken._new1209(li.begin_token, li.end_token, InstrumentKind.CLAUSEPART, len(parts) + 1)
+                        part = FragToken._new1252(li.begin_token, li.end_token, InstrumentKind.CLAUSEPART, len(parts) + 1)
                         parts.append(part)
                     if (li.end_char > part.end_char): 
                         part.end_token = li.end_token
@@ -610,15 +618,15 @@ class ContentAnalyzeWhapper:
                 if (((len(li.numbers) == 1 and li.numbers[0] == "1")) or ((len(li.numbers) == 0 and ii == (len(lines_) - 1)))): 
                     for j in range(ii, len(lines_), 1):
                         li = lines_[j]
-                        not0 = FragToken._new1202(li.begin_token, li.end_token, InstrumentKind.NOTICE, li)
-                        notices.append(not0)
+                        not0_ = FragToken._new1245(li.begin_token, li.end_token, InstrumentKind.NOTICE, li)
+                        notices.append(not0_)
                         if (li.num_begin_token is not None and li.begin_token != li.num_begin_token): 
-                            not0.children.append(FragToken._new1211(li.begin_token, li.num_begin_token.previous, InstrumentKind.KEYWORD, True))
+                            not0_.children.append(FragToken._new1254(li.begin_token, li.num_begin_token.previous, InstrumentKind.KEYWORD, True))
                         if (len(li.numbers) > 0): 
-                            NumberingHelper.create_number(not0, li)
-                        if (len(not0.children) > 0): 
-                            not0.children.append(FragToken._new1202(Utils.ifNotNull(li.num_end_token, li.begin_token), li.end_token, InstrumentKind.CONTENT, li))
-                del lines_[ii:ii+len(lines_) - ii]
+                            NumberingHelper.create_number(not0_, li)
+                        if (len(not0_.children) > 0): 
+                            not0_.children.append(FragToken._new1245(Utils.ifNotNull(li.num_end_token, li.begin_token), li.end_token, InstrumentKind.CONTENT, li))
+                    del lines_[ii:ii+len(lines_) - ii]
                 break
             ii += 1
         nums = NumberingHelper.extract_main_sequence(lines_, self.doc_typ != DecreeKind.CONTRACT or self.top_doc.kind == InstrumentKind.APPENDIX, self.doc_typ != DecreeKind.CONTRACT)
@@ -640,13 +648,49 @@ class ContentAnalyzeWhapper:
                     last = None
                     continue
                 if (li.typ == InstrToken1.Types.INDEX): 
-                    root.children.append(FragToken._new1202(li.begin_token, li.end_token, InstrumentKind.INDEX, li))
+                    ind = FragToken._new1245(li.begin_token, li.end_token, InstrumentKind.INDEX, li)
+                    root.children.append(ind)
                     last = None
+                    tt = li.begin_token
+                    while tt is not None and tt.end_char <= li.end_char: 
+                        if (tt.is_newline_after): 
+                            ind.children.append(FragToken._new1257(li.begin_token, tt, InstrumentKind.NAME, True))
+                            tt = tt.next0_
+                            break
+                        tt = tt.next0_
+                    while tt is not None and tt.end_char <= li.end_char: 
+                        it1 = InstrToken1.parse(tt, True, None, 0, None, False, 0, False)
+                        if (it1 is None): 
+                            break
+                        ind_item = FragToken._new1236(tt, it1.end_token, InstrumentKind.INDEXITEM)
+                        ind.children.append(ind_item)
+                        nam = None
+                        if (it1.num_end_token is not None and it1.num_end_token != it1.end_token): 
+                            if (it1.begin_token != it1.num_begin_token): 
+                                ind_item.children.append(FragToken._new1254(it1.begin_token, it1.num_begin_token.previous, InstrumentKind.KEYWORD, True))
+                            NumberingHelper.create_number(ind_item, it1)
+                            nam = FragToken._new1254(it1.num_end_token.next0_, it1.end_token, InstrumentKind.NAME, True)
+                            ind_item.children.append(nam)
+                        else: 
+                            nam = FragToken._new1254(it1.begin_token, it1.end_token, InstrumentKind.NAME, True)
+                            ind_item.children.append(nam)
+                        ind_item.name = FragToken._get_restored_namemt(nam, True)
+                        val = (nam.value if isinstance(nam.value, str) else None)
+                        if (val is not None): 
+                            while len(val) > 4:
+                                ch = val[len(val) - 1]
+                                if ((ch == '.' or ch == '-' or ch.isdigit()) or Utils.isWhitespace(ch)): 
+                                    val = val[0 : (len(val) - 1)]
+                                else: 
+                                    break
+                            nam.value = val
+                        tt = it1.end_token
+                        tt = tt.next0_
                     continue
                 if (last is not None and last.kind == InstrumentKind.CONTENT): 
                     last.end_token = li.end_token
                 else: 
-                    last = FragToken._new1202(li.begin_token, li.end_token, InstrumentKind.CONTENT, li)
+                    last = FragToken._new1245(li.begin_token, li.end_token, InstrumentKind.CONTENT, li)
                     root.children.append(last)
             if (not is_preamble): 
                 if ((len(root.children) == 1 and root.children[0].kind == InstrumentKind.CONTENT and root.kind == InstrumentKind.CONTENT) and ((root.children[0]._itok is None or not root.children[0]._itok.has_changes))): 
@@ -683,15 +727,15 @@ class ContentAnalyzeWhapper:
                 else: 
                     blk.append(lines_[j])
             else: j = len(lines_)
-            fr = FragToken._new1201(li.begin_token, li.end_token, li)
+            fr = FragToken._new1244(li.begin_token, li.end_token, li)
             root.children.append(fr)
             fr.kind = (InstrumentKind.SUBITEM if is_subitem else InstrumentKind.ITEM)
             NumberingHelper.create_number(fr, li)
             if (li.num_end_token != li.end_token and li.num_end_token is not None): 
-                fr.children.append(FragToken._new1202(li.num_end_token.next0, li.end_token, InstrumentKind.CONTENT, li))
+                fr.children.append(FragToken._new1245(li.num_end_token.next0_, li.end_token, InstrumentKind.CONTENT, li))
             elif (li.is_standard_title and li.all_upper): 
                 fr.kind = InstrumentKind.TAIL
-                fr.children.append(FragToken._new1217(li.begin_token, li.end_token, InstrumentKind.NAME, True))
+                fr.children.append(FragToken._new1257(li.begin_token, li.end_token, InstrumentKind.NAME, True))
             if (len(blk) > 0): 
                 fr.end_token = blk[len(blk) - 1].end_token
                 self.__analize_content_without_containers(fr, blk, True, False, is_kodex)
@@ -707,9 +751,9 @@ class ContentAnalyzeWhapper:
         for i in range(len(lines_)):
             if (lines_[i].typ == InstrToken1.Types.DIRECTIVE): 
                 j = (i - 1)
-                first_pass2712 = True
+                first_pass2872 = True
                 while True:
-                    if first_pass2712: first_pass2712 = False
+                    if first_pass2872: first_pass2872 = False
                     else: j -= 1
                     if (not (j >= 0)): break
                     li = lines_[j]
@@ -775,7 +819,7 @@ class ContentAnalyzeWhapper:
                 parts[0].name = "ВВОДНАЯ"
                 parts[0].kind = InstrumentKind.DOCPART
                 if (len(parts[0].children) == 0): 
-                    parts[0].children.append(FragToken._new1202(parts[0].begin_token, parts[0].end_token, InstrumentKind.CONTENT, parts[0]._itok))
+                    parts[0].children.append(FragToken._new1245(parts[0].begin_token, parts[0].end_token, InstrumentKind.CONTENT, parts[0]._itok))
             has_null = False
             for p in parts: 
                 if (p.name is None): 
@@ -792,7 +836,7 @@ class ContentAnalyzeWhapper:
     def __create_directive_part(self, lines_ : typing.List['InstrToken1']) -> 'FragToken':
         from pullenti.ner.instrument.internal.FragToken import FragToken
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        res = FragToken._new1193(lines_[0].begin_token, lines_[len(lines_) - 1].end_token, InstrumentKind.DOCPART)
+        res = FragToken._new1236(lines_[0].begin_token, lines_[len(lines_) - 1].end_token, InstrumentKind.DOCPART)
         head = list()
         for i in range(len(lines_)):
             if (lines_[i].typ == InstrToken1.Types.DIRECTIVE): 
@@ -804,12 +848,12 @@ class ContentAnalyzeWhapper:
             self.__analize_content_without_containers(res, lines_, False, False, False)
             return res
         if (len(head) > 0): 
-            fr_head = FragToken._new1193(head[0].begin_token, head[len(head) - 1].end_token, InstrumentKind.CONTENT)
+            fr_head = FragToken._new1236(head[0].begin_token, head[len(head) - 1].end_token, InstrumentKind.CONTENT)
             self.__analize_content_without_containers(fr_head, head, False, False, False)
             res.children.append(fr_head)
         if (len(res.children) == 1 and res.children[0].kind == InstrumentKind.CONTENT): 
             res.children[0].kind = InstrumentKind.PREAMBLE
-        res.children.append(FragToken._new1221(lines_[i].begin_token, lines_[i].end_token, InstrumentKind.DIRECTIVE, lines_[i].value, lines_[i]))
+        res.children.append(FragToken._new1269(lines_[i].begin_token, lines_[i].end_token, InstrumentKind.DIRECTIVE, lines_[i].value, lines_[i]))
         vvv = lines_[i].value
         if (vvv == "УСТАНОВЛЕНИЕ" or vvv == "ВСТАНОВЛЕННЯ"): 
             res.name = "МОТИВИРОВОЧНАЯ"
@@ -845,10 +889,10 @@ class ContentAnalyzeWhapper:
                         if (ch.children[i].kind != InstrumentKind.ITEM): 
                             return
                     else: 
-                        sect = FragToken._new1211(ch.children[i].begin_token, ch.children[i].end_token, InstrumentKind.SECTION, True)
+                        sect = FragToken._new1254(ch.children[i].begin_token, ch.children[i].end_token, InstrumentKind.SECTION, True)
                         sect.name = (sect.value if isinstance(sect.value, str) else None)
                         sect.value = None
-                        sect.children.append(FragToken._new1193(sect.begin_token, sect.end_token, InstrumentKind.NAME))
+                        sect.children.append(FragToken._new1236(sect.begin_token, sect.end_token, InstrumentKind.NAME))
                         new_childs.append(sect)
                         if ((ch.children[i].whitespaces_before_count < 15) or (ch.children[i].whitespaces_after_count < 15)): 
                             return
@@ -872,9 +916,9 @@ class ContentAnalyzeWhapper:
                             continue
                         next_sect = None
                         tt = la.end_token
-                        first_pass2713 = True
+                        first_pass2873 = True
                         while True:
-                            if first_pass2713: first_pass2713 = False
+                            if first_pass2873: first_pass2873 = False
                             else: tt = tt.previous
                             if (not (tt is not None and tt.begin_char > la.begin_char)): break
                             if (tt.is_newline_before): 
@@ -887,10 +931,10 @@ class ContentAnalyzeWhapper:
                                     continue
                                 if ((tt.previous.end_char - la.begin_char) < 20): 
                                     break
-                                next_sect = FragToken._new1211(tt, la.end_token, InstrumentKind.SECTION, True)
+                                next_sect = FragToken._new1254(tt, la.end_token, InstrumentKind.SECTION, True)
                                 next_sect.name = (next_sect.value if isinstance(next_sect.value, str) else None)
                                 next_sect.value = None
-                                next_sect.children.append(FragToken._new1193(tt, la.end_token, InstrumentKind.NAME))
+                                next_sect.children.append(FragToken._new1236(tt, la.end_token, InstrumentKind.NAME))
                                 break
                         if (next_sect is None): 
                             continue
@@ -1073,9 +1117,9 @@ class ContentAnalyzeWhapper:
                 pass
             num = 1
             i = i0
-            first_pass2714 = True
+            first_pass2874 = True
             while True:
-                if first_pass2714: first_pass2714 = False
+                if first_pass2874: first_pass2874 = False
                 else: i += 1
                 if (not (i < len(root.children))): break
                 if (root.children[i].kind == InstrumentKind.COMMENT): 
@@ -1128,22 +1172,22 @@ class ContentAnalyzeWhapper:
             if (fr.kind != InstrumentKind.EDITIONS): 
                 return None
             if (fr.begin_token.is_value("АБЗАЦ", None)): 
-                t = fr.begin_token.next0
+                t = fr.begin_token.next0_
                 if (not ((isinstance(t, NumberToken))) or (t if isinstance(t, NumberToken) else None).value != num): 
                     return None
-                next0 = num
-                t = t.next0
-                if (t is not None and t.is_hiphen and isinstance(t.next0, NumberToken)): 
-                    next0 = (t.next0 if isinstance(t.next0, NumberToken) else None).value
-                    t = t.next0.next0
-                    if (next0 <= num): 
+                next0_ = num
+                t = t.next0_
+                if (t is not None and t.is_hiphen and isinstance(t.next0_, NumberToken)): 
+                    next0_ = (t.next0_ if isinstance(t.next0_, NumberToken) else None).value
+                    t = t.next0_.next0_
+                    if (next0_ <= num): 
                         return None
-                if ((t is None or not t.is_value("УТРАТИТЬ", "ВТРАТИТИ") or t.next0 is None) or not t.next0.is_value("СИЛА", "ЧИННІСТЬ")): 
+                if ((t is None or not t.is_value("УТРАТИТЬ", "ВТРАТИТИ") or t.next0_ is None) or not t.next0_.is_value("СИЛА", "ЧИННІСТЬ")): 
                     return None
                 res0 = list()
                 i = num
-                while i <= next0: 
-                    res0.append(FragToken._new1226(fr.begin_token, fr.end_token, InstrumentKind.INDENTION, i, True, fr.referents))
+                while i <= next0_: 
+                    res0.append(FragToken._new1274(fr.begin_token, fr.end_token, InstrumentKind.INDENTION, i, True, fr.referents))
                     i += 1
                 return res0
             return list()
@@ -1154,18 +1198,20 @@ class ContentAnalyzeWhapper:
         res = list()
         t0 = fr.begin_token
         tt = t0
-        first_pass2715 = True
+        first_pass2875 = True
         while True:
-            if first_pass2715: first_pass2715 = False
-            else: tt = tt.next0
+            if first_pass2875: first_pass2875 = False
+            else: tt = tt.next0_
             if (not (tt is not None and tt.end_char <= fr.end_char)): break
             if (tt.end_char == fr.end_char): 
                 pass
             elif (not tt.is_newline_after): 
                 continue
-            elif (not MiscHelper.can_be_start_of_sentence(tt.next0) and not tt.is_char_of(":")): 
+            elif (tt.is_table_control_char): 
                 continue
-            re = FragToken._new1209(t0, tt, InstrumentKind.INDENTION, num)
+            elif (not MiscHelper.can_be_start_of_sentence(tt.next0_) and not tt.is_char_of(":")): 
+                continue
+            re = FragToken._new1252(t0, tt, InstrumentKind.INDENTION, num)
             num += 1
             if (t0 == fr.begin_token and tt == fr.end_token): 
                 re._itok = fr._itok
@@ -1174,7 +1220,7 @@ class ContentAnalyzeWhapper:
             if (len(res) > 100): 
                 return None
             res.append(re)
-            t0 = tt.next0
+            t0 = tt.next0_
         return res
     
     def __analize_preamble(self, root : 'FragToken') -> None:
@@ -1194,37 +1240,41 @@ class ContentAnalyzeWhapper:
                 del root.children[0]
                 root.children[0:0] = chh.children
         i = 0
-        first_pass2716 = True
+        first_pass2876 = True
         while True:
-            if first_pass2716: first_pass2716 = False
+            if first_pass2876: first_pass2876 = False
             else: i += 1
             if (not (i < len(root.children))): break
             ch = root.children[i]
-            if (ch.kind == InstrumentKind.EDITIONS or ch.kind == InstrumentKind.COMMENT): 
+            if (ch.kind == InstrumentKind.EDITIONS or ch.kind == InstrumentKind.COMMENT or ch.kind == InstrumentKind.INDEX): 
                 continue
             if (ch.kind == InstrumentKind.DIRECTIVE): 
                 ok = True
                 break
             if (ch._itok is not None and ch._itok.has_changes): 
                 break
+            if (ch.kind == InstrumentKind.CONTENT and len(ch.children) == 1 and ch.children[0].kind == InstrumentKind.INDEX): 
+                ch.kind = InstrumentKind.INDEX
+                ch.children = ch.children[0].children
+                continue
             if (ch.kind == InstrumentKind.CONTENT or ch.kind == InstrumentKind.INDENTION): 
-                t = ch.begin_token.next0
+                t = ch.begin_token.next0_
                 while t is not None and (t.end_char < ch.end_char): 
                     if (t.is_newline_before): 
                         if (t.previous.is_char_of(".:;") and t.previous.previous is not None and ((t.previous.previous.is_value("НИЖЕСЛЕДУЮЩИЙ", None) or t.previous.previous.is_value("ДОГОВОР", None)))): 
                             itt1 = InstrToken1.parse(t, True, None, 0, None, False, 0, False)
                             if (itt1 is not None and not itt1.has_verb and (itt1.end_char < ch.end_char)): 
-                                clau = FragToken._new1193(t, ch.end_token, InstrumentKind.CHAPTER)
+                                clau = FragToken._new1236(t, ch.end_token, InstrumentKind.CHAPTER)
                                 if (((i + 1) < len(root.children)) and root.children[i + 1].kind == InstrumentKind.CLAUSE): 
                                     clau.kind = InstrumentKind.CLAUSE
-                                nam = FragToken._new1195(t, itt1.end_token, InstrumentKind.NAME, True, itt1)
+                                nam = FragToken._new1238(t, itt1.end_token, InstrumentKind.NAME, True, itt1)
                                 clau.children.append(nam)
-                                clau.name = FragToken._get_restored_namemt(nam)
-                                clau.children.append(FragToken._new1193(itt1.end_token.next0, ch.end_token, InstrumentKind.CONTENT))
+                                clau.name = FragToken._get_restored_namemt(nam, False)
+                                clau.children.append(FragToken._new1236(itt1.end_token.next0_, ch.end_token, InstrumentKind.CONTENT))
                                 ch.end_token = t.previous
                                 root.children.insert(i + 1, clau)
                             break
-                    t = t.next0
+                    t = t.next0_
                 pream = False
                 if (ch.begin_token.is_value("ПРЕАМБУЛА", None)): 
                     pream = True
@@ -1248,9 +1298,12 @@ class ContentAnalyzeWhapper:
             while j < i: 
                 if (root.children[j].kind == InstrumentKind.CONTENT or root.children[j].kind == InstrumentKind.INDENTION): 
                     root.children[j].kind = InstrumentKind.PREAMBLE
+                    if (len(root.children[j].children) == 1 and root.children[j].children[0].kind == InstrumentKind.INDEX): 
+                        root.children[j].kind = InstrumentKind.INDEX
+                        root.children[j].children = root.children[j].children[0].children
                 j += 1
         else: 
-            prm = FragToken._new1193(root.children[0].begin_token, root.children[i - 1].end_token, InstrumentKind.PREAMBLE)
+            prm = FragToken._new1236(root.children[0].begin_token, root.children[i - 1].end_token, InstrumentKind.PREAMBLE)
             j = 0
             while j < i: 
                 prm.children.append(root.children[j])

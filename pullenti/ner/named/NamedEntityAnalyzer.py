@@ -38,7 +38,7 @@ class NamedEntityAnalyzer(Analyzer):
         return [MetaNamedEntity.GLOBAL_META]
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         res = dict()
         res[Utils.enumToString(NamedEntityKind.MONUMENT)] = ResourceHelper.get_bytes("monument.png")
         res[Utils.enumToString(NamedEntityKind.PLANET)] = ResourceHelper.get_bytes("planet.png")
@@ -46,9 +46,9 @@ class NamedEntityAnalyzer(Analyzer):
         res[Utils.enumToString(NamedEntityKind.BUILDING)] = ResourceHelper.get_bytes("building.png")
         return res
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.named.NamedEntityReferent import NamedEntityReferent
-        if (type0 == NamedEntityReferent.OBJ_TYPENAME): 
+        if (type0_ == NamedEntityReferent.OBJ_TYPENAME): 
             return NamedEntityReferent()
         return None
     
@@ -70,10 +70,10 @@ class NamedEntityAnalyzer(Analyzer):
         from pullenti.ner.named.internal.NamedItemToken import NamedItemToken
         ad = (kit.get_analyzer_data(self) if isinstance(kit.get_analyzer_data(self), AnalyzerDataWithOntology) else None)
         t = kit.first_token
-        first_pass2806 = True
+        first_pass2972 = True
         while True:
-            if first_pass2806: first_pass2806 = False
-            else: t = t.next0
+            if first_pass2972: first_pass2972 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             li = NamedItemToken.try_parse_list(t, ad.local_ontology)
             if (li is None or len(li) == 0): 
@@ -172,15 +172,15 @@ class NamedEntityAnalyzer(Analyzer):
                 ok = True
         if (not ok or ki == NamedEntityKind.UNDEFINED): 
             return None
-        nam = NamedEntityReferent._new1466(ki)
+        nam = NamedEntityReferent._new1617(ki)
         if (typ is not None): 
             nam.add_slot(NamedEntityReferent.ATTR_TYPE, typ.type_value.lower(), False, 0)
         if (nams is not None): 
             if (len(nams) == 1 and nams[0].is_wellknown and nams[0].type_value is not None): 
                 nam.add_slot(NamedEntityReferent.ATTR_TYPE, nams[0].type_value.lower(), False, 0)
             if (typ is not None and (typ.end_char < nams[0].begin_char)): 
-                str0 = MiscHelper.get_text_value(nams[0].begin_token, nams[len(nams) - 1].end_token, GetTextAttr.NO)
-                nam.add_slot(NamedEntityReferent.ATTR_NAME, str0, False, 0)
+                str0_ = MiscHelper.get_text_value(nams[0].begin_token, nams[len(nams) - 1].end_token, GetTextAttr.NO)
+                nam.add_slot(NamedEntityReferent.ATTR_NAME, str0_, False, 0)
             tmp = Utils.newStringIO(None)
             for n in nams: 
                 if (tmp.tell() > 0): 

@@ -53,13 +53,13 @@ class InstrumentBlockReferent(Referent):
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
         res = Utils.newStringIO(None)
         ki = self.kind
-        str0 = (MetaInstrumentBlock.GLOBAL_META.kind_feature.convert_inner_value_to_outer_value(Utils.enumToString(ki), lang) if isinstance(MetaInstrumentBlock.GLOBAL_META.kind_feature.convert_inner_value_to_outer_value(Utils.enumToString(ki), lang), str) else None)
-        if (str0 is not None): 
-            print(str0, end="", file=res)
+        str0_ = (MetaInstrumentBlock.GLOBAL_META.kind_feature.convert_inner_value_to_outer_value(Utils.enumToString(ki), lang) if isinstance(MetaInstrumentBlock.GLOBAL_META.kind_feature.convert_inner_value_to_outer_value(Utils.enumToString(ki), lang), str) else None)
+        if (str0_ is not None): 
+            print(str0_, end="", file=res)
             if (self.kind2 != InstrumentKind.UNDEFINED): 
-                str0 = (MetaInstrumentBlock.GLOBAL_META.kind_feature.convert_inner_value_to_outer_value(Utils.enumToString(self.kind2), lang) if isinstance(MetaInstrumentBlock.GLOBAL_META.kind_feature.convert_inner_value_to_outer_value(Utils.enumToString(self.kind2), lang), str) else None)
-                if (str0 is not None): 
-                    print(" ({0})".format(str0), end="", file=res, flush=True)
+                str0_ = (MetaInstrumentBlock.GLOBAL_META.kind_feature.convert_inner_value_to_outer_value(Utils.enumToString(self.kind2), lang) if isinstance(MetaInstrumentBlock.GLOBAL_META.kind_feature.convert_inner_value_to_outer_value(Utils.enumToString(self.kind2), lang), str) else None)
+                if (str0_ is not None): 
+                    print(" ({0})".format(str0_), end="", file=res, flush=True)
         if (self.number > 0): 
             if (ki == InstrumentKind.TABLE): 
                 print(" {0} строк, {1} столбцов".format(len(self.children), self.number), end="", file=res, flush=True)
@@ -83,13 +83,13 @@ class InstrumentBlockReferent(Referent):
         elif (ki != InstrumentKind.EDITIONS and ki != InstrumentKind.APPROVED and isinstance(self.ref, DecreeReferent)): 
             print(" (*)", end="", file=res)
             ignore_ref = True
-        str0 = self.get_string_value(InstrumentBlockReferent.ATTR_NAME)
-        if ((str0) is None): 
-            str0 = self.get_string_value(InstrumentBlockReferent.ATTR_VALUE)
-        if (str0 is not None): 
-            if (len(str0) > 100): 
-                str0 = (str0[0 : 100] + "...")
-            print(" \"{0}\"".format(str0), end="", file=res, flush=True)
+        str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_NAME)
+        if ((str0_) is None): 
+            str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_VALUE)
+        if (str0_ is not None): 
+            if (len(str0_) > 100): 
+                str0_ = (str0_[0 : 100] + "...")
+            print(" \"{0}\"".format(str0_), end="", file=res, flush=True)
         elif (not ignore_ref and isinstance(self.ref, Referent) and (lev < 30)): 
             print(" \"{0}\"".format(self.ref.to_string(short_variant, lang, lev + 1)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res).strip()
@@ -106,7 +106,7 @@ class InstrumentBlockReferent(Referent):
             res = Utils.valToEnum(s, InstrumentKind)
             if (isinstance(res, InstrumentKind)): 
                 return Utils.valToEnum(res, InstrumentKind)
-        except Exception as ex1413: 
+        except Exception as ex1464: 
             pass
         return InstrumentKind.UNDEFINED
     
@@ -126,7 +126,7 @@ class InstrumentBlockReferent(Referent):
             res = Utils.valToEnum(s, InstrumentKind)
             if (isinstance(res, InstrumentKind)): 
                 return Utils.valToEnum(res, InstrumentKind)
-        except Exception as ex1414: 
+        except Exception as ex1465: 
             pass
         return InstrumentKind.UNDEFINED
     
@@ -162,13 +162,13 @@ class InstrumentBlockReferent(Referent):
     @property
     def number(self) -> int:
         """ Номер (для диапазона - максимальный номер) """
-        str0 = self.get_string_value(InstrumentBlockReferent.ATTR_NUMBER)
-        if (str0 is None): 
+        str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_NUMBER)
+        if (str0_ is None): 
             return 0
-        inoutarg1415 = RefOutArgWrapper(None)
-        inoutres1416 = Utils.tryParseInt(str0, inoutarg1415)
-        i = inoutarg1415.value
-        if (inoutres1416): 
+        inoutarg1466 = RefOutArgWrapper(0)
+        inoutres1467 = Utils.tryParseInt(str0_, inoutarg1466)
+        i = inoutarg1466.value
+        if (inoutres1467): 
             return i
         return 0
     
@@ -180,13 +180,13 @@ class InstrumentBlockReferent(Referent):
     @property
     def sub_number(self) -> int:
         """ Дополнительный номер (через точку за основным) """
-        str0 = self.get_string_value(InstrumentBlockReferent.ATTR_SUBNUMBER)
-        if (str0 is None): 
+        str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_SUBNUMBER)
+        if (str0_ is None): 
             return 0
-        inoutarg1417 = RefOutArgWrapper(None)
-        inoutres1418 = Utils.tryParseInt(str0, inoutarg1417)
-        i = inoutarg1417.value
-        if (inoutres1418): 
+        inoutarg1468 = RefOutArgWrapper(0)
+        inoutres1469 = Utils.tryParseInt(str0_, inoutarg1468)
+        i = inoutarg1468.value
+        if (inoutres1469): 
             return i
         return 0
     
@@ -198,13 +198,13 @@ class InstrumentBlockReferent(Referent):
     @property
     def sub_number2(self) -> int:
         """ Дополнительный второй номер (через точку за дополнительным) """
-        str0 = self.get_string_value(InstrumentBlockReferent.ATTR_SUB2NUMBER)
-        if (str0 is None): 
+        str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_SUB2NUMBER)
+        if (str0_ is None): 
             return 0
-        inoutarg1419 = RefOutArgWrapper(None)
-        inoutres1420 = Utils.tryParseInt(str0, inoutarg1419)
-        i = inoutarg1419.value
-        if (inoutres1420): 
+        inoutarg1470 = RefOutArgWrapper(0)
+        inoutres1471 = Utils.tryParseInt(str0_, inoutarg1470)
+        i = inoutarg1470.value
+        if (inoutres1471): 
             return i
         return 0
     
@@ -216,13 +216,13 @@ class InstrumentBlockReferent(Referent):
     @property
     def sub_number3(self) -> int:
         """ Дополнительный третий номер (через точку за вторым дополнительным) """
-        str0 = self.get_string_value(InstrumentBlockReferent.ATTR_SUB3NUMBER)
-        if (str0 is None): 
+        str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_SUB3NUMBER)
+        if (str0_ is None): 
             return 0
-        inoutarg1421 = RefOutArgWrapper(None)
-        inoutres1422 = Utils.tryParseInt(str0, inoutarg1421)
-        i = inoutarg1421.value
-        if (inoutres1422): 
+        inoutarg1472 = RefOutArgWrapper(0)
+        inoutres1473 = Utils.tryParseInt(str0_, inoutarg1472)
+        i = inoutarg1472.value
+        if (inoutres1473): 
             return i
         return 0
     
@@ -234,13 +234,13 @@ class InstrumentBlockReferent(Referent):
     @property
     def min_number(self) -> int:
         """ Минимальный номер, если задан диапазон """
-        str0 = self.get_string_value(InstrumentBlockReferent.ATTR_MINNUMBER)
-        if (str0 is None): 
+        str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_MINNUMBER)
+        if (str0_ is None): 
             return 0
-        inoutarg1423 = RefOutArgWrapper(None)
-        inoutres1424 = Utils.tryParseInt(str0, inoutarg1423)
-        i = inoutarg1423.value
-        if (inoutres1424): 
+        inoutarg1474 = RefOutArgWrapper(0)
+        inoutres1475 = Utils.tryParseInt(str0_, inoutarg1474)
+        i = inoutarg1474.value
+        if (inoutres1475): 
             return i
         return 0
     

@@ -203,13 +203,13 @@ class Referent:
             def_value(int): 
         
         """
-        str0 = self.get_string_value(attr_name)
-        if (Utils.isNullOrEmpty(str0)): 
+        str0_ = self.get_string_value(attr_name)
+        if (Utils.isNullOrEmpty(str0_)): 
             return def_value
-        inoutarg2492 = RefOutArgWrapper(None)
-        inoutres2493 = Utils.tryParseInt(str0, inoutarg2492)
-        res = inoutarg2492.value
-        if (not inoutres2493): 
+        inoutarg2645 = RefOutArgWrapper(0)
+        inoutres2646 = Utils.tryParseInt(str0_, inoutarg2645)
+        res = inoutarg2645.value
+        if (not inoutres2646): 
             return def_value
         return res
     
@@ -221,21 +221,21 @@ class Referent:
         return self.__m_occurrence
     
     def find_near_occurence(self, t : 'Token') -> 'TextAnnotation':
-        min0 = -1
+        min0_ = -1
         res = None
         for oc in self.occurrence: 
             if (oc.sofa == t.kit.sofa): 
-                len0 = oc.begin_char - t.begin_char
-                if (len0 < 0): 
-                    len0 = (- len0)
-                if ((min0 < 0) or (len0 < min0)): 
-                    min0 = len0
+                len0_ = oc.begin_char - t.begin_char
+                if (len0_ < 0): 
+                    len0_ = (- len0_)
+                if ((min0_ < 0) or (len0_ < min0_)): 
+                    min0_ = len0_
                     res = oc
         return res
     
     def add_occurence_of_ref_tok(self, rt : 'ReferentToken') -> None:
         from pullenti.ner.TextAnnotation import TextAnnotation
-        self.add_occurence(TextAnnotation._new676(rt.kit.sofa, rt.begin_char, rt.end_char, rt.referent))
+        self.add_occurence(TextAnnotation._new716(rt.kit.sofa, rt.begin_char, rt.end_char, rt.referent))
     
     def add_occurence(self, anno : 'TextAnnotation') -> None:
         """ Добавить аннотацию
@@ -254,7 +254,7 @@ class Referent:
                 l_._merge(anno)
                 return
         if (anno.occurence_of != self and anno.occurence_of is not None): 
-            anno = TextAnnotation._new2495(anno.begin_char, anno.end_char, anno.sofa)
+            anno = TextAnnotation._new2648(anno.begin_char, anno.end_char, anno.sofa)
         if (self.__m_occurrence is None): 
             self.__m_occurrence = list()
         anno.occurence_of = self
@@ -308,7 +308,7 @@ class Referent:
         res.occurrence.extend(self.occurrence)
         res.ontology_items = self.ontology_items
         for r in self.slots: 
-            rr = Slot._new2496(r.type_name, r.value, r.count)
+            rr = Slot._new2649(r.type_name, r.value, r.count)
             rr.owner = res
             res.slots.append(rr)
         return res
@@ -450,7 +450,7 @@ class Referent:
                     attr = 1
                 SerializerHelper.serialize_int(stream, attr)
     
-    def deserialize(self, stream : io.IOBase, all0 : typing.List['Referent'], sofa : 'SourceOfAnalysis') -> None:
+    def deserialize(self, stream : io.IOBase, all0_ : typing.List['Referent'], sofa : 'SourceOfAnalysis') -> None:
         from pullenti.ner.TextAnnotation import TextAnnotation
         typ = SerializerHelper.deserialize_string(stream)
         cou = SerializerHelper.deserialize_int(stream)
@@ -458,11 +458,11 @@ class Referent:
         while i < cou: 
             typ = SerializerHelper.deserialize_string(stream)
             c = SerializerHelper.deserialize_int(stream)
-            id0 = SerializerHelper.deserialize_int(stream)
+            id0_ = SerializerHelper.deserialize_int(stream)
             val = None
-            if (id0 < 0): 
-                val = all0[(- id0) - 1]
-            elif (id0 > 0): 
+            if (id0_ < 0): 
+                val = all0_[(- id0_) - 1]
+            elif (id0_ > 0): 
                 stream.seek(stream.tell() - 4, io.SEEK_SET)
                 val = SerializerHelper.deserialize_string(stream)
             self.add_slot(typ, val, False, c)
@@ -471,7 +471,7 @@ class Referent:
         self.__m_occurrence = list()
         i = 0
         while i < cou: 
-            a = TextAnnotation._new2497(sofa, self)
+            a = TextAnnotation._new2650(sofa, self)
             self.__m_occurrence.append(a)
             a.begin_char = SerializerHelper.deserialize_int(stream)
             a.end_char = SerializerHelper.deserialize_int(stream)

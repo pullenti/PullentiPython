@@ -163,13 +163,13 @@ class DerivateDictionary:
                 return li
         if (not try_create): 
             return None
-        len0 = len(word) - 4
+        len0_ = len(word) - 4
         i = 1
-        first_pass2512 = True
+        first_pass2665 = True
         while True:
-            if first_pass2512: first_pass2512 = False
+            if first_pass2665: first_pass2665 = False
             else: i += 1
-            if (not (i <= len0)): break
+            if (not (i <= len0_)): break
             rest = word[i : ]
             li1 = self.find(rest, False, lang_)
             if (li1 is None): 

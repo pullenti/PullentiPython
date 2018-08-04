@@ -9,9 +9,9 @@ from enum import IntEnum
 
 class DecreeChangeTokenTyp(IntEnum):
     UNDEFINED = 0
-    STARTMULTU = 1
-    STARTSINGLE = 2
-    SINGLE = 3
-    ACTION = 4
-    VALUE = 5
-    AFTERVALUE = 6
+    STARTMULTU = 0 + 1
+    STARTSINGLE = (0 + 1) + 1
+    SINGLE = ((0 + 1) + 1) + 1
+    ACTION = (((0 + 1) + 1) + 1) + 1
+    VALUE = ((((0 + 1) + 1) + 1) + 1) + 1
+    AFTERVALUE = (((((0 + 1) + 1) + 1) + 1) + 1) + 1

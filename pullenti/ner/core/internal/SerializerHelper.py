@@ -45,12 +45,12 @@ class SerializerHelper:
     
     @staticmethod
     def deserialize_string(stream : io.IOBase) -> str:
-        len0 = SerializerHelper.deserialize_int(stream)
-        if (len0 < 0): 
+        len0_ = SerializerHelper.deserialize_int(stream)
+        if (len0_ < 0): 
             return None
-        if (len0 == 0): 
+        if (len0_ == 0): 
             return ""
-        data = Utils.newArrayOfBytes(len0, 0)
+        data = Utils.newArrayOfBytes(len0_, 0)
         Utils.readIO(stream, data, 0, len(data))
         return data.decode('utf-8', 'ignore')
     
@@ -62,11 +62,11 @@ class SerializerHelper:
             if (max_char > 0 and tt.end_char > max_char): 
                 break
             cou += 1
-            tt = tt.next0
+            tt = tt.next0_
         SerializerHelper.serialize_int(stream, cou)
         while cou > 0: 
             SerializerHelper.serialize_token(stream, t)
-            cou -= 1; t = t.next0
+            cou -= 1; t = t.next0_
     
     @staticmethod
     def deserialize_tokens(stream : io.IOBase, kit : 'AnalysisKit') -> 'Token':
@@ -76,9 +76,9 @@ class SerializerHelper:
             return None
         res = None
         prev = None
-        first_pass2584 = True
+        first_pass2742 = True
         while True:
-            if first_pass2584: first_pass2584 = False
+            if first_pass2742: first_pass2742 = False
             else: cou -= 1
             if (not (cou > 0)): break
             t = SerializerHelper.__deserialize_token(stream, kit)
@@ -92,20 +92,20 @@ class SerializerHelper:
         t = res
         while t is not None: 
             if (isinstance(t, MetaToken)): 
-                SerializerHelper.__corr_prev_next(t if isinstance(t, MetaToken) else None, t.previous, t.next0)
-            t = t.next0
+                SerializerHelper.__corr_prev_next(t if isinstance(t, MetaToken) else None, t.previous, t.next0_)
+            t = t.next0_
         return res
     
     @staticmethod
-    def __corr_prev_next(mt : 'MetaToken', prev : 'Token', next0 : 'Token') -> None:
+    def __corr_prev_next(mt : 'MetaToken', prev : 'Token', next0_ : 'Token') -> None:
         from pullenti.ner.MetaToken import MetaToken
         mt.begin_token._m_previous = prev
-        mt.end_token._m_next = next0
+        mt.end_token._m_next = next0_
         t = mt.begin_token
         while t is not None and t.end_char <= mt.end_char: 
             if (isinstance(t, MetaToken)): 
-                SerializerHelper.__corr_prev_next(t if isinstance(t, MetaToken) else None, t.previous, t.next0)
-            t = t.next0
+                SerializerHelper.__corr_prev_next(t if isinstance(t, MetaToken) else None, t.previous, t.next0_)
+            t = t.next0_
     
     @staticmethod
     def serialize_token(stream : io.IOBase, t : 'Token') -> None:
@@ -154,5 +154,5 @@ class SerializerHelper:
                 (t if isinstance(t, MetaToken) else None)._m_begin_token = tt
                 while tt is not None: 
                     (t if isinstance(t, MetaToken) else None)._m_end_token = tt
-                    tt = tt.next0
+                    tt = tt.next0_
         return t

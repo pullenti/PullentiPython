@@ -104,7 +104,7 @@ class MorphCollection(MorphBaseInfo):
         else: 
             return self.__m_items[ind]
     
-    __m_empty_items = list()
+    __m_empty_items = None
     
     @property
     def items(self) -> typing.List['MorphBaseInfo']:
@@ -157,7 +157,7 @@ class MorphCollection(MorphBaseInfo):
         verb_has_undef = False
         if (self.__m_items is not None): 
             for it in self.__m_items: 
-                self.__m_class.value |= it.class0.value
+                self.__m_class.value |= it.class0_.value
                 if (g): 
                     self.__m_gender = Utils.valToEnum(self.__m_gender | it.gender, MorphGender)
                 if (ca): 
@@ -166,7 +166,7 @@ class MorphCollection(MorphBaseInfo):
                     self.__m_number = Utils.valToEnum(self.__m_number | it.number, MorphNumber)
                 if (la): 
                     self.__m_language.value |= it.language.value
-                if (it.class0.is_verb): 
+                if (it.class0_.is_verb): 
                     if (isinstance(it, MorphWordForm)): 
                         v = (it if isinstance(it, MorphWordForm) else None).misc.voice
                         if (v == MorphVoice.UNDEFINED): 
@@ -177,13 +177,13 @@ class MorphCollection(MorphBaseInfo):
             self.__m_voice = MorphVoice.UNDEFINED
     
     @property
-    def class0(self) -> 'MorphClass':
+    def class0_(self) -> 'MorphClass':
         if (self.__m_need_recalc): 
             self.__recalc()
         return self.__m_class
     
-    @class0.setter
-    def class0(self, value) -> 'MorphClass':
+    @class0_.setter
+    def class0_(self, value) -> 'MorphClass':
         self.__m_class = value
         return value
     
@@ -247,7 +247,7 @@ class MorphCollection(MorphBaseInfo):
     
     def contains_attr(self, attr_value : str, cla : 'MorphClass'=MorphClass()) -> bool:
         for it in self.items: 
-            if (cla is not None and cla.value != 0 and ((it.class0.value & cla.value)) == 0): 
+            if (cla is not None and cla.value != 0 and ((it.class0_.value & cla.value)) == 0): 
                 continue
             if (it.contains_attr(attr_value, cla)): 
                 return True
@@ -260,7 +260,7 @@ class MorphCollection(MorphBaseInfo):
         return super().check_accord(v, ignore_gender)
     
     def check(self, cl : 'MorphClass') -> bool:
-        return ((self.class0.value & cl.value)) != 0
+        return ((self.class0_.value & cl.value)) != 0
     
     def remove_items(self, it : object, eq : bool=False) -> None:
         """ Удалить элементы, не соответствующие элементу
@@ -300,9 +300,9 @@ class MorphCollection(MorphBaseInfo):
             return
         for i in range(len(self.__m_items) - 1, -1, -1):
             ok = False
-            if (((self.__m_items[i].class0.value & cl.value)) == 0): 
+            if (((self.__m_items[i].class0_.value & cl.value)) == 0): 
                 ok = True
-            elif (eq and self.__m_items[i].class0.value != cl.value): 
+            elif (eq and self.__m_items[i].class0_.value != cl.value): 
                 ok = True
             if (ok): 
                 del self.__m_items[i]
@@ -386,7 +386,7 @@ class MorphCollection(MorphBaseInfo):
         if (self.__m_items is None): 
             return
         for i in range(len(self.__m_items) - 1, -1, -1):
-            if (self.__m_items[i].class0.is_proper): 
+            if (self.__m_items[i].class0_.is_proper): 
                 del self.__m_items[i]
                 self.__m_need_recalc = True
     
@@ -416,8 +416,8 @@ class MorphCollection(MorphBaseInfo):
             return
         for i in range(len(self.__m_items) - 1, -1, -1):
             if (not cla.is_undefined): 
-                if (((self.__m_items[i].class0.value & cla.value)) == 0): 
-                    if (((self.__m_items[i].class0.is_proper or self.__m_items[i].class0.is_noun)) and ((cla.is_proper or cla.is_noun))): 
+                if (((self.__m_items[i].class0_.value & cla.value)) == 0): 
+                    if (((self.__m_items[i].class0_.is_proper or self.__m_items[i].class0_.is_noun)) and ((cla.is_proper or cla.is_noun))): 
                         pass
                     else: 
                         del self.__m_items[i]
@@ -503,7 +503,7 @@ class MorphCollection(MorphBaseInfo):
         if (isinstance(bi, MorphWordForm)): 
             ty = 1
         Utils.writeByteIO(stream, ty)
-        SerializerHelper.serialize_short(stream, bi.class0.value)
+        SerializerHelper.serialize_short(stream, bi.class0_.value)
         SerializerHelper.serialize_short(stream, bi.case.value)
         SerializerHelper.serialize_short(stream, bi.gender)
         SerializerHelper.serialize_short(stream, bi.number)
@@ -525,7 +525,7 @@ class MorphCollection(MorphBaseInfo):
         from pullenti.morph.MorphLang import MorphLang
         ty = Utils.readByteIO(stream)
         res = (MorphBaseInfo() if ty == 0 else MorphWordForm())
-        res.class0 = MorphClass._new63(SerializerHelper.deserialize_short(stream))
+        res.class0_ = MorphClass._new63(SerializerHelper.deserialize_short(stream))
         res.case = MorphCase._new48(SerializerHelper.deserialize_short(stream))
         res.gender = Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphGender)
         res.number = Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphNumber)
@@ -547,19 +547,26 @@ class MorphCollection(MorphBaseInfo):
 
     
     @staticmethod
-    def _new568(_arg1 : 'MorphClass') -> 'MorphCollection':
+    def _new594(_arg1 : 'MorphClass') -> 'MorphCollection':
         res = MorphCollection()
-        res.class0 = _arg1
+        res.class0_ = _arg1
         return res
     
     @staticmethod
-    def _new2025(_arg1 : 'MorphGender') -> 'MorphCollection':
+    def _new2173(_arg1 : 'MorphGender') -> 'MorphCollection':
         res = MorphCollection()
         res.gender = _arg1
         return res
     
     @staticmethod
-    def _new2068(_arg1 : 'MorphCase') -> 'MorphCollection':
+    def _new2221(_arg1 : 'MorphCase') -> 'MorphCollection':
         res = MorphCollection()
         res.case = _arg1
         return res
+    
+    # static constructor for class MorphCollection
+    @staticmethod
+    def _static_ctor():
+        MorphCollection.__m_empty_items = list()
+
+MorphCollection._static_ctor()

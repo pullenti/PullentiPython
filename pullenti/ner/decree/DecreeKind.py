@@ -9,14 +9,14 @@ from enum import IntEnum
 
 class DecreeKind(IntEnum):
     UNDEFINED = 0
-    KODEX = 1
-    USTAV = 2
-    KONVENTION = 3
-    CONTRACT = 4
-    PROJECT = 5
-    PUBLISHER = 6
+    KODEX = 0 + 1
+    USTAV = (0 + 1) + 1
+    KONVENTION = ((0 + 1) + 1) + 1
+    CONTRACT = (((0 + 1) + 1) + 1) + 1
+    PROJECT = ((((0 + 1) + 1) + 1) + 1) + 1
+    PUBLISHER = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
     """ Источники опубликований """
-    PROGRAM = 7
+    PROGRAM = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
     """ Госпрограммы """
-    STANDARD = 8
+    STANDARD = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
     """ Стандарт (ГОСТ, ТУ, ANSI и пр.) """

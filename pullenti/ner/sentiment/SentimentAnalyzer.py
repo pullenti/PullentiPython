@@ -40,7 +40,7 @@ class SentimentAnalyzer(Analyzer):
         return [MetaSentiment._global_meta]
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         from pullenti.ner.sentiment.internal.MetaSentiment import MetaSentiment
         res = dict()
         res[MetaSentiment.IMAGE_ID] = ResourceHelper.get_bytes("neutral.png")
@@ -52,9 +52,9 @@ class SentimentAnalyzer(Analyzer):
     def used_extern_object_types(self) -> typing.List[str]:
         return ["ALL"]
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.sentiment.SentimentReferent import SentimentReferent
-        if (type0 == SentimentReferent.OBJ_TYPENAME): 
+        if (type0_ == SentimentReferent.OBJ_TYPENAME): 
             return SentimentReferent()
         return None
     
@@ -77,10 +77,10 @@ class SentimentAnalyzer(Analyzer):
         from pullenti.ner.ReferentToken import ReferentToken
         ad = kit.get_analyzer_data(self)
         t = kit.first_token
-        first_pass2881 = True
+        first_pass3049 = True
         while True:
-            if first_pass2881: first_pass2881 = False
-            else: t = t.next0
+            if first_pass3049: first_pass3049 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
                 continue
@@ -95,9 +95,9 @@ class SentimentAnalyzer(Analyzer):
             t0 = t
             t1 = tok.end_token
             tt = t.previous
-            first_pass2882 = True
+            first_pass3050 = True
             while True:
-                if first_pass2882: first_pass2882 = False
+                if first_pass3050: first_pass3050 = False
                 else: tt = tt.previous
                 if (not (tt is not None)): break
                 tok0 = SentimentAnalyzer.__m_termins.try_parse(tt, TerminParseAttr.NO)
@@ -112,11 +112,11 @@ class SentimentAnalyzer(Analyzer):
                     t0 = tt
                     continue
                 break
-            tt = t1.next0
-            first_pass2883 = True
+            tt = t1.next0_
+            first_pass3051 = True
             while True:
-                if first_pass2883: first_pass2883 = False
-                else: tt = tt.next0
+                if first_pass3051: first_pass3051 = False
+                else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not ((isinstance(tt, TextToken)))): 
                     break

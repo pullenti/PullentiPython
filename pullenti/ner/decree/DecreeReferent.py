@@ -183,14 +183,14 @@ class DecreeReferent(Referent):
         res = list()
         for s in self.slots: 
             if (s.type_name == DecreeReferent.ATTR_DATE): 
-                str0 = str(s.value)
-                i = str0.find('.')
+                str0_ = str(s.value)
+                i = str0_.find('.')
                 if (i == 4): 
-                    str0 = str0[0 : 4]
-                inoutarg1038 = RefOutArgWrapper(None)
-                inoutres1039 = Utils.tryParseInt(str0, inoutarg1038)
-                i = inoutarg1038.value
-                if (inoutres1039): 
+                    str0_ = str0_[0 : 4]
+                inoutarg1080 = RefOutArgWrapper(0)
+                inoutres1081 = Utils.tryParseInt(str0_, inoutarg1080)
+                i = inoutarg1080.value
+                if (inoutres1081): 
                     res.append(i)
         return res
     
@@ -528,23 +528,23 @@ class DecreeReferent(Referent):
     def create_ontology_item(self) -> 'IntOntologyItem':
         from pullenti.ner.core.Termin import Termin
         oi = IntOntologyItem(self)
-        vars0 = list()
+        vars0_ = list()
         for a in self.slots: 
             if (a.type_name == DecreeReferent.ATTR_NAME): 
                 s = str(a.value)
-                if (not s in vars0): 
-                    vars0.append(s)
+                if (not s in vars0_): 
+                    vars0_.append(s)
         if (self.number is not None): 
             for digs in self.__all_number_digits(): 
-                if (not digs in vars0): 
-                    vars0.append(digs)
-        for v in vars0: 
+                if (not digs in vars0_): 
+                    vars0_.append(digs)
+        for v in vars0_: 
             oi.termins.append(Termin(v))
         return oi
 
     
     @staticmethod
-    def _new1022(_arg1 : str) -> 'DecreeReferent':
+    def _new1077(_arg1 : str) -> 'DecreeReferent':
         res = DecreeReferent()
         res.typ = _arg1
         return res

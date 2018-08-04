@@ -111,17 +111,17 @@ class MorphEngine:
         need_test_unknown_vars = True
         if (res is not None): 
             for r in res: 
-                if ((r.class0.is_pronoun or r.class0.is_noun or r.class0.is_adjective) or (r.class0.is_misc and r.class0.is_conjunction) or r.class0.is_preposition): 
+                if ((r.class0_.is_pronoun or r.class0_.is_noun or r.class0_.is_adjective) or (r.class0_.is_misc and r.class0_.is_conjunction) or r.class0_.is_preposition): 
                     need_test_unknown_vars = False
-                elif (r.class0.is_adverb and r.normal_case is not None): 
+                elif (r.class0_.is_adverb and r.normal_case is not None): 
                     if (not LanguageHelper.ends_with_ex(r.normal_case, "О", "А", None, None)): 
                         need_test_unknown_vars = False
                     elif (r.normal_case == "МНОГО"): 
                         need_test_unknown_vars = False
-                elif (r.class0.is_verb and len(res) > 1): 
+                elif (r.class0_.is_verb and len(res) > 1): 
                     ok = False
                     for rr in res: 
-                        if (rr != r and rr.class0 != r.class0): 
+                        if (rr != r and rr.class0_ != r.class0_): 
                             ok = True
                             break
                     if (ok and not LanguageHelper.ends_with(word, "ИМ")): 
@@ -137,14 +137,14 @@ class MorphEngine:
             if ((gl < 2) or (sog < 2)): 
                 need_test_unknown_vars = False
         if (need_test_unknown_vars and res is not None and len(res) == 1): 
-            if (res[0].class0.is_verb): 
+            if (res[0].class0_.is_verb): 
                 if ("н.вр." in res[0].misc.attrs and "нес.в." in res[0].misc.attrs and not "страд.з." in res[0].misc.attrs): 
                     need_test_unknown_vars = False
                 elif ("б.вр." in res[0].misc.attrs and "сов.в." in res[0].misc.attrs): 
                     need_test_unknown_vars = False
                 elif (res[0].normal_case is not None and LanguageHelper.ends_with(res[0].normal_case, "СЯ")): 
                     need_test_unknown_vars = False
-            if (res[0].class0.is_undefined and "прдктв." in res[0].misc.attrs): 
+            if (res[0].class0_.is_undefined and "прдктв." in res[0].misc.attrs): 
                 need_test_unknown_vars = False
         if (need_test_unknown_vars): 
             if (self.m_root_reverce is None): 
@@ -159,10 +159,10 @@ class MorphEngine:
                     break
                 inoutarg19 = RefOutArgWrapper(None)
                 inoutres20 = Utils.tryGetValue(tn.nodes, ch, inoutarg19)
-                next0 = inoutarg19.value
+                next0_ = inoutarg19.value
                 if (not inoutres20): 
                     break
-                tn = next0
+                tn = next0_
                 if (tn._lazy is not None): 
                     tn._load()
                 if (tn.reverce_variants is not None): 
@@ -178,15 +178,15 @@ class MorphEngine:
                     i -= 1
                 if (glas): 
                     for mv in tn0.reverce_variants: 
-                        if (((not mv.class0.is_verb and not mv.class0.is_adjective and not mv.class0.is_noun) and not mv.class0.is_proper_surname and not mv.class0.is_proper_geo) and not mv.class0.is_proper_secname): 
+                        if (((not mv.class0_.is_verb and not mv.class0_.is_adjective and not mv.class0_.is_noun) and not mv.class0_.is_proper_surname and not mv.class0_.is_proper_geo) and not mv.class0_.is_proper_secname): 
                             continue
                         ok = False
                         for rr in res: 
                             if (rr.is_in_dictionary): 
-                                if (rr.class0 == mv.class0 or rr.class0.is_noun): 
+                                if (rr.class0_ == mv.class0_ or rr.class0_.is_noun): 
                                     ok = True
                                     break
-                                if (not mv.class0.is_adjective and rr.class0.is_verb): 
+                                if (not mv.class0_.is_adjective and rr.class0_.is_verb): 
                                     ok = True
                                     break
                         if (ok): 
@@ -201,7 +201,7 @@ class MorphEngine:
                             res.append(r)
         if (word == "ПРИ" and res is not None): 
             for i in range(len(res) - 1, -1, -1):
-                if (res[i].class0.is_proper_geo): 
+                if (res[i].class0_.is_proper_geo): 
                     del res[i]
             else: i = -1
         if (res is None or len(res) == 0): 
@@ -210,24 +210,24 @@ class MorphEngine:
         for v in res: 
             if (v.normal_case is None): 
                 v.normal_case = word
-            if (v.class0.is_verb): 
+            if (v.class0_.is_verb): 
                 if (v.normal_full is None and LanguageHelper.ends_with(v.normal_case, "ТЬСЯ")): 
                     v.normal_full = v.normal_case[0 : (len(v.normal_case) - 2)]
             v.language = self.language
-            if (v.class0.is_preposition): 
+            if (v.class0_.is_preposition): 
                 v.normal_case = LanguageHelper.normalize_preposition(v.normal_case)
         mc = MorphClass()
         for i in range(len(res) - 1, -1, -1):
-            if (not res[i].is_in_dictionary and res[i].class0.is_adjective and len(res) > 1): 
+            if (not res[i].is_in_dictionary and res[i].class0_.is_adjective and len(res) > 1): 
                 if ("к.ф." in res[i].misc.attrs or "неизм." in res[i].misc.attrs): 
                     del res[i]
                     continue
             if (res[i].is_in_dictionary): 
-                mc.value |= res[i].class0.value
+                mc.value |= res[i].class0_.value
         else: i = -1
         if (mc == MorphClass.VERB and len(res) > 1): 
             for r in res: 
-                if (r.undef_coef > 100 and r.class0 == MorphClass.ADJECTIVE): 
+                if (r.undef_coef > 100 and r.class0_ == MorphClass.ADJECTIVE): 
                     r.undef_coef = 0
         if (len(res) == 0): 
             return None
@@ -272,46 +272,46 @@ class MorphEngine:
                 break
             i += 1
         i = 0
-        first_pass2516 = True
+        first_pass2669 = True
         while True:
-            if first_pass2516: first_pass2516 = False
+            if first_pass2669: first_pass2669 = False
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
             if (wf.contains_attr("инф.", MorphClass())): 
                 continue
             j = i + 1
-            first_pass2517 = True
+            first_pass2670 = True
             while True:
-                if first_pass2517: first_pass2517 = False
+                if first_pass2670: first_pass2670 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
                 if (wf1.contains_attr("инф.", MorphClass())): 
                     continue
-                if ((wf.class0 == wf1.class0 and wf.gender == wf1.gender and wf.number == wf1.number) and wf.normal_case == wf1.normal_case): 
+                if ((wf.class0_ == wf1.class0_ and wf.gender == wf1.gender and wf.number == wf1.number) and wf.normal_case == wf1.normal_case): 
                     wf.case |= wf1.case
                     del res[j]
                     j -= 1
         i = 0
-        first_pass2518 = True
+        first_pass2671 = True
         while True:
-            if first_pass2518: first_pass2518 = False
+            if first_pass2671: first_pass2671 = False
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
             if (wf.contains_attr("инф.", MorphClass())): 
                 continue
             j = i + 1
-            first_pass2519 = True
+            first_pass2672 = True
             while True:
-                if first_pass2519: first_pass2519 = False
+                if first_pass2672: first_pass2672 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
                 if (wf1.contains_attr("инф.", MorphClass())): 
                     continue
-                if ((wf.class0 == wf1.class0 and wf.case == wf1.case and wf.number == wf1.number) and wf.normal_case == wf1.normal_case): 
+                if ((wf.class0_ == wf1.class0_ and wf.case == wf1.case and wf.number == wf1.number) and wf.normal_case == wf1.normal_case): 
                     wf.gender |= wf1.gender
                     del res[j]
                     j -= 1
@@ -341,7 +341,7 @@ class MorphEngine:
                     if (word_end in r.variants): 
                         for li in r.variants_list: 
                             for v in li: 
-                                if (((cla.value & v.class0.value)) != 0 and v.normal_tail is not None): 
+                                if (((cla.value & v.class0_.value)) != 0 and v.normal_tail is not None): 
                                     if (cas.is_undefined): 
                                         if (v.case.is_nominative or v.case.is_undefined): 
                                             pass
@@ -349,6 +349,11 @@ class MorphEngine:
                                             continue
                                     elif ((v.case & cas).is_undefined): 
                                         continue
+                                    sur = cla.is_proper_surname
+                                    sur0 = v.class0_.is_proper_surname
+                                    if (sur or sur0): 
+                                        if (sur != sur0): 
+                                            continue
                                     find = True
                                     if (gender != MorphGender.UNDEFINED): 
                                         if (((gender & v.gender)) == MorphGender.UNDEFINED): 
@@ -387,10 +392,10 @@ class MorphEngine:
                 break
             inoutarg25 = RefOutArgWrapper(None)
             inoutres26 = Utils.tryGetValue(tn.nodes, ch, inoutarg25)
-            next0 = inoutarg25.value
+            next0_ = inoutarg25.value
             if (not inoutres26): 
                 break
-            tn = next0
+            tn = next0_
             if (tn._lazy is not None): 
                 tn._load()
             if (tn.reverce_variants is not None): 
@@ -400,13 +405,18 @@ class MorphEngine:
         if (tn0 is None): 
             return None
         for mv in tn0.reverce_variants: 
-            if (((mv.class0.value & cla.value)) != 0 and mv.rule is not None): 
+            if (((mv.class0_.value & cla.value)) != 0 and mv.rule is not None): 
                 if (len(mv.tail) > 0 and not LanguageHelper.ends_with(word, mv.tail)): 
                     continue
                 word_begin = word[0 : (len(word) - len(mv.tail))]
                 for liv in mv.rule.variants_list: 
                     for v in liv: 
-                        if (((v.class0.value & cla.value)) != 0): 
+                        if (((v.class0_.value & cla.value)) != 0): 
+                            sur = cla.is_proper_surname
+                            sur0 = v.class0_.is_proper_surname
+                            if (sur or sur0): 
+                                if (sur != sur0): 
+                                    continue
                             if (not cas.is_undefined): 
                                 if ((cas & v.case).is_undefined and not v.case.is_undefined): 
                                     continue
@@ -441,7 +451,7 @@ class MorphEngine:
         return res
     
     def correct_word_by_morph(self, word : str) -> str:
-        vars0 = list()
+        vars0_ = list()
         tmp = Utils.newStringIO(len(word))
         for ch in range(1, len(word), 1):
             Utils.setLengthStringIO(tmp, 0)
@@ -449,18 +459,18 @@ class MorphEngine:
             Utils.setCharAtStringIO(tmp, ch, '*')
             var = self.__check_corr_var(Utils.toStringStringIO(tmp), self.m_root, 0)
             if (var is not None): 
-                if (not var in vars0): 
-                    vars0.append(var)
-        if (len(vars0) == 0): 
+                if (not var in vars0_): 
+                    vars0_.append(var)
+        if (len(vars0_) == 0): 
             for ch in range(1, len(word), 1):
                 Utils.setLengthStringIO(tmp, 0)
                 print(word, end="", file=tmp)
                 Utils.insertStringIO(tmp, ch, '*')
                 var = self.__check_corr_var(Utils.toStringStringIO(tmp), self.m_root, 0)
                 if (var is not None): 
-                    if (not var in vars0): 
-                        vars0.append(var)
-        if (len(vars0) == 0): 
+                    if (not var in vars0_): 
+                        vars0_.append(var)
+        if (len(vars0_) == 0): 
             ch = 1
             while ch < (len(word) - 1): 
                 Utils.setLengthStringIO(tmp, 0)
@@ -468,17 +478,17 @@ class MorphEngine:
                 Utils.removeStringIO(tmp, ch, 1)
                 var = self.__check_corr_var(Utils.toStringStringIO(tmp), self.m_root, 0)
                 if (var is not None): 
-                    if (not var in vars0): 
-                        vars0.append(var)
+                    if (not var in vars0_): 
+                        vars0_.append(var)
                 ch += 1
-        if (len(vars0) != 1): 
+        if (len(vars0_) != 1): 
             return None
-        return vars0[0]
+        return vars0_[0]
     
     def __check_corr_var(self, word : str, tn : 'MorphTreeNode', i : int) -> str:
-        first_pass2520 = True
+        first_pass2673 = True
         while True:
-            if first_pass2520: first_pass2520 = False
+            if first_pass2673: first_pass2673 = False
             else: i += 1
             if (not (i <= len(word))): break
             if (tn._lazy is not None): 
@@ -546,10 +556,10 @@ class MorphEngine:
                 break
             inoutarg29 = RefOutArgWrapper(None)
             inoutres30 = Utils.tryGetValue(tn.nodes, ch, inoutarg29)
-            next0 = inoutarg29.value
+            next0_ = inoutarg29.value
             if (not inoutres30): 
                 break
-            tn = next0
+            tn = next0_
             if (tn._lazy is not None): 
                 tn._load()
             if (tn.reverce_variants is not None): 
@@ -566,9 +576,9 @@ class MorphEngine:
                 tn._load()
             ok = False
             for v in tn.reverce_variants: 
-                if (geo and v.class0.is_proper_geo): 
+                if (geo and v.class0_.is_proper_geo): 
                     pass
-                elif (not geo and v.class0.is_proper_surname): 
+                elif (not geo and v.class0_.is_proper_surname): 
                     pass
                 else: 
                     continue
@@ -591,18 +601,18 @@ class MorphEngine:
                 return -1
             if ((x.undef_coef * 2) < y.undef_coef): 
                 return 1
-        if (x.class0 != y.class0): 
-            if ((x.class0.is_preposition or x.class0.is_conjunction or x.class0.is_pronoun) or x.class0.is_personal_pronoun): 
+        if (x.class0_ != y.class0_): 
+            if ((x.class0_.is_preposition or x.class0_.is_conjunction or x.class0_.is_pronoun) or x.class0_.is_personal_pronoun): 
                 return -1
-            if ((y.class0.is_preposition or y.class0.is_conjunction or y.class0.is_pronoun) or y.class0.is_personal_pronoun): 
+            if ((y.class0_.is_preposition or y.class0_.is_conjunction or y.class0_.is_pronoun) or y.class0_.is_personal_pronoun): 
                 return 1
-            if (x.class0.is_verb): 
+            if (x.class0_.is_verb): 
                 return 1
-            if (y.class0.is_verb): 
+            if (y.class0_.is_verb): 
                 return -1
-            if (x.class0.is_noun): 
+            if (x.class0_.is_noun): 
                 return -1
-            if (y.class0.is_noun): 
+            if (y.class0_.is_noun): 
                 return 1
         cx = MorphEngine.__calc_coef(x)
         cy = MorphEngine.__calc_coef(y)
@@ -629,7 +639,7 @@ class MorphEngine:
             k -= 3
         if (wf.normal_case is None or (len(wf.normal_case) < 4)): 
             return k
-        if (wf.class0.is_adjective and wf.number != MorphNumber.PLURAL): 
+        if (wf.class0_.is_adjective and wf.number != MorphNumber.PLURAL): 
             last = wf.normal_case[len(wf.normal_case) - 1]
             last1 = wf.normal_case[len(wf.normal_case) - 2]
             ok = False
@@ -647,7 +657,7 @@ class MorphEngine:
             if (ok): 
                 if (LanguageHelper.is_cyrillic_vowel(last1)): 
                     k += 1
-        elif (wf.class0.is_adjective and wf.number == MorphNumber.PLURAL): 
+        elif (wf.class0_.is_adjective and wf.number == MorphNumber.PLURAL): 
             last = wf.normal_case[len(wf.normal_case) - 1]
             last1 = wf.normal_case[len(wf.normal_case) - 2]
             if (last == 'Й' or last == 'Е'): 
@@ -674,19 +684,19 @@ class MorphEngine:
         i = 0
         while i < (len(res) - 1): 
             j = i + 1
-            first_pass2521 = True
+            first_pass2674 = True
             while True:
-                if first_pass2521: first_pass2521 = False
+                if first_pass2674: first_pass2674 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 if (MorphEngine.__comp1(res[i], res[j])): 
-                    if ((res[i].class0.is_adjective and res[j].class0.is_noun and not res[j].is_in_dictionary) and not res[i].is_in_dictionary): 
+                    if ((res[i].class0_.is_adjective and res[j].class0_.is_noun and not res[j].is_in_dictionary) and not res[i].is_in_dictionary): 
                         del res[j]
-                    elif ((res[i].class0.is_noun and res[j].class0.is_adjective and not res[j].is_in_dictionary) and not res[i].is_in_dictionary): 
+                    elif ((res[i].class0_.is_noun and res[j].class0_.is_adjective and not res[j].is_in_dictionary) and not res[i].is_in_dictionary): 
                         del res[i]
-                    elif (res[i].class0.is_adjective and res[j].class0.is_pronoun): 
+                    elif (res[i].class0_.is_adjective and res[j].class0_.is_pronoun): 
                         del res[i]
-                    elif (res[i].class0.is_pronoun and res[j].class0.is_adjective): 
+                    elif (res[i].class0_.is_pronoun and res[j].class0_.is_adjective): 
                         if (res[j].normal_full == "ОДИН" or res[j].normal_case == "ОДИН"): 
                             continue
                         del res[j]

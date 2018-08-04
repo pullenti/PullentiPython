@@ -33,23 +33,23 @@ class AnalysisResult:
         return self.__m_entities
     
     @property
-    def log0(self) -> typing.List[str]:
+    def log0_(self) -> typing.List[str]:
         """ Это некоторые информационные сообщения """
         return self.__m_log
     
     def _add_exception(self, ex : Exception) -> None:
-        str0 = str(ex)
-        for e0 in self.exceptions: 
-            if (str(e0) == str0): 
+        str0_ = str(ex)
+        for e0_ in self.exceptions: 
+            if (str(e0_) == str0_): 
                 return
         self.exceptions.append(ex)
     
     def __str__(self) -> str:
         res = Utils.newStringIO(None)
-        len0 = 0
+        len0_ = 0
         for s in self.sofas: 
-            len0 += len(s.text)
-        print("Общая длина {0} знаков".format(len0), end="", file=res, flush=True)
+            len0_ += len(s.text)
+        print("Общая длина {0} знаков".format(len0_), end="", file=res, flush=True)
         if (len(self.sofas) > 1): 
             print(" в {0} текстах".format(len(self.sofas)), end="", file=res, flush=True)
         if (self.base_language is not None): 

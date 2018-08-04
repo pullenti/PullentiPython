@@ -33,30 +33,30 @@ class CityAttachHelper:
         if (len(li) > 2 and li[0].typ == CityItemToken.ItemType.MISC and li[1].typ == CityItemToken.ItemType.NOUN): 
             li[1].doubtful = False
             del li[0]
-        inoutarg1053 = RefOutArgWrapper(None)
-        res = CityAttachHelper.__try1(li, inoutarg1053, ad)
-        oi = inoutarg1053.value
+        inoutarg1095 = RefOutArgWrapper(None)
+        res = CityAttachHelper.__try1(li, inoutarg1095, ad)
+        oi = inoutarg1095.value
         if (res is None): 
-            inoutarg1049 = RefOutArgWrapper(None)
-            res = CityAttachHelper.__try_noun_name(li, inoutarg1049, False)
-            oi = inoutarg1049.value
+            inoutarg1091 = RefOutArgWrapper(None)
+            res = CityAttachHelper.__try_noun_name(li, inoutarg1091, False)
+            oi = inoutarg1091.value
         if (res is None): 
-            inoutarg1050 = RefOutArgWrapper(None)
-            res = CityAttachHelper.__try_name_exist(li, inoutarg1050, False)
-            oi = inoutarg1050.value
+            inoutarg1092 = RefOutArgWrapper(None)
+            res = CityAttachHelper.__try_name_exist(li, inoutarg1092, False)
+            oi = inoutarg1092.value
         if (res is None): 
             res = CityAttachHelper.__try4(li)
         if (res is None and always): 
-            inoutarg1051 = RefOutArgWrapper(None)
-            res = CityAttachHelper.__try_noun_name(li, inoutarg1051, True)
-            oi = inoutarg1051.value
+            inoutarg1093 = RefOutArgWrapper(None)
+            res = CityAttachHelper.__try_noun_name(li, inoutarg1093, True)
+            oi = inoutarg1093.value
         if (res is None and always): 
             if (AddressItemToken.try_attach_org(li[0].begin_token) is not None): 
                 pass
             else: 
-                inoutarg1052 = RefOutArgWrapper(None)
-                res = CityAttachHelper.__try_name_exist(li, inoutarg1052, True)
-                oi = inoutarg1052.value
+                inoutarg1094 = RefOutArgWrapper(None)
+                res = CityAttachHelper.__try_name_exist(li, inoutarg1094, True)
+                oi = inoutarg1094.value
         if (res is None): 
             return None
         if (res is not None and res.morph is not None): 
@@ -64,9 +64,9 @@ class CityAttachHelper:
         if (res.begin_token.previous is not None): 
             if (res.begin_token.previous.is_value("ТЕРРИТОРИЯ", None)): 
                 res.begin_token = res.begin_token.previous
-            if ((BracketHelper.can_be_start_of_sequence(res.begin_token.previous, False, False) and BracketHelper.can_be_end_of_sequence(res.end_token.next0, False, None, False) and res.begin_token.previous.previous is not None) and res.begin_token.previous.previous.is_value("ТЕРРИТОРИЯ", None)): 
+            if ((BracketHelper.can_be_start_of_sequence(res.begin_token.previous, False, False) and BracketHelper.can_be_end_of_sequence(res.end_token.next0_, False, None, False) and res.begin_token.previous.previous is not None) and res.begin_token.previous.previous.is_value("ТЕРРИТОРИЯ", None)): 
                 res.begin_token = res.begin_token.previous.previous
-                res.end_token = res.end_token.next0
+                res.end_token = res.end_token.next0_
         return res
     
     @staticmethod
@@ -95,7 +95,7 @@ class CityAttachHelper:
                     pass
                 else: 
                     ok = False
-        if (len(li) == 1 and li[0].begin_token.morph.class0.is_adjective): 
+        if (len(li) == 1 and li[0].begin_token.morph.class0_.is_adjective): 
             sits = StreetItemToken.try_parse_list(li[0].begin_token, None, 3)
             if (sits is not None and len(sits) == 2 and sits[1].typ == StreetItemType.NOUN): 
                 return None
@@ -106,11 +106,11 @@ class CityAttachHelper:
             if (li[i].typ == CityItemToken.ItemType.NOUN): 
                 at = None
                 if (not li[i].chars.is_all_lower and (li[i].whitespaces_after_count < 2)): 
-                    sit = StreetItemToken.try_parse(li[i].end_token.next0, None, False, None, False)
+                    sit = StreetItemToken.try_parse(li[i].end_token.next0_, None, False, None, False)
                     if (sit is not None and sit.typ == StreetItemType.NOUN): 
                         at = AddressItemToken.try_parse(li[i].begin_token, None, False, False, None)
                         if (at is not None): 
-                            at2 = AddressItemToken.try_parse(li[i].end_token.next0, None, False, False, None)
+                            at2 = AddressItemToken.try_parse(li[i].end_token.next0_, None, False, False, None)
                             if (at2 is not None and at2.typ == AddressItemToken.ItemType.STREET): 
                                 at = None
                 if (at is None): 
@@ -133,7 +133,7 @@ class CityAttachHelper:
                                 i += 1
         if (not ok and oi.value is not None and (len(oi.value.canonic_text) < 4)): 
             return None
-        if (not ok and li[0].begin_token.morph.class0.is_proper_name): 
+        if (not ok and li[0].begin_token.morph.class0_.is_proper_name): 
             return None
         if (not ok): 
             if (not MiscHelper.is_exists_in_dictionary(li[0].begin_token, li[0].end_token, MorphClass.ADJECTIVE | MorphClass.NOUN | MorphClass.PRONOUN)): 
@@ -145,7 +145,7 @@ class CityAttachHelper:
                     elif (li[0].geo_object_before and (li[0].whitespaces_after_count < 2)): 
                         ad1 = AddressItemToken.try_parse(li[0].begin_token, None, False, False, None)
                         if (ad1 is not None and ad1.typ == AddressItemToken.ItemType.STREET): 
-                            ad2 = AddressItemToken.try_parse(li[0].end_token.next0, None, False, False, None)
+                            ad2 = AddressItemToken.try_parse(li[0].end_token.next0_, None, False, False, None)
                             if (ad2 is None or ad2.typ != AddressItemToken.ItemType.STREET): 
                                 ok = False
                         elif (AddressItemToken.try_attach_org(li[0].begin_token) is not None): 
@@ -154,9 +154,9 @@ class CityAttachHelper:
                 if (li[0].kit.process_referent("PERSON", li[0].begin_token) is not None): 
                     ok = False
         if (not ok): 
-            ok = CityAttachHelper.check_year_after(li[0].end_token.next0)
-        if (not ok and ((not li[0].begin_token.morph.class0.is_adjective or li[0].begin_token != li[0].end_token))): 
-            ok = CityAttachHelper.check_city_after(li[0].end_token.next0)
+            ok = CityAttachHelper.check_year_after(li[0].end_token.next0_)
+        if (not ok and ((not li[0].begin_token.morph.class0_.is_adjective or li[0].begin_token != li[0].end_token))): 
+            ok = CityAttachHelper.check_city_after(li[0].end_token.next0_)
         if (not ok): 
             return None
         if (i < len(li)): 
@@ -190,10 +190,10 @@ class CityAttachHelper:
                                 pass
                             else: 
                                 return None
-                    if (li[0].begin_token.morph.class0.is_adjective): 
+                    if (li[0].begin_token.morph.class0_.is_adjective): 
                         li[0].value = ProperNameHelper.get_name(li[0].begin_token, li[0].end_token, MorphClass.ADJECTIVE, li[1].morph.case, li[1].morph.gender, False, False)
         elif (isinstance(oi.value.referent, GeoReferent)): 
-            rt = ReferentToken._new695(oi.value.referent if isinstance(oi.value.referent, GeoReferent) else None, li[0].begin_token, li[len(li) - 1].end_token, mc)
+            rt = ReferentToken._new735(oi.value.referent if isinstance(oi.value.referent, GeoReferent) else None, li[0].begin_token, li[len(li) - 1].end_token, mc)
         elif (typ is None): 
             typ = oi.value.typ
         if (rt is None): 
@@ -205,16 +205,16 @@ class CityAttachHelper:
                 city._add_typ_city(li[0].kit.base_language)
             if (alttyp is not None): 
                 city._add_typ(alttyp)
-            rt = ReferentToken._new695(city, li[0].begin_token, li[len(li) - 1].end_token, mc)
+            rt = ReferentToken._new735(city, li[0].begin_token, li[len(li) - 1].end_token, mc)
         if (isinstance(rt.referent, GeoReferent) and len(li) == 1 and (rt.referent if isinstance(rt.referent, GeoReferent) else None).is_city): 
             if (rt.begin_token.previous is not None and rt.begin_token.previous.is_value("Г", None)): 
                 rt.begin_token = rt.begin_token.previous
             elif ((rt.begin_token.previous is not None and rt.begin_token.previous.is_char('.') and rt.begin_token.previous.previous is not None) and rt.begin_token.previous.previous.is_value("Г", None)): 
                 rt.begin_token = rt.begin_token.previous.previous
-            elif (rt.end_token.next0 is not None and (rt.whitespaces_after_count < 2) and rt.end_token.next0.is_value("Г", None)): 
-                rt.end_token = rt.end_token.next0
-                if (rt.end_token.next0 is not None and rt.end_token.next0.is_char('.')): 
-                    rt.end_token = rt.end_token.next0
+            elif (rt.end_token.next0_ is not None and (rt.whitespaces_after_count < 2) and rt.end_token.next0_.is_value("Г", None)): 
+                rt.end_token = rt.end_token.next0_
+                if (rt.end_token.next0_ is not None and rt.end_token.next0_.is_char('.')): 
+                    rt.end_token = rt.end_token.next0_
         return rt
     
     @staticmethod
@@ -239,7 +239,7 @@ class CityAttachHelper:
         typ2 = (None if li[0].typ == CityItemToken.ItemType.MISC else li[0].alt_value)
         prob_adj = None
         i1 = 1
-        org = None
+        org0_ = None
         if ((typ is not None and li[i1].typ == CityItemToken.ItemType.NOUN and ((i1 + 1) < len(li))) and li[0].whitespaces_after_count <= 1 and (((LanguageHelper.ends_with(typ, "ПОСЕЛОК") or LanguageHelper.ends_with(typ, "СЕЛИЩЕ") or typ == "ДЕРЕВНЯ") or typ == "СЕЛО"))): 
             if (li[i1].begin_token == li[i1].end_token): 
                 ooo = AddressItemToken.try_attach_org(li[i1].begin_token)
@@ -274,18 +274,18 @@ class CityAttachHelper:
                 elif (not ok and not li[1].is_newline_before): 
                     if (li[0].geo_object_before or li[1].geo_object_after): 
                         ok = True
-                    elif (StreetDefineHelper.check_street_after(li[1].end_token.next0)): 
+                    elif (StreetDefineHelper.check_street_after(li[1].end_token.next0_)): 
                         ok = True
-                    elif (li[1].end_token.next0 is not None and isinstance(li[1].end_token.next0.get_referent(), DateReferent)): 
+                    elif (li[1].end_token.next0_ is not None and isinstance(li[1].end_token.next0_.get_referent(), DateReferent)): 
                         ok = True
                     elif ((li[1].whitespaces_before_count < 2) and li[1].is_newline_after and li[1].onto_item is not None): 
                         ok = True
-                if (li[1].doubtful and li[1].end_token.next0 is not None and li[1].end_token.chars == li[1].end_token.next0.chars): 
+                if (li[1].doubtful and li[1].end_token.next0_ is not None and li[1].end_token.chars == li[1].end_token.next0_.chars): 
                     ok = False
             if (not ok): 
-                ok = CityAttachHelper.check_year_after(li[1].end_token.next0)
+                ok = CityAttachHelper.check_year_after(li[1].end_token.next0_)
             if (not ok): 
-                ok = CityAttachHelper.check_city_after(li[1].end_token.next0)
+                ok = CityAttachHelper.check_city_after(li[1].end_token.next0_)
         elif ((li[i1].typ == CityItemToken.ItemType.PROPERNAME or li[i1].typ == CityItemToken.ItemType.CITY)): 
             if (((li[0].value == "АДМИНИСТРАЦИЯ" or li[0].value == "АДМІНІСТРАЦІЯ")) and i1 == 1): 
                 return None
@@ -300,7 +300,7 @@ class CityAttachHelper:
                     ok = False
                 if (li[i1].doubtful and not li[i1].geo_object_after and not li[0].geo_object_before): 
                     if (li[i1].morph.case.is_genitive): 
-                        if (((li[0].begin_token.previous is None or MiscLocationHelper.check_geo_object_before(li[0].begin_token))) and ((li[i1].end_token.next0 is None or MiscLocationHelper.check_geo_object_after(li[i1].end_token.next0) or AddressItemToken.check_house_after(li[i1].end_token.next0, False, True)))): 
+                        if (((li[0].begin_token.previous is None or MiscLocationHelper.check_geo_object_before(li[0].begin_token))) and ((li[i1].end_token.next0_ is None or MiscLocationHelper.check_geo_object_after(li[i1].end_token.next0_) or AddressItemToken.check_house_after(li[i1].end_token.next0_, False, True)))): 
                             pass
                         else: 
                             ok = False
@@ -312,7 +312,7 @@ class CityAttachHelper:
                                 ok = False
                 npt = NounPhraseHelper.try_parse(li[i1].begin_token, NounPhraseParseAttr.NO, 0)
                 if (npt is not None): 
-                    if (npt.end_token.end_char > li[i1].end_char and len(npt.adjectives) > 0 and not npt.adjectives[0].end_token.next0.is_comma): 
+                    if (npt.end_token.end_char > li[i1].end_char and len(npt.adjectives) > 0 and not npt.adjectives[0].end_token.next0_.is_comma): 
                         ok = False
                     elif (TerrItemToken._m_unknown_regions.try_parse(npt.end_token, TerminParseAttr.FULLWORDSONLY) is not None): 
                         ok1 = False
@@ -323,10 +323,10 @@ class CityAttachHelper:
                             geo_ = (ttt.get_referent() if isinstance(ttt.get_referent(), GeoReferent) else None)
                             if (geo_ is not None and not geo_.is_city): 
                                 ok1 = True
-                        if (npt.end_token.next0 is not None): 
-                            ttt = npt.end_token.next0
-                            if (ttt.is_comma and ttt.next0 is not None): 
-                                ttt = ttt.next0
+                        if (npt.end_token.next0_ is not None): 
+                            ttt = npt.end_token.next0_
+                            if (ttt.is_comma and ttt.next0_ is not None): 
+                                ttt = ttt.next0_
                             geo_ = (ttt.get_referent() if isinstance(ttt.get_referent(), GeoReferent) else None)
                             if (geo_ is not None and not geo_.is_city): 
                                 ok1 = True
@@ -340,9 +340,9 @@ class CityAttachHelper:
             elif (li[i1].geo_object_after and not li[i1].is_newline_after): 
                 ok = True
             else: 
-                ok = CityAttachHelper.check_year_after(li[i1].end_token.next0)
+                ok = CityAttachHelper.check_year_after(li[i1].end_token.next0_)
             if (not ok): 
-                ok = CityAttachHelper.check_street_after(li[i1].end_token.next0)
+                ok = CityAttachHelper.check_street_after(li[i1].end_token.next0_)
         else: 
             return None
         if (not ok and not always): 
@@ -355,7 +355,7 @@ class CityAttachHelper:
             city = (oi.value.referent.clone() if isinstance(oi.value.referent.clone(), GeoReferent) else None)
             city.occurrence.clear()
         if (not li[0].morph.case.is_undefined and li[0].morph.gender != MorphGender.UNDEFINED): 
-            if (li[i1].end_token.morph.class0.is_adjective and li[i1].begin_token == li[i1].end_token): 
+            if (li[i1].end_token.morph.class0_.is_adjective and li[i1].begin_token == li[i1].end_token): 
                 nam = ProperNameHelper.get_name(li[i1].begin_token, li[i1].end_token, MorphClass.ADJECTIVE, li[0].morph.case, li[0].morph.gender, False, False)
                 if (nam is not None and nam != name): 
                     name = nam
@@ -380,16 +380,16 @@ class CityAttachHelper:
             city.higher = li[0].higher_geo
         if (li[0].typ == CityItemToken.ItemType.MISC): 
             del li[0]
-        res = ReferentToken._new695(city, li[0].begin_token, li[len(li) - 1].end_token, mc)
-        if (res.end_token.next0 is not None and res.end_token.next0.is_hiphen and isinstance(res.end_token.next0.next0, NumberToken)): 
-            num = (res.end_token.next0.next0 if isinstance(res.end_token.next0.next0, NumberToken) else None)
-            if (num.typ == NumberSpellingType.DIGIT and not num.morph.class0.is_adjective and (num.value < 50)): 
+        res = ReferentToken._new735(city, li[0].begin_token, li[len(li) - 1].end_token, mc)
+        if (res.end_token.next0_ is not None and res.end_token.next0_.is_hiphen and isinstance(res.end_token.next0_.next0_, NumberToken)): 
+            num = (res.end_token.next0_.next0_ if isinstance(res.end_token.next0_.next0_, NumberToken) else None)
+            if (num.typ == NumberSpellingType.DIGIT and not num.morph.class0_.is_adjective and (num.value < 50)): 
                 for s in city.slots: 
                     if (s.type_name == GeoReferent.ATTR_NAME): 
                         city.upload_slot(s, "{0}-{1}".format(s.value, num.value))
                 res.end_token = num
         if (li[0].begin_token == li[0].end_token and li[0].begin_token.is_value("ГОРОДОК", None)): 
-            if (AddressItemToken.check_house_after(res.end_token.next0, True, False)): 
+            if (AddressItemToken.check_house_after(res.end_token.next0_, True, False)): 
                 return None
         return res
     
@@ -422,7 +422,7 @@ class CityAttachHelper:
             return None
         if (nam == "РИМ"): 
             if (tt.term == "РИМ"): 
-                if (isinstance(tt.next0, TextToken) and tt.next0.get_morph_class_in_dictionary().is_proper_secname): 
+                if (isinstance(tt.next0_, TextToken) and tt.next0_.get_morph_class_in_dictionary().is_proper_secname): 
                     pass
                 else: 
                     ok = True
@@ -437,29 +437,29 @@ class CityAttachHelper:
         elif (li[0].chars.is_latin_letter and li[0].begin_token.previous is not None and ((li[0].begin_token.previous.is_value("IN", None) or li[0].begin_token.previous.is_value("FROM", None)))): 
             ok = True
         else: 
-            tt2 = li[0].end_token.next0
-            first_pass2681 = True
+            tt2 = li[0].end_token.next0_
+            first_pass2841 = True
             while True:
-                if first_pass2681: first_pass2681 = False
-                else: tt2 = tt2.next0
+                if first_pass2841: first_pass2841 = False
+                else: tt2 = tt2.next0_
                 if (not (tt2 is not None)): break
                 if (tt2.is_newline_before): 
                     break
-                if ((tt2.is_char_of(",(") or tt2.morph.class0.is_preposition or tt2.morph.class0.is_conjunction) or tt2.morph.class0.is_misc): 
+                if ((tt2.is_char_of(",(") or tt2.morph.class0_.is_preposition or tt2.morph.class0_.is_conjunction) or tt2.morph.class0_.is_misc): 
                     continue
                 if (isinstance(tt2.get_referent(), GeoReferent) and tt2.chars.is_cyrillic_letter == li[0].chars.is_cyrillic_letter): 
                     ok = True
                 break
             if (not ok): 
                 tt2 = li[0].begin_token.previous
-                first_pass2682 = True
+                first_pass2842 = True
                 while True:
-                    if first_pass2682: first_pass2682 = False
+                    if first_pass2842: first_pass2842 = False
                     else: tt2 = tt2.previous
                     if (not (tt2 is not None)): break
                     if (tt2.is_newline_after): 
                         break
-                    if ((tt2.is_char_of(",)") or tt2.morph.class0.is_preposition or tt2.morph.class0.is_conjunction) or tt2.morph.class0.is_misc): 
+                    if ((tt2.is_char_of(",)") or tt2.morph.class0_.is_preposition or tt2.morph.class0_.is_conjunction) or tt2.morph.class0_.is_misc): 
                         continue
                     if (isinstance(tt2.get_referent(), GeoReferent) and tt2.chars.is_cyrillic_letter == li[0].chars.is_cyrillic_letter): 
                         ok = True
@@ -492,9 +492,9 @@ class CityAttachHelper:
                 if (pp is not None): 
                     always = False
         if (li[0].begin_token.chars.is_latin_letter and li[0].begin_token == li[0].end_token): 
-            tt1 = li[0].end_token.next0
+            tt1 = li[0].end_token.next0_
             if (tt1 is not None and tt1.is_char(',')): 
-                tt1 = tt1.next0
+                tt1 = tt1.next0_
             if ((isinstance(tt1, TextToken) and tt1.chars.is_latin_letter and (tt1.length_char < 3)) and not tt1.chars.is_all_lower): 
                 ok = False
         if (not ok and not always): 
@@ -509,7 +509,7 @@ class CityAttachHelper:
                 city._merge_slots2(oi.value.referent if isinstance(oi.value.referent, GeoReferent) else None, li[0].kit.base_language)
             if (not city.is_city): 
                 city._add_typ_city(li[0].kit.base_language)
-        return ReferentToken._new695(city, li[0].begin_token, li[0].end_token, li[0].morph)
+        return ReferentToken._new735(city, li[0].begin_token, li[0].end_token, li[0].morph)
     
     @staticmethod
     def __try4(li : typing.List['CityItemToken']) -> 'ReferentToken':
@@ -525,7 +525,7 @@ class CityAttachHelper:
                 geo_.add_ext_referent(li[1].org_ref)
                 return ReferentToken(geo_, li[0].begin_token, li[1].end_token)
             else: 
-                aid = AddressItemToken.try_attach_org(li[0].end_token.next0)
+                aid = AddressItemToken.try_attach_org(li[0].end_token.next0_)
                 if (aid is not None): 
                     geo_ = GeoReferent()
                     geo_._add_typ(li[0].value)
@@ -538,7 +538,7 @@ class CityAttachHelper:
     def check_year_after(tt : 'Token') -> bool:
         from pullenti.ner.NumberToken import NumberToken
         if (tt is not None and ((tt.is_comma or tt.is_hiphen))): 
-            tt = tt.next0
+            tt = tt.next0_
         if (tt is not None and tt.is_newline_after): 
             if (isinstance(tt, NumberToken)): 
                 year = (tt if isinstance(tt, NumberToken) else None).value
@@ -551,8 +551,8 @@ class CityAttachHelper:
     @staticmethod
     def check_street_after(tt : 'Token') -> bool:
         from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        if (tt is not None and ((tt.is_comma_and or tt.is_hiphen or tt.morph.class0.is_preposition))): 
-            tt = tt.next0
+        if (tt is not None and ((tt.is_comma_and or tt.is_hiphen or tt.morph.class0_.is_preposition))): 
+            tt = tt.next0_
         if (tt is None): 
             return False
         ait = AddressItemToken.try_parse(tt, None, False, False, None)
@@ -563,16 +563,16 @@ class CityAttachHelper:
     @staticmethod
     def check_city_after(tt : 'Token') -> bool:
         from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        while tt is not None and (((tt.is_comma_and or tt.is_hiphen or tt.morph.class0.is_preposition) or tt.is_char('.'))):
-            tt = tt.next0
+        while tt is not None and (((tt.is_comma_and or tt.is_hiphen or tt.morph.class0_.is_preposition) or tt.is_char('.'))):
+            tt = tt.next0_
         if (tt is None): 
             return False
         cits = CityItemToken.try_parse_list(tt, None, 5)
         if (cits is None or len(cits) == 0): 
             if (tt.length_char == 1 and tt.chars.is_all_lower and ((tt.is_value("Д", None) or tt.is_value("П", None)))): 
-                tt1 = tt.next0
+                tt1 = tt.next0_
                 if (tt1 is not None and tt1.is_char('.')): 
-                    tt1 = tt1.next0
+                    tt1 = tt1.next0_
                 ci = CityItemToken.try_parse(tt1, None, False, None)
                 if (ci is not None and ((ci.typ == CityItemToken.ItemType.PROPERNAME or ci.typ == CityItemToken.ItemType.CITY))): 
                     return True

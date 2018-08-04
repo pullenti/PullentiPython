@@ -48,7 +48,7 @@ class InstrumentAnalyzer(Analyzer):
         return [MetaInstrument.GLOBAL_META, MetaInstrumentBlock.GLOBAL_META, InstrumentParticipantMeta.GLOBAL_META, InstrumentArtefactMeta.GLOBAL_META]
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         from pullenti.ner.instrument.internal.MetaInstrument import MetaInstrument
         from pullenti.ner.instrument.internal.MetaInstrumentBlock import MetaInstrumentBlock
         from pullenti.ner.instrument.internal.InstrumentParticipantMeta import InstrumentParticipantMeta
@@ -60,18 +60,18 @@ class InstrumentAnalyzer(Analyzer):
         res[InstrumentArtefactMeta.IMAGE_ID] = ResourceHelper.get_bytes("artefact.png")
         return res
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
         from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
         from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
         from pullenti.ner.instrument.InstrumentArtefact import InstrumentArtefact
-        if (type0 == InstrumentReferent.OBJ_TYPENAME): 
+        if (type0_ == InstrumentReferent.OBJ_TYPENAME): 
             return InstrumentReferent()
-        if (type0 == InstrumentBlockReferent.OBJ_TYPENAME): 
+        if (type0_ == InstrumentBlockReferent.OBJ_TYPENAME): 
             return InstrumentBlockReferent()
-        if (type0 == InstrumentParticipant.OBJ_TYPENAME): 
+        if (type0_ == InstrumentParticipant.OBJ_TYPENAME): 
             return InstrumentParticipant()
-        if (type0 == InstrumentArtefact.OBJ_TYPENAME): 
+        if (type0_ == InstrumentArtefact.OBJ_TYPENAME): 
             return InstrumentArtefact()
         return None
     

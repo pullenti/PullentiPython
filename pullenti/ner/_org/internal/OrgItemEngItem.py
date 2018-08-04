@@ -10,7 +10,7 @@ from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.org.OrgProfile import OrgProfile
+from pullenti.ner._org.OrgProfile import OrgProfile
 
 
 class OrgItemEngItem(MetaToken):
@@ -31,13 +31,13 @@ class OrgItemEngItem(MetaToken):
             return None
         tok = (OrgItemEngItem.__m_ontology.try_parse(t, TerminParseAttr.NO) if can_be_cyr else None)
         if (not t.chars.is_latin_letter and tok is None): 
-            if (not t.is_and or t.next0 is None): 
+            if (not t.is_and or t.next0_ is None): 
                 return None
-            if (t.next0.is_value("COMPANY", None) or t.next0.is_value("CO", None)): 
-                res = OrgItemEngItem(t, t.next0)
+            if (t.next0_.is_value("COMPANY", None) or t.next0_.is_value("CO", None)): 
+                res = OrgItemEngItem(t, t.next0_)
                 res.full_value = "company"
-                if (res.end_token.next0 is not None and res.end_token.next0.is_char('.')): 
-                    res.end_token = res.end_token.next0
+                if (res.end_token.next0_ is not None and res.end_token.next0_.is_char('.')): 
+                    res.end_token = res.end_token.next0_
                 return res
             return None
         if (t.chars.is_latin_letter): 
@@ -63,10 +63,10 @@ class OrgItemEngItem(MetaToken):
                 if ((tt0 if isinstance(tt0, TextToken) else None).term == "U"): 
                     return False
         elif (tok.begin_token.is_value("CO", None) and tok.begin_token == tok.end_token): 
-            if (tok.end_token.next0 is not None and tok.end_token.next0.is_hiphen): 
+            if (tok.end_token.next0_ is not None and tok.end_token.next0_.is_hiphen): 
                 return False
         if (not tok.is_whitespace_after): 
-            if (isinstance(tok.end_token.next0, NumberToken)): 
+            if (isinstance(tok.end_token.next0_, NumberToken)): 
                 return False
         return True
     
@@ -74,21 +74,21 @@ class OrgItemEngItem(MetaToken):
     def try_attach_org(t : 'Token', can_be_cyr : bool=False) -> 'ReferentToken':
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
+        from pullenti.ner._org.internal.OrgItemTypeToken import OrgItemTypeToken
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.core.MiscHelper import MiscHelper
         from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+        from pullenti.ner._org.OrganizationReferent import OrganizationReferent
         from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.org.internal.OrgItemNameToken import OrgItemNameToken
+        from pullenti.ner._org.internal.OrgItemNameToken import OrgItemNameToken
         if (t is None): 
             return None
         br = False
-        if (t.is_char('(') and t.next0 is not None): 
-            t = t.next0
+        if (t.is_char('(') and t.next0_ is not None): 
+            t = t.next0_
             br = True
         if (isinstance(t, NumberToken)): 
-            if ((t if isinstance(t, NumberToken) else None).typ == NumberSpellingType.WORDS and t.morph.class0.is_adjective and t.chars.is_capital_upper): 
+            if ((t if isinstance(t, NumberToken) else None).typ == NumberSpellingType.WORDS and t.morph.class0_.is_adjective and t.chars.is_capital_upper): 
                 pass
             else: 
                 return None
@@ -106,35 +106,35 @@ class OrgItemEngItem(MetaToken):
         tok = None
         geo_ = None
         add_typ = None
-        first_pass2812 = True
+        first_pass2978 = True
         while True:
-            if first_pass2812: first_pass2812 = False
-            else: t = t.next0
+            if first_pass2978: first_pass2978 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and t.whitespaces_before_count > 1): 
                 break
             if (t.is_char(')')): 
                 break
-            if (t.is_char('(') and t.next0 is not None): 
-                if (isinstance(t.next0.get_referent(), GeoReferent) and t.next0.next0 is not None and t.next0.next0.is_char(')')): 
-                    geo_ = (t.next0.get_referent() if isinstance(t.next0.get_referent(), GeoReferent) else None)
-                    t = t.next0.next0
+            if (t.is_char('(') and t.next0_ is not None): 
+                if (isinstance(t.next0_.get_referent(), GeoReferent) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
+                    geo_ = (t.next0_.get_referent() if isinstance(t.next0_.get_referent(), GeoReferent) else None)
+                    t = t.next0_.next0_
                     continue
-                typ = OrgItemTypeToken.try_attach(t.next0, True, None)
-                if ((typ is not None and typ.end_token.next0 is not None and typ.end_token.next0.is_char(')')) and typ.chars.is_latin_letter): 
+                typ = OrgItemTypeToken.try_attach(t.next0_, True, None)
+                if ((typ is not None and typ.end_token.next0_ is not None and typ.end_token.next0_.is_char(')')) and typ.chars.is_latin_letter): 
                     add_typ = typ
-                    t = typ.end_token.next0
+                    t = typ.end_token.next0_
                     continue
-                if ((isinstance(t.next0, TextToken) and t.next0.next0 is not None and t.next0.next0.is_char(')')) and t.next0.chars.is_capital_upper): 
-                    t = t.next0.next0
+                if ((isinstance(t.next0_, TextToken) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')) and t.next0_.chars.is_capital_upper): 
+                    t = t.next0_.next0_
                     t1 = t
                     continue
                 break
             tok = OrgItemEngItem.try_attach(t, can_be_cyr)
-            if (tok is None and t.is_char_of(".,") and t.next0 is not None): 
-                tok = OrgItemEngItem.try_attach(t.next0, can_be_cyr)
-                if (tok is None and t.next0.is_char_of(",.")): 
-                    tok = OrgItemEngItem.try_attach(t.next0.next0, can_be_cyr)
+            if (tok is None and t.is_char_of(".,") and t.next0_ is not None): 
+                tok = OrgItemEngItem.try_attach(t.next0_, can_be_cyr)
+                if (tok is None and t.next0_.is_char_of(",.")): 
+                    tok = OrgItemEngItem.try_attach(t.next0_.next0_, can_be_cyr)
             if (tok is not None): 
                 if (tok.length_char == 1 and t0.chars.is_cyrillic_letter): 
                     return None
@@ -146,22 +146,22 @@ class OrgItemEngItem(MetaToken):
             if (t.is_char('.')): 
                 if (t.previous is not None and t.previous.length_char == 1): 
                     continue
-                elif (MiscHelper.can_be_start_of_sentence(t.next0)): 
+                elif (MiscHelper.can_be_start_of_sentence(t.next0_)): 
                     break
             if (not t.chars.is_latin_letter): 
                 if (not can_be_cyr or not t.chars.is_cyrillic_letter): 
                     break
             if (t.chars.is_all_lower): 
-                if (t.morph.class0.is_preposition or t.morph.class0.is_conjunction): 
+                if (t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction): 
                     continue
                 if (br): 
                     continue
                 break
             mc = t.get_morph_class_in_dictionary()
             if (mc.is_verb): 
-                if (t.next0 is not None and t.next0.morph.class0.is_preposition): 
+                if (t.next0_ is not None and t.next0_.morph.class0_.is_preposition): 
                     break
-            if (t.next0 is not None and t.next0.is_value("OF", None)): 
+            if (t.next0_ is not None and t.next0_.is_value("OF", None)): 
                 break
             if (isinstance(t, TextToken)): 
                 nam_wo += 1
@@ -169,7 +169,7 @@ class OrgItemEngItem(MetaToken):
         if (tok is None): 
             return None
         if (t0 == tok.begin_token): 
-            br2 = BracketHelper.try_parse(tok.end_token.next0, BracketParseAttr.NO, 100)
+            br2 = BracketHelper.try_parse(tok.end_token.next0_, BracketParseAttr.NO, 100)
             if (br2 is not None): 
                 org1 = OrganizationReferent()
                 if (tok.short_value is not None): 
@@ -180,12 +180,12 @@ class OrgItemEngItem(MetaToken):
                     org1.add_name(nam1, True, None)
                     return ReferentToken(org1, t0, br2.end_token)
             return None
-        org_ = OrganizationReferent()
+        org0_ = OrganizationReferent()
         te = tok.end_token
         if (tok.is_bank): 
             t1 = tok.end_token
         if (tok.full_value == "company" and (tok.whitespaces_after_count < 3)): 
-            tok1 = OrgItemEngItem.try_attach(tok.end_token.next0, can_be_cyr)
+            tok1 = OrgItemEngItem.try_attach(tok.end_token.next0_, can_be_cyr)
             if (tok1 is not None): 
                 t1 = tok.end_token
                 tok = tok1
@@ -211,51 +211,51 @@ class OrgItemEngItem(MetaToken):
                 if (tai is not None): 
                     nam = "{0} {1}".format(nam, tai)
         if (tok.is_bank): 
-            org_.add_type_str(("bank" if tok.kit.base_language.is_en else "банк"))
-            org_.add_profile(OrgProfile.FINANCE)
-            if ((t1.next0 is not None and t1.next0.is_value("OF", None) and t1.next0.next0 is not None) and t1.next0.next0.chars.is_latin_letter): 
-                nam0 = OrgItemNameToken.try_attach(t1.next0, None, False, False)
+            org0_.add_type_str(("bank" if tok.kit.base_language.is_en else "банк"))
+            org0_.add_profile(OrgProfile.FINANCE)
+            if ((t1.next0_ is not None and t1.next0_.is_value("OF", None) and t1.next0_.next0_ is not None) and t1.next0_.next0_.chars.is_latin_letter): 
+                nam0 = OrgItemNameToken.try_attach(t1.next0_, None, False, False)
                 if (nam0 is not None): 
                     te = nam0.end_token
                 else: 
-                    te = t1.next0.next0
+                    te = t1.next0_.next0_
                 nam = MiscHelper.get_text_value(t0, te, GetTextAttr.NO)
                 if (isinstance(te.get_referent(), GeoReferent)): 
-                    org_._add_geo_object(te.get_referent() if isinstance(te.get_referent(), GeoReferent) else None)
+                    org0_._add_geo_object(te.get_referent() if isinstance(te.get_referent(), GeoReferent) else None)
             elif (t0 == t1): 
                 return None
         else: 
             if (tok.short_value is not None): 
-                org_.add_type_str(tok.short_value)
-            org_.add_type_str(tok.full_value)
+                org0_.add_type_str(tok.short_value)
+            org0_.add_type_str(tok.full_value)
         if (Utils.isNullOrEmpty(nam)): 
             return None
-        org_.add_name(nam, True, None)
+        org0_.add_name(nam, True, None)
         if (alt_nam is not None): 
-            org_.add_name(alt_nam, True, None)
-        res = ReferentToken(org_, t0, te)
+            org0_.add_name(alt_nam, True, None)
+        res = ReferentToken(org0_, t0, te)
         t = te
-        while t.next0 is not None:
-            if (t.next0.is_char_of(",.")): 
-                t = t.next0
+        while t.next0_ is not None:
+            if (t.next0_.is_char_of(",.")): 
+                t = t.next0_
             else: 
                 break
         if (t.whitespaces_after_count < 2): 
-            tok = OrgItemEngItem.try_attach(t.next0, can_be_cyr)
+            tok = OrgItemEngItem.try_attach(t.next0_, can_be_cyr)
             if (tok is not None): 
                 if (tok.short_value is not None): 
-                    org_.add_type_str(tok.short_value)
-                org_.add_type_str(tok.full_value)
+                    org0_.add_type_str(tok.short_value)
+                org0_.add_type_str(tok.full_value)
                 res.end_token = tok.end_token
         if (geo_ is not None): 
-            org_._add_geo_object(geo_)
+            org0_._add_geo_object(geo_)
         if (add_typ is not None): 
-            org_.add_type(add_typ, False)
+            org0_.add_type(add_typ, False)
         if (not br): 
             return res
         t = res.end_token
-        if (t.next0 is None or t.next0.is_char(')')): 
-            res.end_token = t.next0
+        if (t.next0_ is None or t.next0_.is_char(')')): 
+            res.end_token = t.next0_
         else: 
             return None
         return res

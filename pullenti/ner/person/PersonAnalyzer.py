@@ -47,9 +47,9 @@ class PersonAnalyzer(Analyzer):
             if (isinstance(referent, PersonReferent)): 
                 exist_props = None
                 i = 0
-                first_pass2872 = True
+                first_pass3040 = True
                 while True:
-                    if first_pass2872: first_pass2872 = False
+                    if first_pass3040: first_pass3040 = False
                     else: i += 1
                     if (not (i < len(referent.slots))): break
                     a = referent.slots[i]
@@ -84,9 +84,9 @@ class PersonAnalyzer(Analyzer):
                                 referent.upload_slot(a, pat.referent)
             if (isinstance(referent, PersonPropertyReferent)): 
                 i = 0
-                first_pass2873 = True
+                first_pass3041 = True
                 while True:
-                    if first_pass2873: first_pass2873 = False
+                    if first_pass3041: first_pass3041 = False
                     else: i += 1
                     if (not (i < len(referent.slots))): break
                     a = referent.slots[i]
@@ -137,7 +137,7 @@ class PersonAnalyzer(Analyzer):
         return [MetaPerson._global_meta, MetaPersonProperty._global_meta, MetaPersonIdentity._global_meta]
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         from pullenti.ner.person.internal.MetaPerson import MetaPerson
         from pullenti.ner.person.internal.MetaPersonProperty import MetaPersonProperty
         from pullenti.ner.person.internal.MetaPersonIdentity import MetaPersonIdentity
@@ -155,15 +155,15 @@ class PersonAnalyzer(Analyzer):
         res[MetaPersonIdentity.IMAGE_ID] = ResourceHelper.get_bytes("identity.png")
         return res
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.person.PersonReferent import PersonReferent
         from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
         from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
-        if (type0 == PersonReferent.OBJ_TYPENAME): 
+        if (type0_ == PersonReferent.OBJ_TYPENAME): 
             return PersonReferent()
-        if (type0 == PersonPropertyReferent.OBJ_TYPENAME): 
+        if (type0_ == PersonPropertyReferent.OBJ_TYPENAME): 
             return PersonPropertyReferent()
-        if (type0 == PersonIdentityReferent.OBJ_TYPENAME): 
+        if (type0_ == PersonIdentityReferent.OBJ_TYPENAME): 
             return PersonIdentityReferent()
         return None
     
@@ -196,14 +196,14 @@ class PersonAnalyzer(Analyzer):
         t = kit.first_token
         while t is not None: 
             t.inner_bool = False
-            t = t.next0
+            t = t.next0_
         steps = 2
-        max0 = steps
+        max0_ = steps
         delta = 100000
         parts = math.floor((((len(kit.sofa.text) + delta) - 1)) / delta)
         if (parts == 0): 
             parts = 1
-        max0 *= parts
+        max0_ *= parts
         cur = 0
         step = 0
         while step < steps: 
@@ -213,7 +213,7 @@ class PersonAnalyzer(Analyzer):
                 if (t.begin_char > next_pos): 
                     next_pos += delta
                     cur += 1
-                    if (not self._on_progress(cur, max0, kit)): 
+                    if (not self._on_progress(cur, max0_, kit)): 
                         return
                 rts = self.__try_attach_persons(t, ad, step)
                 if (rts is not None): 
@@ -236,7 +236,7 @@ class PersonAnalyzer(Analyzer):
                                                 rt1 = (ss.value if isinstance(ss.value, ReferentToken) else None)
                                                 rt1.referent = ad.register_referent(rt1.referent)
                                                 ss.value = rt1.referent
-                                                rr = ReferentToken._new695(rt1.referent, rt1.begin_token, rt1.end_token, rt1.morph)
+                                                rr = ReferentToken._new735(rt1.referent, rt1.begin_token, rt1.end_token, rt1.morph)
                                                 kit.embed_token(rr)
                                                 if (rr.begin_token == rt.begin_token): 
                                                     rt.begin_token = rr
@@ -259,7 +259,7 @@ class PersonAnalyzer(Analyzer):
                                                             rt1 = (ss.value if isinstance(ss.value, ReferentToken) else None)
                                                             rt1.referent = ad.register_referent(rt1.referent)
                                                             ss.value = rt1.referent
-                                                            rr = ReferentToken._new695(rt1.referent, rt1.begin_token, rt1.end_token, rt1.morph)
+                                                            rr = ReferentToken._new735(rt1.referent, rt1.begin_token, rt1.end_token, rt1.morph)
                                                             kit.embed_token(rr)
                                                             if (rr.begin_token == rt0.begin_token): 
                                                                 rt0.begin_token = rr
@@ -270,7 +270,7 @@ class PersonAnalyzer(Analyzer):
                                                             if (rr.end_token == pat.end_token): 
                                                                 pat.end_token = rr
                                                     pat.prop_ref = (ad.register_referent(pat.prop_ref) if isinstance(ad.register_referent(pat.prop_ref), PersonPropertyReferent) else None)
-                                                    rt2 = ReferentToken._new695(pat.prop_ref, pat.begin_token, pat.end_token, pat.morph)
+                                                    rt2 = ReferentToken._new735(pat.prop_ref, pat.begin_token, pat.end_token, pat.morph)
                                                     kit.embed_token(rt2)
                                                     if (rt2.begin_token == rt0.begin_token): 
                                                         rt0.begin_token = rt2
@@ -287,7 +287,7 @@ class PersonAnalyzer(Analyzer):
                                 rt.referent = ad.register_referent(rt.referent)
                                 for p in pats: 
                                     if (p.prop_ref is not None): 
-                                        rr = ReferentToken._new695(p.prop_ref, p.begin_token, p.end_token, p.morph)
+                                        rr = ReferentToken._new735(p.prop_ref, p.begin_token, p.end_token, p.morph)
                                         kit.embed_token(rr)
                                         if (rr.begin_token == rt.begin_token): 
                                             rt.begin_token = rr
@@ -307,7 +307,7 @@ class PersonAnalyzer(Analyzer):
                             pers.add_slot(PersonReferent.ATTR_IDDOC, rt.referent, False, 0)
                         kit.embed_token(rt)
                         t = rt
-                t = t.next0
+                t = t.next0_
             if (len(ad.referents) == 0 and not ad.need_second_step): 
                 break
             step += 1
@@ -320,22 +320,22 @@ class PersonAnalyzer(Analyzer):
                 if (s.type_name == PersonReferent.ATTR_ATTR and isinstance(s.value, PersonPropertyReferent)): 
                     pr = (s.value if isinstance(s.value, PersonPropertyReferent) else None)
                     li = [ ]
-                    inoutarg2266 = RefOutArgWrapper(None)
-                    inoutres2267 = Utils.tryGetValue(props, pr, inoutarg2266)
-                    li = inoutarg2266.value
-                    if (not inoutres2267): 
+                    inoutarg2419 = RefOutArgWrapper(None)
+                    inoutres2420 = Utils.tryGetValue(props, pr, inoutarg2419)
+                    li = inoutarg2419.value
+                    if (not inoutres2420): 
                         li = list()
                         props[pr] = li
                     if (not p in li): 
                         li.append(p)
         t = kit.first_token
-        first_pass2874 = True
+        first_pass3042 = True
         while True:
-            if first_pass2874: first_pass2874 = False
-            else: t = t.next0
+            if first_pass3042: first_pass3042 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (isinstance(t, ReferentToken)): 
-                if (t.chars.is_latin_letter and MiscHelper.is_eng_adj_suffix(t.next0)): 
+                if (t.chars.is_latin_letter and MiscHelper.is_eng_adj_suffix(t.next0_)): 
                     pass
                 else: 
                     continue
@@ -356,7 +356,7 @@ class PersonAnalyzer(Analyzer):
                     if (len(pers) > 1): 
                         break
             if (len(pers) == 1): 
-                tt = pat.end_token.next0
+                tt = pat.end_token.next0_
                 if (tt is not None and ((tt.is_char('_') or tt.is_newline_before or tt.is_table_control_char))): 
                     pass
                 else: 
@@ -394,7 +394,7 @@ class PersonAnalyzer(Analyzer):
         self.__m_level -= 1
         if (pat is None or pat.prop_ref is None): 
             return None
-        rt = ReferentToken._new695(pat.prop_ref, pat.begin_token, pat.end_token, pat.morph)
+        rt = ReferentToken._new735(pat.prop_ref, pat.begin_token, pat.end_token, pat.morph)
         rt.data = ad
         return rt
     
@@ -411,37 +411,37 @@ class PersonAnalyzer(Analyzer):
         res = list()
         res.append(rt)
         names = None
-        tt = rt.end_token.next0
+        tt = rt.end_token.next0_
         while tt is not None: 
             if (not tt.is_comma_and): 
                 break
-            pits = PersonItemToken.try_attach_list(tt.next0, None, PersonItemToken.ParseAttr.NO, 10)
+            pits = PersonItemToken.try_attach_list(tt.next0_, None, PersonItemToken.ParseAttr.NO, 10)
             if (pits is None or len(pits) != 1): 
                 break
             rt1 = PersonAnalyzer._try_attach_person(t, ad, False, step, False)
             if (rt1 is not None): 
                 break
-            if (pits[0].firstname is None or len(pits[0].firstname.vars0) == 0): 
+            if (pits[0].firstname is None or len(pits[0].firstname.vars0_) == 0): 
                 break
             if (names is None): 
                 names = list()
             names.append(pits[0])
             if (tt.is_and): 
                 break
-            tt = tt.next0
-            tt = tt.next0
+            tt = tt.next0_
+            tt = tt.next0_
         if (names is not None): 
             for n in names: 
                 pers = PersonReferent()
-                bi = MorphBaseInfo._new2269(MorphNumber.SINGULAR, t.kit.base_language)
-                bi.class0 = MorphClass._new2233(True)
-                if (n.firstname.vars0[0].gender == MorphGender.FEMINIE): 
+                bi = MorphBaseInfo._new2422(MorphNumber.SINGULAR, t.kit.base_language)
+                bi.class0_ = MorphClass._new2386(True)
+                if (n.firstname.vars0_[0].gender == MorphGender.FEMINIE): 
                     pers.is_female = True
                     bi.gender = MorphGender.FEMINIE
-                elif (n.firstname.vars0[0].gender == MorphGender.MASCULINE): 
+                elif (n.firstname.vars0_[0].gender == MorphGender.MASCULINE): 
                     pers.is_male = True
                     bi.gender = MorphGender.MASCULINE
-                for v in n.firstname.vars0: 
+                for v in n.firstname.vars0_: 
                     pers.add_slot(PersonReferent.ATTR_FIRSTNAME, v.value, False, 0)
                 for s in rt.referent.slots: 
                     if (s.type_name == PersonReferent.ATTR_ATTR): 
@@ -453,7 +453,7 @@ class PersonAnalyzer(Analyzer):
                             if (sur0 is not None): 
                                 pers.add_slot(PersonReferent.ATTR_LASTNAME, sur0, False, 0)
                         pers.add_slot(PersonReferent.ATTR_LASTNAME, sur, False, 0)
-                res.append(ReferentToken._new695(pers, n.begin_token, n.end_token, n.morph))
+                res.append(ReferentToken._new735(pers, n.begin_token, n.end_token, n.morph))
         return res
     
     @staticmethod
@@ -476,40 +476,40 @@ class PersonAnalyzer(Analyzer):
         mi.case = (MorphCase.NOMINATIVE if (for_ext_ontos or ((ad is not None and ad.nominative_case_always))) else MorphCase.ALL_CASES)
         mi.gender = (MorphGender.MASCULINE | MorphGender.FEMINIE)
         t0 = t
-        and0 = False
+        and0_ = False
         and_was_terminated = False
         can_attach_to_previous_person = True
         is_king = False
         after_be_predicate = False
-        first_pass2875 = True
+        first_pass3043 = True
         while True:
-            if first_pass2875: first_pass2875 = False
-            else: t = t.next0
+            if first_pass3043: first_pass3043 = False
+            else: t = t.next0_
             if (not (t is not None)): break
-            if (attrs is not None and t.next0 is not None): 
-                if (and0): 
+            if (attrs is not None and t.next0_ is not None): 
+                if (and0_): 
                     break
                 if (t.is_char(',')): 
-                    t = t.next0
+                    t = t.next0_
                 elif (t.is_and and t.is_whitespace_after and t.chars.is_all_lower): 
-                    t = t.next0
-                    and0 = True
+                    t = t.next0_
+                    and0_ = True
                 elif (t.is_hiphen and t.is_newline_after): 
-                    t = t.next0
-                    and0 = True
+                    t = t.next0_
+                    and0_ = True
                 elif (t.is_hiphen and t.whitespaces_after_count == 1 and t.whitespaces_before_count == 1): 
-                    t = t.next0
-                    and0 = True
-                elif ((t.is_hiphen and t.next0 is not None and t.next0.is_hiphen) and t.next0.whitespaces_after_count == 1 and t.whitespaces_before_count == 1): 
-                    t = t.next0.next0
-                    and0 = True
+                    t = t.next0_
+                    and0_ = True
+                elif ((t.is_hiphen and t.next0_ is not None and t.next0_.is_hiphen) and t.next0_.whitespaces_after_count == 1 and t.whitespaces_before_count == 1): 
+                    t = t.next0_.next0_
+                    and0_ = True
                 elif (t.is_char(':')): 
                     if (not attrs[len(attrs) - 1].morph.case.is_nominative and not attrs[len(attrs) - 1].morph.case.is_undefined): 
                         pass
                     else: 
                         mi.case = MorphCase.NOMINATIVE
                         mi.gender = (MorphGender.MASCULINE | MorphGender.FEMINIE)
-                    t = t.next0
+                    t = t.next0_
                     if (not BracketHelper.can_be_start_of_sequence(t, False, False)): 
                         can_attach_to_previous_person = False
                 elif (t.is_char('_')): 
@@ -520,14 +520,14 @@ class PersonAnalyzer(Analyzer):
                             break
                         else: 
                             cou += 1
-                        te = te.next0
+                        te = te.next0_
                     if (cou > 2 and ((not t.is_newline_before or ((te is not None and not te.is_newline_before))))): 
                         mi.case = MorphCase.NOMINATIVE
                         mi.gender = (MorphGender.MASCULINE | MorphGender.FEMINIE)
                         can_attach_to_previous_person = False
                         t = te
-                        if (t is not None and t.is_char('/') and t.next0 is not None): 
-                            t = t.next0
+                        if (t is not None and t.is_char('/') and t.next0_ is not None): 
+                            t = t.next0_
                         break
                 elif ((t.is_value("ЯВЛЯТЬСЯ", None) or t.is_value("БЫТЬ", None) or t.is_value("Є", None)) or t.is_value("IS", None)): 
                     mi.case = MorphCase.NOMINATIVE
@@ -535,14 +535,14 @@ class PersonAnalyzer(Analyzer):
                     after_be_predicate = True
                     continue
                 elif (((t.is_value("LIKE", None) or t.is_value("AS", None))) and attrs is not None): 
-                    t = t.next0
+                    t = t.next0_
                     break
             if (t.chars.is_latin_letter and step == 0): 
                 tt2 = t
                 if (MiscHelper.is_eng_article(t)): 
-                    tt2 = t.next0
+                    tt2 = t.next0_
                 pit0 = PersonItemToken.try_attach(tt2, (None if ad is None else ad.local_ontology), PersonItemToken.ParseAttr.CANBELATIN, None)
-                if (pit0 is not None and MiscHelper.is_eng_adj_suffix(pit0.end_token.next0) and ad is not None): 
+                if (pit0 is not None and MiscHelper.is_eng_adj_suffix(pit0.end_token.next0_) and ad is not None): 
                     pp = PersonIdentityToken.try_attach_onto_for_single(pit0, ad.local_ontology)
                     if (pp is None): 
                         pp = PersonIdentityToken.try_attach_latin_surname(pit0, ad.local_ontology)
@@ -581,7 +581,7 @@ class PersonAnalyzer(Analyzer):
                 is_king = True
             if (a.typ == PersonAttrTerminType.BESTREGARDS): 
                 mi.case = MorphCase.NOMINATIVE
-            if (and0): 
+            if (and0_): 
                 and_was_terminated = True
             if (a.can_has_person_after == 0): 
                 if (a.gender != MorphGender.UNDEFINED): 
@@ -592,13 +592,16 @@ class PersonAnalyzer(Analyzer):
                 if (not a.morph.case.is_undefined): 
                     mi.case &= a.morph.case
             t = a.end_token
-        if (attrs is not None and and0 and not and_was_terminated): 
+        if (attrs is not None and and0_ and not and_was_terminated): 
             if ((t is not None and t.previous is not None and t.previous.is_hiphen) and (t.whitespaces_before_count < 2)): 
                 pass
             else: 
                 return None
+        if (attrs is not None): 
+            if (t is not None and BracketHelper.can_be_end_of_sequence(t, False, None, False)): 
+                t = t.next0_
         while t is not None and t.is_table_control_char:
-            t = t.next0
+            t = t.next0_
         if (t is None): 
             if (attrs is not None): 
                 attr = attrs[len(attrs) - 1]
@@ -606,11 +609,11 @@ class PersonAnalyzer(Analyzer):
                     return ReferentToken(attr.prop_ref, attr.begin_token, attr.end_token)
             return None
         if (attrs is not None and t.is_char('(')): 
-            pr = PersonAnalyzer._try_attach_person(t.next0, ad, for_ext_ontos, step, for_attribute)
-            if (pr is not None and pr.end_token.next0 is not None and pr.end_token.next0.is_char(')')): 
-                res = PersonHelper._create_referent_token(pr.referent if isinstance(pr.referent, PersonReferent) else None, t, pr.end_token.next0, attrs[0].morph, attrs, ad, True, after_be_predicate)
+            pr = PersonAnalyzer._try_attach_person(t.next0_, ad, for_ext_ontos, step, for_attribute)
+            if (pr is not None and pr.end_token.next0_ is not None and pr.end_token.next0_.is_char(')')): 
+                res = PersonHelper._create_referent_token(pr.referent if isinstance(pr.referent, PersonReferent) else None, t, pr.end_token.next0_, attrs[0].morph, attrs, ad, True, after_be_predicate)
                 if (res is not None): 
-                    res.end_token = pr.end_token.next0
+                    res.end_token = pr.end_token.next0_
                 return res
         tt0 = t0.previous
         if (mi.case == MorphCase.ALL_CASES and tt0 is not None): 
@@ -649,26 +652,26 @@ class PersonAnalyzer(Analyzer):
                 if (ad is not None): 
                     ad.need_second_step = True
             if (pits is not None and len(pits) == 1 and pits[0].firstname is not None): 
-                if (pits[0].end_token.next0 is not None and pits[0].end_token.next0.is_and and isinstance(pits[0].end_token.next0.next0, ReferentToken)): 
-                    pr = (pits[0].end_token.next0.next0.get_referent() if isinstance(pits[0].end_token.next0.next0.get_referent(), PersonReferent) else None)
+                if (pits[0].end_token.next0_ is not None and pits[0].end_token.next0_.is_and and isinstance(pits[0].end_token.next0_.next0_, ReferentToken)): 
+                    pr = (pits[0].end_token.next0_.next0_.get_referent() if isinstance(pits[0].end_token.next0_.next0_.get_referent(), PersonReferent) else None)
                     if (pr is not None): 
-                        if (len(pits[0].firstname.vars0) < 1): 
+                        if (len(pits[0].firstname.vars0_) < 1): 
                             return None
-                        v = pits[0].firstname.vars0[0]
+                        v = pits[0].firstname.vars0_[0]
                         pers = PersonReferent()
-                        bi = MorphBaseInfo._new2272(v.gender, MorphNumber.SINGULAR, pits[0].kit.base_language)
-                        bi.class0 = MorphClass._new2233(True)
+                        bi = MorphBaseInfo._new2425(v.gender, MorphNumber.SINGULAR, pits[0].kit.base_language)
+                        bi.class0_ = MorphClass._new2386(True)
                         if (v.gender == MorphGender.MASCULINE): 
                             pers.is_male = True
                         elif (v.gender == MorphGender.FEMINIE): 
                             pers.is_female = True
                         for s in pr.slots: 
                             if (s.type_name == PersonReferent.ATTR_LASTNAME): 
-                                str0 = (s.value if isinstance(s.value, str) else None)
-                                str0 = Morphology.get_wordform(str0, bi)
+                                str0_ = (s.value if isinstance(s.value, str) else None)
+                                str0 = Morphology.get_wordform(str0_, bi)
                                 pers.add_slot(s.type_name, str0, False, 0)
-                                if (str0 != str0): 
-                                    pers.add_slot(s.type_name, str0, False, 0)
+                                if (str0 != str0_): 
+                                    pers.add_slot(s.type_name, str0_, False, 0)
                         if (len(pers.slots) == 0): 
                             return None
                         pers.add_slot(PersonReferent.ATTR_FIRSTNAME, v.value, False, 0)
@@ -677,8 +680,8 @@ class PersonAnalyzer(Analyzer):
                 if ((attr is not None and attr.prop_ref is not None and attr.prop_ref.kind == PersonPropertyKind.KIN) and isinstance(attr.prop_ref.get_value(PersonPropertyReferent.ATTR_REF), PersonReferent) and attr.gender != MorphGender.UNDEFINED): 
                     pr = (attr.prop_ref.get_value(PersonPropertyReferent.ATTR_REF) if isinstance(attr.prop_ref.get_value(PersonPropertyReferent.ATTR_REF), PersonReferent) else None)
                     pers = PersonReferent()
-                    bi = MorphBaseInfo._new2274(MorphNumber.SINGULAR, attr.gender, attr.kit.base_language)
-                    bi.class0 = MorphClass._new2233(True)
+                    bi = MorphBaseInfo._new2427(MorphNumber.SINGULAR, attr.gender, attr.kit.base_language)
+                    bi.class0_ = MorphClass._new2386(True)
                     for s in pr.slots: 
                         if (s.type_name == PersonReferent.ATTR_LASTNAME): 
                             sur = (s.value if isinstance(s.value, str) else None)
@@ -686,7 +689,7 @@ class PersonAnalyzer(Analyzer):
                             pers.add_slot(s.type_name, sur0, False, 0)
                             if (sur0 != sur): 
                                 pers.add_slot(s.type_name, sur, False, 0)
-                    v = pits[0].firstname.vars0[0]
+                    v = pits[0].firstname.vars0_[0]
                     pers.add_slot(PersonReferent.ATTR_FIRSTNAME, v.value, False, 0)
                     if (attr.gender == MorphGender.MASCULINE): 
                         pers.is_male = True
@@ -811,21 +814,21 @@ class PersonAnalyzer(Analyzer):
                     if (best.coef >= 0): 
                         best.coef += (1 if best.chars.is_all_upper else 2)
                 if (best.coef >= 0 and (best.coef < min_coef)): 
-                    tee = best.end_token.next0
+                    tee = best.end_token.next0_
                     tee1 = None
                     if (tee is not None and tee.is_char('(')): 
                         br = BracketHelper.try_parse(tee, BracketParseAttr.NO, 100)
                         if (br is not None and (br.length_char < 100)): 
-                            tee1 = br.begin_token.next0
-                            tee = br.end_token.next0
+                            tee1 = br.begin_token.next0_
+                            tee = br.end_token.next0_
                     if (isinstance(tee, TextToken)): 
                         if (tee.is_char_of(":,") or tee.is_hiphen or (tee if isinstance(tee, TextToken) else None).is_verb_be): 
-                            tee = tee.next0
+                            tee = tee.next0_
                     att = PersonAttrToken.try_attach(tee, (None if ad is None else ad.local_ontology), PersonAttrToken.PersonAttrAttachAttrs.NO)
                     if (att is None and tee1 is not None): 
                         att = PersonAttrToken.try_attach(tee1, (None if ad is None else ad.local_ontology), PersonAttrToken.PersonAttrAttachAttrs.NO)
                     if (att is not None): 
-                        if (tee == best.end_token.next0 and not att.morph.case.is_nominative and not att.morph.case.is_undefined): 
+                        if (tee == best.end_token.next0_ and not att.morph.case.is_nominative and not att.morph.case.is_undefined): 
                             pass
                         else: 
                             best.coef += 2
@@ -892,9 +895,9 @@ class PersonAnalyzer(Analyzer):
                                         if (pat.prop_ref is None): 
                                             break
                                         elif (pat.higher_prop_ref is None): 
-                                            str0 = s.lower()
-                                            if (pat.prop_ref.name is not None and not LanguageHelper.ends_with(pat.prop_ref.name, str0)): 
-                                                pat.prop_ref.name += (" " + str0)
+                                            str0_ = s.lower()
+                                            if (pat.prop_ref.name is not None and not LanguageHelper.ends_with(pat.prop_ref.name, str0_)): 
+                                                pat.prop_ref.name += (" " + str0_)
                                             if (pat.add_outer_org_as_ref): 
                                                 pat.prop_ref.add_slot(PersonPropertyReferent.ATTR_REF, None, True, 0)
                                                 pat.add_outer_org_as_ref = False
@@ -910,7 +913,7 @@ class PersonAnalyzer(Analyzer):
         if (attrs is not None): 
             attr = attrs[len(attrs) - 1]
             if (attr.can_be_single_person and attr.prop_ref is not None): 
-                return ReferentToken._new695(attr.prop_ref, attr.begin_token, attr.end_token, attr.morph)
+                return ReferentToken._new735(attr.prop_ref, attr.begin_token, attr.end_token, attr.morph)
         return None
     
     def process_ontology_item(self, begin : 'Token') -> 'ReferentToken':
@@ -924,17 +927,17 @@ class PersonAnalyzer(Analyzer):
             if (pat is not None and pat.prop_ref is not None): 
                 return ReferentToken(pat.prop_ref, pat.begin_token, pat.end_token)
             return None
-        t = rt.end_token.next0
+        t = rt.end_token.next0_
         while t is not None: 
-            if (t.is_char(';') and t.next0 is not None): 
-                rt1 = PersonAnalyzer._try_attach_person(t.next0, None, True, -1, False)
+            if (t.is_char(';') and t.next0_ is not None): 
+                rt1 = PersonAnalyzer._try_attach_person(t.next0_, None, True, -1, False)
                 if (rt1 is not None and rt1.referent.type_name == rt.referent.type_name): 
                     rt.referent.merge_slots(rt1.referent, True)
                     rt.end_token = rt1.end_token
                     t = rt.end_token
                 elif (rt1 is not None): 
                     t = rt1.end_token
-            t = t.next0
+            t = t.next0_
         return rt
     
     @staticmethod

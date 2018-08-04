@@ -17,19 +17,19 @@ class TerminToken(MetaToken):
 
     
     @staticmethod
-    def _new594(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'TerminToken':
+    def _new620(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'TerminToken':
         res = TerminToken(_arg1, _arg2)
         res.abridge_without_point = _arg3
         return res
     
     @staticmethod
-    def _new597(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Termin') -> 'TerminToken':
+    def _new623(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Termin') -> 'TerminToken':
         res = TerminToken(_arg1, _arg2)
         res.termin = _arg3
         return res
     
     @staticmethod
-    def _new602(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'TerminToken':
+    def _new628(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'TerminToken':
         res = TerminToken(_arg1, _arg2)
         res.morph = _arg3
         return res

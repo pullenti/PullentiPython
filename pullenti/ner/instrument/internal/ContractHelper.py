@@ -74,11 +74,11 @@ class ContractHelper:
                 br = BracketHelper.try_parse(tt, BracketParseAttr.CANBEMANYLINES, 100)
                 if (br is not None and br.end_char >= fr2.begin_char): 
                     return -1
-            tt = tt.next0
+            tt = tt.next0_
         t = fr1.end_token
         if (t.is_char_of(":;.")): 
             return 1
-        if (isinstance(t, TextToken) and ((t.morph.class0.is_preposition or t.morph.class0.is_conjunction))): 
+        if (isinstance(t, TextToken) and ((t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction))): 
             return -1
         t1 = fr2.begin_token
         if (isinstance(t1, TextToken)): 

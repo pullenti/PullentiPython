@@ -32,29 +32,29 @@ class AddressItemToken(MetaToken):
     
     class ItemType(IntEnum):
         PREFIX = 0
-        STREET = 1
-        HOUSE = 2
-        BUILDING = 3
-        CORPUS = 4
-        POTCH = 5
-        FLOOR = 6
-        FLAT = 7
-        CORPUSORFLAT = 8
-        OFFICE = 9
-        PLOT = 10
-        BLOCK = 11
-        BOX = 12
-        CITY = 13
-        REGION = 14
-        COUNTRY = 15
-        NUMBER = 16
-        NONUMBER = 17
-        KILOMETER = 18
-        ZIP = 19
-        POSTOFFICEBOX = 20
-        CSP = 21
-        DETAIL = 22
-        BUSINESSCENTER = 23
+        STREET = 0 + 1
+        HOUSE = (0 + 1) + 1
+        BUILDING = ((0 + 1) + 1) + 1
+        CORPUS = (((0 + 1) + 1) + 1) + 1
+        POTCH = ((((0 + 1) + 1) + 1) + 1) + 1
+        FLOOR = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
+        FLAT = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        CORPUSORFLAT = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        OFFICE = ((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        PLOT = (((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        BLOCK = ((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        BOX = (((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        CITY = ((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        REGION = (((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        COUNTRY = ((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        NUMBER = (((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        NONUMBER = ((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        KILOMETER = (((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        ZIP = ((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        POSTOFFICEBOX = (((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        CSP = ((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        DETAIL = (((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        BUSINESSCENTER = ((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
     
     def __init__(self, typ_ : 'ItemType', begin : 'Token', end : 'Token') -> None:
         self.typ = AddressItemToken.ItemType.PREFIX
@@ -123,9 +123,9 @@ class AddressItemToken(MetaToken):
         if (isinstance(t, NumberToken)): 
             v = (t if isinstance(t, NumberToken) else None).value
             if ((v < 100000) or v >= 10000000): 
-                if ((t if isinstance(t, NumberToken) else None).typ == NumberSpellingType.DIGIT and not t.morph.class0.is_adjective): 
-                    if (t.next0 is None or isinstance(t.next0, NumberToken)): 
-                        if (t.previous is None or not t.previous.morph.class0.is_preposition): 
+                if ((t if isinstance(t, NumberToken) else None).typ == NumberSpellingType.DIGIT and not t.morph.class0_.is_adjective): 
+                    if (t.next0_ is None or isinstance(t.next0_, NumberToken)): 
+                        if (t.previous is None or not t.previous.morph.class0_.is_preposition): 
                             return None
         it = AddressItemToken.try_parse(t, loc_streets, False, False, None)
         if (it is None): 
@@ -135,16 +135,16 @@ class AddressItemToken(MetaToken):
         if (it.typ == AddressItemToken.ItemType.KILOMETER and not it.is_number and isinstance(it.begin_token.previous, NumberToken)): 
             it.begin_token = it.begin_token.previous
             it.value = str((it.begin_token if isinstance(it.begin_token, NumberToken) else None).value)
-            if (it.begin_token.previous is not None and it.begin_token.previous.morph.class0.is_preposition): 
+            if (it.begin_token.previous is not None and it.begin_token.previous.morph.class0_.is_preposition): 
                 it.begin_token = it.begin_token.previous
         res = list()
         res.append(it)
         pref = it.typ == AddressItemToken.ItemType.PREFIX
-        t = it.end_token.next0
-        first_pass2525 = True
+        t = it.end_token.next0_
+        first_pass2678 = True
         while True:
-            if first_pass2525: first_pass2525 = False
-            else: t = t.next0
+            if first_pass2678: first_pass2678 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (max_count > 0 and len(res) >= max_count): 
                 break
@@ -152,9 +152,9 @@ class AddressItemToken(MetaToken):
             if (len(res) > 1): 
                 if (last.is_newline_before and res[len(res) - 2].typ != AddressItemToken.ItemType.PREFIX): 
                     i = 0
-                    first_pass2526 = True
+                    first_pass2679 = True
                     while True:
-                        if first_pass2526: first_pass2526 = False
+                        if first_pass2679: first_pass2679 = False
                         else: i += 1
                         if (not (i < (len(res) - 1))): break
                         if (res[i].typ == last.typ): 
@@ -183,15 +183,15 @@ class AddressItemToken(MetaToken):
                     break
                 continue
             if (t.is_hiphen or t.is_char('_')): 
-                if (((it.typ == AddressItemToken.ItemType.NUMBER or it.typ == AddressItemToken.ItemType.STREET)) and isinstance(t.next0, NumberToken)): 
+                if (((it.typ == AddressItemToken.ItemType.NUMBER or it.typ == AddressItemToken.ItemType.STREET)) and isinstance(t.next0_, NumberToken)): 
                     continue
             if (it.typ == AddressItemToken.ItemType.DETAIL and it.detail_type == AddressDetailType.CROSS): 
                 str1 = AddressItemToken.try_parse(t, loc_streets, True, False, None)
                 if (str1 is not None and str1.typ == AddressItemToken.ItemType.STREET): 
-                    if (str1.end_token.next0 is not None and ((str1.end_token.next0.is_and or str1.end_token.next0.is_hiphen))): 
-                        str2 = AddressItemToken.try_parse(str1.end_token.next0.next0, loc_streets, True, False, None)
+                    if (str1.end_token.next0_ is not None and ((str1.end_token.next0_.is_and or str1.end_token.next0_.is_hiphen))): 
+                        str2 = AddressItemToken.try_parse(str1.end_token.next0_.next0_, loc_streets, True, False, None)
                         if (str2 is None or str2.typ != AddressItemToken.ItemType.STREET): 
-                            str2 = StreetDefineHelper._try_parse_second_street(str1.begin_token, str1.end_token.next0.next0, loc_streets)
+                            str2 = StreetDefineHelper._try_parse_second_street(str1.begin_token, str1.end_token.next0_.next0_, loc_streets)
                             if (str2 is not None): 
                                 str2.is_doubt = False
                         if (str2 is not None and str2.typ == AddressItemToken.ItemType.STREET): 
@@ -216,13 +216,13 @@ class AddressItemToken(MetaToken):
                     res.append(it0)
                     it = it0
                     t = it.end_token
-                    tt1 = t.next0
+                    tt1 = t.next0_
                     while tt1 is not None: 
                         if (tt1.is_comma): 
                             pass
                         else: 
-                            if (tt1.is_value("Л", None) and tt1.next0 is not None and tt1.next0.is_char('.')): 
-                                ait = AddressItemToken.try_parse(tt1.next0.next0, None, False, True, None)
+                            if (tt1.is_value("Л", None) and tt1.next0_ is not None and tt1.next0_.is_char('.')): 
+                                ait = AddressItemToken.try_parse(tt1.next0_.next0_, None, False, True, None)
                                 if (ait is not None and ait.typ == AddressItemToken.ItemType.NUMBER): 
                                     st2 = StreetReferent()
                                     st2.add_slot(StreetReferent.ATTR_TYP, "линия", False, 0)
@@ -231,10 +231,10 @@ class AddressItemToken(MetaToken):
                                     res.append(it)
                                     t = it.end_token
                             break
-                        tt1 = tt1.next0
+                        tt1 = tt1.next0_
                     continue
-                if (t.morph.class0.is_preposition): 
-                    it0 = AddressItemToken.try_parse(t.next0, loc_streets, False, False, it)
+                if (t.morph.class0_.is_preposition): 
+                    it0 = AddressItemToken.try_parse(t.next0_, loc_streets, False, False, it)
                     if (it0 is not None and it0.typ == AddressItemToken.ItemType.BUILDING and it0.begin_token.is_value("СТ", None)): 
                         it0 = None
                         break
@@ -245,41 +245,41 @@ class AddressItemToken(MetaToken):
                             t = it.end_token
                             continue
                 if (it.typ == AddressItemToken.ItemType.HOUSE or it.typ == AddressItemToken.ItemType.BUILDING or it.typ == AddressItemToken.ItemType.NUMBER): 
-                    if ((not t.is_whitespace_before and t.length_char == 1 and t.chars.is_letter) and not t.is_whitespace_after and isinstance(t.next0, NumberToken)): 
+                    if ((not t.is_whitespace_before and t.length_char == 1 and t.chars.is_letter) and not t.is_whitespace_after and isinstance(t.next0_, NumberToken)): 
                         ch = AddressItemToken.__correct_char(t)
                         if (ch == "К" or ch == "С"): 
-                            it0 = AddressItemToken._new84((AddressItemToken.ItemType.CORPUS if ch == "К" else AddressItemToken.ItemType.BUILDING), t, t.next0, str((t.next0 if isinstance(t.next0, NumberToken) else None).value))
+                            it0 = AddressItemToken._new84((AddressItemToken.ItemType.CORPUS if ch == "К" else AddressItemToken.ItemType.BUILDING), t, t.next0_, str((t.next0_ if isinstance(t.next0_, NumberToken) else None).value))
                             it = it0
                             res.append(it)
                             t = it.end_token
-                            tt = t.next0
-                            if (((tt is not None and not tt.is_whitespace_before and tt.length_char == 1) and tt.chars.is_letter and not tt.is_whitespace_after) and isinstance(tt.next0, NumberToken)): 
+                            tt = t.next0_
+                            if (((tt is not None and not tt.is_whitespace_before and tt.length_char == 1) and tt.chars.is_letter and not tt.is_whitespace_after) and isinstance(tt.next0_, NumberToken)): 
                                 ch = AddressItemToken.__correct_char(tt)
                                 if (ch == "К" or ch == "С"): 
-                                    it = AddressItemToken._new84((AddressItemToken.ItemType.CORPUS if ch == "К" else AddressItemToken.ItemType.BUILDING), tt, tt.next0, str((tt.next0 if isinstance(tt.next0, NumberToken) else None).value))
+                                    it = AddressItemToken._new84((AddressItemToken.ItemType.CORPUS if ch == "К" else AddressItemToken.ItemType.BUILDING), tt, tt.next0_, str((tt.next0_ if isinstance(tt.next0_, NumberToken) else None).value))
                                     res.append(it)
                                     t = it.end_token
                             continue
-                if (t.morph.class0.is_preposition): 
+                if (t.morph.class0_.is_preposition): 
                     if ((((t.is_value("У", None) or t.is_value("ВОЗЛЕ", None) or t.is_value("НАПРОТИВ", None)) or t.is_value("НА", None) or t.is_value("В", None)) or t.is_value("ВО", None) or t.is_value("ПО", None)) or t.is_value("ОКОЛО", None)): 
                         continue
-                if (t.morph.class0.is_noun): 
+                if (t.morph.class0_.is_noun): 
                     if ((t.is_value("ДВОР", None) or t.is_value("ПОДЪЕЗД", None) or t.is_value("КРЫША", None)) or t.is_value("ПОДВАЛ", None)): 
                         continue
                 if (t.is_value("ТЕРРИТОРИЯ", "ТЕРИТОРІЯ")): 
                     continue
-                if (t.is_char('(') and t.next0 is not None): 
-                    it0 = AddressItemToken.try_parse(t.next0, loc_streets, pre, False, None)
-                    if (it0 is not None and it0.end_token.next0 is not None and it0.end_token.next0.is_char(')')): 
+                if (t.is_char('(') and t.next0_ is not None): 
+                    it0 = AddressItemToken.try_parse(t.next0_, loc_streets, pre, False, None)
+                    if (it0 is not None and it0.end_token.next0_ is not None and it0.end_token.next0_.is_char(')')): 
                         it0.begin_token = t
-                        it0.end_token = it0.end_token.next0
+                        it0.end_token = it0.end_token.next0_
                         it = it0
                         res.append(it)
                         t = it.end_token
                         continue
                     br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
                     if (br is not None and (br.length_char < 100)): 
-                        if (t.next0.is_value("БЫВШИЙ", None) or t.next0.is_value("БЫВШ", None)): 
+                        if (t.next0_.is_value("БЫВШИЙ", None) or t.next0_.is_value("БЫВШ", None)): 
                             it = AddressItemToken(AddressItemToken.ItemType.DETAIL, t, br.end_token)
                             res.append(it)
                         t = br.end_token
@@ -293,9 +293,9 @@ class AddressItemToken(MetaToken):
                             if (res[jj].typ == AddressItemToken.ItemType.STREET or res[jj].typ == AddressItemToken.ItemType.CITY): 
                                 check_kv = True
                     if (check_kv): 
-                        tt2 = t.next0
+                        tt2 = t.next0_
                         if (tt2 is not None and tt2.is_char('.')): 
-                            tt2 = tt2.next0
+                            tt2 = tt2.next0_
                         it22 = AddressItemToken.try_parse(tt2, loc_streets, False, True, None)
                         if (it22 is not None and it22.typ == AddressItemToken.ItemType.NUMBER): 
                             it22.begin_token = t
@@ -304,8 +304,8 @@ class AddressItemToken(MetaToken):
                             t = it22.end_token
                             continue
                 if (res[len(res) - 1].typ == AddressItemToken.ItemType.CITY): 
-                    if (((t.is_hiphen or t.is_char('_') or t.is_value("НЕТ", None))) and t.next0 is not None and t.next0.is_comma): 
-                        att = AddressItemToken.__try_parse(t.next0.next0, None, False, True, None)
+                    if (((t.is_hiphen or t.is_char('_') or t.is_value("НЕТ", None))) and t.next0_ is not None and t.next0_.is_comma): 
+                        att = AddressItemToken.__try_parse(t.next0_.next0_, None, False, True, None)
                         if (att is not None): 
                             if (att.typ == AddressItemToken.ItemType.HOUSE or att.typ == AddressItemToken.ItemType.BUILDING or att.typ == AddressItemToken.ItemType.CORPUS): 
                                 it = AddressItemToken(AddressItemToken.ItemType.STREET, t, t)
@@ -363,16 +363,16 @@ class AddressItemToken(MetaToken):
                             it.typ = AddressItemToken.ItemType.BOX
                             break
             if (it.typ == AddressItemToken.ItemType.NUMBER or it.typ == AddressItemToken.ItemType.ZIP): 
-                del0 = False
-                if (it.begin_token.previous is not None and it.begin_token.previous.morph.class0.is_preposition): 
-                    del0 = True
-                elif (it.morph.class0.is_noun): 
-                    del0 = True
-                if ((not del0 and it.end_token.whitespaces_after_count == 1 and it.whitespaces_before_count > 0) and it.typ == AddressItemToken.ItemType.NUMBER): 
-                    npt = NounPhraseHelper.try_parse(it.end_token.next0, NounPhraseParseAttr.NO, 0)
+                del0_ = False
+                if (it.begin_token.previous is not None and it.begin_token.previous.morph.class0_.is_preposition): 
+                    del0_ = True
+                elif (it.morph.class0_.is_noun): 
+                    del0_ = True
+                if ((not del0_ and it.end_token.whitespaces_after_count == 1 and it.whitespaces_before_count > 0) and it.typ == AddressItemToken.ItemType.NUMBER): 
+                    npt = NounPhraseHelper.try_parse(it.end_token.next0_, NounPhraseParseAttr.NO, 0)
                     if (npt is not None): 
-                        del0 = True
-                if (del0): 
+                        del0_ = True
+                if (del0_): 
                     del res[len(res) - 1]
                 elif ((it.typ == AddressItemToken.ItemType.NUMBER and it0 is not None and it0.typ == AddressItemToken.ItemType.STREET) and it0.ref_token is None): 
                     if (it.begin_token.previous.is_char(',') or it.is_newline_after): 
@@ -389,35 +389,35 @@ class AddressItemToken(MetaToken):
         i = 0
         while i < (len(res) - 1): 
             if (res[i].is_terr_or_rzd and res[i + 1].typ == AddressItemToken.ItemType.KILOMETER and (((i + 1) >= len(res) or not res[i + 1].is_terr_or_rzd))): 
-                str0 = StreetReferent()
-                str0.add_slot(StreetReferent.ATTR_TYP, "километр", True, 0)
-                str0.add_slot(StreetReferent.ATTR_NAME, res[i].referent.get_string_value(GeoReferent.ATTR_NAME), False, 0)
-                str0.add_slot(StreetReferent.ATTR_GEO, res[i].referent, False, 0)
-                str0.number = res[i + 1].value
+                str0_ = StreetReferent()
+                str0_.add_slot(StreetReferent.ATTR_TYP, "километр", True, 0)
+                str0_.add_slot(StreetReferent.ATTR_NAME, res[i].referent.get_string_value(GeoReferent.ATTR_NAME), False, 0)
+                str0_.add_slot(StreetReferent.ATTR_GEO, res[i].referent, False, 0)
+                str0_.number = res[i + 1].value
                 t11 = res[i + 1].end_token
                 remove2 = False
                 if ((res[i].value is None and ((i + 2) < len(res)) and res[i + 2].typ == AddressItemToken.ItemType.NUMBER) and res[i + 2].value is not None): 
-                    str0.number = (res[i + 2].value + "км")
+                    str0_.number = (res[i + 2].value + "км")
                     t11 = res[i + 2].end_token
                     remove2 = True
-                ai = AddressItemToken._new86(AddressItemToken.ItemType.STREET, res[i].begin_token, t11, str0, False)
+                ai = AddressItemToken._new86(AddressItemToken.ItemType.STREET, res[i].begin_token, t11, str0_, False)
                 res[i] = ai
                 del res[i + 1]
                 if (remove2): 
                     del res[i + 1]
             elif (res[i + 1].is_terr_or_rzd and res[i].typ == AddressItemToken.ItemType.KILOMETER): 
-                str0 = StreetReferent()
-                str0.add_slot(StreetReferent.ATTR_TYP, "километр", True, 0)
-                str0.add_slot(StreetReferent.ATTR_NAME, res[i + 1].referent.get_string_value(GeoReferent.ATTR_NAME), False, 0)
-                str0.add_slot(StreetReferent.ATTR_GEO, res[i + 1].referent, False, 0)
-                str0.number = res[i].value
+                str0_ = StreetReferent()
+                str0_.add_slot(StreetReferent.ATTR_TYP, "километр", True, 0)
+                str0_.add_slot(StreetReferent.ATTR_NAME, res[i + 1].referent.get_string_value(GeoReferent.ATTR_NAME), False, 0)
+                str0_.add_slot(StreetReferent.ATTR_GEO, res[i + 1].referent, False, 0)
+                str0_.number = res[i].value
                 t11 = res[i + 1].end_token
                 remove2 = False
                 if ((res[i].value is None and ((i + 2) < len(res)) and res[i + 2].typ == AddressItemToken.ItemType.NUMBER) and res[i + 2].value is not None): 
-                    str0.number = (res[i + 2].value + "км")
+                    str0_.number = (res[i + 2].value + "км")
                     t11 = res[i + 2].end_token
                     remove2 = True
-                ai = AddressItemToken._new86(AddressItemToken.ItemType.STREET, res[i].begin_token, t11, str0, False)
+                ai = AddressItemToken._new86(AddressItemToken.ItemType.STREET, res[i].begin_token, t11, str0_, False)
                 res[i] = ai
                 del res[i + 1]
                 if (remove2): 
@@ -469,7 +469,7 @@ class AddressItemToken(MetaToken):
                 ty = AddressItemToken.__find_addr_typ(tt, max_char, lev + 1)
                 if (ty is not None): 
                     return ty
-                tt = tt.next0
+                tt = tt.next0_
         else: 
             ai = AddressItemToken.try_attach_detail(t)
             if (ai is not None): 
@@ -488,26 +488,26 @@ class AddressItemToken(MetaToken):
         t.kit.recurse_level += 1
         res = AddressItemToken.__try_parse(t, loc_streets, prefix_before, ignore_street, prev)
         t.kit.recurse_level -= 1
-        if (((res is not None and not res.is_whitespace_after and res.end_token.next0 is not None) and res.end_token.next0.is_hiphen and not res.end_token.next0.is_whitespace_after) and res.value is not None): 
+        if (((res is not None and not res.is_whitespace_after and res.end_token.next0_ is not None) and res.end_token.next0_.is_hiphen and not res.end_token.next0_.is_whitespace_after) and res.value is not None): 
             if (res.typ == AddressItemToken.ItemType.HOUSE or res.typ == AddressItemToken.ItemType.BUILDING or res.typ == AddressItemToken.ItemType.CORPUS): 
-                tt = res.end_token.next0.next0
+                tt = res.end_token.next0_.next0_
                 if (isinstance(tt, NumberToken)): 
                     res.value = "{0}-{1}".format(res.value, (tt if isinstance(tt, NumberToken) else None).value)
                     res.end_token = tt
-                    if ((not tt.is_whitespace_after and isinstance(tt.next0, TextToken) and tt.next0.length_char == 1) and tt.next0.chars.is_all_upper): 
-                        tt = tt.next0
+                    if ((not tt.is_whitespace_after and isinstance(tt.next0_, TextToken) and tt.next0_.length_char == 1) and tt.next0_.chars.is_all_upper): 
+                        tt = tt.next0_
                         res.end_token = tt
                         res.value += (tt if isinstance(tt, TextToken) else None).term
-                    if ((not tt.is_whitespace_after and tt.next0 is not None and tt.next0.is_char_of("\\/")) and isinstance(tt.next0.next0, NumberToken)): 
-                        tt = tt.next0.next0
+                    if ((not tt.is_whitespace_after and tt.next0_ is not None and tt.next0_.is_char_of("\\/")) and isinstance(tt.next0_.next0_, NumberToken)): 
+                        tt = tt.next0_.next0_
                         res.end_token = tt
                         res.value = "{0}/{1}".format(res.value, (tt if isinstance(tt, NumberToken) else None).value)
-                    if ((not tt.is_whitespace_after and tt.next0 is not None and tt.next0.is_hiphen) and isinstance(tt.next0.next0, NumberToken)): 
-                        tt = tt.next0.next0
+                    if ((not tt.is_whitespace_after and tt.next0_ is not None and tt.next0_.is_hiphen) and isinstance(tt.next0_.next0_, NumberToken)): 
+                        tt = tt.next0_.next0_
                         res.end_token = tt
                         res.value = "{0}-{1}".format(res.value, (tt if isinstance(tt, NumberToken) else None).value)
-                        if ((not tt.is_whitespace_after and isinstance(tt.next0, TextToken) and tt.next0.length_char == 1) and tt.next0.chars.is_all_upper): 
-                            tt = tt.next0
+                        if ((not tt.is_whitespace_after and isinstance(tt.next0_, TextToken) and tt.next0_.length_char == 1) and tt.next0_.chars.is_all_upper): 
+                            tt = tt.next0_
                             res.end_token = tt
                             res.value += (tt if isinstance(tt, TextToken) else None).term
                 elif (isinstance(tt, TextToken) and tt.length_char == 1 and tt.chars.is_all_upper): 
@@ -553,15 +553,15 @@ class AddressItemToken(MetaToken):
                         if (ttt.is_newline_after): 
                             crlf = True
                             break
-                        ttt = ttt.next0
+                        ttt = ttt.next0_
                     if (crlf): 
                         ttt = rt.begin_token.previous
-                        first_pass2527 = True
+                        first_pass2680 = True
                         while True:
-                            if first_pass2527: first_pass2527 = False
+                            if first_pass2680: first_pass2680 = False
                             else: ttt = ttt.previous
                             if (not (ttt is not None)): break
-                            if (ttt.morph.class0.is_preposition or ttt.is_comma): 
+                            if (ttt.morph.class0_.is_preposition or ttt.is_comma): 
                                 continue
                             if (isinstance(ttt.get_referent(), GeoReferent)): 
                                 crlf = False
@@ -569,18 +569,18 @@ class AddressItemToken(MetaToken):
                         if (sli[0].typ == StreetItemType.NOUN and "ДОРОГА" in sli[0].termin.canonic_text): 
                             crlf = False
                     if (crlf): 
-                        aat = AddressItemToken.try_parse(rt.end_token.next0, None, False, True, None)
+                        aat = AddressItemToken.try_parse(rt.end_token.next0_, None, False, True, None)
                         if (aat is None): 
                             return None
                         if (aat.typ != AddressItemToken.ItemType.HOUSE): 
                             return None
                     return rt
                 if (len(sli) == 1 and sli[0].typ == StreetItemType.NOUN): 
-                    tt = sli[0].end_token.next0
+                    tt = sli[0].end_token.next0_
                     if (tt is not None and ((tt.is_hiphen or tt.is_char('_') or tt.is_value("НЕТ", None)))): 
-                        ttt = tt.next0
+                        ttt = tt.next0_
                         if (ttt is not None and ttt.is_comma): 
-                            ttt = ttt.next0
+                            ttt = ttt.next0_
                         att = AddressItemToken.try_parse(ttt, None, False, True, None)
                         if (att is not None): 
                             if (att.typ == AddressItemToken.ItemType.HOUSE or att.typ == AddressItemToken.ItemType.CORPUS or att.typ == AddressItemToken.ItemType.BUILDING): 
@@ -589,36 +589,36 @@ class AddressItemToken(MetaToken):
             return None
         if (isinstance(t, NumberToken)): 
             n = (t if isinstance(t, NumberToken) else None)
-            if (((n.length_char == 6 or n.length_char == 5)) and n.typ == NumberSpellingType.DIGIT and not n.morph.class0.is_adjective): 
+            if (((n.length_char == 6 or n.length_char == 5)) and n.typ == NumberSpellingType.DIGIT and not n.morph.class0_.is_adjective): 
                 return AddressItemToken._new84(AddressItemToken.ItemType.ZIP, t, t, str(n.value))
             ok = False
-            if ((t.previous is not None and t.previous.morph.class0.is_preposition and t.next0 is not None) and t.next0.chars.is_letter and t.next0.chars.is_all_lower): 
+            if ((t.previous is not None and t.previous.morph.class0_.is_preposition and t.next0_ is not None) and t.next0_.chars.is_letter and t.next0_.chars.is_all_lower): 
                 ok = True
-            elif (t.morph.class0.is_adjective and not t.morph.class0.is_noun): 
+            elif (t.morph.class0_.is_adjective and not t.morph.class0_.is_noun): 
                 ok = True
-            tok0 = AddressItemToken.__m_ontology.try_parse(t.next0, TerminParseAttr.NO)
+            tok0 = AddressItemToken.__m_ontology.try_parse(t.next0_, TerminParseAttr.NO)
             if (tok0 is not None and isinstance(tok0.termin.tag, AddressItemToken.ItemType)): 
-                if (tok0.end_token.next0 is None or tok0.end_token.next0.is_comma or tok0.end_token.is_newline_after): 
+                if (tok0.end_token.next0_ is None or tok0.end_token.next0_.is_comma or tok0.end_token.is_newline_after): 
                     ok = True
                 typ0 = Utils.valToEnum(tok0.termin.tag, AddressItemToken.ItemType)
                 if (typ0 == AddressItemToken.ItemType.FLAT): 
-                    if (isinstance(t.next0, TextToken) and t.next0.is_value("КВ", None)): 
-                        if (t.next0.get_source_text() == "кВ"): 
+                    if (isinstance(t.next0_, TextToken) and t.next0_.is_value("КВ", None)): 
+                        if (t.next0_.get_source_text() == "кВ"): 
                             return None
-                    if (isinstance(tok0.end_token.next0, NumberToken) and (tok0.end_token.whitespaces_after_count < 3)): 
+                    if (isinstance(tok0.end_token.next0_, NumberToken) and (tok0.end_token.whitespaces_after_count < 3)): 
                         if (prev is not None and ((prev.typ == AddressItemToken.ItemType.STREET or prev.typ == AddressItemToken.ItemType.CITY))): 
                             return AddressItemToken._new84(AddressItemToken.ItemType.NUMBER, t, t, str(n.value))
                 if ((typ0 == AddressItemToken.ItemType.KILOMETER or typ0 == AddressItemToken.ItemType.FLOOR or typ0 == AddressItemToken.ItemType.BLOCK) or typ0 == AddressItemToken.ItemType.POTCH or typ0 == AddressItemToken.ItemType.FLAT): 
                     return AddressItemToken._new84(typ0, t, tok0.end_token, str(n.value))
         prepos = False
         tok = None
-        if (t.morph.class0.is_preposition): 
+        if (t.morph.class0_.is_preposition): 
             tok = AddressItemToken.__m_ontology.try_parse(t, TerminParseAttr.NO)
             if ((tok) is None): 
                 if (t.begin_char < t.end_char): 
                     return None
                 if (not t.is_char_of("КСкс")): 
-                    t = t.next0
+                    t = t.next0_
                 prepos = True
         if (tok is None): 
             tok = AddressItemToken.__m_ontology.try_parse(t, TerminParseAttr.NO)
@@ -632,9 +632,9 @@ class AddressItemToken(MetaToken):
             if (tok.termin.canonic_text == "ТАМ ЖЕ"): 
                 cou = 0
                 tt = t.previous
-                first_pass2528 = True
+                first_pass2681 = True
                 while True:
-                    if first_pass2528: first_pass2528 = False
+                    if first_pass2681: first_pass2681 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (cou > 1000): 
@@ -654,7 +654,7 @@ class AddressItemToken(MetaToken):
                 return None
             if (isinstance(tok.termin.tag, AddressDetailType)): 
                 return AddressItemToken.try_attach_detail(t)
-            t1 = tok.end_token.next0
+            t1 = tok.end_token.next0_
             if (isinstance(tok.termin.tag, AddressItemToken.ItemType)): 
                 if (isinstance(tok.termin.tag2, AddressHouseType)): 
                     house_typ = Utils.valToEnum(tok.termin.tag2, AddressHouseType)
@@ -662,15 +662,15 @@ class AddressItemToken(MetaToken):
                     build_typ = Utils.valToEnum(tok.termin.tag2, AddressBuildingType)
                 typ_ = Utils.valToEnum(tok.termin.tag, AddressItemToken.ItemType)
                 if (typ_ == AddressItemToken.ItemType.PREFIX): 
-                    first_pass2529 = True
+                    first_pass2682 = True
                     while True:
-                        if first_pass2529: first_pass2529 = False
-                        else: t1 = t1.next0
+                        if first_pass2682: first_pass2682 = False
+                        else: t1 = t1.next0_
                         if (not (t1 is not None)): break
-                        if (((t1.morph.class0.is_preposition or t1.morph.class0.is_conjunction)) and t1.whitespaces_after_count == 1): 
+                        if (((t1.morph.class0_.is_preposition or t1.morph.class0_.is_conjunction)) and t1.whitespaces_after_count == 1): 
                             continue
                         if (t1.is_char(':')): 
-                            t1 = t1.next0
+                            t1 = t1.next0_
                             break
                         if (t1.is_char('(')): 
                             br = BracketHelper.try_parse(t1, BracketParseAttr.NO, 100)
@@ -685,7 +685,7 @@ class AddressItemToken(MetaToken):
                         if (t1.is_value("УКАЗАННЫЙ", None) or t1.is_value("ЕГРИП", None) or t1.is_value("ФАКТИЧЕСКИЙ", None)): 
                             continue
                         if (t1.is_comma): 
-                            if (t1.next0 is not None and t1.next0.is_value("УКАЗАННЫЙ", None)): 
+                            if (t1.next0_ is not None and t1.next0_.is_value("УКАЗАННЫЙ", None)): 
                                 continue
                         break
                     if (t1 is not None): 
@@ -696,15 +696,17 @@ class AddressItemToken(MetaToken):
                                 t0 = t
                         res = AddressItemToken(AddressItemToken.ItemType.PREFIX, t0, t1.previous)
                         tt = t0.previous
-                        first_pass2530 = True
+                        first_pass2683 = True
                         while True:
-                            if first_pass2530: first_pass2530 = False
+                            if first_pass2683: first_pass2683 = False
                             else: tt = tt.previous
                             if (not (tt is not None)): break
                             if (tt.newlines_after_count > 3): 
                                 break
                             if (tt.is_comma_and or tt.is_char_of("().")): 
                                 continue
+                            if (not ((isinstance(tt, TextToken)))): 
+                                break
                             if (((tt.is_value("ПОЧТОВЫЙ", None) or tt.is_value("ЮРИДИЧЕСКИЙ", None) or tt.is_value("ЮР", None)) or tt.is_value("ФАКТИЧЕСКИЙ", None) or tt.is_value("ФАКТ", None)) or tt.is_value("ПОЧТ", None) or tt.is_value("АДРЕС", None)): 
                                 res.begin_token = tt
                             else: 
@@ -727,15 +729,15 @@ class AddressItemToken(MetaToken):
                 if (typ_ == AddressItemToken.ItemType.KILOMETER or typ_ == AddressItemToken.ItemType.FLOOR or typ_ == AddressItemToken.ItemType.POTCH): 
                     return AddressItemToken(typ_, t, tok.end_token)
                 if ((typ_ == AddressItemToken.ItemType.HOUSE or typ_ == AddressItemToken.ItemType.BUILDING or typ_ == AddressItemToken.ItemType.CORPUS) or typ_ == AddressItemToken.ItemType.PLOT): 
-                    if (t1 is not None and ((t1.morph.class0.is_preposition or t1.morph.class0.is_conjunction)) and (t1.whitespaces_after_count < 2)): 
-                        tok2 = AddressItemToken.__m_ontology.try_parse(t1.next0, TerminParseAttr.NO)
+                    if (t1 is not None and ((t1.morph.class0_.is_preposition or t1.morph.class0_.is_conjunction)) and (t1.whitespaces_after_count < 2)): 
+                        tok2 = AddressItemToken.__m_ontology.try_parse(t1.next0_, TerminParseAttr.NO)
                         if (tok2 is not None and isinstance(tok2.termin.tag, AddressItemToken.ItemType)): 
                             typ2 = Utils.valToEnum(tok2.termin.tag, AddressItemToken.ItemType)
                             if (typ2 != typ_ and ((typ2 == AddressItemToken.ItemType.PLOT or ((typ2 == AddressItemToken.ItemType.HOUSE and typ_ == AddressItemToken.ItemType.PLOT))))): 
                                 typ_ = typ2
                                 if (isinstance(tok.termin.tag2, AddressHouseType)): 
                                     house_typ = Utils.valToEnum(tok.termin.tag2, AddressHouseType)
-                                t1 = tok2.end_token.next0
+                                t1 = tok2.end_token.next0_
                                 if (t1 is None): 
                                     return AddressItemToken._new95(typ_, t, tok2.end_token, "0", house_typ)
                 if (typ_ != AddressItemToken.ItemType.NUMBER): 
@@ -743,34 +745,34 @@ class AddressItemToken(MetaToken):
                         return AddressItemToken._new96(typ_, t, tok.end_token, house_typ, build_typ)
                     if (isinstance(t1, NumberToken) and (t1 if isinstance(t1, NumberToken) else None).value == 0): 
                         return AddressItemToken._new97(typ_, t, t1, "0", house_typ, build_typ)
-        if (t1 is not None and t1.is_char('.') and t1.next0 is not None): 
+        if (t1 is not None and t1.is_char('.') and t1.next0_ is not None): 
             if (not t1.is_whitespace_after): 
-                t1 = t1.next0
-            elif (isinstance(t1.next0, NumberToken) and (t1.next0 if isinstance(t1.next0, NumberToken) else None).typ == NumberSpellingType.DIGIT and (t1.whitespaces_after_count < 2)): 
-                t1 = t1.next0
-        if ((t1 is not None and not t1.is_whitespace_after and ((t1.is_hiphen or t1.is_char('_')))) and isinstance(t1.next0, NumberToken)): 
-            t1 = t1.next0
+                t1 = t1.next0_
+            elif (isinstance(t1.next0_, NumberToken) and (t1.next0_ if isinstance(t1.next0_, NumberToken) else None).typ == NumberSpellingType.DIGIT and (t1.whitespaces_after_count < 2)): 
+                t1 = t1.next0_
+        if ((t1 is not None and not t1.is_whitespace_after and ((t1.is_hiphen or t1.is_char('_')))) and isinstance(t1.next0_, NumberToken)): 
+            t1 = t1.next0_
         tok = AddressItemToken.__m_ontology.try_parse(t1, TerminParseAttr.NO)
         if (tok is not None and isinstance(tok.termin.tag, AddressItemToken.ItemType) and Utils.valToEnum(tok.termin.tag, AddressItemToken.ItemType) == AddressItemToken.ItemType.NUMBER): 
-            t1 = tok.end_token.next0
+            t1 = tok.end_token.next0_
         elif (tok is not None and isinstance(tok.termin.tag, AddressItemToken.ItemType) and Utils.valToEnum(tok.termin.tag, AddressItemToken.ItemType) == AddressItemToken.ItemType.NONUMBER): 
             re0 = AddressItemToken._new97(typ_, t, tok.end_token, "0", house_typ, build_typ)
-            if (not re0.is_whitespace_after and isinstance(re0.end_token.next0, NumberToken)): 
-                re0.end_token = re0.end_token.next0
+            if (not re0.is_whitespace_after and isinstance(re0.end_token.next0_, NumberToken)): 
+                re0.end_token = re0.end_token.next0_
                 re0.value = str((re0.end_token if isinstance(re0.end_token, NumberToken) else None).value)
             return re0
         elif (t1 is not None): 
             if (typ_ == AddressItemToken.ItemType.FLAT): 
                 tok2 = AddressItemToken.__m_ontology.try_parse(t1, TerminParseAttr.NO)
                 if (tok2 is not None and Utils.valToEnum(tok2.termin.tag, AddressItemToken.ItemType) == AddressItemToken.ItemType.FLAT): 
-                    t1 = tok2.end_token.next0
-            if (t1.is_value("СТРОИТЕЛЬНЫЙ", None) and t1.next0 is not None): 
-                t1 = t1.next0
+                    t1 = tok2.end_token.next0_
+            if (t1.is_value("СТРОИТЕЛЬНЫЙ", None) and t1.next0_ is not None): 
+                t1 = t1.next0_
             ttt = MiscHelper.check_number_prefix(t1)
             if (ttt is not None): 
                 t1 = ttt
                 if (t1.is_hiphen or t1.is_char('_')): 
-                    t1 = t1.next0
+                    t1 = t1.next0_
         if (t1 is None): 
             return None
         num = Utils.newStringIO(None)
@@ -785,28 +787,28 @@ class AddressItemToken(MetaToken):
                 drob = False
                 hiph = False
                 lit = False
-                et = nt.next0
+                et = nt.next0_
                 if (et is not None and ((et.is_char_of("\\/") or et.is_value("ДРОБЬ", None)))): 
                     drob = True
-                    et = et.next0
+                    et = et.next0_
                     if (et is not None and et.is_char_of("\\/")): 
-                        et = et.next0
+                        et = et.next0_
                     t1 = et
                 elif (et is not None and ((et.is_hiphen or et.is_char('_')))): 
                     hiph = True
-                    et = et.next0
-                elif ((et is not None and et.is_char('.') and isinstance(et.next0, NumberToken)) and not et.is_whitespace_after): 
+                    et = et.next0_
+                elif ((et is not None and et.is_char('.') and isinstance(et.next0_, NumberToken)) and not et.is_whitespace_after): 
                     return None
                 if (isinstance(et, NumberToken)): 
                     if (drob): 
                         print("/{0}".format((et if isinstance(et, NumberToken) else None).value), end="", file=num, flush=True)
                         drob = False
                         t1 = et
-                        et = et.next0
-                        if (et is not None and et.is_char_of("\\/") and isinstance(et.next0, NumberToken)): 
-                            t1 = et.next0
+                        et = et.next0_
+                        if (et is not None and et.is_char_of("\\/") and isinstance(et.next0_, NumberToken)): 
+                            t1 = et.next0_
                             print("/{0}".format((t1 if isinstance(t1, NumberToken) else None).value), end="", file=num, flush=True)
-                            et = t1.next0
+                            et = t1.next0_
                     elif ((hiph and not t1.is_whitespace_after and isinstance(et, NumberToken)) and not et.is_whitespace_before): 
                         numm = AddressItemToken.try_parse(et, None, False, True, None)
                         if (numm is not None and numm.typ == AddressItemToken.ItemType.NUMBER): 
@@ -814,9 +816,9 @@ class AddressItemToken(MetaToken):
                             if (typ_ == AddressItemToken.ItemType.FLAT or typ_ == AddressItemToken.ItemType.PLOT): 
                                 merge = True
                             elif (typ_ == AddressItemToken.ItemType.HOUSE or typ_ == AddressItemToken.ItemType.BUILDING or typ_ == AddressItemToken.ItemType.CORPUS): 
-                                ttt = numm.end_token.next0
+                                ttt = numm.end_token.next0_
                                 if (ttt is not None and ttt.is_comma): 
-                                    ttt = ttt.next0
+                                    ttt = ttt.next0_
                                 numm2 = AddressItemToken.try_parse(ttt, None, False, True, None)
                                 if (numm2 is not None): 
                                     if ((numm2.typ == AddressItemToken.ItemType.FLAT or numm2.typ == AddressItemToken.ItemType.BUILDING or ((numm2.typ == AddressItemToken.ItemType.CORPUSORFLAT and numm2.value is not None))) or numm2.typ == AddressItemToken.ItemType.CORPUS): 
@@ -824,29 +826,29 @@ class AddressItemToken(MetaToken):
                             if (merge): 
                                 print("/{0}".format(numm.value), end="", file=num, flush=True)
                                 t1 = numm.end_token
-                                et = t1.next0
+                                et = t1.next0_
                 elif (et is not None and ((et.is_hiphen or et.is_char('_') or et.is_value("НЕТ", None))) and drob): 
                     t1 = et
-                if (((BracketHelper.is_bracket(et, False) and isinstance(et.next0, TextToken) and et.next0.length_char == 1) and et.next0.is_letters and BracketHelper.is_bracket(et.next0.next0, False)) and not et.is_whitespace_after and not et.next0.is_whitespace_after): 
-                    ch = AddressItemToken.__correct_char(et.next0)
+                if (((BracketHelper.is_bracket(et, False) and isinstance(et.next0_, TextToken) and et.next0_.length_char == 1) and et.next0_.is_letters and BracketHelper.is_bracket(et.next0_.next0_, False)) and not et.is_whitespace_after and not et.next0_.is_whitespace_after): 
+                    ch = AddressItemToken.__correct_char(et.next0_)
                     if (ch is None): 
                         return None
                     print(ch, end="", file=num)
-                    t1 = et.next0.next0
+                    t1 = et.next0_.next0_
                 elif (BracketHelper.can_be_start_of_sequence(et, True, False) and (et.whitespaces_before_count < 2)): 
                     br = BracketHelper.try_parse(et, BracketParseAttr.NO, 100)
-                    if (br is not None and isinstance(br.begin_token.next0, TextToken) and br.begin_token.next0.next0 == br.end_token): 
-                        s = AddressItemToken.__correct_char(br.begin_token.next0)
+                    if (br is not None and isinstance(br.begin_token.next0_, TextToken) and br.begin_token.next0_.next0_ == br.end_token): 
+                        s = AddressItemToken.__correct_char(br.begin_token.next0_)
                         if (s is not None): 
                             print(s, end="", file=num)
                             t1 = br.end_token
                 elif (isinstance(et, TextToken) and (et if isinstance(et, TextToken) else None).length_char == 1): 
                     s = AddressItemToken.__correct_char(et)
                     if (s is not None): 
-                        if (((s == "К" or s == "С")) and isinstance(et.next0, NumberToken) and not et.is_whitespace_after): 
+                        if (((s == "К" or s == "С")) and isinstance(et.next0_, NumberToken) and not et.is_whitespace_after): 
                             pass
-                        elif ((s == "Б" and et.next0 is not None and et.next0.is_char_of("/\\")) and isinstance(et.next0.next0, TextToken) and et.next0.next0.is_value("Н", None)): 
-                            et = et.next0.next0
+                        elif ((s == "Б" and et.next0_ is not None and et.next0_.is_char_of("/\\")) and isinstance(et.next0_.next0_, TextToken) and et.next0_.next0_.is_value("Н", None)): 
+                            et = et.next0_.next0_
                             t1 = et
                         else: 
                             ok = False
@@ -854,30 +856,30 @@ class AddressItemToken(MetaToken):
                                 ok = True
                             elif (not et.is_whitespace_before or ((et.whitespaces_before_count == 1 and et.chars.is_all_upper))): 
                                 ok = True
-                                if (isinstance(et.next0, NumberToken)): 
+                                if (isinstance(et.next0_, NumberToken)): 
                                     if (not et.is_whitespace_before and et.is_whitespace_after): 
                                         pass
                                     else: 
                                         ok = False
-                            elif (((et.next0 is None or et.next0.is_comma)) and (et.whitespaces_before_count < 2)): 
+                            elif (((et.next0_ is None or et.next0_.is_comma)) and (et.whitespaces_before_count < 2)): 
                                 ok = True
                             elif (et.is_whitespace_before and et.chars.is_all_lower and et.is_value("В", "У")): 
                                 pass
                             else: 
-                                ait_next = AddressItemToken.try_parse(et.next0, None, False, True, None)
+                                ait_next = AddressItemToken.try_parse(et.next0_, None, False, True, None)
                                 if (ait_next is not None): 
                                     if ((ait_next.typ == AddressItemToken.ItemType.CORPUS or ait_next.typ == AddressItemToken.ItemType.FLAT or ait_next.typ == AddressItemToken.ItemType.BUILDING) or ait_next.typ == AddressItemToken.ItemType.OFFICE): 
                                         ok = True
                             if (ok): 
                                 print(s, end="", file=num)
                                 t1 = et
-                                if (et.next0 is not None and et.next0.is_char_of("\\/") and et.next0.next0 is not None): 
-                                    if (isinstance(et.next0.next0, NumberToken)): 
-                                        print("/{0}".format((et.next0.next0 if isinstance(et.next0.next0, NumberToken) else None).value), end="", file=num, flush=True)
-                                        et = et.next0.next0
+                                if (et.next0_ is not None and et.next0_.is_char_of("\\/") and et.next0_.next0_ is not None): 
+                                    if (isinstance(et.next0_.next0_, NumberToken)): 
+                                        print("/{0}".format((et.next0_.next0_ if isinstance(et.next0_.next0_, NumberToken) else None).value), end="", file=num, flush=True)
+                                        et = et.next0_.next0_
                                         t1 = et
-                                    elif (et.next0.next0.is_hiphen or et.next0.next0.is_char('_') or et.next0.next0.is_value("НЕТ", None)): 
-                                        et = et.next0.next0
+                                    elif (et.next0_.next0_.is_hiphen or et.next0_.next0_.is_char('_') or et.next0_.next0_.is_value("НЕТ", None)): 
+                                        et = et.next0_.next0_
                                         t1 = et
                 elif (isinstance(et, TextToken) and not et.is_whitespace_before): 
                     val = (et if isinstance(et, TextToken) else None).term
@@ -886,9 +888,9 @@ class AddressItemToken(MetaToken):
                         print("КМ", end="", file=num)
                     elif (val == "БН"): 
                         t1 = et
-                    elif (((len(val) == 2 and val[1] == 'Б' and et.next0 is not None) and et.next0.is_char_of("\\/") and et.next0.next0 is not None) and et.next0.next0.is_value("Н", None)): 
+                    elif (((len(val) == 2 and val[1] == 'Б' and et.next0_ is not None) and et.next0_.is_char_of("\\/") and et.next0_.next0_ is not None) and et.next0_.next0_.is_value("Н", None)): 
                         print(val[0], end="", file=num)
-                        et = et.next0.next0
+                        et = et.next0_.next0_
                         t1 = et
         else: 
             re11 = AddressItemToken.__try_attachvch(t1, typ_)
@@ -903,7 +905,7 @@ class AddressItemToken(MetaToken):
                     if (typ_ == AddressItemToken.ItemType.NUMBER): 
                         return None
                     if (ch == "К" or ch == "С"): 
-                        if (not t1.is_whitespace_after and isinstance(t1.next0, NumberToken)): 
+                        if (not t1.is_whitespace_after and isinstance(t1.next0_, NumberToken)): 
                             return None
                     if (ch == "Д" and typ_ == AddressItemToken.ItemType.PLOT): 
                         rrr = AddressItemToken.__try_parse(t1, None, False, True, None)
@@ -911,34 +913,34 @@ class AddressItemToken(MetaToken):
                             rrr.typ = AddressItemToken.ItemType.PLOT
                             rrr.begin_token = t
                             return rrr
-                    if (t1.chars.is_all_lower and ((t1.morph.class0.is_preposition or t1.morph.class0.is_conjunction))): 
-                        if ((t1.whitespaces_after_count < 2) and t1.next0.chars.is_letter): 
+                    if (t1.chars.is_all_lower and ((t1.morph.class0_.is_preposition or t1.morph.class0_.is_conjunction))): 
+                        if ((t1.whitespaces_after_count < 2) and t1.next0_.chars.is_letter): 
                             return None
-                    if (t.chars.is_all_upper and t.length_char == 1 and t.next0.is_char('.')): 
+                    if (t.chars.is_all_upper and t.length_char == 1 and t.next0_.is_char('.')): 
                         return None
                     print(ch, end="", file=num)
-                    if ((t1.next0 is not None and ((t1.next0.is_hiphen or t1.next0.is_char('_'))) and not t1.is_whitespace_after) and isinstance(t1.next0.next0, NumberToken) and not t1.next0.is_whitespace_after): 
-                        print((t1.next0.next0 if isinstance(t1.next0.next0, NumberToken) else None).value, end="", file=num)
-                        t1 = t1.next0.next0
-                    elif (isinstance(t1.next0, NumberToken) and not t1.is_whitespace_after and t1.chars.is_all_upper): 
-                        print((t1.next0 if isinstance(t1.next0, NumberToken) else None).value, end="", file=num)
-                        t1 = t1.next0
+                    if ((t1.next0_ is not None and ((t1.next0_.is_hiphen or t1.next0_.is_char('_'))) and not t1.is_whitespace_after) and isinstance(t1.next0_.next0_, NumberToken) and not t1.next0_.is_whitespace_after): 
+                        print((t1.next0_.next0_ if isinstance(t1.next0_.next0_, NumberToken) else None).value, end="", file=num)
+                        t1 = t1.next0_.next0_
+                    elif (isinstance(t1.next0_, NumberToken) and not t1.is_whitespace_after and t1.chars.is_all_upper): 
+                        print((t1.next0_ if isinstance(t1.next0_, NumberToken) else None).value, end="", file=num)
+                        t1 = t1.next0_
                 if (typ_ == AddressItemToken.ItemType.BOX and num.tell() == 0): 
                     rom = NumberHelper.try_parse_roman(t1)
                     if (rom is not None): 
                         return AddressItemToken._new84(typ_, t, rom.end_token, str(rom.value))
-            elif (((BracketHelper.is_bracket(t1, False) and isinstance(t1.next0, TextToken) and t1.next0.length_char == 1) and t1.next0.is_letters and BracketHelper.is_bracket(t1.next0.next0, False)) and not t1.is_whitespace_after and not t1.next0.is_whitespace_after): 
-                ch = AddressItemToken.__correct_char(t1.next0)
+            elif (((BracketHelper.is_bracket(t1, False) and isinstance(t1.next0_, TextToken) and t1.next0_.length_char == 1) and t1.next0_.is_letters and BracketHelper.is_bracket(t1.next0_.next0_, False)) and not t1.is_whitespace_after and not t1.next0_.is_whitespace_after): 
+                ch = AddressItemToken.__correct_char(t1.next0_)
                 if (ch is None): 
                     return None
                 print(ch, end="", file=num)
-                t1 = t1.next0.next0
+                t1 = t1.next0_.next0_
             elif (isinstance(t1, TextToken) and ((((t1.length_char == 1 and ((t1.is_hiphen or t1.is_char('_'))))) or t1.is_value("НЕТ", None) or t1.is_value("БН", None))) and (((typ_ == AddressItemToken.ItemType.CORPUS or typ_ == AddressItemToken.ItemType.CORPUSORFLAT or typ_ == AddressItemToken.ItemType.BUILDING) or typ_ == AddressItemToken.ItemType.HOUSE or typ_ == AddressItemToken.ItemType.FLAT))): 
-                while t1.next0 is not None and ((t1.next0.is_hiphen or t1.next0.is_char('_'))) and not t1.is_whitespace_after:
-                    t1 = t1.next0
+                while t1.next0_ is not None and ((t1.next0_.is_hiphen or t1.next0_.is_char('_'))) and not t1.is_whitespace_after:
+                    t1 = t1.next0_
                 val = None
-                if (not t1.is_whitespace_after and isinstance(t1.next0, NumberToken)): 
-                    t1 = t1.next0
+                if (not t1.is_whitespace_after and isinstance(t1.next0_, NumberToken)): 
+                    t1 = t1.next0_
                     val = str((t1 if isinstance(t1, NumberToken) else None).value)
                 if (t1.is_value("БН", None)): 
                     val = "0"
@@ -971,8 +973,8 @@ class AddressItemToken(MetaToken):
             return None
         if (t1 is None): 
             t1 = t
-            while t1.next0 is not None:
-                t1 = t1.next0
+            while t1.next0_ is not None:
+                t1 = t1.next0_
         return AddressItemToken._new105(typ_, t, t1, Utils.toStringStringIO(num), t.morph, house_typ, build_typ)
     
     @staticmethod
@@ -984,23 +986,23 @@ class AddressItemToken(MetaToken):
             return None
         tt = t
         while tt is not None: 
-            if ((((tt.is_value("В", None) or tt.is_value("B", None))) and tt.next0 is not None and tt.next0.is_char_of("./\\")) and isinstance(tt.next0.next0, TextToken) and tt.next0.next0.is_value("Ч", None)): 
-                tt = tt.next0.next0
-                if (tt.next0 is not None and tt.next0.is_char('.')): 
-                    tt = tt.next0
-                tt2 = MiscHelper.check_number_prefix(tt.next0)
+            if ((((tt.is_value("В", None) or tt.is_value("B", None))) and tt.next0_ is not None and tt.next0_.is_char_of("./\\")) and isinstance(tt.next0_.next0_, TextToken) and tt.next0_.next0_.is_value("Ч", None)): 
+                tt = tt.next0_.next0_
+                if (tt.next0_ is not None and tt.next0_.is_char('.')): 
+                    tt = tt.next0_
+                tt2 = MiscHelper.check_number_prefix(tt.next0_)
                 if (tt2 is not None): 
                     tt = tt2
-                if (tt.next0 is not None and isinstance(tt.next0, NumberToken) and (tt.whitespaces_after_count < 2)): 
-                    tt = tt.next0
+                if (tt.next0_ is not None and isinstance(tt.next0_, NumberToken) and (tt.whitespaces_after_count < 2)): 
+                    tt = tt.next0_
                 return AddressItemToken._new84(ty, t, tt, "В/Ч")
-            elif (((tt.is_value("ВОЙСКОВОЙ", None) or tt.is_value("ВОИНСКИЙ", None))) and tt.next0 is not None and tt.next0.is_value("ЧАСТЬ", None)): 
-                tt = tt.next0
-                tt2 = MiscHelper.check_number_prefix(tt.next0)
+            elif (((tt.is_value("ВОЙСКОВОЙ", None) or tt.is_value("ВОИНСКИЙ", None))) and tt.next0_ is not None and tt.next0_.is_value("ЧАСТЬ", None)): 
+                tt = tt.next0_
+                tt2 = MiscHelper.check_number_prefix(tt.next0_)
                 if (tt2 is not None): 
                     tt = tt2
-                if (tt.next0 is not None and isinstance(tt.next0, NumberToken) and (tt.whitespaces_after_count < 2)): 
-                    tt = tt.next0
+                if (tt.next0_ is not None and isinstance(tt.next0_, NumberToken) and (tt.whitespaces_after_count < 2)): 
+                    tt = tt.next0_
                 return AddressItemToken._new84(ty, t, tt, "В/Ч")
             elif (ty == AddressItemToken.ItemType.FLAT): 
                 if (tt.whitespaces_before_count > 1): 
@@ -1008,23 +1010,23 @@ class AddressItemToken(MetaToken):
                 if (not ((isinstance(tt, TextToken)))): 
                     break
                 if ((tt if isinstance(tt, TextToken) else None).term.startswith("ОБЩ")): 
-                    if (tt.next0 is not None and tt.next0.is_char('.')): 
-                        tt = tt.next0
-                    re = AddressItemToken.__try_attachvch(tt.next0, ty)
+                    if (tt.next0_ is not None and tt.next0_.is_char('.')): 
+                        tt = tt.next0_
+                    re = AddressItemToken.__try_attachvch(tt.next0_, ty)
                     if (re is not None): 
                         return re
                     return AddressItemToken._new84(ty, t, tt, "ОБЩ")
                 if (tt.chars.is_all_upper and tt.length_char > 1): 
                     re = AddressItemToken._new84(ty, t, tt, (tt if isinstance(tt, TextToken) else None).term)
-                    if ((tt.whitespaces_after_count < 2) and isinstance(tt.next0, TextToken) and tt.next0.chars.is_all_upper): 
-                        tt = tt.next0
+                    if ((tt.whitespaces_after_count < 2) and isinstance(tt.next0_, TextToken) and tt.next0_.chars.is_all_upper): 
+                        tt = tt.next0_
                         re.end_token = tt
                         re.value += (tt if isinstance(tt, TextToken) else None).term
                     return re
                 break
             else: 
                 break
-            tt = tt.next0
+            tt = tt.next0_
         return None
     
     @staticmethod
@@ -1035,15 +1037,15 @@ class AddressItemToken(MetaToken):
         if (t is None or ((isinstance(t, ReferentToken)))): 
             return None
         tt = t
-        if (t.chars.is_capital_upper and not t.morph.class0.is_preposition): 
+        if (t.chars.is_capital_upper and not t.morph.class0_.is_preposition): 
             return None
         tok = AddressItemToken.__m_ontology.try_parse(t, TerminParseAttr.NO)
-        if (tok is None and t.morph.class0.is_preposition and t.next0 is not None): 
-            tt = t.next0
+        if (tok is None and t.morph.class0_.is_preposition and t.next0_ is not None): 
+            tt = t.next0_
             if (isinstance(tt, NumberToken)): 
                 pass
             else: 
-                if (tt.chars.is_capital_upper and not tt.morph.class0.is_preposition): 
+                if (tt.chars.is_capital_upper and not tt.morph.class0_.is_preposition): 
                     return None
                 tok = AddressItemToken.__m_ontology.try_parse(tt, TerminParseAttr.NO)
         res = None
@@ -1071,15 +1073,15 @@ class AddressItemToken(MetaToken):
                 else: 
                     return None
             res = AddressItemToken._new111(AddressItemToken.ItemType.DETAIL, t, tok.end_token, Utils.valToEnum(tok.termin.tag, AddressDetailType))
-        tt = res.end_token.next0
-        first_pass2531 = True
+        tt = res.end_token.next0_
+        first_pass2684 = True
         while True:
-            if first_pass2531: first_pass2531 = False
-            else: tt = tt.next0
+            if first_pass2684: first_pass2684 = False
+            else: tt = tt.next0_
             if (not (tt is not None)): break
             if (isinstance(tt, ReferentToken)): 
                 break
-            if (not tt.morph.class0.is_preposition): 
+            if (not tt.morph.class0_.is_preposition): 
                 if (tt.chars.is_capital_upper or tt.chars.is_all_upper): 
                     break
             tok = AddressItemToken.__m_ontology.try_parse(tt, TerminParseAttr.NO)
@@ -1096,9 +1098,9 @@ class AddressItemToken(MetaToken):
             if (tt.is_value("ОРИЕНТИР", None) or tt.is_value("НАПРАВЛЕНИЕ", None) or tt.is_value("ОТ", None)): 
                 res.end_token = tt
                 continue
-            if (tt.is_comma or tt.morph.class0.is_preposition): 
+            if (tt.is_comma or tt.morph.class0_.is_preposition): 
                 continue
-            if (isinstance(tt, NumberToken) and tt.next0 is not None): 
+            if (isinstance(tt, NumberToken) and tt.next0_ is not None): 
                 nex = NumberExToken.try_parse_number_with_postfix(tt)
                 if (nex is not None and ((nex.ex_typ == NumberExType.METER or nex.ex_typ == NumberExType.KILOMETER))): 
                     tt = nex.end_token
@@ -1111,9 +1113,9 @@ class AddressItemToken(MetaToken):
             break
         if (first_num and res.detail_type == AddressDetailType.UNDEFINED): 
             return None
-        if (res is not None and res.end_token.next0 is not None and res.end_token.next0.morph.class0.is_preposition): 
-            if (res.end_token.whitespaces_after_count == 1 and res.end_token.next0.whitespaces_after_count == 1): 
-                res.end_token = res.end_token.next0
+        if (res is not None and res.end_token.next0_ is not None and res.end_token.next0_.morph.class0_.is_preposition): 
+            if (res.end_token.whitespaces_after_count == 1 and res.end_token.next0_.whitespaces_after_count == 1): 
+                res.end_token = res.end_token.next0_
         return res
     
     @staticmethod
@@ -1145,17 +1147,17 @@ class AddressItemToken(MetaToken):
                             namm = (t if isinstance(t, TextToken) else None).term[i - 1 : ]
                             rt00 = ReferentToken(org00, t, t)
                             rt00.data = t.kit.get_analyzer_data_by_analyzer_name("ORGANIZATION")
-                            if (t.next0 is not None and t.next0.is_hiphen): 
-                                if (isinstance(t.next0.next0, NumberToken)): 
-                                    org00.add_slot("NUMBER", str((t.next0.next0 if isinstance(t.next0.next0, NumberToken) else None).value), False, 0)
-                                    rt00.end_token = t.next0.next0
-                                elif (isinstance(t.next0.next0, TextToken) and not t.next0.is_whitespace_after): 
-                                    namm = "{0}-{1}".format(namm, (t.next0.next0 if isinstance(t.next0.next0, TextToken) else None).term)
-                                    rt00.end_token = t.next0.next0
+                            if (t.next0_ is not None and t.next0_.is_hiphen): 
+                                if (isinstance(t.next0_.next0_, NumberToken)): 
+                                    org00.add_slot("NUMBER", str((t.next0_.next0_ if isinstance(t.next0_.next0_, NumberToken) else None).value), False, 0)
+                                    rt00.end_token = t.next0_.next0_
+                                elif (isinstance(t.next0_.next0_, TextToken) and not t.next0_.is_whitespace_after): 
+                                    namm = "{0}-{1}".format(namm, (t.next0_.next0_ if isinstance(t.next0_.next0_, TextToken) else None).term)
+                                    rt00.end_token = t.next0_.next0_
                             org00.add_slot("NAME", namm, False, 0)
                             return AddressItemToken._new114(AddressItemToken.ItemType.STREET, t, rt00.end_token, rt00.referent, rt00, True)
                         break
-        if (t.is_value("СНТ", None) and isinstance(t.next0, ReferentToken)): 
+        if (t.is_value("СНТ", None) and isinstance(t.next0_, ReferentToken)): 
             pass
         rt = None
         typ_ = None
@@ -1175,63 +1177,63 @@ class AddressItemToken(MetaToken):
                 else: 
                     rt1 = None
         else: 
-            tt = rt1.begin_token.next0
+            tt = rt1.begin_token.next0_
             while tt is not None and (tt.end_char < rt1.end_char): 
                 if (tt.is_comma): 
                     rt1.end_token = tt.previous
-                    if (isinstance(tt.next0, ReferentToken)): 
-                        s = rt1.referent.find_slot(None, tt.next0.get_referent(), True)
+                    if (isinstance(tt.next0_, ReferentToken)): 
+                        s = rt1.referent.find_slot(None, tt.next0_.get_referent(), True)
                         if (s is not None): 
                             rt1.referent.slots.remove(s)
-                tt = tt.next0
-            tt = rt1.end_token.next0
+                tt = tt.next0_
+            tt = rt1.end_token.next0_
             while tt is not None: 
                 if (tt.is_hiphen or tt.is_comma): 
                     pass
                 elif (isinstance(tt, TextToken) and (tt if isinstance(tt, TextToken) else None).term == "ПМК"): 
-                    tt2 = tt.next0
+                    tt2 = tt.next0_
                     if (tt2 is not None and ((tt2.is_hiphen or tt2.is_char_of(":")))): 
-                        tt2 = tt2.next0
+                        tt2 = tt2.next0_
                     if (isinstance(tt2, NumberToken)): 
                         rt1.referent.add_slot("NUMBER", str((tt2 if isinstance(tt2, NumberToken) else None).value), False, 0)
                         rt1.end_token = tt2
                         break
                 else: 
                     break
-                tt = tt.next0
-        tt1 = t.next0
+                tt = tt.next0_
+        tt1 = t.next0_
         if (tt1 is not None and tt1.is_value("ПМК", None)): 
-            tt1 = tt1.next0
+            tt1 = tt1.next0_
         if (tok is not None): 
             if (tok.begin_token == tok.end_token and tok.begin_token.is_value("СП", None)): 
-                tok = AddressItemToken.__m_org_ontology.try_parse(tok.end_token.next0, TerminParseAttr.NO)
+                tok = AddressItemToken.__m_org_ontology.try_parse(tok.end_token.next0_, TerminParseAttr.NO)
                 if (tok is not None): 
                     tok.begin_token = t
                     ok = True
-                    tt1 = tok.end_token.next0
+                    tt1 = tok.end_token.next0_
                 if (rt1 is None): 
-                    rt1 = t.kit.process_referent("ORGANIZATION", t.next0)
+                    rt1 = t.kit.process_referent("ORGANIZATION", t.next0_)
                     if ((rt1) is not None): 
                         rt1.begin_token = t
             else: 
                 ok = True
-                tt1 = tok.end_token.next0
+                tt1 = tok.end_token.next0_
             tok2 = AddressItemToken.__m_org_ontology.try_parse(tt1, TerminParseAttr.NO)
             if (tok2 is not None): 
-                tt1 = tok2.end_token.next0
+                tt1 = tok2.end_token.next0_
                 tok2 = AddressItemToken.__m_org_ontology.try_parse(tt1, TerminParseAttr.NO)
                 if (tok2 is not None): 
-                    tt1 = tok2.end_token.next0
+                    tt1 = tok2.end_token.next0_
             while tt1 is not None:
                 if (tt1.is_value("ОБЩЕСТВО", None) or tt1.is_value("ТЕРРИТОРИЯ", None) or tt1.is_value("ПМК", None)): 
-                    tt1 = tt1.next0
+                    tt1 = tt1.next0_
                 else: 
                     break
             if (isinstance(tt1, TextToken) and tt1.chars.is_all_lower and ((tt1.length_char == 2 or tt1.length_char == 3))): 
                 if (tt1.whitespaces_before_count < 2): 
                     if (AddressItemToken.check_house_after(tt1, False, False)): 
                         return None
-                    tt1 = tt1.next0
+                    tt1 = tt1.next0_
         elif (t.length_char > 1 and t.chars.is_cyrillic_letter): 
             nt2 = t
             num2 = None
@@ -1241,11 +1243,11 @@ class AddressItemToken(MetaToken):
                 ok = True
             elif (t.chars.is_all_lower and t.get_morph_class_in_dictionary().is_undefined and not t.is_value("ПСЕВДО", None)): 
                 ok = True
-            tt2 = t.next0
-            first_pass2532 = True
+            tt2 = t.next0_
+            first_pass2685 = True
             while True:
-                if first_pass2532: first_pass2532 = False
-                else: tt2 = tt2.next0
+                if first_pass2685: first_pass2685 = False
+                else: tt2 = tt2.next0_
                 if (not (tt2 is not None)): break
                 if (tt2.whitespaces_before_count > 2): 
                     break
@@ -1265,8 +1267,8 @@ class AddressItemToken(MetaToken):
                 if (tt2.is_hiphen): 
                     continue
                 if (tt2.is_value("ИМ", None)): 
-                    if (tt2.next0 is not None and tt2.next0.is_char('.')): 
-                        tt2 = tt2.next0
+                    if (tt2.next0_ is not None and tt2.next0_.is_char('.')): 
+                        tt2 = tt2.next0_
                     continue
                 if (isinstance(tt2, NumberToken)): 
                     num2 = tt2
@@ -1291,7 +1293,7 @@ class AddressItemToken(MetaToken):
         elif (BracketHelper.is_bracket(t, True)): 
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
             if (br is not None): 
-                if (AddressItemToken.check_house_after(br.end_token.next0, False, False)): 
+                if (AddressItemToken.check_house_after(br.end_token.next0_, False, False)): 
                     tt1 = t
                     ok = True
                 else: 
@@ -1304,7 +1306,7 @@ class AddressItemToken(MetaToken):
         if (ok and BracketHelper.is_bracket(tt1, False)): 
             br = BracketHelper.try_parse(tt1, BracketParseAttr.NO, 100)
             if (br is not None and (br.length_char < 100)): 
-                res1 = AddressItemToken.try_attach_org(tt1.next0)
+                res1 = AddressItemToken.try_attach_org(tt1.next0_)
                 if (res1 is not None and res1.ref_token is not None): 
                     if (res1.end_token == br.end_token or res1.end_token == br.end_token.previous): 
                         res1.begin_token = t
@@ -1329,7 +1331,7 @@ class AddressItemToken(MetaToken):
         if (ok and ((((typ_ is None and ((t.chars.is_all_upper and t.length_char == 3)))) or tok is not None))): 
             tt = tt1
             if (tt is not None and ((tt.is_hiphen or tt.is_char('_')))): 
-                tt = tt.next0
+                tt = tt.next0_
             adt = AddressItemToken.try_parse(tt, None, False, True, None)
             if (adt is not None and adt.typ == AddressItemToken.ItemType.NUMBER): 
                 if (tt.previous.is_hiphen or tt.previous.is_char('_') or not ((isinstance(tt, NumberToken)))): 
@@ -1352,9 +1354,9 @@ class AddressItemToken(MetaToken):
             nam = MiscHelper.get_text_value(tt1, tt1, GetTextAttr.NO)
             t1 = tt1
         if ((ok and typ_ is None and num is not None) and t.length_char > 2 and (t.length_char < 5)): 
-            tt2 = t1.next0
+            tt2 = t1.next0_
             if (tt2 is not None and tt2.is_char(',')): 
-                tt2 = tt2.next0
+                tt2 = tt2.next0_
             if (tt2 is not None and (tt2.whitespaces_after_count < 2)): 
                 adt = AddressItemToken.try_parse(tt2, None, False, True, None)
                 if (adt is not None): 
@@ -1366,78 +1368,78 @@ class AddressItemToken(MetaToken):
             elif ("БІЗНЕС" in nam): 
                 typ_ = "бізнес центр"
         if (typ_ is not None): 
-            org = t.kit.create_referent("ORGANIZATION")
-            if (org is None): 
-                org = Referent("ORGANIZATION")
-            org.add_slot("TYPE", typ_, False, 0)
+            org0_ = t.kit.create_referent("ORGANIZATION")
+            if (org0_ is None): 
+                org0_ = Referent("ORGANIZATION")
+            org0_.add_slot("TYPE", typ_, False, 0)
             if (typ2 is not None): 
-                org.add_slot("TYPE", typ2, False, 0)
+                org0_.add_slot("TYPE", typ2, False, 0)
             if (nam is not None): 
-                if ((not bracks and t1.next0 is not None and t1.next0.chars.is_cyrillic_letter) and t1.whitespaces_after_count == 1): 
+                if ((not bracks and t1.next0_ is not None and t1.next0_.chars.is_cyrillic_letter) and t1.whitespaces_after_count == 1): 
                     ok = False
-                    if (tok is not None and t1.next0 == tok.end_token): 
+                    if (tok is not None and t1.next0_ == tok.end_token): 
                         pass
-                    elif (t1.next0.next0 is None or BracketHelper.can_be_end_of_sequence(t1.next0.next0, False, None, False)): 
+                    elif (t1.next0_.next0_ is None or BracketHelper.can_be_end_of_sequence(t1.next0_.next0_, False, None, False)): 
                         ok = True
-                    elif (t1.next0.next0.is_char(',')): 
+                    elif (t1.next0_.next0_.is_char(',')): 
                         ok = True
-                    elif (isinstance(t1.next0.next0, NumberToken) and ((t1.next0.next0.next0 is None or BracketHelper.can_be_end_of_sequence(t1.next0.next0.next0, False, None, False)))): 
+                    elif (isinstance(t1.next0_.next0_, NumberToken) and ((t1.next0_.next0_.next0_ is None or BracketHelper.can_be_end_of_sequence(t1.next0_.next0_.next0_, False, None, False)))): 
                         ok = True
-                    elif (((t1.next0.next0.is_hiphen or t1.next0.next0.is_value("N", None) or t1.next0.next0.is_value("№", None))) and isinstance(t1.next0.next0.next0, NumberToken)): 
+                    elif (((t1.next0_.next0_.is_hiphen or t1.next0_.next0_.is_value("N", None) or t1.next0_.next0_.is_value("№", None))) and isinstance(t1.next0_.next0_.next0_, NumberToken)): 
                         ok = True
                     if (ok): 
-                        nam = "{0} {1}".format(nam, t1.next0.get_source_text().upper())
-                        t1 = t1.next0
-                elif ((((not bracks and t1.next0 is not None and t1.next0.next0 is not None) and t1.next0.is_hiphen and not t1.is_whitespace_after) and not t1.next0.is_whitespace_after and ((isinstance(t1.next0.next0, TextToken) or isinstance(t1.next0.next0.get_referent(), GeoReferent)))) and t1.next0.next0.chars.is_cyrillic_letter): 
-                    nam = "{0} {1}".format(nam, MiscHelper.get_text_value(t1.next0.next0, t1.next0.next0, GetTextAttr.NO))
-                    t1 = t1.next0.next0
+                        nam = "{0} {1}".format(nam, t1.next0_.get_source_text().upper())
+                        t1 = t1.next0_
+                elif ((((not bracks and t1.next0_ is not None and t1.next0_.next0_ is not None) and t1.next0_.is_hiphen and not t1.is_whitespace_after) and not t1.next0_.is_whitespace_after and ((isinstance(t1.next0_.next0_, TextToken) or isinstance(t1.next0_.next0_.get_referent(), GeoReferent)))) and t1.next0_.next0_.chars.is_cyrillic_letter): 
+                    nam = "{0} {1}".format(nam, MiscHelper.get_text_value(t1.next0_.next0_, t1.next0_.next0_, GetTextAttr.NO))
+                    t1 = t1.next0_.next0_
                 if ((nam.startswith("ИМ.") or nam.startswith("ИМ ") or nam.startswith("ІМ.")) or nam.startswith("ІМ ")): 
-                    org.add_slot("NAME", nam[3 : ].strip(), False, 0)
+                    org0_.add_slot("NAME", nam[3 : ].strip(), False, 0)
                     nam = "{0} {1}".format(("ІМЕНІ" if nam.startswith("ІМ") else "ИМЕНИ"), nam[3 : ].strip())
                 if (nam.startswith("ИМЕНИ ") or nam.startswith("ІМЕНІ ")): 
-                    org.add_slot("NAME", nam[6 : ].strip(), False, 0)
-                org.add_slot("NAME", nam, False, 0)
-            rt = ReferentToken._new115(org, t, t1, t.kit.get_analyzer_data_by_analyzer_name("ORGANIZATION"))
+                    org0_.add_slot("NAME", nam[6 : ].strip(), False, 0)
+                org0_.add_slot("NAME", nam, False, 0)
+            rt = ReferentToken._new115(org0_, t, t1, t.kit.get_analyzer_data_by_analyzer_name("ORGANIZATION"))
             empty_org = False
-            if ((t1.next0 is not None and t1.next0.is_hiphen and t1.next0.next0 is not None) and t1.next0.next0.is_value("ГОРОДИЩЕ", None)): 
-                rt.end_token = t1.next0.next0
-            if (t1.next0 is not None and t1.next0.is_value("ПРИ", None)): 
-                rtt = t1.kit.process_referent("ORGANIZATION", t1.next0.next0)
+            if ((t1.next0_ is not None and t1.next0_.is_hiphen and t1.next0_.next0_ is not None) and t1.next0_.next0_.is_value("ГОРОДИЩЕ", None)): 
+                rt.end_token = t1.next0_.next0_
+            if (t1.next0_ is not None and t1.next0_.is_value("ПРИ", None)): 
+                rtt = t1.kit.process_referent("ORGANIZATION", t1.next0_.next0_)
                 if (rtt is not None): 
                     empty_org = True
                     t1 = rtt.end_token
                     rt.end_token = t1
-            if (t1.next0 is not None and t1.next0.is_value("АПН", None)): 
-                t1 = t1.next0
+            if (t1.next0_ is not None and t1.next0_.is_value("АПН", None)): 
+                t1 = t1.next0_
                 rt.end_token = t1
             if (t1.whitespaces_after_count < 2): 
-                rtt1 = t1.kit.process_referent("ORGANIZATION", t1.next0)
+                rtt1 = t1.kit.process_referent("ORGANIZATION", t1.next0_)
                 if (rtt1 is not None): 
                     empty_org = True
                     t1 = rtt1.end_token
                     rt.end_token = t1
             if (empty_org and (t1.whitespaces_after_count < 2)): 
-                terr = TerrItemToken.try_parse(t1.next0, None, False, False)
+                terr = TerrItemToken.try_parse(t1.next0_, None, False, False)
                 if (terr is not None and terr.onto_item is not None): 
                     t1 = terr.end_token
                     rt.end_token = t1
             if (num is not None): 
-                org.add_slot("NUMBER", num, False, 0)
-            elif (t1.next0 is not None and ((t1.next0.is_hiphen or t1.next0.is_value("№", None) or t1.next0.is_value("N", None))) and isinstance(t1.next0.next0, NumberToken)): 
-                nai = AddressItemToken.try_parse(t1.next0.next0, None, False, True, None)
+                org0_.add_slot("NUMBER", num, False, 0)
+            elif (t1.next0_ is not None and ((t1.next0_.is_hiphen or t1.next0_.is_value("№", None) or t1.next0_.is_value("N", None))) and isinstance(t1.next0_.next0_, NumberToken)): 
+                nai = AddressItemToken.try_parse(t1.next0_.next0_, None, False, True, None)
                 if (nai is not None and nai.typ == AddressItemToken.ItemType.NUMBER): 
-                    org.add_slot("NUMBER", nai.value, False, 0)
+                    org0_.add_slot("NUMBER", nai.value, False, 0)
                     rt.end_token = nai.end_token
                     t1 = rt.end_token
                 else: 
-                    rt.end_token = t1.next0.next0
+                    rt.end_token = t1.next0_.next0_
                     t1 = rt.end_token
-                    org.add_slot("NUMBER", str((t1 if isinstance(t1, NumberToken) else None).value), False, 0)
+                    org0_.add_slot("NUMBER", str((t1 if isinstance(t1, NumberToken) else None).value), False, 0)
             if (tok is not None and (t1.end_char < tok.end_char)): 
                 rt.end_token = tok.end_token
                 t1 = rt.end_token
-                if (t1.next0 is not None and (t1.whitespaces_after_count < 2) and t1.next0.is_value("ТЕРРИТОРИЯ", "ТЕРИТОРІЯ")): 
-                    rt.end_token = t1.next0
+                if (t1.next0_ is not None and (t1.whitespaces_after_count < 2) and t1.next0_.is_value("ТЕРРИТОРИЯ", "ТЕРИТОРІЯ")): 
+                    rt.end_token = t1.next0_
                     t1 = rt.end_token
         if (rt is None): 
             rt = rt1
@@ -1478,11 +1480,11 @@ class AddressItemToken(MetaToken):
             return False
         cou = 0
         while t is not None and (cou < 4): 
-            if (t.is_char_of(",.") or t.morph.class0.is_preposition): 
+            if (t.is_char_of(",.") or t.morph.class0_.is_preposition): 
                 pass
             else: 
                 break
-            t = t.next0; cou += 1
+            t = t.next0_; cou += 1
         if (t is None): 
             return False
         if (t.is_newline_before): 
@@ -1492,18 +1494,18 @@ class AddressItemToken(MetaToken):
             if (pure_house): 
                 return ait.typ == AddressItemToken.ItemType.HOUSE or ait.typ == AddressItemToken.ItemType.PLOT
             if ((ait.typ == AddressItemToken.ItemType.HOUSE or ait.typ == AddressItemToken.ItemType.FLOOR or ait.typ == AddressItemToken.ItemType.OFFICE) or ait.typ == AddressItemToken.ItemType.FLAT or ait.typ == AddressItemToken.ItemType.PLOT): 
-                if ((isinstance(t, TextToken) and t.chars.is_all_upper and t.next0 is not None) and t.next0.is_hiphen and isinstance(t.next0.next0, NumberToken)): 
+                if ((isinstance(t, TextToken) and t.chars.is_all_upper and t.next0_ is not None) and t.next0_.is_hiphen and isinstance(t.next0_.next0_, NumberToken)): 
                     return False
-                if (isinstance(t, TextToken) and t.next0 == ait.end_token and t.next0.is_hiphen): 
+                if (isinstance(t, TextToken) and t.next0_ == ait.end_token and t.next0_.is_hiphen): 
                     return False
                 return True
             if (leek): 
                 if (ait.typ == AddressItemToken.ItemType.NUMBER): 
                     return True
             if (ait.typ == AddressItemToken.ItemType.NUMBER): 
-                t1 = t.next0
+                t1 = t.next0_
                 while t1 is not None and t1.is_char_of(".,"):
-                    t1 = t1.next0
+                    t1 = t1.next0_
                 ait = AddressItemToken.try_parse(t1, None, False, True, None)
                 if (ait is not None and (((ait.typ == AddressItemToken.ItemType.BUILDING or ait.typ == AddressItemToken.ItemType.CORPUS or ait.typ == AddressItemToken.ItemType.FLAT) or ait.typ == AddressItemToken.ItemType.FLOOR or ait.typ == AddressItemToken.ItemType.OFFICE))): 
                     return True
@@ -1514,11 +1516,11 @@ class AddressItemToken(MetaToken):
         from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         cou = 0
         while t is not None and (cou < 4): 
-            if (t.is_char_of(",.") or t.morph.class0.is_preposition): 
+            if (t.is_char_of(",.") or t.morph.class0_.is_preposition): 
                 pass
             else: 
                 break
-            t = t.next0; cou += 1
+            t = t.next0_; cou += 1
         if (t is None): 
             return False
         km = AddressItemToken.try_parse(t, None, False, True, None)

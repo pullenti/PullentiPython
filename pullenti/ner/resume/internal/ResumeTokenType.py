@@ -9,5 +9,5 @@ from enum import IntEnum
 
 class ResumeTokenType(IntEnum):
     UNDEFINED = 0
-    STUDY = 1
-    JOB = 2
+    STUDY = 0 + 1
+    JOB = (0 + 1) + 1

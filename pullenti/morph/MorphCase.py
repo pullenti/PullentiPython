@@ -194,17 +194,17 @@ class MorphCase:
         return Utils.toStringStringIO(tmp_str)
     
     @staticmethod
-    def parse(str0 : str) -> 'MorphCase':
+    def parse(str0_ : str) -> 'MorphCase':
         """ Восстановить падежи из строки, полученной ToString
         
         Args:
-            str0(str): 
+            str0_(str): 
         
         """
         res = MorphCase()
-        if (Utils.isNullOrEmpty(str0)): 
+        if (Utils.isNullOrEmpty(str0_)): 
             return res
-        for s in Utils.splitString(str0, '|', False): 
+        for s in Utils.splitString(str0_, '|', False): 
             i = 0
             while i < len(MorphCase.__m_names): 
                 if (s == MorphCase.__m_names[i]): 

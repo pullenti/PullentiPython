@@ -29,15 +29,15 @@ class NounPhraseHelper:
         if (res is not None): 
             return res
         if (((typ & NounPhraseParseAttr.PARSEPREPOSITION)) != NounPhraseParseAttr.NO): 
-            if (isinstance(t, TextToken) and t.morph.class0.is_preposition and (t.whitespaces_after_count < 3)): 
-                res = _NounPraseHelperInt.try_parse(t.next0, typ, max_char_pos)
+            if (isinstance(t, TextToken) and t.morph.class0_.is_preposition and (t.whitespaces_after_count < 3)): 
+                res = _NounPraseHelperInt.try_parse(t.next0_, typ, max_char_pos)
                 if (res is not None): 
                     mc = LanguageHelper.get_case_after_preposition((t if isinstance(t, TextToken) else None).lemma)
                     res.preposition = t
                     res.begin_token = t
                     if (not (mc & res.morph.case).is_undefined): 
                         res.morph.remove_items(mc, False)
-                    elif (t.morph.class0.is_adverb): 
+                    elif (t.morph.class0_.is_adverb): 
                         return None
                     return res
         return None

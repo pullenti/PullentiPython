@@ -103,7 +103,7 @@ class RusLatAccord:
         RusLatAccord.__m_accords.append(RusLatAccord("ь", ""))
         RusLatAccord.__m_accords.append(RusLatAccord("", "gh"))
         RusLatAccord.__m_accords.append(RusLatAccord("", "h"))
-        RusLatAccord.__m_accords.append(RusLatAccord._new1435("", "e", True))
+        RusLatAccord.__m_accords.append(RusLatAccord._new1486("", "e", True))
         RusLatAccord.__m_accords.append(RusLatAccord("еи", "ei"))
         RusLatAccord.__m_accords.append(RusLatAccord("аи", "ai"))
         RusLatAccord.__m_accords.append(RusLatAccord("ай", "i"))
@@ -119,11 +119,11 @@ class RusLatAccord:
         return RusLatAccord.__m_accords
     
     @staticmethod
-    def __is_pref(str0 : str, i : int, pref : str) -> bool:
-        if ((len(pref) + i) > len(str0)): 
+    def __is_pref(str0_ : str, i : int, pref : str) -> bool:
+        if ((len(pref) + i) > len(str0_)): 
             return False
         for j in range(len(pref)):
-            if (pref[j] != str0[i + j]): 
+            if (pref[j] != str0_[i + j]): 
                 return False
         return True
     
@@ -307,7 +307,7 @@ class RusLatAccord:
 
     
     @staticmethod
-    def _new1435(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'RusLatAccord':
+    def _new1486(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'RusLatAccord':
         res = RusLatAccord(_arg1, _arg2)
         res.on_tail = _arg3
         return res

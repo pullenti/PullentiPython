@@ -19,12 +19,12 @@ class PersonRelation:
     def best(self) -> 'Types':
         from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
         res = TitleItemToken.Types.UNDEFINED
-        max0 = 0
+        max0_ = 0
         for v in self.coefs.items(): 
-            if (v[1] > max0): 
+            if (v[1] > max0_): 
                 res = v[0]
-                max0 = v[1]
-            elif (v[1] == max0): 
+                max0_ = v[1]
+            elif (v[1] == max0_): 
                 res = TitleItemToken.Types.UNDEFINED
         return res
     
@@ -38,7 +38,7 @@ class PersonRelation:
 
     
     @staticmethod
-    def _new2316(_arg1 : 'PersonReferent') -> 'PersonRelation':
+    def _new2469(_arg1 : 'PersonReferent') -> 'PersonRelation':
         res = PersonRelation()
         res.person = _arg1
         return res

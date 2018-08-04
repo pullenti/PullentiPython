@@ -22,19 +22,19 @@ class ListHelper:
     
     class LineToken(MetaToken):
         
-        def __init__(self, b : 'Token', e0 : 'Token') -> None:
+        def __init__(self, b : 'Token', e0_ : 'Token') -> None:
             self.is_list_item = False
             self.is_list_head = False
             self.number = 0
-            super().__init__(b, e0, None)
+            super().__init__(b, e0_, None)
         
         def correct_begin_token(self) -> None:
             if (not self.is_list_item): 
                 return
-            if (self.begin_token.is_hiphen and self.begin_token.next0 is not None): 
-                self.begin_token = self.begin_token.next0
-            elif ((self.number > 0 and self.begin_token.next0 is not None and self.begin_token.next0.is_char(')')) and self.begin_token.next0.next0 is not None): 
-                self.begin_token = self.begin_token.next0.next0
+            if (self.begin_token.is_hiphen and self.begin_token.next0_ is not None): 
+                self.begin_token = self.begin_token.next0_
+            elif ((self.number > 0 and self.begin_token.next0_ is not None and self.begin_token.next0_.is_char(')')) and self.begin_token.next0_.next0_ is not None): 
+                self.begin_token = self.begin_token.next0_.next0_
         
         def __str__(self) -> str:
             return "{0}: {1}".format(("LISTITEM" if self.is_list_item else "TEXT"), self.get_source_text())
@@ -48,10 +48,10 @@ class ListHelper:
             if (t is None or t.end_char > max_char): 
                 return None
             res = ListHelper.LineToken(t, t)
-            first_pass2777 = True
+            first_pass2940 = True
             while True:
-                if first_pass2777: first_pass2777 = False
-                else: t = t.next0
+                if first_pass2940: first_pass2940 = False
+                else: t = t.next0_
                 if (not (t is not None and t.end_char <= max_char)): break
                 if (t.is_char(':')): 
                     if (res.is_newline_before and res.begin_token.is_value("ПРИЛОЖЕНИЕ", "ДОДАТОК")): 
@@ -64,7 +64,7 @@ class ListHelper:
                     if (t.previous is not None and isinstance(t.previous.get_referent(), DecreeReferent)): 
                         if (not t.is_whitespace_after): 
                             continue
-                        if (t.next0 is not None and isinstance(t.next0.get_referent(), DecreeReferent)): 
+                        if (t.next0_ is not None and isinstance(t.next0_.get_referent(), DecreeReferent)): 
                             continue
                     res.is_list_item = True
                     res.end_token = t
@@ -76,23 +76,23 @@ class ListHelper:
                         res.end_token = t
                         continue
                 if (t.is_newline_before and t != res.begin_token): 
-                    next0_ = True
+                    next0__ = True
                     if (t.previous.is_comma or t.previous.is_and or t.is_char_of("(")): 
-                        next0_ = False
+                        next0__ = False
                     elif (t.chars.is_letter or isinstance(t, NumberToken)): 
                         if (t.chars.is_all_lower): 
-                            next0_ = False
+                            next0__ = False
                         elif (t.previous.chars.is_letter): 
-                            next0_ = False
-                    if (next0_): 
+                            next0__ = False
+                    if (next0__): 
                         break
                 res.end_token = t
             if (res.begin_token.is_hiphen): 
-                res.is_list_item = (res.begin_token.next0 is not None and not res.begin_token.next0.is_hiphen)
+                res.is_list_item = (res.begin_token.next0_ is not None and not res.begin_token.next0_.is_hiphen)
             elif (res.begin_token.is_char_of("·")): 
                 res.is_list_item = True
-                res.begin_token = res.begin_token.next0
-            elif (res.begin_token.next0 is not None and ((res.begin_token.next0.is_char(')') or ((prev is not None and ((prev.is_list_item or prev.is_list_head))))))): 
+                res.begin_token = res.begin_token.next0_
+            elif (res.begin_token.next0_ is not None and ((res.begin_token.next0_.is_char(')') or ((prev is not None and ((prev.is_list_item or prev.is_list_head))))))): 
                 if (res.begin_token.length_char == 1 or isinstance(res.begin_token, NumberToken)): 
                     res.is_list_item = True
                     if (isinstance(res.begin_token, NumberToken)): 
@@ -113,7 +113,7 @@ class ListHelper:
             res = list()
             res.append(lt)
             ss = str(lt)
-            t = lt.end_token.next0
+            t = lt.end_token.next0_
             while t is not None: 
                 lt0 = ListHelper.LineToken.parse(t, max_char, lt)
                 if (lt0 is None): 
@@ -121,7 +121,7 @@ class ListHelper:
                 lt = lt0
                 res.append(lt)
                 t = lt0.end_token
-                t = t.next0
+                t = t.next0_
             if ((len(res) < 2) and not res[0].is_list_item): 
                 if ((prev is not None and prev.is_list_item and res[0].end_token.is_char('.')) and not res[0].begin_token.chars.is_capital_upper): 
                     res[0].is_list_item = True
@@ -165,18 +165,18 @@ class ListHelper:
         if (res.kind == InstrumentKind.CLAUSE and res.number == 12): 
             pass
         i = 0
-        first_pass2778 = True
+        first_pass2941 = True
         while True:
-            if first_pass2778: first_pass2778 = False
+            if first_pass2941: first_pass2941 = False
             else: i += 1
             if (not (i < len(res.children))): break
             if (res.children[i].kind == InstrumentKind.INDENTION and ((res.children[i].end_token.is_char_of(":;") or ((((i + 1) < len(res.children)) and res.children[i + 1].kind == InstrumentKind.EDITIONS and res.children[i + 1].end_token.is_char_of(":;")))))): 
                 cou = 1
                 list_bullet = chr(0)
                 j = (i + 1)
-                first_pass2779 = True
+                first_pass2942 = True
                 while True:
-                    if first_pass2779: first_pass2779 = False
+                    if first_pass2942: first_pass2942 = False
                     else: j += 1
                     if (not (j < len(res.children))): break
                     ch = res.children[j]
@@ -195,10 +195,10 @@ class ListHelper:
                         break
                     if (ch.end_token.is_char_of(":")): 
                         if (ord(list_bullet) != 0 and ch.begin_token.is_char(list_bullet)): 
-                            tt = ch.begin_token.next0
+                            tt = ch.begin_token.next0_
                             while tt is not None and (tt.end_char < ch.end_char): 
                                 if (tt.previous.is_char('.') and MiscHelper.can_be_start_of_sentence(tt)): 
-                                    ch2 = FragToken._new1209(tt, ch.end_token, InstrumentKind.INDENTION, ch.number)
+                                    ch2 = FragToken._new1252(tt, ch.end_token, InstrumentKind.INDENTION, ch.number)
                                     ch.end_token = tt.previous
                                     res.children.insert(j + 1, ch2)
                                     for k in range(j + 1, len(res.children), 1):
@@ -207,7 +207,7 @@ class ListHelper:
                                     cou += 1
                                     j += 1
                                     break
-                                tt = tt.next0
+                                tt = tt.next0_
                         break
                     cou += 1
                     j += 1
@@ -217,9 +217,9 @@ class ListHelper:
                     continue
                 if ((i > 0 and not res.children[i].end_token.is_char(':') and res.children[i - 1].kind2 == InstrumentKind.UNDEFINED) and res.children[i - 1].end_token.is_char(':')): 
                     res.children[i - 1].kind2 = InstrumentKind.LISTHEAD
-                first_pass2780 = True
+                first_pass2943 = True
                 while True:
-                    if first_pass2780: first_pass2780 = False
+                    if first_pass2943: first_pass2943 = False
                     else: i += 1
                     if (not (i < j)): break
                     ch = res.children[i]
@@ -273,14 +273,14 @@ class ListHelper:
             return -1
         if (res.has_changes and res.multiline_changes_value is not None): 
             ci = res.multiline_changes_value
-            cit = FragToken._new1193(ci.begin_token, ci.end_token, InstrumentKind.CITATION)
+            cit = FragToken._new1236(ci.begin_token, ci.end_token, InstrumentKind.CITATION)
             res.children.append(cit)
             if (BracketHelper.is_bracket(cit.begin_token.previous, True)): 
                 cit.begin_token = cit.begin_token.previous
-            if (BracketHelper.is_bracket(cit.end_token.next0, True)): 
-                cit.end_token = cit.end_token.next0
-                if (cit.end_token.next0 is not None and cit.end_token.next0.is_char_of(";.")): 
-                    cit.end_token = cit.end_token.next0
+            if (BracketHelper.is_bracket(cit.end_token.next0_, True)): 
+                cit.end_token = cit.end_token.next0_
+                if (cit.end_token.next0_ is not None and cit.end_token.next0_.is_char_of(";.")): 
+                    cit.end_token = cit.end_token.next0_
             res.fill_by_content_children()
             if (res.children[0].has_changes): 
                 pass
@@ -295,7 +295,7 @@ class ListHelper:
                     cit_kind = PartToken._get_instr_kind_by_typ(PartToken._get_type_by_attr_name(mnem))
                 elif (len(dcr.owners) > 0 and isinstance(dcr.owners[0], DecreePartReferent) and dcr.kind == DecreeChangeKind.NEW): 
                     pat = (dcr.owners[0] if isinstance(dcr.owners[0], DecreePartReferent) else None)
-                    min0 = 0
+                    min0_ = 0
                     for s in pat.slots: 
                         ty = PartToken._get_type_by_attr_name(s.type_name)
                         if (ty == PartToken.ItemType.UNDEFINED): 
@@ -303,8 +303,8 @@ class ListHelper:
                         l_ = PartToken._get_rank(ty)
                         if (l_ == 0): 
                             continue
-                        if (l_ > min0 or min0 == 0): 
-                            min0 = l_
+                        if (l_ > min0_ or min0_ == 0): 
+                            min0_ = l_
                             cit_kind = PartToken._get_instr_kind_by_typ(ty)
             sub = None
             if (cit_kind != InstrumentKind.UNDEFINED and cit_kind != InstrumentKind.APPENDIX): 
@@ -434,9 +434,9 @@ class ListHelper:
         if (cou < 2): 
             return -1
         i = 0
-        first_pass2781 = True
+        first_pass2944 = True
         while True:
-            if first_pass2781: first_pass2781 = False
+            if first_pass2944: first_pass2944 = False
             else: i += 1
             if (not (i < len(lines))): break
             if (lines[i].is_list_item): 
@@ -482,16 +482,16 @@ class ListHelper:
                         i += 1
         for li in lines: 
             li.correct_begin_token()
-            ch = FragToken._new1209(li.begin_token, li.end_token, (InstrumentKind.LISTITEM if li.is_list_item else InstrumentKind.CONTENT), li.number)
+            ch = FragToken._new1252(li.begin_token, li.end_token, (InstrumentKind.LISTITEM if li.is_list_item else InstrumentKind.CONTENT), li.number)
             if (ch.kind == InstrumentKind.CONTENT and ch.end_token.is_char(':')): 
                 ch.kind = InstrumentKind.LISTHEAD
             res.children.append(ch)
             chli = (li.tag if isinstance(li.tag, list) else None)
             if (chli is not None): 
                 for lt in chli: 
-                    ch.children.append(FragToken._new1193(lt.begin_token, lt.end_token, InstrumentKind.LISTITEM))
+                    ch.children.append(FragToken._new1236(lt.begin_token, lt.end_token, InstrumentKind.LISTITEM))
                 if (ch.begin_char < ch.children[0].begin_char): 
-                    ch.children.insert(0, FragToken._new1193(ch.begin_token, ch.children[0].begin_token.previous, InstrumentKind.CONTENT))
+                    ch.children.insert(0, FragToken._new1236(ch.begin_token, ch.children[0].begin_token.previous, InstrumentKind.CONTENT))
         return ret
     
     @staticmethod
@@ -502,9 +502,9 @@ class ListHelper:
             if ((lines[i].typ == InstrToken1.Types.LINE and len(lines[i].numbers) == 0 and lines[i].begin_token.is_value("ПРИЛОЖЕНИЯ", "ДОДАТОК")) and len(lines[i + 1].numbers) > 0 and lines[i].end_token.is_char(':')): 
                 num = 1
                 ++ i
-                first_pass2782 = True
+                first_pass2945 = True
                 while True:
-                    if first_pass2782: first_pass2782 = False
+                    if first_pass2945: first_pass2945 = False
                     else: i += 1
                     if (not (i < len(lines))): break
                     if (len(lines[i].numbers) == 0): 
@@ -515,10 +515,10 @@ class ListHelper:
                             continue
                         break
                     else: 
-                        inoutarg1385 = RefOutArgWrapper(None)
-                        inoutres1386 = Utils.tryParseInt(lines[i].numbers[0], inoutarg1385)
-                        nn = inoutarg1385.value
-                        if (inoutres1386): 
+                        inoutarg1436 = RefOutArgWrapper(0)
+                        inoutres1437 = Utils.tryParseInt(lines[i].numbers[0], inoutarg1436)
+                        nn = inoutarg1436.value
+                        if (inoutres1437): 
                             num = (nn + 1)
                         lines[i].num_typ = NumberTypes.UNDEFINED
                         lines[i].numbers.clear()

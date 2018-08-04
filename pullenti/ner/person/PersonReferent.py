@@ -219,14 +219,14 @@ class PersonReferent(Referent):
     
     def __to_short_string(self, lang : 'MorphLang') -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        id0 = None
+        id0_ = None
         for a in self.slots: 
             if (a.type_name == PersonReferent.ATTR_IDENTITY): 
                 s = str(a.value)
-                if (id0 is None or (len(s) < len(id0))): 
-                    id0 = s
-        if (id0 is not None): 
-            return MiscHelper.convert_first_char_upper_and_other_lower(id0)
+                if (id0_ is None or (len(s) < len(id0_))): 
+                    id0_ = s
+        if (id0_ is not None): 
+            return MiscHelper.convert_first_char_upper_and_other_lower(id0_)
         n = self.get_string_value(PersonReferent.ATTR_LASTNAME)
         if (n is not None): 
             res = Utils.newStringIO(None)
@@ -247,14 +247,14 @@ class PersonReferent(Referent):
     
     def __to_full_string(self, last_name_first : bool, lang : 'MorphLang') -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        id0 = None
+        id0_ = None
         for a in self.slots: 
             if (a.type_name == PersonReferent.ATTR_IDENTITY): 
                 s = str(a.value)
-                if (id0 is None or len(s) > len(id0)): 
-                    id0 = s
-        if (id0 is not None): 
-            return MiscHelper.convert_first_char_upper_and_other_lower(id0)
+                if (id0_ is None or len(s) > len(id0_)): 
+                    id0_ = s
+        if (id0_ is not None): 
+            return MiscHelper.convert_first_char_upper_and_other_lower(id0_)
         sss = self.get_string_value("NAMETYPE")
         if (sss == "china"): 
             last_name_first = True
@@ -351,12 +351,12 @@ class PersonReferent(Referent):
         self._correct_data()
     
     @staticmethod
-    def __is_initial(str0 : str) -> bool:
-        if (str0 is None): 
+    def __is_initial(str0_ : str) -> bool:
+        if (str0_ is None): 
             return False
-        if (len(str0) == 1): 
+        if (len(str0_) == 1): 
             return True
-        if (str0 == "ДЖ"): 
+        if (str0_ == "ДЖ"): 
             return True
         return False
     
@@ -690,22 +690,22 @@ class PersonReferent(Referent):
                     j += 1
     
     def __remove_slots(self, attr_name : str, cols : typing.List['PersonMorphCollection']) -> None:
-        vars0 = list()
+        vars0_ = list()
         for col in cols: 
             for v in col.values: 
-                if (not v in vars0): 
-                    vars0.append(v)
-        if (len(vars0) < 1): 
+                if (not v in vars0_): 
+                    vars0_.append(v)
+        if (len(vars0_) < 1): 
             return
         for i in range(len(self.slots) - 1, -1, -1):
             if (self.slots[i].type_name == attr_name): 
                 v = str(self.slots[i].value)
-                if (not v in vars0): 
+                if (not v in vars0_): 
                     for j in range(len(self.slots)):
                         if (j != i and self.slots[j].type_name == self.slots[i].type_name): 
                             if (attr_name == PersonReferent.ATTR_LASTNAME): 
                                 ee = False
-                                for vv in vars0: 
+                                for vv in vars0_: 
                                     if (self.__compare_surnames_strs(v, vv)): 
                                         ee = True
                                 if (not ee): 
@@ -759,7 +759,7 @@ class PersonReferent(Referent):
         tit = self.__find_shortest_king_titul(False)
         for a in self.slots: 
             if (a.type_name == PersonReferent.ATTR_IDENTITY): 
-                oi.termins.append(Termin._new2277(str(a.value), True))
+                oi.termins.append(Termin._new2430(str(a.value), True))
             elif (a.type_name == PersonReferent.ATTR_LASTNAME): 
                 t = Termin(str(a.value))
                 if (len(t.terms) > 20): 

@@ -10,7 +10,7 @@ from enum import IntEnum
 class FundsKind(IntEnum):
     """ Типы ценных бумаг """
     UNDEFINED = 0
-    STOCK = 1
+    STOCK = 0 + 1
     """ Акция """
-    CAPITAL = 2
+    CAPITAL = (0 + 1) + 1
     """ Уставной капитал """

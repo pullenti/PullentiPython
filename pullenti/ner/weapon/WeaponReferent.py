@@ -35,31 +35,31 @@ class WeaponReferent(Referent):
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         res = Utils.newStringIO(None)
-        str0 = None
+        str0_ = None
         for s in self.slots: 
             if (s.type_name == WeaponReferent.ATTR_TYPE): 
                 n = s.value
-                if (str0 is None or (len(n) < len(str0))): 
-                    str0 = n
-        if (str0 is not None): 
-            print(str0.lower(), end="", file=res)
-        str0 = self.get_string_value(WeaponReferent.ATTR_BRAND)
-        if ((str0) is not None): 
-            print(" {0}".format(MiscHelper.convert_first_char_upper_and_other_lower(str0)), end="", file=res, flush=True)
-        str0 = self.get_string_value(WeaponReferent.ATTR_MODEL)
-        if ((str0) is not None): 
-            print(" {0}".format(str0), end="", file=res, flush=True)
-        str0 = self.get_string_value(WeaponReferent.ATTR_NAME)
-        if ((str0) is not None): 
-            print(" \"{0}\"".format(MiscHelper.convert_first_char_upper_and_other_lower(str0)), end="", file=res, flush=True)
+                if (str0_ is None or (len(n) < len(str0_))): 
+                    str0_ = n
+        if (str0_ is not None): 
+            print(str0_.lower(), end="", file=res)
+        str0_ = self.get_string_value(WeaponReferent.ATTR_BRAND)
+        if ((str0_) is not None): 
+            print(" {0}".format(MiscHelper.convert_first_char_upper_and_other_lower(str0_)), end="", file=res, flush=True)
+        str0_ = self.get_string_value(WeaponReferent.ATTR_MODEL)
+        if ((str0_) is not None): 
+            print(" {0}".format(str0_), end="", file=res, flush=True)
+        str0_ = self.get_string_value(WeaponReferent.ATTR_NAME)
+        if ((str0_) is not None): 
+            print(" \"{0}\"".format(MiscHelper.convert_first_char_upper_and_other_lower(str0_)), end="", file=res, flush=True)
             for s in self.slots: 
-                if (s.type_name == WeaponReferent.ATTR_NAME and str0 != s.value): 
-                    if (LanguageHelper.is_cyrillic_char(str0[0]) != LanguageHelper.is_cyrillic_char((s.value)[0])): 
+                if (s.type_name == WeaponReferent.ATTR_NAME and str0_ != s.value): 
+                    if (LanguageHelper.is_cyrillic_char(str0_[0]) != LanguageHelper.is_cyrillic_char((s.value)[0])): 
                         print(" ({0})".format(MiscHelper.convert_first_char_upper_and_other_lower(s.value)), end="", file=res, flush=True)
                         break
-        str0 = self.get_string_value(WeaponReferent.ATTR_NUMBER)
-        if ((str0) is not None): 
-            print(", номер {0}".format(str0), end="", file=res, flush=True)
+        str0_ = self.get_string_value(WeaponReferent.ATTR_NUMBER)
+        if ((str0_) is not None): 
+            print(", номер {0}".format(str0_), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
     def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:

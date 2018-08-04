@@ -12,7 +12,7 @@ from pullenti.ner.Referent import Referent
 class MetaOrganization(ReferentClass):
     
     def __init__(self) -> None:
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+        from pullenti.ner._org.OrganizationReferent import OrganizationReferent
         super().__init__()
         self.add_feature(OrganizationReferent.ATTR_NAME, "Название", 0, 0)
         self.add_feature(OrganizationReferent.ATTR_TYPE, "Тип", 0, 0)
@@ -28,7 +28,7 @@ class MetaOrganization(ReferentClass):
     
     @property
     def name(self) -> str:
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+        from pullenti.ner._org.OrganizationReferent import OrganizationReferent
         return OrganizationReferent.OBJ_TYPENAME
     
     @property
@@ -38,7 +38,7 @@ class MetaOrganization(ReferentClass):
     ORG_IMAGE_ID = "org"
     
     def get_image_id(self, obj : 'Referent'=None) -> str:
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+        from pullenti.ner._org.OrganizationReferent import OrganizationReferent
         if (isinstance(obj, OrganizationReferent)): 
             prs = (obj if isinstance(obj, OrganizationReferent) else None).profiles
             if (prs is not None and len(prs) > 0): 

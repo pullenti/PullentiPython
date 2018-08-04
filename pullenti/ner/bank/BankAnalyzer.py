@@ -41,15 +41,15 @@ class BankAnalyzer(Analyzer):
         return [MetaBank._global_meta]
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         from pullenti.ner.bank.internal.MetaBank import MetaBank
         res = dict()
         res[MetaBank.IMAGE_ID] = ResourceHelper.get_bytes("dollar.png")
         return res
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.bank.BankDataReferent import BankDataReferent
-        if (type0 == BankDataReferent.OBJ_TYPENAME): 
+        if (type0_ == BankDataReferent.OBJ_TYPENAME): 
             return BankDataReferent()
         return None
     
@@ -66,9 +66,9 @@ class BankAnalyzer(Analyzer):
             if (t.chars.is_letter): 
                 tok = BankAnalyzer.__m_ontology.try_parse(t, TerminParseAttr.NO)
                 if (tok is not None): 
-                    tt = tok.end_token.next0
+                    tt = tok.end_token.next0_
                     if (tt is not None and tt.is_char(':')): 
-                        tt = tt.next0
+                        tt = tt.next0_
                     rt = self.__try_attach(tt, True)
                     if (rt is not None): 
                         rt.begin_token = t
@@ -78,7 +78,7 @@ class BankAnalyzer(Analyzer):
                 rt.referent = ad.register_referent(rt.referent)
                 kit.embed_token(rt)
                 t = rt
-            t = t.next0
+            t = t.next0_
     
     @staticmethod
     def __is_bank_req(txt : str) -> bool:
@@ -100,34 +100,34 @@ class BankAnalyzer(Analyzer):
         t1 = t
         uris_keys = None
         uris = None
-        org = None
+        org0_ = None
         cor_org = None
         org_is_bank = False
         empty = 0
         last_uri = None
-        first_pass2548 = True
+        first_pass2701 = True
         while True:
-            if first_pass2548: first_pass2548 = False
-            else: t = t.next0
+            if first_pass2701: first_pass2701 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char and t != t0): 
                 break
-            if (t.is_comma or t.morph.class0.is_preposition or t.is_char_of("/\\")): 
+            if (t.is_comma or t.morph.class0_.is_preposition or t.is_char_of("/\\")): 
                 continue
             bank_keyword = False
-            if (t.is_value("ПОЛНЫЙ", None) and t.next0 is not None and ((t.next0.is_value("НАИМЕНОВАНИЕ", None) or t.next0.is_value("НАЗВАНИЕ", None)))): 
-                t = t.next0.next0
+            if (t.is_value("ПОЛНЫЙ", None) and t.next0_ is not None and ((t.next0_.is_value("НАИМЕНОВАНИЕ", None) or t.next0_.is_value("НАЗВАНИЕ", None)))): 
+                t = t.next0_.next0_
                 if (t is None): 
                     break
             if (t.is_value("БАНК", None)): 
                 if (isinstance(t, ReferentToken) and t.get_referent().type_name == "ORGANIZATION"): 
                     bank_keyword = True
-                tt = t.next0
+                tt = t.next0_
                 npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
                 if (npt is not None): 
-                    tt = npt.end_token.next0
+                    tt = npt.end_token.next0_
                 if (tt is not None and tt.is_char(':')): 
-                    tt = tt.next0
+                    tt = tt.next0_
                 if (tt is not None): 
                     if (not bank_keyword): 
                         t = tt
@@ -151,8 +151,8 @@ class BankAnalyzer(Analyzer):
                 if ((last_uri is not None and last_uri.scheme == "К/С" and t.previous is not None) and t.previous.is_value("В", None)): 
                     cor_org = r
                     t1 = t
-                elif (org is None or ((not org_is_bank and is_bank))): 
-                    org = r
+                elif (org0_ is None or ((not org_is_bank and is_bank))): 
+                    org0_ = r
                     t1 = t
                     org_is_bank = is_bank
                     if (is_bank): 
@@ -200,7 +200,7 @@ class BankAnalyzer(Analyzer):
                         empty += 1
                         if (t.is_newline_before): 
                             nnn = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
-                            if (nnn is not None and nnn.end_token.next0 is not None and nnn.end_token.next0.is_char(':')): 
+                            if (nnn is not None and nnn.end_token.next0_ is not None and nnn.end_token.next0_.is_char(':')): 
                                 break
                     if (uris is None): 
                         break
@@ -208,20 +208,20 @@ class BankAnalyzer(Analyzer):
                 break
             if (empty > 0 and t.is_char(':') and t.is_newline_after): 
                 break
-            if ((isinstance(t, NumberToken) and t.is_newline_before and t.next0 is not None) and not t.next0.chars.is_letter): 
+            if ((isinstance(t, NumberToken) and t.is_newline_before and t.next0_ is not None) and not t.next0_.chars.is_letter): 
                 break
         if (uris is None): 
             return None
         if (not "Р/С" in uris_keys and not "Л/С" in uris_keys): 
             return None
         ok = False
-        if ((len(uris) < 2) and org is None): 
+        if ((len(uris) < 2) and org0_ is None): 
             return None
         bdr = BankDataReferent()
         for u in uris: 
             bdr.add_slot(BankDataReferent.ATTR_ITEM, u, False, 0)
-        if (org is not None): 
-            bdr.add_slot(BankDataReferent.ATTR_BANK, org, False, 0)
+        if (org0_ is not None): 
+            bdr.add_slot(BankDataReferent.ATTR_BANK, org0_, False, 0)
         if (cor_org is not None): 
             bdr.add_slot(BankDataReferent.ATTR_CORBANK, cor_org, False, 0)
         org0 = (None if t0.previous is None else t0.previous.get_referent())

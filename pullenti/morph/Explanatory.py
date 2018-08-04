@@ -115,7 +115,7 @@ class Explanatory:
             return None
         for g in grs: 
             for w in g.words: 
-                if (w.class0 == cla): 
+                if (w.class0_ == cla): 
                     return w.spelling
         return None
     

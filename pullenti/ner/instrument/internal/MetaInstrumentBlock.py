@@ -50,6 +50,7 @@ class MetaInstrumentBlock(ReferentClass):
         self.kind_feature.add_value(Utils.enumToString(InstrumentKind.DATE), "Дата", None, None)
         self.kind_feature.add_value(Utils.enumToString(InstrumentKind.DIRECTIVE), "Директива", None, None)
         self.kind_feature.add_value(Utils.enumToString(InstrumentKind.INDEX), "Оглавление", None, None)
+        self.kind_feature.add_value(Utils.enumToString(InstrumentKind.INDEXITEM), "Элемент оглавления", None, None)
         self.kind_feature.add_value(Utils.enumToString(InstrumentKind.DOCREFERENCE), "Ссылка на документ", None, None)
         self.kind_feature.add_value(Utils.enumToString(InstrumentKind.INITIATOR), "Инициатор", None, None)
         self.kind_feature.add_value(Utils.enumToString(InstrumentKind.PREAMBLE), "Преамбула", None, None)

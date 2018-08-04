@@ -23,7 +23,7 @@ class Line(MetaToken):
             cou += t.length_char
             if (t == self.end_token): 
                 break
-            t = t.next0
+            t = t.next0_
         return cou
     
     @property
@@ -38,7 +38,7 @@ class Line(MetaToken):
                     ru += 1
                 elif (t.chars.is_latin_letter): 
                     en += 1
-            t = t.next0
+            t = t.next0_
         if (en > 0 and ru == 0): 
             return True
         return False
@@ -55,7 +55,7 @@ class Line(MetaToken):
                     ru += 1
                 elif (t.chars.is_latin_letter): 
                     en += 1
-            t = t.next0
+            t = t.next0_
         if (ru > 0 and en == 0): 
             return True
         return False
@@ -75,18 +75,18 @@ class Line(MetaToken):
                 if (t.begin_char > max_end_char): 
                     break
             t1 = t
-            first_pass2809 = True
+            first_pass2975 = True
             while True:
-                if first_pass2809: first_pass2809 = False
-                else: t1 = t1.next0
-                if (not (t1 is not None and t1.next0 is not None)): break
+                if first_pass2975: first_pass2975 = False
+                else: t1 = t1.next0_
+                if (not (t1 is not None and t1.next0_ is not None)): break
                 if (t1.is_newline_after): 
-                    if (t1.next0 is None or MiscHelper.can_be_start_of_sentence(t1.next0)): 
+                    if (t1.next0_ is None or MiscHelper.can_be_start_of_sentence(t1.next0_)): 
                         break
                 if (t1 == t and t.is_newline_before and isinstance(t.get_referent(), PersonReferent)): 
-                    if (t1.next0 is None): 
+                    if (t1.next0_ is None): 
                         continue
-                    if (isinstance(t1.next0, TextToken) and t1.next0.chars.is_letter and not t1.next0.chars.is_all_lower): 
+                    if (isinstance(t1.next0_, TextToken) and t1.next0_.chars.is_letter and not t1.next0_.chars.is_all_lower): 
                         break
             if (t1 is None): 
                 t1 = t
@@ -104,5 +104,5 @@ class Line(MetaToken):
             if (len(res) >= max_lines or total_chars >= max_chars): 
                 break
             t = t1
-            t = t.next0
+            t = t.next0_
         return res

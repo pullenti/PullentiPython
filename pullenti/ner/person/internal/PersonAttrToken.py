@@ -148,10 +148,10 @@ class PersonAttrToken(ReferentToken):
             return None
         olev = None
         lev = 0
-        inoutarg2065 = RefOutArgWrapper(None)
-        inoutres2066 = Utils.tryGetValue(t.kit.misc_data, "pat", inoutarg2065)
-        olev = inoutarg2065.value
-        if (not inoutres2066): 
+        inoutarg2218 = RefOutArgWrapper(None)
+        inoutres2219 = Utils.tryGetValue(t.kit.misc_data, "pat", inoutarg2218)
+        olev = inoutarg2218.value
+        if (not inoutres2219): 
             lev = 1
             t.kit.misc_data["pat"] = lev
         else: 
@@ -166,29 +166,29 @@ class PersonAttrToken(ReferentToken):
             lev = 0
         t.kit.misc_data["pat"] = lev
         if (res is None): 
-            if (t.morph.class0.is_noun): 
+            if (t.morph.class0_.is_noun): 
                 aterr = (t.kit.processor.find_analyzer("GEO") if isinstance(t.kit.processor.find_analyzer("GEO"), GeoAnalyzer) else None)
                 if (aterr is not None): 
                     rt = aterr.process_citizen(t)
                     if (rt is not None): 
-                        res = PersonAttrToken._new2062(rt.begin_token, rt.end_token, rt.morph)
+                        res = PersonAttrToken._new2215(rt.begin_token, rt.end_token, rt.morph)
                         res.prop_ref = PersonPropertyReferent()
                         res.prop_ref.add_slot(PersonPropertyReferent.ATTR_NAME, ("громадянин" if t.kit.base_language.is_ua else "гражданин"), True, 0)
                         res.prop_ref.add_slot(PersonPropertyReferent.ATTR_REF, rt.referent, True, 0)
                         res.prop_ref.add_ext_referent(rt)
                         res.typ = PersonAttrTerminType.POSITION
-                        if ((res.end_token.next0 is not None and res.end_token.next0.is_value("ПО", None) and res.end_token.next0.next0 is not None) and res.end_token.next0.next0.is_value("ПРОИСХОЖДЕНИЕ", None)): 
-                            res.end_token = res.end_token.next0.next0
+                        if ((res.end_token.next0_ is not None and res.end_token.next0_.is_value("ПО", None) and res.end_token.next0_.next0_ is not None) and res.end_token.next0_.next0_.is_value("ПРОИСХОЖДЕНИЕ", None)): 
+                            res.end_token = res.end_token.next0_.next0_
                         return res
-            if (((((isinstance(t, TextToken))) and (t if isinstance(t, TextToken) else None).term == "АК" and t.next0 is not None) and t.next0.is_char('.') and t.next0.next0 is not None) and not t.next0.next0.chars.is_all_lower): 
-                res = PersonAttrToken._new2063(t, t.next0, PersonAttrTerminType.POSITION)
-                res.prop_ref = PersonPropertyReferent._new2064("академик")
+            if (((((isinstance(t, TextToken))) and (t if isinstance(t, TextToken) else None).term == "АК" and t.next0_ is not None) and t.next0_.is_char('.') and t.next0_.next0_ is not None) and not t.next0_.next0_.chars.is_all_lower): 
+                res = PersonAttrToken._new2216(t, t.next0_, PersonAttrTerminType.POSITION)
+                res.prop_ref = PersonPropertyReferent._new2217("академик")
                 return res
-            if (isinstance(t, TextToken) and t.next0 is not None): 
+            if (isinstance(t, TextToken) and t.next0_ is not None): 
                 if (((t.is_value("ВИЦЕ", "ВІЦЕ") or t.is_value("ЭКС", "ЕКС") or t.is_value("ГЕН", None)) or t.is_value("VICE", None) or t.is_value("EX", None)) or t.is_value("DEPUTY", None)): 
-                    tt = t.next0
+                    tt = t.next0_
                     if (tt.is_hiphen or tt.is_char('.')): 
-                        tt = tt.next0
+                        tt = tt.next0_
                     res = PersonAttrToken.__try_attach(tt, loc_onto, attrs)
                     if (res is not None and res.prop_ref is not None): 
                         res.begin_token = t
@@ -198,25 +198,25 @@ class PersonAttrToken(ReferentToken):
                             res.prop_ref.name = "{0}-{1}".format((t if isinstance(t, TextToken) else None).term.lower(), res.prop_ref.name)
                         return res
             if (t.is_value("ГВАРДИИ", "ГВАРДІЇ")): 
-                res = PersonAttrToken.__try_attach(t.next0, loc_onto, attrs)
+                res = PersonAttrToken.__try_attach(t.next0_, loc_onto, attrs)
                 if (res is not None): 
                     if (res.prop_ref is not None and res.prop_ref.kind == PersonPropertyKind.MILITARYRANK): 
                         res.begin_token = t
                         return res
             tt1 = t
-            if (tt1.morph.class0.is_preposition and tt1.next0 is not None): 
-                tt1 = tt1.next0
-            if ((tt1.next0 is not None and tt1.is_value("НАЦИОНАЛЬНОСТЬ", "НАЦІОНАЛЬНІСТЬ")) or tt1.is_value("ПРОФЕССИЯ", "ПРОФЕСІЯ") or tt1.is_value("СПЕЦИАЛЬНОСТЬ", "СПЕЦІАЛЬНІСТЬ")): 
-                tt1 = tt1.next0
+            if (tt1.morph.class0_.is_preposition and tt1.next0_ is not None): 
+                tt1 = tt1.next0_
+            if ((tt1.next0_ is not None and tt1.is_value("НАЦИОНАЛЬНОСТЬ", "НАЦІОНАЛЬНІСТЬ")) or tt1.is_value("ПРОФЕССИЯ", "ПРОФЕСІЯ") or tt1.is_value("СПЕЦИАЛЬНОСТЬ", "СПЕЦІАЛЬНІСТЬ")): 
+                tt1 = tt1.next0_
                 if (tt1.is_hiphen or tt1.is_char(':')): 
-                    tt1 = tt1.next0
+                    tt1 = tt1.next0_
                 res = PersonAttrToken.__try_attach(tt1, loc_onto, attrs)
                 if (res is not None): 
                     res.begin_token = t
                     return res
             return None
         if (res.typ == PersonAttrTerminType.OTHER and res.age is not None and res.value is None): 
-            res1 = PersonAttrToken.__try_attach(res.end_token.next0, loc_onto, attrs)
+            res1 = PersonAttrToken.__try_attach(res.end_token.next0_, loc_onto, attrs)
             if (res1 is not None): 
                 res1.begin_token = res.begin_token
                 res1.age = res.age
@@ -234,11 +234,11 @@ class PersonAttrToken(ReferentToken):
             if (npt is not None and npt.end_char > res.end_char): 
                 if (PersonAttrToken.__m_termins.try_parse(npt.end_token, TerminParseAttr.NO) is None): 
                     return None
-        if (res.typ == PersonAttrTerminType.PREFIX and (((((res.value == "ГРАЖДАНИН" or res.value == "ГРАЖДАНКА" or res.value == "УРОЖЕНЕЦ") or res.value == "УРОЖЕНКА" or res.value == "ГРОМАДЯНИН") or res.value == "ГРОМАДЯНКА" or res.value == "УРОДЖЕНЕЦЬ") or res.value == "УРОДЖЕНКА")) and res.end_token.next0 is not None): 
-            tt = res.end_token.next0
-            if (((tt is not None and tt.is_char('(') and tt.next0 is not None) and tt.next0.is_value("КА", None) and tt.next0.next0 is not None) and tt.next0.next0.is_char(')')): 
-                res.end_token = tt.next0.next0
-                tt = res.end_token.next0
+        if (res.typ == PersonAttrTerminType.PREFIX and (((((res.value == "ГРАЖДАНИН" or res.value == "ГРАЖДАНКА" or res.value == "УРОЖЕНЕЦ") or res.value == "УРОЖЕНКА" or res.value == "ГРОМАДЯНИН") or res.value == "ГРОМАДЯНКА" or res.value == "УРОДЖЕНЕЦЬ") or res.value == "УРОДЖЕНКА")) and res.end_token.next0_ is not None): 
+            tt = res.end_token.next0_
+            if (((tt is not None and tt.is_char('(') and tt.next0_ is not None) and tt.next0_.is_value("КА", None) and tt.next0_.next0_ is not None) and tt.next0_.next0_.is_char(')')): 
+                res.end_token = tt.next0_.next0_
+                tt = res.end_token.next0_
             r = (None if tt is None else tt.get_referent())
             if (r is not None and r.type_name == PersonAttrToken.__obj_name_geo): 
                 res.end_token = tt
@@ -246,8 +246,8 @@ class PersonAttrToken(ReferentToken):
                 res.prop_ref.add_slot(PersonPropertyReferent.ATTR_NAME, res.value.lower(), True, 0)
                 res.prop_ref.add_slot(PersonPropertyReferent.ATTR_REF, r, True, 0)
                 res.typ = PersonAttrTerminType.POSITION
-            elif ((tt is not None and tt.is_and and tt.next0 is not None) and tt.next0.is_value("ЖИТЕЛЬ", None)): 
-                aaa = PersonAttrToken.__try_attach(tt.next0, loc_onto, attrs)
+            elif ((tt is not None and tt.is_and and tt.next0_ is not None) and tt.next0_.is_value("ЖИТЕЛЬ", None)): 
+                aaa = PersonAttrToken.__try_attach(tt.next0_, loc_onto, attrs)
                 if (aaa is not None and aaa.prop_ref is not None): 
                     aaa.begin_token = res.begin_token
                     aaa.value = res.value
@@ -257,7 +257,7 @@ class PersonAttrToken(ReferentToken):
             if (res.begin_token == res.end_token and res.chars.is_capital_upper and res.whitespaces_after_count == 1): 
                 pit = PersonItemToken.try_attach(t, loc_onto, PersonItemToken.ParseAttr.IGNOREATTRS, None)
                 if (pit is not None and pit.lastname is not None and pit.lastname.is_lastname_has_std_tail): 
-                    rt1 = t.kit.process_referent("PERSON", t.next0)
+                    rt1 = t.kit.process_referent("PERSON", t.next0_)
                     if (rt1 is not None and isinstance(rt1.referent, PersonReferent)): 
                         pass
                     else: 
@@ -265,9 +265,9 @@ class PersonAttrToken(ReferentToken):
         if (res.prop_ref is None): 
             return res
         if (res.chars.is_latin_letter): 
-            tt = res.end_token.next0
+            tt = res.end_token.next0_
             if (tt is not None and tt.is_hiphen): 
-                tt = tt.next0
+                tt = tt.next0_
             if (tt is not None and tt.is_value("ELECT", None)): 
                 res.end_token = tt
         if (not res.begin_token.chars.is_all_lower): 
@@ -282,7 +282,7 @@ class PersonAttrToken(ReferentToken):
         if (s == "глава" and res.prop_ref.find_slot(PersonPropertyReferent.ATTR_REF, None, True) is None): 
             return None
         if (((s == "королева" or s == "король" or s == "князь")) and res.chars.is_capital_upper): 
-            pits = PersonItemToken.try_attach_list(res.end_token.next0, loc_onto, PersonItemToken.ParseAttr.NO, 10)
+            pits = PersonItemToken.try_attach_list(res.end_token.next0_, loc_onto, PersonItemToken.ParseAttr.NO, 10)
             if (pits is not None and len(pits) > 0): 
                 if (pits[0].typ == PersonItemToken.ItemType.INITIAL): 
                     return None
@@ -297,25 +297,25 @@ class PersonAttrToken(ReferentToken):
             if (t.previous is not None): 
                 if (t.previous.is_value("ДРУГ", None)): 
                     return None
-                if (t.previous.morph.class0.is_preposition and t.previous.previous is not None and t.previous.previous.is_value("ДРУГ", None)): 
+                if (t.previous.morph.class0_.is_preposition and t.previous.previous is not None and t.previous.previous.is_value("ДРУГ", None)): 
                     return None
-            if (t.next0 is not None): 
-                if (t.next0.is_value("ДРУГ", None)): 
+            if (t.next0_ is not None): 
+                if (t.next0_.is_value("ДРУГ", None)): 
                     return None
-                if (t.next0.morph.class0.is_preposition and t.next0.next0 is not None and t.next0.next0.is_value("ДРУГ", None)): 
+                if (t.next0_.morph.class0_.is_preposition and t.next0_.next0_ is not None and t.next0_.next0_.is_value("ДРУГ", None)): 
                     return None
         if (res.chars.is_latin_letter and ((res.is_doubt or s == "senior")) and (res.whitespaces_after_count < 2)): 
             if (res.prop_ref is not None and len(res.prop_ref.slots) == 1): 
-                tt2 = res.end_token.next0
+                tt2 = res.end_token.next0_
                 if (MiscHelper.is_eng_adj_suffix(tt2)): 
-                    tt2 = tt2.next0.next0
+                    tt2 = tt2.next0_.next0_
                 res2 = PersonAttrToken.__try_attach(tt2, loc_onto, attrs)
                 if ((res2 is not None and res2.chars.is_latin_letter and res2.typ == res.typ) and res2.prop_ref is not None): 
                     res2.prop_ref.name = "{0} {1}".format(Utils.ifNotNull(res.prop_ref.name, ""), Utils.ifNotNull(res2.prop_ref.name, "")).strip()
                     res2.begin_token = res.begin_token
                     res = res2
         if (res.prop_ref.name == "министр"): 
-            rt1 = res.kit.process_referent("ORGANIZATION", res.end_token.next0)
+            rt1 = res.kit.process_referent("ORGANIZATION", res.end_token.next0_)
             if (rt1 is not None and rt1.referent.find_slot("TYPE", "министерство", True) is not None): 
                 t1 = rt1.end_token
                 if (isinstance(t1.get_referent(), GeoReferent)): 
@@ -330,7 +330,7 @@ class PersonAttrToken(ReferentToken):
             if (p.name is not None and " - " in p.name): 
                 p.name = p.name.replace(" - ", "-")
             p = p.higher
-        if (res.begin_token.morph.class0.is_adjective): 
+        if (res.begin_token.morph.class0_.is_adjective): 
             r = res.kit.process_referent("GEO", res.begin_token)
             if (r is not None): 
                 res.prop_ref.add_slot(PersonPropertyReferent.ATTR_REF, r.referent, False, 0)
@@ -345,26 +345,26 @@ class PersonAttrToken(ReferentToken):
                     contains_geo = True
                     break
         if (not contains_geo and (res.end_token.whitespaces_after_count < 2)): 
-            if (isinstance(res.end_token.next0, ReferentToken) and res.end_token.next0.get_referent().type_name == PersonAttrToken.__obj_name_geo): 
-                res.prop_ref.add_slot(PersonPropertyReferent.ATTR_REF, res.end_token.next0.get_referent(), False, 0)
-                res.end_token = res.end_token.next0
+            if (isinstance(res.end_token.next0_, ReferentToken) and res.end_token.next0_.get_referent().type_name == PersonAttrToken.__obj_name_geo): 
+                res.prop_ref.add_slot(PersonPropertyReferent.ATTR_REF, res.end_token.next0_.get_referent(), False, 0)
+                res.end_token = res.end_token.next0_
         if (res.end_token.whitespaces_after_count < 2): 
-            te = res.end_token.next0
+            te = res.end_token.next0_
             if (te is not None and te.is_value("В", None)): 
-                te = te.next0
+                te = te.next0_
                 if (isinstance(te, ReferentToken) and ((te.get_referent().type_name == PersonAttrToken.__obj_name_date or te.get_referent().type_name == PersonAttrToken.__obj_name_date_range))): 
                     res.end_token = te
             elif (te is not None and te.is_char('(')): 
-                te = te.next0
-                if ((isinstance(te, ReferentToken) and ((te.get_referent().type_name == PersonAttrToken.__obj_name_date or te.get_referent().type_name == PersonAttrToken.__obj_name_date_range)) and te.next0 is not None) and te.next0.is_char(')')): 
-                    res.end_token = te.next0
+                te = te.next0_
+                if ((isinstance(te, ReferentToken) and ((te.get_referent().type_name == PersonAttrToken.__obj_name_date or te.get_referent().type_name == PersonAttrToken.__obj_name_date_range)) and te.next0_ is not None) and te.next0_.is_char(')')): 
+                    res.end_token = te.next0_
                 elif (isinstance(te, NumberToken)): 
                     rt1 = te.kit.process_referent("DATE", te)
-                    if (rt1 is not None and rt1.end_token.next0 is not None and rt1.end_token.next0.is_char(')')): 
-                        res.end_token = rt1.end_token.next0
+                    if (rt1 is not None and rt1.end_token.next0_ is not None and rt1.end_token.next0_.is_char(')')): 
+                        res.end_token = rt1.end_token.next0_
         if (res.prop_ref is not None and res.prop_ref.name == "отец"): 
             is_king = False
-            tt = res.end_token.next0
+            tt = res.end_token.next0_
             if (isinstance(tt, TextToken) and tt.get_morph_class_in_dictionary().is_proper_name): 
                 if (not (res.morph.case & tt.morph.case).is_undefined): 
                     if (not tt.morph.case.is_genitive): 
@@ -372,7 +372,7 @@ class PersonAttrToken(ReferentToken):
             if (is_king): 
                 res.prop_ref.name = "священник"
         if (res.prop_ref is not None and res.prop_ref.kind == PersonPropertyKind.KING): 
-            t1 = res.end_token.next0
+            t1 = res.end_token.next0_
             if (res.prop_ref.name == "отец"): 
                 if (t1 is None or not t1.chars.is_capital_upper): 
                     return None
@@ -380,12 +380,12 @@ class PersonAttrToken(ReferentToken):
                     return None
                 res.prop_ref.name = "священник"
                 return res
-            if (t1 is not None and t1.chars.is_capital_upper and t1.morph.class0.is_adjective): 
+            if (t1 is not None and t1.chars.is_capital_upper and t1.morph.class0_.is_adjective): 
                 res._king_surname = PersonItemToken.try_attach(t1, loc_onto, PersonItemToken.ParseAttr.IGNOREATTRS, None)
                 if ((res._king_surname) is not None): 
                     res.end_token = t1
-                    if ((t1.next0 is not None and t1.next0.is_and and t1.next0.next0 is not None) and t1.next0.next0.is_value("ВСЕЯ", None)): 
-                        t1 = t1.next0.next0.next0
+                    if ((t1.next0_ is not None and t1.next0_.is_and and t1.next0_.next0_ is not None) and t1.next0_.next0_.is_value("ВСЕЯ", None)): 
+                        t1 = t1.next0_.next0_.next0_
                         geo_ = (((None if t1 is None else t1.get_referent())) if isinstance(((None if t1 is None else t1.get_referent())), GeoReferent) else None)
                         if (geo_ is not None): 
                             res.end_token = t1
@@ -393,13 +393,13 @@ class PersonAttrToken(ReferentToken):
         if (res.can_has_person_after > 0 and res.prop_ref.find_slot(PersonPropertyReferent.ATTR_REF, None, True) is None): 
             npt = NounPhraseHelper.try_parse(res.begin_token, NounPhraseParseAttr.NO, 0)
             tt0 = res.begin_token
-            if (isinstance(tt0, TextToken) and tt0.morph.class0.is_personal_pronoun and ((tt0.is_value("ОН", None) or tt0.is_value("ОНА", None)))): 
+            if (isinstance(tt0, TextToken) and tt0.morph.class0_.is_personal_pronoun and ((tt0.is_value("ОН", None) or tt0.is_value("ОНА", None)))): 
                 pass
             else: 
                 tt0 = tt0.previous
-                if (isinstance(tt0, TextToken) and tt0.morph.class0.is_personal_pronoun and ((tt0.is_value("ОН", None) or tt0.is_value("ОНА", None)))): 
+                if (isinstance(tt0, TextToken) and tt0.morph.class0_.is_personal_pronoun and ((tt0.is_value("ОН", None) or tt0.is_value("ОНА", None)))): 
                     pass
-                elif (isinstance(tt0, TextToken) and tt0.morph.class0.is_pronoun and tt0.is_value("СВОЙ", None)): 
+                elif (isinstance(tt0, TextToken) and tt0.morph.class0_.is_pronoun and tt0.is_value("СВОЙ", None)): 
                     pass
                 else: 
                     tt0 = None
@@ -407,15 +407,15 @@ class PersonAttrToken(ReferentToken):
                 gen = MorphGender.UNDEFINED
                 cou = 0
                 for wf in tt0.morph.items: 
-                    if (wf.class0.is_personal_pronoun or wf.class0.is_pronoun): 
+                    if (wf.class0_.is_personal_pronoun or wf.class0_.is_pronoun): 
                         gen = wf.gender
                         if (((gen)) == MorphGender.NEUTER): 
                             gen = MorphGender.MASCULINE
                         break
                 tt = tt0.previous
-                first_pass2851 = True
+                first_pass3019 = True
                 while True:
-                    if first_pass2851: first_pass2851 = False
+                    if first_pass3019: first_pass3019 = False
                     else: tt = tt.previous; cou += 1
                     if (not (tt is not None and (cou < 200))): break
                     pr = (tt.get_referent() if isinstance(tt.get_referent(), PersonPropertyReferent) else None)
@@ -446,14 +446,14 @@ class PersonAttrToken(ReferentToken):
             elif (res.whitespaces_after_count == 1): 
                 pa = (res.kit.processor.find_analyzer("PERSON") if isinstance(res.kit.processor.find_analyzer("PERSON"), PersonAnalyzer) else None)
                 if (pa is not None): 
-                    t1 = res.end_token.next0
+                    t1 = res.end_token.next0_
                     pr = PersonAnalyzer._try_attach_person(t1, (res.kit.get_analyzer_data(pa) if isinstance(res.kit.get_analyzer_data(pa), PersonAnalyzer.PersonAnalyzerData) else None), False, 0, True)
                     if (pr is not None and res.can_has_person_after == 1): 
                         if (pr.begin_token == t1): 
                             if (not pr.morph.case.is_genitive and not pr.morph.case.is_undefined): 
                                 pr = None
                             elif (not pr.morph.case.is_undefined and not (res.morph.case & pr.morph.case).is_undefined): 
-                                if (PersonAnalyzer._try_attach_person(pr.end_token.next0, (res.kit.get_analyzer_data(pa) if isinstance(res.kit.get_analyzer_data(pa), PersonAnalyzer.PersonAnalyzerData) else None), False, 0, True) is not None): 
+                                if (PersonAnalyzer._try_attach_person(pr.end_token.next0_, (res.kit.get_analyzer_data(pa) if isinstance(res.kit.get_analyzer_data(pa), PersonAnalyzer.PersonAnalyzerData) else None), False, 0, True) is not None): 
                                     pass
                                 else: 
                                     pr = None
@@ -475,9 +475,9 @@ class PersonAttrToken(ReferentToken):
                 cou = 0
                 refs = list()
                 tt = tok.begin_token.previous
-                first_pass2852 = True
+                first_pass3020 = True
                 while True:
-                    if first_pass2852: first_pass2852 = False
+                    if first_pass3020: first_pass3020 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.whitespaces_after_count > 15): 
@@ -514,7 +514,7 @@ class PersonAttrToken(ReferentToken):
                     res.begin_token = res.begin_token.previous.previous.previous
                     res.prop_ref.add_slot(PersonPropertyReferent.ATTR_REF, res.begin_token.get_referent(), False, 0)
         if (res.chars.is_latin_letter and res.prop_ref is not None and (res.whitespaces_after_count < 2)): 
-            rnext = PersonAttrToken.try_attach(res.end_token.next0, loc_onto, PersonAttrToken.PersonAttrAttachAttrs.NO)
+            rnext = PersonAttrToken.try_attach(res.end_token.next0_, loc_onto, PersonAttrToken.PersonAttrAttachAttrs.NO)
             if ((rnext is not None and rnext.chars.is_latin_letter and rnext.prop_ref is not None) and len(rnext.prop_ref.slots) == 1 and rnext.can_has_person_after > 0): 
                 res.end_token = rnext.end_token
                 res.prop_ref.name = "{0} {1}".format(res.prop_ref.name, rnext.prop_ref.name)
@@ -539,14 +539,14 @@ class PersonAttrToken(ReferentToken):
         from pullenti.ner.core.BracketHelper import BracketHelper
         if (t is None): 
             return None
-        if (t.morph.class0.is_pronoun and (((t.is_value("ЕГО", "ЙОГО") or t.is_value("ЕЕ", "ЇЇ") or t.is_value("HIS", None)) or t.is_value("HER", None)))): 
-            res1 = PersonAttrToken.try_attach(t.next0, loc_onto, attrs)
+        if (t.morph.class0_.is_pronoun and (((t.is_value("ЕГО", "ЙОГО") or t.is_value("ЕЕ", "ЇЇ") or t.is_value("HIS", None)) or t.is_value("HER", None)))): 
+            res1 = PersonAttrToken.try_attach(t.next0_, loc_onto, attrs)
             if (res1 is not None and res1.prop_ref is not None): 
                 k = 0
                 tt2 = t.previous
-                first_pass2853 = True
+                first_pass3021 = True
                 while True:
-                    if first_pass2853: first_pass2853 = False
+                    if first_pass3021: first_pass3021 = False
                     else: tt2 = tt2.previous; k += 1
                     if (not (tt2 is not None and (k < 10))): break
                     r = tt2.get_referent()
@@ -567,18 +567,18 @@ class PersonAttrToken(ReferentToken):
             return None
         nta = NumberHelper.try_parse_age(t)
         if (nta is not None): 
-            if (nta.morph.class0.is_adjective or ((t.previous is not None and t.previous.is_comma)) or ((nta.end_token.next0 is not None and nta.end_token.next0.is_char_of(",.")))): 
-                return PersonAttrToken._new2067(t, nta.end_token, PersonAttrTerminType.OTHER, str(nta.value), nta.morph)
+            if (nta.morph.class0_.is_adjective or ((t.previous is not None and t.previous.is_comma)) or ((nta.end_token.next0_ is not None and nta.end_token.next0_.is_char_of(",.")))): 
+                return PersonAttrToken._new2220(t, nta.end_token, PersonAttrTerminType.OTHER, str(nta.value), nta.morph)
         if (t.is_newline_before): 
             li = MailLine.parse(t, 0)
             if (li is not None and li.typ == MailLine.Types.BESTREGARDS): 
-                return PersonAttrToken._new2069(li.begin_token, li.end_token, PersonAttrTerminType.BESTREGARDS, MorphCollection._new2068(MorphCase.NOMINATIVE))
+                return PersonAttrToken._new2222(li.begin_token, li.end_token, PersonAttrTerminType.BESTREGARDS, MorphCollection._new2221(MorphCase.NOMINATIVE))
         tt = (t if isinstance(t, TextToken) else None)
         if (tt is None): 
             nt = (t if isinstance(t, NumberToken) else None)
             if (nt is not None): 
-                if (((nt.value == 1 or nt.value == 2)) and nt.morph.class0.is_adjective): 
-                    pat0 = PersonAttrToken.__try_attach(t.next0, loc_onto, attrs)
+                if (((nt.value == 1 or nt.value == 2)) and nt.morph.class0_.is_adjective): 
+                    pat0 = PersonAttrToken.__try_attach(t.next0_, loc_onto, attrs)
                     if (pat0 is not None and pat0.prop_ref is not None): 
                         pat0.begin_token = t
                         for s in pat0.prop_ref.slots: 
@@ -591,46 +591,46 @@ class PersonAttrToken(ReferentToken):
             if (t is not None): 
                 rr = t.get_referent()
             if (rr is not None and ((isinstance(rr, GeoReferent) or rr.type_name == "ORGANIZATION"))): 
-                ttt = t.next0
+                ttt = t.next0_
                 if (MiscHelper.is_eng_adj_suffix(ttt)): 
-                    ttt = ttt.next0.next0
+                    ttt = ttt.next0_.next0_
                 if (isinstance(ttt, TextToken) and ttt.morph.language.is_en and (ttt.whitespaces_before_count < 2)): 
                     res0 = PersonAttrToken.__try_attach(ttt, loc_onto, attrs)
                     if (res0 is not None and res0.prop_ref is not None): 
                         res0.begin_token = t
                         res0.prop_ref.add_slot(PersonPropertyReferent.ATTR_REF, t.get_referent(), False, 0)
                         return res0
-            if (isinstance(rr, PersonReferent) and MiscHelper.is_eng_adj_suffix(t.next0)): 
-                res0 = PersonAttrToken.__try_attach(t.next0.next0.next0, loc_onto, attrs)
+            if (isinstance(rr, PersonReferent) and MiscHelper.is_eng_adj_suffix(t.next0_)): 
+                res0 = PersonAttrToken.__try_attach(t.next0_.next0_.next0_, loc_onto, attrs)
                 if (res0 is not None and res0.prop_ref is not None and res0.chars.is_latin_letter): 
                     res0.begin_token = t
                     res0.prop_ref.add_slot(PersonPropertyReferent.ATTR_REF, t.get_referent(), False, 0)
                     return res0
             return None
         if (MiscHelper.is_eng_article(tt)): 
-            res0 = PersonAttrToken.__try_attach(t.next0, loc_onto, attrs)
+            res0 = PersonAttrToken.__try_attach(t.next0_, loc_onto, attrs)
             if (res0 is not None): 
                 res0.begin_token = t
                 return res0
         if ((tt.term == "Г" or tt.term == "ГР" or tt.term == "М") or tt.term == "Д"): 
-            if (tt.next0 is not None and tt.next0.is_hiphen and isinstance(tt.next0.next0, TextToken)): 
+            if (tt.next0_ is not None and tt.next0_.is_hiphen and isinstance(tt.next0_.next0_, TextToken)): 
                 pref = tt.term
-                tail = (tt.next0.next0 if isinstance(tt.next0.next0, TextToken) else None).term
-                vars0 = None
+                tail = (tt.next0_.next0_ if isinstance(tt.next0_.next0_, TextToken) else None).term
+                vars0_ = None
                 if (pref == "Г"): 
-                    vars0 = PersonAttrToken.__get_std_forms(tail, "ГОСПОДИН", "ГОСПОЖА")
+                    vars0_ = PersonAttrToken.__get_std_forms(tail, "ГОСПОДИН", "ГОСПОЖА")
                 elif (pref == "ГР"): 
-                    vars0 = PersonAttrToken.__get_std_forms(tail, "ГРАЖДАНИН", "ГРАЖДАНКА")
+                    vars0_ = PersonAttrToken.__get_std_forms(tail, "ГРАЖДАНИН", "ГРАЖДАНКА")
                 elif (pref == "М"): 
-                    vars0 = PersonAttrToken.__get_std_forms(tail, "МИСТЕР", None)
+                    vars0_ = PersonAttrToken.__get_std_forms(tail, "МИСТЕР", None)
                 elif (pref == "Д"): 
-                    if (PersonAttrToken.__find_grade_last(tt.next0.next0.next0, tt) is not None): 
+                    if (PersonAttrToken.__find_grade_last(tt.next0_.next0_.next0_, tt) is not None): 
                         pass
                     else: 
-                        vars0 = PersonAttrToken.__get_std_forms(tail, "ДОКТОР", None)
-                if (vars0 is not None): 
-                    res = PersonAttrToken._new2063(tt, tt.next0.next0, PersonAttrTerminType.PREFIX)
-                    for v in vars0: 
+                        vars0_ = PersonAttrToken.__get_std_forms(tail, "ДОКТОР", None)
+                if (vars0_ is not None): 
+                    res = PersonAttrToken._new2216(tt, tt.next0_.next0_, PersonAttrTerminType.PREFIX)
+                    for v in vars0_: 
                         res.morph.add_item(v)
                         if (res.value is None): 
                             res.value = v.normal_case
@@ -638,28 +638,28 @@ class PersonAttrToken(ReferentToken):
                     return res
         if (tt.term == "ГР" or tt.term == "ГРАЖД"): 
             t1 = tt
-            if (tt.next0 is not None and tt.next0.is_char('.')): 
-                t1 = tt.next0
-            if (isinstance(t1.next0, NumberToken)): 
+            if (tt.next0_ is not None and tt.next0_.is_char('.')): 
+                t1 = tt.next0_
+            if (isinstance(t1.next0_, NumberToken)): 
                 return None
-            return PersonAttrToken._new2071(tt, t1, PersonAttrTerminType.PREFIX, ("ГРОМАДЯНИН" if tt.morph.language.is_ua else "ГРАЖДАНИН"))
+            return PersonAttrToken._new2224(tt, t1, PersonAttrTerminType.PREFIX, ("ГРОМАДЯНИН" if tt.morph.language.is_ua else "ГРАЖДАНИН"))
         npt0 = None
         step = 0
         while step < 2: 
             toks = PersonAttrToken.__m_termins.try_parse_all(t, TerminParseAttr.NO)
             if (toks is None and t.is_value("ВРИО", None)): 
                 toks = list()
-                toks.append(TerminToken._new597(t, t, PersonAttrToken.__m_termin_vrio))
+                toks.append(TerminToken._new623(t, t, PersonAttrToken.__m_termin_vrio))
             elif (toks is None and isinstance(t, TextToken) and t.morph.language.is_en): 
-                str0 = (t if isinstance(t, TextToken) else None).term
-                if (str0.endswith("MAN") or str0.endswith("PERSON") or str0.endswith("MIST")): 
+                str0_ = (t if isinstance(t, TextToken) else None).term
+                if (str0_.endswith("MAN") or str0_.endswith("PERSON") or str0_.endswith("MIST")): 
                     toks = list()
-                    toks.append(TerminToken._new597(t, t, PersonAttrTermin._new2073(str0, t.morph.language, PersonAttrTerminType.POSITION)))
-                elif (str0 == "MODEL" and (t.whitespaces_after_count < 2)): 
-                    rt = t.kit.process_referent("PERSON", t.next0)
+                    toks.append(TerminToken._new623(t, t, PersonAttrTermin._new2226(str0_, t.morph.language, PersonAttrTerminType.POSITION)))
+                elif (str0_ == "MODEL" and (t.whitespaces_after_count < 2)): 
+                    rt = t.kit.process_referent("PERSON", t.next0_)
                     if (rt is not None and isinstance(rt.referent, PersonReferent)): 
                         toks = list()
-                        toks.append(TerminToken._new597(t, t, PersonAttrTermin._new2073(str0, t.morph.language, PersonAttrTerminType.POSITION)))
+                        toks.append(TerminToken._new623(t, t, PersonAttrTermin._new2226(str0_, t.morph.language, PersonAttrTerminType.POSITION)))
             if ((toks is None and step == 0 and t.chars.is_latin_letter) and (t.whitespaces_after_count < 2)): 
                 npt1 = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
                 if (npt1 is not None and npt1.begin_token != npt1.end_token): 
@@ -684,38 +684,38 @@ class PersonAttrToken(ReferentToken):
                             if (k >= 3 and t.chars.is_all_lower): 
                                 if (not MiscHelper.is_eng_article(t.previous)): 
                                     break
-                            tt2 = tt2.next0
+                            tt2 = tt2.next0_
                 elif (((npt1 is None or npt1.end_token == t)) and t.chars.is_capital_upper): 
                     mc = t.get_morph_class_in_dictionary()
                     if ((mc.is_misc or mc.is_preposition or mc.is_conjunction) or mc.is_personal_pronoun or mc.is_pronoun): 
                         pass
                     else: 
                         tt1 = None
-                        if ((t.next0 is not None and t.next0.is_hiphen and not t.is_whitespace_after) and not t.next0.is_whitespace_after): 
-                            tt1 = t.next0.next0
+                        if ((t.next0_ is not None and t.next0_.is_hiphen and not t.is_whitespace_after) and not t.next0_.is_whitespace_after): 
+                            tt1 = t.next0_.next0_
                         elif (npt1 is None): 
-                            tt1 = t.next0
+                            tt1 = t.next0_
                         toks1 = PersonAttrToken.__m_termins.try_parse_all(tt1, TerminParseAttr.NO)
                         if (toks1 is not None and (toks1[0].termin if isinstance(toks1[0].termin, PersonAttrTermin) else None).typ == PersonAttrTerminType.POSITION and (tt1.whitespaces_before_count < 2)): 
                             step = 1
                             toks = toks1
             if (toks is not None): 
                 for tok in toks: 
-                    if (((tok.morph.class0.is_preposition or tok.morph.contains_attr("к.ф.", MorphClass()))) and tok.end_token == tok.begin_token): 
+                    if (((tok.morph.class0_.is_preposition or tok.morph.contains_attr("к.ф.", MorphClass()))) and tok.end_token == tok.begin_token): 
                         continue
                     pat = (tok.termin if isinstance(tok.termin, PersonAttrTermin) else None)
                     if (isinstance(tok.end_token, TextToken) and pat.canonic_text.startswith((tok.end_token if isinstance(tok.end_token, TextToken) else None).term)): 
                         if (tok.length_char < len(pat.canonic_text)): 
-                            if (tok.end_token.next0 is not None and tok.end_token.next0.is_char('.')): 
-                                tok.end_token = tok.end_token.next0
+                            if (tok.end_token.next0_ is not None and tok.end_token.next0_.is_char('.')): 
+                                tok.end_token = tok.end_token.next0_
                     if (pat.typ == PersonAttrTerminType.PREFIX): 
                         if (step == 0 or ((pat.canonic_text != "ГРАЖДАНИН" and pat.canonic_text != "ГРОМАДЯНИН"))): 
-                            return PersonAttrToken._new2077(tok.begin_token, tok.end_token, PersonAttrTerminType.PREFIX, pat.canonic_text, tok.morph, pat.gender)
+                            return PersonAttrToken._new2230(tok.begin_token, tok.end_token, PersonAttrTerminType.PREFIX, pat.canonic_text, tok.morph, pat.gender)
                     if (pat.typ == PersonAttrTerminType.BESTREGARDS): 
                         end = tok.end_token
-                        if (end.next0 is not None and end.next0.is_char_of(",")): 
-                            end = end.next0
-                        return PersonAttrToken._new2069(tok.begin_token, end, PersonAttrTerminType.BESTREGARDS, MorphCollection._new2068(MorphCase.NOMINATIVE))
+                        if (end.next0_ is not None and end.next0_.is_char_of(",")): 
+                            end = end.next0_
+                        return PersonAttrToken._new2222(tok.begin_token, end, PersonAttrTerminType.BESTREGARDS, MorphCollection._new2221(MorphCase.NOMINATIVE))
                     if (pat.typ == PersonAttrTerminType.POSITION or pat.typ == PersonAttrTerminType.PREFIX or pat.typ == PersonAttrTerminType.KING): 
                         res = PersonAttrToken.__create_attr_position(tok, loc_onto, attrs)
                         if (res is not None): 
@@ -751,13 +751,13 @@ class PersonAttrToken(ReferentToken):
                             pit = PersonItemToken.try_attach(t, None, PersonItemToken.ParseAttr.IGNOREATTRS, None)
                             if (pit is not None and pit.typ == PersonItemToken.ItemType.INITIAL): 
                                 ok = False
-                                pit = PersonItemToken.try_attach(pit.end_token.next0, None, PersonItemToken.ParseAttr.IGNOREATTRS, None)
+                                pit = PersonItemToken.try_attach(pit.end_token.next0_, None, PersonItemToken.ParseAttr.IGNOREATTRS, None)
                                 if (pit is not None and pit.typ == PersonItemToken.ItemType.INITIAL): 
-                                    pit = PersonItemToken.try_attach(pit.end_token.next0, None, PersonItemToken.ParseAttr.IGNOREATTRS, None)
+                                    pit = PersonItemToken.try_attach(pit.end_token.next0_, None, PersonItemToken.ParseAttr.IGNOREATTRS, None)
                                     if (pit is not None and pit.typ == PersonItemToken.ItemType.INITIAL): 
                                         ok = True
                                 if (not ok): 
-                                    if (PersonAttrToken.__try_attach(tok.end_token.next0, loc_onto, attrs) is not None): 
+                                    if (PersonAttrToken.__try_attach(tok.end_token.next0_, loc_onto, attrs) is not None): 
                                         ok = True
                                 if (not ok): 
                                     return None
@@ -786,23 +786,23 @@ class PersonAttrToken(ReferentToken):
                                         break
                                     i += 1
                                 if (empty_adj is not None): 
-                                    res1 = PersonAttrToken._new2080(res.begin_token, res.end_token, npt0.morph, res)
+                                    res1 = PersonAttrToken._new2233(res.begin_token, res.end_token, npt0.morph, res)
                                     res1.prop_ref = PersonPropertyReferent()
                                     res1.prop_ref.name = empty_adj
                                     res1.prop_ref.higher = res.prop_ref
                                     res1.can_be_independent_property = res.can_be_independent_property
                                     res1.typ = res.typ
                                     if (res.begin_token != res.end_token): 
-                                        res.begin_token = res.begin_token.next0
+                                        res.begin_token = res.begin_token.next0_
                                     res = res1
                             if (res is not None): 
                                 res.morph.remove_not_in_dictionary_items()
                             return res
             if (step > 0 or t.chars.is_latin_letter): 
                 break
-            if (t.morph.class0.is_adjective or t.chars.is_latin_letter): 
+            if (t.morph.class0_.is_adjective or t.chars.is_latin_letter): 
                 pass
-            elif (t.next0 is not None and t.next0.is_hiphen): 
+            elif (t.next0_ is not None and t.next0_.is_hiphen): 
                 pass
             else: 
                 break
@@ -814,10 +814,10 @@ class PersonAttrToken(ReferentToken):
             t = npt.end_token
             npt0 = npt
             step += 1
-        if (isinstance(t, TextToken) and (((t.is_value("ВИЦЕ", "ВІЦЕ") or t.is_value("ЭКС", "ЕКС") or t.is_value("VICE", None)) or t.is_value("EX", None) or t.is_value("DEPUTY", None))) and t.next0 is not None): 
-            te = t.next0
+        if (isinstance(t, TextToken) and (((t.is_value("ВИЦЕ", "ВІЦЕ") or t.is_value("ЭКС", "ЕКС") or t.is_value("VICE", None)) or t.is_value("EX", None) or t.is_value("DEPUTY", None))) and t.next0_ is not None): 
+            te = t.next0_
             if (te.is_hiphen): 
-                te = te.next0
+                te = te.next0_
             ppp = PersonAttrToken.__try_attach(te, loc_onto, attrs)
             if (ppp is not None): 
                 if (t.begin_char < ppp.begin_char): 
@@ -829,15 +829,15 @@ class PersonAttrToken(ReferentToken):
                 if (BracketHelper.is_bracket(te, False)): 
                     br = BracketHelper.try_parse(te, BracketParseAttr.NO, 100)
                     if (br is not None and isinstance(te, TextToken)): 
-                        ppp = PersonAttrToken._new2062(t, br.end_token, br.end_token.previous.morph)
+                        ppp = PersonAttrToken._new2215(t, br.end_token, br.end_token.previous.morph)
                         ppp.prop_ref = PersonPropertyReferent()
-                        ppp.prop_ref.name = "{0}-{1}".format((t if isinstance(t, TextToken) else None).term, MiscHelper.get_text_value(te.next0, br.end_token, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)).lower()
+                        ppp.prop_ref.name = "{0}-{1}".format((t if isinstance(t, TextToken) else None).term, MiscHelper.get_text_value(te.next0_, br.end_token, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)).lower()
                         return ppp
         if (isinstance(t, TextToken) and t.chars.is_latin_letter): 
             if (t.is_value("STATE", None)): 
-                tt1 = t.next0
+                tt1 = t.next0_
                 if (MiscHelper.is_eng_adj_suffix(tt1)): 
-                    tt1 = tt1.next0.next0
+                    tt1 = tt1.next0_.next0_
                 res1 = PersonAttrToken.__try_attach(tt1, loc_onto, attrs)
                 if (res1 is not None and res1.prop_ref is not None): 
                     res1.begin_token = t
@@ -856,20 +856,20 @@ class PersonAttrToken(ReferentToken):
         res = list()
         li1 = None
         li2 = None
-        inoutarg2084 = RefOutArgWrapper(None)
-        inoutres2085 = Utils.tryGetValue(PersonAttrToken.__m_std_forms, w1, inoutarg2084)
-        li1 = inoutarg2084.value
-        if (not inoutres2085): 
+        inoutarg2237 = RefOutArgWrapper(None)
+        inoutres2238 = Utils.tryGetValue(PersonAttrToken.__m_std_forms, w1, inoutarg2237)
+        li1 = inoutarg2237.value
+        if (not inoutres2238): 
             li1 = Morphology.get_all_wordforms(w1, MorphLang())
             PersonAttrToken.__m_std_forms[w1] = li1
         for v in li1: 
             if (LanguageHelper.ends_with(v.normal_case, tail)): 
                 res.append(v)
         if (w2 is not None): 
-            inoutarg2082 = RefOutArgWrapper(None)
-            inoutres2083 = Utils.tryGetValue(PersonAttrToken.__m_std_forms, w2, inoutarg2082)
-            li2 = inoutarg2082.value
-            if (not inoutres2083): 
+            inoutarg2235 = RefOutArgWrapper(None)
+            inoutres2236 = Utils.tryGetValue(PersonAttrToken.__m_std_forms, w2, inoutarg2235)
+            li2 = inoutarg2235.value
+            if (not inoutres2236): 
                 li2 = Morphology.get_all_wordforms(w2, MorphLang())
                 PersonAttrToken.__m_std_forms[w2] = li2
         if (li2 is not None): 
@@ -898,12 +898,12 @@ class PersonAttrToken(ReferentToken):
         if (ty2 == PersonAttrTerminType2.ABBR): 
             pr0 = PersonPropertyReferent()
             pr0.name = tok.termin.canonic_text
-            return PersonAttrToken._new2086(tok.begin_token, tok.end_token, pr0, PersonAttrTerminType.POSITION)
+            return PersonAttrToken._new2239(tok.begin_token, tok.end_token, pr0, PersonAttrTerminType.POSITION)
         if (ty2 == PersonAttrTerminType2.IO or ty2 == PersonAttrTerminType2.IO2): 
             k = 0
-            first_pass2854 = True
+            first_pass3022 = True
             while True:
-                if first_pass2854: first_pass2854 = False
+                if first_pass3022: first_pass3022 = False
                 else: k += 1
                 if (k > 0): 
                     if (ty2 == PersonAttrTerminType2.IO): 
@@ -911,10 +911,10 @@ class PersonAttrToken(ReferentToken):
                     if (((tok.morph.number & MorphNumber.PLURAL)) != MorphNumber.UNDEFINED): 
                         return None
                     break
-                tt = tok.end_token.next0
-                if (tt is not None and tt.morph.class0.is_preposition): 
-                    tt = tt.next0
-                res_pat = PersonAttrToken._new2063(tok.begin_token, tok.end_token, PersonAttrTerminType.POSITION)
+                tt = tok.end_token.next0_
+                if (tt is not None and tt.morph.class0_.is_preposition): 
+                    tt = tt.next0_
+                res_pat = PersonAttrToken._new2216(tok.begin_token, tok.end_token, PersonAttrTerminType.POSITION)
                 res_pat.prop_ref = PersonPropertyReferent()
                 if (tt is not None and isinstance(tt.get_referent(), PersonPropertyReferent)): 
                     res_pat.end_token = tt
@@ -928,7 +928,7 @@ class PersonAttrToken(ReferentToken):
                         if (not ((isinstance(tt, TextToken)))): 
                             continue
                         npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
-                        if (npt is None or npt.end_token == tok.end_token.next0): 
+                        if (npt is None or npt.end_token == tok.end_token.next0_): 
                             continue
                         pat = PersonAttrToken.try_attach(npt.end_token, loc_onto, PersonAttrToken.PersonAttrAttachAttrs.NO)
                         if (pat is None or pat.begin_token != tt): 
@@ -939,39 +939,44 @@ class PersonAttrToken(ReferentToken):
                     res_pat.prop_ref.higher = pat.prop_ref
                     res_pat.higher_prop_ref = pat
                 nam = tok.termin.canonic_text
-                ts = res_pat.end_token.next0
+                ts = res_pat.end_token.next0_
                 te = None
-                first_pass2855 = True
+                first_pass3023 = True
                 while True:
-                    if first_pass2855: first_pass2855 = False
-                    else: ts = ts.next0
+                    if first_pass3023: first_pass3023 = False
+                    else: ts = ts.next0_
                     if (not (ts is not None)): break
-                    if (ts.morph.class0.is_preposition): 
+                    if (ts.morph.class0_.is_preposition): 
                         if (ts.is_value("В", None) or ts.is_value("ПО", None)): 
-                            if (isinstance(ts.next0, ReferentToken)): 
-                                r = ts.next0.get_referent()
+                            if (isinstance(ts.next0_, ReferentToken)): 
+                                r = ts.next0_.get_referent()
                                 if (r.type_name == PersonAttrToken.__obj_name_geo or r.type_name == PersonAttrToken.__obj_name_org): 
                                     res_pat.prop_ref.add_slot(PersonPropertyReferent.ATTR_REF, r, False, 0)
-                                    res_pat.end_token = ts.next0
+                                    res_pat.end_token = ts.next0_
                                 else: 
-                                    te = ts.next0
-                                ts = ts.next0
+                                    te = ts.next0_
+                                ts = ts.next0_
                                 continue
-                            rt11 = ts.kit.process_referent("NAMEDENTITY", ts.next0)
+                            rt11 = ts.kit.process_referent("NAMEDENTITY", ts.next0_)
                             if (rt11 is not None): 
                                 res_pat.prop_ref.add_slot(PersonPropertyReferent.ATTR_REF, rt11, False, 0)
                                 res_pat.end_token = rt11.end_token
                                 ts = rt11.end_token
                                 continue
-                        nnn = NounPhraseHelper.try_parse(ts.next0, NounPhraseParseAttr.NO, 0)
+                        nnn = NounPhraseHelper.try_parse(ts.next0_, NounPhraseParseAttr.NO, 0)
                         if (nnn is None): 
                             break
                         if (ts.is_value("ПО", None)): 
                             te = nnn.end_token
                             ts = te
+                            if (ts.next0_ is not None and ts.next0_.is_and and (ts.whitespaces_after_count < 2)): 
+                                nnn2 = NounPhraseHelper.try_parse(ts.next0_.next0_, NounPhraseParseAttr.NO, 0)
+                                if (nnn2 is not None and not (nnn2.morph.case & nnn.morph.case).is_undefined): 
+                                    te = nnn2.end_token
+                                    ts = te
                             continue
                         break
-                    if (ts != res_pat.end_token.next0 and ts.chars.is_all_lower): 
+                    if (ts != res_pat.end_token.next0_ and ts.chars.is_all_lower): 
                         nnn = NounPhraseHelper.try_parse(ts, NounPhraseParseAttr.NO, 0)
                         if (nnn is None): 
                             break
@@ -980,28 +985,28 @@ class PersonAttrToken(ReferentToken):
                         continue
                     break
                 if (te is not None): 
-                    s = MiscHelper.get_text_value(res_pat.end_token.next0, te, GetTextAttr.NO)
+                    s = MiscHelper.get_text_value(res_pat.end_token.next0_, te, GetTextAttr.NO)
                     if (not Utils.isNullOrEmpty(s)): 
                         nam = "{0} {1}".format(nam, s)
                         res_pat.end_token = te
-                inoutarg2088 = RefOutArgWrapper(nam)
-                res_pat.begin_token = PersonAttrToken.__analize_vise(res_pat.begin_token, inoutarg2088)
-                nam = inoutarg2088.value
+                inoutarg2241 = RefOutArgWrapper(nam)
+                res_pat.begin_token = PersonAttrToken.__analize_vise(res_pat.begin_token, inoutarg2241)
+                nam = inoutarg2241.value
                 res_pat.prop_ref.name = nam.lower()
                 res_pat.morph = tok.morph
                 return res_pat
         if (ty2 == PersonAttrTerminType2.ADJ): 
-            pat = PersonAttrToken.__try_attach(tok.end_token.next0, loc_onto, attrs)
+            pat = PersonAttrToken.__try_attach(tok.end_token.next0_, loc_onto, attrs)
             if (pat is None or pat.typ != PersonAttrTerminType.POSITION): 
                 return None
-            if (tok.begin_char == tok.end_char and not tok.begin_token.morph.class0.is_undefined): 
+            if (tok.begin_char == tok.end_char and not tok.begin_token.morph.class0_.is_undefined): 
                 return None
             pat.begin_token = tok.begin_token
             pat.prop_ref.name = "{0} {1}".format(tok.termin.canonic_text.lower(), pat.prop_ref.name)
             pat.morph = tok.morph
             return pat
         if (ty2 == PersonAttrTerminType2.IGNOREDADJ): 
-            pat = PersonAttrToken.__try_attach(tok.end_token.next0, loc_onto, attrs)
+            pat = PersonAttrToken.__try_attach(tok.end_token.next0_, loc_onto, attrs)
             if (pat is None or pat.typ != PersonAttrTerminType.POSITION): 
                 return None
             pat.begin_token = tok.begin_token
@@ -1012,18 +1017,18 @@ class PersonAttrToken(ReferentToken):
             if (gr is not None): 
                 return gr
             if (tok.begin_token.is_value("КАНДИДАТ", None)): 
-                tt = tok.end_token.next0
+                tt = tok.end_token.next0_
                 if (tt is not None and tt.is_value("В", None)): 
-                    tt = tt.next0
-                elif ((tt is not None and tt.is_value("НА", None) and tt.next0 is not None) and ((tt.next0.is_value("ПОСТ", None) or tt.next0.is_value("ДОЛЖНОСТЬ", None)))): 
-                    tt = tt.next0.next0
+                    tt = tt.next0_
+                elif ((tt is not None and tt.is_value("НА", None) and tt.next0_ is not None) and ((tt.next0_.is_value("ПОСТ", None) or tt.next0_.is_value("ДОЛЖНОСТЬ", None)))): 
+                    tt = tt.next0_.next0_
                 else: 
                     tt = None
                 if (tt is not None): 
                     pat2 = PersonAttrToken.__try_attach(tt, loc_onto, PersonAttrToken.PersonAttrAttachAttrs.NO)
                     if (pat2 is not None): 
-                        res0 = PersonAttrToken._new2063(tok.begin_token, pat2.end_token, PersonAttrTerminType.POSITION)
-                        res0.prop_ref = PersonPropertyReferent._new2064("кандидат")
+                        res0 = PersonAttrToken._new2216(tok.begin_token, pat2.end_token, PersonAttrTerminType.POSITION)
+                        res0.prop_ref = PersonPropertyReferent._new2217("кандидат")
                         res0.prop_ref.higher = pat2.prop_ref
                         res0.higher_prop_ref = pat2
                         res0.morph = tok.morph
@@ -1033,25 +1038,25 @@ class PersonAttrToken(ReferentToken):
         name = tok.termin.canonic_text.lower()
         t0 = tok.begin_token
         t1 = tok.end_token
-        inoutarg2100 = RefOutArgWrapper(name)
-        t0 = PersonAttrToken.__analize_vise(t0, inoutarg2100)
-        name = inoutarg2100.value
+        inoutarg2253 = RefOutArgWrapper(name)
+        t0 = PersonAttrToken.__analize_vise(t0, inoutarg2253)
+        name = inoutarg2253.value
         pr = PersonPropertyReferent()
-        if ((t1.next0 is not None and t1.next0.is_hiphen and not t1.is_whitespace_after) and not t1.next0.is_whitespace_after): 
-            if (t1.next0.next0.chars == t1.chars or PersonAttrToken.__m_termins.try_parse(t1.next0.next0, TerminParseAttr.NO) is not None or ((t1.next0.next0.chars.is_all_lower and t1.next0.next0.chars.is_cyrillic_letter))): 
+        if ((t1.next0_ is not None and t1.next0_.is_hiphen and not t1.is_whitespace_after) and not t1.next0_.is_whitespace_after): 
+            if (t1.next0_.next0_.chars == t1.chars or PersonAttrToken.__m_termins.try_parse(t1.next0_.next0_, TerminParseAttr.NO) is not None or ((t1.next0_.next0_.chars.is_all_lower and t1.next0_.next0_.chars.is_cyrillic_letter))): 
                 npt = NounPhraseHelper.try_parse(t1, NounPhraseParseAttr.NO, 0)
-                if (npt is not None and npt.end_token == t1.next0.next0): 
+                if (npt is not None and npt.end_token == t1.next0_.next0_): 
                     name = npt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False).lower()
                     t1 = npt.end_token
-        tname0 = t1.next0
+        tname0 = t1.next0_
         tname1 = None
         category = None
         npt0 = None
-        t = t1.next0
-        first_pass2856 = True
+        t = t1.next0_
+        first_pass3024 = True
         while True:
-            if first_pass2856: first_pass2856 = False
-            else: t = t.next0
+            if first_pass3024: first_pass3024 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (((attrs & PersonAttrToken.PersonAttrAttachAttrs.ONLYKEYWORD)) != PersonAttrToken.PersonAttrAttachAttrs.NO): 
                 break
@@ -1077,39 +1082,39 @@ class PersonAttrToken(ReferentToken):
                         ok = True
                 if (not ok): 
                     npt00 = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.PARSEPREPOSITION, 0)
-                    if (npt00 is not None and npt00.end_token.next0 is not None and not PersonAttrToken.__is_person(t)): 
+                    if (npt00 is not None and npt00.end_token.next0_ is not None and not PersonAttrToken.__is_person(t)): 
                         tt1 = npt00.end_token
                         zap = False
-                        and0 = False
-                        ttt = tt1.next0
+                        and0_ = False
+                        ttt = tt1.next0_
                         while ttt is not None: 
                             if (not ttt.is_comma_and): 
                                 break
-                            npt00 = NounPhraseHelper.try_parse(ttt.next0, NounPhraseParseAttr.NO, 0)
+                            npt00 = NounPhraseHelper.try_parse(ttt.next0_, NounPhraseParseAttr.NO, 0)
                             if (npt00 is None): 
                                 break
                             tt1 = npt00.end_token
                             if (ttt.is_char(',')): 
                                 zap = True
                             else: 
-                                and0 = True
+                                and0_ = True
                                 break
                             ttt = npt00.end_token
-                            ttt = ttt.next0
-                        if (zap and not and0): 
+                            ttt = ttt.next0_
+                        if (zap and not and0_): 
                             pass
-                        elif (tt1.next0 is None): 
+                        elif (tt1.next0_ is None): 
                             pass
                         else: 
-                            if (PersonAttrToken.__is_person(tt1.next0)): 
+                            if (PersonAttrToken.__is_person(tt1.next0_)): 
                                 ok = True
-                            elif (isinstance(tt1.next0.get_referent(), GeoReferent)): 
-                                if (PersonAttrToken.__is_person(tt1.next0.next0)): 
+                            elif (isinstance(tt1.next0_.get_referent(), GeoReferent)): 
+                                if (PersonAttrToken.__is_person(tt1.next0_.next0_)): 
                                     ok = True
                                 else: 
-                                    inoutarg2091 = RefOutArgWrapper(None)
-                                    ttt = PersonAttrToken.__try_attach_category(tt1.next0.next0, inoutarg2091)
-                                    ccc = inoutarg2091.value
+                                    inoutarg2244 = RefOutArgWrapper(None)
+                                    ttt = PersonAttrToken.__try_attach_category(tt1.next0_.next0_, inoutarg2244)
+                                    ccc = inoutarg2244.value
                                     if (ttt is not None): 
                                         ok = True
                             if (ok): 
@@ -1129,7 +1134,7 @@ class PersonAttrToken(ReferentToken):
                             if (not ttt.chars.is_all_lower): 
                                 ok = False
                                 break
-                        ttt = ttt.next0
+                        ttt = ttt.next0_
                     if (not ok): 
                         break
                     continue
@@ -1166,23 +1171,23 @@ class PersonAttrToken(ReferentToken):
                 else: 
                     break
             te = t
-            if (te.next0 is not None and te.is_char_of(",в") and ((attrs & PersonAttrToken.PersonAttrAttachAttrs.AFTERZAMESTITEL)) == PersonAttrToken.PersonAttrAttachAttrs.NO): 
-                te = te.next0
-            elif (te.next0 is not None and te.morph.class0.is_preposition): 
+            if (te.next0_ is not None and te.is_char_of(",в") and ((attrs & PersonAttrToken.PersonAttrAttachAttrs.AFTERZAMESTITEL)) == PersonAttrToken.PersonAttrAttachAttrs.NO): 
+                te = te.next0_
+            elif (te.next0_ is not None and te.morph.class0_.is_preposition): 
                 if (((attrs & PersonAttrToken.PersonAttrAttachAttrs.AFTERZAMESTITEL)) == PersonAttrToken.PersonAttrAttachAttrs.AFTERZAMESTITEL): 
                     break
                 if (((te.is_value("ИЗ", None) or te.is_value("ПРИ", None) or te.is_value("ПО", None)) or te.is_value("НА", None) or te.is_value("ОТ", None)) or te.is_value("OF", None)): 
-                    te = te.next0
-            elif ((te.is_hiphen and te.next0 is not None and not te.is_whitespace_before) and not te.is_whitespace_after and te.previous.chars == te.next0.chars): 
+                    te = te.next0_
+            elif ((te.is_hiphen and te.next0_ is not None and not te.is_whitespace_before) and not te.is_whitespace_after and te.previous.chars == te.next0_.chars): 
                 continue
-            elif (te.is_value("REPRESENT", None) and isinstance(te.next0, ReferentToken)): 
-                te = te.next0
+            elif (te.is_value("REPRESENT", None) and isinstance(te.next0_, ReferentToken)): 
+                te = te.next0_
             r = te.get_referent()
             if ((te.chars.is_latin_letter and te.length_char > 1 and not t0.chars.is_latin_letter) and not te.chars.is_all_lower): 
                 if (r is None or r.type_name != PersonAttrToken.__obj_name_org): 
-                    inoutarg2092 = RefOutArgWrapper(None)
-                    tt = PersonAttrToken.__try_attach_category(t, inoutarg2092)
-                    category = inoutarg2092.value
+                    inoutarg2245 = RefOutArgWrapper(None)
+                    tt = PersonAttrToken.__try_attach_category(t, inoutarg2245)
+                    category = inoutarg2245.value
                     if (tt is not None and name is not None): 
                         t1 = tt
                         t = t1
@@ -1194,7 +1199,7 @@ class PersonAttrToken(ReferentToken):
                             t = te
                             tname1 = t
                             t1 = tname1
-                        te = te.next0
+                        te = te.next0_
                     continue
             if (r is not None): 
                 if ((r.type_name == PersonAttrToken.__obj_name_geo and te.previous is not None and te.previous.is_value("ДЕЛО", "СПРАВІ")) and te.previous.previous is not None and te.previous.previous.is_value("ПО", None)): 
@@ -1211,34 +1216,34 @@ class PersonAttrToken(ReferentToken):
                     if (posol): 
                         t = t1
                         continue
-                    if ((((r.type_name == PersonAttrToken.__obj_name_geo and t1.next0 is not None and t1.next0.morph.class0.is_preposition) and t1.next0.next0 is not None and not t1.next0.is_value("О", None)) and not t1.next0.is_value("ОБ", None) and ((attrs & PersonAttrToken.PersonAttrAttachAttrs.AFTERZAMESTITEL)) == PersonAttrToken.PersonAttrAttachAttrs.NO) and not (tok.termin if isinstance(tok.termin, PersonAttrTermin) else None).is_boss): 
-                        r1 = t1.next0.next0.get_referent()
+                    if ((((r.type_name == PersonAttrToken.__obj_name_geo and t1.next0_ is not None and t1.next0_.morph.class0_.is_preposition) and t1.next0_.next0_ is not None and not t1.next0_.is_value("О", None)) and not t1.next0_.is_value("ОБ", None) and ((attrs & PersonAttrToken.PersonAttrAttachAttrs.AFTERZAMESTITEL)) == PersonAttrToken.PersonAttrAttachAttrs.NO) and not (tok.termin if isinstance(tok.termin, PersonAttrTermin) else None).is_boss): 
+                        r1 = t1.next0_.next0_.get_referent()
                         if ((r1) is not None): 
                             if (r1.type_name == PersonAttrToken.__obj_name_org): 
                                 pr.add_slot(PersonPropertyReferent.ATTR_REF, r1, False, 0)
-                                t1 = t1.next0.next0
+                                t1 = t1.next0_.next0_
                                 t = t1
                     if (r.type_name == PersonAttrToken.__obj_name_org): 
-                        t = te.next0
+                        t = te.next0_
                         while t is not None: 
-                            if (not t.is_comma_and or not ((isinstance(t.next0, ReferentToken)))): 
+                            if (not t.is_comma_and or not ((isinstance(t.next0_, ReferentToken)))): 
                                 break
-                            r = t.next0.get_referent()
+                            r = t.next0_.get_referent()
                             if (r is None): 
                                 break
                             if (r.type_name != PersonAttrToken.__obj_name_org): 
                                 break
                             pr.add_slot(PersonPropertyReferent.ATTR_REF, r, False, 0)
-                            t = t.next0
+                            t = t.next0_
                             t1 = t
                             if (t.previous.is_and): 
-                                t = t.next0
+                                t = t.next0_
                                 break
-                            t = t.next0
-                        first_pass2857 = True
+                            t = t.next0_
+                        first_pass3025 = True
                         while True:
-                            if first_pass2857: first_pass2857 = False
-                            else: t = t.next0
+                            if first_pass3025: first_pass3025 = False
+                            else: t = t.next0_
                             if (not (t is not None)): break
                             if (t.is_newline_before): 
                                 break
@@ -1270,8 +1275,8 @@ class PersonAttrToken(ReferentToken):
                                     break
                             pr.add_slot(PersonPropertyReferent.ATTR_REF, r, False, 0)
                             t1 = t
-                if ((t1.next0 is not None and (t1.whitespaces_after_count < 2) and t1.next0.chars.is_latin_letter) and not t1.next0.chars.is_all_lower and MiscHelper.check_number_prefix(t1.next0) is None): 
-                    t = t1.next0
+                if ((t1.next0_ is not None and (t1.whitespaces_after_count < 2) and t1.next0_.chars.is_latin_letter) and not t1.next0_.chars.is_all_lower and MiscHelper.check_number_prefix(t1.next0_) is None): 
+                    t = t1.next0_
                     while t is not None: 
                         if (not ((isinstance(t, TextToken)))): 
                             break
@@ -1283,16 +1288,16 @@ class PersonAttrToken(ReferentToken):
                             break
                         tname1 = t
                         t1 = tname1
-                        t = t.next0
+                        t = t.next0_
                 t = t1
-                if (((tname0 == t and tname1 is None and t.next0 is not None) and ((attrs & PersonAttrToken.PersonAttrAttachAttrs.AFTERZAMESTITEL)) == PersonAttrToken.PersonAttrAttachAttrs.NO and name != "президент") and t.next0.is_value("ПО", None)): 
-                    tname0 = t.next0
+                if (((tname0 == t and tname1 is None and t.next0_ is not None) and ((attrs & PersonAttrToken.PersonAttrAttachAttrs.AFTERZAMESTITEL)) == PersonAttrToken.PersonAttrAttachAttrs.NO and name != "президент") and t.next0_.is_value("ПО", None)): 
+                    tname0 = t.next0_
                     continue
                 break
             if (category is None): 
-                inoutarg2093 = RefOutArgWrapper(None)
-                tt = PersonAttrToken.__try_attach_category(t, inoutarg2093)
-                category = inoutarg2093.value
+                inoutarg2246 = RefOutArgWrapper(None)
+                tt = PersonAttrToken.__try_attach_category(t, inoutarg2246)
+                category = inoutarg2246.value
                 if (tt is not None and name is not None): 
                     t1 = tt
                     t = t1
@@ -1341,11 +1346,11 @@ class PersonAttrToken(ReferentToken):
                             iii += len(nnn.adjectives)
                         test_person = True
                         t.kit.misc_data["TestAttr"] = None
-                        li = PersonIdentityToken.try_attach(pits, 0, MorphBaseInfo._new2094(MorphCase.ALL_CASES), None, False, False)
+                        li = PersonIdentityToken.try_attach(pits, 0, MorphBaseInfo._new2247(MorphCase.ALL_CASES), None, False, False)
                         del t.kit.misc_data["TestAttr"]
                         if (len(li) > 0 and li[0].coef > 1): 
                             t.kit.misc_data["TestAttr"] = None
-                            li1 = PersonIdentityToken.try_attach(pits, iii, MorphBaseInfo._new2094(MorphCase.ALL_CASES), None, False, False)
+                            li1 = PersonIdentityToken.try_attach(pits, iii, MorphBaseInfo._new2247(MorphCase.ALL_CASES), None, False, False)
                             del t.kit.misc_data["TestAttr"]
                             if (len(li1) == 0): 
                                 break
@@ -1353,14 +1358,14 @@ class PersonAttrToken(ReferentToken):
                                 break
                         else: 
                             t.kit.misc_data["TestAttr"] = None
-                            li1 = PersonIdentityToken.try_attach(pits, 1, MorphBaseInfo._new2094(MorphCase.ALL_CASES), None, False, False)
+                            li1 = PersonIdentityToken.try_attach(pits, 1, MorphBaseInfo._new2247(MorphCase.ALL_CASES), None, False, False)
                             del t.kit.misc_data["TestAttr"]
                             if (len(li1) > 0 and li1[0].coef >= 1 and li1[0].begin_token == t): 
                                 continue
             if (BracketHelper.can_be_start_of_sequence(t, True, False)): 
                 br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
-                if ((br is not None and t.next0.get_referent() is not None and t.next0.get_referent().type_name == PersonAttrToken.__obj_name_org) and t.next0.next0 == br.end_token): 
-                    pr.add_slot(PersonPropertyReferent.ATTR_REF, t.next0.get_referent(), False, 0)
+                if ((br is not None and t.next0_.get_referent() is not None and t.next0_.get_referent().type_name == PersonAttrToken.__obj_name_org) and t.next0_.next0_ == br.end_token): 
+                    pr.add_slot(PersonPropertyReferent.ATTR_REF, t.next0_.get_referent(), False, 0)
                     t1 = br.end_token
                     break
                 elif (br is not None and (br.length_char < 40)): 
@@ -1382,8 +1387,8 @@ class PersonAttrToken(ReferentToken):
             if (test): 
                 rto = t.kit.process_referent("ORGANIZATION", t)
                 if (rto is not None): 
-                    str0 = str(rto.referent).upper()
-                    if (str0.startswith("ГОСУДАРСТВЕННАЯ ГРАЖДАНСКАЯ СЛУЖБА")): 
+                    str0_ = str(rto.referent).upper()
+                    if (str0_.startswith("ГОСУДАРСТВЕННАЯ ГРАЖДАНСКАЯ СЛУЖБА")): 
                         rto = None
                 if (rto is not None and rto.end_char >= t.end_char and rto.begin_char == t.begin_char): 
                     pr.add_slot(PersonPropertyReferent.ATTR_REF, rto.referent, False, 0)
@@ -1393,9 +1398,9 @@ class PersonAttrToken(ReferentToken):
                     if (((attrs & PersonAttrToken.PersonAttrAttachAttrs.AFTERZAMESTITEL)) != PersonAttrToken.PersonAttrAttachAttrs.NO): 
                         break
                     npt0 = npt
-                    if (t.next0 is not None and t.next0.is_and): 
-                        rto2 = t.kit.process_referent("ORGANIZATION", t.next0.next0)
-                        if (rto2 is not None and rto2.begin_char == t.next0.next0.begin_char): 
+                    if (t.next0_ is not None and t.next0_.is_and): 
+                        rto2 = t.kit.process_referent("ORGANIZATION", t.next0_.next0_)
+                        if (rto2 is not None and rto2.begin_char == t.next0_.next0_.begin_char): 
                             pr.add_slot(PersonPropertyReferent.ATTR_REF, rto2.referent, False, 0)
                             pr.add_ext_referent(rto2)
                             t1 = rto2.end_token
@@ -1407,16 +1412,16 @@ class PersonAttrToken(ReferentToken):
                     t = t1
                     npt0 = npt
                     continue
-            if (t.morph.class0.is_preposition): 
-                npt = NounPhraseHelper.try_parse(t.next0, NounPhraseParseAttr.NO, 0)
-                if (npt is None and t.next0 is not None and t.next0.morph.class0.is_adverb): 
-                    npt = NounPhraseHelper.try_parse(t.next0.next0, NounPhraseParseAttr.NO, 0)
+            if (t.morph.class0_.is_preposition): 
+                npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
+                if (npt is None and t.next0_ is not None and t.next0_.morph.class0_.is_adverb): 
+                    npt = NounPhraseHelper.try_parse(t.next0_.next0_, NounPhraseParseAttr.NO, 0)
                 if (npt is not None and PersonAttrToken.__exists_in_doctionary(npt.end_token)): 
                     ok = False
                     if ((t.is_value("ПО", None) and npt.morph.case.is_dative and not npt.noun.is_value("ИМЯ", "ІМЯ")) and not npt.noun.is_value("ПРОЗВИЩЕ", "ПРІЗВИСЬКО") and not npt.noun.is_value("ПРОЗВАНИЕ", "ПРОЗВАННЯ")): 
                         ok = True
                         if (npt.noun.is_value("РАБОТА", "РОБОТА") or npt.noun.is_value("ПОДДЕРЖКА", "ПІДТРИМКА") or npt.noun.is_value("СОПРОВОЖДЕНИЕ", "СУПРОВІД")): 
-                            npt2 = NounPhraseHelper.try_parse(npt.end_token.next0, NounPhraseParseAttr.PARSEPREPOSITION, 0)
+                            npt2 = NounPhraseHelper.try_parse(npt.end_token.next0_, NounPhraseParseAttr.PARSEPREPOSITION, 0)
                             if (npt2 is not None): 
                                 npt = npt2
                     elif (npt.noun.is_value("ОТСТАВКА", None) or npt.noun.is_value("ВІДСТАВКА", None)): 
@@ -1432,28 +1437,28 @@ class PersonAttrToken(ReferentToken):
                 if (t.is_value("OF", None)): 
                     continue
             elif (t.is_and and npt0 is not None): 
-                npt = NounPhraseHelper.try_parse(t.next0, NounPhraseParseAttr.NO, 0)
-                if (npt is not None and not (npt.morph.class0 & npt0.morph.class0).is_undefined): 
+                npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
+                if (npt is not None and not (npt.morph.class0_ & npt0.morph.class0_).is_undefined): 
                     if (npt0.chars == npt.chars): 
                         tname1 = npt.end_token
                         t1 = tname1
                         t = t1
                         npt0 = None
                         continue
-            elif (t.is_char(',') and not t.is_newline_after and npt0 is not None): 
-                npt = NounPhraseHelper.try_parse(t.next0, NounPhraseParseAttr.NO, 0)
-                if (npt is not None and not (npt.morph.class0 & npt0.morph.class0).is_undefined): 
-                    if (npt0.chars == npt.chars and npt.end_token.next0 is not None and npt.end_token.next0.is_and): 
-                        npt1 = NounPhraseHelper.try_parse(npt.end_token.next0.next0, NounPhraseParseAttr.NO, 0)
-                        if (npt1 is not None and not (npt1.morph.class0 & npt.morph.class0 & npt0.morph.class0).is_undefined): 
+            elif (t.is_comma_and and ((not t.is_newline_after or tok.is_newline_before)) and npt0 is not None): 
+                npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
+                if (npt is not None and not (npt.morph.class0_ & npt0.morph.class0_).is_undefined): 
+                    if (npt0.chars == npt.chars and npt.end_token.next0_ is not None and npt.end_token.next0_.is_and): 
+                        npt1 = NounPhraseHelper.try_parse(npt.end_token.next0_.next0_, NounPhraseParseAttr.NO, 0)
+                        if (npt1 is not None and not (npt1.morph.class0_ & npt.morph.class0_ & npt0.morph.class0_).is_undefined): 
                             if (npt0.chars == npt1.chars): 
                                 tname1 = npt1.end_token
                                 t1 = tname1
                                 t = t1
                                 npt0 = None
                                 continue
-            elif (t.morph.class0.is_adjective and BracketHelper.can_be_start_of_sequence(t.next0, True, False)): 
-                br = BracketHelper.try_parse(t.next0, BracketParseAttr.NO, 100)
+            elif (t.morph.class0_.is_adjective and BracketHelper.can_be_start_of_sequence(t.next0_, True, False)): 
+                br = BracketHelper.try_parse(t.next0_, BracketParseAttr.NO, 100)
                 if (br is not None and (br.length_char < 100)): 
                     tname1 = br.end_token
                     t1 = tname1
@@ -1467,7 +1472,7 @@ class PersonAttrToken(ReferentToken):
                     else: 
                         tname1 = t
                         t1 = tname1
-                    t = t.next0
+                    t = t.next0_
                 break
             if (((t.chars.is_all_upper or ((not t.chars.is_all_lower and not t.chars.is_capital_upper)))) and t.length_char > 1 and not t0.chars.is_all_upper): 
                 tname1 = t
@@ -1477,7 +1482,7 @@ class PersonAttrToken(ReferentToken):
                 tname1 = t
                 t1 = tname1
                 continue
-            if (((t.chars.is_letter and isinstance(t.next0, ReferentToken) and isinstance(t.next0.get_referent(), PersonReferent)) and not t.morph.class0.is_preposition and not t.morph.class0.is_conjunction) and not t.morph.class0.is_verb): 
+            if (((t.chars.is_letter and isinstance(t.next0_, ReferentToken) and isinstance(t.next0_.get_referent(), PersonReferent)) and not t.morph.class0_.is_preposition and not t.morph.class0_.is_conjunction) and not t.morph.class0_.is_verb): 
                 tname1 = t
                 t1 = tname1
                 break
@@ -1487,11 +1492,11 @@ class PersonAttrToken(ReferentToken):
                     t1 = tname1
                     break
             if (test_person): 
-                if (t.next0 is None): 
+                if (t.next0_ is None): 
                     break
-                te = t.next0
-                if (((te.is_char_of(",в") or te.is_value("ИЗ", None))) and te.next0 is not None): 
-                    te = te.next0
+                te = t.next0_
+                if (((te.is_char_of(",в") or te.is_value("ИЗ", None))) and te.next0_ is not None): 
+                    te = te.next0_
                 r = te.get_referent()
                 if ((r) is not None): 
                     if (r.type_name == PersonAttrToken.__obj_name_geo or r.type_name == PersonAttrToken.__obj_name_org or r.type_name == PersonAttrToken.__obj_name_transport): 
@@ -1501,20 +1506,20 @@ class PersonAttrToken(ReferentToken):
                 break
             if (t.morph.language.is_en): 
                 break
-            if (t.morph.class0.is_noun and t.get_morph_class_in_dictionary().is_undefined and (t.whitespaces_before_count < 2)): 
+            if (t.morph.class0_.is_noun and t.get_morph_class_in_dictionary().is_undefined and (t.whitespaces_before_count < 2)): 
                 tname1 = t
                 t1 = tname1
                 continue
             break
         if (tname1 is not None): 
             if (pr.find_slot(PersonPropertyReferent.ATTR_REF, None, True) is None and (((((tname1.is_value("КОМПАНИЯ", "КОМПАНІЯ") or tname1.is_value("ФИРМА", "ФІРМА") or tname1.is_value("ПРЕДПРИЯТИЕ", "ПІДПРИЄМСТВО")) or tname1.is_value("ПРЕЗИДИУМ", "ПРЕЗИДІЯ") or tname1.is_value("ЧАСТЬ", "ЧАСТИНА")) or tname1.is_value("ФЕДЕРАЦИЯ", "ФЕДЕРАЦІЯ") or tname1.is_value("ВЕДОМСТВО", "ВІДОМСТВО")) or tname1.is_value("БАНК", None) or tname1.is_value("КОРПОРАЦИЯ", "КОРПОРАЦІЯ")))): 
-                if (tname1 == tname0 or ((tname0.is_value("ЭТОТ", "ЦЕЙ") and tname0.next0 == tname1))): 
-                    org_ = None
+                if (tname1 == tname0 or ((tname0.is_value("ЭТОТ", "ЦЕЙ") and tname0.next0_ == tname1))): 
+                    org0_ = None
                     cou = 0
                     tt0 = t0.previous
-                    first_pass2858 = True
+                    first_pass3026 = True
                     while True:
-                        if first_pass2858: first_pass2858 = False
+                        if first_pass3026: first_pass3026 = False
                         else: tt0 = tt0.previous
                         if (not (tt0 is not None)): break
                         if (tt0.is_newline_after): 
@@ -1540,12 +1545,12 @@ class PersonAttrToken(ReferentToken):
                                                 ok1 = True
                                     if (not ok1): 
                                         continue
-                                org_ = r0
+                                org0_ = r0
                                 break
-                        if (org_ is not None or has_org): 
+                        if (org0_ is not None or has_org): 
                             break
-                    if (org_ is not None): 
-                        pr.add_slot(PersonPropertyReferent.ATTR_REF, org_, False, 0)
+                    if (org0_ is not None): 
+                        pr.add_slot(PersonPropertyReferent.ATTR_REF, org0_, False, 0)
                         tname1 = None
         if (tname1 is not None): 
             s = MiscHelper.get_text_value(tname0, tname1, GetTextAttr.NO)
@@ -1554,21 +1559,21 @@ class PersonAttrToken(ReferentToken):
         if (category is not None): 
             name = "{0} {1}".format(name, category)
         else: 
-            inoutarg2097 = RefOutArgWrapper(None)
-            tt = PersonAttrToken.__try_attach_category(t1.next0, inoutarg2097)
-            category = inoutarg2097.value
+            inoutarg2250 = RefOutArgWrapper(None)
+            tt = PersonAttrToken.__try_attach_category(t1.next0_, inoutarg2250)
+            category = inoutarg2250.value
             if (tt is not None): 
                 name = "{0} {1}".format(name, category)
                 t1 = tt
         pr.name = name
-        res = PersonAttrToken._new2098(t0, t1, PersonAttrTerminType.POSITION, pr, tok.morph)
+        res = PersonAttrToken._new2251(t0, t1, PersonAttrTerminType.POSITION, pr, tok.morph)
         res.can_be_independent_property = (tok.termin if isinstance(tok.termin, PersonAttrTermin) else None).can_be_unique_identifier
         i = name.find("заместитель ")
         if (i < 0): 
             i = name.find("заступник ")
         if (i >= 0): 
             i += 11
-            res1 = PersonAttrToken._new2069(t0, t1, PersonAttrTerminType.POSITION, tok.morph)
+            res1 = PersonAttrToken._new2222(t0, t1, PersonAttrTerminType.POSITION, tok.morph)
             res1.prop_ref = PersonPropertyReferent()
             res1.prop_ref.name = name[0 : (i)]
             res1.prop_ref.higher = res.prop_ref
@@ -1627,7 +1632,7 @@ class PersonAttrToken(ReferentToken):
     def __try_attach_category(t : 'Token', cat : str) -> 'Token':
         from pullenti.ner.NumberToken import NumberToken
         cat.value = None
-        if (t is None or t.next0 is None): 
+        if (t is None or t.next0_ is None): 
             return None
         tt = None
         num = -1
@@ -1642,14 +1647,14 @@ class PersonAttrToken(ReferentToken):
         if ((num < 0) and ((t.is_value("ВЫСШИЙ", None) or t.is_value("ВЫСШ", None) or t.is_value("ВИЩИЙ", None)))): 
             num = 0
             tt = t
-            if (tt.next0 is not None and tt.next0.is_char('.')): 
-                tt = tt.next0
-        if (tt is None or tt.next0 is None or (num < 0)): 
+            if (tt.next0_ is not None and tt.next0_.is_char('.')): 
+                tt = tt.next0_
+        if (tt is None or tt.next0_ is None or (num < 0)): 
             return None
-        tt = tt.next0
+        tt = tt.next0_
         if (tt.is_value("КАТЕГОРИЯ", None) or tt.is_value("КАТЕГОРІЯ", None) or tt.is_value("КАТ", None)): 
-            if (tt.next0 is not None and tt.next0.is_char('.')): 
-                tt = tt.next0
+            if (tt.next0_ is not None and tt.next0_.is_char('.')): 
+                tt = tt.next0_
             if (num == 0): 
                 cat.value = ("вищої категорії" if tt.kit.base_language.is_ua else "высшей категории")
             else: 
@@ -1696,12 +1701,12 @@ class PersonAttrToken(ReferentToken):
     @staticmethod
     def __create_attr_grade(tok : 'TerminToken') -> 'PersonAttrToken':
         from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        t1 = PersonAttrToken.__find_grade_last(tok.end_token.next0, tok.begin_token)
+        t1 = PersonAttrToken.__find_grade_last(tok.end_token.next0_, tok.begin_token)
         if (t1 is None): 
             return None
         pr = PersonPropertyReferent()
         pr.name = "{0} наук".format(tok.termin.canonic_text.lower())
-        return PersonAttrToken._new2101(tok.begin_token, t1, PersonAttrTerminType.POSITION, pr, tok.morph, False)
+        return PersonAttrToken._new2254(tok.begin_token, t1, PersonAttrTerminType.POSITION, pr, tok.morph, False)
     
     @staticmethod
     def __find_grade_last(t : 'Token', t0 : 'Token') -> 'Token':
@@ -1715,22 +1720,22 @@ class PersonAttrToken(ReferentToken):
             if (t.is_value("Н", None)): 
                 if (t0.length_char > 1 or t0.chars != t.chars): 
                     return None
-                if ((t.next0 is not None and t.next0.is_hiphen and t.next0.next0 is not None) and t.next0.next0.is_value("К", None)): 
-                    t1 = t.next0.next0
+                if ((t.next0_ is not None and t.next0_.is_hiphen and t.next0_.next0_ is not None) and t.next0_.next0_.is_value("К", None)): 
+                    t1 = t.next0_.next0_
                     break
-                if (t.next0 is not None and t.next0.is_char('.')): 
-                    t1 = t.next0
+                if (t.next0_ is not None and t.next0_.is_char('.')): 
+                    t1 = t.next0_
                     break
             if (not t.chars.is_all_lower and t0.chars.is_all_lower): 
                 break
             i += 1
             if ((i) > 2): 
                 break
-            if (t.next0 is not None and t.next0.is_char('.')): 
-                t = t.next0
-            if (t.next0 is not None and t.next0.is_hiphen): 
-                t = t.next0
-            t = t.next0
+            if (t.next0_ is not None and t.next0_.is_char('.')): 
+                t = t.next0_
+            if (t.next0_ is not None and t.next0_.is_hiphen): 
+                t = t.next0_
+            t = t.next0_
         if (t1 is None or i == 0): 
             return None
         return t1
@@ -1761,9 +1766,11 @@ class PersonAttrToken(ReferentToken):
                     if (n != "ДОН"): 
                         return PersonPropertyKind.KING
                 if (pat.is_military_rank): 
+                    if (nn == "ВИЦЕ"): 
+                        continue
                     if (nn == "КАПИТАН" or nn == "CAPTAIN" or nn == "КАПІТАН"): 
-                        org_ = (pr.get_value(PersonPropertyReferent.ATTR_REF) if isinstance(pr.get_value(PersonPropertyReferent.ATTR_REF), Referent) else None)
-                        if (org_ is not None and org_.type_name == "ORGANIZATION"): 
+                        org0_ = (pr.get_value(PersonPropertyReferent.ATTR_REF) if isinstance(pr.get_value(PersonPropertyReferent.ATTR_REF), Referent) else None)
+                        if (org0_ is not None and org0_.type_name == "ORGANIZATION"): 
                             continue
                     return PersonPropertyKind.MILITARYRANK
                 if (pat.is_nation): 
@@ -1777,7 +1784,7 @@ class PersonAttrToken(ReferentToken):
         from pullenti.ner.person.internal.PersonAttrTermin import PersonAttrTermin
         tok = PersonAttrToken.__m_termins.try_parse(t, TerminParseAttr.NO)
         if ((tok is not None and tok.begin_token == tok.end_token and t.length_char == 1) and t.is_value("Д", None)): 
-            if (BracketHelper.is_bracket(t.next0, True) and not t.is_whitespace_after): 
+            if (BracketHelper.is_bracket(t.next0_, True) and not t.is_whitespace_after): 
                 return None
         if (tok is not None and tok.termin.canonic_text == "ГРАФ"): 
             tok.morph = MorphCollection(t.morph)
@@ -1811,172 +1818,172 @@ class PersonAttrToken(ReferentToken):
         if (PersonAttrToken.__m_termins is not None): 
             return
         PersonAttrToken.__m_termins = TerminCollection()
-        PersonAttrToken.__m_termins.add(PersonAttrTermin._new2102("ТОВАРИЩ", PersonAttrTerminType.PREFIX))
-        PersonAttrToken.__m_termins.add(PersonAttrTermin._new2073("ТОВАРИШ", MorphLang.UA, PersonAttrTerminType.PREFIX))
+        PersonAttrToken.__m_termins.add(PersonAttrTermin._new2255("ТОВАРИЩ", PersonAttrTerminType.PREFIX))
+        PersonAttrToken.__m_termins.add(PersonAttrTermin._new2226("ТОВАРИШ", MorphLang.UA, PersonAttrTerminType.PREFIX))
         for s in ["ГОСПОДИН", "ГРАЖДАНИН", "УРОЖЕНЕЦ", "МИСТЕР", "СЭР", "СЕНЬОР", "МОНСЕНЬОР", "СИНЬОР", "МЕСЬЕ", "МСЬЕ", "ДОН", "МАЭСТРО", "МЭТР"]: 
-            t = PersonAttrTermin._new2104(s, PersonAttrTerminType.PREFIX, MorphGender.MASCULINE)
+            t = PersonAttrTermin._new2257(s, PersonAttrTerminType.PREFIX, MorphGender.MASCULINE)
             if (s == "ГРАЖДАНИН"): 
                 t.add_abridge("ГР.")
                 t.add_abridge("ГРАЖД.")
                 t.add_abridge("ГР-Н")
             PersonAttrToken.__m_termins.add(t)
         for s in ["ПАН", "ГРОМАДЯНИН", "УРОДЖЕНЕЦЬ", "МІСТЕР", "СЕР", "СЕНЬЙОР", "МОНСЕНЬЙОР", "МЕСЬЄ", "МЕТР", "МАЕСТРО"]: 
-            t = PersonAttrTermin._new2105(s, MorphLang.UA, PersonAttrTerminType.PREFIX, MorphGender.MASCULINE)
+            t = PersonAttrTermin._new2258(s, MorphLang.UA, PersonAttrTerminType.PREFIX, MorphGender.MASCULINE)
             if (s == "ГРОМАДЯНИН"): 
                 t.add_abridge("ГР.")
                 t.add_abridge("ГР-Н")
             PersonAttrToken.__m_termins.add(t)
         for s in ["ГОСПОЖА", "ПАНИ", "ГРАЖДАНКА", "УРОЖЕНКА", "СЕНЬОРА", "СЕНЬОРИТА", "СИНЬОРА", "СИНЬОРИТА", "МИСС", "МИССИС", "МАДАМ", "МАДЕМУАЗЕЛЬ", "ФРАУ", "ФРОЙЛЯЙН", "ЛЕДИ", "ДОННА"]: 
-            t = PersonAttrTermin._new2104(s, PersonAttrTerminType.PREFIX, MorphGender.FEMINIE)
+            t = PersonAttrTermin._new2257(s, PersonAttrTerminType.PREFIX, MorphGender.FEMINIE)
             if (s == "ГРАЖДАНКА"): 
                 t.add_abridge("ГР.")
                 t.add_abridge("ГРАЖД.")
                 t.add_abridge("ГР-КА")
             PersonAttrToken.__m_termins.add(t)
         for s in ["ПАНІ", "ГРОМАДЯНКА", "УРОДЖЕНКА", "СЕНЬЙОРА", "СЕНЬЙОРА", "МІС", "МІСІС", "МАДАМ", "МАДЕМУАЗЕЛЬ", "ФРАУ", "ФРОЙЛЯЙН", "ЛЕДІ"]: 
-            t = PersonAttrTermin._new2105(s, MorphLang.UA, PersonAttrTerminType.PREFIX, MorphGender.FEMINIE)
+            t = PersonAttrTermin._new2258(s, MorphLang.UA, PersonAttrTerminType.PREFIX, MorphGender.FEMINIE)
             if (s == "ГРОМАДЯНКА"): 
                 t.add_abridge("ГР.")
                 t.add_abridge("ГР-КА")
             PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2105("MISTER", MorphLang.EN, PersonAttrTerminType.PREFIX, MorphGender.MASCULINE)
+        t = PersonAttrTermin._new2258("MISTER", MorphLang.EN, PersonAttrTerminType.PREFIX, MorphGender.MASCULINE)
         t.add_abridge("MR")
         t.add_abridge("MR.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2105("MISSIS", MorphLang.EN, PersonAttrTerminType.PREFIX, MorphGender.FEMINIE)
+        t = PersonAttrTermin._new2258("MISSIS", MorphLang.EN, PersonAttrTerminType.PREFIX, MorphGender.FEMINIE)
         t.add_abridge("MRS")
         t.add_abridge("MSR.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2105("MISS", MorphLang.EN, PersonAttrTerminType.PREFIX, MorphGender.FEMINIE)
+        t = PersonAttrTermin._new2258("MISS", MorphLang.EN, PersonAttrTerminType.PREFIX, MorphGender.FEMINIE)
         t.add_abridge("MS")
         t.add_abridge("MS.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2102("БЕЗРАБОТНЫЙ", PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2255("БЕЗРАБОТНЫЙ", PersonAttrTerminType.POSITION)
         t.add_variant("НЕ РАБОТАЮЩИЙ", False)
         t.add_variant("НЕ РАБОТАЕТ", False)
         t.add_variant("ВРЕМЕННО НЕ РАБОТАЮЩИЙ", False)
         t.add_variant("ВРЕМЕННО НЕ РАБОТАЕТ", False)
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2073("БЕЗРОБІТНИЙ", MorphLang.UA, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2226("БЕЗРОБІТНИЙ", MorphLang.UA, PersonAttrTerminType.POSITION)
         t.add_variant("НЕ ПРАЦЮЮЧИЙ", False)
         t.add_variant("НЕ ПРАЦЮЄ", False)
         t.add_variant("ТИМЧАСОВО НЕ ПРАЦЮЮЧИЙ", False)
         t.add_variant("ТИМЧАСОВО НЕ ПРАЦЮЄ", False)
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2113("ЗАМЕСТИТЕЛЬ", "заместитель", PersonAttrTerminType2.IO2, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2266("ЗАМЕСТИТЕЛЬ", "заместитель", PersonAttrTerminType2.IO2, PersonAttrTerminType.POSITION)
         t.add_variant("ЗАМЕСТИТЕЛЬНИЦА", False)
         t.add_abridge("ЗАМ.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2114("ЗАСТУПНИК", MorphLang.UA, "заступник", PersonAttrTerminType2.IO2, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2267("ЗАСТУПНИК", MorphLang.UA, "заступник", PersonAttrTerminType2.IO2, PersonAttrTerminType.POSITION)
         t.add_variant("ЗАСТУПНИЦЯ", False)
         t.add_abridge("ЗАМ.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2113("УПОЛНОМОЧЕННЫЙ", "уполномоченный", PersonAttrTerminType2.IO2, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2266("УПОЛНОМОЧЕННЫЙ", "уполномоченный", PersonAttrTerminType2.IO2, PersonAttrTerminType.POSITION)
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2114("УПОВНОВАЖЕНИЙ", MorphLang.UA, "уповноважений", PersonAttrTerminType2.IO2, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2267("УПОВНОВАЖЕНИЙ", MorphLang.UA, "уповноважений", PersonAttrTerminType2.IO2, PersonAttrTerminType.POSITION)
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2113("ЭКС-УПОЛНОМОЧЕННЫЙ", "экс-уполномоченный", PersonAttrTerminType2.IO2, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2266("ЭКС-УПОЛНОМОЧЕННЫЙ", "экс-уполномоченный", PersonAttrTerminType2.IO2, PersonAttrTerminType.POSITION)
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2114("ЕКС-УПОВНОВАЖЕНИЙ", MorphLang.UA, "екс-уповноважений", PersonAttrTerminType2.IO2, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2267("ЕКС-УПОВНОВАЖЕНИЙ", MorphLang.UA, "екс-уповноважений", PersonAttrTerminType2.IO2, PersonAttrTerminType.POSITION)
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2119("ИСПОЛНЯЮЩИЙ ОБЯЗАННОСТИ", PersonAttrTerminType2.IO, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2272("ИСПОЛНЯЮЩИЙ ОБЯЗАННОСТИ", PersonAttrTerminType2.IO, PersonAttrTerminType.POSITION)
         t.add_abridge("И.О.")
         t.acronym = "ИО"
         t.canonic_text = t.acronym
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2120("ВИКОНУЮЧИЙ ОБОВЯЗКИ", MorphLang.UA, PersonAttrTerminType2.IO, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2273("ВИКОНУЮЧИЙ ОБОВЯЗКИ", MorphLang.UA, PersonAttrTerminType2.IO, PersonAttrTerminType.POSITION)
         t.add_abridge("В.О.")
         t.acronym = "ВО"
         t.canonic_text = t.acronym
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2119("ВРЕМЕННО ИСПОЛНЯЮЩИЙ ОБЯЗАННОСТИ", PersonAttrTerminType2.IO, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2272("ВРЕМЕННО ИСПОЛНЯЮЩИЙ ОБЯЗАННОСТИ", PersonAttrTerminType2.IO, PersonAttrTerminType.POSITION)
         t.add_abridge("ВР.И.О.")
         t.acronym = "ВРИО"
         t.canonic_text = t.acronym
         PersonAttrToken.__m_termin_vrio = t
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2102("ЗАВЕДУЮЩИЙ", PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2255("ЗАВЕДУЮЩИЙ", PersonAttrTerminType.POSITION)
         t.add_abridge("ЗАВЕД.")
         t.add_abridge("ЗАВ.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2073("ЗАВІДУВАЧ", MorphLang.UA, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2226("ЗАВІДУВАЧ", MorphLang.UA, PersonAttrTerminType.POSITION)
         t.add_abridge("ЗАВІД.")
         t.add_abridge("ЗАВ.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2102("СОТРУДНИК", PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2255("СОТРУДНИК", PersonAttrTerminType.POSITION)
         t.add_abridge("СОТРУДН.")
         t.add_abridge("СОТР.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2073("СПІВРОБІТНИК", MorphLang.UA, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2226("СПІВРОБІТНИК", MorphLang.UA, PersonAttrTerminType.POSITION)
         t.add_abridge("СПІВРОБ.")
         t.add_abridge("СПІВ.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2102("АКАДЕМИК", PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2255("АКАДЕМИК", PersonAttrTerminType.POSITION)
         t.add_abridge("АКАД.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2073("АКАДЕМІК", MorphLang.UA, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2226("АКАДЕМІК", MorphLang.UA, PersonAttrTerminType.POSITION)
         t.add_abridge("АКАД.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2102("ЧЛЕН-КОРРЕСПОНДЕНТ", PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2255("ЧЛЕН-КОРРЕСПОНДЕНТ", PersonAttrTerminType.POSITION)
         t.add_abridge("ЧЛ.-КОРР.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2073("ЧЛЕН-КОРЕСПОНДЕНТ", MorphLang.UA, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2226("ЧЛЕН-КОРЕСПОНДЕНТ", MorphLang.UA, PersonAttrTerminType.POSITION)
         t.add_abridge("ЧЛ.-КОР.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2102("ДОЦЕНТ", PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2255("ДОЦЕНТ", PersonAttrTerminType.POSITION)
         t.add_abridge("ДОЦ.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2102("ПРОФЕССОР", PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2255("ПРОФЕССОР", PersonAttrTerminType.POSITION)
         t.add_abridge("ПРОФ.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2073("ПРОФЕСОР", MorphLang.UA, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2226("ПРОФЕСОР", MorphLang.UA, PersonAttrTerminType.POSITION)
         t.add_abridge("ПРОФ.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2073("PROFESSOR", MorphLang.EN, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2226("PROFESSOR", MorphLang.EN, PersonAttrTerminType.POSITION)
         t.add_abridge("PROF.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2119("КАНДИДАТ", PersonAttrTerminType2.GRADE, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2272("КАНДИДАТ", PersonAttrTerminType2.GRADE, PersonAttrTerminType.POSITION)
         t.add_abridge("КАНД.")
         t.add_abridge("КАН.")
         t.add_abridge("К-Т")
         t.add_abridge("К.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2119("ДОКТОР", PersonAttrTerminType2.GRADE, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2272("ДОКТОР", PersonAttrTerminType2.GRADE, PersonAttrTerminType.POSITION)
         t.add_abridge("ДОКТ.")
         t.add_abridge("ДОК.")
         t.add_abridge("Д-Р")
         t.add_abridge("Д.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2073("DOCTOR", MorphLang.EN, PersonAttrTerminType.PREFIX)
+        t = PersonAttrTermin._new2226("DOCTOR", MorphLang.EN, PersonAttrTerminType.PREFIX)
         t.add_abridge("DR")
         t.add_abridge("DR.")
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2102("ДОКТОРАНТ", PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2255("ДОКТОРАНТ", PersonAttrTerminType.POSITION)
         PersonAttrToken.__m_termins.add(t)
-        t = PersonAttrTermin._new2073("ДОКТОРАНТ", MorphLang.UA, PersonAttrTerminType.POSITION)
+        t = PersonAttrTermin._new2226("ДОКТОРАНТ", MorphLang.UA, PersonAttrTerminType.POSITION)
         PersonAttrToken.__m_termins.add(t)
         for s in ["КФН", "КТН", "КХН"]: 
-            t = PersonAttrTermin._new2139(s, "кандидат наук", PersonAttrTerminType.POSITION, PersonAttrTerminType2.ABBR)
+            t = PersonAttrTermin._new2292(s, "кандидат наук", PersonAttrTerminType.POSITION, PersonAttrTerminType2.ABBR)
             PersonAttrToken.__m_termins.add(t)
         for s in ["ГЛАВНЫЙ", "МЛАДШИЙ", "СТАРШИЙ", "ВЕДУЩИЙ", "НАУЧНЫЙ"]: 
-            t = PersonAttrTermin._new2119(s, PersonAttrTerminType2.ADJ, PersonAttrTerminType.POSITION)
+            t = PersonAttrTermin._new2272(s, PersonAttrTerminType2.ADJ, PersonAttrTerminType.POSITION)
             t.add_all_abridges(0, 0, 2)
             PersonAttrToken.__m_termins.add(t)
         for s in ["ГОЛОВНИЙ", "МОЛОДШИЙ", "СТАРШИЙ", "ПРОВІДНИЙ", "НАУКОВИЙ"]: 
-            t = PersonAttrTermin._new2141(s, PersonAttrTerminType2.ADJ, PersonAttrTerminType.POSITION, MorphLang.UA)
+            t = PersonAttrTermin._new2294(s, PersonAttrTerminType2.ADJ, PersonAttrTerminType.POSITION, MorphLang.UA)
             t.add_all_abridges(0, 0, 2)
             PersonAttrToken.__m_termins.add(t)
         for s in ["НЫНЕШНИЙ", "НОВЫЙ", "CURRENT", "NEW"]: 
-            t = PersonAttrTermin._new2119(s, PersonAttrTerminType2.IGNOREDADJ, PersonAttrTerminType.POSITION)
+            t = PersonAttrTermin._new2272(s, PersonAttrTerminType2.IGNOREDADJ, PersonAttrTerminType.POSITION)
             PersonAttrToken.__m_termins.add(t)
         for s in ["НИНІШНІЙ", "НОВИЙ"]: 
-            t = PersonAttrTermin._new2141(s, PersonAttrTerminType2.IGNOREDADJ, PersonAttrTerminType.POSITION, MorphLang.UA)
+            t = PersonAttrTermin._new2294(s, PersonAttrTerminType2.IGNOREDADJ, PersonAttrTerminType.POSITION, MorphLang.UA)
             PersonAttrToken.__m_termins.add(t)
         for s in ["ТОГДАШНИЙ", "БЫВШИЙ", "ПРЕДЫДУЩИЙ", "FORMER", "PREVIOUS", "THEN"]: 
-            t = PersonAttrTermin._new2119(s, PersonAttrTerminType2.IO, PersonAttrTerminType.POSITION)
+            t = PersonAttrTermin._new2272(s, PersonAttrTerminType2.IO, PersonAttrTerminType.POSITION)
             PersonAttrToken.__m_termins.add(t)
         for s in ["ТОДІШНІЙ", "КОЛИШНІЙ"]: 
-            t = PersonAttrTermin._new2141(s, PersonAttrTerminType2.IO, PersonAttrTerminType.POSITION, MorphLang.UA)
+            t = PersonAttrTermin._new2294(s, PersonAttrTerminType2.IO, PersonAttrTerminType.POSITION, MorphLang.UA)
             PersonAttrToken.__m_termins.add(t)
         dat = ResourceHelper.get_bytes("attr_ru.dat")
         if (dat is None): 
@@ -1993,9 +2000,9 @@ class PersonAttrToken(ReferentToken):
     __m_termin_vrio = None
     
     @staticmethod
-    def __deflate(zip0 : bytearray) -> bytearray:
+    def __deflate(zip0_ : bytearray) -> bytearray:
         with io.BytesIO() as unzip: 
-            data_ = io.BytesIO(zip0)
+            data_ = io.BytesIO(zip0_)
             data_.seek(0, io.SEEK_SET)
             MorphSerializeHelper.deflate_gzip(data_, unzip)
             data_.close()
@@ -2008,9 +2015,9 @@ class PersonAttrToken(ReferentToken):
             return
         with io.BytesIO(PersonAttrToken.__deflate(dat)) as tmp: 
             tmp.seek(0, io.SEEK_SET)
-            xml0 = None # new XmlDocument
-            xml0 = xml.etree.ElementTree.parse(tmp)
-            for x in xml0.getroot(): 
+            xml0_ = None # new XmlDocument
+            xml0_ = xml.etree.ElementTree.parse(tmp)
+            for x in xml0_.getroot(): 
                 a = Utils.getXmlAttrByName(x.attrib, "v")
                 if (a is None): 
                     continue
@@ -2020,7 +2027,7 @@ class PersonAttrToken(ReferentToken):
                 attrs = ("" if Utils.getXmlAttrByName(x.attrib, "a") is None else (Utils.ifNotNull(Utils.getXmlAttrByName(x.attrib, "a")[1], "")))
                 if (val == "ОТЕЦ"): 
                     pass
-                pat = PersonAttrTermin._new2146(val, PersonAttrTerminType.POSITION, lang)
+                pat = PersonAttrTermin._new2299(val, PersonAttrTerminType.POSITION, lang)
                 for ch in attrs: 
                     if (ch == 'p'): 
                         pat.can_has_person_after = 1
@@ -2066,19 +2073,19 @@ class PersonAttrToken(ReferentToken):
 
     
     @staticmethod
-    def _new2062(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'PersonAttrToken':
+    def _new2215(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'PersonAttrToken':
         res = PersonAttrToken(_arg1, _arg2)
         res.morph = _arg3
         return res
     
     @staticmethod
-    def _new2063(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType') -> 'PersonAttrToken':
+    def _new2216(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType') -> 'PersonAttrToken':
         res = PersonAttrToken(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new2067(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType', _arg4 : str, _arg5 : 'MorphCollection') -> 'PersonAttrToken':
+    def _new2220(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType', _arg4 : str, _arg5 : 'MorphCollection') -> 'PersonAttrToken':
         res = PersonAttrToken(_arg1, _arg2)
         res.typ = _arg3
         res.age = _arg4
@@ -2086,21 +2093,21 @@ class PersonAttrToken(ReferentToken):
         return res
     
     @staticmethod
-    def _new2069(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType', _arg4 : 'MorphCollection') -> 'PersonAttrToken':
+    def _new2222(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType', _arg4 : 'MorphCollection') -> 'PersonAttrToken':
         res = PersonAttrToken(_arg1, _arg2)
         res.typ = _arg3
         res.morph = _arg4
         return res
     
     @staticmethod
-    def _new2071(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType', _arg4 : str) -> 'PersonAttrToken':
+    def _new2224(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType', _arg4 : str) -> 'PersonAttrToken':
         res = PersonAttrToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new2077(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType', _arg4 : str, _arg5 : 'MorphCollection', _arg6 : 'MorphGender') -> 'PersonAttrToken':
+    def _new2230(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType', _arg4 : str, _arg5 : 'MorphCollection', _arg6 : 'MorphGender') -> 'PersonAttrToken':
         res = PersonAttrToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
@@ -2109,21 +2116,21 @@ class PersonAttrToken(ReferentToken):
         return res
     
     @staticmethod
-    def _new2080(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : 'PersonAttrToken') -> 'PersonAttrToken':
+    def _new2233(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : 'PersonAttrToken') -> 'PersonAttrToken':
         res = PersonAttrToken(_arg1, _arg2)
         res.morph = _arg3
         res.higher_prop_ref = _arg4
         return res
     
     @staticmethod
-    def _new2086(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonPropertyReferent', _arg4 : 'PersonAttrTerminType') -> 'PersonAttrToken':
+    def _new2239(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonPropertyReferent', _arg4 : 'PersonAttrTerminType') -> 'PersonAttrToken':
         res = PersonAttrToken(_arg1, _arg2)
         res.prop_ref = _arg3
         res.typ = _arg4
         return res
     
     @staticmethod
-    def _new2098(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType', _arg4 : 'PersonPropertyReferent', _arg5 : 'MorphCollection') -> 'PersonAttrToken':
+    def _new2251(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType', _arg4 : 'PersonPropertyReferent', _arg5 : 'MorphCollection') -> 'PersonAttrToken':
         res = PersonAttrToken(_arg1, _arg2)
         res.typ = _arg3
         res.prop_ref = _arg4
@@ -2131,7 +2138,7 @@ class PersonAttrToken(ReferentToken):
         return res
     
     @staticmethod
-    def _new2101(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType', _arg4 : 'PersonPropertyReferent', _arg5 : 'MorphCollection', _arg6 : bool) -> 'PersonAttrToken':
+    def _new2254(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonAttrTerminType', _arg4 : 'PersonPropertyReferent', _arg5 : 'MorphCollection', _arg6 : bool) -> 'PersonAttrToken':
         res = PersonAttrToken(_arg1, _arg2)
         res.typ = _arg3
         res.prop_ref = _arg4

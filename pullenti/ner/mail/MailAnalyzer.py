@@ -39,15 +39,15 @@ class MailAnalyzer(Analyzer):
         return [MetaLetter._global_meta]
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         from pullenti.ner.mail.internal.MetaLetter import MetaLetter
         res = dict()
         res[MetaLetter.IMAGE_ID] = ResourceHelper.get_bytes("mail.png")
         return res
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.mail.MailReferent import MailReferent
-        if (type0 == MailReferent.OBJ_TYPENAME): 
+        if (type0_ == MailReferent.OBJ_TYPENAME): 
             return MailReferent()
         return None
     
@@ -72,10 +72,10 @@ class MailAnalyzer(Analyzer):
         from pullenti.ner.person.PersonReferent import PersonReferent
         lines = list()
         t = kit.first_token
-        first_pass2801 = True
+        first_pass2964 = True
         while True:
-            if first_pass2801: first_pass2801 = False
-            else: t = t.next0
+            if first_pass2964: first_pass2964 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             ml = MailLine.parse(t, 0)
             if (ml is None): 
@@ -89,9 +89,9 @@ class MailAnalyzer(Analyzer):
         blocks = list()
         blk = None
         i = 0
-        first_pass2802 = True
+        first_pass2965 = True
         while True:
-            if first_pass2802: first_pass2802 = False
+            if first_pass2965: first_pass2965 = False
             else: i += 1
             if (not (i < len(lines))): break
             ml = lines[i]
@@ -111,13 +111,13 @@ class MailAnalyzer(Analyzer):
                         if (tt.get_referent() is not None): 
                             if (tt.get_referent().type_name == "DATE" or tt.get_referent().type_name == "URI"): 
                                 is_new = True
-                        tt = tt.next0
+                        tt = tt.next0_
                 if (is_new): 
                     blk = list()
                     blocks.append(blk)
-                    first_pass2803 = True
+                    first_pass2966 = True
                     while True:
-                        if first_pass2803: first_pass2803 = False
+                        if first_pass2966: first_pass2966 = False
                         else: i += 1
                         if (not (i < len(lines))): break
                         if (lines[i].typ == MailLine.Types.FROM): 
@@ -173,7 +173,7 @@ class MailAnalyzer(Analyzer):
                     else: 
                         break
                     i += 1
-                mail_ = MailReferent._new1446(MailKind.HEAD)
+                mail_ = MailReferent._new1497(MailKind.HEAD)
                 mt = ReferentToken(mail_, lines[0].begin_token, t1)
                 mail_.text = MiscHelper.get_text_value_of_meta_token(mt, GetTextAttr.KEEPREGISTER)
                 ad.register_referent(mail_)
@@ -182,9 +182,9 @@ class MailAnalyzer(Analyzer):
             t2 = None
             err = 0
             i = (len(lines) - 1)
-            first_pass2804 = True
+            first_pass2967 = True
             while True:
-                if first_pass2804: first_pass2804 = False
+                if first_pass2967: first_pass2967 = False
                 else: i -= 1
                 if (not (i >= i0)): break
                 li = lines[i]
@@ -223,7 +223,7 @@ class MailAnalyzer(Analyzer):
                 else: i = i0 - 1
             for ii in range(i0, len(lines), 1):
                 if (lines[ii].typ == MailLine.Types.HELLO): 
-                    mail_ = MailReferent._new1446(MailKind.HELLO)
+                    mail_ = MailReferent._new1497(MailKind.HELLO)
                     mt = ReferentToken(mail_, lines[i0].begin_token, lines[ii].end_token)
                     if (mt.length_char > 0): 
                         mail_.text = MiscHelper.get_text_value_of_meta_token(mt, GetTextAttr.KEEPREGISTER)
@@ -237,14 +237,14 @@ class MailAnalyzer(Analyzer):
                 if (t2 is not None and t2.previous is None): 
                     pass
                 else: 
-                    mail_ = MailReferent._new1446(MailKind.BODY)
+                    mail_ = MailReferent._new1497(MailKind.BODY)
                     mt = ReferentToken(mail_, lines[i0].begin_token, (t2.previous if t2 is not None and t2.previous is not None else lines[len(lines) - 1].end_token))
                     if (mt.length_char > 0): 
                         mail_.text = MiscHelper.get_text_value_of_meta_token(mt, GetTextAttr.KEEPREGISTER)
                         ad.register_referent(mail_)
                         mail_.add_occurence_of_ref_tok(mt)
                 if (t2 is not None): 
-                    mail_ = MailReferent._new1446(MailKind.TAIL)
+                    mail_ = MailReferent._new1497(MailKind.TAIL)
                     mt = ReferentToken(mail_, t2, lines[len(lines) - 1].end_token)
                     if (mt.length_char > 0): 
                         mail_.text = MiscHelper.get_text_value_of_meta_token(mt, GetTextAttr.KEEPREGISTER)

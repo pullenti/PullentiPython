@@ -19,9 +19,9 @@ class EditionHelper:
         if (root.sub_number == 67): 
             pass
         if (len(root.children) > 1 and root.children[0].kind == InstrumentKind.NUMBER and root.children[1].kind == InstrumentKind.CONTENT): 
-            if (root.children[1].begin_token.is_value("УТРАТИТЬ", "ВТРАТИТИ") and root.children[1].begin_token.next0 is not None and root.children[1].begin_token.next0.is_value("СИЛА", "ЧИННІСТЬ")): 
+            if (root.children[1].begin_token.is_value("УТРАТИТЬ", "ВТРАТИТИ") and root.children[1].begin_token.next0_ is not None and root.children[1].begin_token.next0_.is_value("СИЛА", "ЧИННІСТЬ")): 
                 root.is_expired = True
-        if ((not root.is_expired and root.kind == InstrumentKind.INDENTION and root.begin_token.is_value("АБЗАЦ", None)) and root.begin_token.next0 is not None and root.begin_token.next0.is_value("УТРАТИТЬ", "ВТРАТИТИ")): 
+        if ((not root.is_expired and root.kind == InstrumentKind.INDENTION and root.begin_token.is_value("АБЗАЦ", None)) and root.begin_token.next0_ is not None and root.begin_token.next0_.is_value("УТРАТИТЬ", "ВТРАТИТИ")): 
             root.is_expired = True
         if (root.is_expired or ((root._itok is not None and root._itok.is_expired))): 
             root.is_expired = True
@@ -33,7 +33,7 @@ class EditionHelper:
                 if (dec is not None): 
                     if (not dec in root.referents): 
                         root.referents.append(dec)
-                tt = tt.next0
+                tt = tt.next0_
             return
         for i0 in range(len(root.children)):
             ch = root.children[i0]
@@ -122,8 +122,8 @@ class EditionHelper:
         if (fr.sub_number3 == 67): 
             pass
         t = edt.begin_token
-        if (t.is_char('(') and t.next0 is not None): 
-            t = t.next0
+        if (t.is_char('(') and t.next0_ is not None): 
+            t = t.next0_
         if (t.is_value("АБЗАЦ", None)): 
             return (1 if fr.kind == InstrumentKind.INDENTION else -1)
         pt = PartToken.try_attach(t, None, False, False)

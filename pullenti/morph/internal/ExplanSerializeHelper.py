@@ -37,9 +37,9 @@ class ExplanSerializeHelper:
             deflate.close()
     
     @staticmethod
-    def deserializedd(str0 : io.IOBase, dic : 'DerivateDictionary', lazy_load : bool) -> None:
+    def deserializedd(str0_ : io.IOBase, dic : 'DerivateDictionary', lazy_load : bool) -> None:
         with io.BytesIO() as tmp: 
-            MorphSerializeHelper.deflate_gzip(str0, tmp)
+            MorphSerializeHelper.deflate_gzip(str0_, tmp)
             wr = ByteArrayWrapper(tmp.getvalue())
             cou = wr.deserialize_int()
             while cou > 0: 
@@ -74,7 +74,7 @@ class ExplanSerializeHelper:
         ExplanSerializeHelper.__serialize_short(res, len(dg.words))
         for w in dg.words: 
             ExplanSerializeHelper.__serialize_string(res, w.spelling)
-            ExplanSerializeHelper.__serialize_short(res, (0 if w.class0 is None else w.class0.value))
+            ExplanSerializeHelper.__serialize_short(res, (0 if w.class0_ is None else w.class0_.value))
             ExplanSerializeHelper.__serialize_short(res, w.lang.value)
             ExplanSerializeHelper.__serialize_short(res, w.attrs._value)
             ExplanSerializeHelper.__serialize_short(res, (0 if w.nexts is None else len(w.nexts)))
@@ -84,11 +84,11 @@ class ExplanSerializeHelper:
                     ExplanSerializeHelper.__serialize_short(res, kp[1].value)
     
     @staticmethod
-    def deserialize_derivate_group(str0 : 'ByteArrayWrapper', dg : 'DerivateGroup') -> None:
+    def deserialize_derivate_group(str0_ : 'ByteArrayWrapper', dg : 'DerivateGroup') -> None:
         from pullenti.morph.MorphClass import MorphClass
         from pullenti.morph.MorphLang import MorphLang
         from pullenti.morph.MorphCase import MorphCase
-        attr = str0.deserialize_short()
+        attr = str0_.deserialize_short()
         if (((attr & 1)) != 0): 
             dg.is_dummy = True
         if (((attr & 2)) != 0): 
@@ -97,20 +97,20 @@ class ExplanSerializeHelper:
             dg.m_transitive = 0
         if (((attr & 8)) != 0): 
             dg.m_transitive = 1
-        dg.prefix = str0.deserialize_string()
-        cou = str0.deserialize_short()
+        dg.prefix = str0_.deserialize_string()
+        cou = str0_.deserialize_short()
         while cou > 0: 
             w = DerivateWord(dg)
-            w.spelling = str0.deserialize_string()
-            w.class0 = MorphClass()
-            w.class0.value = str0.deserialize_short()
-            w.lang = MorphLang._new6(str0.deserialize_short())
-            w.attrs._value = str0.deserialize_short()
-            cou1 = str0.deserialize_short()
+            w.spelling = str0_.deserialize_string()
+            w.class0_ = MorphClass()
+            w.class0_.value = str0_.deserialize_short()
+            w.lang = MorphLang._new6(str0_.deserialize_short())
+            w.attrs._value = str0_.deserialize_short()
+            cou1 = str0_.deserialize_short()
             while cou1 > 0: 
-                pref = Utils.ifNotNull(str0.deserialize_string(), "")
+                pref = Utils.ifNotNull(str0_.deserialize_string(), "")
                 cas = MorphCase()
-                cas.value = str0.deserialize_short()
+                cas.value = str0_.deserialize_short()
                 if (w.nexts is None): 
                     w.nexts = dict()
                 w.nexts[pref] = cas
@@ -148,19 +148,19 @@ class ExplanSerializeHelper:
                 res.seek(p1, io.SEEK_SET)
     
     @staticmethod
-    def deserialize_tree_node(str0 : 'ByteArrayWrapper', dic : 'DerivateDictionary', tn : 'ExplanTreeNode', lazy_load : bool) -> None:
-        cou = str0.deserialize_short()
+    def deserialize_tree_node(str0_ : 'ByteArrayWrapper', dic : 'DerivateDictionary', tn : 'ExplanTreeNode', lazy_load : bool) -> None:
+        cou = str0_.deserialize_short()
         li = (list() if cou > 1 else None)
         while cou > 0: 
-            id0 = str0.deserialize_int()
-            if (id0 > 0 and id0 <= len(dic._m_all_groups)): 
-                gr = dic._m_all_groups[id0 - 1]
+            id0_ = str0_.deserialize_int()
+            if (id0_ > 0 and id0_ <= len(dic._m_all_groups)): 
+                gr = dic._m_all_groups[id0_ - 1]
                 if (gr._lazy is not None): 
-                    p0 = str0.position
-                    str0.seek(gr._lazy.begin)
-                    ExplanSerializeHelper.deserialize_derivate_group(str0, gr)
+                    p0 = str0_.position
+                    str0_.seek(gr._lazy.begin)
+                    ExplanSerializeHelper.deserialize_derivate_group(str0_, gr)
                     gr._lazy = None
-                    str0.seek(p0)
+                    str0_.seek(p0)
                 if (li is not None): 
                     li.append(gr)
                 else: 
@@ -168,12 +168,12 @@ class ExplanSerializeHelper:
             cou -= 1
         if (li is not None): 
             tn.groups = li
-        cou = str0.deserialize_short()
+        cou = str0_.deserialize_short()
         if (cou == 0): 
             return
         while cou > 0: 
-            ke = str0.deserialize_short()
-            p1 = str0.deserialize_int()
+            ke = str0_.deserialize_short()
+            p1 = str0_.deserialize_int()
             tn1 = ExplanTreeNode()
             if (tn.nodes is None): 
                 tn.nodes = dict()
@@ -181,12 +181,12 @@ class ExplanSerializeHelper:
                 tn.nodes[ke] = tn1
             if (lazy_load): 
                 tn1._lazy = LazyInfo2()
-                tn1._lazy.begin = str0.position
-                tn1._lazy.data = str0
+                tn1._lazy.begin = str0_.position
+                tn1._lazy.data = str0_
                 tn1._lazy.dic = dic
-                str0.seek(p1)
+                str0_.seek(p1)
             else: 
-                ExplanSerializeHelper.deserialize_tree_node(str0, dic, tn1, False)
+                ExplanSerializeHelper.deserialize_tree_node(str0_, dic, tn1, False)
             cou -= 1
     
     @staticmethod

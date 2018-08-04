@@ -109,12 +109,12 @@ class InnerMorphology:
             InnerMorphology.__m_engine_kz._reset()
         gc.collect()
     
-    def __on_progress(self, val : int, max0 : int, progress : EventHandler) -> None:
+    def __on_progress(self, val : int, max0_ : int, progress : EventHandler) -> None:
         p = val
-        if (max0 > 0xFFFF): 
-            p = (math.floor(p / (math.floor(max0 / 100))))
+        if (max0_ > 0xFFFF): 
+            p = (math.floor(p / (math.floor(max0_ / 100))))
         else: 
-            p = (math.floor((p * 100) / max0))
+            p = (math.floor((p * 100) / max0_))
         if (p != self.__last_percent and progress is not None): 
             progress.call(None, ProgressEventArgs(p, None))
         self.__last_percent = p
@@ -149,9 +149,9 @@ class InnerMorphology:
         tot_by_words = 0
         tot_kz_words = 0
         i = 0
-        first_pass2513 = True
+        first_pass2666 = True
         while True:
-            if first_pass2513: first_pass2513 = False
+            if first_pass2666: first_pass2666 = False
             else: i += 1
             if (not (i < twr.length)): break
             ty = InnerMorphology._get_char_typ(twrch[i])
@@ -315,9 +315,9 @@ class InnerMorphology:
                 debug_token = r
         if (not good_text): 
             i = 0
-            first_pass2514 = True
+            first_pass2667 = True
             while True:
-                if first_pass2514: first_pass2514 = False
+                if first_pass2667: first_pass2667 = False
                 else: i += 1
                 if (not (i < (len(res) - 2))): break
                 ui0 = twrch[res[i].begin_char]
@@ -525,7 +525,7 @@ class InnerMorphology:
                 if (r.language.is_cyrillic): 
                     ok = False
                     for wf in r.word_forms: 
-                        if (wf.class0.is_proper_surname): 
+                        if (wf.class0_.is_proper_surname): 
                             ok = True
                             break
                     if (not ok): 
@@ -554,9 +554,9 @@ class InnerMorphology:
                         del res[i + 1:i + 1+2]
             i += 1
         i = 0
-        first_pass2515 = True
+        first_pass2668 = True
         while True:
-            if first_pass2515: first_pass2515 = False
+            if first_pass2668: first_pass2668 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (not res[i].char_info.is_letter and not res[i + 1].char_info.is_letter and (res[i].end_char + 1) == res[i + 1].begin_char): 

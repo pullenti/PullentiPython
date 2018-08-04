@@ -10,5 +10,5 @@ from enum import IntEnum
 class BookLinkRefType(IntEnum):
     """ Тип ссылки """
     UNDEFINED = 0
-    INLINE = 1
+    INLINE = 0 + 1
     """ Встроенная в текст """

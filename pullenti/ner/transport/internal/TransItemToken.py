@@ -25,14 +25,14 @@ class TransItemToken(MetaToken):
     
     class Typs(IntEnum):
         NOUN = 0
-        BRAND = 1
-        MODEL = 2
-        NUMBER = 3
-        NAME = 4
-        ORG = 5
-        ROUTE = 6
-        CLASS = 7
-        DATE = 8
+        BRAND = 0 + 1
+        MODEL = (0 + 1) + 1
+        NUMBER = ((0 + 1) + 1) + 1
+        NAME = (((0 + 1) + 1) + 1) + 1
+        ORG = ((((0 + 1) + 1) + 1) + 1) + 1
+        ROUTE = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
+        CLASS = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        DATE = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
     
     class TransTermin(Termin):
         
@@ -46,27 +46,27 @@ class TransItemToken(MetaToken):
     
         
         @staticmethod
-        def _new2350(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : 'TransportKind') -> 'TransTermin':
+        def _new2503(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : 'TransportKind') -> 'TransTermin':
             res = TransItemToken.TransTermin(_arg1, _arg2)
             res.typ = _arg3
             res.kind = _arg4
             return res
         
         @staticmethod
-        def _new2353(_arg1 : str, _arg2 : bool, _arg3 : 'Typs') -> 'TransTermin':
+        def _new2506(_arg1 : str, _arg2 : bool, _arg3 : 'Typs') -> 'TransTermin':
             res = TransItemToken.TransTermin(_arg1, _arg2)
             res.typ = _arg3
             return res
         
         @staticmethod
-        def _new2354(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : 'MorphLang') -> 'TransTermin':
+        def _new2507(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : 'MorphLang') -> 'TransTermin':
             res = TransItemToken.TransTermin(_arg1, _arg2)
             res.typ = _arg3
             res.lang = _arg4
             return res
         
         @staticmethod
-        def _new2357(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : 'MorphLang', _arg5 : 'TransportKind') -> 'TransTermin':
+        def _new2510(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : 'MorphLang', _arg5 : 'TransportKind') -> 'TransTermin':
             res = TransItemToken.TransTermin(_arg1, _arg2)
             res.typ = _arg3
             res.lang = _arg4
@@ -103,28 +103,28 @@ class TransItemToken(MetaToken):
         tr0 = tr
         res = list()
         res.append(tr)
-        t = tr.end_token.next0
+        t = tr.end_token.next0_
         if (tr.typ == TransItemToken.Typs.NOUN): 
             while t is not None: 
                 if (t.is_char(':') or t.is_hiphen): 
                     pass
                 else: 
                     break
-                t = t.next0
+                t = t.next0_
         and_conj = False
         while t is not None: 
             if (max_count > 0 and len(res) >= max_count): 
                 break
             if (tr0.typ == TransItemToken.Typs.NOUN or tr0.typ == TransItemToken.Typs.ORG): 
-                if (t.is_hiphen and t.next0 is not None): 
-                    t = t.next0
+                if (t.is_hiphen and t.next0_ is not None): 
+                    t = t.next0_
             tr = TransItemToken.try_parse(t, tr0, False, False)
             if (tr is None): 
-                if (BracketHelper.can_be_end_of_sequence(t, True, None, False) and t.next0 is not None): 
+                if (BracketHelper.can_be_end_of_sequence(t, True, None, False) and t.next0_ is not None): 
                     if (tr0.typ == TransItemToken.Typs.MODEL or tr0.typ == TransItemToken.Typs.BRAND): 
-                        tt1 = t.next0
+                        tt1 = t.next0_
                         if (tt1 is not None and tt1.is_comma): 
-                            tt1 = tt1.next0
+                            tt1 = tt1.next0_
                         tr = TransItemToken.try_parse(tt1, tr0, False, False)
             if (tr is None and isinstance(t, ReferentToken)): 
                 rt = (t if isinstance(t, ReferentToken) else None)
@@ -136,18 +136,18 @@ class TransItemToken(MetaToken):
             if (tr is None and t.is_char('(')): 
                 br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
                 if (br is not None): 
-                    tr = TransItemToken.try_parse(t.next0, tr0, False, False)
+                    tr = TransItemToken.try_parse(t.next0_, tr0, False, False)
                     if (tr is not None): 
                         if (tr.typ != TransItemToken.Typs.NUMBER): 
                             tr = None
-                        elif (tr.end_token.next0 is not None): 
+                        elif (tr.end_token.next0_ is not None): 
                             tr.begin_token = t
-                            if (tr.end_token.next0.is_char(')')): 
-                                tr.end_token = tr.end_token.next0
+                            if (tr.end_token.next0_.is_char(')')): 
+                                tr.end_token = tr.end_token.next0_
                     if (tr is None): 
-                        tt = br.end_token.next0
+                        tt = br.end_token.next0_
                         if (tt is not None and tt.is_comma): 
-                            tt = tt.next0
+                            tt = tt.next0_
                         tr = TransItemToken.try_parse(tt, tr0, False, False)
                         if (tr is not None and tr.typ == TransItemToken.Typs.NUMBER): 
                             pass
@@ -155,10 +155,10 @@ class TransItemToken(MetaToken):
                             tr = None
             if (tr is None and t.is_hiphen): 
                 if (tr0.typ == TransItemToken.Typs.BRAND or tr0.typ == TransItemToken.Typs.MODEL): 
-                    tr = TransItemToken.try_parse(t.next0, tr0, False, False)
+                    tr = TransItemToken.try_parse(t.next0_, tr0, False, False)
             if (tr is None and t.is_comma): 
                 if ((tr0.typ == TransItemToken.Typs.NAME or tr0.typ == TransItemToken.Typs.BRAND or tr0.typ == TransItemToken.Typs.MODEL) or tr0.typ == TransItemToken.Typs.CLASS or tr0.typ == TransItemToken.Typs.DATE): 
-                    tr = TransItemToken.try_parse(t.next0, tr0, True, False)
+                    tr = TransItemToken.try_parse(t.next0_, tr0, True, False)
                     if (tr is not None): 
                         if (tr.typ == TransItemToken.Typs.NUMBER): 
                             pass
@@ -167,9 +167,9 @@ class TransItemToken(MetaToken):
             if (tr is None): 
                 if (tr0.typ == TransItemToken.Typs.NAME): 
                     if (t.is_char(',')): 
-                        tr = TransItemToken.try_parse(t.next0, tr0, True, False)
-                    elif (t.morph.class0.is_conjunction and t.is_and): 
-                        tr = TransItemToken.try_parse(t.next0, tr0, True, False)
+                        tr = TransItemToken.try_parse(t.next0_, tr0, True, False)
+                    elif (t.morph.class0_.is_conjunction and t.is_and): 
+                        tr = TransItemToken.try_parse(t.next0_, tr0, True, False)
                         and_conj = True
                 if (tr is not None): 
                     if (tr.typ != TransItemToken.Typs.NAME): 
@@ -188,12 +188,12 @@ class TransItemToken(MetaToken):
             t = tr.end_token
             if (and_conj): 
                 break
-            t = t.next0
+            t = t.next0_
         i = 0
         while i < (len(res) - 1): 
             if (res[i].typ == TransItemToken.Typs.MODEL and res[i + 1].typ == TransItemToken.Typs.MODEL): 
                 res[i].end_token = res[i + 1].end_token
-                res[i].value = "{0}{1}{2}".format(res[i].value, ('-' if res[i].end_token.next0 is not None and res[i].end_token.next0.is_hiphen else ' '), res[i + 1].value)
+                res[i].value = "{0}{1}{2}".format(res[i].value, ('-' if res[i].end_token.next0_ is not None and res[i].end_token.next0_.is_hiphen else ' '), res[i + 1].value)
                 del res[i + 1]
                 i -= 1
             i += 1
@@ -209,7 +209,7 @@ class TransItemToken(MetaToken):
         if (res is None): 
             return None
         if (res.typ == TransItemToken.Typs.NAME): 
-            br = BracketHelper.try_parse(res.end_token.next0, BracketParseAttr.NO, 100)
+            br = BracketHelper.try_parse(res.end_token.next0_, BracketParseAttr.NO, 100)
             if (br is not None and br.is_char('(')): 
                 alt = MiscHelper.get_text_value_of_meta_token(br, GetTextAttr.NO)
                 if (MiscHelper.can_be_equal_cyr_and_latss(res.value, alt)): 
@@ -233,36 +233,36 @@ class TransItemToken(MetaToken):
             return None
         t1 = t
         if (t1.is_char(',')): 
-            t1 = t1.next0
+            t1 = t1.next0_
         if (t1 is not None and t1.is_value("ПРИНАДЛЕЖАТЬ", "НАЛЕЖАТИ")): 
-            t1 = t1.next0
+            t1 = t1.next0_
         if (isinstance(t1, ReferentToken)): 
             if (t1.get_referent().type_name == "ORGANIZATION"): 
-                return TransItemToken._new2337(t, t1, TransItemToken.Typs.ORG, t1.get_referent(), t1.morph)
+                return TransItemToken._new2490(t, t1, TransItemToken.Typs.ORG, t1.get_referent(), t1.morph)
         route = False
         if (t1 is not None and ((t1.is_value("СЛЕДОВАТЬ", "СЛІДУВАТИ") or t1.is_value("ВЫПОЛНЯТЬ", "ВИКОНУВАТИ")))): 
-            t1 = t1.next0
+            t1 = t1.next0_
             route = True
-        if (t1 is not None and t1.morph.class0.is_preposition): 
-            t1 = t1.next0
+        if (t1 is not None and t1.morph.class0_.is_preposition): 
+            t1 = t1.next0_
         if (t1 is not None and ((t1.is_value("РЕЙС", None) or t1.is_value("МАРШРУТ", None)))): 
-            t1 = t1.next0
+            t1 = t1.next0_
             route = True
         if (isinstance(t1, ReferentToken)): 
             if (isinstance(t1.get_referent(), GeoReferent)): 
                 geo_ = (t1.get_referent() if isinstance(t1.get_referent(), GeoReferent) else None)
                 if (geo_.is_state or geo_.is_city): 
-                    tit = TransItemToken._new2338(t, t1, TransItemToken.Typs.ROUTE, list())
+                    tit = TransItemToken._new2491(t, t1, TransItemToken.Typs.ROUTE, list())
                     tit.route_items.append(geo_)
-                    t1 = t1.next0
-                    first_pass2891 = True
+                    t1 = t1.next0_
+                    first_pass3059 = True
                     while True:
-                        if first_pass2891: first_pass2891 = False
-                        else: t1 = t1.next0
+                        if first_pass3059: first_pass3059 = False
+                        else: t1 = t1.next0_
                         if (not (t1 is not None)): break
                         if (t1.is_hiphen): 
                             continue
-                        if (t1.morph.class0.is_preposition or t1.morph.class0.is_conjunction): 
+                        if (t1.morph.class0_.is_preposition or t1.morph.class0_.is_conjunction): 
                             continue
                         geo_ = (t1.get_referent() if isinstance(t1.get_referent(), GeoReferent) else None)
                         if (geo_ is None): 
@@ -274,14 +274,14 @@ class TransItemToken(MetaToken):
                     if (len(tit.route_items) > 1 or route): 
                         return tit
             elif (isinstance(t1.get_referent(), DateReferent) and (t1.whitespaces_before_count < 3)): 
-                tit = TransItemToken._new2339(t, t1, TransItemToken.Typs.DATE, t1.get_referent())
-                if (t1.next0 is not None): 
-                    if (t1.next0.is_value("В", None) and t1.next0.next0 is not None and t1.next0.next0.is_char('.')): 
-                        tit.end_token = t1.next0.next0
-                    elif (t1.next0.is_value("ВЫП", None) or t1.next0.is_value("ВЫПУСК", None)): 
-                        tit.end_token = t1.next0
-                        if (t1.next0.next0 is not None and t1.next0.next0.is_char('.')): 
-                            tit.end_token = t1.next0.next0
+                tit = TransItemToken._new2492(t, t1, TransItemToken.Typs.DATE, t1.get_referent())
+                if (t1.next0_ is not None): 
+                    if (t1.next0_.is_value("В", None) and t1.next0_.next0_ is not None and t1.next0_.next0_.is_char('.')): 
+                        tit.end_token = t1.next0_.next0_
+                    elif (t1.next0_.is_value("ВЫП", None) or t1.next0_.is_value("ВЫПУСК", None)): 
+                        tit.end_token = t1.next0_
+                        if (t1.next0_.next0_ is not None and t1.next0_.next0_.is_char('.')): 
+                            tit.end_token = t1.next0_.next0_
                 return tit
         if (isinstance(t, TextToken)): 
             num = MiscHelper.check_number_prefix(t)
@@ -294,13 +294,13 @@ class TransItemToken(MetaToken):
                     return tit
             tok = TransItemToken.__m_ontology.try_parse(t, TerminParseAttr.NO)
             if (tok is None and ((t.is_value("С", None) or t.is_value("C", None) or t.is_value("ЗА", None)))): 
-                tok = TransItemToken.__m_ontology.try_parse(t.next0, TerminParseAttr.NO)
+                tok = TransItemToken.__m_ontology.try_parse(t.next0_, TerminParseAttr.NO)
             if (tok is None and BracketHelper.is_bracket(t, True)): 
-                tok1 = TransItemToken.__m_ontology.try_parse(t.next0, TerminParseAttr.NO)
-                if (tok1 is not None and BracketHelper.is_bracket(tok1.end_token.next0, True)): 
+                tok1 = TransItemToken.__m_ontology.try_parse(t.next0_, TerminParseAttr.NO)
+                if (tok1 is not None and BracketHelper.is_bracket(tok1.end_token.next0_, True)): 
                     tok = tok1
                     tok.begin_token = t
-                    tok.end_token = tok.end_token.next0
+                    tok.end_token = tok.end_token.next0_
                     tok.begin_token = t
                 elif (tok1 is not None): 
                     tt = (tok1.termin if isinstance(tok1.termin, TransItemToken.TransTermin) else None)
@@ -308,7 +308,7 @@ class TransItemToken(MetaToken):
                         tok = tok1
                         tok.begin_token = t
             if (tok is None and t.is_value("МАРКА", None)): 
-                res1 = TransItemToken.__try_parse(t.next0, prev, after_conj, False)
+                res1 = TransItemToken.__try_parse(t.next0_, prev, after_conj, False)
                 if (res1 is not None): 
                     if (res1.typ == TransItemToken.Typs.NAME or res1.typ == TransItemToken.Typs.BRAND): 
                         res1.begin_token = t
@@ -317,9 +317,9 @@ class TransItemToken(MetaToken):
             if (tok is not None): 
                 tt = (tok.termin if isinstance(tok.termin, TransItemToken.TransTermin) else None)
                 if (tt.typ == TransItemToken.Typs.NUMBER): 
-                    tit = TransItemToken.__attach_rus_auto_number(tok.end_token.next0)
+                    tit = TransItemToken.__attach_rus_auto_number(tok.end_token.next0_)
                     if (tit is None): 
-                        tit = TransItemToken._attach_number(tok.end_token.next0, False)
+                        tit = TransItemToken._attach_number(tok.end_token.next0_, False)
                     if (tit is not None): 
                         tit.begin_token = t
                         return tit
@@ -333,44 +333,44 @@ class TransItemToken(MetaToken):
                             return None
                 if (tt.canonic_text == "СУДНО"): 
                     if (((tok.morph.number & MorphNumber.PLURAL)) != MorphNumber.UNDEFINED): 
-                        if (not BracketHelper.can_be_start_of_sequence(tok.end_token.next0, False, False)): 
+                        if (not BracketHelper.can_be_start_of_sequence(tok.end_token.next0_, False, False)): 
                             return None
-                tit = TransItemToken._new2340(tok.begin_token, tok.end_token, tt.kind, tt.typ, tt.is_doubt, tok.chars, tok.morph)
+                tit = TransItemToken._new2493(tok.begin_token, tok.end_token, tt.kind, tt.typ, tt.is_doubt, tok.chars, tok.morph)
                 tit.value = tt.canonic_text
                 if (tit.typ == TransItemToken.Typs.NOUN): 
                     tit.value = tit.value.lower()
                 else: 
                     tit.value = tit.value.upper()
                 return tit
-            if (tok is None and t.morph.class0.is_adjective): 
+            if (tok is None and t.morph.class0_.is_adjective): 
                 npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
                 if (npt is not None and len(npt.adjectives) > 0): 
                     state_ = None
                     tt = t
-                    first_pass2892 = True
+                    first_pass3060 = True
                     while True:
-                        if first_pass2892: first_pass2892 = False
-                        else: tt = tt.next0
+                        if first_pass3060: first_pass3060 = False
+                        else: tt = tt.next0_
                         if (not (tt is not None and tt.previous != npt.end_token)): break
                         tok = TransItemToken.__m_ontology.try_parse(tt, TerminParseAttr.NO)
                         if (tok is None and state_ is None): 
                             state_ = tt.kit.process_referent("GEO", tt)
                         if (tok is not None and tok.end_token == npt.end_token): 
                             if ((tok.termin if isinstance(tok.termin, TransItemToken.TransTermin) else None).typ == TransItemToken.Typs.NOUN): 
-                                tit = TransItemToken._new2340(t, tok.end_token, (tok.termin if isinstance(tok.termin, TransItemToken.TransTermin) else None).kind, TransItemToken.Typs.NOUN, (tok.termin if isinstance(tok.termin, TransItemToken.TransTermin) else None).is_doubt, tok.chars, npt.morph)
+                                tit = TransItemToken._new2493(t, tok.end_token, (tok.termin if isinstance(tok.termin, TransItemToken.TransTermin) else None).kind, TransItemToken.Typs.NOUN, (tok.termin if isinstance(tok.termin, TransItemToken.TransTermin) else None).is_doubt, tok.chars, npt.morph)
                                 tit.value = (tok.termin if isinstance(tok.termin, TransItemToken.TransTermin) else None).canonic_text.lower()
                                 tit.alt_value = npt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False).lower()
                                 if (LanguageHelper.ends_with_ex(tit.alt_value, "суд", "суда", None, None)): 
-                                    if (not BracketHelper.can_be_start_of_sequence(tok.end_token.next0, False, False)): 
+                                    if (not BracketHelper.can_be_start_of_sequence(tok.end_token.next0_, False, False)): 
                                         continue
                                 if (state_ is not None): 
                                     if ((state_.referent if isinstance(state_.referent, GeoReferent) else None).is_state): 
                                         tit.state = state_
                                 return tit
-        if (t is not None and t.is_value("КЛАСС", None) and t.next0 is not None): 
-            br = BracketHelper.try_parse(t.next0, BracketParseAttr.NO, 100)
+        if (t is not None and t.is_value("КЛАСС", None) and t.next0_ is not None): 
+            br = BracketHelper.try_parse(t.next0_, BracketParseAttr.NO, 100)
             if (br is not None): 
-                return TransItemToken._new2342(t, br.end_token, TransItemToken.Typs.CLASS, MiscHelper.get_text_value_of_meta_token(br, GetTextAttr.NO))
+                return TransItemToken._new2495(t, br.end_token, TransItemToken.Typs.CLASS, MiscHelper.get_text_value_of_meta_token(br, GetTextAttr.NO))
         nt = (t if isinstance(t, NumberToken) else None)
         if (nt is not None): 
             if (prev is None or nt.typ != NumberSpellingType.DIGIT): 
@@ -389,7 +389,7 @@ class TransItemToken(MetaToken):
                 return res
         t1 = t
         if (t.is_hiphen): 
-            t1 = t.next0
+            t1 = t.next0_
         if (prev is not None and prev.typ == TransItemToken.Typs.BRAND and t1 is not None): 
             tit = TransItemToken.__attach_model(t1, True, prev)
             if (tit is not None): 
@@ -398,8 +398,8 @@ class TransItemToken(MetaToken):
         if (prev is not None and ((prev.typ == TransItemToken.Typs.NOUN or after_conj))): 
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
             if (br is not None and br.is_quote_type): 
-                tit = TransItemToken.try_parse(br.begin_token.next0, prev, after_conj, False)
-                if (tit is not None and tit.end_token.next0 == br.end_token): 
+                tit = TransItemToken.try_parse(br.begin_token.next0_, prev, after_conj, False)
+                if (tit is not None and tit.end_token.next0_ == br.end_token): 
                     if (not tit.is_doubt or tit.typ == TransItemToken.Typs.BRAND): 
                         tit.begin_token = br.begin_token
                         tit.end_token = br.end_token
@@ -417,10 +417,10 @@ class TransItemToken(MetaToken):
                                 digs += 1
                             else: 
                                 un += 1
-                    if (((digs == 0 and un == 0 and t.next0.chars.is_capital_upper)) or prev.kind == TransportKind.SHIP or prev.kind == TransportKind.SPACE): 
-                        return TransItemToken._new2342(br.begin_token, br.end_token, TransItemToken.Typs.NAME, s)
+                    if (((digs == 0 and un == 0 and t.next0_.chars.is_capital_upper)) or prev.kind == TransportKind.SHIP or prev.kind == TransportKind.SPACE): 
+                        return TransItemToken._new2495(br.begin_token, br.end_token, TransItemToken.Typs.NAME, s)
                     if (digs > 0 and (chars_ < 5)): 
-                        return TransItemToken._new2342(br.begin_token, br.end_token, TransItemToken.Typs.MODEL, s.replace(" ", ""))
+                        return TransItemToken._new2495(br.begin_token, br.end_token, TransItemToken.Typs.MODEL, s.replace(" ", ""))
         if (prev is not None and (((prev.typ == TransItemToken.Typs.NOUN or prev.typ == TransItemToken.Typs.BRAND or prev.typ == TransItemToken.Typs.NAME) or prev.typ == TransItemToken.Typs.MODEL))): 
             tit = TransItemToken.__attach_model(t, prev.typ != TransItemToken.Typs.NAME, prev)
             if (tit is not None): 
@@ -428,7 +428,7 @@ class TransItemToken(MetaToken):
         if (((prev is not None and prev.typ == TransItemToken.Typs.NOUN and prev.kind == TransportKind.AUTO) and isinstance(t, TextToken) and t.chars.is_letter) and not t.chars.is_all_lower and (t.whitespaces_before_count < 2)): 
             pt = t.kit.process_referent("PERSON", t)
             if (pt is None): 
-                tit = TransItemToken._new2345(t, t, TransItemToken.Typs.BRAND)
+                tit = TransItemToken._new2498(t, t, TransItemToken.Typs.BRAND)
                 tit.value = (t if isinstance(t, TextToken) else None).term
                 return tit
         if (((prev is not None and prev.typ == TransItemToken.Typs.NOUN and ((prev.kind == TransportKind.SHIP or prev.kind == TransportKind.SPACE)))) or after_conj): 
@@ -446,7 +446,7 @@ class TransItemToken(MetaToken):
                         ok = False
                 if (ok): 
                     t1 = t
-                    tt = t.next0
+                    tt = t.next0_
                     while tt is not None: 
                         if (tt.whitespaces_before_count > 1): 
                             break
@@ -456,12 +456,12 @@ class TransItemToken(MetaToken):
                         if ((tit) is not None): 
                             break
                         t1 = tt
-                        tt = tt.next0
+                        tt = tt.next0_
                     s = MiscHelper.get_text_value(t, t1, GetTextAttr.NO)
                     if (s is not None): 
-                        res1 = TransItemToken._new2346(t, t1, TransItemToken.Typs.NAME, True, s)
+                        res1 = TransItemToken._new2499(t, t1, TransItemToken.Typs.NAME, True, s)
                         if (not t1.is_newline_after): 
-                            br = BracketHelper.try_parse(t1.next0, BracketParseAttr.NO, 100)
+                            br = BracketHelper.try_parse(t1.next0_, BracketParseAttr.NO, 100)
                             if (br is not None): 
                                 res1.end_token = br.end_token
                                 res1.alt_value = res1.value
@@ -473,15 +473,15 @@ class TransItemToken(MetaToken):
     def __attach_model(t : 'Token', can_be_first_word : bool, prev : 'TransItemToken') -> 'TransItemToken':
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.core.MiscHelper import MiscHelper
-        res = TransItemToken._new2345(t, t, TransItemToken.Typs.MODEL)
+        res = TransItemToken._new2498(t, t, TransItemToken.Typs.MODEL)
         cyr = Utils.newStringIO(None)
         lat = Utils.newStringIO(None)
         t0 = t
         num = False
-        first_pass2893 = True
+        first_pass3061 = True
         while True:
-            if first_pass2893: first_pass2893 = False
-            else: t = t.next0
+            if first_pass3061: first_pass3061 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and t.whitespaces_before_count > 1): 
                 break
@@ -528,7 +528,7 @@ class TransItemToken(MetaToken):
                                 res.is_doubt = True
                 if (vv is None): 
                     break
-            if ((vv.length < 4) or t.morph.class0.is_preposition or t.morph.class0.is_conjunction): 
+            if ((vv.length < 4) or t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction): 
                 if (t.is_whitespace_before and t.is_whitespace_after): 
                     if (t.previous is not None and not t.previous.is_hiphen): 
                         if (t.chars.is_all_lower): 
@@ -569,14 +569,14 @@ class TransItemToken(MetaToken):
         t0 = t
         t1 = t
         if (t.is_value("НА", None)): 
-            npt = NounPhraseHelper.try_parse(t.next0, NounPhraseParseAttr.NO, 0)
+            npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
             if (npt is not None and npt.noun.is_value("ФОН", None)): 
-                t = npt.end_token.next0
+                t = npt.end_token.next0_
         res = None
-        first_pass2894 = True
+        first_pass3062 = True
         while True:
-            if first_pass2894: first_pass2894 = False
-            else: t = t.next0
+            if first_pass3062: first_pass3062 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before): 
                 break
@@ -588,7 +588,7 @@ class TransItemToken(MetaToken):
                 continue
             nt = (t if isinstance(t, NumberToken) else None)
             if (nt is not None): 
-                if (nt.typ != NumberSpellingType.DIGIT or nt.morph.class0.is_adjective): 
+                if (nt.typ != NumberSpellingType.DIGIT or nt.morph.class0_.is_adjective): 
                     break
                 if (res is None): 
                     res = Utils.newStringIO(None)
@@ -612,7 +612,7 @@ class TransItemToken(MetaToken):
             t1 = t
         if (res is None or (res.tell() < 5)): 
             return None
-        re = TransItemToken._new2342(t0, t1, TransItemToken.Typs.NUMBER, Utils.toStringStringIO(res))
+        re = TransItemToken._new2495(t0, t1, TransItemToken.Typs.NUMBER, Utils.toStringStringIO(res))
         if (not ignore_region): 
             k = 0; i = res.tell() - 1
             while i > 4: 
@@ -638,27 +638,27 @@ class TransItemToken(MetaToken):
         doubt = 0
         if (not t.chars.is_all_upper or t.is_whitespace_after): 
             doubt += 1
-        t = t.next0
+        t = t.next0_
         nt = (t if isinstance(t, NumberToken) else None)
-        if ((nt is None or nt.typ != NumberSpellingType.DIGIT or nt.morph.class0.is_adjective) or (nt.end_char - nt.begin_char) != 2): 
+        if ((nt is None or nt.typ != NumberSpellingType.DIGIT or nt.morph.class0_.is_adjective) or (nt.end_char - nt.begin_char) != 2): 
             return None
-        t = t.next0
+        t = t.next0_
         v2 = MiscHelper.get_cyr_lat_word(t, 2)
         if (v2 is None or v2.cyr_word is None or v2.length != 2): 
             return None
         if (not t.chars.is_all_upper or t.is_whitespace_after): 
             doubt += 1
-        res = TransItemToken._new2349(t0, t, TransItemToken.Typs.NUMBER, TransportKind.AUTO)
+        res = TransItemToken._new2502(t0, t, TransItemToken.Typs.NUMBER, TransportKind.AUTO)
         res.value = "{0}{1}{2}".format(v1.cyr_word, nt.get_source_text(), v2.cyr_word)
-        nt = (t.next0 if isinstance(t.next0, NumberToken) else None)
-        if ((nt is not None and nt.typ == NumberSpellingType.DIGIT and not nt.morph.class0.is_adjective) and (nt.value < 200) and (t.whitespaces_after_count < 2)): 
+        nt = (t.next0_ if isinstance(t.next0_, NumberToken) else None)
+        if ((nt is not None and nt.typ == NumberSpellingType.DIGIT and not nt.morph.class0_.is_adjective) and (nt.value < 200) and (t.whitespaces_after_count < 2)): 
             n = str(nt.value)
             if (len(n) < 2): 
                 n = ("0" + n)
             res.alt_value = n
             res.end_token = nt
-        if (res.end_token.next0 is not None and res.end_token.next0.is_value("RUS", None)): 
-            res.end_token = res.end_token.next0
+        if (res.end_token.next0_ is not None and res.end_token.next0_.is_value("RUS", None)): 
+            res.end_token = res.end_token.next0_
             doubt = 0
         if (doubt > 1): 
             res.is_doubt = True
@@ -674,17 +674,17 @@ class TransItemToken(MetaToken):
         if (TransItemToken.__m_ontology is not None): 
             return
         TransItemToken.__m_ontology = TerminCollection()
-        t = TransItemToken.TransTermin._new2350("автомобиль", True, TransItemToken.Typs.NOUN, TransportKind.AUTO)
+        t = TransItemToken.TransTermin._new2503("автомобиль", True, TransItemToken.Typs.NOUN, TransportKind.AUTO)
         t.add_abridge("а-м")
         t.add_variant("автомашина", False)
         t.add_variant("автомобіль", False)
         TransItemToken.__m_ontology.add(t)
         for s in ["ВНЕДОРОЖНИК", "ПОЗАШЛЯХОВИК", "АВТОБУС", "МИКРОАВТОБУС", "ГРУЗОВИК"]: 
-            TransItemToken.__m_ontology.add(TransItemToken.TransTermin._new2350(s, True, TransItemToken.Typs.NOUN, TransportKind.AUTO))
-        t = TransItemToken.TransTermin._new2350("", True, TransItemToken.Typs.NOUN, TransportKind.AUTO)
+            TransItemToken.__m_ontology.add(TransItemToken.TransTermin._new2503(s, True, TransItemToken.Typs.NOUN, TransportKind.AUTO))
+        t = TransItemToken.TransTermin._new2503("", True, TransItemToken.Typs.NOUN, TransportKind.AUTO)
         t.add_abridge("а-м")
         TransItemToken.__m_ontology.add(t)
-        t = TransItemToken.TransTermin._new2353("государственный номер", True, TransItemToken.Typs.NUMBER)
+        t = TransItemToken.TransTermin._new2506("государственный номер", True, TransItemToken.Typs.NUMBER)
         t.add_abridge("г-н")
         t.add_abridge("н\\з")
         t.add_abridge("г\\н")
@@ -696,42 +696,42 @@ class TransItemToken(MetaToken):
         t.add_abridge("рег. знак")
         t.add_variant("государственный регистрационный знак", False)
         TransItemToken.__m_ontology.add(t)
-        t = TransItemToken.TransTermin._new2354("державний номер", True, TransItemToken.Typs.NUMBER, MorphLang.UA)
+        t = TransItemToken.TransTermin._new2507("державний номер", True, TransItemToken.Typs.NUMBER, MorphLang.UA)
         t.add_variant("держномер", False)
         t.add_abridge("держ.номер")
         t.add_abridge("держ.ном.")
         TransItemToken.__m_ontology.add(t)
-        t = TransItemToken.TransTermin._new2353("номер", True, TransItemToken.Typs.NUMBER)
+        t = TransItemToken.TransTermin._new2506("номер", True, TransItemToken.Typs.NUMBER)
         TransItemToken.__m_ontology.add(t)
         for s in ["КРУИЗНЫЙ ЛАЙНЕР", "ТЕПЛОХОД", "ПАРОХОД", "ЯХТА", "ЛОДКА", "КОРАБЛЬ", "СУДНО", "ПОДВОДНАЯ ЛОДКА", "АПК", "ШХУНА", "КРЕЙСЕР", "АВИАНОСЕЦ", "ЭСМИНЕЦ", "ФРЕГАТ", "ЛИНКОР", "АТОМОХОД", "ЛЕДОКОЛ", "ПЛАВБАЗА", "ТАНКЕР", "СУПЕРТАНКЕР", "СУХОГРУЗ", "ТРАУЛЕР", "РЕФРИЖЕРАТОР"]: 
-            t = TransItemToken.TransTermin._new2350(s, True, TransItemToken.Typs.NOUN, TransportKind.SHIP)
+            t = TransItemToken.TransTermin._new2503(s, True, TransItemToken.Typs.NOUN, TransportKind.SHIP)
             TransItemToken.__m_ontology.add(t)
             if (s == "АПК"): 
                 t.is_doubt = True
         for s in ["КРУЇЗНИЙ ЛАЙНЕР", "ПАРОПЛАВ", "ПАРОПЛАВ", "ЯХТА", "ЧОВЕН", "КОРАБЕЛЬ", "СУДНО", "ПІДВОДНИЙ ЧОВЕН", "АПК", "ШХУНА", "КРЕЙСЕР", "АВІАНОСЕЦЬ", "ЕСМІНЕЦЬ", "ФРЕГАТ", "ЛІНКОР", "АТОМОХІД", "КРИГОЛАМ", "ПЛАВБАЗА", "ТАНКЕР", "СУПЕРТАНКЕР", "СУХОВАНТАЖ", "ТРАУЛЕР", "РЕФРИЖЕРАТОР"]: 
-            t = TransItemToken.TransTermin._new2357(s, True, TransItemToken.Typs.NOUN, MorphLang.UA, TransportKind.SHIP)
+            t = TransItemToken.TransTermin._new2510(s, True, TransItemToken.Typs.NOUN, MorphLang.UA, TransportKind.SHIP)
             TransItemToken.__m_ontology.add(t)
             if (s == "АПК"): 
                 t.is_doubt = True
         for s in ["САМОЛЕТ", "АВИАЛАЙНЕР", "ИСТРЕБИТЕЛЬ", "БОМБАРДИРОВЩИК", "ВЕРТОЛЕТ"]: 
-            TransItemToken.__m_ontology.add(TransItemToken.TransTermin._new2350(s, True, TransItemToken.Typs.NOUN, TransportKind.FLY))
+            TransItemToken.__m_ontology.add(TransItemToken.TransTermin._new2503(s, True, TransItemToken.Typs.NOUN, TransportKind.FLY))
         for s in ["ЛІТАК", "АВІАЛАЙНЕР", "ВИНИЩУВАЧ", "БОМБАРДУВАЛЬНИК", "ВЕРТОЛІТ"]: 
-            TransItemToken.__m_ontology.add(TransItemToken.TransTermin._new2357(s, True, TransItemToken.Typs.NOUN, MorphLang.UA, TransportKind.FLY))
+            TransItemToken.__m_ontology.add(TransItemToken.TransTermin._new2510(s, True, TransItemToken.Typs.NOUN, MorphLang.UA, TransportKind.FLY))
         for s in ["КОСМИЧЕСКИЙ КОРАБЛЬ", "ЗВЕЗДОЛЕТ", "КОСМИЧЕСКАЯ СТАНЦИЯ", "РАКЕТА-НОСИТЕЛЬ"]: 
-            TransItemToken.__m_ontology.add(TransItemToken.TransTermin._new2350(s, True, TransItemToken.Typs.NOUN, TransportKind.SPACE))
+            TransItemToken.__m_ontology.add(TransItemToken.TransTermin._new2503(s, True, TransItemToken.Typs.NOUN, TransportKind.SPACE))
         for s in ["КОСМІЧНИЙ КОРАБЕЛЬ", "ЗОРЕЛІТ", "КОСМІЧНА СТАНЦІЯ", "РАКЕТА-НОСІЙ"]: 
-            TransItemToken.__m_ontology.add(TransItemToken.TransTermin._new2357(s, True, TransItemToken.Typs.NOUN, MorphLang.UA, TransportKind.SPACE))
+            TransItemToken.__m_ontology.add(TransItemToken.TransTermin._new2510(s, True, TransItemToken.Typs.NOUN, MorphLang.UA, TransportKind.SPACE))
         TransItemToken.__load_brands(TransItemToken.__m_cars, TransportKind.AUTO)
         TransItemToken.__load_brands(TransItemToken.__m_flys, TransportKind.FLY)
     
     @staticmethod
-    def __load_brands(str0 : str, kind_ : 'TransportKind') -> None:
+    def __load_brands(str0_ : str, kind_ : 'TransportKind') -> None:
         
-        cars = Utils.splitString(str0, ';', False)
-        vars0 = list()
+        cars = Utils.splitString(str0_, ';', False)
+        vars0_ = list()
         for c in cars: 
             its = Utils.splitString(c, ',', False)
-            vars0.clear()
+            vars0_.clear()
             doubt = False
             for it in its: 
                 s = it.strip()
@@ -739,12 +739,12 @@ class TransItemToken(MetaToken):
                     if (s == "true"): 
                         doubt = True
                     else: 
-                        vars0.append(s)
-            if (len(vars0) == 0): 
+                        vars0_.append(s)
+            if (len(vars0_) == 0): 
                 continue
-            for v in vars0: 
+            for v in vars0_: 
                 t = TransItemToken.TransTermin(v)
-                t.canonic_text = vars0[0]
+                t.canonic_text = vars0_[0]
                 t.kind = kind_
                 t.typ = TransItemToken.Typs.BRAND
                 t.is_doubt = doubt
@@ -756,7 +756,7 @@ class TransItemToken(MetaToken):
 
     
     @staticmethod
-    def _new2337(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent', _arg5 : 'MorphCollection') -> 'TransItemToken':
+    def _new2490(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent', _arg5 : 'MorphCollection') -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.ref = _arg4
@@ -764,21 +764,21 @@ class TransItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2338(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : typing.List[object]) -> 'TransItemToken':
+    def _new2491(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : typing.List[object]) -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.route_items = _arg4
         return res
     
     @staticmethod
-    def _new2339(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent') -> 'TransItemToken':
+    def _new2492(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent') -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.ref = _arg4
         return res
     
     @staticmethod
-    def _new2340(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'TransportKind', _arg4 : 'Typs', _arg5 : bool, _arg6 : 'CharsInfo', _arg7 : 'MorphCollection') -> 'TransItemToken':
+    def _new2493(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'TransportKind', _arg4 : 'Typs', _arg5 : bool, _arg6 : 'CharsInfo', _arg7 : 'MorphCollection') -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.kind = _arg3
         res.typ = _arg4
@@ -788,20 +788,20 @@ class TransItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2342(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str) -> 'TransItemToken':
+    def _new2495(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str) -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new2345(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs') -> 'TransItemToken':
+    def _new2498(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs') -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new2346(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : bool, _arg5 : str) -> 'TransItemToken':
+    def _new2499(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : bool, _arg5 : str) -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.is_doubt = _arg4
@@ -809,7 +809,7 @@ class TransItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2349(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'TransportKind') -> 'TransItemToken':
+    def _new2502(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'TransportKind') -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.kind = _arg4

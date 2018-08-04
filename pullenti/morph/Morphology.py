@@ -137,11 +137,11 @@ class Morphology:
         from pullenti.morph.MorphWordForm import MorphWordForm
         if (morph_info is None or Utils.isNullOrEmpty(word)): 
             return word
-        cla = morph_info.class0
+        cla = morph_info.class0_
         if (cla.is_undefined): 
             mi0 = Morphology.get_word_base_info(word, MorphLang(), False, False)
             if (mi0 is not None): 
-                cla = mi0.class0
+                cla = mi0.class0_
         for ch in word: 
             if (ch.islower()): 
                 word = word.upper()
@@ -178,7 +178,7 @@ class Morphology:
                     if (is_case_nominative): 
                         if (not wf.case.is_nominative and not wf.case.is_undefined): 
                             continue
-                    cla.value |= wf.class0.value
+                    cla.value |= wf.class0_.value
                     bi.gender |= wf.gender
                     bi.case |= wf.case
                     bi.number |= wf.number
@@ -187,7 +187,7 @@ class Morphology:
                     ok = True
                 if (ok or in_dict_only): 
                     break
-        bi.class0 = cla
+        bi.class0_ = cla
         return bi
     
     @staticmethod
@@ -225,7 +225,7 @@ class Morphology:
         bi1 = Morphology.get_word_base_info(var1, MorphLang(), False, False)
         bi2 = Morphology.get_word_base_info(var2, MorphLang(), False, False)
         var = var1
-        if (not bi1.class0.is_adjective and bi2.class0.is_adjective): 
+        if (not bi1.class0_.is_adjective and bi2.class0_.is_adjective): 
             var = var2
         if (bi is None): 
             return var

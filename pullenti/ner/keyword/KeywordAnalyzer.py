@@ -65,7 +65,7 @@ class KeywordAnalyzer(Analyzer):
         return [KeywordMeta.GLOBAL_META]
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         from pullenti.ner.keyword.internal.KeywordMeta import KeywordMeta
         res = dict()
         res[KeywordMeta.IMAGE_OBJ] = ResourceHelper.get_bytes("kwobject.png")
@@ -73,9 +73,9 @@ class KeywordAnalyzer(Analyzer):
         res[KeywordMeta.IMAGE_REF] = ResourceHelper.get_bytes("kwreferent.png")
         return res
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.keyword.KeywordReferent import KeywordReferent
-        if (type0 == KeywordReferent.OBJ_TYPENAME): 
+        if (type0_ == KeywordReferent.OBJ_TYPENAME): 
             return KeywordReferent()
         return None
     
@@ -110,21 +110,21 @@ class KeywordAnalyzer(Analyzer):
         li = list()
         tmp = Utils.newStringIO(None)
         tmp2 = list()
-        max0 = 0
+        max0_ = 0
         t = kit.first_token
         while t is not None: 
-            max0 += 1
-            t = t.next0
+            max0_ += 1
+            t = t.next0_
         cur = 0
         t = kit.first_token
-        first_pass2794 = True
+        first_pass2957 = True
         while True:
-            if first_pass2794: first_pass2794 = False
-            else: t = t.next0; cur += 1
+            if first_pass2957: first_pass2957 = False
+            else: t = t.next0_; cur += 1
             if (not (t is not None)): break
             r = t.get_referent()
             if (r is not None): 
-                t = self.__add_referents(ad, t, cur, max0)
+                t = self.__add_referents(ad, t, cur, max0_)
                 continue
             if (not ((isinstance(t, TextToken)))): 
                 continue
@@ -132,7 +132,7 @@ class KeywordAnalyzer(Analyzer):
                 continue
             term = (t if isinstance(t, TextToken) else None).term
             if (term == "ЕСТЬ"): 
-                if (isinstance(t.previous, TextToken) and t.previous.morph.class0.is_verb): 
+                if (isinstance(t.previous, TextToken) and t.previous.morph.class0_.is_verb): 
                     pass
                 else: 
                     continue
@@ -145,7 +145,7 @@ class KeywordAnalyzer(Analyzer):
                         continue
                     if (t.is_value("МОЧЬ", None) or t.is_value("WOULD", None)): 
                         continue
-                    kref = KeywordReferent._new1436(KeywordType.PREDICATE)
+                    kref = KeywordReferent._new1487(KeywordType.PREDICATE)
                     norm = t.get_normal_case_text(MorphClass.VERB, True, MorphGender.UNDEFINED, False)
                     if (norm is None): 
                         norm = (t if isinstance(t, TextToken) else None).get_lemma()
@@ -155,8 +155,8 @@ class KeywordAnalyzer(Analyzer):
                     drv = Explanatory.find_derivates(norm, True, t.morph.language)
                     KeywordAnalyzer.__add_normals(kref, drv, norm)
                     kref = (ad.register_referent(kref) if isinstance(ad.register_referent(kref), KeywordReferent) else None)
-                    KeywordAnalyzer.__set_rank(kref, cur, max0)
-                    rt1 = ReferentToken._new695(ad.register_referent(kref), t, t, t.morph)
+                    KeywordAnalyzer.__set_rank(kref, cur, max0_)
+                    rt1 = ReferentToken._new735(ad.register_referent(kref), t, t, t.morph)
                     kit.embed_token(rt1)
                     t = rt1
                     continue
@@ -182,10 +182,10 @@ class KeywordAnalyzer(Analyzer):
             li.clear()
             t0 = t
             tt = t
-            first_pass2795 = True
+            first_pass2958 = True
             while True:
-                if first_pass2795: first_pass2795 = False
-                else: tt = tt.next0
+                if first_pass2958: first_pass2958 = False
+                else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= npt.end_char)): break
                 if (not ((isinstance(tt, TextToken)))): 
                     continue
@@ -202,22 +202,22 @@ class KeywordAnalyzer(Analyzer):
                 if (mc.is_misc): 
                     if (MiscHelper.is_eng_article(tt)): 
                         continue
-                kref = KeywordReferent._new1436(KeywordType.OBJECT)
+                kref = KeywordReferent._new1487(KeywordType.OBJECT)
                 norm = (tt if isinstance(tt, TextToken) else None).get_lemma()
                 kref.add_slot(KeywordReferent.ATTR_VALUE, norm, False, 0)
                 if (norm != "ЕСТЬ"): 
                     drv = Explanatory.find_derivates(norm, True, tt.morph.language)
                     KeywordAnalyzer.__add_normals(kref, drv, norm)
                 kref = (ad.register_referent(kref) if isinstance(ad.register_referent(kref), KeywordReferent) else None)
-                KeywordAnalyzer.__set_rank(kref, cur, max0)
-                rt1 = ReferentToken._new695(kref, tt, tt, tt.morph)
+                KeywordAnalyzer.__set_rank(kref, cur, max0_)
+                rt1 = ReferentToken._new735(kref, tt, tt, tt.morph)
                 kit.embed_token(rt1)
                 if (tt == t and len(li) == 0): 
                     t0 = rt1
                 t = rt1
                 li.append(kref)
             if (len(li) > 1): 
-                kref = KeywordReferent._new1436(KeywordType.OBJECT)
+                kref = KeywordReferent._new1487(KeywordType.OBJECT)
                 Utils.setLengthStringIO(tmp, 0)
                 tmp2.clear()
                 has_norm = False
@@ -245,27 +245,27 @@ class KeywordAnalyzer(Analyzer):
                 if (norm != val): 
                     kref.add_slot(KeywordReferent.ATTR_NORMAL, norm, False, 0)
                 kref = (ad.register_referent(kref) if isinstance(ad.register_referent(kref), KeywordReferent) else None)
-                KeywordAnalyzer.__set_rank(kref, cur, max0)
-                rt1 = ReferentToken._new695(kref, t0, t, npt.morph)
+                KeywordAnalyzer.__set_rank(kref, cur, max0_)
+                rt1 = ReferentToken._new735(kref, t0, t, npt.morph)
                 kit.embed_token(rt1)
                 t = rt1
         cur = 0
         t = kit.first_token
-        first_pass2796 = True
+        first_pass2959 = True
         while True:
-            if first_pass2796: first_pass2796 = False
-            else: t = t.next0; cur += 1
+            if first_pass2959: first_pass2959 = False
+            else: t = t.next0_; cur += 1
             if (not (t is not None)): break
             kw = (t.get_referent() if isinstance(t.get_referent(), KeywordReferent) else None)
             if (kw is None or kw.typ != KeywordType.OBJECT): 
                 continue
-            if (t.next0 is None or kw.child_words > 2): 
+            if (t.next0_ is None or kw.child_words > 2): 
                 continue
-            t1 = t.next0
-            if (t1.is_value("OF", None) and (t1.whitespaces_after_count < 3) and t1.next0 is not None): 
-                t1 = t1.next0
-                if (isinstance(t1, TextToken) and MiscHelper.is_eng_article(t1) and t1.next0 is not None): 
-                    t1 = t1.next0
+            t1 = t.next0_
+            if (t1.is_value("OF", None) and (t1.whitespaces_after_count < 3) and t1.next0_ is not None): 
+                t1 = t1.next0_
+                if (isinstance(t1, TextToken) and MiscHelper.is_eng_article(t1) and t1.next0_ is not None): 
+                    t1 = t1.next0_
             elif (not t1.morph.case.is_genitive or t.whitespaces_after_count > 1): 
                 continue
             kw2 = (t1.get_referent() if isinstance(t1.get_referent(), KeywordReferent) else None)
@@ -276,14 +276,14 @@ class KeywordAnalyzer(Analyzer):
             kw_un = KeywordReferent()
             kw_un._union(kw, kw2, MiscHelper.get_text_value(t1, t1, GetTextAttr.NO))
             kw_un = (ad.register_referent(kw_un) if isinstance(ad.register_referent(kw_un), KeywordReferent) else None)
-            KeywordAnalyzer.__set_rank(kw_un, cur, max0)
-            rt1 = ReferentToken._new695(kw_un, t, t1, t.morph)
+            KeywordAnalyzer.__set_rank(kw_un, cur, max0_)
+            rt1 = ReferentToken._new735(kw_un, t, t1, t.morph)
             kit.embed_token(rt1)
             t = rt1
         if (KeywordAnalyzer.SORT_KEYWORDS_BY_RANK): 
-            all0 = list(ad.referents)
-            all0.sort(key=operator.attrgetter('rank'), reverse=True)
-            ad.referents = all0
+            all0_ = list(ad.referents)
+            all0_.sort(key=operator.attrgetter('rank'), reverse=True)
+            ad.referents = all0_
     
     @staticmethod
     def __calc_rank(gr : 'DerivateGroup') -> int:
@@ -291,8 +291,8 @@ class KeywordAnalyzer(Analyzer):
             return 0
         res = 0
         for w in gr.words: 
-            if (w.lang.is_ru and w.class0 is not None): 
-                if (w.class0.is_verb and w.class0.is_adjective): 
+            if (w.lang.is_ru and w.class0_ is not None): 
+                if (w.class0_.is_verb and w.class0_.is_adjective): 
                     pass
                 else: 
                     res += 1
@@ -324,7 +324,7 @@ class KeywordAnalyzer(Analyzer):
                     kref.add_slot(KeywordReferent.ATTR_NORMAL, grs[i].words[0].spelling, False, 0)
             i += 1
     
-    def __add_referents(self, ad : 'AnalyzerData', t : 'Token', cur : int, max0 : int) -> 'Token':
+    def __add_referents(self, ad : 'AnalyzerData', t : 'Token', cur : int, max0_ : int) -> 'Token':
         from pullenti.ner.MetaToken import MetaToken
         from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.denomination.DenominationReferent import DenominationReferent
@@ -341,7 +341,7 @@ class KeywordAnalyzer(Analyzer):
             return t
         if (isinstance(r, DenominationReferent)): 
             dr = (r if isinstance(r, DenominationReferent) else None)
-            kref0 = KeywordReferent._new1436(KeywordType.REFERENT)
+            kref0 = KeywordReferent._new1487(KeywordType.REFERENT)
             for s in dr.slots: 
                 if (s.type_name == DenominationReferent.ATTR_VALUE): 
                     kref0.add_slot(KeywordReferent.ATTR_NORMAL, s.value, False, 0)
@@ -353,7 +353,7 @@ class KeywordAnalyzer(Analyzer):
             return t
         if (isinstance(r, MoneyReferent)): 
             mr = (r if isinstance(r, MoneyReferent) else None)
-            kref0 = KeywordReferent._new1436(KeywordType.OBJECT)
+            kref0 = KeywordReferent._new1487(KeywordType.OBJECT)
             kref0.add_slot(KeywordReferent.ATTR_NORMAL, mr.currency, False, 0)
             rt0 = ReferentToken(ad.register_referent(kref0), t, t)
             t.kit.embed_token(rt0)
@@ -363,9 +363,9 @@ class KeywordAnalyzer(Analyzer):
         tt = (t if isinstance(t, MetaToken) else None).begin_token
         while tt is not None and tt.end_char <= t.end_char: 
             if (isinstance(tt, ReferentToken)): 
-                self.__add_referents(ad, tt, cur, max0)
-            tt = tt.next0
-        kref = KeywordReferent._new1436(KeywordType.REFERENT)
+                self.__add_referents(ad, tt, cur, max0_)
+            tt = tt.next0_
+        kref = KeywordReferent._new1487(KeywordType.REFERENT)
         norm = None
         if (r.type_name == "GEO"): 
             norm = r.get_string_value("ALPHA2")
@@ -374,13 +374,13 @@ class KeywordAnalyzer(Analyzer):
         if (norm is not None): 
             kref.add_slot(KeywordReferent.ATTR_NORMAL, norm.upper(), False, 0)
         kref.add_slot(KeywordReferent.ATTR_REF, t.get_referent(), False, 0)
-        KeywordAnalyzer.__set_rank(kref, cur, max0)
+        KeywordAnalyzer.__set_rank(kref, cur, max0_)
         rt1 = ReferentToken(ad.register_referent(kref), t, t)
         t.kit.embed_token(rt1)
         return rt1
     
     @staticmethod
-    def __set_rank(kr : 'KeywordReferent', cur : int, max0 : int) -> None:
+    def __set_rank(kr : 'KeywordReferent', cur : int, max0_ : int) -> None:
         from pullenti.ner.Referent import Referent
         from pullenti.ner.keyword.KeywordReferent import KeywordReferent
         rank = 1
@@ -399,8 +399,8 @@ class KeywordAnalyzer(Analyzer):
             if (r is not None): 
                 if (r.type_name == "PERSON"): 
                     rank = 4
-        if (max0 > 0): 
-            rank *= ((1 - (((0.5 * cur) / max0))))
+        if (max0_ > 0): 
+            rank *= ((1 - (((0.5 * cur) / max0_))))
         kr.rank += rank
     
     SORT_KEYWORDS_BY_RANK = True

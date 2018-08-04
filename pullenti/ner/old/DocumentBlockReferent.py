@@ -37,19 +37,19 @@ class DocumentBlockReferent(Referent):
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         res = Utils.newStringIO(None)
-        str0 = self.get_string_value(DocumentBlockReferent.ATTR_NUMBER)
-        if ((str0) is not None): 
-            print("{0}) ".format(str0), end="", file=res, flush=True)
+        str0_ = self.get_string_value(DocumentBlockReferent.ATTR_NUMBER)
+        if ((str0_) is not None): 
+            print("{0}) ".format(str0_), end="", file=res, flush=True)
         if (self.typ != DocumentBlockType.UNDEFINED): 
             print("{0}: ".format(Utils.enumToString(self.typ)), end="", file=res, flush=True)
-        str0 = self.get_string_value(DocumentBlockReferent.ATTR_NAME)
-        if ((str0) is not None): 
-            print(MiscHelper.convert_first_char_upper_and_other_lower(str0), end="", file=res)
+        str0_ = self.get_string_value(DocumentBlockReferent.ATTR_NAME)
+        if ((str0_) is not None): 
+            print(MiscHelper.convert_first_char_upper_and_other_lower(str0_), end="", file=res)
         else: 
-            str0 = self.get_string_value(DocumentBlockReferent.ATTR_CONTENT)
-            if ((str0) is not None): 
+            str0_ = self.get_string_value(DocumentBlockReferent.ATTR_CONTENT)
+            if ((str0_) is not None): 
                 sp = True
-                for ch in str0: 
+                for ch in str0_: 
                     if (Utils.isWhitespace(ch)): 
                         if (res.tell() > 100): 
                             print("...", end="", file=res)
@@ -93,7 +93,7 @@ class DocumentBlockReferent(Referent):
             res = Utils.valToEnum(s, DocumentBlockType)
             if (isinstance(res, DocumentBlockType)): 
                 return Utils.valToEnum(res, DocumentBlockType)
-        except Exception as ex1477: 
+        except Exception as ex1628: 
             pass
         return DocumentBlockType.UNDEFINED
     
@@ -110,7 +110,7 @@ class DocumentBlockReferent(Referent):
 
     
     @staticmethod
-    def _new1478(_arg1 : 'DocumentBlockType') -> 'DocumentBlockReferent':
+    def _new1629(_arg1 : 'DocumentBlockType') -> 'DocumentBlockReferent':
         res = DocumentBlockReferent()
         res.typ = _arg1
         return res

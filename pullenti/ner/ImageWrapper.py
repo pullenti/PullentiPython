@@ -10,14 +10,14 @@ class ImageWrapper:
      (например, для Андроида) """
     
     def __init__(self) -> None:
-        self.id0 = None
+        self.id0_ = None
         self.content = None
         self.image = None
 
     
     @staticmethod
-    def _new2488(_arg1 : str, _arg2 : bytearray) -> 'ImageWrapper':
+    def _new2641(_arg1 : str, _arg2 : bytearray) -> 'ImageWrapper':
         res = ImageWrapper()
-        res.id0 = _arg1
+        res.id0_ = _arg1
         res.content = _arg2
         return res

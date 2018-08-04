@@ -10,17 +10,17 @@ from enum import IntEnum
 class DecreeChangeValueKind(IntEnum):
     """ Типы изменяющих СЭ значений """
     UNDEFINED = 0
-    TEXT = 1
+    TEXT = 0 + 1
     """ Текстовой фрагмент """
-    WORDS = 2
+    WORDS = (0 + 1) + 1
     """ Слова (в точном значении) """
-    ROBUSTWORDS = 3
+    ROBUSTWORDS = ((0 + 1) + 1) + 1
     """ Слова (в неточном значений) """
-    NUMBERS = 4
+    NUMBERS = (((0 + 1) + 1) + 1) + 1
     """ Цифры """
-    SEQUENCE = 5
+    SEQUENCE = ((((0 + 1) + 1) + 1) + 1) + 1
     """ Предложение """
-    FOOTNOTE = 6
+    FOOTNOTE = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
     """ Сноска """
-    BLOCK = 7
+    BLOCK = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
     """ Блок со словами """

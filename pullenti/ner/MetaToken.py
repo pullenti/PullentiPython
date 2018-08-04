@@ -18,7 +18,7 @@ class MetaToken(Token):
     def __init__(self, begin : 'Token', end : 'Token', kit_ : 'AnalysisKit'=None) -> None:
         self._m_begin_token = None
         self._m_end_token = None
-        super().__init__(Utils.ifNotNull(kit_, (begin.kit if begin is not None else None)), (0 if begin is None else begin.begin_char), (0 if end is None else end.end_char))
+        super().__init__(Utils.ifNotNull(kit_, begin.kit), (0 if begin is None else begin.begin_char), (0 if end is None else end.end_char))
         if (begin == self or end == self): 
             pass
         self._m_begin_token = begin
@@ -27,7 +27,7 @@ class MetaToken(Token):
             return
         self.chars = begin.chars
         if (begin != end): 
-            t = begin.next0
+            t = begin.next0_
             while t is not None: 
                 if (t.chars.is_letter): 
                     if (self.chars.is_capital_upper and t.chars.is_all_lower): 
@@ -36,7 +36,7 @@ class MetaToken(Token):
                         self.chars &= t.chars
                 if (t == end): 
                     break
-                t = t.next0
+                t = t.next0_
     
     def __refresh_chars_info(self) -> None:
         if (self._m_begin_token is None): 
@@ -44,7 +44,7 @@ class MetaToken(Token):
         self.chars = self._m_begin_token.chars
         cou = 0
         if (self._m_begin_token != self._m_end_token and self._m_end_token is not None): 
-            t = self._m_begin_token.next0
+            t = self._m_begin_token.next0_
             while t is not None: 
                 cou += 1
                 if ((cou) > 100): 
@@ -55,7 +55,7 @@ class MetaToken(Token):
                     self.chars &= t.chars
                 if (t == self._m_end_token): 
                     break
-                t = t.next0
+                t = t.next0_
     
     @property
     def begin_token(self) -> 'Token':
@@ -100,7 +100,7 @@ class MetaToken(Token):
             if (count > 1 and t == self._m_begin_token): 
                 break
             count += 1
-            t = t.next0
+            t = t.next0_
         return count
     
     @property
@@ -136,7 +136,7 @@ class MetaToken(Token):
             print(t.get_source_text(), end="", file=res)
             if (t == self._m_end_token): 
                 break
-            t = t.next0
+            t = t.next0_
         return Utils.toStringStringIO(res)
     
     @staticmethod
@@ -170,19 +170,19 @@ class MetaToken(Token):
 
     
     @staticmethod
-    def _new564(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'MetaToken':
+    def _new590(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.morph = _arg3
         return res
     
     @staticmethod
-    def _new785(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object) -> 'MetaToken':
+    def _new825(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object) -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.tag = _arg3
         return res
     
     @staticmethod
-    def _new2026(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
+    def _new2174(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.tag = _arg3
         res.morph = _arg4

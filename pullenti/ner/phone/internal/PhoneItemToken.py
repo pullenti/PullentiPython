@@ -22,12 +22,12 @@ class PhoneItemToken(MetaToken):
     
     class PhoneItemType(IntEnum):
         NUMBER = 0
-        CITYCODE = 1
-        DELIM = 2
-        PREFIX = 3
-        ADDNUMBER = 4
-        COUNTRYCODE = 5
-        ALT = 6
+        CITYCODE = 0 + 1
+        DELIM = (0 + 1) + 1
+        PREFIX = ((0 + 1) + 1) + 1
+        ADDNUMBER = (((0 + 1) + 1) + 1) + 1
+        COUNTRYCODE = ((((0 + 1) + 1) + 1) + 1) + 1
+        ALT = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
     
     def __init__(self, begin : 'Token', end : 'Token') -> None:
         self.item_type = PhoneItemToken.PhoneItemType.NUMBER
@@ -62,11 +62,11 @@ class PhoneItemToken(MetaToken):
             return None
         if (res.item_type != PhoneItemToken.PhoneItemType.PREFIX): 
             return res
-        t = res.end_token.next0
-        first_pass2876 = True
+        t = res.end_token.next0_
+        first_pass3044 = True
         while True:
-            if first_pass2876: first_pass2876 = False
-            else: t = t.next0
+            if first_pass3044: first_pass3044 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
                 break
@@ -95,7 +95,7 @@ class PhoneItemToken(MetaToken):
                     return None
                 res.end_token = t
                 continue
-            if (t.morph.class0.is_preposition): 
+            if (t.morph.class0_.is_preposition): 
                 continue
             break
         return res
@@ -107,22 +107,22 @@ class PhoneItemToken(MetaToken):
         if (t0 is None): 
             return None
         if (isinstance(t0, NumberToken)): 
-            if (NumberExToken.try_parse_number_with_postfix(t0) is not None): 
-                rt = t0.kit.process_referent("PHONE", t0.next0)
+            if (NumberExToken.try_parse_number_with_postfix(t0) is not None and not t0.is_whitespace_after): 
+                rt = t0.kit.process_referent("PHONE", t0.next0_)
                 if (rt is None): 
                     return None
-            if ((t0 if isinstance(t0, NumberToken) else None).typ == NumberSpellingType.DIGIT and not t0.morph.class0.is_adjective): 
-                return PhoneItemToken._new2282(t0, t0, PhoneItemToken.PhoneItemType.NUMBER, t0.get_source_text())
+            if ((t0 if isinstance(t0, NumberToken) else None).typ == NumberSpellingType.DIGIT and not t0.morph.class0_.is_adjective): 
+                return PhoneItemToken._new2435(t0, t0, PhoneItemToken.PhoneItemType.NUMBER, t0.get_source_text())
             return None
         if (t0.is_char('.')): 
-            return PhoneItemToken._new2282(t0, t0, PhoneItemToken.PhoneItemType.DELIM, ".")
+            return PhoneItemToken._new2435(t0, t0, PhoneItemToken.PhoneItemType.DELIM, ".")
         if (t0.is_hiphen): 
-            return PhoneItemToken._new2282(t0, t0, PhoneItemToken.PhoneItemType.DELIM, "-")
+            return PhoneItemToken._new2435(t0, t0, PhoneItemToken.PhoneItemType.DELIM, "-")
         if (t0.is_char('+')): 
-            if (not ((isinstance(t0.next0, NumberToken))) or (t0.next0 if isinstance(t0.next0, NumberToken) else None).typ != NumberSpellingType.DIGIT): 
+            if (not ((isinstance(t0.next0_, NumberToken))) or (t0.next0_ if isinstance(t0.next0_, NumberToken) else None).typ != NumberSpellingType.DIGIT): 
                 return None
             else: 
-                val = t0.next0.get_source_text()
+                val = t0.next0_.get_source_text()
                 for i in range(len(val)):
                     if (val[i] != '0'): 
                         break
@@ -131,12 +131,12 @@ class PhoneItemToken(MetaToken):
                     return None
                 if (i > 0): 
                     val = val[i : ]
-                return PhoneItemToken._new2282(t0, t0.next0, PhoneItemToken.PhoneItemType.COUNTRYCODE, val)
-        if (t0.is_char(chr(0x2011)) and isinstance(t0.next0, NumberToken) and t0.next0.length_char == 2): 
-            return PhoneItemToken._new2282(t0, t0, PhoneItemToken.PhoneItemType.DELIM, "-")
+                return PhoneItemToken._new2435(t0, t0.next0_, PhoneItemToken.PhoneItemType.COUNTRYCODE, val)
+        if (t0.is_char(chr(0x2011)) and isinstance(t0.next0_, NumberToken) and t0.next0_.length_char == 2): 
+            return PhoneItemToken._new2435(t0, t0, PhoneItemToken.PhoneItemType.DELIM, "-")
         if (t0.is_char_of("(")): 
-            if (isinstance(t0.next0, NumberToken)): 
-                et = t0.next0
+            if (isinstance(t0.next0_, NumberToken)): 
+                et = t0.next0_
                 val = Utils.newStringIO(None)
                 while et is not None: 
                     if (et.is_char(')')): 
@@ -145,32 +145,32 @@ class PhoneItemToken(MetaToken):
                         print(et.get_source_text(), end="", file=val)
                     elif (not et.is_hiphen and not et.is_char('.')): 
                         return None
-                    et = et.next0
+                    et = et.next0_
                 if (et is None or val.tell() == 0): 
                     return None
                 else: 
-                    return PhoneItemToken._new2287(t0, et, PhoneItemToken.PhoneItemType.CITYCODE, Utils.toStringStringIO(val), True)
+                    return PhoneItemToken._new2440(t0, et, PhoneItemToken.PhoneItemType.CITYCODE, Utils.toStringStringIO(val), True)
             else: 
-                tt1 = PhoneItemToken.__m_phone_termins.try_parse(t0.next0, TerminParseAttr.NO)
+                tt1 = PhoneItemToken.__m_phone_termins.try_parse(t0.next0_, TerminParseAttr.NO)
                 if (tt1 is None or tt1.termin.tag is not None): 
                     pass
-                elif (tt1.end_token.next0 is None or not tt1.end_token.next0.is_char(')')): 
+                elif (tt1.end_token.next0_ is None or not tt1.end_token.next0_.is_char(')')): 
                     pass
                 else: 
-                    return PhoneItemToken._new2288(t0, tt1.end_token.next0, PhoneItemToken.PhoneItemType.PREFIX, True, "")
+                    return PhoneItemToken._new2441(t0, tt1.end_token.next0_, PhoneItemToken.PhoneItemType.PREFIX, True, "")
                 return None
-        if ((t0.is_char('/') and isinstance(t0.next0, NumberToken) and t0.next0.next0 is not None) and t0.next0.next0.is_char('/') and t0.next0.length_char == 3): 
-            return PhoneItemToken._new2287(t0, t0.next0.next0, PhoneItemToken.PhoneItemType.CITYCODE, str((t0.next0 if isinstance(t0.next0, NumberToken) else None).value), True)
+        if ((t0.is_char('/') and isinstance(t0.next0_, NumberToken) and t0.next0_.next0_ is not None) and t0.next0_.next0_.is_char('/') and t0.next0_.length_char == 3): 
+            return PhoneItemToken._new2440(t0, t0.next0_.next0_, PhoneItemToken.PhoneItemType.CITYCODE, str((t0.next0_ if isinstance(t0.next0_, NumberToken) else None).value), True)
         t1 = None
         ki = PhoneKind.UNDEFINED
-        if ((t0.is_value("Т", None) and t0.next0 is not None and t0.next0.is_char_of("\\/")) and t0.next0.next0 is not None and ((t0.next0.next0.is_value("Р", None) or t0.next0.next0.is_value("М", None)))): 
-            t1 = t0.next0.next0
+        if ((t0.is_value("Т", None) and t0.next0_ is not None and t0.next0_.is_char_of("\\/")) and t0.next0_.next0_ is not None and ((t0.next0_.next0_.is_value("Р", None) or t0.next0_.next0_.is_value("М", None)))): 
+            t1 = t0.next0_.next0_
             ki = (PhoneKind.WORK if t1.is_value("Р", None) else PhoneKind.MOBILE)
         else: 
             tt = PhoneItemToken.__m_phone_termins.try_parse(t0, TerminParseAttr.NO)
             if (tt is None or tt.termin.tag is not None): 
                 if (t0.is_value("НОМЕР", None)): 
-                    rr = PhoneItemToken.__try_attach(t0.next0)
+                    rr = PhoneItemToken.__try_attach(t0.next0_)
                     if (rr is not None and rr.item_type == PhoneItemToken.PhoneItemType.PREFIX): 
                         rr.begin_token = t0
                         return rr
@@ -178,13 +178,13 @@ class PhoneItemToken(MetaToken):
             if (isinstance(tt.termin.tag2, PhoneKind)): 
                 ki = Utils.valToEnum(tt.termin.tag2, PhoneKind)
             t1 = tt.end_token
-        res = PhoneItemToken._new2290(t0, t1, PhoneItemToken.PhoneItemType.PREFIX, "", ki)
+        res = PhoneItemToken._new2443(t0, t1, PhoneItemToken.PhoneItemType.PREFIX, "", ki)
         while True:
-            if (t1.next0 is not None and t1.next0.is_char_of(".:")): 
-                t1 = t1.next0
+            if (t1.next0_ is not None and t1.next0_.is_char_of(".:")): 
+                t1 = t1.next0_
                 res.end_token = t1
-            elif (t1.next0 is not None and t1.next0.is_table_control_char): 
-                t1 = t1.next0
+            elif (t1.next0_ is not None and t1.next0_.is_table_control_char): 
+                t1 = t1.next0_
             else: 
                 break
         if (t0 == t1 and ((t0.begin_char == t0.end_char or t0.chars.is_all_upper))): 
@@ -199,19 +199,19 @@ class PhoneItemToken(MetaToken):
         if (t is None): 
             return None
         if (t.is_char(',')): 
-            t = t.next0
-        elif (t.is_char_of("*#") and isinstance(t.next0, NumberToken)): 
-            val0 = (t.next0 if isinstance(t.next0, NumberToken) else None).get_source_text()
-            t1 = t.next0
-            if ((t1.next0 is not None and t1.next0.is_hiphen and not t1.is_whitespace_after) and isinstance(t1.next0.next0, NumberToken) and not t1.next0.is_whitespace_after): 
-                t1 = t1.next0.next0
+            t = t.next0_
+        elif (t.is_char_of("*#") and isinstance(t.next0_, NumberToken)): 
+            val0 = (t.next0_ if isinstance(t.next0_, NumberToken) else None).get_source_text()
+            t1 = t.next0_
+            if ((t1.next0_ is not None and t1.next0_.is_hiphen and not t1.is_whitespace_after) and isinstance(t1.next0_.next0_, NumberToken) and not t1.next0_.is_whitespace_after): 
+                t1 = t1.next0_.next0_
                 val0 += t1.get_source_text()
             if (len(val0) >= 3 and (len(val0) < 7)): 
-                return PhoneItemToken._new2282(t, t1, PhoneItemToken.PhoneItemType.ADDNUMBER, val0)
+                return PhoneItemToken._new2435(t, t1, PhoneItemToken.PhoneItemType.ADDNUMBER, val0)
         br = False
         if (t is not None and t.is_char('(')): 
             br = True
-            t = t.next0
+            t = t.next0_
         to = PhoneItemToken.__m_phone_termins.try_parse(t, TerminParseAttr.NO)
         if (to is None): 
             if (not br): 
@@ -221,32 +221,32 @@ class PhoneItemToken(MetaToken):
         elif (to.termin.tag is None): 
             return None
         else: 
-            t = to.end_token.next0
+            t = to.end_token.next0_
         if (t is None): 
             return None
         if (((t.is_value("НОМЕР", None) or t.is_value("N", None) or t.is_value("#", None)) or t.is_value("№", None) or t.is_value("NUMBER", None)) or ((t.is_char('+') and br))): 
-            t = t.next0
+            t = t.next0_
         elif (to is None and not br): 
             return None
         elif (t.is_value("НОМ", None) or t.is_value("ТЕЛ", None)): 
-            t = t.next0
+            t = t.next0_
             if (t is not None and t.is_char('.')): 
-                t = t.next0
+                t = t.next0_
         if (t is not None and t.is_char_of(":,") and not t.is_newline_after): 
-            t = t.next0
+            t = t.next0_
         if (not ((isinstance(t, NumberToken)))): 
             return None
         val = (t if isinstance(t, NumberToken) else None).get_source_text()
-        if ((t.next0 is not None and t.next0.is_hiphen and not t.is_whitespace_after) and isinstance(t.next0.next0, NumberToken)): 
-            val += t.next0.next0.get_source_text()
-            t = t.next0.next0
+        if ((t.next0_ is not None and t.next0_.is_hiphen and not t.is_whitespace_after) and isinstance(t.next0_.next0_, NumberToken)): 
+            val += t.next0_.next0_.get_source_text()
+            t = t.next0_.next0_
         if ((len(val) < 2) or len(val) > 7): 
             return None
         if (br): 
-            if (t.next0 is None or not t.next0.is_char(')')): 
+            if (t.next0_ is None or not t.next0_.is_char(')')): 
                 return None
-            t = t.next0
-        res = PhoneItemToken._new2282(t0, t, PhoneItemToken.PhoneItemType.ADDNUMBER, val)
+            t = t.next0_
+        res = PhoneItemToken._new2435(t0, t, PhoneItemToken.PhoneItemType.ADDNUMBER, val)
         return res
     
     @staticmethod
@@ -268,7 +268,7 @@ class PhoneItemToken(MetaToken):
         br = False
         if (p is None and t0.is_char('(')): 
             br = True
-            p = PhoneItemToken.try_attach(t0.next0)
+            p = PhoneItemToken.try_attach(t0.next0_)
             if (p is not None): 
                 p.begin_token = t0
                 p.is_in_brackets = True
@@ -278,11 +278,11 @@ class PhoneItemToken(MetaToken):
             return None
         res = list()
         res.append(p)
-        t = p.end_token.next0
-        first_pass2877 = True
+        t = p.end_token.next0_
+        first_pass3045 = True
         while True:
-            if first_pass2877: first_pass2877 = False
-            else: t = t.next0
+            if first_pass3045: first_pass3045 = False
+            else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
                 if (len(res) == 1 and res[0].item_type == PhoneItemToken.PhoneItemType.PREFIX): 
@@ -297,18 +297,18 @@ class PhoneItemToken(MetaToken):
                 if (t.is_newline_before): 
                     break
                 if (p.item_type == PhoneItemToken.PhoneItemType.PREFIX and ((t.is_char_of("\\/") or t.is_hiphen))): 
-                    p0 = PhoneItemToken.try_attach(t.next0)
+                    p0 = PhoneItemToken.try_attach(t.next0_)
                     if (p0 is not None and p0.item_type == PhoneItemToken.PhoneItemType.PREFIX): 
                         p.end_token = p0.end_token
                         t = p.end_token
                         continue
-                if ((res[0].item_type == PhoneItemToken.PhoneItemType.PREFIX and t.is_char_of("\\/") and not t.is_whitespace_after) and not t.is_whitespace_before and isinstance(t.next0, NumberToken)): 
+                if ((res[0].item_type == PhoneItemToken.PhoneItemType.PREFIX and t.is_char_of("\\/") and not t.is_whitespace_after) and not t.is_whitespace_before and isinstance(t.next0_, NumberToken)): 
                     sum_num = 0
                     for pp in res: 
                         if (pp.item_type == PhoneItemToken.PhoneItemType.CITYCODE or pp.item_type == PhoneItemToken.PhoneItemType.COUNTRYCODE or pp.item_type == PhoneItemToken.PhoneItemType.NUMBER): 
                             sum_num += len(pp.value)
                     if (sum_num < 7): 
-                        tt = t.next0
+                        tt = t.next0_
                         while tt is not None: 
                             if (tt.is_whitespace_before): 
                                 break
@@ -318,7 +318,7 @@ class PhoneItemToken(MetaToken):
                                 pass
                             else: 
                                 break
-                            tt = tt.next0
+                            tt = tt.next0_
                         if (sum_num == 10 or sum_num == 11): 
                             continue
                 if (p0 is None): 
@@ -340,7 +340,7 @@ class PhoneItemToken(MetaToken):
                 p.item_type = PhoneItemToken.PhoneItemType.CITYCODE
             p = p0
             if (p.item_type == PhoneItemToken.PhoneItemType.NUMBER and res[len(res) - 1].item_type == PhoneItemToken.PhoneItemType.NUMBER): 
-                res.append(PhoneItemToken._new2282(t, t, PhoneItemToken.PhoneItemType.DELIM, " "))
+                res.append(PhoneItemToken._new2435(t, t, PhoneItemToken.PhoneItemType.DELIM, " "))
             if (br): 
                 p.is_in_brackets = True
             res.append(p)
@@ -358,8 +358,8 @@ class PhoneItemToken(MetaToken):
                 del res[i + 1]
                 i -= 1
             i += 1
-        if ((len(res) > 1 and res[0].is_in_brackets and res[0].item_type == PhoneItemToken.PhoneItemType.PREFIX) and res[len(res) - 1].end_token.next0 is not None and res[len(res) - 1].end_token.next0.is_char(')')): 
-            res[len(res) - 1].end_token = res[len(res) - 1].end_token.next0
+        if ((len(res) > 1 and res[0].is_in_brackets and res[0].item_type == PhoneItemToken.PhoneItemType.PREFIX) and res[len(res) - 1].end_token.next0_ is not None and res[len(res) - 1].end_token.next0_.is_char(')')): 
+            res[len(res) - 1].end_token = res[len(res) - 1].end_token.next0_
         if (res[0].item_type == PhoneItemToken.PhoneItemType.PREFIX): 
             i = 2
             while i < (len(res) - 1): 
@@ -374,8 +374,8 @@ class PhoneItemToken(MetaToken):
         from pullenti.ner.NumberToken import NumberToken
         if (t0 is None): 
             return None
-        if (t0.is_char_of("\\/") and isinstance(t0.next0, NumberToken) and (t0.next0.end_char - t0.next0.begin_char) <= 1): 
-            pli1 = PhoneItemToken.try_attach_all(t0.next0)
+        if (t0.is_char_of("\\/") and isinstance(t0.next0_, NumberToken) and (t0.next0_.end_char - t0.next0_.begin_char) <= 1): 
+            pli1 = PhoneItemToken.try_attach_all(t0.next0_)
             if (pli1 is not None and len(pli1) > 1): 
                 if (pli1[len(pli1) - 1].item_type == PhoneItemToken.PhoneItemType.DELIM): 
                     del pli1[len(pli1) - 1]
@@ -394,21 +394,21 @@ class PhoneItemToken(MetaToken):
                             num += p1.value
                     else: ii = len(pli1)
                     if (ii >= len(pli1)): 
-                        return PhoneItemToken._new2282(t0, pli1[len(pli1) - 1].end_token, PhoneItemToken.PhoneItemType.ALT, num)
-            return PhoneItemToken._new2282(t0, t0.next0, PhoneItemToken.PhoneItemType.ALT, t0.next0.get_source_text())
-        if (t0.is_hiphen and isinstance(t0.next0, NumberToken) and (t0.next0.end_char - t0.next0.begin_char) <= 1): 
-            t1 = t0.next0.next0
+                        return PhoneItemToken._new2435(t0, pli1[len(pli1) - 1].end_token, PhoneItemToken.PhoneItemType.ALT, num)
+            return PhoneItemToken._new2435(t0, t0.next0_, PhoneItemToken.PhoneItemType.ALT, t0.next0_.get_source_text())
+        if (t0.is_hiphen and isinstance(t0.next0_, NumberToken) and (t0.next0_.end_char - t0.next0_.begin_char) <= 1): 
+            t1 = t0.next0_.next0_
             ok = False
             if (t1 is None): 
                 ok = True
             elif (t1.is_newline_before or t1.is_char_of(",.")): 
                 ok = True
             if (ok): 
-                return PhoneItemToken._new2282(t0, t0.next0, PhoneItemToken.PhoneItemType.ALT, t0.next0.get_source_text())
-        if ((t0.is_char('(') and isinstance(t0.next0, NumberToken) and (t0.next0.end_char - t0.next0.begin_char) == 1) and t0.next0.next0 is not None and t0.next0.next0.is_char(')')): 
-            return PhoneItemToken._new2282(t0, t0.next0.next0, PhoneItemToken.PhoneItemType.ALT, t0.next0.get_source_text())
-        if ((t0.is_char_of("/-") and isinstance(t0.next0, NumberToken) and ph0._m_template is not None) and LanguageHelper.ends_with(ph0._m_template, str(((t0.next0.end_char - t0.next0.begin_char) + 1)))): 
-            return PhoneItemToken._new2282(t0, t0.next0, PhoneItemToken.PhoneItemType.ALT, t0.next0.get_source_text())
+                return PhoneItemToken._new2435(t0, t0.next0_, PhoneItemToken.PhoneItemType.ALT, t0.next0_.get_source_text())
+        if ((t0.is_char('(') and isinstance(t0.next0_, NumberToken) and (t0.next0_.end_char - t0.next0_.begin_char) == 1) and t0.next0_.next0_ is not None and t0.next0_.next0_.is_char(')')): 
+            return PhoneItemToken._new2435(t0, t0.next0_.next0_, PhoneItemToken.PhoneItemType.ALT, t0.next0_.get_source_text())
+        if ((t0.is_char_of("/-") and isinstance(t0.next0_, NumberToken) and ph0._m_template is not None) and LanguageHelper.ends_with(ph0._m_template, str(((t0.next0_.end_char - t0.next0_.begin_char) + 1)))): 
+            return PhoneItemToken._new2435(t0, t0.next0_, PhoneItemToken.PhoneItemType.ALT, t0.next0_.get_source_text())
         return None
     
     @staticmethod
@@ -430,17 +430,17 @@ class PhoneItemToken(MetaToken):
         t.add_variant("ТЛФН", False)
         t.add_abridge("Т/Ф")
         PhoneItemToken.__m_phone_termins.add(t)
-        t = Termin._new2299("МОБИЛЬНЫЙ", MorphLang.RU, True, PhoneKind.MOBILE)
+        t = Termin._new2452("МОБИЛЬНЫЙ", MorphLang.RU, True, PhoneKind.MOBILE)
         t.add_abridge("МОБ.")
         t.add_abridge("Т.М.")
         t.add_abridge("М.Т.")
         t.add_abridge("М.")
         PhoneItemToken.__m_phone_termins.add(t)
-        t = Termin._new2299("СОТОВЫЙ", MorphLang.RU, True, PhoneKind.MOBILE)
+        t = Termin._new2452("СОТОВЫЙ", MorphLang.RU, True, PhoneKind.MOBILE)
         t.add_abridge("СОТ.")
         t.add_abridge("CELL.")
         PhoneItemToken.__m_phone_termins.add(t)
-        t = Termin._new2299("РАБОЧИЙ", MorphLang.RU, True, PhoneKind.WORK)
+        t = Termin._new2452("РАБОЧИЙ", MorphLang.RU, True, PhoneKind.WORK)
         t.add_abridge("РАБ.")
         t.add_abridge("Т.Р.")
         t.add_abridge("Р.Т.")
@@ -449,38 +449,38 @@ class PhoneItemToken(MetaToken):
         t.add_abridge("ГОР.")
         t.add_abridge("Г.Т.")
         PhoneItemToken.__m_phone_termins.add(t)
-        t = Termin._new2299("ДОМАШНИЙ", MorphLang.RU, True, PhoneKind.HOME)
+        t = Termin._new2452("ДОМАШНИЙ", MorphLang.RU, True, PhoneKind.HOME)
         t.add_abridge("ДОМ.")
         PhoneItemToken.__m_phone_termins.add(t)
         t = Termin("КОНТАКТНЫЙ", MorphLang.RU, True)
         PhoneItemToken.__m_phone_termins.add(t)
         t = Termin("МНОГОКАНАЛЬНЫЙ", MorphLang.RU, True)
         PhoneItemToken.__m_phone_termins.add(t)
-        t = Termin._new2299("ФАКС", MorphLang.RU, True, PhoneKind.FAX)
+        t = Termin._new2452("ФАКС", MorphLang.RU, True, PhoneKind.FAX)
         t.add_abridge("Ф.")
         t.add_abridge("Т/ФАКС")
         t.add_abridge("ТЕЛ/ФАКС")
         PhoneItemToken.__m_phone_termins.add(t)
         t = Termin("ЗВОНИТЬ", MorphLang.RU, True)
         PhoneItemToken.__m_phone_termins.add(t)
-        t = Termin._new2299("ПРИЕМНАЯ", MorphLang.RU, True, PhoneKind.WORK)
+        t = Termin._new2452("ПРИЕМНАЯ", MorphLang.RU, True, PhoneKind.WORK)
         PhoneItemToken.__m_phone_termins.add(t)
         t = Termin("PHONE", MorphLang.EN, True)
         t.add_abridge("PH.")
         t.add_variant("TELEFON", True)
         PhoneItemToken.__m_phone_termins.add(t)
-        t = Termin._new2299("DIRECT LINE", MorphLang.EN, True, PhoneKind.WORK)
+        t = Termin._new2452("DIRECT LINE", MorphLang.EN, True, PhoneKind.WORK)
         t.add_variant("DIRECT LINES", True)
         PhoneItemToken.__m_phone_termins.add(t)
-        t = Termin._new2299("MOBILE", MorphLang.EN, True, PhoneKind.MOBILE)
+        t = Termin._new2452("MOBILE", MorphLang.EN, True, PhoneKind.MOBILE)
         t.add_abridge("MOB.")
         t.add_variant("MOBIL", True)
         t.add_abridge("M.")
         PhoneItemToken.__m_phone_termins.add(t)
-        t = Termin._new2299("FAX", MorphLang.EN, True, PhoneKind.FAX)
+        t = Termin._new2452("FAX", MorphLang.EN, True, PhoneKind.FAX)
         t.add_abridge("F.")
         PhoneItemToken.__m_phone_termins.add(t)
-        t = Termin._new2299("HOME", MorphLang.EN, True, PhoneKind.HOME)
+        t = Termin._new2452("HOME", MorphLang.EN, True, PhoneKind.HOME)
         PhoneItemToken.__m_phone_termins.add(t)
         t = Termin("CALL", MorphLang.EN, True)
         t.add_variant("SEDIU", True)
@@ -519,14 +519,14 @@ class PhoneItemToken(MetaToken):
 
     
     @staticmethod
-    def _new2282(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PhoneItemType', _arg4 : str) -> 'PhoneItemToken':
+    def _new2435(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PhoneItemType', _arg4 : str) -> 'PhoneItemToken':
         res = PhoneItemToken(_arg1, _arg2)
         res.item_type = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new2287(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PhoneItemType', _arg4 : str, _arg5 : bool) -> 'PhoneItemToken':
+    def _new2440(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PhoneItemType', _arg4 : str, _arg5 : bool) -> 'PhoneItemToken':
         res = PhoneItemToken(_arg1, _arg2)
         res.item_type = _arg3
         res.value = _arg4
@@ -534,7 +534,7 @@ class PhoneItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2288(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PhoneItemType', _arg4 : bool, _arg5 : str) -> 'PhoneItemToken':
+    def _new2441(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PhoneItemType', _arg4 : bool, _arg5 : str) -> 'PhoneItemToken':
         res = PhoneItemToken(_arg1, _arg2)
         res.item_type = _arg3
         res.is_in_brackets = _arg4
@@ -542,7 +542,7 @@ class PhoneItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2290(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PhoneItemType', _arg4 : str, _arg5 : 'PhoneKind') -> 'PhoneItemToken':
+    def _new2443(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PhoneItemType', _arg4 : str, _arg5 : 'PhoneKind') -> 'PhoneItemToken':
         res = PhoneItemToken(_arg1, _arg2)
         res.item_type = _arg3
         res.value = _arg4

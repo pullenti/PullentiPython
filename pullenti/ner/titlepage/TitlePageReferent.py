@@ -56,8 +56,8 @@ class TitlePageReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         res = Utils.newStringIO(None)
-        str0 = self.get_string_value(TitlePageReferent.ATTR_NAME)
-        print("\"{0}\"".format(Utils.ifNotNull(str0, "?")), end="", file=res, flush=True)
+        str0_ = self.get_string_value(TitlePageReferent.ATTR_NAME)
+        print("\"{0}\"".format(Utils.ifNotNull(str0_, "?")), end="", file=res, flush=True)
         if (not short_variant): 
             for r in self.slots: 
                 if (r.type_name == TitlePageReferent.ATTR_TYPE): 
@@ -105,7 +105,7 @@ class TitlePageReferent(Referent):
         if (BracketHelper.can_be_start_of_sequence(begin, True, False)): 
             br = BracketHelper.try_parse(begin, BracketParseAttr.NO, 100)
             if (br is not None and br.end_token == end): 
-                begin = begin.next0
+                begin = begin.next0_
                 end = end.previous
         val = MiscHelper.get_text_value(begin, end, Utils.valToEnum(GetTextAttr.KEEPREGISTER | GetTextAttr.KEEPQUOTES, GetTextAttr))
         if (val is None): 
@@ -149,13 +149,13 @@ class TitlePageReferent(Referent):
         return value
     
     @property
-    def org(self) -> 'OrganizationReferent':
+    def org0_(self) -> 'OrganizationReferent':
         """ Организация """
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+        from pullenti.ner._org.OrganizationReferent import OrganizationReferent
         return (self.get_value(TitlePageReferent.ATTR_ORG) if isinstance(self.get_value(TitlePageReferent.ATTR_ORG), OrganizationReferent) else None)
     
-    @org.setter
-    def org(self, value) -> 'OrganizationReferent':
+    @org0_.setter
+    def org0_(self, value) -> 'OrganizationReferent':
         self.add_slot(TitlePageReferent.ATTR_ORG, value, True, 0)
         return value
     

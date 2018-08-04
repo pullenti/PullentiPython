@@ -30,10 +30,10 @@ class TerrAttachHelper:
             return None
         if (li[0].is_doubt): 
             ok = False
-            if (CityAttachHelper.check_city_after(li[0].end_token.next0)): 
+            if (CityAttachHelper.check_city_after(li[0].end_token.next0_)): 
                 ok = True
             else: 
-                ali = AddressItemToken.try_parse_list(li[0].end_token.next0, None, 2)
+                ali = AddressItemToken.try_parse_list(li[0].end_token.next0_, None, 2)
                 if (ali is not None and len(ali) > 0 and ali[0].typ == AddressItemToken.ItemType.STREET): 
                     ok = True
             if (not ok): 
@@ -53,12 +53,12 @@ class TerrAttachHelper:
         from pullenti.ner.geo.GeoReferent import GeoReferent
         from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
         aid = None
-        t = li[0].end_token.next0
+        t = li[0].end_token.next0_
         if (t is None): 
             return None
         tt = t
         if (BracketHelper.can_be_start_of_sequence(tt, True, False)): 
-            tt = tt.next0
+            tt = tt.next0_
         if (len(li) > 1): 
             tmp = list(li)
             del tmp[0]
@@ -80,8 +80,8 @@ class TerrAttachHelper:
                 return None
             rt.begin_token = li[0].begin_token
             t1 = rt.end_token
-            if (tt != t and BracketHelper.can_be_end_of_sequence(t1.next0, False, None, False)): 
-                t1 = t1.next0
+            if (tt != t and BracketHelper.can_be_end_of_sequence(t1.next0_, False, None, False)): 
+                t1 = t1.next0_
                 rt.end_token = t1
             return rt
         return None
@@ -148,7 +148,7 @@ class TerrAttachHelper:
                                 if ((li[k].onto_item.referent if isinstance(li[k].onto_item.referent, GeoReferent) else None).is_state): 
                                     break
                             ok = False
-                            tt = li[k].end_token.next0
+                            tt = li[k].end_token.next0_
                             if (tt is None): 
                                 ok = True
                             elif (tt.is_char_of(",.")): 
@@ -182,8 +182,8 @@ class TerrAttachHelper:
                         if (geo_ is None): 
                             break
                         if (ex_obj.is_adjective and ((li[k].termin_item.canonic_text == "СОЮЗ" or li[k].termin_item.canonic_text == "ФЕДЕРАЦИЯ"))): 
-                            str0 = str(ex_obj.onto_item)
-                            if (not li[k].termin_item.canonic_text in str0): 
+                            str0_ = str(ex_obj.onto_item)
+                            if (not li[k].termin_item.canonic_text in str0_): 
                                 return None
                         if (li[k].termin_item.canonic_text == "РАЙОН" or li[k].termin_item.canonic_text == "ОКРУГ" or li[k].termin_item.canonic_text == "КРАЙ"): 
                             tmp = Utils.newStringIO(None)
@@ -200,7 +200,7 @@ class TerrAttachHelper:
                     noun = li[k]
                     if (k == 0): 
                         tt = TerrItemToken.try_parse(li[k].begin_token.previous, None, True, False)
-                        if (tt is not None and tt.morph.class0.is_adjective): 
+                        if (tt is not None and tt.morph.class0_.is_adjective): 
                             adj_terr_before = True
             else: 
                 if (ex_obj is not None): 
@@ -215,19 +215,19 @@ class TerrAttachHelper:
         morph_ = None
         if (ex_obj is not None): 
             if (ex_obj.is_adjective and not ex_obj.morph.language.is_en and noun is None): 
-                if (attach_always and ex_obj.end_token.next0 is not None): 
+                if (attach_always and ex_obj.end_token.next0_ is not None): 
                     npt = NounPhraseHelper.try_parse(ex_obj.begin_token, NounPhraseParseAttr.NO, 0)
-                    if (ex_obj.end_token.next0.is_comma_and): 
+                    if (ex_obj.end_token.next0_.is_comma_and): 
                         pass
                     elif (npt is None): 
                         pass
                     else: 
-                        str0 = StreetItemToken.try_parse(ex_obj.end_token.next0, None, False, None, False)
-                        if (str0 is not None): 
-                            if (str0.typ == StreetItemType.NOUN and str0.end_token == npt.end_token): 
+                        str0_ = StreetItemToken.try_parse(ex_obj.end_token.next0_, None, False, None, False)
+                        if (str0_ is not None): 
+                            if (str0_.typ == StreetItemType.NOUN and str0_.end_token == npt.end_token): 
                                 return None
                 else: 
-                    cit = CityItemToken.try_parse(ex_obj.end_token.next0, None, False, None)
+                    cit = CityItemToken.try_parse(ex_obj.end_token.next0_, None, False, None)
                     if (cit is not None and ((cit.typ == CityItemToken.ItemType.NOUN or cit.typ == CityItemToken.ItemType.CITY))): 
                         npt = NounPhraseHelper.try_parse(ex_obj.begin_token, NounPhraseParseAttr.NO, 0)
                         if (npt is not None and npt.end_token == cit.end_token): 
@@ -244,10 +244,10 @@ class TerrAttachHelper:
                     return None
             if (ex_obj.is_doubt and noun is None): 
                 ok2 = False
-                if (TerrAttachHelper.__can_be_geo_after(ex_obj.end_token.next0)): 
+                if (TerrAttachHelper.__can_be_geo_after(ex_obj.end_token.next0_)): 
                     ok2 = True
                 elif (not ex_obj.can_be_surname and not ex_obj.can_be_city): 
-                    if ((ex_obj.end_token.next0 is not None and ex_obj.end_token.next0.is_char(')') and ex_obj.begin_token.previous is not None) and ex_obj.begin_token.previous.is_char('(')): 
+                    if ((ex_obj.end_token.next0_ is not None and ex_obj.end_token.next0_.is_char(')') and ex_obj.begin_token.previous is not None) and ex_obj.begin_token.previous.is_char('(')): 
                         ok2 = True
                     elif (ex_obj.chars.is_latin_letter and ex_obj.begin_token.previous is not None): 
                         if (ex_obj.begin_token.previous.is_value("IN", None)): 
@@ -294,7 +294,7 @@ class TerrAttachHelper:
                     if (MiscHelper.is_exists_in_dictionary(new_name.begin_token, new_name.end_token, MorphClass.ADJECTIVE | MorphClass.PRONOUN | MorphClass.VERB)): 
                         if (noun.begin_token != new_name.begin_token): 
                             if (geo_before is None): 
-                                if (len(li) == 2 and TerrAttachHelper.__can_be_geo_after(li[1].end_token.next0)): 
+                                if (len(li) == 2 and TerrAttachHelper.__can_be_geo_after(li[1].end_token.next0_)): 
                                     pass
                                 elif (new_name.is_geo_in_dictionary): 
                                     pass
@@ -327,7 +327,7 @@ class TerrAttachHelper:
                             if (cit.typ == CityItemToken.ItemType.CITY or cit.typ == CityItemToken.ItemType.NOUN): 
                                 ok = True
                     elif (len(li) == 2): 
-                        ok = TerrAttachHelper.__can_be_geo_after(li[len(li) - 1].end_token.next0)
+                        ok = TerrAttachHelper.__can_be_geo_after(li[len(li) - 1].end_token.next0_)
                     if (not ok and not li[0].is_newline_before and not li[0].chars.is_all_lower): 
                         rt00 = li[0].kit.process_referent("PERSONPROPERTY", li[0].begin_token.previous)
                         if (rt00 is not None): 
@@ -340,8 +340,8 @@ class TerrAttachHelper:
                     if (not ok and not attach_always): 
                         if (MiscHelper.is_exists_in_dictionary(new_name.begin_token, new_name.end_token, MorphClass.ADJECTIVE | MorphClass.PRONOUN | MorphClass.VERB)): 
                             if (exists is not None): 
-                                for e0 in exists: 
-                                    if (e0.find_slot(GeoReferent.ATTR_NAME, name, True) is not None): 
+                                for e0_ in exists: 
+                                    if (e0_.find_slot(GeoReferent.ATTR_NAME, name, True) is not None): 
                                         ok = True
                                         break
                             if (not ok): 
@@ -381,20 +381,20 @@ class TerrAttachHelper:
                     if (npt is not None and npt.end_token == noun.end_token): 
                         alt_name = "{0} {1}".format(npt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False), name)
         else: 
-            if ((len(li) == 1 and noun is not None and noun.end_token.next0 is not None) and isinstance(noun.end_token.next0.get_referent(), GeoReferent)): 
-                g = (noun.end_token.next0.get_referent() if isinstance(noun.end_token.next0.get_referent(), GeoReferent) else None)
+            if ((len(li) == 1 and noun is not None and noun.end_token.next0_ is not None) and isinstance(noun.end_token.next0_.get_referent(), GeoReferent)): 
+                g = (noun.end_token.next0_.get_referent() if isinstance(noun.end_token.next0_.get_referent(), GeoReferent) else None)
                 if (noun.termin_item is not None): 
                     if (g.find_slot(GeoReferent.ATTR_TYPE, noun.termin_item.canonic_text.lower(), True) is not None): 
-                        return ReferentToken._new695(g, noun.begin_token, noun.end_token.next0, noun.begin_token.morph)
-            if ((len(li) == 1 and noun == li[0] and li[0].termin_item is not None) and TerrItemToken.try_parse(li[0].end_token.next0, None, True, False) is None and TerrItemToken.try_parse(li[0].begin_token.previous, None, True, False) is None): 
+                        return ReferentToken._new735(g, noun.begin_token, noun.end_token.next0_, noun.begin_token.morph)
+            if ((len(li) == 1 and noun == li[0] and li[0].termin_item is not None) and TerrItemToken.try_parse(li[0].end_token.next0_, None, True, False) is None and TerrItemToken.try_parse(li[0].begin_token.previous, None, True, False) is None): 
                 if (li[0].morph.number == MorphNumber.PLURAL): 
                     return None
                 cou = 0
-                str0 = li[0].termin_item.canonic_text.lower()
+                str0_ = li[0].termin_item.canonic_text.lower()
                 tt = li[0].begin_token.previous
-                first_pass2689 = True
+                first_pass2849 = True
                 while True:
-                    if first_pass2689: first_pass2689 = False
+                    if first_pass2849: first_pass2849 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.is_newline_after): 
@@ -408,11 +408,11 @@ class TerrAttachHelper:
                         continue
                     ok = True
                     cou = 0
-                    tt = li[0].end_token.next0
-                    first_pass2690 = True
+                    tt = li[0].end_token.next0_
+                    first_pass2850 = True
                     while True:
-                        if first_pass2690: first_pass2690 = False
-                        else: tt = tt.next0
+                        if first_pass2850: first_pass2850 = False
+                        else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.is_newline_before): 
                             cou += 10
@@ -428,8 +428,8 @@ class TerrAttachHelper:
                     if (ok): 
                         ii = 0
                         while g is not None and (ii < 3): 
-                            if (g.find_slot(GeoReferent.ATTR_TYPE, str0, True) is not None): 
-                                return ReferentToken._new695(g, li[0].begin_token, li[0].end_token, noun.begin_token.morph)
+                            if (g.find_slot(GeoReferent.ATTR_TYPE, str0_, True) is not None): 
+                                return ReferentToken._new735(g, li[0].begin_token, li[0].end_token, noun.begin_token.morph)
                             g = g.higher; ii += 1
                     break
             return None
@@ -460,6 +460,8 @@ class TerrAttachHelper:
                 elif (noun.termin_item.acronym == "МО" and add_noun is not None): 
                     ter._add_typ(add_noun.termin_item.canonic_text)
                 else: 
+                    if (noun.termin_item.canonic_text == "СОЮЗ" and ex_obj is not None and ex_obj.end_char > noun.end_char): 
+                        return ReferentToken._new735(ter, ex_obj.begin_token, ex_obj.end_token, ex_obj.morph)
                     ter._add_typ(noun.termin_item.canonic_text)
                     if (noun.termin_item.is_region and ter.is_state): 
                         ter._add_typ_reg(li[0].kit.base_language)
@@ -472,7 +474,7 @@ class TerrAttachHelper:
                 if (full_name is not None): 
                     ter._add_name(full_name)
         res = ReferentToken(ter, li[0].begin_token, li[k - 1].end_token)
-        if (noun is not None and noun.morph.class0.is_noun): 
+        if (noun is not None and noun.morph.class0_.is_noun): 
             res.morph = noun.morph
         else: 
             res.morph = MorphCollection()
@@ -481,12 +483,12 @@ class TerrAttachHelper:
                 for v in li[ii].morph.items: 
                     bi = MorphBaseInfo(v)
                     if (noun is not None): 
-                        if (bi.class0.is_adjective): 
-                            bi.class0 = MorphClass.NOUN
+                        if (bi.class0_.is_adjective): 
+                            bi.class0_ = MorphClass.NOUN
                     res.morph.add_item(bi)
                 ii += 1
         if (li[0].termin_item is not None and li[0].termin_item.is_specific_prefix): 
-            res.begin_token = li[0].end_token.next0
+            res.begin_token = li[0].end_token.next0_
         if (isinstance(res.begin_token.previous, TextToken) and (res.whitespaces_before_count < 2)): 
             tt = (res.begin_token.previous if isinstance(res.begin_token.previous, TextToken) else None)
             if (tt.term == "АР"): 
@@ -501,7 +503,7 @@ class TerrAttachHelper:
         from pullenti.ner.geo.GeoReferent import GeoReferent
         from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         if (tt is not None and tt.is_comma): 
-            tt = tt.next0
+            tt = tt.next0_
         if (tt is None): 
             return False
         if (isinstance(tt.get_referent(), GeoReferent)): 
@@ -537,8 +539,8 @@ class TerrAttachHelper:
         g = (tok.termin.tag if isinstance(tok.termin.tag, GeoReferent) else None)
         if (g is None): 
             return None
-        if (tok.end_token.next0 is not None and tok.end_token.next0.is_char('.')): 
-            tok.end_token = tok.end_token.next0
+        if (tok.end_token.next0_ is not None and tok.end_token.next0_.is_char('.')): 
+            tok.end_token = tok.end_token.next0_
         gg = g.clone()
         gg.occurrence.clear()
         return ReferentToken(gg, tok.begin_token, tok.end_token)

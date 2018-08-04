@@ -26,12 +26,12 @@ class MiscLocationHelper:
         if (t is None): 
             return False
         tt = t.previous
-        first_pass2687 = True
+        first_pass2847 = True
         while True:
-            if first_pass2687: first_pass2687 = False
+            if first_pass2847: first_pass2847 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
-            if ((tt.is_char_of(",.;:") or tt.is_hiphen or tt.is_and) or tt.morph.class0.is_conjunction or tt.morph.class0.is_preposition): 
+            if ((tt.is_char_of(",.;:") or tt.is_hiphen or tt.is_and) or tt.morph.class0_.is_conjunction or tt.morph.class0_.is_preposition): 
                 continue
             if (tt.is_value("ТЕРРИТОРИЯ", "ТЕРИТОРІЯ")): 
                 continue
@@ -57,13 +57,13 @@ class MiscLocationHelper:
         from pullenti.ner.address.StreetReferent import StreetReferent
         if (t is None): 
             return False
-        tt = t.next0
-        first_pass2688 = True
+        tt = t.next0_
+        first_pass2848 = True
         while True:
-            if first_pass2688: first_pass2688 = False
-            else: tt = tt.next0
+            if first_pass2848: first_pass2848 = False
+            else: tt = tt.next0_
             if (not (tt is not None)): break
-            if ((tt.is_char_of(",.;") or tt.is_hiphen or tt.morph.class0.is_conjunction) or tt.morph.class0.is_preposition): 
+            if ((tt.is_char_of(",.;") or tt.is_hiphen or tt.morph.class0_.is_conjunction) or tt.morph.class0_.is_preposition): 
                 continue
             if (tt.is_value("ТЕРРИТОРИЯ", "ТЕРИТОРІЯ")): 
                 continue
@@ -77,7 +77,7 @@ class MiscLocationHelper:
     
     @staticmethod
     def check_near_before(t : 'Token') -> 'Token':
-        if (t is None or not t.morph.class0.is_preposition): 
+        if (t is None or not t.morph.class0_.is_preposition): 
             return None
         if (t.is_value("У", None) or t.is_value("ОКОЛО", None) or t.is_value("ВБЛИЗИ", None)): 
             return t
@@ -281,10 +281,10 @@ class MiscLocationHelper:
         from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         from pullenti.ner.geo.GeoReferent import GeoReferent
         res = None
-        inoutarg1092 = RefOutArgWrapper(None)
-        inoutres1093 = Utils.tryGetValue(MiscLocationHelper.__m_geo_ref_by_name, name, inoutarg1092)
-        res = inoutarg1092.value
-        if (inoutres1093): 
+        inoutarg1134 = RefOutArgWrapper(None)
+        inoutres1135 = Utils.tryGetValue(MiscLocationHelper.__m_geo_ref_by_name, name, inoutarg1134)
+        res = inoutarg1134.value
+        if (inoutres1135): 
             return res
         for r in TerrItemToken._m_all_states: 
             if (r.find_slot(None, name, True) is not None): 
@@ -310,12 +310,12 @@ class MiscLocationHelper:
         tok = MiscLocationHelper.__m_nords.try_parse(t, TerminParseAttr.NO)
         if (tok is None): 
             return None
-        res = MetaToken._new564(t, t, t.morph)
+        res = MetaToken._new590(t, t, t.morph)
         t1 = None
-        if ((t.next0 is not None and t.next0.is_hiphen and not t.is_whitespace_after) and not t.is_whitespace_after): 
-            t1 = t.next0.next0
-        elif (t.morph.class0.is_adjective and (t.whitespaces_after_count < 2)): 
-            t1 = t.next0
+        if ((t.next0_ is not None and t.next0_.is_hiphen and not t.is_whitespace_after) and not t.is_whitespace_after): 
+            t1 = t.next0_.next0_
+        elif (t.morph.class0_.is_adjective and (t.whitespaces_after_count < 2)): 
+            t1 = t.next0_
         if (t1 is not None): 
             tok = MiscLocationHelper.__m_nords.try_parse(t1, TerminParseAttr.NO)
             if ((tok) is not None): 
@@ -354,9 +354,9 @@ class MiscLocationHelper:
     _m_alpha3_2 = None
     
     @staticmethod
-    def _deflate(zip0 : bytearray) -> bytearray:
+    def _deflate(zip0_ : bytearray) -> bytearray:
         with io.BytesIO() as unzip: 
-            data = io.BytesIO(zip0)
+            data = io.BytesIO(zip0_)
             data.seek(0, io.SEEK_SET)
             MorphSerializeHelper.deflate_gzip(data, unzip)
             data.close()

@@ -37,10 +37,10 @@ class DenominationReferent(Referent):
         from pullenti.ner.TextToken import TextToken
         tmp = Utils.newStringIO(None)
         t = begin
-        first_pass2680 = True
+        first_pass2840 = True
         while True:
-            if first_pass2680: first_pass2680 = False
-            else: t = t.next0
+            if first_pass2840: first_pass2840 = False
+            else: t = t.next0_
             if (not (t is not None and t.previous != end)): break
             if (isinstance(t, NumberToken)): 
                 print(t.get_source_text(), end="", file=tmp)
@@ -97,15 +97,15 @@ class DenominationReferent(Referent):
                     ty = 3
             if (ty != ty0 or ty == 3): 
                 if (i > i0): 
-                    vars0 = list()
+                    vars0_ = list()
                     p = nam[i0 : i]
-                    DenominationReferent.__add_vars(p, vars0)
-                    items.append(vars0)
+                    DenominationReferent.__add_vars(p, vars0_)
+                    items.append(vars0_)
                     if (ty == 1 and ty0 == 2): 
-                        vars0 = list()
-                        vars0.append("")
-                        vars0.append("-")
-                        items.append(vars0)
+                        vars0_ = list()
+                        vars0_.append("")
+                        vars0_.append("-")
+                        items.append(vars0_)
                 i0 = i
                 ty0 = ty
             i += 1
@@ -139,24 +139,24 @@ class DenominationReferent(Referent):
         return self.__m_names
     
     @staticmethod
-    def __add_vars(str0 : str, vars0 : typing.List[str]) -> None:
-        vars0.append(str0)
+    def __add_vars(str0_ : str, vars0_ : typing.List[str]) -> None:
+        vars0_.append(str0_)
         for k in range(2):
             tmp = Utils.newStringIO(None)
-            for i in range(len(str0)):
-                inoutarg1047 = RefOutArgWrapper(None)
-                inoutres1048 = Utils.tryGetValue(DenominationReferent.__m_var_chars, str0[i], inoutarg1047)
-                v = inoutarg1047.value
-                if (not inoutres1048): 
+            for i in range(len(str0_)):
+                inoutarg1089 = RefOutArgWrapper(None)
+                inoutres1090 = Utils.tryGetValue(DenominationReferent.__m_var_chars, str0_[i], inoutarg1089)
+                v = inoutarg1089.value
+                if (not inoutres1090): 
                     break
                 if ((len(v) < 2) or v[k] == '-'): 
                     break
                 print(v[k], end="", file=tmp)
-            else: i = len(str0)
-            if (i >= len(str0)): 
+            else: i = len(str0_)
+            if (i >= len(str0_)): 
                 v = Utils.toStringStringIO(tmp)
-                if (not v in vars0): 
-                    vars0.append(v)
+                if (not v in vars0_): 
+                    vars0_.append(v)
     
     __m_var_chars = None
     

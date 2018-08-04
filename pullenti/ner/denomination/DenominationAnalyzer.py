@@ -46,15 +46,15 @@ class DenominationAnalyzer(Analyzer):
         return [MetaDenom._global_meta]
     
     @property
-    def images(self) -> typing.List['java.util.Map.Entry']:
+    def images(self) -> typing.List[tuple]:
         from pullenti.ner.denomination.internal.MetaDenom import MetaDenom
         res = dict()
         res[MetaDenom.DENOM_IMAGE_ID] = ResourceHelper.get_bytes("denom.png")
         return res
     
-    def create_referent(self, type0 : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.denomination.DenominationReferent import DenominationReferent
-        if (type0 == DenominationReferent.OBJ_TYPENAME): 
+        if (type0_ == DenominationReferent.OBJ_TYPENAME): 
             return DenominationReferent()
         return None
     
@@ -79,10 +79,10 @@ class DenominationAnalyzer(Analyzer):
             detect_new_denoms = False
             dt = datetime.datetime.now()
             t = kit.first_token
-            first_pass2678 = True
+            first_pass2838 = True
             while True:
-                if first_pass2678: first_pass2678 = False
-                else: t = t.next0
+                if first_pass2838: first_pass2838 = False
+                else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_whitespace_before): 
                     pass
@@ -136,19 +136,19 @@ class DenominationAnalyzer(Analyzer):
     def __can_be_start_of_denom(self, t : 'Token') -> bool:
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.NumberToken import NumberToken
-        if ((t is None or not t.chars.is_letter or t.next0 is None) or t.is_newline_after): 
+        if ((t is None or not t.chars.is_letter or t.next0_ is None) or t.is_newline_after): 
             return False
         if (not ((isinstance(t, TextToken)))): 
             return False
         if (t.length_char > 4): 
             return False
-        t = t.next0
+        t = t.next0_
         if (t.chars.is_letter): 
             return False
         if (isinstance(t, NumberToken)): 
             return True
         if (t.is_char_of("/\\") or t.is_hiphen): 
-            return isinstance(t.next0, NumberToken)
+            return isinstance(t.next0_, NumberToken)
         if (t.is_char_of("+*&^#@!_")): 
             return True
         return False
@@ -168,7 +168,7 @@ class DenominationAnalyzer(Analyzer):
         if (rt0 is not None): 
             return rt0
         if (t.chars.is_all_lower): 
-            if (not t.is_whitespace_after and isinstance(t.next0, NumberToken)): 
+            if (not t.is_whitespace_after and isinstance(t.next0_, NumberToken)): 
                 if (t.previous is None or t.is_whitespace_before or t.previous.is_char_of(",:")): 
                     pass
                 else: 
@@ -181,11 +181,11 @@ class DenominationAnalyzer(Analyzer):
         ok = True
         nums = 0
         chars = 0
-        w = t1.next0
-        first_pass2679 = True
+        w = t1.next0_
+        first_pass2839 = True
         while True:
-            if first_pass2679: first_pass2679 = False
-            else: w = w.next0
+            if first_pass2839: first_pass2839 = False
+            else: w = w.next0_
             if (not (w is not None)): break
             if (w.is_whitespace_before and not for_ontology): 
                 break
@@ -249,24 +249,24 @@ class DenominationAnalyzer(Analyzer):
         t0 = t
         nt = (t if isinstance(t, NumberToken) else None)
         if (nt is not None and nt.typ == NumberSpellingType.DIGIT and nt.value == 1): 
-            if (t.next0 is not None and t.next0.is_hiphen): 
-                t = t.next0
-            if (isinstance(t.next0, TextToken) and not t.next0.is_whitespace_before): 
-                if (t.next0.is_value("C", None) or t.next0.is_value("С", None)): 
+            if (t.next0_ is not None and t.next0_.is_hiphen): 
+                t = t.next0_
+            if (isinstance(t.next0_, TextToken) and not t.next0_.is_whitespace_before): 
+                if (t.next0_.is_value("C", None) or t.next0_.is_value("С", None)): 
                     dr = DenominationReferent()
                     dr.add_slot(DenominationReferent.ATTR_VALUE, "1С", False, 0)
                     dr.add_slot(DenominationReferent.ATTR_VALUE, "1C", False, 0)
-                    return ReferentToken(dr, t0, t.next0)
-        if (((nt is not None and nt.typ == NumberSpellingType.DIGIT and isinstance(t.next0, TextToken)) and not t.is_whitespace_after and not t.next0.chars.is_all_lower) and t.next0.chars.is_letter): 
+                    return ReferentToken(dr, t0, t.next0_)
+        if (((nt is not None and nt.typ == NumberSpellingType.DIGIT and isinstance(t.next0_, TextToken)) and not t.is_whitespace_after and not t.next0_.chars.is_all_lower) and t.next0_.chars.is_letter): 
             dr = DenominationReferent()
-            dr.add_slot(DenominationReferent.ATTR_VALUE, "{0}{1}".format(nt.get_source_text(), (t.next0 if isinstance(t.next0, TextToken) else None).term), False, 0)
-            return ReferentToken(dr, t0, t.next0)
+            dr.add_slot(DenominationReferent.ATTR_VALUE, "{0}{1}".format(nt.get_source_text(), (t.next0_ if isinstance(t.next0_, TextToken) else None).term), False, 0)
+            return ReferentToken(dr, t0, t.next0_)
         return None
     
     def __check_attach(self, begin : 'Token', end : 'Token') -> bool:
         from pullenti.ner.core.BracketHelper import BracketHelper
         t = begin
-        while t is not None and t != end.next0: 
+        while t is not None and t != end.next0_: 
             if (t != begin): 
                 co = t.whitespaces_before_count
                 if (co > 0): 
@@ -276,9 +276,9 @@ class DenominationAnalyzer(Analyzer):
                         return False
                     if (t.previous.chars.is_all_lower): 
                         return False
-            t = t.next0
-        if (not end.is_whitespace_after and end.next0 is not None): 
-            if (not end.next0.is_char_of(",;") and not BracketHelper.can_be_end_of_sequence(end.next0, False, None, False)): 
+            t = t.next0_
+        if (not end.is_whitespace_after and end.next0_ is not None): 
+            if (not end.next0_.is_char_of(",;") and not BracketHelper.can_be_end_of_sequence(end.next0_, False, None, False)): 
                 return False
         return True
     
