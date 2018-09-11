@@ -7,7 +7,7 @@ from setuptools import (
 
 setup(
     name='pullenti',
-    version='3.9',
+    version='3.10',
     description='Named entity recognition for russian language',
     url='http://pullenti.ru/',
     author='Konstantin Kuznetsov',
