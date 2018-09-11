@@ -1,10 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.NumberSpellingType import NumberSpellingType
@@ -106,9 +106,9 @@ class OrgItemEngItem(MetaToken):
         tok = None
         geo_ = None
         add_typ = None
-        first_pass2978 = True
+        first_pass3947 = True
         while True:
-            if first_pass2978: first_pass2978 = False
+            if first_pass3947: first_pass3947 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and t.whitespaces_before_count > 1): 
@@ -116,7 +116,7 @@ class OrgItemEngItem(MetaToken):
             if (t.is_char(')')): 
                 break
             if (t.is_char('(') and t.next0_ is not None): 
-                if (isinstance(t.next0_.get_referent(), GeoReferent) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
+                if ((isinstance(t.next0_.get_referent(), GeoReferent)) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
                     geo_ = (t.next0_.get_referent() if isinstance(t.next0_.get_referent(), GeoReferent) else None)
                     t = t.next0_.next0_
                     continue
@@ -125,7 +125,7 @@ class OrgItemEngItem(MetaToken):
                     add_typ = typ
                     t = typ.end_token.next0_
                     continue
-                if ((isinstance(t.next0_, TextToken) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')) and t.next0_.chars.is_capital_upper): 
+                if (((isinstance(t.next0_, TextToken)) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')) and t.next0_.chars.is_capital_upper): 
                     t = t.next0_.next0_
                     t1 = t
                     continue
@@ -206,8 +206,8 @@ class OrgItemEngItem(MetaToken):
                 alt_nam = nam
                 tai = None
                 if ((i2 + 1) < len(nam)): 
-                    tai = nam[i2 : ].strip()
-                nam = nam[0 : (i1)].strip()
+                    tai = nam[i2:].strip()
+                nam = nam[0:0+i1].strip()
                 if (tai is not None): 
                     nam = "{0} {1}".format(nam, tai)
         if (tok.is_bank): 

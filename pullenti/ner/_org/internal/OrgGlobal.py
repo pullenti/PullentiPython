@@ -1,13 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-import xml.etree.ElementTree
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+import xml.etree
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner._org.internal.ResourceHelper import ResourceHelper
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
 
@@ -59,12 +59,12 @@ class OrgGlobal:
                             elif (xx.tag == "abbr"): 
                                 abbr = Utils.getXmlInnerText(xx)
                             elif (xx.tag == "geo"): 
-                                inoutarg1630 = RefOutArgWrapper(None)
-                                inoutres1631 = Utils.tryGetValue(geos, Utils.getXmlInnerText(xx), inoutarg1630)
-                                geo_ = inoutarg1630.value
-                                if (not inoutres1631): 
+                                inoutarg1638 = RefOutArgWrapper(None)
+                                inoutres1639 = Utils.tryGetValue(geos, Utils.getXmlInnerText(xx), inoutarg1638)
+                                geo_ = inoutarg1638.value
+                                if (not inoutres1639): 
                                     ar = geo_proc.process(SourceOfAnalysis(Utils.getXmlInnerText(xx)), None, lang)
-                                    if (ar is not None and len(ar.entities) == 1 and isinstance(ar.entities[0], GeoReferent)): 
+                                    if (ar is not None and len(ar.entities) == 1 and (isinstance(ar.entities[0], GeoReferent))): 
                                         geo_ = (ar.entities[0] if isinstance(ar.entities[0], GeoReferent) else None)
                                         geos[Utils.getXmlInnerText(xx)] = geo_
                                     else: 

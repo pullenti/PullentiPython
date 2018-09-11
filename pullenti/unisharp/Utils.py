@@ -110,7 +110,7 @@ class Utils:
     def isNullOrEmpty(v):
         if(v is None): return True
         try:
-            if(len(v) == 0): return True;
+            if(len(v) == 0): return True
         except:
             pass
         return False
@@ -154,9 +154,19 @@ class Utils:
     def joinStrings(d, s):
         res = ""
         for ss in s:
-            if(len(res) > 0): res += d;
+            if(len(res) > 0): res += d
             res += ss
         return res
+
+    @staticmethod
+    def startsWithString(s, sub, ignoreCase = False):
+        if(not ignoreCase): return s.startswith(sub)
+        return s.upper().startswith(sub.upper())
+
+    @staticmethod
+    def endsWithString(s, sub, ignoreCase = False):
+        if(not ignoreCase): return s.endswith(sub)
+        return s.upper().endswith(sub.upper())
 
     @staticmethod
     def splitString(s, sep, ignoreEmpty = False):
@@ -164,7 +174,7 @@ class Utils:
         res = []
         i0 = 0
         for i in range(len(s)):
-            ch = s[i];
+            ch = s[i]
             if(isinstance(sep, list)):
                 if(not (ch in sep)): continue
             else:
@@ -172,7 +182,7 @@ class Utils:
                 
             if(i > i0): res.append(s[i0: i])
             else: 
-                if((not ignoreEmpty) and i > 0): res.append("");
+                if((not ignoreEmpty) and i > 0): res.append("")
             i0 = i + 1
         else: i = len(s)
         if(i > i0):
@@ -337,14 +347,20 @@ class Utils:
     @staticmethod
     def getResourceStream(di, name):
         try:
-            return pkg_resources.ResourceManager().resource_stream(di, name)
+            for rn in pkg_resources.ResourceManager().resource_listdir(di, ''):
+                fname = PurePath(rn).name
+                if(Utils.endsWithString(name, fname, True)):
+                    return pkg_resources.ResourceManager().resource_stream(di, fname)
         except:
             return None
 
     @staticmethod
     def getResourceInfo(di, name):
         try:
-            if(pkg_resources.ResourceManager().resource_exists(di, name)): return name
+            for rn in pkg_resources.ResourceManager().resource_listdir(di, ''):
+                fname = PurePath(rn).name
+                if(Utils.endsWithString(name, fname, True)):
+                    return fname
             return None
         except:
             return None

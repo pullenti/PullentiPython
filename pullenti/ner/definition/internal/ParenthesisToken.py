@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -44,7 +44,7 @@ class ParenthesisToken(MetaToken):
             if (t1.get_morph_class_in_dictionary() == MorphClass.VERB): 
                 if (t1.morph.contains_attr("н.вр.", MorphClass()) and t1.morph.contains_attr("нес.в.", MorphClass()) and t1.morph.contains_attr("дейст.з.", MorphClass())): 
                     return ParenthesisToken(t, t1)
-        t1 = None
+        t1 = (None)
         if ((t.is_value("В", None) and t.next0_ is not None and t.next0_.is_value("СООТВЕТСТВИЕ", None)) and t.next0_.next0_ is not None and t.next0_.next0_.morph.class0_.is_preposition): 
             t1 = t.next0_.next0_.next0_
         elif (t.is_value("СОГЛАСНО", None)): 
@@ -65,13 +65,13 @@ class ParenthesisToken(MetaToken):
                         t1 = npt1.end_token.next0_
             r = t1.get_referent()
             if (r is not None): 
-                res = ParenthesisToken._new1082(t, t1, r)
+                res = ParenthesisToken._new1084(t, t1, r)
                 if (t1.next0_ is not None and t1.next0_.is_comma): 
                     sila = False
                     ttt = t1.next0_.next0_
-                    first_pass2824 = True
+                    first_pass3774 = True
                     while True:
-                        if first_pass2824: first_pass2824 = False
+                        if first_pass3774: first_pass3774 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_value("СИЛА", None) or ttt.is_value("ДЕЙСТВИЕ", None)): 
@@ -115,10 +115,9 @@ class ParenthesisToken(MetaToken):
             ParenthesisToken.__m_termins.add(Termin(s, MorphLang.RU, True))
     
     __m_termins = None
-
     
     @staticmethod
-    def _new1082(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent') -> 'ParenthesisToken':
+    def _new1084(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent') -> 'ParenthesisToken':
         res = ParenthesisToken(_arg1, _arg2)
         res.ref = _arg3
         return res

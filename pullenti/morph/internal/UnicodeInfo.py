@@ -1,10 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 
 
 class UnicodeInfo:
@@ -20,22 +20,22 @@ class UnicodeInfo:
         self.__m_value = 0
         self.uni_char = None
         self.code = 0
-        self.uni_char = chr(v)
-        self.code = v
-        self.__m_value = 0
+        self.uni_char = (chr(v))
+        self.code = (v)
+        self.__m_value = (0)
     
     def __get_value(self, i : int) -> bool:
-        return ((((self.__m_value >> i)) & 1)) != 0
+        return (((((self.__m_value) >> i)) & 1)) != 0
     
     def __set_value(self, i : int, val : bool) -> None:
         if (val): 
-            self.__m_value |= (1 << i)
+            self.__m_value |= ((1 << i))
         else: 
-            self.__m_value &= ~ ((1 << i))
+            self.__m_value &= (~ ((1 << i)))
     
     @property
     def is_whitespace(self) -> bool:
-        return ((self.__m_value & 0x1)) != 0
+        return (((self.__m_value) & 0x1)) != 0
     
     @is_whitespace.setter
     def is_whitespace(self, value) -> bool:
@@ -44,7 +44,7 @@ class UnicodeInfo:
     
     @property
     def is_digit(self) -> bool:
-        return ((self.__m_value & 0x2)) != 0
+        return (((self.__m_value) & 0x2)) != 0
     
     @is_digit.setter
     def is_digit(self, value) -> bool:
@@ -53,7 +53,7 @@ class UnicodeInfo:
     
     @property
     def is_letter(self) -> bool:
-        return ((self.__m_value & 0x4)) != 0
+        return (((self.__m_value) & 0x4)) != 0
     
     @is_letter.setter
     def is_letter(self, value) -> bool:
@@ -62,7 +62,7 @@ class UnicodeInfo:
     
     @property
     def is_upper(self) -> bool:
-        return ((self.__m_value & 0x8)) != 0
+        return (((self.__m_value) & 0x8)) != 0
     
     @is_upper.setter
     def is_upper(self, value) -> bool:
@@ -71,7 +71,7 @@ class UnicodeInfo:
     
     @property
     def is_lower(self) -> bool:
-        return ((self.__m_value & 0x10)) != 0
+        return (((self.__m_value) & 0x10)) != 0
     
     @is_lower.setter
     def is_lower(self, value) -> bool:
@@ -80,7 +80,7 @@ class UnicodeInfo:
     
     @property
     def is_latin(self) -> bool:
-        return ((self.__m_value & 0x20)) != 0
+        return (((self.__m_value) & 0x20)) != 0
     
     @is_latin.setter
     def is_latin(self, value) -> bool:
@@ -89,7 +89,7 @@ class UnicodeInfo:
     
     @property
     def is_cyrillic(self) -> bool:
-        return ((self.__m_value & 0x40)) != 0
+        return (((self.__m_value) & 0x40)) != 0
     
     @is_cyrillic.setter
     def is_cyrillic(self, value) -> bool:
@@ -98,7 +98,7 @@ class UnicodeInfo:
     
     @property
     def is_hiphen(self) -> bool:
-        return ((self.__m_value & 0x80)) != 0
+        return (((self.__m_value) & 0x80)) != 0
     
     @is_hiphen.setter
     def is_hiphen(self, value) -> bool:
@@ -107,7 +107,7 @@ class UnicodeInfo:
     
     @property
     def is_vowel(self) -> bool:
-        return ((self.__m_value & 0x100)) != 0
+        return (((self.__m_value) & 0x100)) != 0
     
     @is_vowel.setter
     def is_vowel(self, value) -> bool:
@@ -116,7 +116,7 @@ class UnicodeInfo:
     
     @property
     def is_quot(self) -> bool:
-        return ((self.__m_value & 0x200)) != 0
+        return (((self.__m_value) & 0x200)) != 0
     
     @is_quot.setter
     def is_quot(self, value) -> bool:
@@ -125,7 +125,7 @@ class UnicodeInfo:
     
     @property
     def is_apos(self) -> bool:
-        return ((self.__m_value & 0x400)) != 0
+        return (((self.__m_value) & 0x400)) != 0
     
     @is_apos.setter
     def is_apos(self, value) -> bool:
@@ -134,7 +134,7 @@ class UnicodeInfo:
     
     @property
     def is_udaren(self) -> bool:
-        return ((self.__m_value & 0x800)) != 0
+        return (((self.__m_value) & 0x800)) != 0
     
     @is_udaren.setter
     def is_udaren(self, value) -> bool:
@@ -150,30 +150,30 @@ class UnicodeInfo:
             ui = UnicodeInfo(i)
             if (Utils.isWhitespace(ch)): 
                 ui.is_whitespace = True
-            elif (ch.isdigit()): 
+            elif (str.isdigit(ch)): 
                 ui.is_digit = True
             elif (ch == 'º' or ch == '°'): 
                 pass
-            elif (ch.isalpha()): 
+            elif (str.isalpha(ch)): 
                 ui.is_letter = True
                 if (i >= 0x400 and (i < 0x500)): 
                     ui.is_cyrillic = True
-                    if ((ch) in "АЕЁИОУЮЯЫЭЄІЇЎӘӨҰҮІ"): 
+                    if ("АЕЁИОУЮЯЫЭЄІЇЎӘӨҰҮІ".find(ch) >= 0): 
                         ui.is_vowel = True
                 elif (i < 0x200): 
                     ui.is_latin = True
-                    if ((ch) in "AEIOUY"): 
+                    if ("AEIOUY".find(ch) >= 0): 
                         ui.is_vowel = True
-                if (ch.isupper()): 
+                if (str.isupper(ch)): 
                     ui.is_upper = True
-                if (ch.islower()): 
+                if (str.islower(ch)): 
                     ui.is_lower = True
             else: 
-                if (((((ch == '-' or ch == '–' or ch == '¬') or ch == '-' or ch == chr(0x00AD)) or ch == chr(0x2011) or ch == '-') or ch == '—' or ch == '–') or ch == '−' or ch == '-'): 
+                if (((((ch == '-' or ch == '–' or ch == '¬') or ch == '-' or ch == (chr(0x00AD))) or ch == (chr(0x2011)) or ch == '-') or ch == '—' or ch == '–') or ch == '−' or ch == '-'): 
                     ui.is_hiphen = True
-                if ((ch) in "\"'`“”’"): 
+                if ("\"'`“”’".find(ch) >= 0): 
                     ui.is_quot = True
-                if ((ch) in "'`’"): 
+                if ("'`’".find(ch) >= 0): 
                     ui.is_apos = True
                     ui.is_quot = True
             if (i >= 0x300 and (i < 0x370)): 

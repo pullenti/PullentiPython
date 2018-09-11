@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -15,8 +15,5 @@ class DecreeKind(IntEnum):
     CONTRACT = (((0 + 1) + 1) + 1) + 1
     PROJECT = ((((0 + 1) + 1) + 1) + 1) + 1
     PUBLISHER = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
-    """ Источники опубликований """
     PROGRAM = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
-    """ Госпрограммы """
     STANDARD = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-    """ Стандарт (ГОСТ, ТУ, ANSI и пр.) """

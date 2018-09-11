@@ -1,15 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.address.StreetKind import StreetKind
-
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 
 
@@ -83,7 +82,7 @@ class StreetReferent(Referent):
         from pullenti.ner.geo.GeoReferent import GeoReferent
         res = list()
         for a in self.slots: 
-            if (a.type_name == StreetReferent.ATTR_GEO and isinstance(a.value, GeoReferent)): 
+            if (a.type_name == StreetReferent.ATTR_GEO and (isinstance(a.value, GeoReferent))): 
                 res.append(a.value if isinstance(a.value, GeoReferent) else None)
         return res
     
@@ -104,11 +103,16 @@ class StreetReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        tmp = Utils.newStringIO(None)
+        tmp = io.StringIO()
         nam = self.get_string_value(StreetReferent.ATTR_NAME)
         typs_ = self.typs
         if (len(typs_) > 0): 
-            for i in range(len(typs_)):
+            i = 0
+            first_pass3649 = True
+            while True:
+                if first_pass3649: first_pass3649 = False
+                else: i += 1
+                if (not (i < len(typs_))): break
                 if (nam is not None and typs_[i].upper() in nam): 
                     continue
                 if (tmp.tell() > 0): 
@@ -127,7 +131,7 @@ class StreetReferent(Referent):
             if (isinstance(kladr, Referent)): 
                 print(" (ФИАС: {0}".format(Utils.ifNotNull((kladr if isinstance(kladr, Referent) else None).get_string_value("GUID"), "?")), end="", file=tmp, flush=True)
                 for s in self.slots: 
-                    if (s.type_name == StreetReferent.ATTR_FIAS and isinstance(s.value, Referent) and s.value != kladr): 
+                    if (s.type_name == StreetReferent.ATTR_FIAS and (isinstance(s.value, Referent)) and s.value != kladr): 
                         print(", {0}".format(Utils.ifNotNull((s.value if isinstance(s.value, Referent) else None).get_string_value("GUID"), "?")), end="", file=tmp, flush=True)
                 print(')', end="", file=tmp)
             bti = self.get_string_value(StreetReferent.ATTR_BTI)
@@ -215,15 +219,15 @@ class StreetReferent(Referent):
         return True
     
     def add_slot(self, attr_name : str, attr_value : object, clear_old_value : bool, stat_count : int=0) -> 'Slot':
-        if (attr_name == StreetReferent.ATTR_NAME and isinstance(attr_value, str)): 
+        if (attr_name == StreetReferent.ATTR_NAME and (isinstance(attr_value, str))): 
             str0_ = (attr_value if isinstance(attr_value, str) else None)
             if (str0_.find('.') > 0): 
                 i = 1
                 while i < (len(str0_) - 1): 
                     if (str0_[i] == '.' and str0_[i + 1] != ' '): 
-                        str0_ = (str0_[0 : (i + 1)] + " " + str0_[i + 1 : ])
+                        str0_ = (str0_[0:0+i + 1] + " " + str0_[i + 1:])
                     i += 1
-            attr_value = str0_
+            attr_value = (str0_)
         return super().add_slot(attr_name, attr_value, clear_old_value, stat_count)
     
     def merge_slots(self, obj : 'Referent', merge_statistic : bool=True) -> None:

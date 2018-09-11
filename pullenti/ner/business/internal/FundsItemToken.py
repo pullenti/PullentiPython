@@ -1,11 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+import math
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.business.internal.FundsItemTyp import FundsItemTyp
 from pullenti.ner.business.FundsKind import FundsKind
@@ -27,13 +28,13 @@ class FundsItemToken(MetaToken):
         super().__init__(b, e0_, None)
     
     def __str__(self) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         print(self.typ, end="", file=res)
         if (self.kind != FundsKind.UNDEFINED): 
             print(" K={0}".format(Utils.enumToString(self.kind)), end="", file=res, flush=True)
         if (self.float_val > 0): 
             print(" F={0}".format(self.float_val), end="", file=res, flush=True)
-        if (self.long_val > 0): 
+        if (self.long_val > (0)): 
             print(" L={0}".format(self.long_val), end="", file=res, flush=True)
         if (self.ref is not None): 
             print(" R={0}".format(str(self.ref)), end="", file=res, flush=True)
@@ -57,9 +58,9 @@ class FundsItemToken(MetaToken):
             return None
         typ0 = FundsItemTyp.UNDEFINED
         tt = t
-        first_pass2718 = True
+        first_pass3667 = True
         while True:
-            if first_pass2718: first_pass2718 = False
+            if first_pass3667: first_pass3667 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.morph.class0_.is_preposition or tt.morph.class0_.is_adverb): 
@@ -119,9 +120,9 @@ class FundsItemToken(MetaToken):
                     cou = 0
                     ok = False
                     ttt = tt.previous
-                    first_pass2719 = True
+                    first_pass3668 = True
                     while True:
-                        if first_pass2719: first_pass2719 = False
+                        if first_pass3668: first_pass3668 = False
                         else: ttt = ttt.previous
                         if (not (ttt is not None)): break
                         cou += 1
@@ -150,7 +151,7 @@ class FundsItemToken(MetaToken):
                             ttt = ttt.next0_
                     if (ok): 
                         res = FundsItemToken._new434(t, tt, FundsKind.STOCK, FundsItemTyp.NOUN)
-                        res.string_val = "{0}ая акция".format(val[0 : (len(val) - 2)].lower())
+                        res.string_val = "{0}ая акция".format(val[0:0+len(val) - 2].lower())
                         return res
             if (isinstance(tt, NumberToken)): 
                 num = NumberExToken.try_parse_number_with_postfix(tt)
@@ -160,7 +161,7 @@ class FundsItemToken(MetaToken):
                     if (num.ex_typ == NumberExType.PERCENT): 
                         res = FundsItemToken._new435(t, num.end_token, FundsItemTyp.PERCENT, num.real_value)
                         t = num.end_token.next0_
-                        if (t is not None and ((t.is_char('+') or t.is_value("ПЛЮС", None))) and isinstance(t.next0_, NumberToken)): 
+                        if (t is not None and ((t.is_char('+') or t.is_value("ПЛЮС", None))) and (isinstance(t.next0_, NumberToken))): 
                             res.end_token = t.next0_
                             t = res.end_token.next0_
                         if ((t is not None and t.is_hiphen and t.next0_ is not None) and t.next0_.chars.is_all_lower and not t.is_whitespace_after): 
@@ -191,15 +192,15 @@ class FundsItemToken(MetaToken):
         if (f.typ == FundsItemTyp.ORG): 
             return None
         if (f.typ == FundsItemTyp.PRICE or f.typ == FundsItemTyp.PERCENT or f.typ == FundsItemTyp.COUNT): 
-            if (t.previous is not None and t.previous.is_char_of(",.") and isinstance(t.previous.previous, NumberToken)): 
+            if (t.previous is not None and t.previous.is_char_of(",.") and (isinstance(t.previous.previous, NumberToken))): 
                 return None
         li = list()
         li.append(f)
         is_in_br = False
         tt = f.end_token.next0_
-        first_pass2720 = True
+        first_pass3669 = True
         while True:
-            if first_pass2720: first_pass2720 = False
+            if first_pass3669: first_pass3669 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if ((tt.is_whitespace_before and tt.previous is not None and tt.previous.is_char('.')) and tt.chars.is_capital_upper): 
@@ -229,7 +230,8 @@ class FundsItemToken(MetaToken):
         funds = FundsReferent()
         res = ReferentToken(funds, t, t)
         org_prob = None
-        for i in range(len(li)):
+        i = 0
+        while i < len(li): 
             if (li[i].typ == FundsItemTyp.NOUN): 
                 funds.kind = li[i].kind
                 if (li[i].string_val is not None): 
@@ -238,7 +240,7 @@ class FundsItemToken(MetaToken):
                     org_prob = (li[i].ref if isinstance(li[i].ref, OrganizationReferent) else None)
                 res.end_token = li[i].end_token
             elif (li[i].typ == FundsItemTyp.COUNT): 
-                if (funds.count > 0 or li[i].long_val == 0): 
+                if (funds.count > (0) or li[i].long_val == (0)): 
                     break
                 funds.count = li[i].long_val
                 res.end_token = li[i].end_token
@@ -264,6 +266,7 @@ class FundsItemToken(MetaToken):
                 res.end_token = li[i].end_token
             else: 
                 break
+            i += 1
         if (funds.percent > 0 and funds.source is not None and funds.kind == FundsKind.UNDEFINED): 
             funds.kind = FundsKind.STOCK
         if (not funds._check_correct()): 
@@ -305,7 +308,6 @@ class FundsItemToken(MetaToken):
                             break
                 tt = tt.previous
         return res
-
     
     @staticmethod
     def _new429(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'FundsItemTyp', _arg4 : 'Referent') -> 'FundsItemToken':

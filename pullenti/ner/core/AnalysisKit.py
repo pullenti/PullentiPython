@@ -1,16 +1,16 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import datetime
+import io
 import typing
 import math
-import io
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
-from pullenti.ntopy.Misc import EventHandler
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
+from pullenti.unisharp.Misc import EventHandler
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
@@ -25,7 +25,7 @@ class AnalysisKit:
     def __init__(self, sofa_ : 'SourceOfAnalysis'=None, only_tokenizing : bool=False, lang : 'MorphLang'=MorphLang(), progress : EventHandler=None) -> None:
         from pullenti.morph.Morphology import Morphology
         from pullenti.ner.TextToken import TextToken
-        self._start_date = None
+        self._start_date = datetime.datetime(1, 1, 1, 0, 0, 0)
         self.corrected_tokens = None
         self.first_token = None
         self.__m_entities = list()
@@ -45,7 +45,8 @@ class AnalysisKit:
         tokens = Morphology.process(sofa_.text, lang, None)
         t0 = None
         if (tokens is not None): 
-            for ii in range(len(tokens)):
+            ii = 0
+            while ii < len(tokens): 
                 mt = tokens[ii]
                 if (mt.begin_char == 733860): 
                     pass
@@ -66,10 +67,11 @@ class AnalysisKit:
                                 self.corrected_tokens = dict()
                             self.corrected_tokens[tt] = tt.get_source_text()
                 if (t0 is None): 
-                    self.first_token = tt
+                    self.first_token = (tt)
                 else: 
                     t0.next0_ = tt
-                t0 = tt
+                t0 = (tt)
+                ii += 1
         if (sofa_.clear_dust): 
             self.__clear_dust()
         if (sofa_.do_words_merging_by_morph): 
@@ -79,43 +81,43 @@ class AnalysisKit:
         self.__merge_letters()
         self.__define_base_language()
         t = self.first_token
-        first_pass2749 = True
+        first_pass3699 = True
         while True:
-            if first_pass2749: first_pass2749 = False
+            if first_pass3699: first_pass3699 = False
             else: t = t.next0_
             if (not (t is not None)): break
             nt = NumberHelper._try_parse(t)
             if (nt is None): 
                 continue
             self.embed_token(nt)
-            t = nt
+            t = (nt)
         if (only_tokenizing): 
             return
         t = self.first_token
-        first_pass2750 = True
+        first_pass3700 = True
         while True:
-            if first_pass2750: first_pass2750 = False
+            if first_pass3700: first_pass3700 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.morph.class0_.is_preposition): 
                 continue
             mc = t.get_morph_class_in_dictionary()
             if (mc.is_undefined and t.chars.is_cyrillic_letter and t.length_char > 4): 
-                tail = sofa_.text[t.end_char - 1 : (t.end_char - 1) + 2]
+                tail = sofa_.text[t.end_char - 1:t.end_char - 1+2]
                 tte = None
                 tt = t.previous
                 if (tt is not None and ((tt.is_comma_and or tt.morph.class0_.is_preposition or tt.morph.class0_.is_conjunction))): 
                     tt = tt.previous
-                if ((tt is not None and not tt.get_morph_class_in_dictionary().is_undefined and ((tt.morph.class0_.value & t.morph.class0_.value)) != 0) and tt.length_char > 4): 
-                    tail2 = sofa_.text[tt.end_char - 1 : (tt.end_char - 1) + 2]
+                if ((tt is not None and not tt.get_morph_class_in_dictionary().is_undefined and (((tt.morph.class0_.value) & (t.morph.class0_.value))) != 0) and tt.length_char > 4): 
+                    tail2 = sofa_.text[tt.end_char - 1:tt.end_char - 1+2]
                     if (tail2 == tail): 
                         tte = tt
                 if (tte is None): 
                     tt = t.next0_
                     if (tt is not None and ((tt.is_comma_and or tt.morph.class0_.is_preposition or tt.morph.class0_.is_conjunction))): 
                         tt = tt.next0_
-                    if ((tt is not None and not tt.get_morph_class_in_dictionary().is_undefined and ((tt.morph.class0_.value & t.morph.class0_.value)) != 0) and tt.length_char > 4): 
-                        tail2 = sofa_.text[tt.end_char - 1 : (tt.end_char - 1) + 2]
+                    if ((tt is not None and not tt.get_morph_class_in_dictionary().is_undefined and (((tt.morph.class0_.value) & (t.morph.class0_.value))) != 0) and tt.length_char > 4): 
+                        tail2 = sofa_.text[tt.end_char - 1:tt.end_char - 1+2]
                         if (tail2 == tail): 
                             tte = tt
                 if (tte is not None): 
@@ -131,9 +133,9 @@ class AnalysisKit:
     
     def __clear_dust(self) -> None:
         t = self.first_token
-        first_pass2751 = True
+        first_pass3701 = True
         while True:
-            if first_pass2751: first_pass2751 = False
+            if first_pass3701: first_pass3701 = False
             else: t = t.next0_
             if (not (t is not None)): break
             cou = AnalysisKit.__calc_abnormal_coef(t)
@@ -142,9 +144,9 @@ class AnalysisKit:
                 continue
             t1 = t
             tt = t
-            first_pass2752 = True
+            first_pass3702 = True
             while True:
-                if first_pass2752: first_pass2752 = False
+                if first_pass3702: first_pass3702 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 co = AnalysisKit.__calc_abnormal_coef(tt)
@@ -204,9 +206,9 @@ class AnalysisKit:
         from pullenti.ner.TextToken import TextToken
         from pullenti.morph.Morphology import Morphology
         t = self.first_token
-        first_pass2753 = True
+        first_pass3703 = True
         while True:
-            if first_pass2753: first_pass2753 = False
+            if first_pass3703: first_pass3703 = False
             else: t = t.next0_
             if (not (t is not None and t.next0_ is not None)): break
             if (not t.chars.is_letter or (t.length_char < 2)): 
@@ -247,21 +249,21 @@ class AnalysisKit:
             tt.end_char = t1.end_char
             tt.chars = t.chars
             if (t == self.first_token): 
-                self.first_token = tt
+                self.first_token = (tt)
             else: 
                 t.previous.next0_ = tt
             if (t1.next0_ is not None): 
                 tt.next0_ = t1.next0_
-            t = tt
+            t = (tt)
     
     def __correct_words_by_morph(self, lang : 'MorphLang') -> None:
         from pullenti.ner.TextToken import TextToken
         from pullenti.morph.MorphClass import MorphClass
         from pullenti.morph.Morphology import Morphology
         tt = self.first_token
-        first_pass2754 = True
+        first_pass3704 = True
         while True:
-            if first_pass2754: first_pass2754 = False
+            if first_pass3704: first_pass3704 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (not ((isinstance(tt, TextToken)))): 
@@ -286,11 +288,11 @@ class AnalysisKit:
             if (mc.is_proper_surname): 
                 continue
             if (tt == self.first_token): 
-                self.first_token = tt1
+                self.first_token = (tt1)
             else: 
                 tt.previous.next0_ = tt1
             tt1.next0_ = tt.next0_
-            tt = tt1
+            tt = (tt1)
             if (self.corrected_tokens is None): 
                 self.corrected_tokens = dict()
             self.corrected_tokens[tt] = tt.get_source_text()
@@ -299,11 +301,11 @@ class AnalysisKit:
         from pullenti.ner.TextToken import TextToken
         from pullenti.morph.Morphology import Morphology
         before_word = False
-        tmp = Utils.newStringIO(None)
+        tmp = io.StringIO()
         t = self.first_token
-        first_pass2755 = True
+        first_pass3705 = True
         while True:
-            if first_pass2755: first_pass2755 = False
+            if first_pass3705: first_pass3705 = False
             else: t = t.next0_
             if (not (t is not None)): break
             tt = (t if isinstance(t, TextToken) else None)
@@ -346,20 +348,15 @@ class AnalysisKit:
                 continue
             tt = TextToken(mt[0], self)
             if (t == self.first_token): 
-                self.first_token = tt
+                self.first_token = (tt)
             else: 
                 tt.previous = t.previous
             tt.next0_ = t1.next0_
             tt.begin_char = t.begin_char
             tt.end_char = t1.end_char
-            t = tt
+            t = (tt)
     
     def embed_token(self, mt : 'MetaToken') -> None:
-        """ Встроить токен в основную цепочку токенов
-        
-        Args:
-            mt(MetaToken): 
-        """
         from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.TextAnnotation import TextAnnotation
         if (mt is None): 
@@ -371,7 +368,7 @@ class AnalysisKit:
         if (mt.begin_char > mt.end_char): 
             return
         if (mt.begin_token == self.first_token): 
-            self.first_token = mt
+            self.first_token = (mt)
         else: 
             tp = mt.begin_token.previous
             mt.previous = tp
@@ -382,14 +379,6 @@ class AnalysisKit:
                 (mt if isinstance(mt, ReferentToken) else None).referent.add_occurence(TextAnnotation._new497(self.sofa, mt.begin_char, mt.end_char))
     
     def debed_token(self, t : 'Token') -> 'Token':
-        """ Убрать метатокен из цепочки, восстановив исходное
-        
-        Args:
-            t(Token): 
-        
-        Returns:
-            Token: первый токен удалённого метатокена
-        """
         from pullenti.ner.MetaToken import MetaToken
         r = t.get_referent()
         if (r is not None): 
@@ -426,14 +415,6 @@ class AnalysisKit:
         return self.__m_sofa
     
     def get_text_character(self, position : int) -> 'char':
-        """ Получить символ из исходного текста
-        
-        Args:
-            position(int): позиция
-        
-        Returns:
-            'char': символ (0, если выход за границу)
-        """
         if ((position < 0) or position >= len(self.__m_sofa.text)): 
             return chr(0)
         return self.__m_sofa.text[position]
@@ -445,12 +426,6 @@ class AnalysisKit:
         return self.get_analyzer_data(a)
     
     def get_analyzer_data(self, analyzer : 'Analyzer') -> 'AnalyzerData':
-        """ Работа с локальными данными анализаторов
-        
-        Args:
-            analyzer(Analyzer): 
-        
-        """
         if (analyzer is None or analyzer.name is None): 
             return None
         inoutarg498 = RefOutArgWrapper(None)
@@ -480,9 +455,9 @@ class AnalysisKit:
         stat = dict()
         total = 0
         t = self.first_token
-        first_pass2756 = True
+        first_pass3706 = True
         while True:
-            if first_pass2756: first_pass2756 = False
+            if first_pass3706: first_pass3706 = False
             else: t = t.next0_
             if (not (t is not None)): break
             tt = (t if isinstance(t, TextToken) else None)
@@ -500,12 +475,6 @@ class AnalysisKit:
                 self.base_language |= kp[0]
     
     def replace_referent(self, old_referent : 'Referent', new_referent : 'Referent') -> None:
-        """ Заменить везде где только возможно старую сущность на новую (используется при объединении сущностей)
-        
-        Args:
-            old_referent(Referent): 
-            new_referent(Referent): 
-        """
         from pullenti.ner.ReferentToken import ReferentToken
         t = self.first_token
         while t is not None: 
@@ -561,9 +530,11 @@ class AnalysisKit:
             for d in self.__m_datas.items(): 
                 self.__m_entities.extend(d[1].referents)
         SerializerHelper.serialize_int(stream, len(self.__m_entities))
-        for i in range(len(self.__m_entities)):
+        i = 0
+        while i < len(self.__m_entities): 
             self.__m_entities[i].tag = (i + 1)
             SerializerHelper.serialize_string(stream, self.__m_entities[i].type_name)
+            i += 1
         for e0_ in self.__m_entities: 
             e0_.serialize(stream)
         SerializerHelper.serialize_tokens(stream, self.first_token, 0)
@@ -589,17 +560,17 @@ class AnalysisKit:
             self.__m_entities[i].deserialize(stream, self.__m_entities, self.__m_sofa)
             i += 1
         self.first_token = SerializerHelper.deserialize_tokens(stream, self)
-
+        self.__create_statistics()
     
     @staticmethod
-    def _new2628(_arg1 : 'Processor', _arg2 : 'ExtOntology') -> 'AnalysisKit':
+    def _new2641(_arg1 : 'Processor', _arg2 : 'ExtOntology') -> 'AnalysisKit':
         res = AnalysisKit()
         res.processor = _arg1
         res.ontology = _arg2
         return res
     
     @staticmethod
-    def _new2629(_arg1 : 'SourceOfAnalysis', _arg2 : bool, _arg3 : 'MorphLang', _arg4 : EventHandler, _arg5 : 'ExtOntology', _arg6 : 'Processor') -> 'AnalysisKit':
+    def _new2642(_arg1 : 'SourceOfAnalysis', _arg2 : bool, _arg3 : 'MorphLang', _arg4 : EventHandler, _arg5 : 'ExtOntology', _arg6 : 'Processor') -> 'AnalysisKit':
         res = AnalysisKit(_arg1, _arg2, _arg3, _arg4)
         res.ontology = _arg5
         res.processor = _arg6

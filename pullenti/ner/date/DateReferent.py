@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -7,10 +7,9 @@
 import datetime
 import math
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.date.DatePointerType import DatePointerType
-
 from pullenti.ner.core.NumberHelper import NumberHelper
 
 
@@ -239,7 +238,7 @@ class DateReferent(Referent):
     def _to_string(self, short_variant : bool, lang : 'MorphLang', lev : int, from_range : int) -> str:
         from pullenti.morph.MorphLang import MorphLang
         from pullenti.ner.date.internal.MetaDate import MetaDate
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         p = self.pointer
         if (lang is None): 
             lang = MorphLang.RU
@@ -404,12 +403,6 @@ class DateReferent(Referent):
     
     @staticmethod
     def is_month_defined(obj : 'Referent') -> bool:
-        """ Проверка, что дата или диапазон определены с точностью до одного месяца
-        
-        Args:
-            obj(Referent): 
-        
-        """
         from pullenti.ner.date.DateRangeReferent import DateRangeReferent
         sd = (obj if isinstance(obj, DateReferent) else None)
         if (sd is not None): 
@@ -424,7 +417,6 @@ class DateReferent(Referent):
                 return False
             return True
         return False
-
     
     @staticmethod
     def _new718(_arg1 : 'DateReferent', _arg2 : int) -> 'DateReferent':

@@ -1,10 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+import io
+from pullenti.unisharp.Utils import Utils
 
 
 class MorphLang:
@@ -12,27 +13,27 @@ class MorphLang:
     
     def __init__(self, lng : 'MorphLang'=None) -> None:
         self.value = 0
-        self.value = 0
+        self.value = (0)
         if (lng is not None): 
             self.value = lng.value
     
     def __get_value(self, i : int) -> bool:
-        return ((((self.value >> i)) & 1)) != 0
+        return (((((self.value) >> i)) & 1)) != 0
     
     def __set_value(self, i : int, val : bool) -> None:
         if (val): 
-            self.value |= (1 << i)
+            self.value |= ((1 << i))
         else: 
-            self.value &= ~ ((1 << i))
+            self.value &= (~ ((1 << i)))
     
     @property
     def is_undefined(self) -> bool:
         """ Неопределённый язык """
-        return self.value == 0
+        return self.value == (0)
     
     @is_undefined.setter
     def is_undefined(self, value_) -> bool:
-        self.value = 0
+        self.value = (0)
         return value_
     
     @property
@@ -103,7 +104,7 @@ class MorphLang:
     __m_names = None
     
     def __str__(self) -> str:
-        tmp_str = Utils.newStringIO(None)
+        tmp_str = io.StringIO()
         i = 0
         while i < len(MorphLang.__m_names): 
             if (self.__get_value(i)): 
@@ -123,30 +124,24 @@ class MorphLang:
     
     @staticmethod
     def try_parse(str0_ : str, lang : 'MorphLang') -> bool:
-        """ Преобразовать из строки
-        
-        Args:
-            str0_(str): 
-            lang(MorphLang): 
-        
-        """
         lang.value = MorphLang()
         while not Utils.isNullOrEmpty(str0_):
             i = 0
             while i < len(MorphLang.__m_names): 
-                if (str0_.upper().startswith(MorphLang.__m_names[i].upper())): 
+                if (Utils.startsWithString(str0_, MorphLang.__m_names[i], True)): 
                     break
                 i += 1
             if (i >= len(MorphLang.__m_names)): 
                 break
-            lang.value.value |= (1 << i)
-            for i in range(2, len(str0_), 1):
-                if (str0_[i].isalpha()): 
+            lang.value.value |= ((1 << i))
+            i = 2
+            while i < len(str0_): 
+                if (str.isalpha(str0_[i])): 
                     break
-            else: i = len(str0_)
+                i += 1
             if (i >= len(str0_)): 
                 break
-            str0_ = str0_[i : ]
+            str0_ = str0_[i:]
         if (lang.value.is_undefined): 
             return False
         return True
@@ -158,7 +153,7 @@ class MorphLang:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphLang._new6((val1 & val2))
+        return MorphLang._new6(((val1) & (val2)))
     
     def __or__(self : 'MorphLang', arg2 : 'MorphLang') -> 'MorphLang':
         val1 = 0
@@ -167,7 +162,7 @@ class MorphLang:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphLang._new6((val1 | val2))
+        return MorphLang._new6(((val1) | (val2)))
     
     def __eq__(self : 'MorphLang', arg2 : 'MorphLang') -> bool:
         val1 = 0
@@ -188,26 +183,18 @@ class MorphLang:
         return val1 != val2
     
     UNKNOWN = None
-    """ Неопределённое """
     
     RU = None
-    """ Русский """
     
     UA = None
-    """ Украинский """
     
     BY = None
-    """ Белорусский """
     
     EN = None
-    """ Английский """
     
     IT = None
-    """ Итальянский """
     
     KZ = None
-    """ Казахский """
-
     
     @staticmethod
     def _new6(_arg1 : int) -> 'MorphLang':

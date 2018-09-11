@@ -1,12 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
-
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 
 
 class GeneralRelationHelper:
@@ -54,10 +53,9 @@ class GeneralRelationHelper:
                                 j -= 1
                             j += 1
                         i += 1
-    
         
         @staticmethod
-        def _new1476(_arg1 : 'Referent', _arg2 : 'AnalyzerData') -> 'Node':
+        def _new1480(_arg1 : 'Referent', _arg2 : 'AnalyzerData') -> 'Node':
             res = GeneralRelationHelper.Node()
             res.ref = _arg1
             res.ad = _arg2
@@ -73,14 +71,13 @@ class GeneralRelationHelper:
             if (ad is None): 
                 continue
             for r in ad.referents: 
-                nod = GeneralRelationHelper.Node._new1476(r, ad)
+                nod = GeneralRelationHelper.Node._new1480(r, ad)
                 all_refs.append(nod)
                 r.tag = nod
-                si = [ ]
-                inoutarg1479 = RefOutArgWrapper(None)
-                inoutres1480 = Utils.tryGetValue(all0_, a.name, inoutarg1479)
-                si = inoutarg1479.value
-                if (not inoutres1480): 
+                inoutarg1483 = RefOutArgWrapper(None)
+                inoutres1484 = Utils.tryGetValue(all0_, a.name, inoutarg1483)
+                si = inoutarg1483.value
+                if (not inoutres1484): 
                     si = dict()
                     all0_[a.name] = si
                 strs = r.get_compare_strings()
@@ -88,10 +85,10 @@ class GeneralRelationHelper:
                     continue
                 for s in strs: 
                     li = [ ]
-                    inoutarg1477 = RefOutArgWrapper(None)
-                    inoutres1478 = Utils.tryGetValue(si, s, inoutarg1477)
-                    li = inoutarg1477.value
-                    if (not inoutres1478): 
+                    inoutarg1481 = RefOutArgWrapper(None)
+                    inoutres1482 = Utils.tryGetValue(si, s, inoutarg1481)
+                    li = inoutarg1481.value
+                    if (not inoutres1482): 
                         li = list()
                         si[s] = li
                     li.append(r)
@@ -112,8 +109,10 @@ class GeneralRelationHelper:
             for li in ty.values(): 
                 if (len(li) < 2): 
                     continue
-                for i in range(len(li)):
-                    for j in range(i + 1, len(li), 1):
+                i = 0
+                while i < len(li): 
+                    j = i + 1
+                    while j < len(li): 
                         n1 = None
                         n2 = None
                         if (li[i].can_be_general_for(li[j]) and not li[j].can_be_general_for(li[i])): 
@@ -131,14 +130,18 @@ class GeneralRelationHelper:
                                 n2.gen_to = list()
                             if (not n1 in n2.gen_to): 
                                 n2.gen_to.append(n1)
+                        j += 1
+                    i += 1
         for n in all_refs: 
             if (n.gen_to is not None and len(n.gen_to) > 1): 
                 for i in range(len(n.gen_to) - 1, -1, -1):
                     p = n.gen_to[i]
                     del0_ = False
-                    for j in range(len(n.gen_to)):
+                    j = 0
+                    while j < len(n.gen_to): 
                         if (j != i and n.gen_to[j].is_in_gen_parents_or_higher(p)): 
                             del0_ = True
+                        j += 1
                     if (del0_): 
                         p.gen_from.remove(n)
                         del n.gen_to[i]
@@ -170,7 +173,7 @@ class GeneralRelationHelper:
         rt = (t if isinstance(t, ReferentToken) else None)
         if (rt is None): 
             return
-        if (rt.referent is not None and isinstance(rt.referent.tag, Referent)): 
+        if (rt.referent is not None and (isinstance(rt.referent.tag, Referent))): 
             rt.referent = (rt.referent.tag if isinstance(rt.referent.tag, Referent) else None)
         tt = rt.begin_token
         while tt is not None and tt.end_char <= rt.end_char: 

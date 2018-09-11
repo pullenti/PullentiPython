@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -7,11 +7,10 @@
 import typing
 import io
 from enum import IntEnum
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.Slot import Slot
-
 from pullenti.ner.core.internal.TextsCompareType import TextsCompareType
 from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 
@@ -22,11 +21,8 @@ class Referent:
     class EqualType(IntEnum):
         """ Типы сравнение объектов """
         WITHINONETEXT = 0
-        """ Объекты в рамках одного текста """
         DIFFERENTTEXTS = 1
-        """ Объекты из разных текстов """
         FORMERGING = 2
-        """ Проверка для потенциального объединения объектов """
     
     def __init__(self, typ : str) -> None:
         self.__m_object_type = None
@@ -48,19 +44,9 @@ class Referent:
         return self.to_string(False, MorphLang.UNKNOWN, 0)
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        """ Специализированное строковое представление сущности
-        
-        Args:
-            short_variant(bool): Сокращённый вариант
-            lang(MorphLang): Язык
-        
-        """
         return self.type_name
     
     def to_sort_string(self) -> str:
-        """ По этой строке можно осуществлять сортировку среди объектов одного типа
-        
-        """
         return self.to_string(False, MorphLang.UNKNOWN, 0)
     
     @property
@@ -79,14 +65,6 @@ class Referent:
         return self.__m_slots
     
     def add_slot(self, attr_name : str, attr_value : object, clear_old_value : bool, stat_count : int=0) -> 'Slot':
-        """ Добавить значение атрибута
-        
-        Args:
-            attr_name(str): имя
-            attr_value(object): значение
-            clear_old_value(bool): если true и слот существует, то значение перезапишется
-        
-        """
         if (clear_old_value): 
             for i in range(len(self.slots) - 1, -1, -1):
                 if (self.slots[i].type_name == attr_name): 
@@ -111,14 +89,6 @@ class Referent:
             slot.value = new_val
     
     def find_slot(self, attr_name : str, val : object=None, use_can_be_equals_for_referents : bool=True) -> 'Slot':
-        """ Найти слот
-        
-        Args:
-            attr_name(str): 
-            val(object): 
-            use_can_be_equals_for_referents(bool): 
-        
-        """
         if (attr_name is None): 
             if (val is None): 
                 return None
@@ -141,7 +111,7 @@ class Referent:
             return val1 is None
         if (val1 == val2): 
             return True
-        if (isinstance(val1, Referent) and isinstance(val2, Referent)): 
+        if ((isinstance(val1, Referent)) and (isinstance(val2, Referent))): 
             if (use_can_be_equals_for_referents): 
                 return (val1 if isinstance(val1, Referent) else None).can_be_equals(val2 if isinstance(val2, Referent) else None, Referent.EqualType.DIFFERENTTEXTS)
             else: 
@@ -156,36 +126,18 @@ class Referent:
         return val1 == val2
     
     def get_value(self, attr_name : str) -> object:
-        """ Получить значение (если их несколько, то вернёт первое)
-        
-        Args:
-            attr_name(str): 
-        
-        """
         for v in self.slots: 
             if (v.type_name == attr_name): 
                 return v.value
         return None
     
     def get_string_value(self, attr_name : str) -> str:
-        """ Получить строковое значение (если их несколько, то вернёт первое)
-        
-        Args:
-            attr_name(str): 
-        
-        """
         for v in self.slots: 
             if (v.type_name == attr_name): 
                 return (None if v.value is None else str(v.value))
         return None
     
     def get_string_values(self, attr_name : str) -> typing.List[str]:
-        """ Получить все строовые значения заданного атрибута
-        
-        Args:
-            attr_name(str): 
-        
-        """
         res = list()
         for v in self.slots: 
             if (v.type_name == attr_name and v.value is not None): 
@@ -196,20 +148,13 @@ class Referent:
         return res
     
     def get_int_value(self, attr_name : str, def_value : int) -> int:
-        """ Получить числовое значение (если их несколько, то вернёт первое)
-        
-        Args:
-            attr_name(str): 
-            def_value(int): 
-        
-        """
         str0_ = self.get_string_value(attr_name)
         if (Utils.isNullOrEmpty(str0_)): 
             return def_value
-        inoutarg2645 = RefOutArgWrapper(0)
-        inoutres2646 = Utils.tryParseInt(str0_, inoutarg2645)
-        res = inoutarg2645.value
-        if (not inoutres2646): 
+        inoutarg2658 = RefOutArgWrapper(0)
+        inoutres2659 = Utils.tryParseInt(str0_, inoutarg2658)
+        res = inoutarg2658.value
+        if (not inoutres2659): 
             return def_value
         return res
     
@@ -238,11 +183,6 @@ class Referent:
         self.add_occurence(TextAnnotation._new716(rt.kit.sofa, rt.begin_char, rt.end_char, rt.referent))
     
     def add_occurence(self, anno : 'TextAnnotation') -> None:
-        """ Добавить аннотацию
-        
-        Args:
-            anno(TextAnnotation): 
-        """
         from pullenti.ner.TextAnnotation import TextAnnotation
         for l_ in self.occurrence: 
             typ = l_._compare_with(anno)
@@ -254,7 +194,7 @@ class Referent:
                 l_._merge(anno)
                 return
         if (anno.occurence_of != self and anno.occurence_of is not None): 
-            anno = TextAnnotation._new2648(anno.begin_char, anno.end_char, anno.sofa)
+            anno = TextAnnotation._new2661(anno.begin_char, anno.end_char, anno.sofa)
         if (self.__m_occurrence is None): 
             self.__m_occurrence = list()
         anno.occurence_of = self
@@ -277,13 +217,6 @@ class Referent:
         self.__m_occurrence.append(anno)
     
     def check_occurence(self, begin_char : int, end_char : int) -> bool:
-        """ Проверка, что ссылки на элемент имеются на заданном участке текста
-        
-        Args:
-            begin_char(int): 
-            end_char(int): 
-        
-        """
         for loc in self.occurrence: 
             cmp = loc._compare(begin_char, end_char)
             if (cmp != TextsCompareType.EARLY and cmp != TextsCompareType.LATER and cmp != TextsCompareType.NONCOMPARABLE): 
@@ -308,21 +241,12 @@ class Referent:
         res.occurrence.extend(self.occurrence)
         res.ontology_items = self.ontology_items
         for r in self.slots: 
-            rr = Slot._new2649(r.type_name, r.value, r.count)
+            rr = Slot._new2662(r.type_name, r.value, r.count)
             rr.owner = res
             res.slots.append(rr)
         return res
     
     def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=EqualType.WITHINONETEXT) -> bool:
-        """ Проверка возможной тождественности объектов
-        
-        Args:
-            obj(Referent): другой объект
-            typ(EqualType): тип сравнения
-        
-        Returns:
-            bool: результат
-        """
         if (obj is None or obj.type_name != self.type_name): 
             return False
         for r in self.slots: 
@@ -334,11 +258,6 @@ class Referent:
         return True
     
     def merge_slots(self, obj : 'Referent', merge_statistic : bool=True) -> None:
-        """ Объединение значений атрибутов со значениями атрибутов другого объекта
-        
-        Args:
-            obj(Referent): Другой объект, считающийся эквивалентным
-        """
         if (obj is None): 
             return
         for r in obj.slots: 
@@ -356,10 +275,6 @@ class Referent:
         return None
     
     def get_image_id(self) -> str:
-        """ Получить идентификатор иконки (саму иконку можно получить через функцию
-         GetImageById(imageId) статического класса ProcessorService
-        
-        """
         if (self.instance_of is None): 
             return None
         return self.instance_of.get_image_id(self)
@@ -367,12 +282,6 @@ class Referent:
     ATTR_GENERAL = "GENERAL"
     
     def can_be_general_for(self, obj : 'Referent') -> bool:
-        """ Проверка, может ли текущий объект быть обобщением для другого объекта
-        
-        Args:
-            obj(Referent): 
-        
-        """
         return False
     
     @property
@@ -393,17 +302,11 @@ class Referent:
         return value
     
     def create_ontology_item(self) -> 'IntOntologyItem':
-        """ Создать элемент отнологии
-        
-        """
         return None
     
     def get_compare_strings(self) -> typing.List[str]:
-        """ Используется внутренним образом
-        
-        """
         res = list()
-        res.append(self.__str__())
+        res.append(str(self))
         s = self.to_string(True, MorphLang.UNKNOWN, 0)
         if (s != res[0]): 
             res.append(s)
@@ -430,8 +333,8 @@ class Referent:
         for s in self.__m_slots: 
             SerializerHelper.serialize_string(stream, s.type_name)
             SerializerHelper.serialize_int(stream, s.count)
-            if (isinstance(s.value, Referent) and isinstance((s.value if isinstance(s.value, Referent) else None).tag, int)): 
-                SerializerHelper.serialize_int(stream, - (s.value if isinstance(s.value, Referent) else None).tag)
+            if ((isinstance(s.value, Referent)) and (isinstance((s.value if isinstance(s.value, Referent) else None).tag, int))): 
+                SerializerHelper.serialize_int(stream, - ((s.value if isinstance(s.value, Referent) else None).tag))
             elif (isinstance(s.value, str)): 
                 SerializerHelper.serialize_string(stream, (s.value if isinstance(s.value, str) else None))
             elif (s.value is None): 
@@ -461,17 +364,17 @@ class Referent:
             id0_ = SerializerHelper.deserialize_int(stream)
             val = None
             if (id0_ < 0): 
-                val = all0_[(- id0_) - 1]
+                val = (all0_[(- id0_) - 1])
             elif (id0_ > 0): 
-                stream.seek(stream.tell() - 4, io.SEEK_SET)
-                val = SerializerHelper.deserialize_string(stream)
+                stream.seek(stream.tell() - (4), io.SEEK_SET)
+                val = (SerializerHelper.deserialize_string(stream))
             self.add_slot(typ, val, False, c)
             i += 1
         cou = SerializerHelper.deserialize_int(stream)
         self.__m_occurrence = list()
         i = 0
         while i < cou: 
-            a = TextAnnotation._new2650(sofa, self)
+            a = TextAnnotation._new2663(sofa, self)
             self.__m_occurrence.append(a)
             a.begin_char = SerializerHelper.deserialize_int(stream)
             a.end_char = SerializerHelper.deserialize_int(stream)

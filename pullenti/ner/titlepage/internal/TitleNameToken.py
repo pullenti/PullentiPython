@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -7,13 +7,11 @@
 import typing
 import math
 from pullenti.ner.MetaToken import MetaToken
-
 from pullenti.ner.booklink.internal.BookLinkTyp import BookLinkTyp
 from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-
 from pullenti.morph.MorphNumber import MorphNumber
 
 
@@ -39,7 +37,8 @@ class TitleNameToken(MetaToken):
     
     @staticmethod
     def sort(li : typing.List['TitleNameToken']) -> None:
-        for k in range(len(li)):
+        k = 0
+        while k < len(li): 
             ch = False
             i = 0
             while i < (len(li) - 1): 
@@ -51,6 +50,7 @@ class TitleNameToken(MetaToken):
                 i += 1
             if (not ch): 
                 break
+            k += 1
     
     @staticmethod
     def can_be_start_of_text_or_content(begin : 'Token', end : 'Token') -> bool:
@@ -113,9 +113,9 @@ class TitleNameToken(MetaToken):
         tstart = self.begin_token
         tend = self.end_token
         t = self.begin_token
-        first_pass3054 = True
+        first_pass4030 = True
         while True:
-            if first_pass3054: first_pass3054 = False
+            if first_pass4030: first_pass4030 = False
             else: t = t.next0_
             if (not (t != self.end_token.next0_ and t is not None and t.end_char <= self.end_token.end_char)): break
             if (t.is_newline_before): 
@@ -211,25 +211,25 @@ class TitleNameToken(MetaToken):
                         else: 
                             self.rank -= 4
                         continue
-                    if (isinstance(r, GeoReferent) or isinstance(r, PersonReferent)): 
+                    if ((isinstance(r, GeoReferent)) or (isinstance(r, PersonReferent))): 
                         if (t.is_newline_before): 
                             self.rank -= 5
                             if (t.is_newline_after or t.next0_ is None): 
                                 self.rank -= 20
-                            elif (t.next0_.is_hiphen or isinstance(t.next0_, NumberToken) or isinstance(t.next0_.get_referent(), DateReferent)): 
+                            elif (t.next0_.is_hiphen or (isinstance(t.next0_, NumberToken)) or (isinstance(t.next0_.get_referent(), DateReferent))): 
                                 self.rank -= 20
                             elif (t != self.begin_token): 
                                 self.rank -= 20
                         continue
-                    if (isinstance(r, GeoReferent) or isinstance(r, DenominationReferent)): 
+                    if ((isinstance(r, GeoReferent)) or (isinstance(r, DenominationReferent))): 
                         continue
-                    if (isinstance(r, UriReferent) or isinstance(r, PhoneReferent)): 
+                    if ((isinstance(r, UriReferent)) or (isinstance(r, PhoneReferent))): 
                         return False
                     if (t.is_newline_before): 
                         self.rank -= 4
                     else: 
                         self.rank -= 2
-                    if (t == self.begin_token and isinstance(self.end_token.get_referent(), PersonReferent)): 
+                    if (t == self.begin_token and (isinstance(self.end_token.get_referent(), PersonReferent))): 
                         self.rank -= 10
                 words += 1
                 if (t.chars.is_all_upper): 
@@ -324,8 +324,8 @@ class TitleNameToken(MetaToken):
                 self.rank += 10
             if (tit1.typ == TitleItemToken.Types.SPECIALITY): 
                 self.speciality = tit1.value
-        if (up_words > 4 and up_words > math.floor((0.8 * words))): 
-            if (tstart.previous is not None and isinstance(tstart.previous.get_referent(), PersonReferent)): 
+        if (up_words > 4 and up_words > (math.floor((.8 * (words))))): 
+            if (tstart.previous is not None and (isinstance(tstart.previous.get_referent(), PersonReferent))): 
                 self.rank += (5 + up_words)
         self.begin_name_token = tstart
         self.end_name_token = tend

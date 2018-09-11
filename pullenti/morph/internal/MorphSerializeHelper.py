@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -7,8 +7,8 @@
 import io
 import gzip
 import shutil
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.morph.internal.MorphTreeNode import MorphTreeNode
 from pullenti.morph.internal.ByteArrayWrapper import ByteArrayWrapper
 from pullenti.morph.MorphMiscInfo import MorphMiscInfo
@@ -61,12 +61,12 @@ class MorphSerializeHelper:
                 try: 
                     ii = 0
                     while ii < len(buf): 
-                        buf[ii] = 0
+                        buf[ii] = (0)
                         ii += 1
                     i = Utils.readIO(deflate, buf, 0, len(buf))
                 except Exception as ex: 
                     for i in range(len(buf) - 1, -1, -1):
-                        if (buf[i] != 0): 
+                        if (buf[i] != (0)): 
                             Utils.writeIO(res, buf, 0, i + 1)
                             break
                     else: i = -1
@@ -124,7 +124,7 @@ class MorphSerializeHelper:
     
     @staticmethod
     def __deserialize_morph_misc_info(str0_ : 'ByteArrayWrapper', mi : 'MorphMiscInfo') -> None:
-        mi._m_value = str0_.deserialize_short()
+        mi._m_value = (str0_.deserialize_short())
         while True:
             s = str0_.deserialize_string()
             if (Utils.isNullOrEmpty(s)): 
@@ -173,7 +173,7 @@ class MorphSerializeHelper:
         r._id0_ = str0_.deserialize_short()
         while not str0_.iseof:
             b = str0_.deserialize_byte()
-            if (b == 0xFF): 
+            if (b == (0xFF)): 
                 break
             str0_.back()
             key = Utils.ifNotNull(str0_.deserialize_string(), "")
@@ -209,14 +209,14 @@ class MorphSerializeHelper:
             return None
         mrv = MorphRuleVariant._new35(me._m_vars[id0_])
         mc = MorphClass()
-        mc.value = str0_.deserialize_short()
+        mc.value = (str0_.deserialize_short())
         if (mc.is_misc and mc.is_proper): 
             mc.is_misc = False
         mrv.class0_ = mc
-        mrv.gender = Utils.valToEnum(str0_.deserialize_byte(), MorphGender)
-        mrv.number = Utils.valToEnum(str0_.deserialize_byte(), MorphNumber)
+        mrv.gender = (Utils.valToEnum(str0_.deserialize_byte(), MorphGender))
+        mrv.number = (Utils.valToEnum(str0_.deserialize_byte(), MorphNumber))
         mca = MorphCase()
-        mca.value = str0_.deserialize_byte()
+        mca.value = (str0_.deserialize_byte())
         mrv.case = mca
         mrv.normal_tail = str0_.deserialize_string()
         mrv.full_normal_tail = str0_.deserialize_string()
@@ -276,7 +276,7 @@ class MorphSerializeHelper:
                 pass
             if (tn.reverce_variants is None): 
                 tn.reverce_variants = list()
-            v.coef = coef
+            v.coef = (coef)
             tn.reverce_variants.append(v)
     
     @staticmethod
@@ -302,7 +302,7 @@ class MorphSerializeHelper:
                 if (r._lazy is not None): 
                     str0_.seek(r._lazy.begin)
                     MorphSerializeHelper.__deserialize_morph_rule(str0_, r, me)
-                    r._lazy = None
+                    r._lazy = (None)
             str0_.seek(p)
     
     @staticmethod
@@ -335,9 +335,9 @@ class MorphSerializeHelper:
                         continue
                     rtn = root
                     lev = 0
-                    first_pass2675 = True
+                    first_pass3620 = True
                     while True:
-                        if first_pass2675: first_pass2675 = False
+                        if first_pass3620: first_pass3620 = False
                         else: lev += 1
                         if (not (lev < MorphSerializeHelper.__max_tail_len)): break
                         i = len(wf) - 1 - lev
@@ -367,7 +367,7 @@ class MorphSerializeHelper:
                                     break
                             if (not has): 
                                 mrf0 = MorphRuleVariant(mrf)
-                                mrf0.coef = 1
+                                mrf0.coef = (1)
                                 rtn.reverce_variants.append(mrf0)
                         break
         if (tn.nodes is not None): 

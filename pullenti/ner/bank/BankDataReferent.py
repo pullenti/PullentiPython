@@ -1,13 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
-
 
 
 class BankDataReferent(Referent):
@@ -30,7 +29,7 @@ class BankDataReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.uri.UriReferent import UriReferent
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         for s in self.slots: 
             if (isinstance(s.value, UriReferent)): 
                 if ((s.value if isinstance(s.value, UriReferent) else None).scheme == "Р/С"): 

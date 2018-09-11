@@ -1,10 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.instrument.InstrumentKind import InstrumentKind
 
@@ -13,7 +13,6 @@ class MetaInstrumentBlock(ReferentClass):
     
     def __init__(self) -> None:
         from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
-        from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
         self.kind_feature = None
         super().__init__()
         self.kind_feature = self.add_feature(InstrumentBlockReferent.ATTR_KIND, "Класс", 0, 1)
@@ -64,10 +63,12 @@ class MetaInstrumentBlock(ReferentClass):
         self.kind_feature.add_value(Utils.enumToString(InstrumentKind.TABLEROW), "Строка таблицы", None, None)
         self.kind_feature.add_value(Utils.enumToString(InstrumentKind.TABLECELL), "Ячейка таблицы", None, None)
         fi2 = self.add_feature(InstrumentBlockReferent.ATTR_KIND, "Класс (доп.)", 0, 1)
-        for i in range(len(self.kind_feature.inner_values)):
+        i = 0
+        while i < len(self.kind_feature.inner_values): 
             fi2.add_value(self.kind_feature.inner_values[i], self.kind_feature.outer_values[i], None, None)
+            i += 1
         self.add_feature(InstrumentBlockReferent.ATTR_CHILD, "Внутренний элемент", 0, 0).show_as_parent = True
-        self.add_feature(InstrumentReferent.ATTR_NAME, "Наименование", 0, 1)
+        self.add_feature(InstrumentBlockReferent.ATTR_NAME, "Наименование", 0, 1)
         self.add_feature(InstrumentBlockReferent.ATTR_NUMBER, "Номер", 0, 1)
         self.add_feature(InstrumentBlockReferent.ATTR_MINNUMBER, "Минимальный номер", 0, 1)
         self.add_feature(InstrumentBlockReferent.ATTR_SUBNUMBER, "Подномер", 0, 1)

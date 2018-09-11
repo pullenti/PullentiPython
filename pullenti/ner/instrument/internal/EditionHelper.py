@@ -1,11 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 from pullenti.ner.instrument.InstrumentKind import InstrumentKind
-
 
 
 class EditionHelper:
@@ -35,13 +34,14 @@ class EditionHelper:
                         root.referents.append(dec)
                 tt = tt.next0_
             return
-        for i0 in range(len(root.children)):
+        i0 = 0
+        while i0 < len(root.children): 
             ch = root.children[i0]
             if (((ch.kind == InstrumentKind.COMMENT or ch.kind == InstrumentKind.KEYWORD or ch.kind == InstrumentKind.NUMBER) or ch.kind == InstrumentKind.NAME or ch.kind == InstrumentKind.CONTENT) or ch.kind == InstrumentKind.INDENTION): 
                 pass
             else: 
                 break
-        else: i0 = len(root.children)
+            i0 += 1
         if (root.number > 0): 
             edt1 = EditionHelper.__get_last_child(root)
             if (edt1 is not None and edt1.kind == InstrumentKind.EDITIONS and edt1.tag is None): 
@@ -52,7 +52,7 @@ class EditionHelper:
                         for r in edt1.referents: 
                             if (not r in root.referents): 
                                 root.referents.append(r)
-                    edt1.tag = edt1
+                    edt1.tag = (edt1)
         if (i0 >= len(root.children)): 
             for ch in root.children: 
                 EditionHelper.analize_editions(ch)
@@ -74,8 +74,9 @@ class EditionHelper:
                 for r in ch0.referents: 
                     if (not r in root.referents): 
                         root.referents.append(r)
-            ch0.tag = ch0
-        for i in range(len(root.children)):
+            ch0.tag = (ch0)
+        i = 0
+        while i < len(root.children): 
             ch = root.children[i]
             edt = None
             edt2 = None
@@ -85,10 +86,10 @@ class EditionHelper:
                 edt2 = root.children[i + 1]
             if (edt is not None): 
                 if (EditionHelper.__can_be_edition_for(ch, edt) < 1): 
-                    edt = None
+                    edt = (None)
             if (edt2 is not None): 
                 if (EditionHelper.__can_be_edition_for(ch, edt2) < 0): 
-                    edt2 = None
+                    edt2 = (None)
             if (edt is not None and edt.tag is None): 
                 if (ch.referents is None): 
                     ch.referents = edt.referents
@@ -96,7 +97,7 @@ class EditionHelper:
                     for r in edt.referents: 
                         if (not r in ch.referents): 
                             ch.referents.append(r)
-                edt.tag = ch
+                edt.tag = (ch)
             if (edt2 is not None and edt2.tag is None): 
                 if (ch.referents is None): 
                     ch.referents = edt2.referents
@@ -104,7 +105,8 @@ class EditionHelper:
                     for r in edt2.referents: 
                         if (not r in ch.referents): 
                             ch.referents.append(r)
-                edt2.tag = ch
+                edt2.tag = (ch)
+            i += 1
         for ch in root.children: 
             EditionHelper.analize_editions(ch)
     

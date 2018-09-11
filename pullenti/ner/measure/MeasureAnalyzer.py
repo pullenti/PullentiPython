@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -64,13 +64,6 @@ class MeasureAnalyzer(Analyzer):
         return 1
     
     def process(self, kit : 'AnalysisKit') -> None:
-        """ Основная функция выделения телефонов
-        
-        Args:
-            cnt: 
-            stage: 
-        
-        """
         from pullenti.ner.core.TerminCollection import TerminCollection
         from pullenti.ner.measure.UnitReferent import UnitReferent
         from pullenti.ner.core.Termin import Termin
@@ -89,9 +82,9 @@ class MeasureAnalyzer(Analyzer):
                     if (s.type_name == UnitReferent.ATTR_NAME or s.type_name == UnitReferent.ATTR_FULLNAME): 
                         addunits.add(Termin._new118(s.value if isinstance(s.value, str) else None, uu))
         t = kit.first_token
-        first_pass2970 = True
+        first_pass3939 = True
         while True:
-            if first_pass2970: first_pass2970 = False
+            if first_pass3939: first_pass3939 = False
             else: t = t.next0_
             if (not (t is not None)): break
             mt = MeasureToken.try_parse_minimal(t, addunits, False)
@@ -102,15 +95,19 @@ class MeasureAnalyzer(Analyzer):
             rts = mt.create_refenets_tokens_with_register(ad, True)
             if (rts is None): 
                 continue
-            for i in range(len(rts)):
+            i = 0
+            while i < len(rts): 
                 rt = rts[i]
                 t.kit.embed_token(rt)
-                t = rt
-                for j in range(i + 1, len(rts), 1):
+                t = (rt)
+                j = i + 1
+                while j < len(rts): 
                     if (rts[j].begin_token == rt.begin_token): 
                         rts[j].begin_token = t
                     if (rts[j].end_token == rt.end_token): 
                         rts[j].end_token = t
+                    j += 1
+                i += 1
         if (kit.ontology is not None): 
             for e0_ in ad.referents: 
                 u = (e0_ if isinstance(e0_, UnitReferent) else None)

@@ -1,10 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphGender import MorphGender
@@ -26,7 +26,7 @@ class NounPhraseItemTextVar(MorphBaseInfo):
             self.normal_value = wf.normal_case
             if (wf.number == MorphNumber.PLURAL and wf.normal_full is not None): 
                 self.single_number_value = wf.normal_full
-            self.undef_coef = wf.undef_coef
+            self.undef_coef = (wf.undef_coef)
         elif (t is not None): 
             self.normal_value = t.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False)
         if (self.case.is_undefined and src is not None): 

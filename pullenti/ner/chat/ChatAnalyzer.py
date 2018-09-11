@@ -1,11 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
-from pullenti.ntopy.Utils import Utils
+import datetime
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.business.internal.ResourceHelper import ResourceHelper
 from pullenti.ner.chat.ChatType import ChatType
@@ -51,7 +52,7 @@ class ChatAnalyzer(Analyzer):
     
     @property
     def used_extern_object_types(self) -> typing.List[str]:
-        return list()
+        return str()
     
     @property
     def progress_weight(self) -> int:
@@ -62,8 +63,6 @@ class ChatAnalyzer(Analyzer):
         return True
     
     CURRENT_DATE_TIME = None
-    """ Это нужно для автотестов, чтобы фиксировать дату-время, относительно которой 
-     идут вычисления (если не задана, то берётся текущая) """
     
     def process(self, kit : 'AnalysisKit') -> None:
         from pullenti.ner.chat.internal.ChatItemToken import ChatItemToken
@@ -72,9 +71,9 @@ class ChatAnalyzer(Analyzer):
         ad = kit.get_analyzer_data(self)
         toks = list()
         t = kit.first_token
-        first_pass2733 = True
+        first_pass3682 = True
         while True:
-            if first_pass2733: first_pass2733 = False
+            if first_pass3682: first_pass3682 = False
             else: t = t.next0_
             if (not (t is not None)): break
             cit = ChatItemToken.try_parse(t)
@@ -83,9 +82,9 @@ class ChatAnalyzer(Analyzer):
             toks.append(cit)
             t = cit.end_token
         i = 0
-        first_pass2734 = True
+        first_pass3683 = True
         while True:
-            if first_pass2734: first_pass2734 = False
+            if first_pass3683: first_pass3683 = False
             else: i += 1
             if (not (i < (len(toks) - 1))): break
             if (((toks[i].typ == ChatType.ACCEPT or toks[i].typ == ChatType.CANCEL)) and ChatAnalyzer.__can_merge(toks[i], toks[i + 1])): 
@@ -115,9 +114,9 @@ class ChatAnalyzer(Analyzer):
     def __can_merge(t1 : 'ChatItemToken', t2 : 'ChatItemToken') -> bool:
         from pullenti.ner.TextToken import TextToken
         t = t1.end_token.next0_
-        first_pass2735 = True
+        first_pass3684 = True
         while True:
-            if first_pass2735: first_pass2735 = False
+            if first_pass3684: first_pass3684 = False
             else: t = t.next0_
             if (not (t is not None and (t.end_char < t2.begin_char))): break
             if (not ((isinstance(t, TextToken)))): 
@@ -139,3 +138,10 @@ class ChatAnalyzer(Analyzer):
         except Exception as ex: 
             raise Utils.newException(ex.__str__(), ex)
         ProcessorService.register_analyzer(ChatAnalyzer())
+    
+    # static constructor for class ChatAnalyzer
+    @staticmethod
+    def _static_ctor():
+        ChatAnalyzer.CURRENT_DATE_TIME = datetime.datetime(1, 1, 1, 0, 0, 0)
+
+ChatAnalyzer._static_ctor()

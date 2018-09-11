@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -20,8 +20,10 @@ class TextWrapper:
         self.length = (0 if txt is None else len(txt))
         chars_ = UnicodeInfo.ALL_CHARS
         if (txt is not None): 
-            for i in range(len(txt)):
+            i = 0
+            while i < len(txt): 
                 self.chars.append(chars_[ord(txt[i])])
+                i += 1
     
     def __str__(self) -> str:
         return str(self.text)

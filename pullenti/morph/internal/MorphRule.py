@@ -1,13 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import typing
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.morph.LanguageHelper import LanguageHelper
 
 
@@ -21,7 +21,7 @@ class MorphRule:
         self._lazy = None
     
     def __str__(self) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         for k in self.variants_key: 
             if (res.tell() > 0): 
                 print(", ", end="", file=res)
@@ -57,5 +57,5 @@ class MorphRule:
                 else: 
                     r.normal_full = word_begin
             if (not MorphWordForm._has_morph_equals(res, r)): 
-                r.undef_coef = 0
+                r.undef_coef = (0)
                 res.append(r)

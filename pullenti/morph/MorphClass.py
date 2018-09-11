@@ -1,10 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+import io
+from pullenti.unisharp.Utils import Utils
 
 
 class MorphClass:
@@ -12,27 +13,27 @@ class MorphClass:
     
     def __init__(self, val : 'MorphClass'=None) -> None:
         self.value = 0
-        self.value = 0
+        self.value = (0)
         if (val is not None): 
             self.value = val.value
     
     def __get_value(self, i : int) -> bool:
-        return ((((self.value >> i)) & 1)) != 0
+        return (((((self.value) >> i)) & 1)) != 0
     
     def __set_value(self, i : int, val : bool) -> None:
         if (val): 
-            self.value |= (1 << i)
+            self.value |= ((1 << i))
         else: 
-            self.value &= ~ ((1 << i))
+            self.value &= (~ ((1 << i)))
     
     @property
     def is_undefined(self) -> bool:
         """ Неопределённый тип """
-        return self.value == 0
+        return self.value == (0)
     
     @is_undefined.setter
     def is_undefined(self, value_) -> bool:
-        self.value = 0
+        self.value = (0)
         return value_
     
     @property
@@ -43,7 +44,7 @@ class MorphClass:
     @is_noun.setter
     def is_noun(self, value_) -> bool:
         if (value_): 
-            self.value = 0
+            self.value = (0)
         self.__set_value(0, value_)
         return value_
     
@@ -59,7 +60,7 @@ class MorphClass:
     @is_adjective.setter
     def is_adjective(self, value_) -> bool:
         if (value_): 
-            self.value = 0
+            self.value = (0)
         self.__set_value(1, value_)
         return value_
     
@@ -75,7 +76,7 @@ class MorphClass:
     @is_verb.setter
     def is_verb(self, value_) -> bool:
         if (value_): 
-            self.value = 0
+            self.value = (0)
         self.__set_value(2, value_)
         return value_
     
@@ -91,7 +92,7 @@ class MorphClass:
     @is_adverb.setter
     def is_adverb(self, value_) -> bool:
         if (value_): 
-            self.value = 0
+            self.value = (0)
         self.__set_value(3, value_)
         return value_
     
@@ -107,7 +108,7 @@ class MorphClass:
     @is_pronoun.setter
     def is_pronoun(self, value_) -> bool:
         if (value_): 
-            self.value = 0
+            self.value = (0)
         self.__set_value(4, value_)
         return value_
     
@@ -123,7 +124,7 @@ class MorphClass:
     @is_misc.setter
     def is_misc(self, value_) -> bool:
         if (value_): 
-            self.value = 0
+            self.value = (0)
         self.__set_value(5, value_)
         return value_
     
@@ -254,11 +255,11 @@ class MorphClass:
     __m_names = None
     
     def __str__(self) -> str:
-        tmp_str = Utils.newStringIO(None)
+        tmp_str = io.StringIO()
         i = 0
-        first_pass2677 = True
+        first_pass3624 = True
         while True:
-            if first_pass2677: first_pass2677 = False
+            if first_pass3624: first_pass3624 = False
             else: i += 1
             if (not (i < len(MorphClass.__m_names))): break
             if (self.__get_value(i)): 
@@ -285,7 +286,7 @@ class MorphClass:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphClass._new63((val1 & val2))
+        return MorphClass._new63(((val1) & (val2)))
     
     def __or__(self : 'MorphClass', arg2 : 'MorphClass') -> 'MorphClass':
         val1 = 0
@@ -294,7 +295,7 @@ class MorphClass:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphClass._new63((val1 | val2))
+        return MorphClass._new63(((val1) | (val2)))
     
     def __xor__(self : 'MorphClass', arg2 : 'MorphClass') -> 'MorphClass':
         val1 = 0
@@ -303,7 +304,7 @@ class MorphClass:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphClass._new63((val1 ^ val2))
+        return MorphClass._new63(((val1) ^ (val2)))
     
     def __eq__(self : 'MorphClass', arg2 : 'MorphClass') -> bool:
         val1 = 0
@@ -324,32 +325,22 @@ class MorphClass:
         return val1 != val2
     
     UNDEFINED = None
-    """ Неопределённое """
     
     NOUN = None
-    """ Существительное """
     
     PRONOUN = None
-    """ Местоимение """
     
     PERSONAL_PRONOUN = None
-    """ Личное местоимение """
     
     VERB = None
-    """ Глагол """
     
     ADJECTIVE = None
-    """ Прилагательное """
     
     ADVERB = None
-    """ Наречие """
     
     PREPOSITION = None
-    """ Предлог """
     
     CONJUNCTION = None
-    """ Союз """
-
     
     @staticmethod
     def _new63(_arg1 : int) -> 'MorphClass':
@@ -412,7 +403,7 @@ class MorphClass:
         return res
     
     @staticmethod
-    def _new2386(_arg1 : bool) -> 'MorphClass':
+    def _new2395(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_proper_surname = _arg1
         return res

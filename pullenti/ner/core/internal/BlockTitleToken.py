@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 import math
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.internal.BlkTyps import BlkTyps
 from pullenti.ner.core.TerminCollection import TerminCollection
@@ -31,9 +31,9 @@ class BlockTitleToken(MetaToken):
         intro = None
         lits = None
         tt = t
-        first_pass2739 = True
+        first_pass3688 = True
         while True:
-            if first_pass2739: first_pass2739 = False
+            if first_pass3688: first_pass3688 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 
@@ -76,9 +76,9 @@ class BlockTitleToken(MetaToken):
             cou = 0
             err = 0
             tt = content.end_token.next0_
-            first_pass2740 = True
+            first_pass3689 = True
             while True:
-                if first_pass2740: first_pass2740 = False
+                if first_pass3689: first_pass3689 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not tt.is_newline_before): 
@@ -108,9 +108,9 @@ class BlockTitleToken(MetaToken):
             return None
         first = True
         tt = t0
-        first_pass2741 = True
+        first_pass3690 = True
         while True:
-            if first_pass2741: first_pass2741 = False
+            if first_pass3690: first_pass3690 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (not tt.is_newline_before): 
@@ -223,7 +223,7 @@ class BlockTitleToken(MetaToken):
                 t = t.next0_
         tt = res.end_token
         while tt is not None and tt.begin_char > li.number_end.end_char: 
-            if (isinstance(tt, TextToken) and tt.chars.is_letter): 
+            if ((isinstance(tt, TextToken)) and tt.chars.is_letter): 
                 res.value = MiscHelper.get_text_value(li.number_end.next0_, tt, GetTextAttr.NO)
                 break
             tt = tt.previous
@@ -233,7 +233,6 @@ class BlockTitleToken(MetaToken):
             if (li.words < li.not_words): 
                 return None
         return res
-
     
     @staticmethod
     def _new481(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BlkTyps') -> 'BlockTitleToken':

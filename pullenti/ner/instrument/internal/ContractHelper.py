@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -12,26 +12,22 @@ class ContractHelper:
     
     @staticmethod
     def correct_dummy_newlines(fr : 'FragToken') -> None:
-        """ Объединение абзацев в один фрагмент, если переход на новую строку
-         является сомнительным (для договоров обычно кривые документы)
-        
-        Args:
-            fr(FragToken): 
-        """
-        for i in range(len(fr.children)):
+        i = 0
+        while i < len(fr.children): 
             ch = fr.children[i]
             if ((ch.kind == InstrumentKind.KEYWORD or ch.kind == InstrumentKind.NUMBER or ch.kind == InstrumentKind.NAME) or ch.kind == InstrumentKind.EDITIONS or ch.kind == InstrumentKind.COMMENT): 
                 pass
             else: 
                 break
-        else: i = len(fr.children)
+            i += 1
         if ((i < len(fr.children)) and fr.children[i].kind == InstrumentKind.INDENTION): 
-            for j in range(i + 1, len(fr.children), 1):
+            j = (i + 1)
+            while j < len(fr.children): 
                 if (fr.children[j].kind != InstrumentKind.INDENTION): 
                     break
                 elif (ContractHelper.__calc_newline_between_coef(fr.children[j - 1], fr.children[j]) > 0): 
                     break
-            else: j = len(fr.children)
+                j += 1
             if (j >= len(fr.children)): 
                 j -= 1
                 fr.children[i].kind = InstrumentKind.CONTENT
@@ -53,11 +49,12 @@ class ContractHelper:
                     j += 1
                 if (ch): 
                     num = 1
-                    for j in range(i, len(fr.children), 1):
+                    j = i
+                    while j < len(fr.children): 
                         if (fr.children[j].kind == InstrumentKind.INDENTION): 
                             fr.children[j].number = num
                             num += 1
-                    else: j = len(fr.children)
+                        j += 1
         for ch in fr.children: 
             ContractHelper.correct_dummy_newlines(ch)
     
@@ -78,7 +75,7 @@ class ContractHelper:
         t = fr1.end_token
         if (t.is_char_of(":;.")): 
             return 1
-        if (isinstance(t, TextToken) and ((t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction))): 
+        if ((isinstance(t, TextToken)) and ((t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction))): 
             return -1
         t1 = fr2.begin_token
         if (isinstance(t1, TextToken)): 

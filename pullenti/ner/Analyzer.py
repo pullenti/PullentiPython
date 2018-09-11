@@ -1,13 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 import math
-from pullenti.ntopy.Misc import ProgressEventArgs
-from pullenti.ntopy.Misc import CancelEventArgs
+from pullenti.unisharp.Misc import ProgressEventArgs
+from pullenti.unisharp.Misc import CancelEventArgs
 from pullenti.ner.core.AnalyzerData import AnalyzerData
 
 
@@ -23,11 +23,6 @@ class Analyzer:
         self._persist_analizer_data = None
     
     def process(self, kit : 'AnalysisKit') -> None:
-        """ Запустить анализ
-        
-        Args:
-            kit(AnalysisKit): контейнер с данными
-        """
         pass
     
     @property
@@ -68,12 +63,6 @@ class Analyzer:
         return False
     
     def create_referent(self, type0_ : str) -> 'Referent':
-        """ Создать объект указанного типа
-        
-        Args:
-            type0_(str): 
-        
-        """
         return None
     
     __empty_list = None
@@ -93,8 +82,8 @@ class Analyzer:
         if (self._progress.__len__() > 0): 
             if (pos >= 0 and pos <= max0_ and max0_ > 0): 
                 percent = pos
-                percent *= 100
-                percent = math.floor(percent / max0_)
+                percent *= (100)
+                percent = math.floor(percent / (max0_))
                 if (percent != self.__last_percent): 
                     arg = ProgressEventArgs(percent, None)
                     for iiid in range(len(self._progress)): self._progress[iiid].call(self, arg)
@@ -132,31 +121,12 @@ class Analyzer:
         return self.__ignorethisanalyzer
     
     def create_analyzer_data(self) -> 'AnalyzerData':
-        """ Используется внутренним образом
-        
-        """
         return AnalyzerData()
     
     def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        """ Попытаться выделить сущность в указанном диапазоне (используется внутренним образом).
-         Кстати, выделенная сущность не сохраняется в локальной онтологии.
-        
-        Args:
-            begin(Token): начало диапазона
-            end(Token): конец диапазона (если null, то до конца)
-        
-        Returns:
-            ReferentToken: результат
-        """
         return None
     
     def process_ontology_item(self, begin : 'Token') -> 'ReferentToken':
-        """ Это используется внутренним образом для обработки внешних онтологий
-        
-        Args:
-            begin(Token): 
-        
-        """
         return None
     
     # static constructor for class Analyzer

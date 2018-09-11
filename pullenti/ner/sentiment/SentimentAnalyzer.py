@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.business.internal.ResourceHelper import ResourceHelper
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
@@ -77,9 +77,9 @@ class SentimentAnalyzer(Analyzer):
         from pullenti.ner.ReferentToken import ReferentToken
         ad = kit.get_analyzer_data(self)
         t = kit.first_token
-        first_pass3049 = True
+        first_pass4025 = True
         while True:
-            if first_pass3049: first_pass3049 = False
+            if first_pass4025: first_pass4025 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -95,27 +95,27 @@ class SentimentAnalyzer(Analyzer):
             t0 = t
             t1 = tok.end_token
             tt = t.previous
-            first_pass3050 = True
+            first_pass4026 = True
             while True:
-                if first_pass3050: first_pass3050 = False
+                if first_pass4026: first_pass4026 = False
                 else: tt = tt.previous
                 if (not (tt is not None)): break
                 tok0 = SentimentAnalyzer.__m_termins.try_parse(tt, TerminParseAttr.NO)
                 if (tok0 is not None): 
-                    if (tok0.termin.tag == 0): 
+                    if ((tok0.termin.tag) == 0): 
                         coef *= 2
                         t0 = tt
                         continue
                     break
-                if (isinstance(tt, TextToken) and (tt if isinstance(tt, TextToken) else None).term == "НЕ"): 
+                if ((isinstance(tt, TextToken)) and (tt if isinstance(tt, TextToken) else None).term == "НЕ"): 
                     coef = (- coef)
                     t0 = tt
                     continue
                 break
             tt = t1.next0_
-            first_pass3051 = True
+            first_pass4027 = True
             while True:
-                if first_pass3051: first_pass3051 = False
+                if first_pass4027: first_pass4027 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not ((isinstance(tt, TextToken)))): 
@@ -125,7 +125,7 @@ class SentimentAnalyzer(Analyzer):
                 tok0 = SentimentAnalyzer.__m_termins.try_parse(tt, TerminParseAttr.NO)
                 if (tok0 is None): 
                     break
-                coef += tok0.termin.tag
+                coef += (tok0.termin.tag)
                 t1 = tok0.end_token
                 tt = t1
             if (coef == 0): 
@@ -137,7 +137,7 @@ class SentimentAnalyzer(Analyzer):
             sr = (ad.register_referent(sr) if isinstance(ad.register_referent(sr), SentimentReferent) else None)
             rt = ReferentToken(sr, t0, t1)
             kit.embed_token(rt)
-            t = rt
+            t = (rt)
     
     __m_termins = None
     

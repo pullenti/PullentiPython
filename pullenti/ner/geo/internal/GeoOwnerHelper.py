@@ -1,11 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 
 
 class GeoOwnerHelper:
@@ -13,7 +13,7 @@ class GeoOwnerHelper:
     @staticmethod
     def __get_types_string(g : 'GeoReferent') -> str:
         from pullenti.ner.geo.GeoReferent import GeoReferent
-        tmp = Utils.newStringIO(None)
+        tmp = io.StringIO()
         for s in g.slots: 
             if (s.type_name == GeoReferent.ATTR_TYPE): 
                 print("{0};".format(s.value), end="", file=tmp, flush=True)
@@ -24,7 +24,7 @@ class GeoOwnerHelper:
         from pullenti.ner.geo.GeoReferent import GeoReferent
         if (rhi is None or rlo is None): 
             return False
-        if (rhi.morph.case.is_instrumental): 
+        if (rhi.morph.case.is_instrumental and not rhi.morph.case.is_genitive): 
             return False
         hi = (rhi.get_referent() if isinstance(rhi.get_referent(), GeoReferent) else None)
         lo = (rlo.get_referent() if isinstance(rlo.get_referent(), GeoReferent) else None)
@@ -133,7 +133,7 @@ class GeoOwnerHelper:
         elif (lo.is_region): 
             for s in hi.slots: 
                 if (s.type_name == GeoReferent.ATTR_TYPE): 
-                    if (s.value != "регион" and s.value != "регіон"): 
+                    if ((s.value) != "регион" and (s.value) != "регіон"): 
                         if (lo.find_slot(s.type_name, s.value, True) is not None): 
                             return False
             if (hi.is_state): 

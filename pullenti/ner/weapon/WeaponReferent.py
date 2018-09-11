@@ -1,14 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.morph.LanguageHelper import LanguageHelper
-
 
 
 class WeaponReferent(Referent):
@@ -34,7 +33,7 @@ class WeaponReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         str0_ = None
         for s in self.slots: 
             if (s.type_name == WeaponReferent.ATTR_TYPE): 
@@ -53,7 +52,7 @@ class WeaponReferent(Referent):
         if ((str0_) is not None): 
             print(" \"{0}\"".format(MiscHelper.convert_first_char_upper_and_other_lower(str0_)), end="", file=res, flush=True)
             for s in self.slots: 
-                if (s.type_name == WeaponReferent.ATTR_NAME and str0_ != s.value): 
+                if (s.type_name == WeaponReferent.ATTR_NAME and str0_ != (s.value)): 
                     if (LanguageHelper.is_cyrillic_char(str0_[0]) != LanguageHelper.is_cyrillic_char((s.value)[0])): 
                         print(" ({0})".format(MiscHelper.convert_first_char_upper_and_other_lower(s.value)), end="", file=res, flush=True)
                         break

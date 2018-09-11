@@ -1,10 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+import datetime
+from pullenti.unisharp.Utils import Utils
 from pullenti.morph.DerivateWord import DerivateWord
 
 
@@ -22,7 +23,7 @@ class DerivateGroup:
         self.m_transitive = -1
         self.deleted = False
         self.id0_ = None
-        self.modified = None
+        self.modified = datetime.datetime(1, 1, 1, 0, 0, 0)
         self.changed = False
         self._lazy = None
         self.tag = None
@@ -37,18 +38,11 @@ class DerivateGroup:
         return -1
     
     def contains_word(self, word : str, lang : 'MorphLang') -> bool:
-        """ Содержит ли группа слово
-        
-        Args:
-            word(str): слово
-            lang(MorphLang): возможный язык
-        
-        """
         for w in self.words: 
             if (w.spelling == word): 
                 if (lang is None or lang.is_undefined or w.lang is None): 
                     return True
-                if (not (lang & w.lang).is_undefined): 
+                if (not ((lang) & w.lang).is_undefined): 
                     return True
         return False
     
@@ -74,12 +68,11 @@ class DerivateGroup:
     def create_by_prefix(self, pref : str, lang : 'MorphLang') -> 'DerivateGroup':
         res = DerivateGroup._new40(True, self, pref)
         for w in self.words: 
-            if (not lang.is_undefined and (w.lang & lang).is_undefined): 
+            if (lang is not None and not lang.is_undefined and ((w.lang) & lang).is_undefined): 
                 continue
             rw = DerivateWord._new41(res, pref + w.spelling, w.lang, w.class0_, w.aspect, w.reflexive, w.tense, w.voice, w.attrs)
             res.words.append(rw)
         return res
-
     
     @staticmethod
     def _new40(_arg1 : bool, _arg2 : 'DerivateGroup', _arg3 : str) -> 'DerivateGroup':

@@ -1,11 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.morph.MorphAspect import MorphAspect
 from pullenti.morph.MorphVoice import MorphVoice
 from pullenti.morph.MorphTense import MorphTense
@@ -30,7 +30,7 @@ class DerivateWord:
         self.group = gr
     
     def __str__(self) -> str:
-        tmp = Utils.newStringIO(None)
+        tmp = io.StringIO()
         print(self.spelling, end="", file=tmp)
         if (self.class0_ is not None and not self.class0_.is_undefined): 
             print(", {0}".format(str(self.class0_)), end="", file=tmp, flush=True)
@@ -42,13 +42,12 @@ class DerivateWord:
             print(", {0}".format(("прош." if self.tense == MorphTense.PAST else ("настоящ." if self.tense == MorphTense.PRESENT else "будущ."))), end="", file=tmp, flush=True)
         if (self.reflexive): 
             print(", возвр.", end="", file=tmp)
-        if (self.attrs._value != 0): 
+        if (self.attrs._value != (0)): 
             print(", {0}".format(str(self.attrs)), end="", file=tmp, flush=True)
         if (self.nexts is not None): 
             for v in self.nexts.items(): 
                 print(" -{0}[{1}];".format(v[0], v[1]), end="", file=tmp, flush=True)
         return Utils.toStringStringIO(tmp)
-
     
     @staticmethod
     def _new41(_arg1 : 'DerivateGroup', _arg2 : str, _arg3 : 'MorphLang', _arg4 : 'MorphClass', _arg5 : 'MorphAspect', _arg6 : bool, _arg7 : 'MorphTense', _arg8 : 'MorphVoice', _arg9 : 'ExplanWordAttr') -> 'DerivateWord':

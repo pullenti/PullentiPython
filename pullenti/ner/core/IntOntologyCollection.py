@@ -1,14 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-
 
 
 class IntOntologyCollection:
@@ -19,7 +18,6 @@ class IntOntologyCollection:
         def __init__(self) -> None:
             super().__init__()
             self.owner = None
-    
         
         @staticmethod
         def _new501(_arg1 : 'IntOntologyItem', _arg2 : object) -> 'OntologyTermin':
@@ -41,15 +39,11 @@ class IntOntologyCollection:
         return self.__m_items
     
     def add_item(self, di : 'IntOntologyItem') -> None:
-        """ Добавить элемент (внимание, после добавления нельзя менять термины у элемента)
-        
-        Args:
-            di(IntOntologyItem): 
-        """
         
         self.__m_items.append(di)
         di.owner = self
-        for i in range(len(di.termins)):
+        i = 0
+        while i < len(di.termins): 
             if (isinstance(di.termins[i], IntOntologyCollection.OntologyTermin)): 
                 (di.termins[i] if isinstance(di.termins[i], IntOntologyCollection.OntologyTermin) else None).owner = di
                 self.__m_termins.add(di.termins[i])
@@ -58,14 +52,9 @@ class IntOntologyCollection:
                 di.termins[i].copy_to(nt)
                 self.__m_termins.add(nt)
                 di.termins[i] = nt
+            i += 1
     
     def add_referent(self, referent : 'Referent') -> bool:
-        """ Добавить в онтологию сущность
-        
-        Args:
-            referent(Referent): 
-        
-        """
         if (referent is None): 
             return False
         oi = None
@@ -89,36 +78,18 @@ class IntOntologyCollection:
         return True
     
     def add_termin(self, di : 'IntOntologyItem', t : 'Termin') -> None:
-        """ Добавить термин в существующий элемент
-        
-        Args:
-            di(IntOntologyItem): 
-            t(Termin): 
-        """
         
         nt = IntOntologyCollection.OntologyTermin._new501(di, t.tag)
         t.copy_to(nt)
         self.__m_termins.add(nt)
     
     def add(self, t : 'Termin') -> None:
-        """ Добавить отдельный термин (после добавления нельзя изменять свойства термина)
-        
-        Args:
-            t(Termin): 
-        """
         self.__m_termins.add(t)
     
     def find_termin_by_canonic_text(self, text : str) -> typing.List['Termin']:
         return self.__m_termins.find_termin_by_canonic_text(text)
     
     def try_attach(self, t : 'Token', referent_type_name : str=None, can_be_geo_object : bool=False) -> typing.List['IntOntologyToken']:
-        """ Привязать с указанной позиции
-        
-        Args:
-            t(Token): 
-            can_be_geo_object(bool): при True внутри может быть географический объект (Министерство РФ по делам ...)
-        
-        """
         
         from pullenti.ner.core.IntOntologyToken import IntOntologyToken
         tts = self.__m_termins.try_parse_all(t, (TerminParseAttr.CANBEGEOOBJECT if can_be_geo_object else TerminParseAttr.NO))
@@ -141,12 +112,6 @@ class IntOntologyCollection:
         return (None if len(res) == 0 else res)
     
     def try_attach_by_item(self, item : 'IntOntologyItem') -> typing.List['IntOntologyItem']:
-        """ Найти похожие онтологические объекты
-        
-        Args:
-            item(IntOntologyItem): 
-        
-        """
         
         if (item is None): 
             return None
@@ -164,13 +129,6 @@ class IntOntologyCollection:
         return res
     
     def try_attach_by_referent(self, referent : 'Referent', item : 'IntOntologyItem'=None, must_be_single : bool=False) -> typing.List['Referent']:
-        """ Найти эквивалентные сущности через онтологические объекты
-        
-        Args:
-            item(IntOntologyItem): 
-            referent(Referent): 
-        
-        """
         from pullenti.ner.Referent import Referent
         if (referent is None): 
             return None
@@ -194,37 +152,29 @@ class IntOntologyCollection:
             if (res is not None and len(res) > 1): 
                 i = 0
                 while i < (len(res) - 1): 
-                    for j in range(i + 1, len(res), 1):
+                    j = i + 1
+                    while j < len(res): 
                         if (not res[i].can_be_equals(res[j], Referent.EqualType.FORMERGING)): 
                             return None
+                        j += 1
                     i += 1
         return res
     
     def remove(self, r : 'Referent') -> None:
-        """ Произвести привязку, если элемент найдётся, то установить ссылку на OntologyElement
-        
-        Args:
-            referent: 
-            mergeSlots: 
-        
-        Удалить всё, что связано с сущностью
-            r(Referent): 
-        """
         i = 0
         while i < len(self.__m_items): 
             if (self.__m_items[i].referent == r): 
                 oi = self.__m_items[i]
-                oi.referent = None
-                r._int_ontology_item = None
+                oi.referent = (None)
+                r._int_ontology_item = (None)
                 del self.__m_items[i]
                 for t in oi.termins: 
                     self.__m_termins.remove(t)
                 break
             i += 1
-
     
     @staticmethod
-    def _new2613(_arg1 : bool) -> 'IntOntologyCollection':
+    def _new2626(_arg1 : bool) -> 'IntOntologyCollection':
         res = IntOntologyCollection()
         res.is_ext_ontology = _arg1
         return res

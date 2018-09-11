@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.morph.MorphPerson import MorphPerson
 from pullenti.morph.MorphTense import MorphTense
 from pullenti.morph.MorphAspect import MorphAspect
@@ -29,13 +29,13 @@ class MorphMiscInfo:
         return self.__m_attrs
     
     def __get_value(self, i : int) -> bool:
-        return ((((self._m_value >> i)) & 1)) != 0
+        return (((((self._m_value) >> i)) & 1)) != 0
     
     def __set_value(self, i : int, val : bool) -> None:
         if (val): 
-            self._m_value |= (1 << i)
+            self._m_value |= ((1 << i))
         else: 
-            self._m_value &= ~ ((1 << i))
+            self._m_value &= (~ ((1 << i)))
     
     def __add_attr(self, attr : str) -> None:
         if (not attr in self.__m_attrs): 
@@ -52,20 +52,20 @@ class MorphMiscInfo:
         """ Лицо """
         res = MorphPerson.UNDEFINED
         if ("1 л." in self.__m_attrs): 
-            res = Utils.valToEnum(res | MorphPerson.FIRST, MorphPerson)
+            res = (Utils.valToEnum((res) | (MorphPerson.FIRST), MorphPerson))
         if ("2 л." in self.__m_attrs): 
-            res = Utils.valToEnum(res | MorphPerson.SECOND, MorphPerson)
+            res = (Utils.valToEnum((res) | (MorphPerson.SECOND), MorphPerson))
         if ("3 л." in self.__m_attrs): 
-            res = Utils.valToEnum(res | MorphPerson.THIRD, MorphPerson)
+            res = (Utils.valToEnum((res) | (MorphPerson.THIRD), MorphPerson))
         return res
     
     @person.setter
     def person(self, value) -> 'MorphPerson':
-        if (((value & MorphPerson.FIRST)) != MorphPerson.UNDEFINED): 
+        if ((((value) & (MorphPerson.FIRST))) != (MorphPerson.UNDEFINED)): 
             self.__add_attr("1 л.")
-        if (((value & MorphPerson.SECOND)) != MorphPerson.UNDEFINED): 
+        if ((((value) & (MorphPerson.SECOND))) != (MorphPerson.UNDEFINED)): 
             self.__add_attr("2 л.")
-        if (((value & MorphPerson.THIRD)) != MorphPerson.UNDEFINED): 
+        if ((((value) & (MorphPerson.THIRD))) != (MorphPerson.UNDEFINED)): 
             self.__add_attr("3 л.")
         return value
     
@@ -159,11 +159,13 @@ class MorphMiscInfo:
         return value
     
     def __str__(self) -> str:
-        if (len(self.__m_attrs) == 0 and self._m_value == 0): 
+        if (len(self.__m_attrs) == 0 and self._m_value == (0)): 
             return ""
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         if (self.is_synonym_form): 
             print("синоним.форма ", end="", file=res)
-        for i in range(len(self.__m_attrs)):
+        i = 0
+        while i < len(self.__m_attrs): 
             print("{0} ".format(self.__m_attrs[i]), end="", file=res, flush=True)
+            i += 1
         return Utils.trimEndString(Utils.toStringStringIO(res))

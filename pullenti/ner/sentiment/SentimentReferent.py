@@ -1,15 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Referent import Referent
 from pullenti.ner.sentiment.SentimentKind import SentimentKind
-
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 
 
@@ -33,7 +32,7 @@ class SentimentReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.sentiment.internal.MetaSentiment import MetaSentiment
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         print(MetaSentiment.FTYP.convert_inner_value_to_outer_value(self.get_string_value(SentimentReferent.ATTR_KIND), lang), end="", file=res)
         print(" {0}".format(Utils.ifNotNull(self.spelling, "")), end="", file=res, flush=True)
         if (self.coef > 0): 
@@ -52,7 +51,7 @@ class SentimentReferent(Referent):
             res = Utils.valToEnum(s, SentimentKind)
             if (isinstance(res, SentimentKind)): 
                 return Utils.valToEnum(res, SentimentKind)
-        except Exception as ex2466: 
+        except Exception as ex2475: 
             pass
         return SentimentKind.UNDEFINED
     
@@ -76,10 +75,10 @@ class SentimentReferent(Referent):
         val = self.get_string_value(SentimentReferent.ATTR_COEF)
         if (val is None): 
             return 0
-        inoutarg2467 = RefOutArgWrapper(0)
-        inoutres2468 = Utils.tryParseInt(val, inoutarg2467)
-        i = inoutarg2467.value
-        if (not inoutres2468): 
+        inoutarg2476 = RefOutArgWrapper(0)
+        inoutres2477 = Utils.tryParseInt(val, inoutarg2476)
+        i = inoutarg2476.value
+        if (not inoutres2477): 
             return 0
         return i
     

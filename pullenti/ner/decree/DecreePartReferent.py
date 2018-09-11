@@ -1,14 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.morph.MorphLang import MorphLang
-
 
 
 class DecreePartReferent(Referent):
@@ -65,7 +64,7 @@ class DecreePartReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         if (self.sub_indention is not None): 
             print(" подабз.{0}".format(self.sub_indention), end="", file=res, flush=True)
         if (self.indention is not None): 
@@ -140,11 +139,11 @@ class DecreePartReferent(Referent):
         if (len(nam) > 100): 
             i = 100
             while i < len(nam): 
-                if (not nam[i].isalpha()): 
+                if (not str.isalpha(nam[i])): 
                     break
                 i += 1
             if (i < len(nam)): 
-                nam = (nam[0 : (i)] + "...")
+                nam = (nam[0:0+i] + "...")
         return MiscHelper.convert_first_char_upper_and_other_lower(nam)
     
     @property
@@ -163,7 +162,7 @@ class DecreePartReferent(Referent):
         tag_ = None
         if (isinstance(attr_value, PartToken.PartValue)): 
             tag_ = (attr_value if isinstance(attr_value, PartToken.PartValue) else None).source_value
-            attr_value = (attr_value if isinstance(attr_value, PartToken.PartValue) else None).value
+            attr_value = ((attr_value if isinstance(attr_value, PartToken.PartValue) else None).value)
         s = super().add_slot(attr_name, attr_value, clear_old_value, stat_count)
         if (tag_ is not None): 
             s.tag = tag_
@@ -359,7 +358,7 @@ class DecreePartReferent(Referent):
         if (name_ is None or len(name_) == 0): 
             return
         if (name_[len(name_) - 1] == '.'): 
-            name_ = name_[0 : (len(name_) - 1)]
+            name_ = name_[0:0+len(name_) - 1]
         name_ = name_.strip().upper()
         self.add_slot(DecreePartReferent.ATTR_NAME, name_, False, 0)
     
@@ -416,11 +415,6 @@ class DecreePartReferent(Referent):
         return False
     
     def _add_high_level_info(self, dp : 'DecreePartReferent') -> None:
-        """ Добавить информацию о вышележащих элементах
-        
-        Args:
-            dp(DecreePartReferent): 
-        """
         if (dp.addagree is not None and self.addagree is None): 
             self.addagree = dp.addagree
         elif (dp.addagree != self.addagree): 
@@ -476,12 +470,6 @@ class DecreePartReferent(Referent):
             self.indention = dp.indention
     
     def _is_all_items_less_level(self, upper_parts : 'Referent', ignore_equals : bool) -> bool:
-        """ Проверить, что все элементы находятся на более низком уровне, чем у аргумента
-        
-        Args:
-            upper_parts(Referent): 
-        
-        """
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
         if (isinstance(upper_parts, DecreeReferent)): 
             return True
@@ -645,10 +633,9 @@ class DecreePartReferent(Referent):
         if (cou != 1): 
             return None
         return res
-
     
     @staticmethod
-    def _new1070(_arg1 : 'DecreeReferent') -> 'DecreePartReferent':
+    def _new1072(_arg1 : 'DecreeReferent') -> 'DecreePartReferent':
         res = DecreePartReferent()
         res.owner = _arg1
         return res

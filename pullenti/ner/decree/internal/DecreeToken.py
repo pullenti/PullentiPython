@@ -1,17 +1,16 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-import datetime
 import io
+import datetime
 import typing
 from enum import IntEnum
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.MetaToken import MetaToken
-
 from pullenti.ner.decree.DecreeKind import DecreeKind
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
@@ -22,7 +21,6 @@ from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphGender import MorphGender
-
 
 
 class DecreeToken(MetaToken):
@@ -73,13 +71,6 @@ class DecreeToken(MetaToken):
     
     @staticmethod
     def try_attach(t : 'Token', prev : 'DecreeToken'=None, must_by_typ : bool=False) -> 'DecreeToken':
-        """ Привязать с указанной позиции один примитив
-        
-        Args:
-            cnt: 
-            indFrom: 
-        
-        """
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.date.DateReferent import DateReferent
         from pullenti.ner.NumberToken import NumberToken
@@ -115,7 +106,7 @@ class DecreeToken(MetaToken):
                     return res
                 elif (res is not None and res.typ == DecreeToken.ItemType.NUMBER): 
                     res1 = DecreeToken.__try_attach(res.end_token.next0_, prev, 0, False)
-                    if (res1 is not None and res1.typ == DecreeToken.ItemType.TYP and isinstance(res1.end_token, TextToken)): 
+                    if (res1 is not None and res1.typ == DecreeToken.ItemType.TYP and (isinstance(res1.end_token, TextToken))): 
                         res = DecreeToken._new831(t, t, DecreeToken.ItemType.TYP)
                         res.value = ("ПРОЕКТ " + (res1.end_token if isinstance(res1.end_token, TextToken) else None).term)
                         return res
@@ -151,9 +142,9 @@ class DecreeToken(MetaToken):
             pass
         if (res.typ == DecreeToken.ItemType.NUMBER): 
             tt = res.end_token.next0_
-            first_pass2791 = True
+            first_pass3741 = True
             while True:
-                if first_pass2791: first_pass2791 = False
+                if first_pass3741: first_pass3741 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not tt.is_comma_and or tt.is_newline_before): 
@@ -172,7 +163,7 @@ class DecreeToken(MetaToken):
                     res.children.append(ddd)
                     res.end_token = ddd.end_token
                     continue
-                if ((tt if isinstance(tt, NumberToken) else None).value > 1970): 
+                if ((tt if isinstance(tt, NumberToken) else None).value > (1970)): 
                     break
                 if (tt.is_whitespace_after): 
                     pass
@@ -180,7 +171,7 @@ class DecreeToken(MetaToken):
                     pass
                 else: 
                     break
-                tmp = Utils.newStringIO(None)
+                tmp = io.StringIO()
                 tee = DecreeToken.__try_attach_number(tt, tmp, True)
                 if (res.children is None): 
                     res.children = list()
@@ -191,20 +182,20 @@ class DecreeToken(MetaToken):
         if (res.typ != DecreeToken.ItemType.TYP): 
             return res
         if (res.begin_token == res.end_token): 
-            tok = DecreeToken.__m_termins.try_parse(res.begin_token.previous, TerminParseAttr.NO)
-            if (tok is not None and isinstance(tok.termin.tag, DecreeToken.ItemType) and tok.end_token == res.end_token): 
-                if (Utils.valToEnum(tok.termin.tag, DecreeToken.ItemType) == DecreeToken.ItemType.TYP): 
+            tok = DecreeToken.M_TERMINS.try_parse(res.begin_token.previous, TerminParseAttr.NO)
+            if (tok is not None and (isinstance(tok.termin.tag, DecreeToken.ItemType)) and tok.end_token == res.end_token): 
+                if ((Utils.valToEnum(tok.termin.tag, DecreeToken.ItemType)) == DecreeToken.ItemType.TYP): 
                     return None
         if (((prev is not None and prev.typ == DecreeToken.ItemType.TYP and prev.value is not None) and (("ДОГОВОР" in prev.value or "ДОГОВІР" in prev.value)) and res.value is not None) and not "ДОГОВОР" in res.value and not "ДОГОВІР" in res.value): 
             return None
-        for e0_ in DecreeToken.__m_empty_adjectives: 
+        for e0_ in DecreeToken.M_EMPTY_ADJECTIVES: 
             if (t.is_value(e0_, None)): 
                 res = DecreeToken.__try_attach(t.next0_, prev, 0, False)
                 if (res is None or res.typ != DecreeToken.ItemType.TYP): 
                     return None
                 break
         if (res.value is not None and " " in res.value): 
-            for s in DecreeToken.__m_all_typesru: 
+            for s in DecreeToken.M_ALL_TYPESRU: 
                 if (s in res.value and res.value != s): 
                     if (s == "КОДЕКС"): 
                         res.full_value = res.value
@@ -267,13 +258,13 @@ class DecreeToken(MetaToken):
                 res.full_value = MiscHelper.get_text_value_of_meta_token(res, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
         if (res.value is not None and ((res.value.startswith("ВЕДОМОСТИ СЪЕЗДА") or res.value.startswith("ВІДОМОСТІ ЗЇЗДУ")))): 
             tt = res.end_token.next0_
-            if (tt is not None and isinstance(tt.get_referent(), GeoReferent)): 
+            if (tt is not None and (isinstance(tt.get_referent(), GeoReferent))): 
                 res.ref = (tt if isinstance(tt, ReferentToken) else None)
                 res.end_token = tt
                 tt = tt.next0_
             if (tt is not None and tt.is_and): 
                 tt = tt.next0_
-            if (tt is not None and isinstance(tt.get_referent(), OrganizationReferent)): 
+            if (tt is not None and (isinstance(tt.get_referent(), OrganizationReferent))): 
                 res.end_token = tt
                 tt = tt.next0_
         return res
@@ -304,29 +295,29 @@ class DecreeToken(MetaToken):
         if (prev is not None): 
             if (t.is_value("ПРИ", "ЗА") and t.next0_ is not None): 
                 t = t.next0_
-        if ((not must_by_typ and t.is_value("МЕЖДУ", "МІЖ") and isinstance(t.next0_, ReferentToken)) and t.next0_.next0_ is not None): 
+        if ((not must_by_typ and t.is_value("МЕЖДУ", "МІЖ") and (isinstance(t.next0_, ReferentToken))) and t.next0_.next0_ is not None): 
             t11 = t.next0_.next0_
             is_br = False
-            if ((t11.is_char('(') and isinstance(t11.next0_, TextToken) and t11.next0_.next0_ is not None) and t11.next0_.next0_.is_char(')')): 
+            if ((t11.is_char('(') and (isinstance(t11.next0_, TextToken)) and t11.next0_.next0_ is not None) and t11.next0_.next0_.is_char(')')): 
                 t11 = t11.next0_.next0_.next0_
                 is_br = True
-            if (t11 is not None and t11.is_comma_and and isinstance(t11.next0_, ReferentToken)): 
+            if (t11 is not None and t11.is_comma_and and (isinstance(t11.next0_, ReferentToken))): 
                 rr = DecreeToken._new831(t, t11.next0_, DecreeToken.ItemType.BETWEEN)
                 rr.children = list()
                 rr.children.append(DecreeToken._new835(t.next0_, t.next0_, DecreeToken.ItemType.OWNER, (t.next0_ if isinstance(t.next0_, ReferentToken) else None)))
                 rr.children.append(DecreeToken._new835(t11.next0_, t11.next0_, DecreeToken.ItemType.OWNER, (t11.next0_ if isinstance(t11.next0_, ReferentToken) else None)))
                 t = rr.end_token.next0_
-                first_pass2792 = True
+                first_pass3742 = True
                 while True:
-                    if first_pass2792: first_pass2792 = False
+                    if first_pass3742: first_pass3742 = False
                     else: t = t.next0_
                     if (not (t is not None)): break
-                    if ((is_br and t.is_char('(') and isinstance(t.next0_, TextToken)) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
+                    if ((is_br and t.is_char('(') and (isinstance(t.next0_, TextToken))) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
                         t = t.next0_.next0_
                         rr.end_token = t
                         rr.children[len(rr.children) - 1].end_token = t
                         continue
-                    if ((t.is_comma_and and t.next0_ is not None and isinstance(t.next0_, ReferentToken)) and not ((isinstance(t.next0_.get_referent(), DateReferent)))): 
+                    if ((t.is_comma_and and t.next0_ is not None and (isinstance(t.next0_, ReferentToken))) and not ((isinstance(t.next0_.get_referent(), DateReferent)))): 
                         rr.children.append(DecreeToken._new835(t.next0_, t.next0_, DecreeToken.ItemType.OWNER, (t.next0_ if isinstance(t.next0_, ReferentToken) else None)))
                         rr.end_token = t.next0_
                         t = rr.end_token
@@ -347,7 +338,7 @@ class DecreeToken(MetaToken):
                     res1.end_token = t
                     res1.begin_token = res1.end_token
                 else: 
-                    res1 = None
+                    res1 = (None)
             if (res1 is None and org0_.contains_profile(OrgProfile.PRESS)): 
                 res1 = DecreeToken._new831(t, t, DecreeToken.ItemType.TYP)
                 res1.value = MiscHelper.get_text_value_of_meta_token((t if isinstance(t, ReferentToken) else None), GetTextAttr.NO)
@@ -359,7 +350,7 @@ class DecreeToken(MetaToken):
                     t11 = (t11 if isinstance(t11, MetaToken) else None).end_token
                 if (isinstance(t11.get_referent(), GeoReferent)): 
                     res1.ref = (t11 if isinstance(t11, ReferentToken) else None)
-                elif (BracketHelper.is_bracket(t11, False) and isinstance(t11.previous.get_referent(), GeoReferent)): 
+                elif (BracketHelper.is_bracket(t11, False) and (isinstance(t11.previous.get_referent(), GeoReferent))): 
                     res1.ref = (t11.previous if isinstance(t11.previous, ReferentToken) else None)
                 return res1
         if (r is not None and not must_by_typ): 
@@ -369,7 +360,7 @@ class DecreeToken(MetaToken):
                 if (prev is not None and prev.typ == DecreeToken.ItemType.TYP and prev.typ_kind == DecreeKind.STANDARD): 
                     ree = DecreeToken.try_attach((t if isinstance(t, ReferentToken) else None).begin_token, prev, False)
                     if ((ree is not None and ree.typ == DecreeToken.ItemType.NUMBER and ree.num_year > 0) and ((ree.end_token == (t if isinstance(t, ReferentToken) else None).end_token or ree.end_token.is_char('*')))): 
-                        if (isinstance(t.next0_, TextToken) and t.next0_.is_char('*')): 
+                        if ((isinstance(t.next0_, TextToken)) and t.next0_.is_char('*')): 
                             t = t.next0_
                         ree.end_token = t
                         ree.begin_token = ree.end_token
@@ -385,7 +376,7 @@ class DecreeToken(MetaToken):
                 ok = False
                 if (prev is not None and ((prev.typ == DecreeToken.ItemType.TYP or prev.typ == DecreeToken.ItemType.DATE))): 
                     ok = True
-                elif (t.next0_ is not None and isinstance(t.next0_.get_referent(), DecreeReferent)): 
+                elif (t.next0_ is not None and (isinstance(t.next0_.get_referent(), DecreeReferent))): 
                     ok = True
                 else: 
                     ne = DecreeToken.__try_attach(t.next0_, None, lev + 1, False)
@@ -399,7 +390,7 @@ class DecreeToken(MetaToken):
                 return DecreeToken._new835(t, t, DecreeToken.ItemType.OWNER, ReferentToken(r, t, t))
             if (isinstance(r, DenominationReferent)): 
                 s = str(r)
-                if (len(s) > 1 and ((s[0] == 'A' or s[0] == 'А')) and s[1].isdigit()): 
+                if (len(s) > 1 and ((s[0] == 'A' or s[0] == 'А')) and str.isdigit(s[1])): 
                     return DecreeToken._new833(t, t, DecreeToken.ItemType.NUMBER, s)
             return None
         if (not must_by_typ): 
@@ -420,7 +411,7 @@ class DecreeToken(MetaToken):
                 dr = t.kit.process_referent("DATE", tdat)
                 if (dr is not None): 
                     return DecreeToken._new835(t, dr.end_token, DecreeToken.ItemType.DATE, dr)
-            if (t.is_value("НА", None) and t.next0_ is not None and isinstance(t.next0_.get_referent(), DateRangeReferent)): 
+            if (t.is_value("НА", None) and t.next0_ is not None and (isinstance(t.next0_.get_referent(), DateRangeReferent))): 
                 return DecreeToken._new835(t, t.next0_, DecreeToken.ItemType.DATERANGE, (t.next0_ if isinstance(t.next0_, ReferentToken) else None))
             if (t.is_char('(')): 
                 tt = DecreeToken.__is_edition(t.next0_)
@@ -430,7 +421,7 @@ class DecreeToken(MetaToken):
                         return DecreeToken._new831(t, br.end_token, DecreeToken.ItemType.EDITION)
                 if (t.next0_ is not None and t.next0_.is_value("ПРОЕКТ", None)): 
                     return DecreeToken._new833(t.next0_, t.next0_, DecreeToken.ItemType.TYP, "ПРОЕКТ")
-                if ((t.next0_ is not None and isinstance(t.next0_.get_referent(), DateRangeReferent) and t.next0_.next0_ is not None) and t.next0_.next0_.is_char(')')): 
+                if ((t.next0_ is not None and (isinstance(t.next0_.get_referent(), DateRangeReferent)) and t.next0_.next0_ is not None) and t.next0_.next0_.is_char(')')): 
                     return DecreeToken._new835(t, t.next0_.next0_, DecreeToken.ItemType.DATERANGE, (t.next0_ if isinstance(t.next0_, ReferentToken) else None))
             else: 
                 tt = DecreeToken.__is_edition(t)
@@ -442,7 +433,7 @@ class DecreeToken(MetaToken):
                         return DecreeToken._new831(t, tt.previous, DecreeToken.ItemType.EDITION)
             if (isinstance(t, NumberToken)): 
                 if (prev is not None and ((prev.typ == DecreeToken.ItemType.TYP or prev.typ == DecreeToken.ItemType.DATE))): 
-                    tmp = Utils.newStringIO(None)
+                    tmp = io.StringIO()
                     t11 = DecreeToken.__try_attach_number(t, tmp, False)
                     if (t11 is not None): 
                         ne = DecreeToken.__try_attach(t11.next0_, None, lev + 1, False)
@@ -458,22 +449,22 @@ class DecreeToken(MetaToken):
                                 ok = True
                                 if (t11.next0_ is not None and t11.next0_.is_char('*')): 
                                     t11 = t11.next0_
-                                if (valnum.upper().endswith("(E)".upper())): 
-                                    valnum = valnum[0 : (len(valnum) - 3)].strip()
+                                if (Utils.endsWithString(valnum, "(E)", True)): 
+                                    valnum = valnum[0:0+len(valnum) - 3].strip()
                                 for ii in range(len(valnum) - 1, -1, -1):
-                                    if (not valnum[ii].isdigit()): 
+                                    if (not str.isdigit(valnum[ii])): 
                                         if (ii == len(valnum) or ii == 0): 
                                             break
                                         if (valnum[ii] != '-' and valnum[ii] != ':' and valnum[ii] != '.'): 
                                             break
                                         inoutarg854 = RefOutArgWrapper(0)
-                                        Utils.tryParseInt(valnum[ii + 1 : ], inoutarg854)
+                                        Utils.tryParseInt(valnum[ii + 1:], inoutarg854)
                                         nn = inoutarg854.value
                                         if (nn > 50 and nn <= 99): 
                                             nn += 1900
                                         if (nn >= 1950 and nn <= datetime.datetime.now().year): 
                                             year = nn
-                                            valnum = valnum[0 : (ii)]
+                                            valnum = valnum[0:0+ii]
                                         break
                                 valnum = valnum.replace('-', '.')
                                 if (year < 1): 
@@ -504,7 +495,7 @@ class DecreeToken(MetaToken):
                         return res1
         if (not ((isinstance(t, TextToken)))): 
             return None
-        toks = DecreeToken.__m_termins.try_parse_all(t, TerminParseAttr.NO)
+        toks = DecreeToken.M_TERMINS.try_parse_all(t, TerminParseAttr.NO)
         if (toks is not None): 
             for tok in toks: 
                 if (tok.end_token.is_char('.') and tok.begin_token != tok.end_token): 
@@ -514,6 +505,10 @@ class DecreeToken(MetaToken):
                         tok.end_token = tok.end_token.next0_
                 doubt = False
                 if ((tok.end_char - tok.begin_char) < 3): 
+                    if (t.is_value("СП", None)): 
+                        if (not ((isinstance(t.next0_, NumberToken)))): 
+                            if (MiscHelper.check_number_prefix(t.next0_) is None): 
+                                return None
                     doubt = True
                     if (tok.end_token.next0_ is None or not tok.chars.is_all_upper): 
                         pass
@@ -524,9 +519,9 @@ class DecreeToken(MetaToken):
                 if (tok.begin_token == tok.end_token and (tok.length_char < 4) and len(toks) > 1): 
                     cou = 0
                     tt = t.previous
-                    first_pass2793 = True
+                    first_pass3743 = True
                     while True:
-                        if first_pass2793: first_pass2793 = False
+                        if first_pass3743: first_pass3743 = False
                         else: tt = tt.previous; cou += 1
                         if (not (tt is not None and (cou < 500))): break
                         dr = (tt.get_referent() if isinstance(tt.get_referent(), DecreeReferent) else None)
@@ -562,7 +557,7 @@ class DecreeToken(MetaToken):
                         doubt = False
                 res = DecreeToken._new859(tok.begin_token, tok.end_token, Utils.valToEnum(tok.termin.tag, DecreeToken.ItemType), tok.termin.canonic_text, tok.morph, doubt)
                 if (isinstance(tok.termin.tag2, DecreeKind)): 
-                    res.typ_kind = Utils.valToEnum(tok.termin.tag2, DecreeKind)
+                    res.typ_kind = (Utils.valToEnum(tok.termin.tag2, DecreeKind))
                 if (res.value == "ГОСТ" and tok.end_token.next0_ is not None): 
                     if (tok.end_token.next0_.is_value("Р", None) or tok.end_token.next0_.is_value("P", None)): 
                         res.end_token = tok.end_token.next0_
@@ -570,33 +565,33 @@ class DecreeToken(MetaToken):
                         g = (tok.end_token.next0_.get_referent() if isinstance(tok.end_token.next0_.get_referent(), GeoReferent) else None)
                         if (g is not None and ((g.alpha2 == "RU" or g.alpha2 == "SU"))): 
                             res.end_token = tok.end_token.next0_
-                if (isinstance(tok.termin.tag2, str) and res.typ == DecreeToken.ItemType.TYP): 
+                if ((isinstance(tok.termin.tag2, str)) and res.typ == DecreeToken.ItemType.TYP): 
                     res.full_value = tok.termin.canonic_text
                     res.value = (tok.termin.tag2 if isinstance(tok.termin.tag2, str) else None)
                     res.is_doubtful = False
                 if (res.typ_kind == DecreeKind.STANDARD): 
                     cou = 0
                     tt = res.end_token.next0_
-                    first_pass2794 = True
+                    first_pass3744 = True
                     while True:
-                        if first_pass2794: first_pass2794 = False
+                        if first_pass3744: first_pass3744 = False
                         else: tt = tt.next0_; cou += 1
                         if (not (tt is not None and (cou < 3))): break
                         if (tt.whitespaces_before_count > 2): 
                             break
-                        tok2 = DecreeToken.__m_termins.try_parse(tt, TerminParseAttr.NO)
+                        tok2 = DecreeToken.M_TERMINS.try_parse(tt, TerminParseAttr.NO)
                         if (tok2 is not None): 
-                            if (isinstance(tok2.termin.tag2, DecreeKind) and Utils.valToEnum(tok2.termin.tag2, DecreeKind) == DecreeKind.STANDARD): 
+                            if ((isinstance(tok2.termin.tag2, DecreeKind)) and (Utils.valToEnum(tok2.termin.tag2, DecreeKind)) == DecreeKind.STANDARD): 
                                 res.end_token = tok2.end_token
                                 tt = res.end_token
                                 res.is_doubtful = False
                                 if (res.value == "СТАНДАРТ"): 
                                     res.value = tok2.termin.canonic_text
                                 continue
-                        if (isinstance(tt, TextToken) and (tt.length_char < 4) and tt.chars.is_all_upper): 
+                        if ((isinstance(tt, TextToken)) and (tt.length_char < 4) and tt.chars.is_all_upper): 
                             res.end_token = tt
                             continue
-                        if (tt.is_char_of("/\\") and isinstance(tt.next0_, TextToken) and tt.next0_.chars.is_all_upper): 
+                        if (tt.is_char_of("/\\") and (isinstance(tt.next0_, TextToken)) and tt.next0_.chars.is_all_upper): 
                             tt = tt.next0_
                             res.end_token = tt
                             continue
@@ -615,18 +610,18 @@ class DecreeToken(MetaToken):
             t11 = t.next0_
             if (t11 is not None and t11.is_value("ЖЕ", None)): 
                 t11 = t11.next0_
-            tok = DecreeToken.__m_termins.try_parse(t11, TerminParseAttr.NO)
+            tok = DecreeToken.M_TERMINS.try_parse(t11, TerminParseAttr.NO)
             if ((tok) is not None): 
-                if (((tok.morph.number & MorphNumber.PLURAL)) == MorphNumber.UNDEFINED): 
+                if ((((tok.morph.number) & (MorphNumber.PLURAL))) == (MorphNumber.UNDEFINED)): 
                     npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
-                    if (npt is not None and ((npt.morph.number & MorphNumber.PLURAL)) != MorphNumber.UNDEFINED): 
+                    if (npt is not None and (((npt.morph.number) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
                         pass
                     else: 
                         te = DecreeToken._find_back_typ(t.previous, tok.termin.canonic_text)
                         if (te is not None): 
                             return DecreeToken._new835(t, tok.end_token, DecreeToken.ItemType.DECREEREF, te)
         if (t.morph.class0_.is_adjective and t.is_value("НАСТОЯЩИЙ", "СПРАВЖНІЙ")): 
-            tok = DecreeToken.__m_termins.try_parse(t.next0_, TerminParseAttr.NO)
+            tok = DecreeToken.M_TERMINS.try_parse(t.next0_, TerminParseAttr.NO)
             if ((tok) is not None): 
                 return DecreeToken._new835(t, tok.end_token, DecreeToken.ItemType.DECREEREF, None)
         if (must_by_typ): 
@@ -641,7 +636,7 @@ class DecreeToken(MetaToken):
                     return dt
             npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
             if (npt is not None and npt.internal_noun is not None): 
-                npt = None
+                npt = (None)
             if ((npt is not None and dt is not None and dt.typ == DecreeToken.ItemType.TYP) and dt.value == "КОДЕКС"): 
                 dt.value = npt.get_normal_case_text(MorphClass(), True, MorphGender.UNDEFINED, False)
                 dt.begin_token = t
@@ -655,7 +650,7 @@ class DecreeToken(MetaToken):
             if (not t.chars.is_all_lower): 
                 try_npt = True
             else: 
-                for a in DecreeToken.__m_std_adjectives: 
+                for a in DecreeToken.M_STD_ADJECTIVES: 
                     if (t.is_value(a, None)): 
                         try_npt = True
                         break
@@ -664,7 +659,7 @@ class DecreeToken(MetaToken):
                     if (npt.end_token.is_value("ГАЗЕТА", None) or npt.end_token.is_value("БЮЛЛЕТЕНЬ", "БЮЛЕТЕНЬ")): 
                         return DecreeToken._new858(t, npt.end_token, DecreeToken.ItemType.TYP, npt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False), npt.morph)
                     if (len(npt.adjectives) > 0 and npt.end_token.get_morph_class_in_dictionary().is_noun): 
-                        tok = DecreeToken.__m_termins.try_parse(npt.end_token, TerminParseAttr.NO)
+                        tok = DecreeToken.M_TERMINS.try_parse(npt.end_token, TerminParseAttr.NO)
                         if ((tok) is not None): 
                             if (npt.begin_token.is_value("ОБЩИЙ", "ЗАГАЛЬНИЙ")): 
                                 return None
@@ -673,15 +668,15 @@ class DecreeToken(MetaToken):
                         if (npt.end_token.is_value("КОЛЛЕГИЯ", "КОЛЕГІЯ")): 
                             res1 = DecreeToken._new858(t, npt.end_token, DecreeToken.ItemType.OWNER, npt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False), npt.morph)
                             t = npt.end_token.next0_
-                            first_pass2795 = True
+                            first_pass3745 = True
                             while True:
-                                if first_pass2795: first_pass2795 = False
+                                if first_pass3745: first_pass3745 = False
                                 else: t = t.next0_
                                 if (not (t is not None)): break
                                 if (t.is_and or t.morph.class0_.is_preposition): 
                                     continue
                                 re = t.get_referent()
-                                if (isinstance(re, GeoReferent) or isinstance(re, OrganizationReferent)): 
+                                if ((isinstance(re, GeoReferent)) or (isinstance(re, OrganizationReferent))): 
                                     res1.end_token = t
                                     continue
                                 elif (re is not None): 
@@ -710,8 +705,8 @@ class DecreeToken(MetaToken):
         elif (DecreeToken.__is_jus_number(t)): 
             t1 = t
         if (t1 is not None): 
-            if ((t1.whitespaces_before_count < 15) and ((not t1.is_newline_before or isinstance(t1, NumberToken) or DecreeToken.__is_jus_number(t1)))): 
-                tmp = Utils.newStringIO(None)
+            if ((t1.whitespaces_before_count < 15) and ((not t1.is_newline_before or (isinstance(t1, NumberToken)) or DecreeToken.__is_jus_number(t1)))): 
+                tmp = io.StringIO()
                 t11 = DecreeToken.__try_attach_number(t1, tmp, num)
                 if (t11 is not None): 
                     if (t11.next0_ is not None and t11.next0_.is_value("ДСП", None)): 
@@ -721,13 +716,13 @@ class DecreeToken(MetaToken):
             if (t1.is_newline_before and num): 
                 return DecreeToken._new831(t0, t1.previous, DecreeToken.ItemType.NUMBER)
         if (BracketHelper.can_be_start_of_sequence(t, False, False)): 
-            if (BracketHelper.can_be_start_of_sequence(t, True, False) and ((((t.next0_.is_value("О", None) or t.next0_.is_value("ОБ", None) or t.next0_.is_value("ПРО", None)) or t.next0_.is_value("ПО", None) or t.chars.is_capital_upper) or ((prev is not None and isinstance(t.next0_, TextToken) and ((prev.typ == DecreeToken.ItemType.DATE or prev.typ == DecreeToken.ItemType.NUMBER))))))): 
+            if (BracketHelper.can_be_start_of_sequence(t, True, False) and ((((t.next0_.is_value("О", None) or t.next0_.is_value("ОБ", None) or t.next0_.is_value("ПРО", None)) or t.next0_.is_value("ПО", None) or t.chars.is_capital_upper) or ((prev is not None and (isinstance(t.next0_, TextToken)) and ((prev.typ == DecreeToken.ItemType.DATE or prev.typ == DecreeToken.ItemType.NUMBER))))))): 
                 br = BracketHelper.try_parse(t, BracketParseAttr.CANCONTAINSVERBS, 200)
                 if (br is not None): 
                     tt = br.end_token
                     if (tt.previous is not None and tt.previous.is_char('>')): 
                         tt = tt.previous
-                    if ((tt.is_char('>') and isinstance(tt.previous, NumberToken) and tt.previous.previous is not None) and tt.previous.previous.is_char('<')): 
+                    if ((tt.is_char('>') and (isinstance(tt.previous, NumberToken)) and tt.previous.previous is not None) and tt.previous.previous.is_char('<')): 
                         tt = tt.previous.previous.previous
                         if (tt is None or tt.begin_char <= br.begin_char): 
                             return None
@@ -766,7 +761,7 @@ class DecreeToken(MetaToken):
                     return None
                 if (pr.kind != PersonPropertyKind.UNDEFINED): 
                     pass
-                elif (pr.name.upper().startswith("ГРАЖДАН".upper()) or pr.name.upper().startswith("ГРОМАДЯН".upper())): 
+                elif (Utils.startsWithString(pr.name, "ГРАЖДАН", True) or Utils.startsWithString(pr.name, "ГРОМАДЯН", True)): 
                     return None
                 return DecreeToken._new857(rt.begin_token, rt.end_token, DecreeToken.ItemType.OWNER, rt, rt.morph)
         if (t.is_value("О", None) or t.is_value("ОБ", None) or t.is_value("ПРО", None)): 
@@ -775,7 +770,7 @@ class DecreeToken(MetaToken):
                 et = t.next0_
             elif (t.next0_ is not None and t.next0_.is_value("ПОПРАВКА", None)): 
                 et = t.next0_
-            elif (t.next0_ is not None and isinstance(t.next0_.get_referent(), OrganizationReferent)): 
+            elif (t.next0_ is not None and (isinstance(t.next0_.get_referent(), OrganizationReferent))): 
                 et = t.next0_
             if (et is not None and et.next0_ is not None and et.next0_.morph.class0_.is_preposition): 
                 et = et.next0_
@@ -802,9 +797,9 @@ class DecreeToken(MetaToken):
                 ok = True
             elif (prev is not None and prev.typ == DecreeToken.ItemType.UNKNOWN and not t.morph.class0_.is_verb): 
                 ok = True
-            elif (t.next0_ is not None and isinstance(t.next0_.get_referent(), GeoReferent) and not t.is_value("ИМЕНЕМ", None)): 
+            elif (t.next0_ is not None and (isinstance(t.next0_.get_referent(), GeoReferent)) and not t.is_value("ИМЕНЕМ", None)): 
                 ok = True
-            elif ((t.previous is not None and t.previous.is_char(',') and t.previous.previous is not None) and isinstance(t.previous.previous.get_referent(), DecreeReferent)): 
+            elif ((t.previous is not None and t.previous.is_char(',') and t.previous.previous is not None) and (isinstance(t.previous.previous.get_referent(), DecreeReferent))): 
                 ok = True
             if (ok): 
                 if (PartToken.try_attach(t, None, False, False) is not None): 
@@ -812,7 +807,7 @@ class DecreeToken(MetaToken):
             if (ok): 
                 t1 = t
                 ty = DecreeToken.ItemType.UNKNOWN
-                tmp = Utils.newStringIO(None)
+                tmp = io.StringIO()
                 tt = t
                 while tt is not None: 
                     if (not ((isinstance(tt, TextToken)))): 
@@ -873,17 +868,17 @@ class DecreeToken(MetaToken):
             npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
             if (npt is not None): 
                 return DecreeToken._new833(t, npt.end_token, DecreeToken.ItemType.TYP, MiscHelper.get_text_value(t, npt.end_token, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE))
-            elif (t.next0_ is not None and isinstance(t.next0_.get_referent(), OrganizationReferent)): 
+            elif (t.next0_ is not None and (isinstance(t.next0_.get_referent(), OrganizationReferent))): 
                 return DecreeToken._new833(t, t.next0_, DecreeToken.ItemType.TYP, MiscHelper.get_text_value(t, t.next0_, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE))
         if ((prev is not None and prev.typ == DecreeToken.ItemType.TYP and prev.value is not None) and (("ДОГОВОР" in prev.value or "ДОГОВІР" in prev.value))): 
             nn = DecreeToken.try_attach_name(t, prev.value, False, False)
             if (nn is not None): 
                 return nn
-            t1 = None
+            t1 = (None)
             ttt = t
-            first_pass2796 = True
+            first_pass3746 = True
             while True:
-                if first_pass2796: first_pass2796 = False
+                if first_pass3746: first_pass3746 = False
                 else: ttt = ttt.next0_
                 if (not (ttt is not None)): break
                 if (ttt.is_newline_before): 
@@ -902,6 +897,9 @@ class DecreeToken(MetaToken):
                 nn = DecreeToken._new831(t, t1, DecreeToken.ItemType.NAME)
                 nn.value = MiscHelper.get_text_value(t, t1, GetTextAttr.NO)
                 return nn
+        if ((isinstance(t, TextToken)) and t.length_char == 1 and t.next0_ is not None): 
+            if (((t if isinstance(t, TextToken) else None).term == "Б" and t.next0_.is_char_of("\\/") and (isinstance(t.next0_.next0_, TextToken))) and (t.next0_.next0_ if isinstance(t.next0_.next0_, TextToken) else None).term == "Н"): 
+                return DecreeToken._new833(t, t.next0_.next0_, DecreeToken.ItemType.NUMBER, "Б/Н")
         return None
     
     @staticmethod
@@ -913,8 +911,8 @@ class DecreeToken(MetaToken):
             return False
         if (tt.term != "A" and tt.term != "А"): 
             return False
-        if (isinstance(t.next0_, NumberToken) and (t.whitespaces_after_count < 2)): 
-            if ((t.next0_ if isinstance(t.next0_, NumberToken) else None).value > 20): 
+        if ((isinstance(t.next0_, NumberToken)) and (t.whitespaces_after_count < 2)): 
+            if ((t.next0_ if isinstance(t.next0_, NumberToken) else None).value > (20)): 
                 return True
             return False
         return False
@@ -935,7 +933,7 @@ class DecreeToken(MetaToken):
             if ((t.next0_ is not None and t.next0_.is_comma and t.next0_.next0_ is not None) and t.next0_.next0_.is_value("ВНЕСЕННЫЙ", "ВНЕСЕНИЙ")): 
                 return t.next0_.next0_
             return t
-        if (isinstance(t, NumberToken) and t.next0_ is not None and t.next0_.is_value("ЧТЕНИЕ", "ЧИТАННЯ")): 
+        if ((isinstance(t, NumberToken)) and t.next0_ is not None and t.next0_.is_value("ЧТЕНИЕ", "ЧИТАННЯ")): 
             return t.next0_.next0_
         return None
     
@@ -950,9 +948,9 @@ class DecreeToken(MetaToken):
             return None
         cou = 0
         tt = t
-        first_pass2797 = True
+        first_pass3747 = True
         while True:
-            if first_pass2797: first_pass2797 = False
+            if first_pass3747: first_pass3747 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             cou += 1
@@ -961,7 +959,7 @@ class DecreeToken(MetaToken):
             if (cou > 500): 
                 break
             d = (tt.get_referent() if isinstance(tt.get_referent(), DecreeReferent) else None)
-            if (d is None and isinstance(tt.get_referent(), DecreePartReferent)): 
+            if (d is None and (isinstance(tt.get_referent(), DecreePartReferent))): 
                 d = (tt.get_referent() if isinstance(tt.get_referent(), DecreePartReferent) else None).owner
             if (d is None): 
                 continue
@@ -981,9 +979,9 @@ class DecreeToken(MetaToken):
         res = None
         digs = False
         br = False
-        first_pass2798 = True
+        first_pass3748 = True
         while True:
-            if first_pass2798: first_pass2798 = False
+            if first_pass3748: first_pass3748 = False
             else: t2 = t2.next0_
             if (not (t2 is not None)): break
             if (t2.is_char_of("(),;")): 
@@ -1017,7 +1015,7 @@ class DecreeToken(MetaToken):
                     res = t2
                     print(t2.get_source_text().upper(), end="", file=tmp)
                     for c in den.value: 
-                        if (c.isdigit()): 
+                        if (str.isdigit(c)): 
                             digs = True
                     if (t2.is_whitespace_after): 
                         break
@@ -1035,7 +1033,7 @@ class DecreeToken(MetaToken):
                 break
             if (s == "\\"): 
                 s = "/"
-            if (s[0].isdigit()): 
+            if (str.isdigit(s[0])): 
                 for d in s: 
                     digs = True
             if (not t2.is_char_of("_@")): 
@@ -1045,7 +1043,7 @@ class DecreeToken(MetaToken):
                 if (t2.whitespaces_after_count > 1): 
                     break
                 if (digs): 
-                    if ((t2.next0_ is not None and ((t2.next0_.is_hiphen or t2.next0_.is_char_of(".:"))) and not t2.next0_.is_whitespace_after) and isinstance(t2.next0_.next0_, NumberToken)): 
+                    if ((t2.next0_ is not None and ((t2.next0_.is_hiphen or t2.next0_.is_char_of(".:"))) and not t2.next0_.is_whitespace_after) and (isinstance(t2.next0_.next0_, NumberToken))): 
                         continue
                 if (not after_num): 
                     break
@@ -1056,7 +1054,7 @@ class DecreeToken(MetaToken):
                 if (t2.is_char('/')): 
                     continue
                 if (t2.next0_ is not None): 
-                    if (((t2.next0_.is_hiphen or isinstance(t2.next0_, NumberToken))) and not digs): 
+                    if (((t2.next0_.is_hiphen or (isinstance(t2.next0_, NumberToken)))) and not digs): 
                         continue
                 if (t2 == t and t2.chars.is_all_upper): 
                     continue
@@ -1077,20 +1075,20 @@ class DecreeToken(MetaToken):
         if (not digs and not after_num): 
             return None
         ch = Utils.getCharAtStringIO(tmp, tmp.tell() - 1)
-        if (not ch.isalnum() and isinstance(res, TextToken) and not res.is_char('_')): 
+        if (not str.isalnum(ch) and (isinstance(res, TextToken)) and not res.is_char('_')): 
             Utils.setLengthStringIO(tmp, tmp.tell() - 1)
             res = res.previous
-        if (res.next0_ is not None and res.next0_.is_hiphen and isinstance(res.next0_.next0_, NumberToken)): 
-            inoutarg880 = RefOutArgWrapper(0)
-            inoutres881 = Utils.tryParseInt(Utils.toStringStringIO(tmp), inoutarg880)
-            min0_ = inoutarg880.value
-            if (inoutres881): 
+        if (res.next0_ is not None and res.next0_.is_hiphen and (isinstance(res.next0_.next0_, NumberToken))): 
+            inoutarg881 = RefOutArgWrapper(0)
+            inoutres882 = Utils.tryParseInt(Utils.toStringStringIO(tmp), inoutarg881)
+            min0_ = inoutarg881.value
+            if (inoutres882): 
                 if (min0_ < (res.next0_.next0_ if isinstance(res.next0_.next0_, NumberToken) else None).value): 
                     res = res.next0_.next0_
                     print("-{0}".format((res if isinstance(res, NumberToken) else None).value), end="", file=tmp, flush=True)
         if (res.next0_ is not None and not res.is_whitespace_after and res.next0_.is_char('(')): 
             cou = 0
-            tmp2 = Utils.newStringIO(None)
+            tmp2 = io.StringIO()
             tt = res.next0_.next0_
             while tt is not None: 
                 if (tt.is_char(')')): 
@@ -1110,25 +1108,16 @@ class DecreeToken(MetaToken):
             if (Utils.getCharAtStringIO(tmp, tmp.tell() - 1) == '3'): 
                 if (Utils.getCharAtStringIO(tmp, tmp.tell() - 2) == 'К' or Utils.getCharAtStringIO(tmp, tmp.tell() - 2) == 'Ф'): 
                     Utils.setCharAtStringIO(tmp, tmp.tell() - 1, 'З')
-        if (isinstance(res.next0_, TextToken) and (res.whitespaces_after_count < 2) and res.next0_.chars.is_all_upper): 
+        if ((isinstance(res.next0_, TextToken)) and (res.whitespaces_after_count < 2) and res.next0_.chars.is_all_upper): 
             if (res.next0_.is_value("РД", None) or res.next0_.is_value("ПД", None)): 
                 print(" {0}".format((res.next0_ if isinstance(res.next0_, TextToken) else None).term), end="", file=tmp, flush=True)
                 res = res.next0_
-        if (isinstance(res.next0_, TextToken) and res.next0_.is_char('*')): 
+        if ((isinstance(res.next0_, TextToken)) and res.next0_.is_char('*')): 
             res = res.next0_
         return res
     
     @staticmethod
     def try_attach_list(t : 'Token', prev : 'DecreeToken'=None, max_count : int=10, must_start_by_typ : bool=False) -> typing.List['DecreeToken']:
-        """ Привязать примитивы в контейнере с указанной позиции
-        
-        Args:
-            cnt: 
-            indFrom: 
-        
-        Returns:
-            typing.List[DecreeToken]: Список примитивов
-        """
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.TextToken import TextToken
@@ -1147,9 +1136,9 @@ class DecreeToken(MetaToken):
                 p.begin_token = t.previous
                 p.end_token = tt
                 tt = tt.next0_
-        first_pass2799 = True
+        first_pass3749 = True
         while True:
-            if first_pass2799: first_pass2799 = False
+            if first_pass3749: first_pass3749 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             ws = False
@@ -1188,7 +1177,7 @@ class DecreeToken(MetaToken):
                             res.append(p)
                             tt = p.end_token
                             continue
-                    p0 = None
+                    p0 = (None)
                 if (tt.is_char(':')): 
                     p0 = DecreeToken.try_attach(tt.next0_, p, False)
                     if (p0 is not None): 
@@ -1206,14 +1195,16 @@ class DecreeToken(MetaToken):
                         continue
                     cou = 0
                     if (res[0].typ == DecreeToken.ItemType.TYP): 
-                        for ii in range(1, len(res), 1):
+                        ii = 1
+                        while ii < len(res): 
                             if ((res[ii].typ == DecreeToken.ItemType.ORG or res[ii].typ == DecreeToken.ItemType.TERR or res[ii].typ == DecreeToken.ItemType.UNKNOWN) or res[ii].typ == DecreeToken.ItemType.OWNER): 
                                 cou += 1
                             else: 
                                 break
+                            ii += 1
                         if (cou > 1): 
                             num = Utils.newStringIO(p.value)
-                            tmp = Utils.newStringIO(None)
+                            tmp = io.StringIO()
                             tend = None
                             tt1 = tt
                             while tt1 is not None: 
@@ -1238,7 +1229,7 @@ class DecreeToken(MetaToken):
                                 p.end_token = tend
                                 tt = p.end_token
                                 continue
-                    p0 = None
+                    p0 = (None)
                 if (tt.is_comma and p.typ == DecreeToken.ItemType.DATE): 
                     p0 = DecreeToken.try_attach(tt.next0_, p, False)
                     if (p0 is not None and p0.typ == DecreeToken.ItemType.NUMBER): 
@@ -1246,7 +1237,7 @@ class DecreeToken(MetaToken):
                         res.append(p)
                         tt = p.end_token
                         continue
-                    p0 = None
+                    p0 = (None)
                 if (tt.is_comma_and and ((p.typ == DecreeToken.ItemType.ORG or p.typ == DecreeToken.ItemType.OWNER))): 
                     p0 = DecreeToken.try_attach(tt.next0_, p, False)
                     if (p0 is not None and ((p0.typ == DecreeToken.ItemType.ORG or p.typ == DecreeToken.ItemType.OWNER))): 
@@ -1254,7 +1245,7 @@ class DecreeToken(MetaToken):
                         res.append(p)
                         tt = p.end_token
                         continue
-                    p0 = None
+                    p0 = (None)
                 if (res[0].typ == DecreeToken.ItemType.TYP): 
                     if (DecreeToken.get_kind(res[0].value) == DecreeKind.PUBLISHER): 
                         if (tt.is_char_of(",;")): 
@@ -1271,7 +1262,7 @@ class DecreeToken(MetaToken):
                         res.append(p)
                         tt = p.end_token
                         continue
-                if (((isinstance(tt, TextToken) and tt.chars.is_all_upper and BracketHelper.can_be_start_of_sequence(tt.next0_, False, False)) and len(res) > 1 and res[len(res) - 1].typ == DecreeToken.ItemType.NUMBER) and res[len(res) - 2].typ == DecreeToken.ItemType.TYP and res[len(res) - 2].typ_kind == DecreeKind.STANDARD): 
+                if ((((isinstance(tt, TextToken)) and tt.chars.is_all_upper and BracketHelper.can_be_start_of_sequence(tt.next0_, False, False)) and len(res) > 1 and res[len(res) - 1].typ == DecreeToken.ItemType.NUMBER) and res[len(res) - 2].typ == DecreeToken.ItemType.TYP and res[len(res) - 2].typ_kind == DecreeKind.STANDARD): 
                     continue
                 if (tt.is_char('(')): 
                     p = DecreeToken.try_attach(tt.next0_, None, False)
@@ -1291,13 +1282,13 @@ class DecreeToken(MetaToken):
                             res[len(res) - 1].end_token = br.end_token
                             tt = res[len(res) - 1].end_token
                             continue
-                if (isinstance(tt, NumberToken) and res[len(res) - 1].typ == DecreeToken.ItemType.DATE): 
+                if ((isinstance(tt, NumberToken)) and res[len(res) - 1].typ == DecreeToken.ItemType.DATE): 
                     if (tt.previous is not None and tt.previous.morph.class0_.is_preposition): 
                         pass
                     elif (NumberExToken.try_parse_number_with_postfix(tt) is not None): 
                         pass
                     else: 
-                        tmp = Utils.newStringIO(None)
+                        tmp = io.StringIO()
                         t11 = DecreeToken.__try_attach_number(tt, tmp, False)
                         if (t11 is not None): 
                             p0 = DecreeToken._new833(tt, t11, DecreeToken.ItemType.NUMBER, Utils.toStringStringIO(tmp))
@@ -1307,9 +1298,9 @@ class DecreeToken(MetaToken):
             res.append(p)
             tt = p.end_token
         i = 0
-        first_pass2800 = True
+        first_pass3750 = True
         while True:
-            if first_pass2800: first_pass2800 = False
+            if first_pass3750: first_pass3750 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].end_token.next0_.is_comma): 
@@ -1329,7 +1320,7 @@ class DecreeToken(MetaToken):
                     res[i].typ = DecreeToken.ItemType.OWNER
                     res[i].value = "{0} {1}".format(res[i].value, res[i + 1].value)
                     res[i].end_token = res[i + 1].end_token
-                    res[i].ref = None
+                    res[i].ref = (None)
                     del res[i + 1]
                     i -= 1
             elif (((res[i].typ == DecreeToken.ItemType.UNKNOWN or res[i].typ == DecreeToken.ItemType.OWNER)) and ((res[i + 1].typ == DecreeToken.ItemType.ORG or res[i + 1].typ == DecreeToken.ItemType.OWNER))): 
@@ -1367,14 +1358,15 @@ class DecreeToken(MetaToken):
                     del res[i + 1]
                     i -= 1
         i = 0
-        first_pass2801 = True
+        first_pass3751 = True
         while True:
-            if first_pass2801: first_pass2801 = False
+            if first_pass3751: first_pass3751 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].typ == DecreeToken.ItemType.UNKNOWN): 
                 ok = False
-                for j in range(i + 1, len(res), 1):
+                j = (i + 1)
+                while j < len(res): 
                     if (res[j].begin_token.previous.is_comma): 
                         break
                     elif (res[j].typ == DecreeToken.ItemType.DATE or res[j].typ == DecreeToken.ItemType.NUMBER): 
@@ -1384,14 +1376,14 @@ class DecreeToken(MetaToken):
                         pass
                     else: 
                         break
-                else: j = len(res)
+                    j += 1
                 if (not ok): 
                     continue
                 if (j == (i + 1)): 
                     if (res[i].begin_token.previous.is_comma): 
                         res[i].typ = DecreeToken.ItemType.OWNER
                     continue
-                tmp = Utils.newStringIO(None)
+                tmp = io.StringIO()
                 ii = i
                 while ii < j: 
                     if (ii > i): 
@@ -1464,6 +1456,9 @@ class DecreeToken(MetaToken):
                 return None
             t = t.next0_
             abou = True
+            if (t is not None): 
+                if (t.is_value("ПОЗИЦИЯ", None)): 
+                    return None
         elif (t.next0_ is not None): 
             if (BracketHelper.can_be_start_of_sequence(t, True, False)): 
                 br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
@@ -1472,7 +1467,7 @@ class DecreeToken(MetaToken):
                     if (re is not None and re.type_name == "URI"): 
                         return None
                     if (t.next0_.chars.is_letter): 
-                        if (t.next0_.chars.is_all_lower or ((isinstance(t.next0_, TextToken) and (t.next0_ if isinstance(t.next0_, TextToken) else None).is_pure_verb))): 
+                        if (t.next0_.chars.is_all_lower or (((isinstance(t.next0_, TextToken)) and (t.next0_ if isinstance(t.next0_, TextToken) else None).is_pure_verb))): 
                             return None
                     t1 = br.end_token
                     tt1 = DecreeToken._try_attach_std_change_name(t.next0_)
@@ -1496,9 +1491,9 @@ class DecreeToken(MetaToken):
             return None
         cou = 0
         tt = t
-        first_pass2802 = True
+        first_pass3752 = True
         while True:
-            if first_pass2802: first_pass2802 = False
+            if first_pass3752: first_pass3752 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before and tt != t): 
@@ -1506,7 +1501,7 @@ class DecreeToken(MetaToken):
                     break
                 if (tt.is_value("ИСТОЧНИК", None)): 
                     break
-                if (isinstance(tt, TextToken) and tt.chars.is_letter and tt.chars.is_all_lower): 
+                if ((isinstance(tt, TextToken)) and tt.chars.is_letter and tt.chars.is_all_lower): 
                     pass
                 else: 
                     break
@@ -1529,7 +1524,7 @@ class DecreeToken(MetaToken):
                 dt = DecreeToken.try_attach(tt, None, False)
                 if (dt is not None): 
                     break
-            if (tt.morph.class0_.is_preposition and tt.next0_ is not None and ((isinstance(tt.next0_.get_referent(), DateReferent) or isinstance(tt.next0_.get_referent(), DateRangeReferent)))): 
+            if (tt.morph.class0_.is_preposition and tt.next0_ is not None and (((isinstance(tt.next0_.get_referent(), DateReferent)) or (isinstance(tt.next0_.get_referent(), DateRangeReferent))))): 
                 break
             if (in_title_doc_ref): 
                 t1 = tt
@@ -1552,12 +1547,12 @@ class DecreeToken(MetaToken):
                 break
             r = tt.get_referent()
             if (r is not None): 
-                if ((isinstance(r, DecreeReferent) or isinstance(r, DateReferent) or isinstance(r, OrganizationReferent)) or isinstance(r, GeoReferent) or r.type_name == "NAMEDENTITY"): 
+                if (((isinstance(r, DecreeReferent)) or (isinstance(r, DateReferent)) or (isinstance(r, OrganizationReferent))) or (isinstance(r, GeoReferent)) or r.type_name == "NAMEDENTITY"): 
                     if (tt.is_newline_before): 
                         break
                     t1 = tt
                     continue
-            npt = NounPhraseHelper.try_parse(tt, Utils.valToEnum(NounPhraseParseAttr.PARSENUMERICASADJECTIVE | NounPhraseParseAttr.PARSEPREPOSITION, NounPhraseParseAttr), 0)
+            npt = NounPhraseHelper.try_parse(tt, Utils.valToEnum((NounPhraseParseAttr.PARSENUMERICASADJECTIVE) | (NounPhraseParseAttr.PARSEPREPOSITION), NounPhraseParseAttr), 0)
             if (npt is None): 
                 break
             dd = npt.end_token.get_morph_class_in_dictionary()
@@ -1591,7 +1586,7 @@ class DecreeToken(MetaToken):
                                             ok = True
                                             break
                                         if (len(prep) == 0 and prep in ex.nexts): 
-                                            if (not (ex.nexts[prep] & npt.morph.case).is_undefined): 
+                                            if (not ((ex.nexts[prep]) & npt.morph.case).is_undefined): 
                                                 ok = True
                                                 break
                         if (not ok): 
@@ -1603,7 +1598,7 @@ class DecreeToken(MetaToken):
             tt = t1
             if (npt.noun.is_value("НАЛОГОПЛАТЕЛЬЩИК", None)): 
                 ttn = MiscHelper.check_number_prefix(tt.next0_)
-                if (isinstance(ttn, NumberToken) and (ttn if isinstance(ttn, NumberToken) else None).value == 1): 
+                if ((isinstance(ttn, NumberToken)) and (ttn if isinstance(ttn, NumberToken) else None).value == (1)): 
                     t1 = ttn
                     tt = t1
         if (tt == t): 
@@ -1612,7 +1607,7 @@ class DecreeToken(MetaToken):
             tt1 = DecreeToken._try_attach_std_change_name(t0)
             if (tt1 is not None and tt1.end_char > t1.end_char): 
                 t1 = tt1
-        s = MiscHelper.get_text_value(t0, t1, Utils.valToEnum(GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE | GetTextAttr.KEEPREGISTER, GetTextAttr))
+        s = MiscHelper.get_text_value(t0, t1, Utils.valToEnum((GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
         if (Utils.isNullOrEmpty(s) or (len(s) < 10)): 
             return None
         return DecreeToken._new833(t, t1, DecreeToken.ItemType.NAME, s)
@@ -1645,9 +1640,9 @@ class DecreeToken(MetaToken):
             return None
         t1 = t
         tt = t.next0_
-        first_pass2803 = True
+        first_pass3753 = True
         while True:
-            if first_pass2803: first_pass2803 = False
+            if first_pass3753: first_pass3753 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.whitespaces_before_count > 15): 
@@ -1667,10 +1662,10 @@ class DecreeToken(MetaToken):
             if (tt.is_value("ТАКЖЕ", "ТАКОЖ") or tt.is_value("НЕОБХОДИМЫЙ", "НЕОБХІДНИЙ")): 
                 continue
             r = tt.get_referent()
-            if (isinstance(r, GeoReferent) or isinstance(r, DecreeReferent) or isinstance(r, DecreePartReferent)): 
+            if ((isinstance(r, GeoReferent)) or (isinstance(r, DecreeReferent)) or (isinstance(r, DecreePartReferent))): 
                 t1 = tt
                 continue
-            if (isinstance(r, OrganizationReferent) and tt.is_newline_after): 
+            if ((isinstance(r, OrganizationReferent)) and tt.is_newline_after): 
                 t1 = tt
                 continue
             pts = PartToken.try_attach_list(tt, False, 40)
@@ -1712,51 +1707,55 @@ class DecreeToken(MetaToken):
                 t1 = t1.next0_
         return t1
     
-    __m_termins = None
+    M_TERMINS = None
     
-    __m_keywords = None
+    M_KEYWORDS = None
     
     @staticmethod
     def initialize() -> None:
         from pullenti.ner.core.TerminCollection import TerminCollection
         from pullenti.ner.core.Termin import Termin
         from pullenti.morph.MorphLang import MorphLang
-        if (DecreeToken.__m_termins is not None): 
+        if (DecreeToken.M_TERMINS is not None): 
             return
-        DecreeToken.__m_termins = TerminCollection()
-        DecreeToken.__m_keywords = TerminCollection()
-        for s in DecreeToken.__m_misc_typesru: 
-            DecreeToken.__m_keywords.add(Termin(s))
-        for s in DecreeToken.__m_misc_typesua: 
-            DecreeToken.__m_keywords.add(Termin._new885(s, MorphLang.UA))
-        for s in DecreeToken.__m_all_typesru: 
-            DecreeToken.__m_termins.add(Termin._new118(s, DecreeToken.ItemType.TYP))
-            DecreeToken.__m_keywords.add(Termin._new118(s, DecreeToken.ItemType.TYP))
-        for s in DecreeToken.__m_all_typesua: 
-            DecreeToken.__m_termins.add(Termin._new119(s, DecreeToken.ItemType.TYP, MorphLang.UA))
-            DecreeToken.__m_keywords.add(Termin._new119(s, DecreeToken.ItemType.TYP, MorphLang.UA))
-        DecreeToken.__m_termins.add(Termin._new118("ОТРАСЛЕВОЕ СОГЛАШЕНИЕ", DecreeToken.ItemType.TYP))
-        DecreeToken.__m_termins.add(Termin._new477("ГАЛУЗЕВА УГОДА", MorphLang.UA, DecreeToken.ItemType.TYP))
-        DecreeToken.__m_termins.add(Termin._new118("МЕЖОТРАСЛЕВОЕ СОГЛАШЕНИЕ", DecreeToken.ItemType.TYP))
-        DecreeToken.__m_termins.add(Termin._new477("МІЖГАЛУЗЕВА УГОДА", MorphLang.UA, DecreeToken.ItemType.TYP))
-        DecreeToken.__m_termins.add(Termin._new120("ОСНОВЫ ЗАКОНОДАТЕЛЬСТВА", DecreeToken.ItemType.TYP, DecreeKind.KODEX))
-        DecreeToken.__m_termins.add(Termin._new895("ОСНОВИ ЗАКОНОДАВСТВА", MorphLang.UA, DecreeToken.ItemType.TYP, DecreeKind.KODEX))
-        DecreeToken.__m_termins.add(Termin._new120("ОСНОВЫ ГРАЖДАНСКОГО ЗАКОНОДАТЕЛЬСТВА", DecreeToken.ItemType.TYP, DecreeKind.KODEX))
-        DecreeToken.__m_termins.add(Termin._new895("ОСНОВИ ЦИВІЛЬНОГО ЗАКОНОДАВСТВА", MorphLang.UA, DecreeToken.ItemType.TYP, DecreeKind.KODEX))
+        DecreeToken.M_TERMINS = TerminCollection()
+        DecreeToken.M_KEYWORDS = TerminCollection()
+        for s in DecreeToken.M_MISC_TYPESRU: 
+            DecreeToken.M_KEYWORDS.add(Termin(s))
+        for s in DecreeToken.M_MISC_TYPESUA: 
+            DecreeToken.M_KEYWORDS.add(Termin._new886(s, MorphLang.UA))
+        t = Termin._new113("ТЕХНИЧЕСКОЕ ЗАДАНИЕ", "ТЗ")
+        t.add_variant("ТЕХЗАДАНИЕ", False)
+        t.add_abridge("ТЕХ. ЗАДАНИЕ")
+        DecreeToken.M_KEYWORDS.add(t)
+        for s in DecreeToken.M_ALL_TYPESRU: 
+            DecreeToken.M_TERMINS.add(Termin._new118(s, DecreeToken.ItemType.TYP))
+            DecreeToken.M_KEYWORDS.add(Termin._new118(s, DecreeToken.ItemType.TYP))
+        for s in DecreeToken.M_ALL_TYPESUA: 
+            DecreeToken.M_TERMINS.add(Termin._new119(s, DecreeToken.ItemType.TYP, MorphLang.UA))
+            DecreeToken.M_KEYWORDS.add(Termin._new119(s, DecreeToken.ItemType.TYP, MorphLang.UA))
+        DecreeToken.M_TERMINS.add(Termin._new118("ОТРАСЛЕВОЕ СОГЛАШЕНИЕ", DecreeToken.ItemType.TYP))
+        DecreeToken.M_TERMINS.add(Termin._new477("ГАЛУЗЕВА УГОДА", MorphLang.UA, DecreeToken.ItemType.TYP))
+        DecreeToken.M_TERMINS.add(Termin._new118("МЕЖОТРАСЛЕВОЕ СОГЛАШЕНИЕ", DecreeToken.ItemType.TYP))
+        DecreeToken.M_TERMINS.add(Termin._new477("МІЖГАЛУЗЕВА УГОДА", MorphLang.UA, DecreeToken.ItemType.TYP))
+        DecreeToken.M_TERMINS.add(Termin._new120("ОСНОВЫ ЗАКОНОДАТЕЛЬСТВА", DecreeToken.ItemType.TYP, DecreeKind.KODEX))
+        DecreeToken.M_TERMINS.add(Termin._new897("ОСНОВИ ЗАКОНОДАВСТВА", MorphLang.UA, DecreeToken.ItemType.TYP, DecreeKind.KODEX))
+        DecreeToken.M_TERMINS.add(Termin._new120("ОСНОВЫ ГРАЖДАНСКОГО ЗАКОНОДАТЕЛЬСТВА", DecreeToken.ItemType.TYP, DecreeKind.KODEX))
+        DecreeToken.M_TERMINS.add(Termin._new897("ОСНОВИ ЦИВІЛЬНОГО ЗАКОНОДАВСТВА", MorphLang.UA, DecreeToken.ItemType.TYP, DecreeKind.KODEX))
         t = Termin._new144("ФЕДЕРАЛЬНЫЙ ЗАКОН", DecreeToken.ItemType.TYP, "ФЗ")
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new899("ФЕДЕРАЛЬНИЙ ЗАКОН", MorphLang.UA, DecreeToken.ItemType.TYP, "ФЗ")
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new901("ФЕДЕРАЛЬНИЙ ЗАКОН", MorphLang.UA, DecreeToken.ItemType.TYP, "ФЗ")
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("ПРОЕКТ ЗАКОНА", DecreeToken.ItemType.TYP)
         t.add_variant("ЗАКОНОПРОЕКТ", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("ПАСПОРТ ПРОЕКТА", DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new477("ПРОЕКТ ЗАКОНУ", MorphLang.UA, DecreeToken.ItemType.TYP)
         t.add_variant("ЗАКОНОПРОЕКТ", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new477("ПАСПОРТ ПРОЕКТУ", MorphLang.UA, DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new142("ГОСУДАРСТВЕННАЯ ПРОГРАММА", "ПРОГРАММА", DecreeToken.ItemType.TYP)
         t.add_variant("ГОСУДАРСТВЕННАЯ ЦЕЛЕВАЯ ПРОГРАММА", False)
         t.add_variant("ФЕДЕРАЛЬНАЯ ЦЕЛЕВАЯ ПРОГРАММА", False)
@@ -1764,233 +1763,233 @@ class DecreeToken(MetaToken):
         t.add_variant("МЕЖГОСУДАРСТВЕННАЯ ЦЕЛЕВАЯ ПРОГРАММА", False)
         t.add_abridge("МЕЖГОСУДАРСТВЕННАЯ ПРОГРАММА")
         t.add_variant("ГОСПРОГРАММА", False)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new905("ДЕРЖАВНА ПРОГРАМА", "ПРОГРАМА", MorphLang.UA, DecreeToken.ItemType.TYP)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new907("ДЕРЖАВНА ПРОГРАМА", "ПРОГРАМА", MorphLang.UA, DecreeToken.ItemType.TYP)
         t.add_variant("ДЕРЖАВНА ЦІЛЬОВА ПРОГРАМА", False)
         t.add_variant("ФЕДЕРАЛЬНА ЦІЛЬОВА ПРОГРАМА", False)
         t.add_abridge("ФЕДЕРАЛЬНА ПРОГРАМА")
         t.add_variant("ДЕРЖПРОГРАМА", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new144("ФЕДЕРАЛЬНЫЙ КОНСТИТУЦИОННЫЙ ЗАКОН", DecreeToken.ItemType.TYP, "ФКЗ")
         t.add_variant("КОНСТИТУЦИОННЫЙ ЗАКОН", False)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new899("ФЕДЕРАЛЬНИЙ КОНСТИТУЦІЙНИЙ ЗАКОН", MorphLang.UA, DecreeToken.ItemType.TYP, "ФКЗ")
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("УГОЛОВНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "УК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("КРИМИНАЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "КК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("КРИМІНАЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "КК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("УГОЛОВНО-ПРОЦЕССУАЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "УПК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("КРИМІНАЛЬНО-ПРОЦЕСУАЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "КПК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("УГОЛОВНО-ИСПОЛНИТЕЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "УИК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("КРИМІНАЛЬНО-ВИКОНАВЧИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "КВК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("ГРАЖДАНСКИЙ КОДЕКС", DecreeToken.ItemType.TYP, "ГК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("ЦИВІЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ЦК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("ГРАЖДАНСКИЙ ПРОЦЕССУАЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ГПК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("ЦИВІЛЬНИЙ ПРОЦЕСУАЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ЦПК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("ГРАДОСТРОИТЕЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ГРК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("МІСТОБУДІВНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "МБК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("ХОЗЯЙСТВЕННЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ХК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("ГОСПОДАРСЬКИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ГК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("ХОЗЯЙСТВЕННЫЙ ПРОЦЕССУАЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ХПК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("ГОСПОДАРСЬКИЙ ПРОЦЕСУАЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ГПК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new901("ФЕДЕРАЛЬНИЙ КОНСТИТУЦІЙНИЙ ЗАКОН", MorphLang.UA, DecreeToken.ItemType.TYP, "ФКЗ")
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("УГОЛОВНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "УК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("КРИМИНАЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "КК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("КРИМІНАЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "КК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("УГОЛОВНО-ПРОЦЕССУАЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "УПК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("КРИМІНАЛЬНО-ПРОЦЕСУАЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "КПК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("УГОЛОВНО-ИСПОЛНИТЕЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "УИК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("КРИМІНАЛЬНО-ВИКОНАВЧИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "КВК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("ГРАЖДАНСКИЙ КОДЕКС", DecreeToken.ItemType.TYP, "ГК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("ЦИВІЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ЦК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("ГРАЖДАНСКИЙ ПРОЦЕССУАЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ГПК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("ЦИВІЛЬНИЙ ПРОЦЕСУАЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ЦПК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("ГРАДОСТРОИТЕЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ГРК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("МІСТОБУДІВНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "МБК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("ХОЗЯЙСТВЕННЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ХК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("ГОСПОДАРСЬКИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ГК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("ХОЗЯЙСТВЕННЫЙ ПРОЦЕССУАЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ХПК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("ГОСПОДАРСЬКИЙ ПРОЦЕСУАЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ГПК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new120("АРБИТРАЖНЫЙ ПРОЦЕССУАЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, DecreeKind.KODEX)
         t.add_abridge("АПК")
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new895("АРБІТРАЖНИЙ ПРОЦЕСУАЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new897("АРБІТРАЖНИЙ ПРОЦЕСУАЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, DecreeKind.KODEX)
         t.add_abridge("АПК")
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("КОДЕКС ВНУТРЕННЕГО ВОДНОГО ТРАНСПОРТА", DecreeToken.ItemType.TYP, "КВВТ", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("КОДЕКС ВНУТРЕННЕГО ВОДНОГО ТРАНСПОРТА", DecreeToken.ItemType.TYP, "КВВТ", DecreeKind.KODEX)
         t.add_variant("КВ ВТ", False)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("ТРУДОВОЙ КОДЕКС", DecreeToken.ItemType.TYP, "ТК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("ТРУДОВИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ТК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("ТРУДОВОЙ КОДЕКС", DecreeToken.ItemType.TYP, "ТК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("ТРУДОВИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ТК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new120("КОДЕКС ЗАКОНОВ О ТРУДЕ", DecreeToken.ItemType.TYP, DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("КОДЕКС ЗАКОНІВ ПРО ПРАЦЮ", MorphLang.UA, DecreeToken.ItemType.TYP, "КЗПП", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("ЖИЛИЩНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ЖК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("ЖИТЛОВИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ЖК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("ЗЕМЕЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ЗК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("ЗЕМЕЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ЗК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("ЛЕСНОЙ КОДЕКС", DecreeToken.ItemType.TYP, "ЛК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("ЛІСОВИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ЛК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("БЮДЖЕТНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "БК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("БЮДЖЕТНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "БК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("НАЛОГОВЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "НК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("ПОДАТКОВИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ПК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("СЕМЕЙНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "СК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("СІМЕЙНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "СК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("ВОДНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ВК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("ВОДНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ВК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("ВОЗДУШНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ВК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("ПОВІТРЯНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ПК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("КОДЕКС ОБ АДМИНИСТРАТИВНЫХ ПРАВОНАРУШЕНИЯХ", DecreeToken.ItemType.TYP, "КОАП", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("КОДЕКС ПРО АДМІНІСТРАТИВНІ ПРАВОПОРУШЕННЯ", MorphLang.UA, DecreeToken.ItemType.TYP, "КОАП", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("КОДЕКС ЗАКОНІВ ПРО ПРАЦЮ", MorphLang.UA, DecreeToken.ItemType.TYP, "КЗПП", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("ЖИЛИЩНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ЖК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("ЖИТЛОВИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ЖК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("ЗЕМЕЛЬНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ЗК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("ЗЕМЕЛЬНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ЗК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("ЛЕСНОЙ КОДЕКС", DecreeToken.ItemType.TYP, "ЛК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("ЛІСОВИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ЛК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("БЮДЖЕТНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "БК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("БЮДЖЕТНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "БК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("НАЛОГОВЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "НК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("ПОДАТКОВИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ПК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("СЕМЕЙНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "СК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("СІМЕЙНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "СК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("ВОДНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ВК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("ВОДНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ВК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("ВОЗДУШНЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ВК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("ПОВІТРЯНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "ПК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("КОДЕКС ОБ АДМИНИСТРАТИВНЫХ ПРАВОНАРУШЕНИЯХ", DecreeToken.ItemType.TYP, "КОАП", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("КОДЕКС ПРО АДМІНІСТРАТИВНІ ПРАВОПОРУШЕННЯ", MorphLang.UA, DecreeToken.ItemType.TYP, "КОАП", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("ОБ АДМИНИСТРАТИВНЫХ ПРАВОНАРУШЕНИЯХ", DecreeToken.ItemType.STDNAME)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new477("ПРО АДМІНІСТРАТИВНІ ПРАВОПОРУШЕННЯ", MorphLang.UA, DecreeToken.ItemType.STDNAME)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("КОДЕКС ОБ АДМИНИСТРАТИВНЫХ ПРАВОНАРУШЕНИЯХ", DecreeToken.ItemType.TYP, "КРКОАП", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("КОДЕКС ОБ АДМИНИСТРАТИВНЫХ ПРАВОНАРУШЕНИЯХ", DecreeToken.ItemType.TYP, "КРКОАП", DecreeKind.KODEX)
         t.add_variant("КРК ОБ АП", False)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("КОДЕКС АДМИНИСТРАТИВНОГО СУДОПРОИЗВОДСТВА", DecreeToken.ItemType.TYP, "КАС", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("КОДЕКС АДМІНІСТРАТИВНОГО СУДОЧИНСТВА", MorphLang.UA, DecreeToken.ItemType.TYP, "КАС", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("ТАМОЖЕННЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ТК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("МИТНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "МК", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("КОДЕКС ТОРГОВОГО МОРЕПЛАВАНИЯ", DecreeToken.ItemType.TYP, "КТМ", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("КОДЕКС ТОРГОВЕЛЬНОГО МОРЕПЛАВСТВА", MorphLang.UA, DecreeToken.ItemType.TYP, "КТМ", DecreeKind.KODEX)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new908("ПРАВИЛА ДОРОЖНОГО ДВИЖЕНИЯ", DecreeToken.ItemType.TYP, "ПДД", "ПРАВИЛА")
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new910("ПРАВИЛА ДОРОЖНЬОГО РУХУ", MorphLang.UA, DecreeToken.ItemType.TYP, "ПДР", "ПРАВИЛА")
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("КОДЕКС АДМИНИСТРАТИВНОГО СУДОПРОИЗВОДСТВА", DecreeToken.ItemType.TYP, "КАС", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("КОДЕКС АДМІНІСТРАТИВНОГО СУДОЧИНСТВА", MorphLang.UA, DecreeToken.ItemType.TYP, "КАС", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("ТАМОЖЕННЫЙ КОДЕКС", DecreeToken.ItemType.TYP, "ТК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("МИТНИЙ КОДЕКС", MorphLang.UA, DecreeToken.ItemType.TYP, "МК", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("КОДЕКС ТОРГОВОГО МОРЕПЛАВАНИЯ", DecreeToken.ItemType.TYP, "КТМ", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("КОДЕКС ТОРГОВЕЛЬНОГО МОРЕПЛАВСТВА", MorphLang.UA, DecreeToken.ItemType.TYP, "КТМ", DecreeKind.KODEX)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new910("ПРАВИЛА ДОРОЖНОГО ДВИЖЕНИЯ", DecreeToken.ItemType.TYP, "ПДД", "ПРАВИЛА")
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new912("ПРАВИЛА ДОРОЖНЬОГО РУХУ", MorphLang.UA, DecreeToken.ItemType.TYP, "ПДР", "ПРАВИЛА")
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("СОБРАНИЕ ЗАКОНОДАТЕЛЬСТВА", DecreeToken.ItemType.TYP)
         t.add_abridge("СЗ")
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("ОФИЦИАЛЬНЫЙ ВЕСТНИК", DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new477("ОФІЦІЙНИЙ ВІСНИК", MorphLang.UA, DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("СВОД ЗАКОНОВ", DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("БЮЛЛЕТЕНЬ НОРМАТИВНЫХ АКТОВ ФЕДЕРАЛЬНЫХ ОРГАНОВ ИСПОЛНИТЕЛЬНОЙ ВЛАСТИ", DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("БЮЛЛЕТЕНЬ МЕЖДУНАРОДНЫХ ДОГОВОРОВ", DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("БЮЛЛЕТЕНЬ ВЕРХОВНОГО СУДА", DecreeToken.ItemType.TYP)
         t.add_variant("БЮЛЛЕТЕНЬ ВС", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("ВЕСТНИК ВЫСШЕГО АРБИТРАЖНОГО СУДА", DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("ВЕСТНИК БАНКА РОССИИ", DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("РОССИЙСКАЯ ГАЗЕТА", DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("РОССИЙСКИЕ ВЕСТИ", DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("СОБРАНИЕ АКТОВ ПРЕЗИДЕНТА И ПРАВИТЕЛЬСТВА", DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("ВЕДОМОСТИ ВЕРХОВНОГО СОВЕТА", DecreeToken.ItemType.TYP)
         t.add_variant("ВЕДОМОСТИ ВС", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("ВЕДОМОСТИ СЪЕЗДА НАРОДНЫХ ДЕПУТАТОВ И ВЕРХОВНОГО СОВЕТА", DecreeToken.ItemType.TYP)
         t.add_variant("ВЕДОМОСТИ СЪЕЗДА НАРОДНЫХ ДЕПУТАТОВ РФ И ВЕРХОВНОГО СОВЕТА", False)
         t.add_variant("ВЕДОМОСТИ СЪЕЗДА НАРОДНЫХ ДЕПУТАТОВ", False)
         t.add_variant("ВЕДОМОСТИ СНД РФ И ВС", False)
         t.add_variant("ВЕДОМОСТИ СНД И ВС", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new118("БЮЛЛЕТЕНЬ НОРМАТИВНЫХ АКТОВ МИНИСТЕРСТВ И ВЕДОМСТВ", DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
-        DecreeToken.__m_termins.add(Termin._new118("СВОД ЗАКОНОВ", DecreeToken.ItemType.TYP))
-        DecreeToken.__m_termins.add(Termin._new118("ВЕДОМОСТИ", DecreeToken.ItemType.TYP))
+        DecreeToken.M_TERMINS.add(t)
+        DecreeToken.M_TERMINS.add(Termin._new118("СВОД ЗАКОНОВ", DecreeToken.ItemType.TYP))
+        DecreeToken.M_TERMINS.add(Termin._new118("ВЕДОМОСТИ", DecreeToken.ItemType.TYP))
         t = Termin._new142("ЗАРЕГИСТРИРОВАТЬ", "РЕГИСТРАЦИЯ", DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new979("ЗАРЕЄСТРУВАТИ", MorphLang.UA, "РЕЄСТРАЦІЯ", DecreeToken.ItemType.TYP)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new981("ЗАРЕЄСТРУВАТИ", MorphLang.UA, "РЕЄСТРАЦІЯ", DecreeToken.ItemType.TYP)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new120("СТАНДАРТ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("МЕЖДУНАРОДНЫЙ СТАНДАРТ", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new120("ГОСТ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("ГОСУДАРСТВЕННЫЙ СТАНДАРТ", False)
         t.add_variant("ГОССТАНДАРТ", False)
         t.add_variant("НАЦИОНАЛЬНЫЙ СТАНДАРТ", False)
         t.add_variant("МЕЖГОСУДАРСТВЕННЫЙ СТАНДАРТ", False)
         t.add_variant("ДЕРЖАВНИЙ СТАНДАРТ", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new120("ПНСТ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("ПРЕДВАРИТЕЛЬНЫЙ НАЦИОНАЛЬНЫЙ СТАНДАРТ", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new120("РСТ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("РЕСПУБЛИКАНСКИЙ СТАНДАРТ", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new120("ПБУ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("ПОЛОЖЕНИЕ ПО БУХГАЛТЕРСКОМУ УЧЕТУ", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new120("ISO", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("ИСО", False)
         t.add_variant("ISO/IEC", False)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new986("ТЕХНИЧЕСКИЕ УСЛОВИЯ", "ТУ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new988("ТЕХНИЧЕСКИЕ УСЛОВИЯ", "ТУ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("ТЕХУСЛОВИЯ", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new120("СТРОИТЕЛЬНЫЕ НОРМЫ И ПРАВИЛА", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("СНИП", False)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new986("СТРОИТЕЛЬНЫЕ НОРМЫ", "СН", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new988("СТРОИТЕЛЬНЫЕ НОРМЫ", "СН", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("CH", False)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new986("ВЕДОМСТВЕННЫЕ СТРОИТЕЛЬНЫЕ НОРМЫ", "ВСН", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new988("ВЕДОМСТВЕННЫЕ СТРОИТЕЛЬНЫЕ НОРМЫ", "ВСН", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("BCH", False)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new986("РЕСПУБЛИКАНСКИЕ СТРОИТЕЛЬНЫЕ НОРМЫ", "РСН", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new988("РЕСПУБЛИКАНСКИЕ СТРОИТЕЛЬНЫЕ НОРМЫ", "РСН", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("PCH", False)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new986("НОРМЫ ПОЖАРНОЙ БЕЗОПАСНОСТИ", "НПБ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new986("ПРАВИЛА ПОЖАРНОЙ БЕЗОПАСНОСТИ", "ППБ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new986("СТРОИТЕЛЬНЫЕ ПРАВИЛА", "СП", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new986("МОСКОВСКИЕ ГОРОДСКИЕ СТРОИТЕЛЬНЫЕ НОРМЫ", "МГСН", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new988("НОРМЫ ПОЖАРНОЙ БЕЗОПАСНОСТИ", "НПБ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new988("ПРАВИЛА ПОЖАРНОЙ БЕЗОПАСНОСТИ", "ППБ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new988("СТРОИТЕЛЬНЫЕ ПРАВИЛА", "СП", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new988("МОСКОВСКИЕ ГОРОДСКИЕ СТРОИТЕЛЬНЫЕ НОРМЫ", "МГСН", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new120("АВОК", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("ABOK", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new120("СТАНДАРТ ОРГАНИЗАЦИИ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("СТО", False)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new986("ПРАВИЛА ПО ОХРАНЕ ТРУДА", "ПОТ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new988("ПРАВИЛА ПО ОХРАНЕ ТРУДА", "ПОТ", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("ПРАВИЛА ОХРАНЫ ТРУДА", False)
-        DecreeToken.__m_termins.add(t)
-        t = Termin._new986("РУКОВОДЯЩИЙ ДОКУМЕНТ", "РД", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
+        t = Termin._new988("РУКОВОДЯЩИЙ ДОКУМЕНТ", "РД", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new120("САНИТАРНЫЕ НОРМЫ И ПРАВИЛА", DecreeToken.ItemType.TYP, DecreeKind.STANDARD)
         t.add_variant("САНПИН", False)
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
         t = Termin._new144("ТЕХНИЧЕСКОЕ ЗАДАНИЕ", DecreeToken.ItemType.TYP, "ТЗ")
-        DecreeToken.__m_termins.add(t)
+        DecreeToken.M_TERMINS.add(t)
     
     @staticmethod
     def is_keyword(t : 'Token', is_misc_type_only : bool=False) -> 'Token':
@@ -1998,26 +1997,27 @@ class DecreeToken(MetaToken):
         from pullenti.ner.decree.internal.PartToken import PartToken
         if (t is None): 
             return None
-        tok = DecreeToken.__m_keywords.try_parse(t, TerminParseAttr.NO)
+        tok = DecreeToken.M_KEYWORDS.try_parse(t, TerminParseAttr.NO)
         if (tok is not None): 
             if (is_misc_type_only and tok.termin.tag is not None): 
                 return None
-            tok.end_token.tag = tok.termin.canonic_text
+            tok.end_token.tag = (tok.termin.canonic_text)
             return tok.end_token
         if (not t.morph.class0_.is_adjective and not t.morph.class0_.is_pronoun): 
             return None
         npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
         if (npt is None or npt.begin_token == npt.end_token): 
-            tok = DecreeToken.__m_keywords.try_parse(t.next0_, TerminParseAttr.NO)
-            if (((t.is_value("НАСТОЯЩИЙ", "СПРАВЖНІЙ") or t.is_value("НАЗВАННЫЙ", "НАЗВАНИЙ") or t.is_value("ДАННЫЙ", "ДАНИЙ"))) and (tok) is not None): 
-                tok.end_token.tag = tok.termin.canonic_text
-                return tok.end_token
+            if (t.is_value("НАСТОЯЩИЙ", "СПРАВЖНІЙ") or t.is_value("НАЗВАННЫЙ", "НАЗВАНИЙ") or t.is_value("ДАННЫЙ", "ДАНИЙ")): 
+                tok = DecreeToken.M_KEYWORDS.try_parse(t.next0_, TerminParseAttr.NO)
+                if ((tok) is not None): 
+                    tok.end_token.tag = (tok.termin.canonic_text)
+                    return tok.end_token
             return None
-        tok = DecreeToken.__m_keywords.try_parse(npt.end_token, TerminParseAttr.NO)
+        tok = DecreeToken.M_KEYWORDS.try_parse(npt.end_token, TerminParseAttr.NO)
         if ((tok) is not None): 
             if (is_misc_type_only and tok.termin.tag is not None): 
                 return None
-            tok.end_token.tag = tok.termin.canonic_text
+            tok.end_token.tag = (tok.termin.canonic_text)
             return tok.end_token
         pp = PartToken.try_attach(npt.end_token, None, False, True)
         if (pp is not None): 
@@ -2027,36 +2027,30 @@ class DecreeToken(MetaToken):
     @staticmethod
     def is_keyword_str(word : str, is_misc_type_only : bool=False) -> bool:
         if (not is_misc_type_only): 
-            if (word in DecreeToken.__m_all_typesru or word in DecreeToken.__m_all_typesua): 
+            if (word in DecreeToken.M_ALL_TYPESRU or word in DecreeToken.M_ALL_TYPESUA): 
                 return True
-        if (word in DecreeToken.__m_misc_typesru or word in DecreeToken.__m_misc_typesua): 
+        if (word in DecreeToken.M_MISC_TYPESRU or word in DecreeToken.M_MISC_TYPESUA): 
             return True
         return False
     
     @staticmethod
     def add_new_type(typ_ : str, acronym : str=None) -> None:
-        """ Добавить новый тип НПА
-        
-        Args:
-            typ_(str): 
-            acronym(str): 
-        """
         from pullenti.ner.core.Termin import Termin
         t = Termin._new144(typ_, DecreeToken.ItemType.TYP, acronym)
-        DecreeToken.__m_termins.add(t)
-        DecreeToken.__m_keywords.add(Termin._new118(typ_, DecreeToken.ItemType.TYP))
+        DecreeToken.M_TERMINS.add(t)
+        DecreeToken.M_KEYWORDS.add(Termin._new118(typ_, DecreeToken.ItemType.TYP))
     
-    __m_all_typesru = None
+    M_ALL_TYPESRU = None
     
-    __m_all_typesua = None
+    M_ALL_TYPESUA = None
     
-    __m_misc_typesru = None
+    M_MISC_TYPESRU = None
     
-    __m_misc_typesua = None
+    M_MISC_TYPESUA = None
     
-    __m_std_adjectives = None
+    M_STD_ADJECTIVES = None
     
-    __m_empty_adjectives = None
+    M_EMPTY_ADJECTIVES = None
     
     @staticmethod
     def get_kind(typ_ : str) -> 'DecreeKind':
@@ -2092,7 +2086,6 @@ class DecreeToken(MetaToken):
         if (LanguageHelper.ends_with(typ_, "ЗАКОН")): 
             return True
         return False
-
     
     @staticmethod
     def _new831(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType') -> 'DecreeToken':
@@ -2173,11 +2166,11 @@ class DecreeToken(MetaToken):
     # static constructor for class DecreeToken
     @staticmethod
     def _static_ctor():
-        DecreeToken.__m_all_typesru = list(["УКАЗ", "УКАЗАНИЕ", "ПОСТАНОВЛЕНИЕ", "РАСПОРЯЖЕНИЕ", "ПРИКАЗ", "ДИРЕКТИВА", "ПИСЬМО", "ЗАПИСКА", "ИНФОРМАЦИОННОЕ ПИСЬМО", "ИНСТРУКЦИЯ", "ЗАКОН", "КОДЕКС", "КОНСТИТУЦИЯ", "РЕШЕНИЕ", "ПОЛОЖЕНИЕ", "РАСПОРЯЖЕНИЕ", "ПОРУЧЕНИЕ", "РЕЗОЛЮЦИЯ", "ДОГОВОР", "СУБДОГОВОР", "АГЕНТСКИЙ ДОГОВОР", "ДОВЕРЕННОСТЬ", "КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ", "КОНТРАКТ", "ГОСУДАРСТВЕННЫЙ КОНТРАКТ", "ОПРЕДЕЛЕНИЕ", "ПРИГОВОР", "СОГЛАШЕНИЕ", "ПРОТОКОЛ", "ЗАЯВЛЕНИЕ", "УВЕДОМЛЕНИЕ", "РАЗЪЯСНЕНИЕ", "УСТАВ", "ХАРТИЯ", "КОНВЕНЦИЯ", "ПАКТ", "БИЛЛЬ", "ДЕКЛАРАЦИЯ", "РЕГЛАМЕНТ", "ТЕЛЕГРАММА", "ТЕЛЕФОНОГРАММА", "ТЕЛЕФАКСОГРАММА", "ТЕЛЕТАЙПОГРАММА", "ФАКСОГРАММА", "ОТВЕТЫ НА ВОПРОСЫ", "ВЫПИСКА ИЗ ПРОТОКОЛА", "ЗАКЛЮЧЕНИЕ", "ДЕКРЕТ"])
-        DecreeToken.__m_all_typesua = list(["УКАЗ", "НАКАЗ", "ПОСТАНОВА", "РОЗПОРЯДЖЕННЯ", "НАКАЗ", "ДИРЕКТИВА", "ЛИСТ", "ЗАПИСКА", "ІНФОРМАЦІЙНИЙ ЛИСТ", "ІНСТРУКЦІЯ", "ЗАКОН", "КОДЕКС", "КОНСТИТУЦІЯ", "РІШЕННЯ", "ПОЛОЖЕННЯ", "РОЗПОРЯДЖЕННЯ", "ДОРУЧЕННЯ", "РЕЗОЛЮЦІЯ", "ДОГОВІР", "СУБКОНТРАКТ", "АГЕНТСЬКИЙ ДОГОВІР", "ДОРУЧЕННЯ", "КОМЕРЦІЙНА ПРОПОЗИЦІЯ", "КОНТРАКТ", "ДЕРЖАВНИЙ КОНТРАКТ", "ВИЗНАЧЕННЯ", "ВИРОК", "УГОДА", "ПРОТОКОЛ", "ЗАЯВА", "ПОВІДОМЛЕННЯ", "РОЗ'ЯСНЕННЯ", "СТАТУТ", "ХАРТІЯ", "КОНВЕНЦІЯ", "ПАКТ", "БІЛЛЬ", "ДЕКЛАРАЦІЯ", "РЕГЛАМЕНТ", "ТЕЛЕГРАМА", "ТЕЛЕФОНОГРАМА", "ТЕЛЕФАКСОГРАММА", "ТЕЛЕТАЙПОГРАМА", "ФАКСОГРАМА", "ВІДПОВІДІ НА ЗАПИТАННЯ", "ВИТЯГ З ПРОТОКОЛУ", "ВИСНОВОК", "ДЕКРЕТ"])
-        DecreeToken.__m_misc_typesru = list(["ПРАВИЛО", "ПРОГРАММА", "ПЕРЕЧЕНЬ", "ПОСОБИЕ", "РЕКОМЕНДАЦИЯ", "НАСТАВЛЕНИЕ", "СТАНДАРТ", "СОГЛАШЕНИЕ", "МЕТОДИКА", "ТРЕБОВАНИЕ", "ПОЛОЖЕНИЕ", "СПИСОК", "ЛИСТ", "ТАБЛИЦА", "ЗАЯВКА", "АКТ", "ФОРМА", "НОРМАТИВ", "ПОРЯДОК", "ИНФОРМАЦИЯ", "НОМЕНКЛАТУРА", "ОСНОВА", "ОБЗОР", "КОНЦЕПЦИЯ", "СТРАТЕГИЯ", "СТРУКТУРА", "УСЛОВИЕ", "КЛАССИФИКАТОР", "ОБЩЕРОССИЙСКИЙ КЛАССИФИКАТОР", "СПЕЦИФИКАЦИЯ", "ОБРАЗЕЦ"])
-        DecreeToken.__m_misc_typesua = list(["ПРАВИЛО", "ПРОГРАМА", "ПЕРЕЛІК", "ДОПОМОГА", "РЕКОМЕНДАЦІЯ", "ПОВЧАННЯ", "СТАНДАРТ", "УГОДА", "МЕТОДИКА", "ВИМОГА", "ПОЛОЖЕННЯ", "СПИСОК", "ТАБЛИЦЯ", "ЗАЯВКА", "АКТ", "ФОРМА", "НОРМАТИВ", "ПОРЯДОК", "ІНФОРМАЦІЯ", "НОМЕНКЛАТУРА", "ОСНОВА", "ОГЛЯД", "КОНЦЕПЦІЯ", "СТРАТЕГІЯ", "СТРУКТУРА", "УМОВА", "КЛАСИФІКАТОР", "ЗАГАЛЬНОРОСІЙСЬКИЙ КЛАСИФІКАТОР", "СПЕЦИФІКАЦІЯ", "ЗРАЗОК"])
-        DecreeToken.__m_std_adjectives = list(["ВСЕОБЩИЙ", "МЕЖДУНАРОДНЫЙ", "ЗАГАЛЬНИЙ", "МІЖНАРОДНИЙ", "НОРМАТИВНЫЙ", "НОРМАТИВНИЙ", "КАССАЦИОННЫЙ", "АПЕЛЛЯЦИОННЫЙ", "КАСАЦІЙНИЙ", "АПЕЛЯЦІЙНИЙ"])
-        DecreeToken.__m_empty_adjectives = list(["НЫНЕШНИЙ", "ПРЕДЫДУЩИЙ", "ДЕЙСТВУЮЩИЙ", "НАСТОЯЩИЙ", "НИНІШНІЙ", "ПОПЕРЕДНІЙ", "СПРАВЖНІЙ"])
+        DecreeToken.M_ALL_TYPESRU = list(["УКАЗ", "УКАЗАНИЕ", "ПОСТАНОВЛЕНИЕ", "РАСПОРЯЖЕНИЕ", "ПРИКАЗ", "ДИРЕКТИВА", "ПИСЬМО", "ЗАПИСКА", "ИНФОРМАЦИОННОЕ ПИСЬМО", "ИНСТРУКЦИЯ", "ЗАКОН", "КОДЕКС", "КОНСТИТУЦИЯ", "РЕШЕНИЕ", "ПОЛОЖЕНИЕ", "РАСПОРЯЖЕНИЕ", "ПОРУЧЕНИЕ", "РЕЗОЛЮЦИЯ", "ДОГОВОР", "СУБДОГОВОР", "АГЕНТСКИЙ ДОГОВОР", "ДОВЕРЕННОСТЬ", "КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ", "КОНТРАКТ", "ГОСУДАРСТВЕННЫЙ КОНТРАКТ", "ОПРЕДЕЛЕНИЕ", "ПРИГОВОР", "СОГЛАШЕНИЕ", "ПРОТОКОЛ", "ЗАЯВЛЕНИЕ", "УВЕДОМЛЕНИЕ", "РАЗЪЯСНЕНИЕ", "УСТАВ", "ХАРТИЯ", "КОНВЕНЦИЯ", "ПАКТ", "БИЛЛЬ", "ДЕКЛАРАЦИЯ", "РЕГЛАМЕНТ", "ТЕЛЕГРАММА", "ТЕЛЕФОНОГРАММА", "ТЕЛЕФАКСОГРАММА", "ТЕЛЕТАЙПОГРАММА", "ФАКСОГРАММА", "ОТВЕТЫ НА ВОПРОСЫ", "ВЫПИСКА ИЗ ПРОТОКОЛА", "ЗАКЛЮЧЕНИЕ", "ДЕКРЕТ"])
+        DecreeToken.M_ALL_TYPESUA = list(["УКАЗ", "НАКАЗ", "ПОСТАНОВА", "РОЗПОРЯДЖЕННЯ", "НАКАЗ", "ДИРЕКТИВА", "ЛИСТ", "ЗАПИСКА", "ІНФОРМАЦІЙНИЙ ЛИСТ", "ІНСТРУКЦІЯ", "ЗАКОН", "КОДЕКС", "КОНСТИТУЦІЯ", "РІШЕННЯ", "ПОЛОЖЕННЯ", "РОЗПОРЯДЖЕННЯ", "ДОРУЧЕННЯ", "РЕЗОЛЮЦІЯ", "ДОГОВІР", "СУБКОНТРАКТ", "АГЕНТСЬКИЙ ДОГОВІР", "ДОРУЧЕННЯ", "КОМЕРЦІЙНА ПРОПОЗИЦІЯ", "КОНТРАКТ", "ДЕРЖАВНИЙ КОНТРАКТ", "ВИЗНАЧЕННЯ", "ВИРОК", "УГОДА", "ПРОТОКОЛ", "ЗАЯВА", "ПОВІДОМЛЕННЯ", "РОЗ'ЯСНЕННЯ", "СТАТУТ", "ХАРТІЯ", "КОНВЕНЦІЯ", "ПАКТ", "БІЛЛЬ", "ДЕКЛАРАЦІЯ", "РЕГЛАМЕНТ", "ТЕЛЕГРАМА", "ТЕЛЕФОНОГРАМА", "ТЕЛЕФАКСОГРАММА", "ТЕЛЕТАЙПОГРАМА", "ФАКСОГРАМА", "ВІДПОВІДІ НА ЗАПИТАННЯ", "ВИТЯГ З ПРОТОКОЛУ", "ВИСНОВОК", "ДЕКРЕТ"])
+        DecreeToken.M_MISC_TYPESRU = list(["ПРАВИЛО", "ПРОГРАММА", "ПЕРЕЧЕНЬ", "ПОСОБИЕ", "РЕКОМЕНДАЦИЯ", "НАСТАВЛЕНИЕ", "СТАНДАРТ", "СОГЛАШЕНИЕ", "МЕТОДИКА", "ТРЕБОВАНИЕ", "ПОЛОЖЕНИЕ", "СПИСОК", "ЛИСТ", "ТАБЛИЦА", "ЗАЯВКА", "АКТ", "ФОРМА", "НОРМАТИВ", "ПОРЯДОК", "ИНФОРМАЦИЯ", "НОМЕНКЛАТУРА", "ОСНОВА", "ОБЗОР", "КОНЦЕПЦИЯ", "СТРАТЕГИЯ", "СТРУКТУРА", "УСЛОВИЕ", "КЛАССИФИКАТОР", "ОБЩЕРОССИЙСКИЙ КЛАССИФИКАТОР", "СПЕЦИФИКАЦИЯ", "ОБРАЗЕЦ"])
+        DecreeToken.M_MISC_TYPESUA = list(["ПРАВИЛО", "ПРОГРАМА", "ПЕРЕЛІК", "ДОПОМОГА", "РЕКОМЕНДАЦІЯ", "ПОВЧАННЯ", "СТАНДАРТ", "УГОДА", "МЕТОДИКА", "ВИМОГА", "ПОЛОЖЕННЯ", "СПИСОК", "ТАБЛИЦЯ", "ЗАЯВКА", "АКТ", "ФОРМА", "НОРМАТИВ", "ПОРЯДОК", "ІНФОРМАЦІЯ", "НОМЕНКЛАТУРА", "ОСНОВА", "ОГЛЯД", "КОНЦЕПЦІЯ", "СТРАТЕГІЯ", "СТРУКТУРА", "УМОВА", "КЛАСИФІКАТОР", "ЗАГАЛЬНОРОСІЙСЬКИЙ КЛАСИФІКАТОР", "СПЕЦИФІКАЦІЯ", "ЗРАЗОК"])
+        DecreeToken.M_STD_ADJECTIVES = list(["ВСЕОБЩИЙ", "МЕЖДУНАРОДНЫЙ", "ЗАГАЛЬНИЙ", "МІЖНАРОДНИЙ", "НОРМАТИВНЫЙ", "НОРМАТИВНИЙ", "КАССАЦИОННЫЙ", "АПЕЛЛЯЦИОННЫЙ", "КАСАЦІЙНИЙ", "АПЕЛЯЦІЙНИЙ"])
+        DecreeToken.M_EMPTY_ADJECTIVES = list(["НЫНЕШНИЙ", "ПРЕДЫДУЩИЙ", "ДЕЙСТВУЮЩИЙ", "НАСТОЯЩИЙ", "НИНІШНІЙ", "ПОПЕРЕДНІЙ", "СПРАВЖНІЙ"])
 
 DecreeToken._static_ctor()

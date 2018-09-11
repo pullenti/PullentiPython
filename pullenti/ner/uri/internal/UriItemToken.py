@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-import typing
 import io
-from pullenti.ntopy.Utils import Utils
+import typing
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.NumberSpellingType import NumberSpellingType
@@ -25,11 +25,11 @@ class UriItemToken(MetaToken):
             return None
         if (res.end_token.is_char_of(".;-:") and res.end_char > 3): 
             res.end_token = res.end_token.previous
-            res.value = res.value[0 : (len(res.value) - 1)]
+            res.value = res.value[0:0+len(res.value) - 1]
         if (res.value.endswith("/")): 
-            res.value = res.value[0 : (len(res.value) - 1)]
+            res.value = res.value[0:0+len(res.value) - 1]
         if (res.value.endswith("\\")): 
-            res.value = res.value[0 : (len(res.value) - 1)]
+            res.value = res.value[0:0+len(res.value) - 1]
         return res
     
     @staticmethod
@@ -48,18 +48,18 @@ class UriItemToken(MetaToken):
             return None
         t1 = t
         delim = chr(0)
-        txt = Utils.newStringIO(None)
-        first_pass3066 = True
+        txt = io.StringIO()
+        first_pass4043 = True
         while True:
-            if first_pass3066: first_pass3066 = False
+            if first_pass4043: first_pass4043 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_whitespace_before and t != t1): 
                 break
             if (isinstance(t, NumberToken)): 
-                if (delim != chr(0)): 
+                if (delim != (chr(0))): 
                     print(delim, end="", file=txt)
-                delim = chr(0)
+                delim = (chr(0))
                 t1 = t
                 print(t.get_source_text(), end="", file=txt)
                 continue
@@ -70,14 +70,14 @@ class UriItemToken(MetaToken):
             delim = t.get_source_text()[0]
         if (txt.tell() == 0): 
             return None
-        return UriItemToken._new2519(t0, t1, Utils.toStringStringIO(txt))
+        return UriItemToken._new2528(t0, t1, Utils.toStringStringIO(txt))
     
     @staticmethod
     def __attach_uri_content(t0 : 'Token', chars_ : str, can_be_whitespaces : bool=False) -> 'UriItemToken':
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.ReferentToken import ReferentToken
-        txt = Utils.newStringIO(None)
+        txt = io.StringIO()
         t1 = t0
         dom = UriItemToken.attach_domain_name(t0, True, can_be_whitespaces)
         if (dom is not None): 
@@ -87,9 +87,9 @@ class UriItemToken(MetaToken):
         t = t0
         if (dom is not None): 
             t = dom.end_token.next0_
-        first_pass3067 = True
+        first_pass4044 = True
         while True:
-            if first_pass3067: first_pass3067 = False
+            if first_pass4044: first_pass4044 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and t.is_whitespace_before): 
@@ -109,9 +109,9 @@ class UriItemToken(MetaToken):
                     if (t.is_char_of("\\/")): 
                         tt1 = t.next0_
                     tt0 = tt1
-                    first_pass3068 = True
+                    first_pass4045 = True
                     while True:
-                        if first_pass3068: first_pass3068 = False
+                        if first_pass4045: first_pass4045 = False
                         else: tt1 = tt1.next0_
                         if (not (tt1 is not None)): break
                         if (tt1 != tt0 and tt1.is_whitespace_before): 
@@ -154,26 +154,26 @@ class UriItemToken(MetaToken):
                 break
             src = tt.get_source_text()
             ch = src[0]
-            if (not ch.isalpha()): 
-                if ((ch) not in chars_): 
+            if (not str.isalpha(ch)): 
+                if (chars_.find(ch) < 0): 
                     break
                 if (ch == '(' or ch == '['): 
                     open_char = ch
                 elif (ch == ')'): 
                     if (open_char != '('): 
                         break
-                    open_char = chr(0)
+                    open_char = (chr(0))
                 elif (ch == ']'): 
                     if (open_char != '['): 
                         break
-                    open_char = chr(0)
+                    open_char = (chr(0))
             print(src, end="", file=txt)
             t1 = t
         if (txt.tell() == 0): 
             return dom
         i = 0
         while i < txt.tell(): 
-            if (Utils.getCharAtStringIO(txt, i).isalnum()): 
+            if (str.isalnum(Utils.getCharAtStringIO(txt, i))): 
                 break
             i += 1
         if (i >= txt.tell()): 
@@ -188,33 +188,33 @@ class UriItemToken(MetaToken):
             Utils.replaceStringIO(txt, "\\\\", "//")
             tmp = Utils.toStringStringIO(txt)
         if (tmp.startswith("//")): 
-            tmp = tmp[2 : ]
+            tmp = tmp[2:]
         if (Utils.compareStrings(tmp, "WWW", True) == 0): 
             return None
-        res = UriItemToken._new2519(t0, t1, Utils.toStringStringIO(txt))
+        res = UriItemToken._new2528(t0, t1, Utils.toStringStringIO(txt))
         return res
     
     @staticmethod
     def attach_domain_name(t0 : 'Token', check_ : bool, can_be_whitspaces : bool) -> 'UriItemToken':
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.NumberToken import NumberToken
-        txt = Utils.newStringIO(None)
+        txt = io.StringIO()
         t1 = t0
         ip_count = 0
         is_ip = True
         t = t0
-        first_pass3069 = True
+        first_pass4046 = True
         while True:
-            if first_pass3069: first_pass3069 = False
+            if first_pass4046: first_pass4046 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_whitespace_before and t != t0): 
                 ok = False
                 if (not t.is_newline_before and can_be_whitspaces): 
                     tt1 = t
-                    first_pass3070 = True
+                    first_pass4047 = True
                     while True:
-                        if first_pass3070: first_pass3070 = False
+                        if first_pass4047: first_pass4047 = False
                         else: tt1 = tt1.next0_
                         if (not (tt1 is not None)): break
                         if (tt1.is_char('.') or tt1.is_hiphen): 
@@ -239,7 +239,7 @@ class UriItemToken(MetaToken):
                 nt = (t if isinstance(t, NumberToken) else None)
                 print(nt.get_source_text(), end="", file=txt)
                 t1 = t
-                if (nt.typ == NumberSpellingType.DIGIT and nt.value >= 0 and (nt.value < 256)): 
+                if (nt.typ == NumberSpellingType.DIGIT and nt.value >= (0) and (nt.value < (256))): 
                     ip_count += 1
                 else: 
                     is_ip = False
@@ -249,8 +249,8 @@ class UriItemToken(MetaToken):
                 break
             src = (tt if isinstance(tt, TextToken) else None).term
             ch = src[0]
-            if (not ch.isalpha()): 
-                if ((ch) not in ".-_"): 
+            if (not str.isalpha(ch)): 
+                if (".-_".find(ch) < 0): 
                     break
                 if (ch != '.'): 
                     is_ip = False
@@ -288,7 +288,7 @@ class UriItemToken(MetaToken):
                     ok = True
             if (not ok): 
                 return None
-        return UriItemToken._new2519(t0, t1, Utils.toStringStringIO(txt).lower())
+        return UriItemToken._new2528(t0, t1, Utils.toStringStringIO(txt).lower())
     
     @staticmethod
     def attach_mail_users(t1 : 'Token') -> typing.List['UriItemToken']:
@@ -301,9 +301,9 @@ class UriItemToken(MetaToken):
             if (res0 is None): 
                 return None
             t1 = res0[0].begin_token.previous
-            first_pass3071 = True
+            first_pass4048 = True
             while True:
-                if first_pass3071: first_pass3071 = False
+                if first_pass4048: first_pass4048 = False
                 else: t1 = t1.previous
                 if (not (t1 is not None)): break
                 if (t1.is_char('{')): 
@@ -317,12 +317,12 @@ class UriItemToken(MetaToken):
                 res0.insert(0, res1[0])
                 t1 = res1[0].begin_token
             return None
-        txt = Utils.newStringIO(None)
+        txt = io.StringIO()
         t0 = t1
         t = t1
-        first_pass3072 = True
+        first_pass4049 = True
         while True:
-            if first_pass3072: first_pass3072 = False
+            if first_pass4049: first_pass4049 = False
             else: t = t.previous
             if (not (t is not None)): break
             if (t.is_whitespace_after): 
@@ -337,15 +337,15 @@ class UriItemToken(MetaToken):
                 break
             src = tt.get_source_text()
             ch = src[0]
-            if (not ch.isalpha()): 
-                if ((ch) not in ".-_"): 
+            if (not str.isalpha(ch)): 
+                if (".-_".find(ch) < 0): 
                     break
             Utils.insertStringIO(txt, 0, src)
             t0 = t
         if (txt.tell() == 0): 
             return None
         res = list()
-        res.append(UriItemToken._new2519(t0, t1, Utils.toStringStringIO(txt).lower()))
+        res.append(UriItemToken._new2528(t0, t1, Utils.toStringStringIO(txt).lower()))
         return res
     
     @staticmethod
@@ -356,7 +356,7 @@ class UriItemToken(MetaToken):
             return None
         txt = Utils.newStringIO(srv.value)
         t1 = srv.end_token
-        if (t1.next0_ is not None and t1.next0_.is_char(':') and isinstance(t1.next0_.next0_, NumberToken)): 
+        if (t1.next0_ is not None and t1.next0_.is_char(':') and (isinstance(t1.next0_.next0_, NumberToken))): 
             t1 = t1.next0_.next0_
             print(":{0}".format((t1 if isinstance(t1, NumberToken) else None).value), end="", file=txt, flush=True)
         t = t1.next0_
@@ -388,24 +388,24 @@ class UriItemToken(MetaToken):
                 print("#{0}".format(dat.value), end="", file=txt, flush=True)
         i = 0
         while i < txt.tell(): 
-            if (Utils.getCharAtStringIO(txt, i).isalpha()): 
+            if (str.isalpha(Utils.getCharAtStringIO(txt, i))): 
                 break
             i += 1
         if (i >= txt.tell()): 
             return None
-        return UriItemToken._new2519(t0, t1, Utils.toStringStringIO(txt))
+        return UriItemToken._new2528(t0, t1, Utils.toStringStringIO(txt))
     
     @staticmethod
     def attachisbn(t0 : 'Token') -> 'UriItemToken':
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.TextToken import TextToken
-        txt = Utils.newStringIO(None)
+        txt = io.StringIO()
         t1 = t0
         digs = 0
         t = t0
-        first_pass3073 = True
+        first_pass4050 = True
         while True:
-            if first_pass3073: first_pass3073 = False
+            if first_pass4050: first_pass4050 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -441,24 +441,24 @@ class UriItemToken(MetaToken):
         dig = 0
         i = 0
         while i < txt.tell(): 
-            if (Utils.getCharAtStringIO(txt, i).isdigit()): 
+            if (str.isdigit(Utils.getCharAtStringIO(txt, i))): 
                 dig += 1
             i += 1
         if (dig < 7): 
             return None
-        return UriItemToken._new2519(t0, t1, Utils.toStringStringIO(txt))
+        return UriItemToken._new2528(t0, t1, Utils.toStringStringIO(txt))
     
     @staticmethod
     def attachbbk(t0 : 'Token') -> 'UriItemToken':
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.TextToken import TextToken
-        txt = Utils.newStringIO(None)
+        txt = io.StringIO()
         t1 = t0
         digs = 0
         t = t0
-        first_pass3074 = True
+        first_pass4051 = True
         while True:
-            if first_pass3074: first_pass3074 = False
+            if first_pass4051: first_pass4051 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before and t != t0): 
@@ -483,7 +483,7 @@ class UriItemToken(MetaToken):
                 if (not ((isinstance(tt.next0_, NumberToken)))): 
                     break
             s = tt.get_source_text()
-            if (s[0].isalpha()): 
+            if (str.isalpha(s[0])): 
                 if (tt.is_whitespace_before): 
                     break
             print(s, end="", file=txt)
@@ -493,7 +493,7 @@ class UriItemToken(MetaToken):
         if (Utils.getCharAtStringIO(txt, txt.tell() - 1) == '.'): 
             Utils.setLengthStringIO(txt, txt.tell() - 1)
             t1 = t1.previous
-        return UriItemToken._new2519(t0, t1, Utils.toStringStringIO(txt))
+        return UriItemToken._new2528(t0, t1, Utils.toStringStringIO(txt))
     
     @staticmethod
     def attach_skype(t0 : 'Token') -> 'UriItemToken':
@@ -517,7 +517,7 @@ class UriItemToken(MetaToken):
         if ("-" in res.value): 
             res.value = res.value.replace("-", "")
         for ch in res.value: 
-            if (not ch.isdigit()): 
+            if (not str.isdigit(ch)): 
                 return None
         if ((len(res.value) < 6) or len(res.value) > 10): 
             return None
@@ -538,10 +538,9 @@ class UriItemToken(MetaToken):
         for domain_group in domain_groups: 
             for domain in Utils.splitString(domain_group.upper(), separator, True): 
                 UriItemToken.__m_std_groups.add(Termin(domain, MorphLang.UNKNOWN, True))
-
     
     @staticmethod
-    def _new2519(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'UriItemToken':
+    def _new2528(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'UriItemToken':
         res = UriItemToken(_arg1, _arg2)
         res.value = _arg3
         return res

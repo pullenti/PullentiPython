@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -26,12 +26,14 @@ class AnalyzerDataWithOntology(AnalyzerData):
             if (res != referent): 
                 res.merge_slots(referent, True)
             if (len(li) > 1 and self.kit is not None): 
-                for i in range(1, len(li), 1):
+                i = 1
+                while i < len(li): 
                     li[0].merge_slots(li[i], True)
                     for ta in li[i].occurrence: 
                         li[0].add_occurence(ta)
                     self.kit.replace_referent(li[i], li[0])
                     self.local_ontology.remove(li[i])
+                    i += 1
             if (res._m_ext_referents is not None): 
                 res = super().register_referent(res)
             self.local_ontology.add_referent(res)

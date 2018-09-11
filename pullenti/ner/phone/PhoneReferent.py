@@ -1,15 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.phone.PhoneKind import PhoneKind
-
 from pullenti.morph.LanguageHelper import LanguageHelper
 
 
@@ -33,7 +32,7 @@ class PhoneReferent(Referent):
     ATTR_ADDNUMBER = "ADDNUMBER"
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         if (self.country_code is not None): 
             print("+{0} ".format(self.country_code), end="", file=res, flush=True)
         num = self.number
@@ -41,11 +40,11 @@ class PhoneReferent(Referent):
             cou = 3
             if (len(num) >= 11): 
                 cou = (len(num) - 7)
-            print("({0}) ".format(num[0 : (cou)]), end="", file=res, flush=True)
-            num = num[cou : ]
+            print("({0}) ".format(num[0:0+cou]), end="", file=res, flush=True)
+            num = num[cou:]
         elif (num is not None and len(num) == 8): 
-            print("({0}) ".format(num[0 : 2]), end="", file=res, flush=True)
-            num = num[2 : ]
+            print("({0}) ".format(num[0:0+2]), end="", file=res, flush=True)
+            num = num[2:]
         if (num is None): 
             print("???-??-??", end="", file=res)
         else: 
@@ -109,7 +108,7 @@ class PhoneReferent(Referent):
         if (num is None): 
             return None
         if (len(num) > 9): 
-            num = num[9 : ]
+            num = num[9:]
         res = list()
         res.append(num)
         add = self.add_number

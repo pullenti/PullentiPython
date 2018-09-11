@@ -1,11 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 
 
@@ -34,7 +34,7 @@ class MorphRuleVariant(MorphBaseInfo):
         return self.to_string_ex(False)
     
     def to_string_ex(self, hide_tails : bool) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         if (not hide_tails): 
             print("-{0}".format(self.tail), end="", file=res, flush=True)
             if (self.normal_tail is not None): 
@@ -61,7 +61,6 @@ class MorphRuleVariant(MorphBaseInfo):
         if (not self.check_accord(wf, False)): 
             return -1
         return 1
-
     
     @staticmethod
     def _new35(_arg1 : 'MorphMiscInfo') -> 'MorphRuleVariant':

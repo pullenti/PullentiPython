@@ -1,15 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.morph.MorphLang import MorphLang
-
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 from pullenti.morph.LanguageHelper import LanguageHelper
 
@@ -33,14 +32,14 @@ class PersonPropertyReferent(Referent):
     ATTR_HIGHER = "HIGHER"
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         if (self.name is not None): 
             print(self.name, end="", file=res)
         for r in self.slots: 
             if (r.type_name == PersonPropertyReferent.ATTR_ATTR and r.value is not None): 
                 print(", {0}".format(str(r.value)), end="", file=res, flush=True)
         for r in self.slots: 
-            if (r.type_name == PersonPropertyReferent.ATTR_REF and isinstance(r.value, Referent) and (lev < 10)): 
+            if (r.type_name == PersonPropertyReferent.ATTR_REF and (isinstance(r.value, Referent)) and (lev < 10)): 
                 print("; {0}".format((r.value if isinstance(r.value, Referent) else None).to_string(short_variant, lang, lev + 1)), end="", file=res, flush=True)
         hi = self.higher
         if (hi is not None and hi != self and self.__check_correct_higher(hi, 0)): 
@@ -168,7 +167,7 @@ class PersonPropertyReferent(Referent):
                 return False
             PersonPropertyReferent.__tmp_stack -= 1
         if (self.find_slot("@GENERAL", None, True) is not None or pr.find_slot("@GENERAL", None, True) is not None): 
-            return self.__str__() == str(pr)
+            return str(self) == str(pr)
         if (self.find_slot(PersonPropertyReferent.ATTR_REF, None, True) is not None or pr.find_slot(PersonPropertyReferent.ATTR_REF, None, True) is not None): 
             refs1 = list()
             refs2 = list()
@@ -180,7 +179,12 @@ class PersonPropertyReferent(Referent):
                     refs2.append(s.value)
             eq = False
             noeq = False
-            for i in range(len(refs1)):
+            i = 0
+            first_pass4017 = True
+            while True:
+                if first_pass4017: first_pass4017 = False
+                else: i += 1
+                if (not (i < len(refs1))): break
                 if (refs1[i] in refs2): 
                     eq = True
                     continue
@@ -192,7 +196,12 @@ class PersonPropertyReferent(Referent):
                                 noeq = False
                                 eq = True
                                 break
-            for i in range(len(refs2)):
+            i = 0
+            first_pass4018 = True
+            while True:
+                if first_pass4018: first_pass4018 = False
+                else: i += 1
+                if (not (i < len(refs2))): break
                 if (refs2[i] in refs1): 
                     eq = True
                     continue
@@ -269,12 +278,6 @@ class PersonPropertyReferent(Referent):
                 self.slots.remove(s)
     
     def can_has_ref(self, r : 'Referent') -> bool:
-        """ Проверка, что этот референт может выступать в качестве ATTR_REF
-        
-        Args:
-            r(Referent): 
-        
-        """
         from pullenti.ner.geo.GeoReferent import GeoReferent
         nam = self.name
         if (nam is None or r is None): 
@@ -299,10 +302,9 @@ class PersonPropertyReferent(Referent):
                     return False
             return True
         return False
-
     
     @staticmethod
-    def _new2217(_arg1 : str) -> 'PersonPropertyReferent':
+    def _new2226(_arg1 : str) -> 'PersonPropertyReferent':
         res = PersonPropertyReferent()
         res.name = _arg1
         return res

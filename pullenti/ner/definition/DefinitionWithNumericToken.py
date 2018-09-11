@@ -1,10 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.morph.MorphGender import MorphGender
@@ -29,12 +29,6 @@ class DefinitionWithNumericToken(MetaToken):
     
     @staticmethod
     def try_parse(t : 'Token') -> 'DefinitionWithNumericToken':
-        """ Выделить определение с указанного токена
-        
-        Args:
-            t(Token): токен
-        
-        """
         from pullenti.ner.core.MiscHelper import MiscHelper
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
@@ -45,9 +39,9 @@ class DefinitionWithNumericToken(MetaToken):
         tt = t
         noun_ = None
         num = None
-        first_pass2837 = True
+        first_pass3787 = True
         while True:
-            if first_pass2837: first_pass2837 = False
+            if first_pass3787: first_pass3787 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt != t and MiscHelper.can_be_start_of_sentence(tt)): 
@@ -67,15 +61,15 @@ class DefinitionWithNumericToken(MetaToken):
         if (num is None): 
             return None
         res = DefinitionWithNumericToken(t, noun_.end_token)
-        res.number = num.value
+        res.number = (num.value)
         res.number_begin_char = num.begin_char
         res.number_end_char = num.end_char
         res.noun = noun_.get_normal_case_text(MorphClass(), True, MorphGender.UNDEFINED, False)
         res.nouns_genetive = (Utils.ifNotNull(noun_.get_morph_variant(MorphCase.GENITIVE, True), (res.noun if res is not None else None)))
-        res.text = MiscHelper.get_text_value(t, num.previous, Utils.valToEnum(GetTextAttr.KEEPQUOTES | GetTextAttr.KEEPREGISTER, GetTextAttr))
+        res.text = MiscHelper.get_text_value(t, num.previous, Utils.valToEnum((GetTextAttr.KEEPQUOTES) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
         if (num.is_whitespace_before): 
             res.text += " "
-        res.number_substring = MiscHelper.get_text_value(num, noun_.end_token, Utils.valToEnum(GetTextAttr.KEEPQUOTES | GetTextAttr.KEEPREGISTER, GetTextAttr))
+        res.number_substring = MiscHelper.get_text_value(num, noun_.end_token, Utils.valToEnum((GetTextAttr.KEEPQUOTES) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
         res.text += res.number_substring
         tt = noun_.end_token
         while tt is not None: 
@@ -86,5 +80,5 @@ class DefinitionWithNumericToken(MetaToken):
         if (res.end_token != noun_.end_token): 
             if (noun_.is_whitespace_after): 
                 res.text += " "
-            res.text += MiscHelper.get_text_value(noun_.end_token.next0_, res.end_token, Utils.valToEnum(GetTextAttr.KEEPQUOTES | GetTextAttr.KEEPREGISTER, GetTextAttr))
+            res.text += MiscHelper.get_text_value(noun_.end_token.next0_, res.end_token, Utils.valToEnum((GetTextAttr.KEEPQUOTES) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
         return res

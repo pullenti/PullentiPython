@@ -1,11 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphGender import MorphGender
@@ -27,14 +27,15 @@ class NounPhraseToken(MetaToken):
     
     def get_normal_case_text(self, mc : 'MorphClass'=MorphClass(), single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         from pullenti.ner.ReferentToken import ReferentToken
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         if (gender == MorphGender.UNDEFINED): 
             gender = self.morph.gender
         if (self.adverbs is not None and len(self.adverbs) > 0): 
             i = 0
             if (len(self.adjectives) > 0): 
-                for j in range(len(self.adjectives)):
-                    s = self.adjectives[j].get_normal_case_text(MorphClass.ADJECTIVE | MorphClass.PRONOUN, single_number, gender, keep_chars)
+                j = 0
+                while j < len(self.adjectives): 
+                    s = self.adjectives[j].get_normal_case_text((MorphClass.ADJECTIVE) | MorphClass.PRONOUN, single_number, gender, keep_chars)
                     print("{0} ".format(Utils.ifNotNull(s, "?")), end="", file=res, flush=True)
                     while i < len(self.adverbs): 
                         if (self.adverbs[i].begin_char < self.adjectives[j].begin_char): 
@@ -42,43 +43,39 @@ class NounPhraseToken(MetaToken):
                         else: 
                             break
                         i += 1
+                    j += 1
             while i < len(self.adverbs): 
                 print("{0} ".format(self.adjectives[i].get_normal_case_text(MorphClass.ADVERB, False, MorphGender.UNDEFINED, False)), end="", file=res, flush=True)
                 i += 1
         else: 
             for t in self.adjectives: 
-                s = t.get_normal_case_text(MorphClass.ADJECTIVE | MorphClass.PRONOUN, single_number, gender, keep_chars)
+                s = t.get_normal_case_text((MorphClass.ADJECTIVE) | MorphClass.PRONOUN, single_number, gender, keep_chars)
                 print("{0} ".format(Utils.ifNotNull(s, "?")), end="", file=res, flush=True)
         r = None
-        if (isinstance(self.noun.begin_token, ReferentToken) and self.noun.begin_token == self.noun.end_token): 
+        if ((isinstance(self.noun.begin_token, ReferentToken)) and self.noun.begin_token == self.noun.end_token): 
             r = self.noun.begin_token.get_normal_case_text(MorphClass(), single_number, gender, keep_chars)
         else: 
-            r = self.noun.get_normal_case_text(MorphClass.NOUN | MorphClass.PRONOUN, single_number, gender, keep_chars)
+            r = self.noun.get_normal_case_text((MorphClass.NOUN) | MorphClass.PRONOUN, single_number, gender, keep_chars)
         if (r is None or r == "?"): 
             r = self.noun.get_normal_case_text(MorphClass(), single_number, MorphGender.UNDEFINED, False)
         print(Utils.ifNotNull(r, str(self.noun)), end="", file=res)
         return Utils.toStringStringIO(res)
     
     def get_normal_case_text_without_adjective(self, adj_index : int) -> str:
-        res = Utils.newStringIO(None)
-        for i in range(len(self.adjectives)):
+        res = io.StringIO()
+        i = 0
+        while i < len(self.adjectives): 
             if (i != adj_index): 
-                s = self.adjectives[i].get_normal_case_text(MorphClass.ADJECTIVE | MorphClass.PRONOUN, False, MorphGender.UNDEFINED, False)
+                s = self.adjectives[i].get_normal_case_text((MorphClass.ADJECTIVE) | MorphClass.PRONOUN, False, MorphGender.UNDEFINED, False)
                 print("{0} ".format(Utils.ifNotNull(s, "?")), end="", file=res, flush=True)
-        r = self.noun.get_normal_case_text(MorphClass.NOUN | MorphClass.PRONOUN, False, MorphGender.UNDEFINED, False)
+            i += 1
+        r = self.noun.get_normal_case_text((MorphClass.NOUN) | MorphClass.PRONOUN, False, MorphGender.UNDEFINED, False)
         if (r is None): 
             r = self.noun.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False)
         print(Utils.ifNotNull(r, str(self.noun)), end="", file=res)
         return Utils.toStringStringIO(res)
     
     def get_morph_variant(self, cas : 'MorphCase', plural : bool) -> str:
-        """ Сгенерировать текст именной группы в нужном падеже и числе
-        
-        Args:
-            cas(MorphCase): 
-            plural(bool): 
-        
-        """
         from pullenti.morph.MorphBaseInfo import MorphBaseInfo
         from pullenti.morph.MorphLang import MorphLang
         from pullenti.ner.core.MiscHelper import MiscHelper
@@ -131,8 +128,8 @@ class NounPhraseToken(MetaToken):
                     continue
                 j = ii.normal_value.find('-')
                 if (j > 0): 
-                    ii.normal_value = ii.normal_value[0 : (j)]
+                    ii.normal_value = ii.normal_value[0:0+j]
                 if (ii.single_number_value is not None): 
                     j = ii.single_number_value.find('-')
                     if (((j)) > 0): 
-                        ii.single_number_value = ii.single_number_value[0 : (j)]
+                        ii.single_number_value = ii.single_number_value[0:0+j]

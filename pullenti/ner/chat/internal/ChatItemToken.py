@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import datetime
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.chat.ChatType import ChatType
 from pullenti.ner.chat.VerbType import VerbType
@@ -26,7 +26,7 @@ class ChatItemToken(MetaToken):
         super().__init__(b, e0_, None)
     
     def __str__(self) -> str:
-        tmp = Utils.newStringIO(None)
+        tmp = io.StringIO()
         print(Utils.enumToString(self.typ), end="", file=tmp)
         if (self.not0_): 
             print(" not", end="", file=tmp)
@@ -62,9 +62,9 @@ class ChatItemToken(MetaToken):
         t1 = None
         has_modal = False
         tt = t
-        first_pass2731 = True
+        first_pass3680 = True
         while True:
-            if first_pass2731: first_pass2731 = False
+            if first_pass3680: first_pass3680 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (not ((isinstance(tt, TextToken)))): 
@@ -115,10 +115,10 @@ class ChatItemToken(MetaToken):
                 return res
         if (tok is not None): 
             res = ChatItemToken(tok.begin_token, tok.end_token)
-            res.typ = Utils.valToEnum(tok.termin.tag, ChatType)
+            res.typ = (Utils.valToEnum(tok.termin.tag, ChatType))
             if (isinstance(tok.termin.tag2, VerbType)): 
-                res.vtyp = Utils.valToEnum(tok.termin.tag2, VerbType)
-            if (res.typ == ChatType.VERB and tok.begin_token == tok.end_token and isinstance(tok.begin_token, TextToken)): 
+                res.vtyp = (Utils.valToEnum(tok.termin.tag2, VerbType))
+            if (res.typ == ChatType.VERB and tok.begin_token == tok.end_token and (isinstance(tok.begin_token, TextToken))): 
                 res.value = (tok.begin_token if isinstance(tok.begin_token, TextToken) else None).get_lemma()
             else: 
                 res.value = MiscHelper.get_text_value_of_meta_token(res, GetTextAttr.NO)
@@ -128,9 +128,9 @@ class ChatItemToken(MetaToken):
                 res.begin_token = t0
             if (res.typ == ChatType.REPEAT): 
                 tt = tok.end_token.next0_
-                first_pass2732 = True
+                first_pass3681 = True
                 while True:
-                    if first_pass2732: first_pass2732 = False
+                    if first_pass3681: first_pass3681 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (not ((isinstance(tt, TextToken)))): 
@@ -139,10 +139,10 @@ class ChatItemToken(MetaToken):
                         continue
                     tok1 = ChatItemToken.__m_ontology.try_parse(tt, TerminParseAttr.NO)
                     if (tok1 is not None): 
-                        if (Utils.valToEnum(tok1.termin.tag, ChatType) == ChatType.ACCEPT or Utils.valToEnum(tok1.termin.tag, ChatType) == ChatType.MISC): 
+                        if ((Utils.valToEnum(tok1.termin.tag, ChatType)) == ChatType.ACCEPT or (Utils.valToEnum(tok1.termin.tag, ChatType)) == ChatType.MISC): 
                             tt = tok1.end_token
                             continue
-                        if (Utils.valToEnum(tok1.termin.tag, ChatType) == ChatType.REPEAT): 
+                        if ((Utils.valToEnum(tok1.termin.tag, ChatType)) == ChatType.REPEAT): 
                             res.end_token = tok1.end_token
                             tt = res.end_token
                             continue
@@ -237,7 +237,6 @@ class ChatItemToken(MetaToken):
         t.add_variant("ПЛОХО СЛЫШНО", False)
         t.add_variant("ПЛОХАЯ СВЯЗЬ", False)
         ChatItemToken.__m_ontology.add(t)
-
     
     @staticmethod
     def _new457(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ChatType') -> 'ChatItemToken':

@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.morph.LanguageHelper import LanguageHelper
 
 
@@ -24,7 +24,7 @@ class RusLatAccord:
         self.lat_to_rus = blat
     
     def __str__(self) -> str:
-        tmp = Utils.newStringIO(None)
+        tmp = io.StringIO()
         print("'{0}'".format(self.rus), end="", file=tmp, flush=True)
         if (self.rus_to_lat and self.lat_to_rus): 
             print(" <-> ", end="", file=tmp)
@@ -38,7 +38,7 @@ class RusLatAccord:
     __m_accords = None
     
     @staticmethod
-    def ___get_accords() -> typing.List['RusLatAccord']:
+    def __get_accords() -> typing.List['RusLatAccord']:
         if (RusLatAccord.__m_accords is not None): 
             return RusLatAccord.__m_accords
         RusLatAccord.__m_accords = list()
@@ -103,7 +103,7 @@ class RusLatAccord:
         RusLatAccord.__m_accords.append(RusLatAccord("ь", ""))
         RusLatAccord.__m_accords.append(RusLatAccord("", "gh"))
         RusLatAccord.__m_accords.append(RusLatAccord("", "h"))
-        RusLatAccord.__m_accords.append(RusLatAccord._new1486("", "e", True))
+        RusLatAccord.__m_accords.append(RusLatAccord._new1490("", "e", True))
         RusLatAccord.__m_accords.append(RusLatAccord("еи", "ei"))
         RusLatAccord.__m_accords.append(RusLatAccord("аи", "ai"))
         RusLatAccord.__m_accords.append(RusLatAccord("ай", "i"))
@@ -122,15 +122,17 @@ class RusLatAccord:
     def __is_pref(str0_ : str, i : int, pref : str) -> bool:
         if ((len(pref) + i) > len(str0_)): 
             return False
-        for j in range(len(pref)):
+        j = 0
+        while j < len(pref): 
             if (pref[j] != str0_[i + j]): 
                 return False
+            j += 1
         return True
     
     @staticmethod
     def __get_vars_pref(rus_ : str, ri : int, lat_ : str, li : int) -> typing.List['RusLatAccord']:
         res = None
-        for a in RusLatAccord.___get_accords(): 
+        for a in RusLatAccord.__get_accords(): 
             if (RusLatAccord.__is_pref(rus_, ri, a.rus) and RusLatAccord.__is_pref(lat_, li, a.lat) and a.rus_to_lat): 
                 if (a.on_tail): 
                     if ((ri + len(a.rus)) < len(rus_)): 
@@ -144,12 +146,6 @@ class RusLatAccord:
     
     @staticmethod
     def get_variants(rus_or_lat : str) -> typing.List[str]:
-        """ Сформировать всевозможные варианты написаний на другой раскладке
-        
-        Args:
-            rus_or_lat(str): слово на кириллице или латинице
-        
-        """
         res = list()
         if (Utils.isNullOrEmpty(rus_or_lat)): 
             return res
@@ -160,7 +156,7 @@ class RusLatAccord:
         while i < len(rus_or_lat): 
             li = list()
             maxlen = 0
-            for a in RusLatAccord.___get_accords(): 
+            for a in RusLatAccord.__get_accords(): 
                 pref = None
                 if (is_rus and len(a.rus) > 0): 
                     pref = a.rus
@@ -187,16 +183,18 @@ class RusLatAccord:
         if (len(stack) == 0): 
             return res
         ind = list()
-        for i in range(len(stack)):
+        i = 0
+        while i < len(stack): 
             ind.append(0)
-        else: i = len(stack)
-        tmp = Utils.newStringIO(None)
+            i += 1
+        tmp = io.StringIO()
         while True:
             Utils.setLengthStringIO(tmp, 0)
-            for i in range(len(ind)):
+            i = 0
+            while i < len(ind): 
                 a = stack[i][ind[i]]
                 print((a.lat if is_rus else a.rus), end="", file=tmp)
-            else: i = len(ind)
+                i += 1
             ok = True
             if (not is_rus): 
                 i = 0
@@ -256,27 +254,19 @@ class RusLatAccord:
     
     @staticmethod
     def find_accords_rus_to_lat(txt : str, pos : int, res : typing.List[str]) -> int:
-        """ Вернёт длину привязки
-        
-        Args:
-            txt(str): 
-            pos(int): 
-            res(typing.List[str]): 
-        
-        """
         if (pos >= len(txt)): 
             return 0
         ch0 = txt[pos]
         ok = False
         if ((pos + 1) < len(txt)): 
             ch1 = txt[pos + 1]
-            for a in RusLatAccord.___get_accords(): 
+            for a in RusLatAccord.__get_accords(): 
                 if ((a.rus_to_lat and len(a.rus) == 2 and a.rus[0] == ch0) and a.rus[1] == ch1): 
                     res.append(a.lat)
                     ok = True
             if (ok): 
                 return 2
-        for a in RusLatAccord.___get_accords(): 
+        for a in RusLatAccord.__get_accords(): 
             if (a.rus_to_lat and len(a.rus) == 1 and a.rus[0] == ch0): 
                 res.append(a.lat)
                 ok = True
@@ -289,14 +279,15 @@ class RusLatAccord:
         if (pos >= len(txt)): 
             return 0
         max_len = 0
-        for a in RusLatAccord.___get_accords(): 
+        for a in RusLatAccord.__get_accords(): 
             if (a.lat_to_rus and len(a.lat) >= max_len): 
-                for i in range(len(a.lat)):
+                i = 0
+                while i < len(a.lat): 
                     if ((pos + i) >= len(txt)): 
                         break
                     if (txt[pos + i] != a.lat[i]): 
                         break
-                else: i = len(a.lat)
+                    i += 1
                 if ((i < len(a.lat)) or (len(a.lat) < 1)): 
                     continue
                 if (len(a.lat) > max_len): 
@@ -304,10 +295,9 @@ class RusLatAccord:
                     max_len = len(a.lat)
                 res.append(a.rus)
         return max_len
-
     
     @staticmethod
-    def _new1486(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'RusLatAccord':
+    def _new1490(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'RusLatAccord':
         res = RusLatAccord(_arg1, _arg2)
         res.on_tail = _arg3
         return res

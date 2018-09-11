@@ -1,11 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.morph.MorphNumber import MorphNumber
 
@@ -19,15 +19,7 @@ class MorphToken:
         return (0 if self.term is None else len(self.term))
     
     def get_source_text(self, text : str) -> str:
-        """ Извлечь фрагмент из исходного текста, соответствующий токену
-        
-        Args:
-            text(str): полный исходный текст
-        
-        Returns:
-            str: фрагмент
-        """
-        return text[self.begin_char : self.end_char + 1]
+        return text[self.begin_char:self.begin_char+(self.end_char + 1) - self.begin_char]
     
     @property
     def lemma(self) -> str:
@@ -57,14 +49,14 @@ class MorphToken:
                 res = (Utils.ifNotNull(best.normal_full, best.normal_case))
         if (res is not None): 
             if (LanguageHelper.ends_with_ex(res, "АНЫЙ", "ЕНЫЙ", None, None)): 
-                res = (res[0 : (len(res) - 3)] + "ННЫЙ")
+                res = (res[0:0+len(res) - 3] + "ННЫЙ")
             elif (LanguageHelper.ends_with(res, "ЙСЯ")): 
-                res = res[0 : (len(res) - 2)]
+                res = res[0:0+len(res) - 2]
             elif (LanguageHelper.ends_with(res, "АНИЙ") and res == self.term): 
                 for wf in self.word_forms: 
                     if (wf.is_in_dictionary): 
                         return res
-                return res[0 : (len(res) - 1)] + "Е"
+                return res[0:0+len(res) - 1] + "Е"
             return res
         return Utils.ifNotNull(self.term, "?")
     
@@ -191,9 +183,9 @@ class MorphToken:
         if (self.char_info.is_all_lower): 
             str0_ = str0_.lower()
         elif (self.char_info.is_capital_upper and len(str0_) > 0): 
-            str0_ = "{0}{1}".format(self.term[0], self.term[1 : ].lower())
+            str0_ = "{0}{1}".format(self.term[0], self.term[1:].lower())
         elif (self.char_info.is_last_lower): 
-            str0_ = "{0}{1}".format(self.term[0 : (len(self.term) - 1)], self.term[len(self.term) - 1 : ].lower())
+            str0_ = "{0}{1}".format(self.term[0:0+len(self.term) - 1], self.term[len(self.term) - 1:].lower())
         if (self.word_forms is None): 
             return str0_
         res = Utils.newStringIO(str0_)

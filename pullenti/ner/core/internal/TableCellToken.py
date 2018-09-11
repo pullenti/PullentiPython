@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -24,9 +24,9 @@ class TableCellToken(MetaToken):
         while t is not None and t.end_char <= self.end_char: 
             t0 = t
             t1 = t
-            first_pass2743 = True
+            first_pass3692 = True
             while True:
-                if first_pass2743: first_pass2743 = False
+                if first_pass3692: first_pass3692 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= self.end_char)): break
                 t1 = t
@@ -38,7 +38,6 @@ class TableCellToken(MetaToken):
             t = t1
             t = t.next0_
         return res
-
     
     @staticmethod
     def _new486(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : int) -> 'TableCellToken':

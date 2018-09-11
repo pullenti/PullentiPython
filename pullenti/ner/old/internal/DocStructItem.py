@@ -1,15 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 from enum import IntEnum
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.Termin import Termin
-
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 
@@ -32,10 +31,9 @@ class DocStructItem(MetaToken):
             from pullenti.morph.MorphLang import MorphLang
             self.typ = DocStructItem.Typs.INDEX
             super().__init__(source, MorphLang(), False)
-    
         
         @staticmethod
-        def _new1623(_arg1 : str, _arg2 : 'Typs') -> 'DocTermin':
+        def _new1631(_arg1 : str, _arg2 : 'Typs') -> 'DocTermin':
             res = DocStructItem.DocTermin(_arg1)
             res.typ = _arg2
             return res
@@ -61,9 +59,9 @@ class DocStructItem(MetaToken):
         if (not t.is_newline_before): 
             return None
         tt = t
-        first_pass2973 = True
+        first_pass3942 = True
         while True:
-            if first_pass2973: first_pass2973 = False
+            if first_pass3942: first_pass3942 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before and tt != t): 
@@ -72,7 +70,7 @@ class DocStructItem(MetaToken):
                 continue
             if (tt.chars.is_all_lower): 
                 return None
-            toks = DocStructItem.__m_ontology.try_attach(tt, None, False)
+            toks = DocStructItem.M_ONTOLOGY.try_attach(tt, None, False)
             if (toks is None): 
                 break
             dt = (toks[0].termin if isinstance(toks[0].termin, DocStructItem.DocTermin) else None)
@@ -94,7 +92,7 @@ class DocStructItem(MetaToken):
                 t1 = ttt
                 ttt = ttt.next0_
             if (ok): 
-                res = DocStructItem._new1619(t, t1, dt.typ, nam)
+                res = DocStructItem._new1627(t, t1, dt.typ, nam)
                 if (res.typ == DocStructItem.Typs.INDEX): 
                     DocStructItem.__analyze_content(res)
                 elif (items is not None): 
@@ -111,25 +109,25 @@ class DocStructItem(MetaToken):
             t1 = t1.next0_
         if (t1 is None): 
             return None
-        if ((t1.end_char - tt.begin_char) > DocStructItem.__max_name_length): 
+        if ((t1.end_char - tt.begin_char) > DocStructItem.MAX_NAME_LENGTH): 
             return None
         name = MiscHelper.get_text_value(tt, t1, GetTextAttr.NO)
-        if (len(name) > DocStructItem.__max_name_length): 
+        if (len(name) > DocStructItem.MAX_NAME_LENGTH): 
             return None
         name2 = None
-        t2 = None
+        t2 = (None)
         if (t1.next0_ is not None and t1.next0_.chars.is_letter): 
             t2 = t1.next0_
             while t2 is not None: 
                 if (t2.is_newline_after): 
                     break
                 t2 = t2.next0_
-            if (t2 is not None and ((t2.end_char - tt.begin_char) < DocStructItem.__max_name_length)): 
+            if (t2 is not None and ((t2.end_char - tt.begin_char) < DocStructItem.MAX_NAME_LENGTH)): 
                 name2 = MiscHelper.get_text_value(tt, t2, GetTextAttr.NO)
         if (items is not None): 
             for it in items: 
                 if (it.value == name or it.value == name2): 
-                    res = DocStructItem._new1620(t, t1, DocStructItem.Typs.CHAPTER, it, name)
+                    res = DocStructItem._new1628(t, t1, DocStructItem.Typs.CHAPTER, it, name)
                     if (it.value == name2): 
                         res.value = name2
                         res.end_token = t2
@@ -138,14 +136,14 @@ class DocStructItem(MetaToken):
             ok = False
             if (tt.is_value("ГЛАВА", None) or tt.is_char('§') or tt.is_value("РАЗДЕЛ", None)): 
                 ok = True
-            elif (isinstance(tt, NumberToken) and tt.next0_ is not None and tt.next0_.is_char('.')): 
+            elif ((isinstance(tt, NumberToken)) and tt.next0_ is not None and tt.next0_.is_char('.')): 
                 ok = True
             if (ok): 
-                res = DocStructItem._new1619(t, t1, DocStructItem.Typs.INDEXITEM, name)
+                res = DocStructItem._new1627(t, t1, DocStructItem.Typs.INDEXITEM, name)
                 return res
         return None
     
-    __max_name_length = 300
+    MAX_NAME_LENGTH = 300
     
     @staticmethod
     def __analyze_content(res : 'DocStructItem') -> None:
@@ -155,9 +153,9 @@ class DocStructItem(MetaToken):
         if (t is None or not t.is_newline_before): 
             return
         numbers = list()
-        first_pass2974 = True
+        first_pass3943 = True
         while True:
-            if first_pass2974: first_pass2974 = False
+            if first_pass3943: first_pass3943 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_value("СТР", None)): 
@@ -178,7 +176,7 @@ class DocStructItem(MetaToken):
                 res.content_items.append(dsi)
                 t = dsi.end_token
                 res.end_token = t
-                if (isinstance(t, NumberToken) and (t if isinstance(t, NumberToken) else None).typ == NumberSpellingType.DIGIT): 
+                if ((isinstance(t, NumberToken)) and (t if isinstance(t, NumberToken) else None).typ == NumberSpellingType.DIGIT): 
                     numbers.append((t if isinstance(t, NumberToken) else None).value)
                 continue
             t1 = t
@@ -203,15 +201,15 @@ class DocStructItem(MetaToken):
                 break
             tt = t2
             while tt != t1: 
-                if (isinstance(tt, NumberToken) and (tt if isinstance(tt, NumberToken) else None).typ == NumberSpellingType.DIGIT): 
+                if ((isinstance(tt, NumberToken)) and (tt if isinstance(tt, NumberToken) else None).typ == NumberSpellingType.DIGIT): 
                     if (tt == t2): 
                         numbers.append((tt if isinstance(tt, NumberToken) else None).value)
                 elif (tt.chars.is_letter and not tt.is_value("СТР", None) and not tt.is_value("С", None)): 
                     break
                 tt = tt.previous
-            item = DocStructItem._new1622(t, t2, DocStructItem.Typs.INDEXITEM)
+            item = DocStructItem._new1630(t, t2, DocStructItem.Typs.INDEXITEM)
             item.value = MiscHelper.get_text_value(t1, tt, GetTextAttr.NO)
-            if (len(item.value) > DocStructItem.__max_name_length): 
+            if (len(item.value) > DocStructItem.MAX_NAME_LENGTH): 
                 break
             if (res.content_items is None): 
                 res.content_items = list()
@@ -219,18 +217,17 @@ class DocStructItem(MetaToken):
             t = item.end_token
             res.end_token = t
     
-    __m_ontology = None
-
+    M_ONTOLOGY = None
     
     @staticmethod
-    def _new1619(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str) -> 'DocStructItem':
+    def _new1627(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str) -> 'DocStructItem':
         res = DocStructItem(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new1620(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'DocStructItem', _arg5 : str) -> 'DocStructItem':
+    def _new1628(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'DocStructItem', _arg5 : str) -> 'DocStructItem':
         res = DocStructItem(_arg1, _arg2)
         res.typ = _arg3
         res.attached_item = _arg4
@@ -238,7 +235,7 @@ class DocStructItem(MetaToken):
         return res
     
     @staticmethod
-    def _new1622(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs') -> 'DocStructItem':
+    def _new1630(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs') -> 'DocStructItem':
         res = DocStructItem(_arg1, _arg2)
         res.typ = _arg3
         return res
@@ -248,16 +245,16 @@ class DocStructItem(MetaToken):
     def _static_ctor():
         from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
         
-        DocStructItem.__m_ontology = IntOntologyCollection()
+        DocStructItem.M_ONTOLOGY = IntOntologyCollection()
         for s in ["СОДЕРЖАНИЕ", "СОДЕРЖИМОЕ", "ОГЛАВЛЕНИЕ", "ПЛАН", "PLAN"]: 
-            DocStructItem.__m_ontology.add(DocStructItem.DocTermin._new1623(s, DocStructItem.Typs.INDEX))
+            DocStructItem.M_ONTOLOGY.add(DocStructItem.DocTermin._new1631(s, DocStructItem.Typs.INDEX))
         for s in ["ВВЕДЕНИЕ", "ВСТУПЛЕНИЕ", "ПРЕДИСЛОВИЕ", "INTRODUCTION"]: 
-            DocStructItem.__m_ontology.add(DocStructItem.DocTermin._new1623(s, DocStructItem.Typs.INTRO))
+            DocStructItem.M_ONTOLOGY.add(DocStructItem.DocTermin._new1631(s, DocStructItem.Typs.INTRO))
         for s in ["ВЫВОДЫ", "ВЫВОД", "ЗАКЛЮЧЕНИЕ", "CONCLUSION"]: 
-            DocStructItem.__m_ontology.add(DocStructItem.DocTermin._new1623(s, DocStructItem.Typs.CONCLUSION))
+            DocStructItem.M_ONTOLOGY.add(DocStructItem.DocTermin._new1631(s, DocStructItem.Typs.CONCLUSION))
         for s in ["ЛИТЕРАТУРА", "СПИСОК ЛИТЕРАТУРЫ", "СПИСОК ИСТОЧНИКОВ", "СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ", "СПИСОК ИСПОЛЬЗУЕМЫХ ИСТОЧНИКОВ", "СПЕЦИАЛЬНАЯ ЛИТЕРАТУРА", "СПИСОК ИСПОЛЬЗОВАННОЙ ЛИТЕРАТУРЫ", "СПИСОК ИСПОЛЬЗУЕМОЙ ЛИТЕРАТУРЫ", "ИСПОЛЬЗОВАННЫЕ ИСТОЧНИКИ", "ИСПОЛЬЗУЕМАЯ ЛИТЕРАТУРА", "БИБЛИОГРАФИЯ", "BIBLIOGRAPHY"]: 
-            DocStructItem.__m_ontology.add(DocStructItem.DocTermin._new1623(s, DocStructItem.Typs.LITERATURE))
+            DocStructItem.M_ONTOLOGY.add(DocStructItem.DocTermin._new1631(s, DocStructItem.Typs.LITERATURE))
         for s in ["ПРИЛОЖЕНИЕ", "СПИСОК СОКРАЩЕНИЙ", "СПИСОК УСЛОВНЫХ СОКРАЩЕНИЙ", "УСЛОВНЫЕ СОКРАЩЕНИЯ", "ОБЗОР ЛИТЕРАТУРЫ", "АННОТАЦИЯ", "БЛАГОДАРНОСТИ", "ПРИЛОЖЕНИЕ", "SUPPLEMENT"]: 
-            DocStructItem.__m_ontology.add(DocStructItem.DocTermin._new1623(s, DocStructItem.Typs.OTHER))
+            DocStructItem.M_ONTOLOGY.add(DocStructItem.DocTermin._new1631(s, DocStructItem.Typs.OTHER))
 
 DocStructItem._static_ctor()

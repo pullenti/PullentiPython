@@ -1,14 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.morph.MorphGender import MorphGender
-
 from pullenti.ner.person.internal.ResourceHelper import ResourceHelper
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
 
@@ -23,21 +22,20 @@ class ShortNameHelper:
         
         def __str__(self) -> str:
             return self.name
-    
         
         @staticmethod
-        def _new2412(_arg1 : str, _arg2 : 'MorphGender') -> 'ShortnameVar':
+        def _new2421(_arg1 : str, _arg2 : 'MorphGender') -> 'ShortnameVar':
             res = ShortNameHelper.ShortnameVar()
             res.name = _arg1
             res.gender = _arg2
             return res
     
-    __m_shorts_names = None
+    M_SHORTS_NAMES = None
     
     @staticmethod
     def get_shortnames_for_name(name : str) -> typing.List[str]:
         res = list()
-        for kp in ShortNameHelper.__m_shorts_names.items(): 
+        for kp in ShortNameHelper.M_SHORTS_NAMES.items(): 
             for v in kp[1]: 
                 if (v.name == name): 
                     if (not kp[0] in res): 
@@ -47,23 +45,23 @@ class ShortNameHelper:
     @staticmethod
     def get_names_for_shortname(shortname : str) -> typing.List['ShortnameVar']:
         res = [ ]
-        inoutarg2410 = RefOutArgWrapper(None)
-        inoutres2411 = Utils.tryGetValue(ShortNameHelper.__m_shorts_names, shortname, inoutarg2410)
-        res = inoutarg2410.value
-        if (not inoutres2411): 
+        inoutarg2419 = RefOutArgWrapper(None)
+        inoutres2420 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, shortname, inoutarg2419)
+        res = inoutarg2419.value
+        if (not inoutres2420): 
             return None
         else: 
             return res
     
-    __m_inited = False
+    M_INITED = False
     
     @staticmethod
     def initialize() -> None:
         from pullenti.ner.core.AnalysisKit import AnalysisKit
         from pullenti.ner.TextToken import TextToken
-        if (ShortNameHelper.__m_inited): 
+        if (ShortNameHelper.M_INITED): 
             return
-        ShortNameHelper.__m_inited = True
+        ShortNameHelper.M_INITED = True
         obj = ResourceHelper.get_string("ShortNames.txt")
         if (obj is not None): 
             kit = AnalysisKit(SourceOfAnalysis(obj))
@@ -83,13 +81,13 @@ class ShortNameHelper:
                         t = t.next0_
                     for s in shos: 
                         li = None
-                        inoutarg2413 = RefOutArgWrapper(None)
-                        inoutres2414 = Utils.tryGetValue(ShortNameHelper.__m_shorts_names, s, inoutarg2413)
-                        li = inoutarg2413.value
-                        if (not inoutres2414): 
+                        inoutarg2422 = RefOutArgWrapper(None)
+                        inoutres2423 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, s, inoutarg2422)
+                        li = inoutarg2422.value
+                        if (not inoutres2423): 
                             li = list()
-                            ShortNameHelper.__m_shorts_names[s] = li
-                        li.append(ShortNameHelper.ShortnameVar._new2412(nam, g))
+                            ShortNameHelper.M_SHORTS_NAMES[s] = li
+                        li.append(ShortNameHelper.ShortnameVar._new2421(nam, g))
                     if (t is None): 
                         break
                     t = t.previous
@@ -98,6 +96,6 @@ class ShortNameHelper:
     # static constructor for class ShortNameHelper
     @staticmethod
     def _static_ctor():
-        ShortNameHelper.__m_shorts_names = dict()
+        ShortNameHelper.M_SHORTS_NAMES = dict()
 
 ShortNameHelper._static_ctor()

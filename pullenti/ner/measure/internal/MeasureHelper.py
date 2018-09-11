@@ -1,24 +1,25 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+import math
+from pullenti.unisharp.Utils import Utils
 
 
 class MeasureHelper:
     
     @staticmethod
     def try_parse_double(val : str, f : float) -> bool:
-        f.value = 0
+        f.value = (0)
         if (Utils.isNullOrEmpty(val)): 
             return False
-        inoutres1503 = Utils.tryParseFloat(val.replace(',', '.'), f)
-        if ((',') in val and inoutres1503): 
+        inoutres1507 = Utils.tryParseFloat(val.replace(',', '.'), f)
+        if (val.find(',') >= 0 and inoutres1507): 
             return True
-        inoutres1502 = Utils.tryParseFloat(val, f)
-        if (inoutres1502): 
+        inoutres1506 = Utils.tryParseFloat(val, f)
+        if (inoutres1506): 
             return True
         return False
     

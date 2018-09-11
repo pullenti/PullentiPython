@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import Stopwatch
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import Stopwatch
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.GetTextAttr import GetTextAttr
@@ -26,9 +26,9 @@ class Program:
         from pullenti.ner.core.MiscHelper import MiscHelper
         sw = Stopwatch()
         print("Initializing ... ", end="", flush=True)
-        Sdk.initialize(MorphLang.RU | MorphLang.EN)
+        Sdk.initialize((MorphLang.RU) | MorphLang.EN)
         sw.stop()
-        print("OK (by {0} ms), version {1}".format(sw.elapsedMilliseconds, ProcessorService._get_version()), flush=True)
+        print("OK (by {0} ms), version {1}".format(sw.elapsedMilliseconds, ProcessorService.get_version()), flush=True)
         txt = "Единственным конкурентом «Трансмаша» на этом сомнительном тендере было ООО «Плассер Алека Рейл Сервис», основным владельцем которого является австрийская компания «СТЦ-Холдинг ГМБХ». До конца 2011 г. эта же фирма была совладельцем «Трансмаша» вместе с «Тако» Краснова. Зато совладельцем «Плассера», также до конца 2011 г., был тот самый Карл Контрус, который имеет четверть акций «Трансмаша». "
         print("Text: {0}".format(txt), flush=True)
         with ProcessorService.create_processor() as proc: 
@@ -40,9 +40,9 @@ class Program:
                     print("   {0}: {1}".format(s.type_name, s.value), flush=True)
             print("\r\n==========================================\r\nNoun groups: ", flush=True)
             t = ar.first_token
-            first_pass2662 = True
+            first_pass3605 = True
             while True:
-                if first_pass2662: first_pass2662 = False
+                if first_pass3605: first_pass3605 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.get_referent() is not None): 
@@ -50,26 +50,26 @@ class Program:
                 npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.ADJECTIVECANBELAST, 0)
                 if (npt is None): 
                     continue
-                print(str(npt), flush=True)
+                print(npt, flush=True)
                 t = npt.end_token
         with ProcessorService.create_specific_processor(KeywordAnalyzer.ANALYZER_NAME) as proc: 
             ar = proc.process(SourceOfAnalysis(txt), None, MorphLang())
             print("\r\n==========================================\r\nKeywords1: ", flush=True)
             for e0_ in ar.entities: 
                 if (isinstance(e0_, KeywordReferent)): 
-                    print(str(e0_), flush=True)
+                    print(e0_, flush=True)
             print("\r\n==========================================\r\nKeywords2: ", flush=True)
             t = ar.first_token
-            first_pass2663 = True
+            first_pass3606 = True
             while True:
-                if first_pass2663: first_pass2663 = False
+                if first_pass3606: first_pass3606 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (isinstance(t, ReferentToken)): 
                     kw = (t.get_referent() if isinstance(t.get_referent(), KeywordReferent) else None)
                     if (kw is None): 
                         continue
-                    kwstr = MiscHelper.get_text_value_of_meta_token(t if isinstance(t, ReferentToken) else None, Utils.valToEnum(GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE | GetTextAttr.KEEPREGISTER, GetTextAttr))
+                    kwstr = MiscHelper.get_text_value_of_meta_token(t if isinstance(t, ReferentToken) else None, Utils.valToEnum((GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
                     print("{0} = {1}".format(kwstr, kw), flush=True)
         print("Over!", flush=True)
 

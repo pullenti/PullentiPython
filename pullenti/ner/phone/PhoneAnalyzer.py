@@ -1,19 +1,17 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 import io
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.core.AnalyzerData import AnalyzerData
-
 from pullenti.ner.bank.internal.ResourceHelper import ResourceHelper
 from pullenti.ner.phone.PhoneKind import PhoneKind
-
 from pullenti.ner.phone.internal.PhoneHelper import PhoneHelper
 from pullenti.morph.LanguageHelper import LanguageHelper
 
@@ -35,12 +33,12 @@ class PhoneAnalyzer(Analyzer):
                 return None
             key = phone_.number
             if (len(key) >= 10): 
-                key = key[3 : ]
+                key = key[3:]
             ph_li = [ ]
-            inoutarg2462 = RefOutArgWrapper(None)
-            inoutres2463 = Utils.tryGetValue(self.__m_phones_hash, key, inoutarg2462)
-            ph_li = inoutarg2462.value
-            if (not inoutres2463): 
+            inoutarg2471 = RefOutArgWrapper(None)
+            inoutres2472 = Utils.tryGetValue(self.__m_phones_hash, key, inoutarg2471)
+            ph_li = inoutarg2471.value
+            if (not inoutres2472): 
                 ph_li = list()
                 self.__m_phones_hash[key] = ph_li
             for p in ph_li: 
@@ -95,22 +93,15 @@ class PhoneAnalyzer(Analyzer):
         return PhoneAnalyzer.PhoneAnalizerData()
     
     def process(self, kit : 'AnalysisKit') -> None:
-        """ Основная функция выделения телефонов
-        
-        Args:
-            cnt: 
-            stage: 
-        
-        """
         
         from pullenti.ner.phone.internal.PhoneItemToken import PhoneItemToken
         from pullenti.ner.phone.PhoneReferent import PhoneReferent
         from pullenti.ner.TextToken import TextToken
         ad = (kit.get_analyzer_data(self) if isinstance(kit.get_analyzer_data(self), PhoneAnalyzer.PhoneAnalizerData) else None)
         t = kit.first_token
-        first_pass3046 = True
+        first_pass4022 = True
         while True:
-            if first_pass3046: first_pass3046 = False
+            if first_pass4022: first_pass4022 = False
             else: t = t.next0_
             if (not (t is not None)): break
             pli = PhoneItemToken.try_attach_all(t)
@@ -182,7 +173,7 @@ class PhoneAnalyzer(Analyzer):
                             tt1 = rt.begin_token.previous
                             if (tt1 is not None and tt1.is_table_control_char): 
                                 tt1 = tt1.previous
-                            if (isinstance(tt1, TextToken) and ((tt1.is_newline_before or ((tt1.previous is not None and tt1.previous.is_table_control_char))))): 
+                            if ((isinstance(tt1, TextToken)) and ((tt1.is_newline_before or ((tt1.previous is not None and tt1.previous.is_table_control_char))))): 
                                 term = (tt1 if isinstance(tt1, TextToken) else None).term
                                 if (term == "T" or term == "Т"): 
                                     rt.begin_token = tt1
@@ -197,7 +188,7 @@ class PhoneAnalyzer(Analyzer):
                         ph._correct()
                     rt.referent = ad.register_referent(rt.referent)
                     kit.embed_token(rt)
-                    t = rt
+                    t = (rt)
     
     def __try_attach(self, pli : typing.List['PhoneItemToken'], ind : int, is_phone_before : bool, prev_phone : 'PhoneReferent') -> typing.List['ReferentToken']:
         from pullenti.ner.phone.PhoneReferent import PhoneReferent
@@ -221,7 +212,7 @@ class PhoneAnalyzer(Analyzer):
             num = ph.number
             if (num is None or len(num) <= len(alt.value)): 
                 break
-            ph.number = (num[0 : (len(num) - len(alt.value))] + alt.value)
+            ph.number = (num[0:0+len(num) - len(alt.value)] + alt.value)
             ph._m_template = ph0._m_template
             rt2 = ReferentToken(ph, alt.begin_token, alt.end_token)
             res.append(rt2)
@@ -259,11 +250,11 @@ class PhoneAnalyzer(Analyzer):
         city_code = None
         j = ind
         if (prev_phone is not None and prev_phone._m_template is not None and pli[j].item_type == PhoneItemToken.PhoneItemType.NUMBER): 
-            tmp = Utils.newStringIO(None)
+            tmp = io.StringIO()
             jj = j
-            first_pass3047 = True
+            first_pass4023 = True
             while True:
-                if first_pass3047: first_pass3047 = False
+                if first_pass4023: first_pass4023 = False
                 else: jj += 1
                 if (not (jj < len(pli))): break
                 if (pli[jj].item_type == PhoneItemToken.PhoneItemType.NUMBER): 
@@ -288,7 +279,7 @@ class PhoneAnalyzer(Analyzer):
             if (country_code != "8"): 
                 cc = PhoneHelper.get_country_prefix(country_code)
                 if (cc is not None and (len(cc) < len(country_code))): 
-                    city_code = country_code[len(cc) : ]
+                    city_code = country_code[len(cc):]
                     country_code = cc
             j += 1
         elif ((j < len(pli)) and pli[j].can_be_country_prefix): 
@@ -307,17 +298,17 @@ class PhoneAnalyzer(Analyzer):
                 country_code = pli[j].value
                 j += 1
             elif (len(pli[j].value) == 4): 
-                country_code = pli[j].value[0 : 1]
+                country_code = pli[j].value[0:0+1]
                 if (city_code is None): 
-                    city_code = pli[j].value[1 : ]
+                    city_code = pli[j].value[1:]
                 else: 
-                    city_code += pli[j].value[1 : ]
+                    city_code += pli[j].value[1:]
                 j += 1
             elif (len(pli[j].value) == 11 and j == (len(pli) - 1) and is_phone_before): 
                 ph0 = PhoneReferent()
                 if (pli[j].value[0] != '8'): 
-                    ph0.country_code = pli[j].value[0 : 1]
-                ph0.number = (pli[j].value[1 : 1 + 3] + pli[j].value[4 : ])
+                    ph0.country_code = pli[j].value[0:0+1]
+                ph0.number = (pli[j].value[1:1+3] + pli[j].value[4:])
                 return ReferentToken(ph0, pli[0].begin_token, pli[j].end_token)
             elif (city_code is None and len(pli[j].value) > 3 and ((j + 1) < len(pli))): 
                 sum0_ = 0
@@ -325,7 +316,7 @@ class PhoneAnalyzer(Analyzer):
                     if (it.item_type == PhoneItemToken.PhoneItemType.NUMBER): 
                         sum0_ += len(it.value)
                 if (sum0_ == 11): 
-                    city_code = pli[j].value[1 : ]
+                    city_code = pli[j].value[1:]
                     j += 1
         if ((j < len(pli)) and pli[j].item_type == PhoneItemToken.PhoneItemType.CITYCODE): 
             if (city_code is None): 
@@ -344,8 +335,8 @@ class PhoneAnalyzer(Analyzer):
         normal_num_len = 0
         if (country_code == "421"): 
             normal_num_len = 9
-        num = Utils.newStringIO(None)
-        templ = Utils.newStringIO(None)
+        num = io.StringIO()
+        templ = io.StringIO()
         part_length = list()
         delim = None
         ok = False
@@ -361,9 +352,9 @@ class PhoneAnalyzer(Analyzer):
                     std = True
                     ok = True
                     j += 5
-        first_pass3048 = True
+        first_pass4024 = True
         while True:
-            if first_pass3048: first_pass3048 = False
+            if first_pass4024: first_pass4024 = False
             else: j += 1
             if (not (j < len(pli))): break
             if (std): 
@@ -379,7 +370,7 @@ class PhoneAnalyzer(Analyzer):
                     delim = pli[j].value
                 elif (pli[j].value != delim): 
                     if ((len(part_length) == 2 and ((part_length[0] == 3 or part_length[0] == 4)) and city_code is None) and part_length[1] == 3): 
-                        city_code = Utils.toStringStringIO(num)[0 : (part_length[0])]
+                        city_code = Utils.toStringStringIO(num)[0:0+part_length[0]]
                         Utils.removeStringIO(num, 0, part_length[0])
                         del part_length[0]
                         delim = pli[j].value
@@ -429,37 +420,38 @@ class PhoneAnalyzer(Analyzer):
                 if (cc is not None): 
                     if (len(cc) > 1 and (len(city_code) - len(cc)) > 1): 
                         country_code = cc
-                        city_code = city_code[len(cc) : ]
+                        city_code = city_code[len(cc):]
         if (country_code is None and city_code is not None and city_code.startswith("00")): 
-            cc = PhoneHelper.get_country_prefix(city_code[2 : ])
+            cc = PhoneHelper.get_country_prefix(city_code[2:])
             if (cc is not None): 
                 if (len(city_code) > (len(cc) + 3)): 
                     country_code = cc
-                    city_code = city_code[len(cc) + 2 : ]
+                    city_code = city_code[len(cc) + 2:]
         if (num.tell() == 0 and city_code is not None): 
             if (len(city_code) == 10): 
-                print(city_code[3 : ], end="", file=num)
+                print(city_code[3:], end="", file=num)
                 part_length.append(num.tell())
-                city_code = city_code[0 : 3]
+                city_code = city_code[0:0+3]
                 ok = True
             elif (((len(city_code) == 9 or len(city_code) == 11 or len(city_code) == 8)) and ((is_phone_before or country_code is not None))): 
                 print(city_code, end="", file=num)
                 part_length.append(num.tell())
-                city_code = None
+                city_code = (None)
                 ok = True
         if (num.tell() < 4): 
             ok = False
         if (num.tell() < 7): 
             if (city_code is not None and (len(city_code) + num.tell()) > 7): 
                 if (not is_phone_before and len(city_code) == 3): 
-                    for ii in range(len(part_length)):
+                    ii = 0
+                    while ii < len(part_length): 
                         if (part_length[ii] == 3): 
                             pass
                         elif (part_length[ii] > 3): 
                             break
                         elif ((ii < (len(part_length) - 1)) or (part_length[ii] < 2)): 
                             break
-                    else: ii = len(part_length)
+                        ii += 1
                     if (ii >= len(part_length)): 
                         if (country_code == "61"): 
                             pass
@@ -524,26 +516,26 @@ class PhoneAnalyzer(Analyzer):
                     ok = False
         if (not ok): 
             return None
-        if (templ.tell() > 0 and not Utils.getCharAtStringIO(templ, templ.tell() - 1).isdigit()): 
+        if (templ.tell() > 0 and not str.isdigit(Utils.getCharAtStringIO(templ, templ.tell() - 1))): 
             Utils.setLengthStringIO(templ, templ.tell() - 1)
         if ((country_code is None and city_code is not None and len(city_code) > 3) and num.tell() > 6): 
             cc = PhoneHelper.get_country_prefix(city_code)
             if (cc is not None and ((len(cc) + 1) < len(city_code))): 
                 country_code = cc
-                city_code = city_code[len(cc) : ]
+                city_code = city_code[len(cc):]
         ph = PhoneReferent()
         if (country_code != "8" and country_code is not None): 
             ph.country_code = country_code
         number = Utils.toStringStringIO(num)
         if ((city_code is None and num.tell() > 7 and len(part_length) > 0) and (part_length[0] < 5)): 
-            city_code = number[0 : (part_length[0])]
-            number = number[part_length[0] : ]
+            city_code = number[0:0+part_length[0]]
+            number = number[part_length[0]:]
         if (city_code is None and num.tell() == 11 and Utils.getCharAtStringIO(num, 0) == '8'): 
-            city_code = number[1 : 1 + 3]
-            number = number[4 : ]
+            city_code = number[1:1+3]
+            number = number[4:]
         if (city_code is None and num.tell() == 10): 
-            city_code = number[0 : 3]
-            number = number[3 : ]
+            city_code = number[0:0+3]
+            number = number[3:]
         if (city_code is not None): 
             number = (city_code + number)
         elif (country_code is None and prev_phone is not None): 
@@ -553,7 +545,7 @@ class PhoneAnalyzer(Analyzer):
             elif (templ.tell() > 0 and prev_phone._m_template is not None and LanguageHelper.ends_with(prev_phone._m_template, Utils.toStringStringIO(templ))): 
                 ok1 = True
             if (ok1 and len(prev_phone.number) > len(number)): 
-                number = (prev_phone.number[0 : (len(prev_phone.number) - len(number))] + number)
+                number = (prev_phone.number[0:0+len(prev_phone.number) - len(number)] + number)
         if (ph.country_code is None and prev_phone is not None and prev_phone.country_code is not None): 
             if (len(prev_phone.number) == len(number)): 
                 ph.country_code = prev_phone.country_code
@@ -570,7 +562,7 @@ class PhoneAnalyzer(Analyzer):
         else: 
             s = PhoneHelper.get_country_prefix(number)
             if (s is not None): 
-                num2 = number[len(s) : ]
+                num2 = number[len(s):]
                 if (len(num2) >= 10 and len(num2) <= 11): 
                     number = num2
                     if (s != "7"): 

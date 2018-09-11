@@ -1,16 +1,15 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Referent import Referent
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.booklink.BookLinkRefType import BookLinkRefType
-
 
 
 class BookLinkRefReferent(Referent):
@@ -34,7 +33,7 @@ class BookLinkRefReferent(Referent):
         self.instance_of = MetaBookLinkRef._global_meta
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         if (self.number is not None): 
             print("[{0}] ".format(self.number), end="", file=res, flush=True)
         if (self.pages is not None): 
@@ -116,13 +115,6 @@ class BookLinkRefReferent(Referent):
     
     @staticmethod
     def get_number_diff(r1 : 'Referent', r2 : 'Referent') -> int:
-        """ Возвращает разницу номеров r2 - r1, иначе null, если номеров нет
-        
-        Args:
-            r1(Referent): 
-            r2(Referent): 
-        
-        """
         num1 = r1.get_string_value(BookLinkRefReferent.ATTR_NUMBER)
         num2 = r2.get_string_value(BookLinkRefReferent.ATTR_NUMBER)
         if (num1 is None or num2 is None): 
@@ -136,7 +128,6 @@ class BookLinkRefReferent(Referent):
         if (not inoutres400 or not inoutres402): 
             return None
         return n2 - n1
-
     
     @staticmethod
     def _new390(_arg1 : 'Referent') -> 'BookLinkRefReferent':

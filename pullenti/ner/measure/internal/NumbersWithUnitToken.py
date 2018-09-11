@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -7,10 +7,9 @@
 import io
 import typing
 from enum import IntEnum
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.measure.internal.MeasureHelper import MeasureHelper
-
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.measure.internal.UnitsHelper import UnitsHelper
 
@@ -40,7 +39,7 @@ class NumbersWithUnitToken(MetaToken):
         super().__init__(b, e0_, None)
     
     def __str__(self) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         if (self.single_val is not None): 
             if (self.plus_minus is not None): 
                 print("[{0} ±{1}{2}]".format(self.single_val, self.plus_minus, ("%" if self.plus_minus_percent else "")), end="", file=res, flush=True)
@@ -102,7 +101,7 @@ class NumbersWithUnitToken(MetaToken):
     @staticmethod
     def try_parse_multi(t : 'Token', add_units : 'TerminCollection', can_omit_number : bool=False) -> typing.List['NumbersWithUnitToken']:
         from pullenti.ner.ReferentToken import ReferentToken
-        if (t is None or isinstance(t, ReferentToken)): 
+        if (t is None or (isinstance(t, ReferentToken))): 
             return None
         mt = NumbersWithUnitToken.try_parse(t, add_units, can_omit_number)
         if (mt is None): 
@@ -129,12 +128,6 @@ class NumbersWithUnitToken(MetaToken):
     
     @staticmethod
     def try_parse(t : 'Token', add_units : 'TerminCollection', can_omit_number : bool=False) -> 'NumbersWithUnitToken':
-        """ Попробовать выделить с указанной позиции
-        
-        Args:
-            t(Token): 
-        
-        """
         return NumbersWithUnitToken.__try_parse(t, add_units, False, can_omit_number)
     
     @staticmethod
@@ -155,6 +148,11 @@ class NumbersWithUnitToken(MetaToken):
         if (t0.is_char('(')): 
             mt0 = NumbersWithUnitToken.__try_parse(t.next0_, add_units, False, False)
             if (mt0 is not None and mt0.end_token.next0_ is not None and mt0.end_token.next0_.is_char(')')): 
+                if (second): 
+                    if (mt0.from_val is not None and mt0.to_val is not None and mt0.from_val == (- mt0.to_val)): 
+                        pass
+                    else: 
+                        return None
                 mt0.begin_token = t0
                 mt0.end_token = mt0.end_token.next0_
                 uu = UnitToken.try_parse_list(mt0.end_token.next0_, add_units)
@@ -165,10 +163,15 @@ class NumbersWithUnitToken(MetaToken):
         plusminus = False
         dty = NumbersWithUnitToken.DiapTyp.UNDEFINED
         uni = None
-        tok = NumbersWithUnitToken._m_termins.try_parse(t, TerminParseAttr.NO)
+        tok = NumbersWithUnitToken.M_TERMINS.try_parse(t, TerminParseAttr.NO)
         if (tok is not None): 
             t = tok.end_token.next0_
-            dty = Utils.valToEnum(tok.termin.tag, NumbersWithUnitToken.DiapTyp)
+            dty = (Utils.valToEnum(tok.termin.tag, NumbersWithUnitToken.DiapTyp))
+            if (not tok.is_whitespace_after): 
+                if (t is not None and t.is_char_of(":")): 
+                    pass
+                else: 
+                    return None
             if (t is not None and t.is_char('(')): 
                 uni = UnitToken.try_parse_list(t.next0_, add_units)
                 if (uni is not None): 
@@ -229,40 +232,47 @@ class NumbersWithUnitToken(MetaToken):
             uni = UnitToken.try_parse_list(t, add_units)
             if (uni is not None): 
                 t = uni[len(uni) - 1].end_token.next0_
+                delim = False
                 while t is not None:
                     if (t.is_char_of(":,")): 
+                        delim = True
                         t = t.next0_
                     else: 
                         break
+                if (not delim): 
+                    if (t is None or not t.is_whitespace_before): 
+                        return None
                 num = NumberExToken.try_parse_float_number(t, True)
         res = None
         rval = 0
         if (num is None): 
-            tt = NumbersWithUnitToken._m_spec.try_parse(t, TerminParseAttr.NO)
+            tt = NumbersWithUnitToken.M_SPEC.try_parse(t, TerminParseAttr.NO)
             if (tt is not None): 
-                rval = tt.termin.tag
+                rval = (tt.termin.tag)
                 unam = tt.termin.tag2
                 for u in UnitsHelper.UNITS: 
                     if (u.fullname_cyr == unam): 
                         uni = list()
-                        uni.append(UnitToken._new1517(t, t, u))
+                        uni.append(UnitToken._new1521(t, t, u))
                         break
                 if (uni is None): 
                     return None
-                res = NumbersWithUnitToken._new1518(t0, tt.end_token, about_)
+                res = NumbersWithUnitToken._new1522(t0, tt.end_token, about_)
                 t = tt.end_token.next0_
             else: 
                 if (not can_omit_number): 
                     return None
                 if ((uni is not None and len(uni) == 1 and uni[0].begin_token == uni[0].end_token) and uni[0].length_char > 3): 
-                    rval = 1
-                    res = NumbersWithUnitToken._new1518(t0, uni[len(uni) - 1].end_token, about_)
+                    rval = (1)
+                    res = NumbersWithUnitToken._new1522(t0, uni[len(uni) - 1].end_token, about_)
                     t = res.end_token.next0_
                 else: 
                     return None
         else: 
+            if ((t == t0 and t0.is_hiphen and not t.is_whitespace_before) and not t.is_whitespace_after and (num.real_value < 0)): 
+                return None
             t = num.end_token.next0_
-            res = NumbersWithUnitToken._new1518(t0, num.end_token, about_)
+            res = NumbersWithUnitToken._new1522(t0, num.end_token, about_)
             rval = num.real_value
         if (uni is None): 
             uni = UnitToken.try_parse_list(t, add_units)
@@ -291,9 +301,9 @@ class NumbersWithUnitToken(MetaToken):
                 if (len(res.units) == 0): 
                     res.units = next0__.units
                 elif (not UnitToken.can_be_equals(res.units, next0__.units)): 
-                    next0__ = None
+                    next0__ = (None)
             elif (len(res.units) > 0): 
-                next0__ = None
+                next0__ = (None)
             if (next0__ is not None): 
                 res.end_token = next0__.end_token
             if (next0__ is not None and next0__.to_val is not None): 
@@ -336,36 +346,36 @@ class NumbersWithUnitToken(MetaToken):
                 res.single_val = rval
         return res
     
-    _m_termins = None
+    M_TERMINS = None
     
-    _m_spec = None
+    M_SPEC = None
     
     @staticmethod
     def _initialize() -> None:
         from pullenti.ner.core.TerminCollection import TerminCollection
         from pullenti.ner.core.Termin import Termin
-        if (NumbersWithUnitToken._m_termins is not None): 
+        if (NumbersWithUnitToken.M_TERMINS is not None): 
             return
-        NumbersWithUnitToken._m_termins = TerminCollection()
+        NumbersWithUnitToken.M_TERMINS = TerminCollection()
         t = Termin._new118("НЕ МЕНЕЕ", NumbersWithUnitToken.DiapTyp.GE)
         t.add_variant("НЕ МЕНЬШЕ", False)
         t.add_variant("НЕ КОРОЧЕ", False)
         t.add_variant("НЕ МЕДЛЕННЕЕ", False)
         t.add_variant("НЕ МЕНЕ", False)
-        NumbersWithUnitToken._m_termins.add(t)
+        NumbersWithUnitToken.M_TERMINS.add(t)
         t = Termin._new118("МЕНЕЕ", NumbersWithUnitToken.DiapTyp.LS)
         t.add_variant("МЕНЬШЕ", False)
         t.add_variant("МЕНЕ", False)
         t.add_variant("КОРОЧЕ", False)
         t.add_variant("МЕДЛЕННЕЕ", False)
-        NumbersWithUnitToken._m_termins.add(t)
+        NumbersWithUnitToken.M_TERMINS.add(t)
         t = Termin._new118("НЕ БОЛЕЕ", NumbersWithUnitToken.DiapTyp.LE)
         t.add_variant("НЕ БОЛЬШЕ", False)
         t.add_variant("НЕ БОЛЕ", False)
         t.add_variant("НЕ ДЛИННЕЕ", False)
         t.add_variant("НЕ БЫСТРЕЕ", False)
         t.add_variant("НЕ ВЫШЕ", False)
-        NumbersWithUnitToken._m_termins.add(t)
+        NumbersWithUnitToken.M_TERMINS.add(t)
         t = Termin._new118("БОЛЕЕ", NumbersWithUnitToken.DiapTyp.GT)
         t.add_variant("БОЛЬШЕ", False)
         t.add_variant("ДЛИННЕЕ", False)
@@ -374,35 +384,34 @@ class NumbersWithUnitToken(MetaToken):
         t.add_variant("ГЛУБЖЕ", False)
         t.add_variant("ВЫШЕ", False)
         t.add_variant("СВЫШЕ", False)
-        NumbersWithUnitToken._m_termins.add(t)
+        NumbersWithUnitToken.M_TERMINS.add(t)
         t = Termin._new118("ОТ", NumbersWithUnitToken.DiapTyp.FROM)
         t.add_variant("С", False)
         t.add_variant("C", False)
         t.add_variant("НАЧИНАЯ С", False)
         t.add_variant("НАЧИНАЯ ОТ", False)
-        NumbersWithUnitToken._m_termins.add(t)
+        NumbersWithUnitToken.M_TERMINS.add(t)
         t = Termin._new118("ДО", NumbersWithUnitToken.DiapTyp.TO)
         t.add_variant("ПО", False)
         t.add_variant("ЗАКАНЧИВАЯ", False)
-        NumbersWithUnitToken._m_termins.add(t)
-        NumbersWithUnitToken._m_spec = TerminCollection()
-        t = Termin._new120("ПОЛЛИТРА", 0.5, "литр")
+        NumbersWithUnitToken.M_TERMINS.add(t)
+        NumbersWithUnitToken.M_SPEC = TerminCollection()
+        t = Termin._new120("ПОЛЛИТРА", .5, "литр")
         t.add_variant("ПОЛУЛИТРА", False)
-        NumbersWithUnitToken._m_spec.add(t)
-        t = Termin._new120("ПОЛКИЛО", 0.5, "килограмм")
+        NumbersWithUnitToken.M_SPEC.add(t)
+        t = Termin._new120("ПОЛКИЛО", .5, "килограмм")
         t.add_variant("ПОЛКИЛОГРАММА", False)
-        NumbersWithUnitToken._m_spec.add(t)
-        t = Termin._new120("ПОЛМЕТРА", 0.5, "метр")
+        NumbersWithUnitToken.M_SPEC.add(t)
+        t = Termin._new120("ПОЛМЕТРА", .5, "метр")
         t.add_variant("ПОЛУМЕТРА", False)
-        NumbersWithUnitToken._m_spec.add(t)
-        t = Termin._new120("ПОЛТОННЫ", 0.5, "тонна")
+        NumbersWithUnitToken.M_SPEC.add(t)
+        t = Termin._new120("ПОЛТОННЫ", .5, "тонна")
         t.add_variant("ПОЛУТОННЫ", False)
-        NumbersWithUnitToken._m_spec.add(t)
-        NumbersWithUnitToken._m_spec.add(t)
-
+        NumbersWithUnitToken.M_SPEC.add(t)
+        NumbersWithUnitToken.M_SPEC.add(t)
     
     @staticmethod
-    def _new1518(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'NumbersWithUnitToken':
+    def _new1522(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'NumbersWithUnitToken':
         res = NumbersWithUnitToken(_arg1, _arg2)
         res.about = _arg3
         return res

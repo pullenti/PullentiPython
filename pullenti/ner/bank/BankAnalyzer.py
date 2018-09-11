@@ -1,11 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.bank.internal.ResourceHelper import ResourceHelper
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
@@ -72,12 +72,12 @@ class BankAnalyzer(Analyzer):
                     rt = self.__try_attach(tt, True)
                     if (rt is not None): 
                         rt.begin_token = t
-            if (rt is None and ((isinstance(t, ReferentToken) or t.is_newline_before))): 
+            if (rt is None and (((isinstance(t, ReferentToken)) or t.is_newline_before))): 
                 rt = self.__try_attach(t, False)
             if (rt is not None): 
                 rt.referent = ad.register_referent(rt.referent)
                 kit.embed_token(rt)
-                t = rt
+                t = (rt)
             t = t.next0_
     
     @staticmethod
@@ -105,9 +105,9 @@ class BankAnalyzer(Analyzer):
         org_is_bank = False
         empty = 0
         last_uri = None
-        first_pass2701 = True
+        first_pass3650 = True
         while True:
-            if first_pass2701: first_pass2701 = False
+            if first_pass3650: first_pass3650 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char and t != t0): 
@@ -120,7 +120,7 @@ class BankAnalyzer(Analyzer):
                 if (t is None): 
                     break
             if (t.is_value("БАНК", None)): 
-                if (isinstance(t, ReferentToken) and t.get_referent().type_name == "ORGANIZATION"): 
+                if ((isinstance(t, ReferentToken)) and t.get_referent().type_name == "ORGANIZATION"): 
                     bank_keyword = True
                 tt = t.next0_
                 npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
@@ -208,7 +208,7 @@ class BankAnalyzer(Analyzer):
                 break
             if (empty > 0 and t.is_char(':') and t.is_newline_after): 
                 break
-            if ((isinstance(t, NumberToken) and t.is_newline_before and t.next0_ is not None) and not t.next0_.chars.is_letter): 
+            if (((isinstance(t, NumberToken)) and t.is_newline_before and t.next0_ is not None) and not t.next0_.chars.is_letter): 
                 break
         if (uris is None): 
             return None

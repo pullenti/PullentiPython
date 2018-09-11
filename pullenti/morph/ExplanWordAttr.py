@@ -1,10 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+import io
+from pullenti.unisharp.Utils import Utils
 
 
 class ExplanWordAttr:
@@ -12,27 +13,27 @@ class ExplanWordAttr:
     
     def __init__(self, val : 'ExplanWordAttr'=None) -> None:
         self._value = 0
-        self._value = 0
+        self._value = (0)
         if (val is not None): 
             self._value = val._value
     
     def __get_value(self, i : int) -> bool:
-        return ((((self._value >> i)) & 1)) != 0
+        return (((((self._value) >> i)) & 1)) != 0
     
     def __set_value(self, i : int, val : bool) -> None:
         if (val): 
-            self._value |= (1 << i)
+            self._value |= ((1 << i))
         else: 
-            self._value &= ~ ((1 << i))
+            self._value &= (~ ((1 << i)))
     
     @property
     def is_undefined(self) -> bool:
         """ Неопределённый тип """
-        return self._value == 0
+        return self._value == (0)
     
     @is_undefined.setter
     def is_undefined(self, value) -> bool:
-        self._value = 0
+        self._value = (0)
         return value
     
     @property
@@ -116,7 +117,7 @@ class ExplanWordAttr:
         return value
     
     def __str__(self) -> str:
-        tmp_str = Utils.newStringIO(None)
+        tmp_str = io.StringIO()
         if (self.is_animated): 
             print("одуш.", end="", file=tmp_str)
         if (self.is_animal): 
@@ -150,7 +151,7 @@ class ExplanWordAttr:
             val1 = self._value
         if (arg2 is not None): 
             val2 = arg2._value
-        return ExplanWordAttr._new42((val1 & val2))
+        return ExplanWordAttr._new42(((val1) & (val2)))
     
     def __or__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> 'ExplanWordAttr':
         val1 = 0
@@ -159,7 +160,7 @@ class ExplanWordAttr:
             val1 = self._value
         if (arg2 is not None): 
             val2 = arg2._value
-        return ExplanWordAttr._new42((val1 | val2))
+        return ExplanWordAttr._new42(((val1) | (val2)))
     
     def __eq__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> bool:
         val1 = 0
@@ -180,8 +181,6 @@ class ExplanWordAttr:
         return val1 != val2
     
     UNDEFINED = None
-    """ Неопределённое """
-
     
     @staticmethod
     def _new42(_arg1 : int) -> 'ExplanWordAttr':

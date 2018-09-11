@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -18,11 +18,11 @@ class ExplanTreeNode:
         if (self._lazy is None): 
             return
         self._lazy.load_node(self)
-        self._lazy = None
+        self._lazy = (None)
     
     def _add_group(self, gr : 'DerivateGroup') -> None:
         if (self.groups is None): 
-            self.groups = gr
+            self.groups = (gr)
             return
         li = (self.groups if isinstance(self.groups, list) else None)
         if (li is None): 
@@ -31,4 +31,4 @@ class ExplanTreeNode:
                 li.append(self.groups if isinstance(self.groups, DerivateGroup) else None)
         if (not gr in li): 
             li.append(gr)
-        self.groups = li
+        self.groups = (li)

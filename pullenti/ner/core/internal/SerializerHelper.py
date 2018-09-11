@@ -1,11 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+import struct
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 
 
@@ -19,7 +20,7 @@ class SerializerHelper:
     def deserialize_int(stream : io.IOBase) -> int:
         buf = Utils.newArrayOfBytes(4, 0)
         Utils.readIO(stream, buf, 0, 4)
-        return int.from_bytes(buf[0:0+4], byteorder="little")
+        return int.from_bytes(buf[0:0+2], byteorder="little")
     
     @staticmethod
     def serialize_short(stream : io.IOBase, val : int) -> None:
@@ -76,9 +77,9 @@ class SerializerHelper:
             return None
         res = None
         prev = None
-        first_pass2742 = True
+        first_pass3691 = True
         while True:
-            if first_pass2742: first_pass2742 = False
+            if first_pass3691: first_pass3691 = False
             else: cou -= 1
             if (not (cou > 0)): break
             t = SerializerHelper.__deserialize_token(stream, kit)
@@ -115,15 +116,15 @@ class SerializerHelper:
         from pullenti.ner.ReferentToken import ReferentToken
         typ = 0
         if (isinstance(t, TextToken)): 
-            typ = 1
+            typ = (1)
         elif (isinstance(t, NumberToken)): 
-            typ = 2
+            typ = (2)
         elif (isinstance(t, ReferentToken)): 
-            typ = 3
+            typ = (3)
         elif (isinstance(t, MetaToken)): 
-            typ = 4
+            typ = (4)
         SerializerHelper.serialize_short(stream, typ)
-        if (typ == 0): 
+        if (typ == (0)): 
             return
         t._serialize(stream)
         if (isinstance(t, MetaToken)): 
@@ -136,17 +137,17 @@ class SerializerHelper:
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.ReferentToken import ReferentToken
         typ = SerializerHelper.deserialize_short(stream)
-        if (typ == 0): 
+        if (typ == (0)): 
             return None
         t = None
-        if (typ == 1): 
-            t = TextToken(None, kit)
-        elif (typ == 2): 
-            t = NumberToken(None, None, 0, NumberSpellingType.DIGIT, kit)
-        elif (typ == 3): 
-            t = ReferentToken(None, None, None, kit)
+        if (typ == (1)): 
+            t = (TextToken(None, kit))
+        elif (typ == (2)): 
+            t = (NumberToken(None, None, 0, NumberSpellingType.DIGIT, kit))
+        elif (typ == (3)): 
+            t = (ReferentToken(None, None, None, kit))
         else: 
-            t = MetaToken(None, None, kit)
+            t = (MetaToken(None, None, kit))
         t._deserialize(stream, kit)
         if (isinstance(t, MetaToken)): 
             tt = SerializerHelper.deserialize_tokens(stream, kit)

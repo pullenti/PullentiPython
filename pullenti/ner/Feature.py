@@ -1,11 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.morph.MorphLang import MorphLang
 
 
@@ -88,7 +88,8 @@ class Feature:
         if (inner_value is None): 
             return None
         val = str(inner_value)
-        for i in range(len(self.inner_values)):
+        i = 0
+        while i < len(self.inner_values): 
             if (Utils.compareStrings(self.inner_values[i], val, True) == 0 and (i < len(self.outer_values))): 
                 if (lang is not None): 
                     if (lang.is_ua and (i < len(self.outer_valuesua)) and self.outer_valuesua[i] is not None): 
@@ -96,17 +97,20 @@ class Feature:
                     if (lang.is_en and (i < len(self.outer_valuesen)) and self.outer_valuesen[i] is not None): 
                         return self.outer_valuesen[i]
                 return self.outer_values[i]
+            i += 1
         return inner_value
     
     def convert_outer_value_to_inner_value(self, outer_value : object) -> object:
         val = (outer_value if isinstance(outer_value, str) else None)
         if (val is None): 
             return outer_value
-        for i in range(len(self.outer_values)):
+        i = 0
+        while i < len(self.outer_values): 
             if (Utils.compareStrings(self.outer_values[i], val, True) == 0 and (i < len(self.inner_values))): 
                 return self.inner_values[i]
             elif ((i < len(self.outer_valuesua)) and self.outer_valuesua[i] == val): 
                 return self.inner_values[i]
+            i += 1
         return outer_value
     
     def add_value(self, int_val : str, ext_val : str, ext_val_ua : str=None, ext_val_eng : str=None) -> None:
@@ -114,10 +118,9 @@ class Feature:
         self.outer_values.append(ext_val)
         self.outer_valuesua.append(ext_val_ua)
         self.outer_valuesen.append(ext_val_eng)
-
     
     @staticmethod
-    def _new2651(_arg1 : str, _arg2 : str, _arg3 : int, _arg4 : int) -> 'Feature':
+    def _new2664(_arg1 : str, _arg2 : str, _arg3 : int, _arg4 : int) -> 'Feature':
         res = Feature()
         res.name = _arg1
         res.caption = _arg2

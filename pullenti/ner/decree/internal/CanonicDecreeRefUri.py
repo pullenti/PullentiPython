@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -18,8 +18,7 @@ class CanonicDecreeRefUri:
         self.text = txt
     
     def __str__(self) -> str:
-        return ("?" if self.text is None else self.text[self.begin_char : self.end_char + 1])
-
+        return ("?" if self.text is None else self.text[self.begin_char:self.begin_char+(self.end_char + 1) - self.begin_char])
     
     @staticmethod
     def _new822(_arg1 : str, _arg2 : 'Referent', _arg3 : int, _arg4 : int) -> 'CanonicDecreeRefUri':

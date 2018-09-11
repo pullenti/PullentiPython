@@ -1,18 +1,17 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.transport.TransportKind import TransportKind
 from pullenti.ner.business.internal.ResourceHelper import ResourceHelper
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-
 
 
 class TransportAnalyzer(Analyzer):
@@ -81,9 +80,9 @@ class TransportAnalyzer(Analyzer):
         objs_by_model = dict()
         obj_by_names = TerminCollection()
         t = kit.first_token
-        first_pass3063 = True
+        first_pass4039 = True
         while True:
-            if first_pass3063: first_pass3063 = False
+            if first_pass4039: first_pass4039 = False
             else: t = t.next0_
             if (not (t is not None)): break
             its = TransItemToken.try_parse_list(t, 10)
@@ -94,9 +93,9 @@ class TransportAnalyzer(Analyzer):
                 for rt in rts: 
                     cou = 0
                     tt = t.previous
-                    first_pass3064 = True
+                    first_pass4040 = True
                     while True:
-                        if first_pass3064: first_pass3064 = False
+                        if first_pass4040: first_pass4040 = False
                         else: tt = tt.previous; cou += 1
                         if (not (tt is not None and (cou < 1000))): break
                         tr = (tt.get_referent() if isinstance(tt.get_referent(), TransportReferent) else None)
@@ -108,21 +107,21 @@ class TransportAnalyzer(Analyzer):
                                 ok = False
                                 break
                         if (ok): 
-                            rt.referent = tr
+                            rt.referent = (tr)
                             break
                     rt.referent = ad.register_referent(rt.referent)
                     kit.embed_token(rt)
-                    t = rt
+                    t = (rt)
                     for s in rt.referent.slots: 
                         if (s.type_name == TransportReferent.ATTR_MODEL): 
                             mod = str(s.value)
                             for k in range(2):
-                                if (not mod[0].isdigit()): 
+                                if (not str.isdigit(mod[0])): 
                                     li = [ ]
-                                    inoutarg2515 = RefOutArgWrapper(None)
-                                    inoutres2516 = Utils.tryGetValue(objs_by_model, mod, inoutarg2515)
-                                    li = inoutarg2515.value
-                                    if (not inoutres2516): 
+                                    inoutarg2524 = RefOutArgWrapper(None)
+                                    inoutres2525 = Utils.tryGetValue(objs_by_model, mod, inoutarg2524)
+                                    li = inoutarg2524.value
+                                    if (not inoutres2525): 
                                         li = list()
                                         objs_by_model[mod] = li
                                     if (not rt.referent in li): 
@@ -139,9 +138,9 @@ class TransportAnalyzer(Analyzer):
         if (len(objs_by_model) == 0 and len(obj_by_names.termins) == 0): 
             return
         t = kit.first_token
-        first_pass3065 = True
+        first_pass4041 = True
         while True:
-            if first_pass3065: first_pass3065 = False
+            if first_pass4041: first_pass4041 = False
             else: t = t.next0_
             if (not (t is not None)): break
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 10)
@@ -150,7 +149,7 @@ class TransportAnalyzer(Analyzer):
                 if (toks is not None and toks.end_token.next0_ == br.end_token): 
                     rt0 = ReferentToken(toks.termin.tag if isinstance(toks.termin.tag, Referent) else None, br.begin_token, br.end_token)
                     kit.embed_token(rt0)
-                    t = rt0
+                    t = (rt0)
                     continue
             if (not ((isinstance(t, TextToken)))): 
                 continue
@@ -179,7 +178,7 @@ class TransportAnalyzer(Analyzer):
                     tok.begin_token = tit.begin_token
                 rt0 = ReferentToken(tr, tok.begin_token, tok.end_token)
                 kit.embed_token(rt0)
-                t = rt0
+                t = (rt0)
                 continue
     
     def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
@@ -198,7 +197,12 @@ class TransportAnalyzer(Analyzer):
         from pullenti.ner.ReferentToken import ReferentToken
         tr = TransportReferent()
         t1 = None
-        for i in range(len(its)):
+        i = 0
+        first_pass4042 = True
+        while True:
+            if first_pass4042: first_pass4042 = False
+            else: i += 1
+            if (not (i < len(its))): break
             if (its[i].typ == TransItemToken.Typs.NOUN): 
                 if (tr.find_slot(TransportReferent.ATTR_TYPE, None, True) is not None): 
                     break
@@ -282,7 +286,6 @@ class TransportAnalyzer(Analyzer):
                     tr.add_slot(TransportReferent.ATTR_ROUTEPOINT, o, False, 0)
                 t1 = its[i].end_token
                 continue
-        else: i = len(its)
         if (not tr._check(attach)): 
             return None
         res = list()

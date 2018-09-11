@@ -1,16 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.morph.MorphGender import MorphGender
-
-
-
 
 
 class PersonMorphCollection:
@@ -23,17 +20,16 @@ class PersonMorphCollection:
             self.gender = MorphGender.UNDEFINED
         
         def __str__(self) -> str:
-            res = Utils.newStringIO(None)
+            res = io.StringIO()
             print(self.value, end="", file=res)
             if (self.short_value is not None): 
                 print(" ({0})".format(self.short_value), end="", file=res, flush=True)
             if (self.gender != MorphGender.UNDEFINED): 
                 print(" {0}".format(Utils.enumToString(self.gender)), end="", file=res, flush=True)
             return Utils.toStringStringIO(res)
-    
         
         @staticmethod
-        def _new2405(_arg1 : str, _arg2 : 'MorphGender', _arg3 : str) -> 'PersonMorphVariant':
+        def _new2414(_arg1 : str, _arg2 : 'MorphGender', _arg3 : str) -> 'PersonMorphVariant':
             res = PersonMorphCollection.PersonMorphVariant()
             res.value = _arg1
             res.gender = _arg2
@@ -44,7 +40,7 @@ class PersonMorphCollection:
         
         def compare(self, x : 'PersonMorphVariant', y : 'PersonMorphVariant') -> int:
             if (x.value.find('-') > 0): 
-                if ((('-') not in y.value) and (len(y.value) < (len(x.value) - 1))): 
+                if ((y.value.find('-') < 0) and (len(y.value) < (len(x.value) - 1))): 
                     return -1
             elif (y.value.find('-') > 0 and (len(y.value) - 1) > len(x.value)): 
                 return 1
@@ -74,14 +70,14 @@ class PersonMorphCollection:
         while i < (len(self.items) - 1): 
             k = 0
             while k < (len(self.items) - 1): 
-                if (PersonMorphCollection.__m_comparer.compare(self.items[k], self.items[k + 1]) > 0): 
+                if (PersonMorphCollection.M_COMPARER.compare(self.items[k], self.items[k + 1]) > 0): 
                     it = self.items[k + 1]
                     self.items[k + 1] = self.items[k]
                     self.items[k] = it
                 k += 1
             i += 1
     
-    __m_comparer = None
+    M_COMPARER = None
     
     @property
     def has_lastname_standard_tail(self) -> bool:
@@ -99,19 +95,19 @@ class PersonMorphCollection:
             return
         if (self.head is None): 
             if (len(val) > 3): 
-                self.head = val[0 : 3]
+                self.head = val[0:0+3]
             else: 
                 self.head = val
         if (gen == MorphGender.MASCULINE or gen == MorphGender.FEMINIE): 
             for it in self.items: 
                 if (it.value == val and it.gender == gen): 
                     return
-            self.items.append(PersonMorphCollection.PersonMorphVariant._new2405(val, gen, shortval))
+            self.items.append(PersonMorphCollection.PersonMorphVariant._new2414(val, gen, shortval))
             if (add_other_gender_var): 
                 g0 = (MorphGender.MASCULINE if gen == MorphGender.FEMINIE else MorphGender.FEMINIE)
-                v = Morphology.get_wordform(val, MorphBaseInfo._new211(MorphClass._new2386(True), g0))
+                v = Morphology.get_wordform(val, MorphBaseInfo._new211(MorphClass._new2395(True), g0))
                 if (v is not None): 
-                    self.items.append(PersonMorphCollection.PersonMorphVariant._new2405(v, g0, shortval))
+                    self.items.append(PersonMorphCollection.PersonMorphVariant._new2414(v, g0, shortval))
         else: 
             self.add(val, shortval, MorphGender.MASCULINE, False)
             self.add(val, shortval, MorphGender.FEMINIE, False)
@@ -149,7 +145,7 @@ class PersonMorphCollection:
         return res
     
     def __str__(self) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         if (self.number > 0): 
             print("Num={0};".format(self.number), end="", file=res, flush=True)
         for it in self.items: 
@@ -170,7 +166,7 @@ class PersonMorphCollection:
     def gender(self) -> 'MorphGender':
         res = MorphGender.UNDEFINED
         for it in self.items: 
-            res = Utils.valToEnum(res | it.gender, MorphGender)
+            res = (Utils.valToEnum((res) | (it.gender), MorphGender))
         if (res == MorphGender.FEMINIE or res == MorphGender.MASCULINE): 
             return res
         else: 
@@ -253,6 +249,6 @@ class PersonMorphCollection:
     # static constructor for class PersonMorphCollection
     @staticmethod
     def _static_ctor():
-        PersonMorphCollection.__m_comparer = PersonMorphCollection.SortComparer()
+        PersonMorphCollection.M_COMPARER = PersonMorphCollection.SortComparer()
 
 PersonMorphCollection._static_ctor()

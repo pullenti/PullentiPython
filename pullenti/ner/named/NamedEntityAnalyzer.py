@@ -1,11 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
-from pullenti.ntopy.Utils import Utils
+import io
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.named.NamedEntityKind import NamedEntityKind
 from pullenti.ner.business.internal.ResourceHelper import ResourceHelper
@@ -70,9 +71,9 @@ class NamedEntityAnalyzer(Analyzer):
         from pullenti.ner.named.internal.NamedItemToken import NamedItemToken
         ad = (kit.get_analyzer_data(self) if isinstance(kit.get_analyzer_data(self), AnalyzerDataWithOntology) else None)
         t = kit.first_token
-        first_pass2972 = True
+        first_pass3941 = True
         while True:
-            if first_pass2972: first_pass2972 = False
+            if first_pass3941: first_pass3941 = False
             else: t = t.next0_
             if (not (t is not None)): break
             li = NamedItemToken.try_parse_list(t, ad.local_ontology)
@@ -82,7 +83,7 @@ class NamedEntityAnalyzer(Analyzer):
             if (rt is not None): 
                 rt.referent = ad.register_referent(rt.referent)
                 kit.embed_token(rt)
-                t = rt
+                t = (rt)
                 continue
     
     def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
@@ -123,7 +124,8 @@ class NamedEntityAnalyzer(Analyzer):
         re = None
         nams = None
         ki = NamedEntityKind.UNDEFINED
-        for i in range(len(toks)):
+        i = 0
+        while i < len(toks): 
             if (toks[i].type_value is not None): 
                 if (nams is not None and toks[i].name_value is not None): 
                     break
@@ -146,7 +148,7 @@ class NamedEntityAnalyzer(Analyzer):
                 break
             if (re is None and NamedEntityAnalyzer.__can_be_ref(ki, toks[i].ref)): 
                 re = toks[i]
-        else: i = len(toks)
+            i += 1
         if ((i < len(toks)) and toks[i].ref is not None): 
             if (NamedEntityAnalyzer.__can_be_ref(ki, toks[i].ref)): 
                 re = toks[i]
@@ -172,7 +174,7 @@ class NamedEntityAnalyzer(Analyzer):
                 ok = True
         if (not ok or ki == NamedEntityKind.UNDEFINED): 
             return None
-        nam = NamedEntityReferent._new1617(ki)
+        nam = NamedEntityReferent._new1625(ki)
         if (typ is not None): 
             nam.add_slot(NamedEntityReferent.ATTR_TYPE, typ.type_value.lower(), False, 0)
         if (nams is not None): 
@@ -181,7 +183,7 @@ class NamedEntityAnalyzer(Analyzer):
             if (typ is not None and (typ.end_char < nams[0].begin_char)): 
                 str0_ = MiscHelper.get_text_value(nams[0].begin_token, nams[len(nams) - 1].end_token, GetTextAttr.NO)
                 nam.add_slot(NamedEntityReferent.ATTR_NAME, str0_, False, 0)
-            tmp = Utils.newStringIO(None)
+            tmp = io.StringIO()
             for n in nams: 
                 if (tmp.tell() > 0): 
                     print(' ', end="", file=tmp)

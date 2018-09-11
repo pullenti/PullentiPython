@@ -1,13 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
-
 
 
 class InstrumentParticipant(Referent):
@@ -50,7 +49,7 @@ class InstrumentParticipant(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         print(MiscHelper.convert_first_char_upper_and_other_lower(Utils.ifNotNull(self.typ, "?")), end="", file=res)
         org0_ = (self.get_value(InstrumentParticipant.ATTR_REF) if isinstance(self.get_value(InstrumentParticipant.ATTR_REF), Referent) else None)
         del0_ = (self.get_value(InstrumentParticipant.ATTR_DELEGATE) if isinstance(self.get_value(InstrumentParticipant.ATTR_DELEGATE), Referent) else None)
@@ -77,14 +76,13 @@ class InstrumentParticipant(Referent):
     
     def _contains_ref(self, r : 'Referent') -> bool:
         for s in self.slots: 
-            if (((s.type_name == InstrumentParticipant.ATTR_REF or s.type_name == InstrumentParticipant.ATTR_DELEGATE)) and isinstance(s.value, Referent)): 
+            if (((s.type_name == InstrumentParticipant.ATTR_REF or s.type_name == InstrumentParticipant.ATTR_DELEGATE)) and (isinstance(s.value, Referent))): 
                 if (r == s.value or r.can_be_equals(s.value if isinstance(s.value, Referent) else None, Referent.EqualType.WITHINONETEXT)): 
                     return True
         return False
-
     
     @staticmethod
-    def _new1337(_arg1 : str) -> 'InstrumentParticipant':
+    def _new1340(_arg1 : str) -> 'InstrumentParticipant':
         res = InstrumentParticipant()
         res.typ = _arg1
         return res

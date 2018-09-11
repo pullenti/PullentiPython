@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -8,23 +8,20 @@ import typing
 import math
 import io
 from enum import IntEnum
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
 from pullenti.ner._org.OrgProfile import OrgProfile
 from pullenti.ner._org.internal.ResourceHelper import ResourceHelper
 from pullenti.ner._org.OrganizationKind import OrganizationKind
 from pullenti.ner._org.internal.OrgOwnershipHelper import OrgOwnershipHelper
-
 from pullenti.ner.core.GetTextAttr import GetTextAttr
-
 from pullenti.ner._org.internal.OrgItemTypeToken import OrgItemTypeToken
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.morph.LanguageHelper import LanguageHelper
@@ -60,7 +57,7 @@ class OrganizationAnalyzer(Analyzer):
                 (referent if isinstance(referent, OrganizationReferent) else None)._final_correction()
             slots = len(referent.slots)
             res = super().register_referent(referent)
-            if (not self.large_text_regim and isinstance(res, OrganizationReferent) and ((res == referent or len(res.slots) != slots))): 
+            if (not self.large_text_regim and (isinstance(res, OrganizationReferent)) and ((res == referent or len(res.slots) != slots))): 
                 ioi = (res if isinstance(res, OrganizationReferent) else None).create_ontology_item_ex(3, True, False)
                 if (ioi is not None): 
                     self.loc_orgs.add_item(ioi)
@@ -194,7 +191,7 @@ class OrganizationAnalyzer(Analyzer):
                     cur += 1
                     if (not self._on_progress(cur, max0_, kit)): 
                         return
-                if (step > 0 and isinstance(t, ReferentToken) and isinstance(t.get_referent(), OrganizationReferent)): 
+                if (step > 0 and (isinstance(t, ReferentToken)) and (isinstance(t.get_referent(), OrganizationReferent))): 
                     mt = OrganizationAnalyzer._check_alias_after(t if isinstance(t, ReferentToken) else None, t.next0_)
                     if (mt is not None): 
                         if (ad is not None): 
@@ -203,7 +200,7 @@ class OrganizationAnalyzer(Analyzer):
                             ad.aliases.add(term)
                         rt = ReferentToken(t.get_referent(), t, mt.end_token)
                         kit.embed_token(rt)
-                        t = rt
+                        t = (rt)
                 while True:
                     rts = self.__try_attach_orgs(t, ad, step)
                     if (rts is None or len(rts) == 0): 
@@ -220,8 +217,8 @@ class OrganizationAnalyzer(Analyzer):
                         kit.embed_token(rt)
                         emb = True
                         if (rt.begin_char <= t.begin_char): 
-                            t = rt
-                    if ((len(rts) == 1 and t == rts[0] and isinstance(t.next0_, ReferentToken)) and isinstance(t.next0_.get_referent(), OrganizationReferent)): 
+                            t = (rt)
+                    if ((len(rts) == 1 and t == rts[0] and (isinstance(t.next0_, ReferentToken))) and (isinstance(t.next0_.get_referent(), OrganizationReferent))): 
                         org0 = (rts[0].referent if isinstance(rts[0].referent, OrganizationReferent) else None)
                         org1 = (t.next0_.get_referent() if isinstance(t.next0_.get_referent(), OrganizationReferent) else None)
                         if (org1.higher is None and OrgOwnershipHelper.can_be_higher(org0, org1, False) and not OrgOwnershipHelper.can_be_higher(org1, org0, False)): 
@@ -230,7 +227,7 @@ class OrganizationAnalyzer(Analyzer):
                             org1.higher = org0
                             rt1 = ReferentToken._new735(ad.register_referent(org1), t, rtt.end_token, t.next0_.morph)
                             kit.embed_token(rt1)
-                            t = rt1
+                            t = (rt1)
                     if (emb and not ((isinstance(t, ReferentToken)))): 
                         continue
                     break
@@ -238,8 +235,8 @@ class OrganizationAnalyzer(Analyzer):
                     rt = self.__check_ownership(t)
                     if (rt is not None): 
                         kit.embed_token(rt)
-                        t = rt
-                if (isinstance(t, ReferentToken) and isinstance(t.get_referent(), OrganizationReferent)): 
+                        t = (rt)
+                if ((isinstance(t, ReferentToken)) and (isinstance(t.get_referent(), OrganizationReferent))): 
                     rt0 = (t if isinstance(t, ReferentToken) else None)
                     while rt0 is not None:
                         rt0 = self.__try_attach_org_before(rt0, ad)
@@ -248,8 +245,8 @@ class OrganizationAnalyzer(Analyzer):
                         self.__do_post_analyze(rt0, ad)
                         rt0.referent = ad.register_referent(rt0.referent)
                         kit.embed_token(rt0)
-                        t = rt0
-                if (step > 0 and isinstance(t, ReferentToken) and isinstance(t.get_referent(), OrganizationReferent)): 
+                        t = (rt0)
+                if (step > 0 and (isinstance(t, ReferentToken)) and (isinstance(t.get_referent(), OrganizationReferent))): 
                     mt = OrganizationAnalyzer._check_alias_after(t if isinstance(t, ReferentToken) else None, t.next0_)
                     if (mt is not None): 
                         if (ad is not None): 
@@ -258,34 +255,34 @@ class OrganizationAnalyzer(Analyzer):
                             ad.aliases.add(term)
                         rt = ReferentToken(t.get_referent(), t, mt.end_token)
                         kit.embed_token(rt)
-                        t = rt
+                        t = (rt)
                 t = t.next0_
             if (len(ad.referents) == 0): 
                 break
             step += 1
         list0_ = list()
         t = kit.first_token
-        first_pass2986 = True
+        first_pass3956 = True
         while True:
-            if first_pass2986: first_pass2986 = False
+            if first_pass3956: first_pass3956 = False
             else: t = t.next0_
             if (not (t is not None)): break
             org0_ = (t.get_referent() if isinstance(t.get_referent(), OrganizationReferent) else None)
             if (org0_ is None): 
                 continue
             t1 = t.next0_
-            if (((t1 is not None and t1.is_char('(') and t1.next0_ is not None) and isinstance(t1.next0_.get_referent(), OrganizationReferent) and t1.next0_.next0_ is not None) and t1.next0_.next0_.is_char(')')): 
+            if (((t1 is not None and t1.is_char('(') and t1.next0_ is not None) and (isinstance(t1.next0_.get_referent(), OrganizationReferent)) and t1.next0_.next0_ is not None) and t1.next0_.next0_.is_char(')')): 
                 org0 = (t1.next0_.get_referent() if isinstance(t1.next0_.get_referent(), OrganizationReferent) else None)
                 if (org0 == org0_ or org0_.higher == org0): 
                     rt1 = ReferentToken._new735(org0_, t, t1.next0_.next0_, t.morph)
                     kit.embed_token(rt1)
-                    t = rt1
+                    t = (rt1)
                     t1 = t.next0_
                 elif (org0_.higher is None and OrgOwnershipHelper.can_be_higher(org0, org0_, False) and not OrgOwnershipHelper.can_be_higher(org0_, org0, False)): 
                     org0_.higher = org0
                     rt1 = ReferentToken._new735(org0_, t, t1.next0_.next0_, t.morph)
                     kit.embed_token(rt1)
-                    t = rt1
+                    t = (rt1)
                     t1 = t.next0_
             of_tok = None
             if (t1 is not None): 
@@ -318,7 +315,7 @@ class OrganizationAnalyzer(Analyzer):
             if (of_tok is not None and org0_.higher is None): 
                 t2 = t1.next0_
                 while t2 is not None: 
-                    if ((isinstance(t2, TextToken) and (t2 if isinstance(t2, TextToken) else None).term == of_tok.term and t2.next0_ is not None) and isinstance(t2.next0_.get_referent(), OrganizationReferent)): 
+                    if (((isinstance(t2, TextToken)) and (t2 if isinstance(t2, TextToken) else None).term == of_tok.term and t2.next0_ is not None) and (isinstance(t2.next0_.get_referent(), OrganizationReferent))): 
                         t2 = t2.next0_
                         if (org1.higher is not None): 
                             if (not org1.higher.can_be_equals(t2.get_referent(), Referent.EqualType.WITHINONETEXT)): 
@@ -337,13 +334,13 @@ class OrganizationAnalyzer(Analyzer):
                     org0_ = (ad.register_referent(org0_) if isinstance(ad.register_referent(org0_), OrganizationReferent) else None)
                 rt = ReferentToken(org0_, list0_[i], rt0)
                 kit.embed_token(rt)
-                t = rt
+                t = (rt)
                 rt0 = rt
         owners = dict()
         t = kit.first_token
-        first_pass2987 = True
+        first_pass3957 = True
         while True:
-            if first_pass2987: first_pass2987 = False
+            if first_pass3957: first_pass3957 = False
             else: t = t.next0_
             if (not (t is not None)): break
             org0_ = (t.get_referent() if isinstance(t.get_referent(), OrganizationReferent) else None)
@@ -354,10 +351,10 @@ class OrganizationAnalyzer(Analyzer):
                 continue
             for ty in org0_.types: 
                 li = [ ]
-                inoutarg2166 = RefOutArgWrapper(None)
-                inoutres2167 = Utils.tryGetValue(owners, ty, inoutarg2166)
-                li = inoutarg2166.value
-                if (not inoutres2167): 
+                inoutarg2175 = RefOutArgWrapper(None)
+                inoutres2176 = Utils.tryGetValue(owners, ty, inoutarg2175)
+                li = inoutarg2175.value
+                if (not inoutres2176): 
                     li = list()
                     owners[ty] = li
                 childs = None
@@ -372,9 +369,9 @@ class OrganizationAnalyzer(Analyzer):
         owns = list()
         last_mvd_org = None
         t = kit.first_token
-        first_pass2988 = True
+        first_pass3958 = True
         while True:
-            if first_pass2988: first_pass2988 = False
+            if first_pass3958: first_pass3958 = False
             else: t = t.next0_
             if (not (t is not None)): break
             org0_ = (t.get_referent() if isinstance(t.get_referent(), OrganizationReferent) else None)
@@ -387,10 +384,10 @@ class OrganizationAnalyzer(Analyzer):
             owns.clear()
             for ty in org0_.types: 
                 li = [ ]
-                inoutarg2168 = RefOutArgWrapper(None)
-                inoutres2169 = Utils.tryGetValue(owners, ty, inoutarg2168)
-                li = inoutarg2168.value
-                if (not inoutres2169): 
+                inoutarg2177 = RefOutArgWrapper(None)
+                inoutres2178 = Utils.tryGetValue(owners, ty, inoutarg2177)
+                li = inoutarg2177.value
+                if (not inoutres2178): 
                     continue
                 for h in li: 
                     if (not h in owns): 
@@ -416,9 +413,9 @@ class OrganizationAnalyzer(Analyzer):
                 if (org0_.kind != OrganizationKind.DEPARTMENT): 
                     org0_.higher = None
         t = last_mvd_org
-        first_pass2989 = True
+        first_pass3959 = True
         while True:
-            if first_pass2989: first_pass2989 = False
+            if first_pass3959: first_pass3959 = False
             else: t = t.previous
             if (not (t is not None)): break
             if (not ((isinstance(t, ReferentToken)))): 
@@ -429,9 +426,9 @@ class OrganizationAnalyzer(Analyzer):
             t1 = None
             br = False
             tt = t.previous
-            first_pass2990 = True
+            first_pass3960 = True
             while True:
-                if first_pass2990: first_pass2990 = False
+                if first_pass3960: first_pass3960 = False
                 else: tt = tt.previous
                 if (not (tt is not None)): break
                 if (tt.is_char(')')): 
@@ -451,7 +448,7 @@ class OrganizationAnalyzer(Analyzer):
             if (t1 is None): 
                 continue
             t0 = t1
-            if (isinstance(t0.previous, TextToken) and (t0.whitespaces_before_count < 2) and t0.previous.length_char >= 2): 
+            if ((isinstance(t0.previous, TextToken)) and (t0.whitespaces_before_count < 2) and t0.previous.length_char >= 2): 
                 if (t0.previous.chars.is_all_upper or ((not t0.previous.chars.is_all_upper and not t0.previous.chars.is_all_lower and not t0.previous.chars.is_capital_upper))): 
                     t0 = t0.previous
             nam = MiscHelper.get_text_value(t0, t1, GetTextAttr.NO)
@@ -528,8 +525,8 @@ class OrganizationAnalyzer(Analyzer):
             return None
         mt = MetaToken(t, t1.next0_)
         nam = MiscHelper.get_text_value(t, t1, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
-        mt.tag = nam
-        if ((' ') not in nam): 
+        mt.tag = (nam)
+        if (nam.find(' ') < 0): 
             tt = rt.begin_token
             while tt is not None and tt.end_char <= rt.end_char: 
                 if (tt.is_value(mt.tag if isinstance(mt.tag, str) else None, None)): 
@@ -578,7 +575,7 @@ class OrganizationAnalyzer(Analyzer):
         if (t is None): 
             return None
         if (ad is not None and len(ad.local_ontology.items) > 1000): 
-            ad = None
+            ad = (None)
         if (t.chars.is_latin_letter and MiscHelper.is_eng_article(t)): 
             res11 = self.__try_attach_orgs(t.next0_, ad, step)
             if (res11 is not None and len(res11) > 0): 
@@ -611,7 +608,7 @@ class OrganizationAnalyzer(Analyzer):
             return res0
         if (typ is not None): 
             if (typ.root is None or not typ.root.is_pure_prefix): 
-                if (((typ.morph.number & MorphNumber.PLURAL)) != MorphNumber.UNDEFINED): 
+                if ((((typ.morph.number) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
                     t1 = typ.end_token
                     ok = True
                     ok1 = False
@@ -629,7 +626,7 @@ class OrganizationAnalyzer(Analyzer):
                         t1 = t1.next0_
                     if (t1 == t and t1.is_newline_after): 
                         ok = False
-                    rt = None
+                    rt = (None)
                     if (ok): 
                         if (not ok1 and typ.coef > 0): 
                             ok1 = True
@@ -665,7 +662,7 @@ class OrganizationAnalyzer(Analyzer):
                             rt = self.__try_attach_org(t1, ad, OrganizationAnalyzer.AttachType.MULTIPLE, typ, False, 0, -1)
                             if (rt is not None and rt.begin_token == rt.end_token): 
                                 if (not rt.begin_token.get_morph_class_in_dictionary().is_undefined and rt.begin_token.chars.is_all_upper): 
-                                    rt = None
+                                    rt = (None)
                             if (rt is None): 
                                 if (len(res) < 2): 
                                     ok = False
@@ -683,7 +680,7 @@ class OrganizationAnalyzer(Analyzer):
                             t1 = t1.next0_
                         if (ok and len(res) > 1): 
                             return res
-        rt = None
+        rt = (None)
         if (typ is not None and ((typ.is_dep or typ.can_be_dep_before_organization))): 
             rt = self.__try_attach_dep_before_org(typ, None)
             if (rt is None): 
@@ -694,11 +691,11 @@ class OrganizationAnalyzer(Analyzer):
         if ((step == 0 and rt is None and tt is not None) and not tt.chars.is_all_lower and tt.chars.is_cyrillic_letter): 
             s = tt.term
             if (s.startswith("ГУ") and len(s) > 3 and ((len(s) > 4 or s == "ГУВД"))): 
-                tt.term = ("МВД" if s == "ГУВД" else tt.term[2 : ])
+                tt.term = ("МВД" if s == "ГУВД" else tt.term[2:])
                 inv = tt.invariant_prefix_length
-                tt.invariant_prefix_length = 0
+                tt.invariant_prefix_length = (0)
                 max0_ = tt.max_length
-                tt.max_length = len(tt.term)
+                tt.max_length = (len(tt.term))
                 rt = self.__try_attach_org(tt, ad, OrganizationAnalyzer.AttachType.NORMALAFTERDEP, None, False, 0, -1)
                 tt.term = s
                 tt.invariant_prefix_length = inv
@@ -708,7 +705,8 @@ class OrganizationAnalyzer(Analyzer):
                     typ.typ = "главное управление"
                     rt0 = self.__try_attach_dep_before_org(typ, rt)
                     if (rt0 is not None): 
-                        rt.referent = ad.register_referent(rt.referent)
+                        if (ad is not None): 
+                            rt.referent = ad.register_referent(rt.referent)
                         rt.referent.add_occurence(TextAnnotation(t, rt.end_token, rt.referent))
                         (rt0.referent if isinstance(rt0.referent, OrganizationReferent) else None).higher = (rt.referent if isinstance(rt.referent, OrganizationReferent) else None)
                         li2 = list()
@@ -727,11 +725,11 @@ class OrganizationAnalyzer(Analyzer):
                 elif (s == "УФМС" or s == "ОУФМС"): 
                     tt.term = "ФМС"
                 else: 
-                    tt.term = tt.term[1 : ]
+                    tt.term = tt.term[1:]
                 inv = tt.invariant_prefix_length
-                tt.invariant_prefix_length = 0
+                tt.invariant_prefix_length = (0)
                 max0_ = tt.max_length
-                tt.max_length = len(tt.term)
+                tt.max_length = (len(tt.term))
                 rt = self.__try_attach_org(tt, ad, OrganizationAnalyzer.AttachType.NORMALAFTERDEP, None, False, 0, -1)
                 tt.term = s
                 tt.invariant_prefix_length = inv
@@ -777,16 +775,16 @@ class OrganizationAnalyzer(Analyzer):
                                         (rt0.referent if isinstance(rt0.referent, OrganizationReferent) else None).add_name(nam.value, True, None)
                         if (len(rt0.referent.slots) > 3): 
                             if (tt.previous is not None and ((tt.previous.morph.class0_.is_adjective and not tt.previous.morph.class0_.is_verb)) and tt.whitespaces_before_count == 1): 
-                                adj = Morphology.get_wordform(tt.previous.get_source_text().upper(), MorphBaseInfo._new2170(MorphClass.ADJECTIVE, gen, tt.previous.morph.language))
+                                adj = Morphology.get_wordform(tt.previous.get_source_text().upper(), MorphBaseInfo._new2179(MorphClass.ADJECTIVE, gen, tt.previous.morph.language))
                                 if (adj is not None and not adj.startswith("УПОЛНОМОЧ") and not adj.startswith("ОПЕРУПОЛНОМОЧ")): 
                                     tyy = "{0} {1}".format(adj.lower(), typ.typ)
                                     rt0.begin_token = tt.previous
                                     if (rt0.begin_token.previous is not None and rt0.begin_token.previous.is_hiphen and rt0.begin_token.previous.previous is not None): 
                                         tt0 = rt0.begin_token.previous.previous
-                                        if (tt0.chars == rt0.begin_token.chars and isinstance(tt0, TextToken)): 
+                                        if (tt0.chars == rt0.begin_token.chars and (isinstance(tt0, TextToken))): 
                                             adj = (tt0 if isinstance(tt0, TextToken) else None).term
                                             if (tt0.morph.class0_.is_adjective and not tt0.morph.contains_attr("неизм.", MorphClass())): 
-                                                adj = Morphology.get_wordform(adj, MorphBaseInfo._new2170(MorphClass.ADJECTIVE, gen, tt0.morph.language))
+                                                adj = Morphology.get_wordform(adj, MorphBaseInfo._new2179(MorphClass.ADJECTIVE, gen, tt0.morph.language))
                                             tyy = "{0} {1}".format(adj.lower(), tyy)
                                             rt0.begin_token = tt0
                                     if (typ.name_is_name): 
@@ -809,7 +807,7 @@ class OrganizationAnalyzer(Analyzer):
                             li2 = list()
                             li2.append(rt0)
                             return li2
-                    rt = None
+                    rt = (None)
         if (rt is None): 
             if (step > 0 and typ is None): 
                 if (not BracketHelper.is_bracket(t, False)): 
@@ -841,7 +839,7 @@ class OrganizationAnalyzer(Analyzer):
                 if (t.chars.is_latin_letter and NumberHelper.try_parse_roman(t) is None): 
                     nam = OrgItemNameToken.try_attach(t, None, False, True)
                     if (nam is not None): 
-                        name_ = Utils.newStringIO(None)
+                        name_ = io.StringIO()
                         print(nam.value, end="", file=name_)
                         rt.end_token = nam.end_token
                         ttt = nam.end_token.next0_
@@ -876,16 +874,16 @@ class OrganizationAnalyzer(Analyzer):
                             org0_.add_name(MiscHelper.get_text_value_of_meta_token(br, GetTextAttr.NO), True, br.begin_token.next0_)
                             if (br.begin_token.next0_ == br.end_token.previous and br.begin_token.next0_.get_morph_class_in_dictionary().is_undefined): 
                                 for wf in br.begin_token.next0_.morph.items: 
-                                    if (wf.case.is_genitive and isinstance(wf, MorphWordForm)): 
+                                    if (wf.case.is_genitive and (isinstance(wf, MorphWordForm))): 
                                         org0_.add_name((wf if isinstance(wf, MorphWordForm) else None).normal_case, True, None)
                             rt.end_token = br.end_token
                 if (len(org0_.slots) == 0): 
-                    rt = None
+                    rt = (None)
         if (rt is None): 
             if (BracketHelper.can_be_start_of_sequence(t, False, False)): 
                 br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
                 if (br is None or br.length_char > 100): 
-                    br = None
+                    br = (None)
                 if (br is not None): 
                     t1 = br.end_token.next0_
                     if (t1 is not None and t1.is_comma): 
@@ -933,9 +931,9 @@ class OrganizationAnalyzer(Analyzer):
                 if (BracketHelper.can_be_end_of_sequence(rt.end_token, True, None, False)): 
                     ok = False
                     ttt = tt1
-                    first_pass2991 = True
+                    first_pass3961 = True
                     while True:
-                        if first_pass2991: first_pass2991 = False
+                        if first_pass3961: first_pass3961 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_char('.')): 
@@ -1023,7 +1021,7 @@ class OrganizationAnalyzer(Analyzer):
         o = (rt.referent if isinstance(rt.referent, OrganizationReferent) else None)
         if ((rt.kit.ontology is not None and o.ontology_items is None and o.higher is None) and o._m_temp_parent_org is None): 
             ot = rt.kit.ontology.attach_referent(o)
-            if (ot is not None and len(ot) == 1 and isinstance(ot[0].referent, OrganizationReferent)): 
+            if (ot is not None and len(ot) == 1 and (isinstance(ot[0].referent, OrganizationReferent))): 
                 oo = (ot[0].referent if isinstance(ot[0].referent, OrganizationReferent) else None)
                 o.merge_slots(oo, False)
                 o.ontology_items = ot
@@ -1051,11 +1049,11 @@ class OrganizationAnalyzer(Analyzer):
                                 rt_ex2.set_default_local_onto(rt.kit.processor)
                                 (sl.value if isinstance(sl.value, Referent) else None).add_ext_referent(rt_ex2)
         if (o.higher is None and o._m_temp_parent_org is None): 
-            if (isinstance(rt.begin_token.previous, ReferentToken) and isinstance(rt.begin_token.previous.get_referent(), OrganizationReferent)): 
+            if ((isinstance(rt.begin_token.previous, ReferentToken)) and (isinstance(rt.begin_token.previous.get_referent(), OrganizationReferent))): 
                 oo = (rt.begin_token.previous.get_referent() if isinstance(rt.begin_token.previous.get_referent(), OrganizationReferent) else None)
                 if (OrgOwnershipHelper.can_be_higher(oo, o, False)): 
                     o._m_temp_parent_org = oo
-            if (o._m_temp_parent_org is None and isinstance(rt.end_token.next0_, ReferentToken) and isinstance(rt.end_token.next0_.get_referent(), OrganizationReferent)): 
+            if (o._m_temp_parent_org is None and (isinstance(rt.end_token.next0_, ReferentToken)) and (isinstance(rt.end_token.next0_.get_referent(), OrganizationReferent))): 
                 oo = (rt.end_token.next0_.get_referent() if isinstance(rt.end_token.next0_.get_referent(), OrganizationReferent) else None)
                 if (OrgOwnershipHelper.can_be_higher(oo, o, False)): 
                     o._m_temp_parent_org = oo
@@ -1084,9 +1082,9 @@ class OrganizationAnalyzer(Analyzer):
         has_inn = False
         has_ok = 0
         te = None
-        first_pass2992 = True
+        first_pass3962 = True
         while True:
-            if first_pass2992: first_pass2992 = False
+            if first_pass3962: first_pass3962 = False
             else: ttt = ttt.next0_
             if (not (ttt is not None)): break
             if (ttt.is_char_of(",;") or ttt.morph.class0_.is_preposition): 
@@ -1133,11 +1131,11 @@ class OrganizationAnalyzer(Analyzer):
                         keyword_ = True
                         continue
                 if (ttt.is_value("REGISTRATION", None) and ttt.next0_ is not None and ttt.next0_.is_value("NUMBER", None)): 
-                    tmp = Utils.newStringIO(None)
+                    tmp = io.StringIO()
                     tt3 = ttt.next0_.next0_
-                    first_pass2993 = True
+                    first_pass3963 = True
                     while True:
-                        if first_pass2993: first_pass2993 = False
+                        if first_pass3963: first_pass3963 = False
                         else: tt3 = tt3.next0_
                         if (not (tt3 is not None)): break
                         if (tt3.is_whitespace_before and tmp.tell() > 0): 
@@ -1155,7 +1153,7 @@ class OrganizationAnalyzer(Analyzer):
                     if (tmp.tell() > 0): 
                         rt.referent.add_slot(OrganizationReferent.ATTR_MISC, Utils.toStringStringIO(tmp), False, 0)
                     continue
-                if ((ttt.is_value("REGISTERED", None) and ttt.next0_ is not None and ttt.next0_.is_value("IN", None)) and isinstance(ttt.next0_.next0_, ReferentToken) and isinstance(ttt.next0_.next0_.get_referent(), GeoReferent)): 
+                if ((ttt.is_value("REGISTERED", None) and ttt.next0_ is not None and ttt.next0_.is_value("IN", None)) and (isinstance(ttt.next0_.next0_, ReferentToken)) and (isinstance(ttt.next0_.next0_.get_referent(), GeoReferent))): 
                     rt.referent.add_slot(OrganizationReferent.ATTR_MISC, ttt.next0_.next0_.get_referent(), False, 0)
                     ttt = ttt.next0_.next0_
                     rt.end_token = ttt
@@ -1179,12 +1177,12 @@ class OrganizationAnalyzer(Analyzer):
                 break
         if (te is not None and len(refs) > 0 and ((te.is_char(')') or has_inn or has_ok > 0))): 
             for rr in refs: 
-                if (rr.type_name == OrganizationAnalyzer.__geoname): 
+                if (rr.type_name == OrganizationAnalyzer.GEONAME): 
                     (rt.referent if isinstance(rt.referent, OrganizationReferent) else None)._add_geo_object(rr)
                 else: 
                     rt.referent.add_slot(OrganizationReferent.ATTR_MISC, rr, False, 0)
             rt.end_token = te
-        if ((rt.whitespaces_before_count < 2) and isinstance(rt.begin_token.previous, TextToken) and rt.begin_token.previous.chars.is_all_upper): 
+        if ((rt.whitespaces_before_count < 2) and (isinstance(rt.begin_token.previous, TextToken)) and rt.begin_token.previous.chars.is_all_upper): 
             term = (rt.begin_token.previous if isinstance(rt.begin_token.previous, TextToken) else None).term
             for s in o.slots: 
                 if (isinstance(s.value, str)): 
@@ -1208,7 +1206,7 @@ class OrganizationAnalyzer(Analyzer):
         if (t0.next0_ is not None and BracketHelper.can_be_start_of_sequence(t0, True, False)): 
             t = t0.next0_
             br = True
-        if (isinstance(t, TextToken) and t.chars.is_letter and not t.chars.is_all_lower): 
+        if ((isinstance(t, TextToken)) and t.chars.is_letter and not t.chars.is_all_lower): 
             if (t.length_char > 3): 
                 pass
             elif (t.length_char > 1 and t.chars.is_all_upper): 
@@ -1241,9 +1239,9 @@ class OrganizationAnalyzer(Analyzer):
             return None
         cou = 0
         ttt = t.previous
-        first_pass2994 = True
+        first_pass3964 = True
         while True:
-            if first_pass2994: first_pass2994 = False
+            if first_pass3964: first_pass3964 = False
             else: ttt = ttt.previous; cou += 1
             if (not (ttt is not None and (cou < 100))): break
             org00 = (ttt.get_referent() if isinstance(ttt.get_referent(), OrganizationReferent) else None)
@@ -1253,7 +1251,7 @@ class OrganizationAnalyzer(Analyzer):
                 str0_ = n
                 ii = n.find(' ')
                 if (ii > 0): 
-                    str0_ = n[0 : (ii)]
+                    str0_ = n[0:0+ii]
                 if (t.is_value(str0_, None)): 
                     if (ad is not None): 
                         ad.aliases.add(Termin._new118(str0_, org00))
@@ -1270,9 +1268,9 @@ class OrganizationAnalyzer(Analyzer):
         from pullenti.ner._org.internal.OrgItemNumberToken import OrgItemNumberToken
         from pullenti.ner._org.internal.OrgItemEponymToken import OrgItemEponymToken
         te = None
-        first_pass2995 = True
+        first_pass3965 = True
         while True:
-            if first_pass2995: first_pass2995 = False
+            if first_pass3965: first_pass3965 = False
             else: t = t.next0_
             if (not (t is not None)): break
             ont = OrgItemNumberToken.try_attach(t, False, None)
@@ -1291,7 +1289,7 @@ class OrganizationAnalyzer(Analyzer):
             break
         return te
     
-    __geoname = "GEO"
+    GEONAME = "GEO"
     
     def __is_geo(self, t : 'Token', can_be_adjective : bool=False) -> object:
         from pullenti.ner.address.AddressReferent import AddressReferent
@@ -1301,7 +1299,7 @@ class OrganizationAnalyzer(Analyzer):
             t = t.next0_
         r = t.get_referent()
         if (r is not None): 
-            if (r.type_name == OrganizationAnalyzer.__geoname): 
+            if (r.type_name == OrganizationAnalyzer.GEONAME): 
                 if (t.whitespaces_before_count <= 15 or t.morph.case.is_genitive): 
                     return r
             if (isinstance(r, AddressReferent)): 
@@ -1345,9 +1343,9 @@ class OrganizationAnalyzer(Analyzer):
         if (not can_has_geo): 
             if (org0_._types_contains("комитет") or org0_._types_contains("академия") or org0_._types_contains("инспекция")): 
                 can_has_geo = True
-        first_pass2996 = True
+        first_pass3966 = True
         while True:
-            if first_pass2996: first_pass2996 = False
+            if first_pass3966: first_pass3966 = False
             else: t = (((None if t is None else t.next0_)))
             if (not (t is not None)): break
             if (((t.is_value("ПО", None) or t.is_value("В", None) or t.is_value("IN", None))) and t.next0_ is not None): 
@@ -1386,23 +1384,23 @@ class OrganizationAnalyzer(Analyzer):
                     continue
                 if (t.is_char('(')): 
                     r = self.__is_geo(t.next0_, False)
-                    if (isinstance(r, ReferentToken) and (r if isinstance(r, ReferentToken) else None).end_token.next0_ is not None and (r if isinstance(r, ReferentToken) else None).end_token.next0_.is_char(')')): 
+                    if ((isinstance(r, ReferentToken)) and (r if isinstance(r, ReferentToken) else None).end_token.next0_ is not None and (r if isinstance(r, ReferentToken) else None).end_token.next0_.is_char(')')): 
                         if (not org0_._add_geo_object(r)): 
                             break
                         t1 = (r if isinstance(r, ReferentToken) else None).end_token.next0_
                         t = t1
                         continue
-                    if (isinstance(r, GeoReferent) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
+                    if ((isinstance(r, GeoReferent)) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
                         if (not org0_._add_geo_object(r)): 
                             break
                         t1 = t.next0_.next0_
                         t = t1
                         continue
-            if (isinstance(t.get_referent(), GeoReferent) and (t.whitespaces_before_count < 2)): 
+            if ((isinstance(t.get_referent(), GeoReferent)) and (t.whitespaces_before_count < 2)): 
                 if (org0_.find_slot(OrganizationReferent.ATTR_GEO, t.get_referent(), True) is not None): 
                     t1 = t
                     continue
-            if (((t.is_value("ПРИ", None) or t.is_value("В", None))) and t.next0_ is not None and isinstance(t.next0_, ReferentToken)): 
+            if (((t.is_value("ПРИ", None) or t.is_value("В", None))) and t.next0_ is not None and (isinstance(t.next0_, ReferentToken))): 
                 r = t.next0_.get_referent()
                 if (isinstance(r, OrganizationReferent)): 
                     if (t.is_value("В", None) and not OrgOwnershipHelper.can_be_higher(r if isinstance(r, OrganizationReferent) else None, org0_, False)): 
@@ -1453,13 +1451,13 @@ class OrganizationAnalyzer(Analyzer):
                     if (t.next0_.next0_ != br.end_token): 
                         break
                     r = t.next0_.get_referent()
-                    if (r.type_name == OrganizationAnalyzer.__geoname): 
+                    if (r.type_name == OrganizationAnalyzer.GEONAME): 
                         if (not org0_._add_geo_object(r)): 
                             break
                         t1 = br.end_token
                         t = t1
                         continue
-                    if (isinstance(r, OrganizationReferent) and not is_global): 
+                    if ((isinstance(r, OrganizationReferent)) and not is_global): 
                         if (not attach_for_new_org and not org0_.can_be_equals(r, Referent.EqualType.WITHINONETEXT)): 
                             break
                         org0_.merge_slots(r, True)
@@ -1570,9 +1568,9 @@ class OrganizationAnalyzer(Analyzer):
         cou_before = 0
         t0 = None
         t = res.begin_token.previous
-        first_pass2997 = True
+        first_pass3967 = True
         while True:
-            if first_pass2997: first_pass2997 = False
+            if first_pass3967: first_pass3967 = False
             else: t = t.previous
             if (not (t is not None)): break
             cou_before += t.whitespaces_after_count
@@ -1595,9 +1593,9 @@ class OrganizationAnalyzer(Analyzer):
         hi_after = None
         cou_after = 0
         t = res.end_token.next0_
-        first_pass2998 = True
+        first_pass3968 = True
         while True:
-            if first_pass2998: first_pass2998 = False
+            if first_pass3968: first_pass3968 = False
             else: t = t.next0_
             if (not (t is not None)): break
             cou_before += t.whitespaces_before_count
@@ -1644,7 +1642,7 @@ class OrganizationAnalyzer(Analyzer):
                 else: 
                     break
                 tt = tt.next0_
-            if ((tt is not None and tt.is_char('(') and isinstance(tt.next0_, ReferentToken)) and tt.next0_.next0_ is not None and tt.next0_.next0_.is_char(')')): 
+            if ((tt is not None and tt.is_char('(') and (isinstance(tt.next0_, ReferentToken))) and tt.next0_.next0_ is not None and tt.next0_.next0_.is_char(')')): 
                 br = True
                 tt = tt.next0_
             if (isinstance(tt, ReferentToken)): 
@@ -1699,9 +1697,9 @@ class OrganizationAnalyzer(Analyzer):
         if (org0_.kind == OrganizationKind.DEPARTMENT and org0_.higher is None and org0_._m_temp_parent_org is None): 
             cou = 0
             tt = tt0.previous
-            first_pass2999 = True
+            first_pass3969 = True
             while True:
-                if first_pass2999: first_pass2999 = False
+                if first_pass3969: first_pass3969 = False
                 else: tt = tt.previous
                 if (not (tt is not None)): break
                 if (tt.is_newline_after): 
@@ -1763,16 +1761,16 @@ class OrganizationAnalyzer(Analyzer):
         org0_.add_name(name_, True, begin)
         return ReferentToken(org0_, begin, et)
     
-    __m_inited = False
+    M_INITED = False
     
     @staticmethod
     def initialize() -> None:
         from pullenti.ner._org.internal.OrgItemEngItem import OrgItemEngItem
         from pullenti.ner._org.internal.OrgItemNameToken import OrgItemNameToken
         from pullenti.ner.ProcessorService import ProcessorService
-        if (OrganizationAnalyzer.__m_inited): 
+        if (OrganizationAnalyzer.M_INITED): 
             return
-        OrganizationAnalyzer.__m_inited = True
+        OrganizationAnalyzer.M_INITED = True
         try: 
             OrganizationAnalyzer.__init_sport()
             OrganizationAnalyzer.__init_politic()
@@ -1796,22 +1794,22 @@ class OrganizationAnalyzer(Analyzer):
             t1 = t.next0_.next0_
             if (t.next0_.is_char('.') and t1.next0_ is not None and t1.next0_.is_char('.')): 
                 t1 = t1.next0_
-            return MetaToken._new2174(t, t1, "городская больница", MorphCollection._new2173(MorphGender.FEMINIE))
+            return MetaToken._new2183(t, t1, "городская больница", MorphCollection._new2182(MorphGender.FEMINIE))
         if ((s == "ИН" and t.next0_ is not None and t.next0_.is_hiphen) and t.next0_.next0_ is not None and t.next0_.next0_.is_value("Т", None)): 
-            return MetaToken._new2174(t, t.next0_.next0_, "институт", MorphCollection._new2173(MorphGender.MASCULINE))
-        if ((s == "Б" and t.next0_ is not None and t.next0_.is_hiphen) and isinstance(t.next0_.next0_, TextToken) and ((t.next0_.next0_.is_value("ЦА", None) or t.next0_.next0_.is_value("ЦУ", None)))): 
-            return MetaToken._new2174(t, t.next0_.next0_, "больница", MorphCollection._new2173(MorphGender.FEMINIE))
+            return MetaToken._new2183(t, t.next0_.next0_, "институт", MorphCollection._new2182(MorphGender.MASCULINE))
+        if ((s == "Б" and t.next0_ is not None and t.next0_.is_hiphen) and (isinstance(t.next0_.next0_, TextToken)) and ((t.next0_.next0_.is_value("ЦА", None) or t.next0_.next0_.is_value("ЦУ", None)))): 
+            return MetaToken._new2183(t, t.next0_.next0_, "больница", MorphCollection._new2182(MorphGender.FEMINIE))
         if (s == "ГКБ"): 
-            return MetaToken._new2174(t, t, "городская клиническая больница", MorphCollection._new2173(MorphGender.FEMINIE))
+            return MetaToken._new2183(t, t, "городская клиническая больница", MorphCollection._new2182(MorphGender.FEMINIE))
         if (t.is_value("ПОЛИКЛИНИКА", None)): 
-            return MetaToken._new2174(t, t, "поликлиника", MorphCollection._new2173(MorphGender.FEMINIE))
+            return MetaToken._new2183(t, t, "поликлиника", MorphCollection._new2182(MorphGender.FEMINIE))
         if (t.is_value("БОЛЬНИЦА", None)): 
-            return MetaToken._new2174(t, t, "больница", MorphCollection._new2173(MorphGender.FEMINIE))
+            return MetaToken._new2183(t, t, "больница", MorphCollection._new2182(MorphGender.FEMINIE))
         if (t.is_value("ДЕТСКИЙ", None)): 
             mt = OrganizationAnalyzer.__try_attach_org_med_typ(t.next0_)
             if (mt is not None): 
                 mt.begin_token = t
-                mt.tag = "{0} {1}".format(("детская" if mt.morph.gender == MorphGender.FEMINIE else "детский"), mt.tag)
+                mt.tag = ("{0} {1}".format(("детская" if mt.morph.gender == MorphGender.FEMINIE else "детский"), mt.tag))
                 return mt
         return None
     
@@ -1883,7 +1881,7 @@ class OrganizationAnalyzer(Analyzer):
         if (rt is None): 
             return None
         t0 = rt.begin_token.previous
-        if (isinstance(t0, TextToken) and (t0.whitespaces_after_count < 2) and t0.morph.class0_.is_adjective): 
+        if ((isinstance(t0, TextToken)) and (t0.whitespaces_after_count < 2) and t0.morph.class0_.is_adjective): 
             rt0 = t0.kit.process_referent("GEO", t0)
             if (rt0 is not None and rt0.morph.class0_.is_adjective): 
                 rt.begin_token = rt0.begin_token
@@ -1927,7 +1925,7 @@ class OrganizationAnalyzer(Analyzer):
                 if (s == "HTTP"): 
                     prof = OrgProfile.MEDIA
                     tname1 = t
-            elif (isinstance(t.get_referent(), GeoReferent) and t.chars.is_letter): 
+            elif ((isinstance(t.get_referent(), GeoReferent)) and t.chars.is_letter): 
                 if ((t.next0_ is not None and (t.next0_.whitespaces_after_count < 3) and t.next0_.chars.is_latin_letter) and ((t.next0_.is_value("POST", None) or t.next0_.is_value("TODAY", None)))): 
                     tname1 = t.next0_
                     if (OrganizationAnalyzer.__is_std_press_end(tname1)): 
@@ -1979,11 +1977,11 @@ class OrganizationAnalyzer(Analyzer):
             t00 = t00.previous
         if (t00 is not None and t00.morph.class0_.is_preposition): 
             t00 = t00.previous
-        tok = OrganizationAnalyzer.__m_prop_names.try_parse(t, TerminParseAttr.NO)
+        tok = OrganizationAnalyzer.M_PROP_NAMES.try_parse(t, TerminParseAttr.NO)
         if (tok is None and t.chars.is_latin_letter and t.is_value("THE", None)): 
-            tok = OrganizationAnalyzer.__m_prop_names.try_parse(t.next0_, TerminParseAttr.NO)
+            tok = OrganizationAnalyzer.M_PROP_NAMES.try_parse(t.next0_, TerminParseAttr.NO)
         if (tok is not None): 
-            prof = Utils.valToEnum(tok.termin.tag, OrgProfile)
+            prof = (Utils.valToEnum(tok.termin.tag, OrgProfile))
         if (br is not None): 
             t1 = br.end_token.previous
             tt = br.begin_token
@@ -2021,7 +2019,7 @@ class OrganizationAnalyzer(Analyzer):
         if ((tok is None and not ok and tname1 is None) and prof == OrgProfile.UNDEFINED): 
             if (br is None or not t.chars.is_capital_upper): 
                 return None
-            tok1 = OrganizationAnalyzer.__m_prop_pref.try_parse(t00, TerminParseAttr.NO)
+            tok1 = OrganizationAnalyzer.M_PROP_PREF.try_parse(t00, TerminParseAttr.NO)
             if (tok1 is not None): 
                 pr = Utils.valToEnum(tok1.termin.tag, OrgProfile)
                 if (prof != OrgProfile.UNDEFINED and prof != pr): 
@@ -2029,9 +2027,9 @@ class OrganizationAnalyzer(Analyzer):
             else: 
                 if (t.chars.is_letter and not t.chars.is_cyrillic_letter): 
                     tt = t.next0_
-                    first_pass3000 = True
+                    first_pass3970 = True
                     while True:
-                        if first_pass3000: first_pass3000 = False
+                        if first_pass3970: first_pass3970 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (isinstance(tt.get_referent(), GeoReferent)): 
@@ -2061,14 +2059,14 @@ class OrganizationAnalyzer(Analyzer):
         if (not ok): 
             cou = 0
             tt = t0.previous
-            first_pass3001 = True
+            first_pass3971 = True
             while True:
-                if first_pass3001: first_pass3001 = False
+                if first_pass3971: first_pass3971 = False
                 else: tt = tt.previous; cou += 1
                 if (not (tt is not None and (cou < 100))): break
                 if (MiscHelper.can_be_start_of_sentence(tt.next0_)): 
                     break
-                tok1 = OrganizationAnalyzer.__m_prop_pref.try_parse(tt, TerminParseAttr.NO)
+                tok1 = OrganizationAnalyzer.M_PROP_PREF.try_parse(tt, TerminParseAttr.NO)
                 if (tok1 is not None): 
                     pr = Utils.valToEnum(tok1.termin.tag, OrgProfile)
                     if (prof != OrgProfile.UNDEFINED and prof != pr): 
@@ -2087,14 +2085,14 @@ class OrganizationAnalyzer(Analyzer):
             cou = 0
             if (not ok): 
                 tt = t.next0_
-                first_pass3002 = True
+                first_pass3972 = True
                 while True:
-                    if first_pass3002: first_pass3002 = False
+                    if first_pass3972: first_pass3972 = False
                     else: tt = tt.next0_; cou += 1
                     if (not (tt is not None and (cou < 10))): break
                     if (MiscHelper.can_be_start_of_sentence(tt) and prof != OrgProfile.SPORT): 
                         break
-                    tok1 = OrganizationAnalyzer.__m_prop_pref.try_parse(tt, TerminParseAttr.NO)
+                    tok1 = OrganizationAnalyzer.M_PROP_PREF.try_parse(tt, TerminParseAttr.NO)
                     if (tok1 is not None): 
                         pr = Utils.valToEnum(tok1.termin.tag, OrgProfile)
                         if (prof != OrgProfile.UNDEFINED and prof != pr): 
@@ -2147,7 +2145,7 @@ class OrganizationAnalyzer(Analyzer):
                     org0_.add_name(v.canonic_text, True, None)
         else: 
             return None
-        if (((((prof & OrgProfile.MEDIA)) != OrgProfile.UNDEFINED)) and t0.previous is not None): 
+        if ((((((prof) & (OrgProfile.MEDIA))) != (OrgProfile.UNDEFINED))) and t0.previous is not None): 
             if ((t0.previous.is_value("ЖУРНАЛ", None) or t0.previous.is_value("ИЗДАНИЕ", None) or t0.previous.is_value("ИЗДАТЕЛЬСТВО", None)) or t0.previous.is_value("АГЕНТСТВО", None)): 
                 t0 = t0.previous
                 org0_.add_type_str(t0.get_normal_case_text(MorphClass.NOUN, True, MorphGender.UNDEFINED, False).lower())
@@ -2196,7 +2194,7 @@ class OrganizationAnalyzer(Analyzer):
                 geo_ = (t.get_referent() if isinstance(t.get_referent(), GeoReferent) else None)
             t1 = t
             if (t.previous is not None and t.previous.morph.class0_.is_adjective): 
-                if (OrganizationAnalyzer.__m_sports.try_parse(t.previous, TerminParseAttr.NO) is not None): 
+                if (OrganizationAnalyzer.M_SPORTS.try_parse(t.previous, TerminParseAttr.NO) is not None): 
                     cou += 1
                     t = t.previous
         else: 
@@ -2207,14 +2205,14 @@ class OrganizationAnalyzer(Analyzer):
                 return None
             if (((npt.noun.is_value("АССОЦИАЦИЯ", None) or npt.noun.is_value("ФЕДЕРАЦИЯ", None) or npt.noun.is_value("СОЮЗ", None)) or npt.noun.is_value("СБОРНАЯ", None) or npt.noun.is_value("КОМАНДА", None)) or npt.noun.is_value("КЛУБ", None)): 
                 typ = npt.noun.get_normal_case_text(MorphClass.NOUN, True, MorphGender.UNDEFINED, False).lower()
-            elif (isinstance(t, TextToken) and t.chars.is_all_upper and (t if isinstance(t, TextToken) else None).term == "ФК"): 
+            elif ((isinstance(t, TextToken)) and t.chars.is_all_upper and (t if isinstance(t, TextToken) else None).term == "ФК"): 
                 typ = "команда"
             else: 
                 return None
             if (typ == "команда"): 
                 cou -= 1
             for a in npt.adjectives: 
-                tok = OrganizationAnalyzer.__m_sports.try_parse(a.begin_token, TerminParseAttr.NO)
+                tok = OrganizationAnalyzer.M_SPORTS.try_parse(a.begin_token, TerminParseAttr.NO)
                 if (tok is not None): 
                     cou += 1
                 elif (a.begin_token.is_value("ОЛИМПИЙСКИЙ", None)): 
@@ -2225,9 +2223,9 @@ class OrganizationAnalyzer(Analyzer):
         propname = None
         del_word = None
         tt = t1.next0_
-        first_pass3003 = True
+        first_pass3973 = True
         while True:
-            if first_pass3003: first_pass3003 = False
+            if first_pass3973: first_pass3973 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.whitespaces_before_count > 3): 
@@ -2242,12 +2240,12 @@ class OrganizationAnalyzer(Analyzer):
                 if (typ == "сборная"): 
                     cou += 1
                 continue
-            if (tt.is_value("СТРАНА", None) and isinstance(tt, TextToken)): 
+            if (tt.is_value("СТРАНА", None) and (isinstance(tt, TextToken))): 
                 t11 = tt
                 t1 = t11
                 del_word = (tt if isinstance(tt, TextToken) else None).term
                 continue
-            tok = OrganizationAnalyzer.__m_sports.try_parse(tt, TerminParseAttr.NO)
+            tok = OrganizationAnalyzer.M_SPORTS.try_parse(tt, TerminParseAttr.NO)
             if (tok is not None): 
                 cou += 1
                 tt = tok.end_token
@@ -2257,7 +2255,7 @@ class OrganizationAnalyzer(Analyzer):
             if (tt.chars.is_all_lower or tt.get_morph_class_in_dictionary().is_verb): 
                 pass
             else: 
-                tok = OrganizationAnalyzer.__m_prop_names.try_parse(tt, TerminParseAttr.NO)
+                tok = OrganizationAnalyzer.M_PROP_NAMES.try_parse(tt, TerminParseAttr.NO)
             if (tok is not None): 
                 propname = tok.termin.canonic_text
                 cou += 1
@@ -2270,7 +2268,7 @@ class OrganizationAnalyzer(Analyzer):
                 br = BracketHelper.try_parse(tt, BracketParseAttr.NO, 100)
                 if (br is None): 
                     break
-                tok = OrganizationAnalyzer.__m_prop_names.try_parse(tt.next0_, TerminParseAttr.NO)
+                tok = OrganizationAnalyzer.M_PROP_NAMES.try_parse(tt.next0_, TerminParseAttr.NO)
                 if (tok is not None or cou > 0): 
                     propname = MiscHelper.get_text_value(tt.next0_, br.end_token, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
                     cou += 1
@@ -2281,7 +2279,7 @@ class OrganizationAnalyzer(Analyzer):
             npt1 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
             if (npt1 is None): 
                 break
-            tok = OrganizationAnalyzer.__m_sports.try_parse(npt1.noun.begin_token, TerminParseAttr.NO)
+            tok = OrganizationAnalyzer.M_SPORTS.try_parse(npt1.noun.begin_token, TerminParseAttr.NO)
             if (tok is None): 
                 break
             cou += 1
@@ -2294,7 +2292,7 @@ class OrganizationAnalyzer(Analyzer):
         org0_.add_type_str(typ)
         if (typ == "федерация"): 
             org0_.add_type_str("ассоциация")
-        name_ = MiscHelper.get_text_value(t, t11, Utils.valToEnum(GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE | GetTextAttr.IGNOREGEOREFERENT, GetTextAttr))
+        name_ = MiscHelper.get_text_value(t, t11, Utils.valToEnum((GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE) | (GetTextAttr.IGNOREGEOREFERENT), GetTextAttr))
         if (name_ is not None and del_word is not None): 
             if (" " + del_word in name_): 
                 name_ = name_.replace(" " + del_word, "")
@@ -2311,18 +2309,18 @@ class OrganizationAnalyzer(Analyzer):
         org0_.add_profile(OrgProfile.SPORT)
         return ReferentToken(org0_, t, t1)
     
-    __m_sports = None
+    M_SPORTS = None
     
-    __m_prop_names = None
+    M_PROP_NAMES = None
     
-    __m_prop_pref = None
+    M_PROP_PREF = None
     
     @staticmethod
     def __init_sport() -> None:
         from pullenti.ner.core.TerminCollection import TerminCollection
         from pullenti.ner.core.Termin import Termin
         from pullenti.morph.MorphLang import MorphLang
-        OrganizationAnalyzer.__m_sports = TerminCollection()
+        OrganizationAnalyzer.M_SPORTS = TerminCollection()
         for s in ["акробатика;акробатический;акробат", "бадминтон;бадминтонный;бадминтонист", "баскетбол;баскетбольный;баскетболист", "бейсбол;бейсбольный;бейсболист", "биатлон;биатлонный;биатлонист", "бильярд;бильярдный;бильярдист", "бобслей;бобслейный;бобслеист", "боулинг", "боевое искуство", "бокс;боксерский;боксер", "борьба;борец", "водное поло", "волейбол;волейбольный;волейболист", "гандбол;гандбольный;гандболист", "гольф;гольфный;гольфист", "горнолыжный спорт", "слалом;;слаломист", "сквош", "гребля", "дзюдо;дзюдоистский;дзюдоист", "карате;;каратист", "керлинг;;керлингист", "коньки;конькобежный;конькобежец", "легкая атлетика;легкоатлетический;легкоатлет", "лыжных гонок", "мотоцикл;мотоциклетный;мотоциклист", "тяжелая атлетика;тяжелоатлетический;тяжелоатлет", "ориентирование", "плавание;;пловец", "прыжки", "регби;;регбист", "пятиборье", "гимнастика;гимнастический;гимнаст", "самбо;;самбист", "сумо;;сумист", "сноуборд;сноубордический;сноубордист", "софтбол;софтбольный;софтболист", "стрельба;стрелковый", "спорт;спортивный", "теннис;теннисный;теннисист", "триатлон", "тхэквондо", "ушу;;ушуист", "фехтование;фехтовальный;фехтовальщик", "фигурное катание;;фигурист", "фристайл;фристальный", "футбол;футбольный;футболист", "мини-футбол", "хоккей;хоккейный;хоккеист", "хоккей на траве", "шахматы;шахматный;шахматист", "шашки;шашечный"]: 
             pp = Utils.splitString(s.upper(), ';', False)
             t = Termin()
@@ -2331,36 +2329,36 @@ class OrganizationAnalyzer(Analyzer):
                 t.add_variant(pp[1], True)
             if (len(pp) > 2 and not Utils.isNullOrEmpty(pp[2])): 
                 t.add_variant(pp[2], True)
-            OrganizationAnalyzer.__m_sports.add(t)
+            OrganizationAnalyzer.M_SPORTS.add(t)
         for s in ["байдарка", "каноэ", "лук", "трава", "коньки", "трамплин", "двоеборье", "батут", "вода", "шпага", "сабля", "лыжи", "скелетон"]: 
-            OrganizationAnalyzer.__m_sports.add(Termin._new2185(s.upper(), s))
-        OrganizationAnalyzer.__m_prop_names = TerminCollection()
+            OrganizationAnalyzer.M_SPORTS.add(Termin._new2194(s.upper(), s))
+        OrganizationAnalyzer.M_PROP_NAMES = TerminCollection()
         for s in ["СПАРТАК", "ЦСКА", "ЗЕНИТ!", "ТЕРЕК", "КРЫЛЬЯ СОВЕТОВ", "ДИНАМО", "АНЖИ", "КУБАНЬ", "АЛАНИЯ", "ТОРПЕДО", "АРСЕНАЛ!", "ЛОКОМОТИВ", "МЕТАЛЛУРГ!", "РОТОР", "СКА", "СОКОЛ!", "ХИМИК!", "ШИННИК", "РУБИН", "ШАХТЕР", "САЛАВАТ ЮЛАЕВ", "ТРАКТОР!", "АВАНГАРД!", "АВТОМОБИЛИСТ!", "АТЛАНТ!", "ВИТЯЗЬ!", "НАЦИОНАЛЬНАЯ ХОККЕЙНАЯ ЛИГА;НХЛ", "КОНТИНЕНТАЛЬНАЯ ХОККЕЙНАЯ ЛИГА;КХЛ", "СОЮЗ ЕВРОПЕЙСКИХ ФУТБОЛЬНЫХ АССОЦИАЦИЙ;УЕФА;UEFA", "Женская теннисная ассоциация;WTA", "Международная федерация бокса;IBF", "Всемирная боксерская организация;WBO", "РЕАЛ", "МАНЧЕСТЕР ЮНАЙТЕД", "манчестер сити", "БАРСЕЛОНА!", "БАВАРИЯ!", "ЧЕЛСИ", "ЛИВЕРПУЛЬ!", "ЮВЕНТУС", "НАПОЛИ", "БОЛОНЬЯ", "ФУЛХЭМ", "ЭВЕРТОН", "ФИЛАДЕЛЬФИЯ", "ПИТТСБУРГ", "ИНТЕР!", "Аякс", "ФЕРРАРИ;FERRARI", "РЕД БУЛЛ;RED BULL", "МАКЛАРЕН;MCLAREN", "МАКЛАРЕН-МЕРСЕДЕС;MCLAREN-MERCEDES"]: 
             ss = s.upper()
             is_bad = False
             if (ss.endswith("!")): 
                 is_bad = True
-                ss = ss[0 : (len(ss) - 1)]
+                ss = ss[0:0+len(ss) - 1]
             pp = Utils.splitString(ss, ';', False)
             t = Termin._new118(pp[0], OrgProfile.SPORT)
             if (not is_bad): 
-                t.tag2 = ss
+                t.tag2 = (ss)
             if (len(pp) > 1): 
                 if (len(pp[1]) < 4): 
                     t.acronym = pp[1]
                 else: 
                     t.add_variant(pp[1], False)
-            OrganizationAnalyzer.__m_prop_names.add(t)
+            OrganizationAnalyzer.M_PROP_NAMES.add(t)
         for s in ["ИТАР ТАСС;ТАСС;Телеграфное агентство советского союза", "Интерфакс;Interfax", "REGNUM", "ЛЕНТА.РУ;Lenta.ru", "Частный корреспондент;ЧасКор", "РИА Новости;Новости!;АПН", "Росбалт;RosBalt", "УНИАН", "ИНФОРОС;inforos", "Эхо Москвы", "Сноб!", "Серебряный дождь", "Вечерняя Москва;Вечерка", "Московский Комсомолец;Комсомолка", "Коммерсантъ;Коммерсант", "Афиша", "Аргументы и факты;АИФ", "Викиновости", "РосБизнесКонсалтинг;РБК", "Газета.ру", "Русский Репортер!", "Ведомости", "Вести!", "Рамблер Новости", "Живой Журнал;ЖЖ;livejournal;livejournal.ru", "Новый Мир", "Новая газета", "Правда!", "Известия!", "Бизнес!", "Русская жизнь!", "НТВ Плюс", "НТВ", "ВГТРК", "ТНТ", "Муз ТВ;МузТВ", "АСТ", "Эксмо", "Астрель", "Терра!", "Финанс!", "Собеседник!", "Newsru.com", "Nature!", "Россия сегодня;Russia Today;RT!", "БЕЛТА", "Ассошиэйтед Пресс;Associated Press", "France Press;France Presse;Франс пресс;Agence France Presse;AFP", "СИНЬХУА", "Gallup", "Cable News Network;CNN", "CBS News", "ABC News", "GoogleNews;Google News", "FoxNews;Fox News", "Reuters;Рейтер", "British Broadcasting Corporation;BBC;БиБиСи;BBC News", "MSNBC", "Голос Америки", "Аль Джазира;Al Jazeera", "Радио Свобода", "Радио Свободная Европа", "Guardian;Гардиан", "Daily Telegraph", "Times;Таймс!", "Independent!", "Financial Times", "Die Welt", "Bild!", "La Pepublica;Република!", "Le Monde", "People Daily", "BusinessWeek", "Economist!", "Forbes;Форбс", "Los Angeles Times", "New York Times", "Wall Street Journal;WSJ", "Washington Post", "Le Figaro;Фигаро", "Bloomberg", "DELFI!"]: 
             ss = s.upper()
             is_bad = False
             if (ss.endswith("!")): 
                 is_bad = True
-                ss = ss[0 : (len(ss) - 1)]
+                ss = ss[0:0+len(ss) - 1]
             pp = Utils.splitString(ss, ';', False)
             t = Termin._new118(pp[0], OrgProfile.MEDIA)
             if (not is_bad): 
-                t.tag2 = ss
+                t.tag2 = (ss)
             ii = 1
             while ii < len(pp): 
                 if ((len(pp[ii]) < 4) and t.acronym is None): 
@@ -2368,17 +2366,17 @@ class OrganizationAnalyzer(Analyzer):
                 else: 
                     t.add_variant(pp[ii], False)
                 ii += 1
-            OrganizationAnalyzer.__m_prop_names.add(t)
+            OrganizationAnalyzer.M_PROP_NAMES.add(t)
         for s in ["Машина времени!", "ДДТ", "Биттлз;Bittles", "ABBA;АББА", "Океан Эльзы;Океан Эльзи", "Аквариум!", "Крематорий!", "Наутилус;Наутилус Помпилиус!", "Пусси Райот;Пусси Риот;Pussy Riot", "Кино!", "Алиса!", "Агата Кристи!", "Чайф", "Ария!", "Земфира!", "Браво!", "Черный кофе!", "Воскресение!", "Урфин Джюс", "Сплин!", "Пикник!", "Мумий Троль", "Коррозия металла", "Арсенал!", "Ночные снайперы!", "Любэ", "Ласковый май!", "Noize MC", "Linkin Park", "ac dc", "green day!", "Pink Floyd;Пинк Флойд", "Depeche Mode", "Bon Jovi", "Nirvana;Нирвана!", "Queen;Квин!", "Nine Inch Nails", "Radioheads", "Pet Shop Boys", "Buggles"]: 
             ss = s.upper()
             is_bad = False
             if (ss.endswith("!")): 
                 is_bad = True
-                ss = ss[0 : (len(ss) - 1)]
+                ss = ss[0:0+len(ss) - 1]
             pp = Utils.splitString(ss, ';', False)
             t = Termin._new118(pp[0], OrgProfile.MUSIC)
             if (not is_bad): 
-                t.tag2 = ss
+                t.tag2 = (ss)
             ii = 1
             while ii < len(pp): 
                 if ((len(pp[ii]) < 4) and t.acronym is None): 
@@ -2386,18 +2384,18 @@ class OrganizationAnalyzer(Analyzer):
                 else: 
                     t.add_variant(pp[ii], False)
                 ii += 1
-            OrganizationAnalyzer.__m_prop_names.add(t)
-        OrganizationAnalyzer.__m_prop_pref = TerminCollection()
+            OrganizationAnalyzer.M_PROP_NAMES.add(t)
+        OrganizationAnalyzer.M_PROP_PREF = TerminCollection()
         for s in ["ФАНАТ", "БОЛЕЛЬЩИК", "гонщик", "вратарь", "нападающий", "голкипер", "полузащитник", "полу-защитник", "центрфорвард", "центр-форвард", "форвард", "игрок", "легионер", "спортсмен"]: 
-            OrganizationAnalyzer.__m_prop_pref.add(Termin._new118(s.upper(), OrgProfile.SPORT))
+            OrganizationAnalyzer.M_PROP_PREF.add(Termin._new118(s.upper(), OrgProfile.SPORT))
         for s in ["защитник", "капитан", "пилот", "игра", "поле", "стадион", "гонка", "чемпионат", "турнир", "заезд", "матч", "кубок", "олипмиада", "финал", "полуфинал", "победа", "поражение", "разгром", "дивизион", "олипмиада", "финал", "полуфинал", "играть", "выигрывать", "выиграть", "проигрывать", "проиграть", "съиграть"]: 
-            OrganizationAnalyzer.__m_prop_pref.add(Termin._new120(s.upper(), OrgProfile.SPORT, s))
+            OrganizationAnalyzer.M_PROP_PREF.add(Termin._new120(s.upper(), OrgProfile.SPORT, s))
         for s in ["корреспондент", "фотокорреспондент", "репортер", "журналист", "тележурналист", "телеоператор", "главный редактор", "главред", "телеведущий", "редколлегия", "обозреватель", "сообщать", "сообщить", "передавать", "передать", "писать", "написать", "издавать", "пояснить", "пояснять", "разъяснить", "разъяснять", "сказать", "говорить", "спрашивать", "спросить", "отвечать", "ответить", "выяснять", "выяснить", "цитировать", "процитировать", "рассказать", "рассказывать", "информировать", "проинформировать", "поведать", "напечатать", "напоминать", "напомнить", "узнать", "узнавать", "репортаж", "интервью", "информации", "сведение", "ИА", "информагенство", "информагентство", "информационный", "газета", "журнал"]: 
-            OrganizationAnalyzer.__m_prop_pref.add(Termin._new118(s.upper(), OrgProfile.MEDIA))
+            OrganizationAnalyzer.M_PROP_PREF.add(Termin._new118(s.upper(), OrgProfile.MEDIA))
         for s in ["сообщение", "статья", "номер", "журнал", "издание", "издательство", "агентство", "цитата", "редактор", "комментатор", "по данным", "оператор", "вышедший", "отчет", "вопрос", "читатель", "слушатель", "телезритель", "источник", "собеедник"]: 
-            OrganizationAnalyzer.__m_prop_pref.add(Termin._new120(s.upper(), OrgProfile.MEDIA, s))
+            OrganizationAnalyzer.M_PROP_PREF.add(Termin._new120(s.upper(), OrgProfile.MEDIA, s))
         for s in ["музыкант", "певец", "певица", "ударник", "гитарист", "клавишник", "солист", "солистка", "исполнитель", "исполнительница", "исполнять", "исполнить", "концерт", "гастроль", "выступление", "известный", "известнейший", "популярный", "популярнейший", "рокгруппа", "панкгруппа", "группа", "альбом", "пластинка", "грампластинка", "концертный", "музыка", "песня", "сингл", "хит", "суперхит", "запись", "студия"]: 
-            OrganizationAnalyzer.__m_prop_pref.add(Termin._new118(s.upper(), OrgProfile.MEDIA))
+            OrganizationAnalyzer.M_PROP_PREF.add(Termin._new118(s.upper(), OrgProfile.MEDIA))
     
     def __try_attach_army(self, t : 'Token', ad : 'OrgAnalyzerData') -> 'ReferentToken':
         from pullenti.ner.NumberToken import NumberToken
@@ -2433,7 +2431,7 @@ class OrganizationAnalyzer(Analyzer):
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner._org.internal.OrgItemNameToken import OrgItemNameToken
         from pullenti.ner._org.internal.OrgItemEponymToken import OrgItemEponymToken
-        if (isinstance(t, TextToken) and t.chars.is_latin_letter): 
+        if ((isinstance(t, TextToken)) and t.chars.is_latin_letter): 
             if (MiscHelper.is_eng_article(t)): 
                 res11 = self.__attach_global_org(t.next0_, attach_typ, ad, ext_geo)
                 if (res11 is not None): 
@@ -2461,9 +2459,9 @@ class OrganizationAnalyzer(Analyzer):
                     org00.add_profile(OrgProfile.STATE)
                     te = self.__attach_tail_attributes(org00, t.next0_, None, False, OrganizationAnalyzer.AttachType.NORMAL, True)
                     return ReferentToken(org00, t, Utils.ifNotNull(te, t))
-            if (t.next0_ is not None and isinstance(t.next0_.get_referent(), GeoReferent)): 
+            if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), GeoReferent))): 
                 is_vc = False
-                if (t.previous is not None and isinstance(t.previous.get_referent(), OrganizationReferent) and (t.previous.get_referent() if isinstance(t.previous.get_referent(), OrganizationReferent) else None).kind == OrganizationKind.MILITARY): 
+                if (t.previous is not None and (isinstance(t.previous.get_referent(), OrganizationReferent)) and (t.previous.get_referent() if isinstance(t.previous.get_referent(), OrganizationReferent) else None).kind == OrganizationKind.MILITARY): 
                     is_vc = True
                 elif (ad is not None): 
                     for r in ad.referents: 
@@ -2478,7 +2476,7 @@ class OrganizationAnalyzer(Analyzer):
                     org00.add_profile(OrgProfile.ARMY)
                     te = self.__attach_tail_attributes(org00, t.next0_, None, False, OrganizationAnalyzer.AttachType.NORMAL, True)
                     return ReferentToken(org00, t, Utils.ifNotNull(te, t))
-        if ((t.chars.is_all_upper and ((term == "АН" or term == "ВАС")) and t.next0_ is not None) and isinstance(t.next0_.get_referent(), GeoReferent)): 
+        if ((t.chars.is_all_upper and ((term == "АН" or term == "ВАС")) and t.next0_ is not None) and (isinstance(t.next0_.get_referent(), GeoReferent))): 
             org00 = OrganizationReferent()
             if (term == "АН"): 
                 org00.add_name("АКАДЕМИЯ НАУК", True, None)
@@ -2506,7 +2504,7 @@ class OrganizationAnalyzer(Analyzer):
             ok = False
             if ((t.previous is not None and t.previous.is_value("В", None) and t.previous.previous is not None) and t.previous.previous.is_value("ЗАРЕГИСТРИРОВАТЬ", None)): 
                 ok = True
-            elif (t.next0_ is not None and isinstance(t.next0_.get_referent(), GeoReferent)): 
+            elif (t.next0_ is not None and (isinstance(t.next0_.get_referent(), GeoReferent))): 
                 ok = True
             if (ok): 
                 org00 = OrganizationReferent()
@@ -2515,12 +2513,12 @@ class OrganizationAnalyzer(Analyzer):
                 org00.add_name("МИНИСТЕРСТВО ЮСТИЦИИ", True, None)
                 org00.add_name("МИНЮСТ", True, None)
                 t1 = t
-                if (t.next0_ is not None and isinstance(t.next0_.get_referent(), GeoReferent)): 
+                if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), GeoReferent))): 
                     t1 = t.next0_
                     org00._add_geo_object(t1.get_referent())
                 return ReferentToken(org00, t, t1)
         if (t.chars.is_all_upper and term == "ФС"): 
-            if (t.next0_ is not None and isinstance(t.next0_.get_referent(), GeoReferent)): 
+            if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), GeoReferent))): 
                 org00 = OrganizationReferent()
                 org00.add_type_str("парламент")
                 org00.add_profile(OrgProfile.STATE)
@@ -2554,14 +2552,14 @@ class OrganizationAnalyzer(Analyzer):
                         res.end_token = res.end_token.next0_
                 return res
         if (t.chars.is_all_upper and term == "ГШ"): 
-            if (t.next0_ is not None and isinstance(t.next0_.get_referent(), OrganizationReferent) and (t.next0_.get_referent() if isinstance(t.next0_.get_referent(), OrganizationReferent) else None).kind == OrganizationKind.MILITARY): 
+            if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), OrganizationReferent)) and (t.next0_.get_referent() if isinstance(t.next0_.get_referent(), OrganizationReferent) else None).kind == OrganizationKind.MILITARY): 
                 org00 = OrganizationReferent()
                 org00.add_type_str("генеральный штаб")
                 org00.add_profile(OrgProfile.ARMY)
                 org00.higher = (t.next0_.get_referent() if isinstance(t.next0_.get_referent(), OrganizationReferent) else None)
                 return ReferentToken(org00, t, t.next0_)
         if (t.chars.is_all_upper and term == "ЗС"): 
-            if (t.next0_ is not None and isinstance(t.next0_.get_referent(), GeoReferent)): 
+            if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), GeoReferent))): 
                 org00 = OrganizationReferent()
                 org00.add_type_str("парламент")
                 org00.add_profile(OrgProfile.STATE)
@@ -2570,7 +2568,7 @@ class OrganizationAnalyzer(Analyzer):
                 return ReferentToken(org00, t, t.next0_)
         if (t.chars.is_all_upper and term == "СФ"): 
             t.inner_bool = True
-            if (t.next0_ is not None and isinstance(t.next0_.get_referent(), GeoReferent)): 
+            if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), GeoReferent))): 
                 org00 = OrganizationReferent()
                 org00.add_type_str("совет")
                 org00.add_profile(OrgProfile.STATE)
@@ -2578,14 +2576,14 @@ class OrganizationAnalyzer(Analyzer):
                 org00._add_geo_object(t.next0_.get_referent())
                 return ReferentToken(org00, t, t.next0_)
             if (t.next0_ is not None): 
-                if (t.next0_.is_value("ФС", None) or ((isinstance(t.next0_.get_referent(), OrganizationReferent) and t.next0_.get_referent().find_slot(OrganizationReferent.ATTR_NAME, "ФЕДЕРАЛЬНОЕ СОБРАНИЕ", True) is not None))): 
+                if (t.next0_.is_value("ФС", None) or (((isinstance(t.next0_.get_referent(), OrganizationReferent)) and t.next0_.get_referent().find_slot(OrganizationReferent.ATTR_NAME, "ФЕДЕРАЛЬНОЕ СОБРАНИЕ", True) is not None))): 
                     org00 = OrganizationReferent()
                     org00.add_type_str("совет")
                     org00.add_profile(OrgProfile.STATE)
                     org00.add_name("СОВЕТ ФЕДЕРАЦИИ", True, None)
                     return ReferentToken(org00, t, t)
         if (t.chars.is_all_upper and term == "ФК"): 
-            if (t.next0_ is not None and isinstance(t.next0_.get_referent(), GeoReferent)): 
+            if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), GeoReferent))): 
                 org00 = OrganizationReferent()
                 org00.add_type_str("казначейство")
                 org00.add_profile(OrgProfile.FINANCE)
@@ -2599,11 +2597,11 @@ class OrganizationAnalyzer(Analyzer):
                 org00.add_name("ФЕДЕРАЛЬНОЕ КАЗНАЧЕЙСТВО", True, None)
                 return ReferentToken(org00, t, t)
         if (t.chars.is_all_upper and ((term == "СК" or term == "CK"))): 
-            if (t.next0_ is not None and isinstance(t.next0_.get_referent(), GeoReferent)): 
+            if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), GeoReferent))): 
                 tt = t.previous
-                first_pass3004 = True
+                first_pass3974 = True
                 while True:
-                    if first_pass3004: first_pass3004 = False
+                    if first_pass3974: first_pass3974 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (isinstance(tt, TextToken)): 
@@ -2649,7 +2647,7 @@ class OrganizationAnalyzer(Analyzer):
                 continue
             if (ot.begin_token == ot.end_token): 
                 if (len(gt) == 1): 
-                    if (isinstance(ot.begin_token, TextToken) and (ot.begin_token if isinstance(ot.begin_token, TextToken) else None).term == "МГТУ"): 
+                    if ((isinstance(ot.begin_token, TextToken)) and (ot.begin_token if isinstance(ot.begin_token, TextToken) else None).term == "МГТУ"): 
                         ty = OrgItemTypeToken.try_attach(ot.begin_token, False, None)
                         if (ty is not None): 
                             continue
@@ -2671,7 +2669,7 @@ class OrganizationAnalyzer(Analyzer):
                 tyty = OrgItemTypeToken.try_attach(t, True, None)
                 if (tyty is not None and tyty.end_token == ot.end_token): 
                     continue
-                if (t.next0_ is not None and isinstance(t.next0_.get_referent(), GeoReferent)): 
+                if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), GeoReferent))): 
                     pass
                 elif (OrgItemTypeToken.check_org_special_word_before(t.previous)): 
                     pass
@@ -2699,13 +2697,13 @@ class OrganizationAnalyzer(Analyzer):
             if (ot.begin_token == ot.end_token): 
                 if (t.previous is None or t.is_whitespace_before): 
                     pass
-                elif (isinstance(t.previous, TextToken) and ((t.previous.is_char_of(",:") or BracketHelper.can_be_start_of_sequence(t.previous, False, False)))): 
+                elif ((isinstance(t.previous, TextToken)) and ((t.previous.is_char_of(",:") or BracketHelper.can_be_start_of_sequence(t.previous, False, False)))): 
                     pass
                 else: 
                     continue
                 if (t.next0_ is None or t.is_whitespace_after): 
                     pass
-                elif (isinstance(t.next0_, TextToken) and ((t.next0_.is_char_of(",.") or BracketHelper.can_be_end_of_sequence(t.next0_, False, None, False)))): 
+                elif ((isinstance(t.next0_, TextToken)) and ((t.next0_.is_char_of(",.") or BracketHelper.can_be_end_of_sequence(t.next0_, False, None, False)))): 
                     pass
                 else: 
                     continue
@@ -2733,7 +2731,7 @@ class OrganizationAnalyzer(Analyzer):
                 org0_ = (org0.clone() if isinstance(org0.clone(), OrganizationReferent) else None)
                 if (len(org0_._geo_objects) > 0): 
                     for s in org0_.slots: 
-                        if (s.type_name == OrganizationReferent.ATTR_GEO and isinstance(s.value, GeoReferent)): 
+                        if (s.type_name == OrganizationReferent.ATTR_GEO and (isinstance(s.value, GeoReferent))): 
                             gg = (s.value if isinstance(s.value, GeoReferent) else None).clone()
                             gg.occurrence.clear()
                             rtg = ReferentToken(gg, t, t)
@@ -2751,7 +2749,7 @@ class OrganizationAnalyzer(Analyzer):
                     org0_._add_geo_object(tt)
                     break
                 tt = tt.next0_
-            if (isinstance(t.previous, TextToken) and (t.whitespaces_before_count < 2) and t.previous.morph.class0_.is_adjective): 
+            if ((isinstance(t.previous, TextToken)) and (t.whitespaces_before_count < 2) and t.previous.morph.class0_.is_adjective): 
                 gg = t.kit.process_referent("GEO", t.previous)
                 if (gg is not None and gg.morph.class0_.is_adjective): 
                     t = t.previous
@@ -2759,7 +2757,7 @@ class OrganizationAnalyzer(Analyzer):
             t1 = None
             if (not "академия" in org0.types and attach_typ != OrganizationAnalyzer.AttachType.NORMALAFTERDEP and attach_typ != OrganizationAnalyzer.AttachType.EXTONTOLOGY): 
                 t1 = self.__attach_tail_attributes(org0_, ot.end_token.next0_, None, False, OrganizationAnalyzer.AttachType.NORMAL, True)
-            elif ((((("министерство" in org0.types or "парламент" in org0.types or "совет" in org0.types) or org0.kind == OrganizationKind.SCIENCE or org0.kind == OrganizationKind.STUDY) or org0.kind == OrganizationKind.JUSTICE or org0.kind == OrganizationKind.MILITARY)) and isinstance(ot.end_token.next0_, ReferentToken)): 
+            elif ((((("министерство" in org0.types or "парламент" in org0.types or "совет" in org0.types) or org0.kind == OrganizationKind.SCIENCE or org0.kind == OrganizationKind.STUDY) or org0.kind == OrganizationKind.JUSTICE or org0.kind == OrganizationKind.MILITARY)) and (isinstance(ot.end_token.next0_, ReferentToken))): 
                 geo_ = (ot.end_token.next0_.get_referent() if isinstance(ot.end_token.next0_.get_referent(), GeoReferent) else None)
                 if (geo_ is not None and geo_.is_state): 
                     org0_._add_geo_object(geo_)
@@ -2808,7 +2806,7 @@ class OrganizationAnalyzer(Analyzer):
             return ReferentToken(org0_, t, t1)
         return None
     
-    __max_org_name = 200
+    MAX_ORG_NAME = 200
     
     def __try_attach_org(self, t : 'Token', ad : 'OrgAnalyzerData', attach_typ : 'AttachType', mult_typ : 'OrgItemTypeToken'=None, is_additional_attach : bool=False, level : int=0, step : int=-1) -> 'ReferentToken':
         from pullenti.ner.core.MiscHelper import MiscHelper
@@ -2839,9 +2837,9 @@ class OrganizationAnalyzer(Analyzer):
         spec_word_before = False
         in_brackets = False
         rt0 = None
-        first_pass3005 = True
+        first_pass3975 = True
         while True:
-            if first_pass3005: first_pass3005 = False
+            if first_pass3975: first_pass3975 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (isinstance(t.get_referent(), OrganizationReferent)): 
@@ -2871,7 +2869,7 @@ class OrganizationAnalyzer(Analyzer):
                     if (ot_ex_li is not None): 
                         break
                     return None
-                if ((typ is not None and typ.root is not None and typ.root.can_has_number) and isinstance(t.next0_, NumberToken)): 
+                if ((typ is not None and typ.root is not None and typ.root.can_has_number) and (isinstance(t.next0_, NumberToken))): 
                     pass
                 else: 
                     hiph = True
@@ -2900,11 +2898,11 @@ class OrganizationAnalyzer(Analyzer):
                         ot_ex_li = ad.local_ontology.try_attach(tt, None, False)
                         if (ot_ex_li is not None): 
                             if (len(tt.kit.sofa.text) > 300): 
-                                ot_ex_li = None
+                                ot_ex_li = (None)
                 if (ot_ex_li is not None): 
                     t.inner_bool = True
-            if ((step >= 0 and not t.inner_bool and t == t0) and isinstance(t, TextToken)): 
-                typ = None
+            if ((step >= 0 and not t.inner_bool and t == t0) and (isinstance(t, TextToken))): 
+                typ = (None)
             else: 
                 typ = OrgItemTypeToken.try_attach(t, attach_typ == OrganizationAnalyzer.AttachType.EXTONTOLOGY, ad)
                 if (typ is None and BracketHelper.can_be_start_of_sequence(t, False, False)): 
@@ -2915,7 +2913,7 @@ class OrganizationAnalyzer(Analyzer):
                             typ.end_token = br.end_token
                             typ.begin_token = t
                         else: 
-                            typ = None
+                            typ = (None)
             if (typ is None): 
                 break
             if (types is None): 
@@ -2957,11 +2955,11 @@ class OrganizationAnalyzer(Analyzer):
                         if (t.whitespaces_before_count > 1): 
                             break
                     if (not typ0.morph.case.is_undefined and not typ.morph.case.is_undefined): 
-                        if (not (typ0.morph.case & typ.morph.case).is_nominative and not hiph): 
+                        if (not ((typ0.morph.case) & typ.morph.case).is_nominative and not hiph): 
                             if (not typ.morph.case.is_nominative): 
                                 break
                     if (typ0.morph.number != MorphNumber.UNDEFINED and typ.morph.number != MorphNumber.UNDEFINED): 
-                        if (((typ0.morph.number & typ.morph.number)) == MorphNumber.UNDEFINED): 
+                        if ((((typ0.morph.number) & (typ.morph.number))) == (MorphNumber.UNDEFINED)): 
                             break
                 if (not pref0 and pref and not hiph): 
                     nom = False
@@ -3000,7 +2998,7 @@ class OrganizationAnalyzer(Analyzer):
                     rt0 = self.__try_attach_org_med(t, ad)
                     if ((rt0) is not None): 
                         return rt0
-                if ((((t0.kit.recurse_level < 4) and isinstance(t0, TextToken) and t0.previous is not None) and t0.length_char > 2 and not t0.chars.is_all_lower) and not t0.is_newline_after and not MiscHelper.can_be_start_of_sentence(t0)): 
+                if ((((t0.kit.recurse_level < 4) and (isinstance(t0, TextToken)) and t0.previous is not None) and t0.length_char > 2 and not t0.chars.is_all_lower) and not t0.is_newline_after and not MiscHelper.can_be_start_of_sentence(t0)): 
                     typ = OrgItemTypeToken.try_attach(t0.next0_, False, None)
                     if (typ is not None): 
                         t0.kit.recurse_level += 1
@@ -3015,16 +3013,16 @@ class OrganizationAnalyzer(Analyzer):
                                 t1 = (Utils.ifNotNull(self.__attach_tail_attributes(org0, t1.next0_, ad, False, OrganizationAnalyzer.AttachType.NORMAL, False), t1))
                                 return ReferentToken(org0, t0, t1)
                 tt = t
-                first_pass3006 = True
+                first_pass3976 = True
                 while True:
-                    if first_pass3006: first_pass3006 = False
+                    if first_pass3976: first_pass3976 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_and): 
                         if (tt == t): 
                             break
                         continue
-                    if (((isinstance(tt, TextToken) and tt.chars.is_letter and not tt.chars.is_all_lower) and not tt.chars.is_capital_upper and tt.length_char > 1) and (tt.whitespaces_after_count < 2)): 
+                    if ((((isinstance(tt, TextToken)) and tt.chars.is_letter and not tt.chars.is_all_lower) and not tt.chars.is_capital_upper and tt.length_char > 1) and (tt.whitespaces_after_count < 2)): 
                         mc = tt.get_morph_class_in_dictionary()
                         if (mc.is_undefined): 
                             pass
@@ -3034,9 +3032,9 @@ class OrganizationAnalyzer(Analyzer):
                             break
                     else: 
                         break
-                    if (isinstance(tt.next0_, ReferentToken) and isinstance(tt.next0_.get_referent(), OrganizationReferent)): 
+                    if ((isinstance(tt.next0_, ReferentToken)) and (isinstance(tt.next0_.get_referent(), OrganizationReferent))): 
                         ttt = t.previous
-                        if (((isinstance(ttt, TextToken) and tt.chars.is_letter and not ttt.chars.is_all_lower) and not ttt.chars.is_capital_upper and ttt.length_char > 1) and ttt.get_morph_class_in_dictionary().is_undefined and (ttt.whitespaces_after_count < 2)): 
+                        if ((((isinstance(ttt, TextToken)) and tt.chars.is_letter and not ttt.chars.is_all_lower) and not ttt.chars.is_capital_upper and ttt.length_char > 1) and ttt.get_morph_class_in_dictionary().is_undefined and (ttt.whitespaces_after_count < 2)): 
                             break
                         tt0 = t
                         t = t.previous
@@ -3077,10 +3075,10 @@ class OrganizationAnalyzer(Analyzer):
             if (rt0 is not None and ot_ex_li is not None): 
                 for ot in ot_ex_li: 
                     if ((ot.end_char > rt0.end_char and ot.item is not None and ot.item.owner is not None) and ot.item.owner.is_ext_ontology): 
-                        rt0 = None
+                        rt0 = (None)
                         break
                     elif (ot.end_char < rt0.begin_char): 
-                        ot_ex_li = None
+                        ot_ex_li = (None)
                         break
             if (rt0 is not None): 
                 if (types is not None and rt0.begin_token == types[0].begin_token): 
@@ -3119,7 +3117,7 @@ class OrganizationAnalyzer(Analyzer):
                     else: 
                         continue
                 ok = types is not None
-                if (ot.end_token.next0_ is not None and isinstance(ot.end_token.next0_.get_referent(), OrganizationReferent)): 
+                if (ot.end_token.next0_ is not None and (isinstance(ot.end_token.next0_.get_referent(), OrganizationReferent))): 
                     ok = True
                 elif (ot.end_token != ot.begin_token): 
                     if (not ot.begin_token.chars.is_all_lower): 
@@ -3188,7 +3186,7 @@ class OrganizationAnalyzer(Analyzer):
                     else: 
                         for ty in org0.types: 
                             org0_.add_type_str(ty)
-                    if (org0.number is not None and isinstance(ot.begin_token.previous, NumberToken) and org0_.number is None): 
+                    if (org0.number is not None and (isinstance(ot.begin_token.previous, NumberToken)) and org0_.number is None): 
                         if (org0.number != str((ot.begin_token.previous if isinstance(ot.begin_token.previous, NumberToken) else None).value) and (ot.begin_token.whitespaces_before_count < 2)): 
                             if (len(org0_.names) > 0 or org0_.higher is not None): 
                                 is_very_doubt = False
@@ -3204,12 +3202,12 @@ class OrganizationAnalyzer(Analyzer):
                             if (ttt.is_hiphen and ttt.next0_ is not None): 
                                 ttt = ttt.next0_
                             if (isinstance(ttt, NumberToken)): 
-                                nnn = OrgItemNumberToken._new1690(ot.end_token.next0_, ttt, str((ttt if isinstance(ttt, NumberToken) else None).value))
+                                nnn = OrgItemNumberToken._new1698(ot.end_token.next0_, ttt, str((ttt if isinstance(ttt, NumberToken) else None).value))
                         if (nnn is not None): 
                             org0_.number = nnn.number
                             te = nnn.end_token
                     norm = (ot.end_token.end_char - ot.begin_token.begin_char) > 5
-                    s = MiscHelper.get_text_value_of_meta_token(ot, Utils.valToEnum(((GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE if norm else GetTextAttr.NO)) | GetTextAttr.IGNOREARTICLES, GetTextAttr))
+                    s = MiscHelper.get_text_value_of_meta_token(ot, Utils.valToEnum((((GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE if norm else GetTextAttr.NO))) | (GetTextAttr.IGNOREARTICLES), GetTextAttr))
                     org0_.add_name(s, True, (None if norm else ot.begin_token))
                     if (types is None or len(types) == 0): 
                         s1 = MiscHelper.get_text_value_of_meta_token(ot, GetTextAttr.IGNOREARTICLES)
@@ -3361,7 +3359,7 @@ class OrganizationAnalyzer(Analyzer):
                     rt0.end_token = tt
                 elif ((tt.length_char > 2 and (tt.length_char < 7) and tt.chars.is_latin_letter) and tt.chars.is_all_upper): 
                     act = tt.get_source_text().upper()
-                    if (isinstance(tt.next0_, NumberToken) and not tt.is_whitespace_after and (tt.next0_ if isinstance(tt.next0_, NumberToken) else None).typ == NumberSpellingType.DIGIT): 
+                    if ((isinstance(tt.next0_, NumberToken)) and not tt.is_whitespace_after and (tt.next0_ if isinstance(tt.next0_, NumberToken) else None).typ == NumberSpellingType.DIGIT): 
                         tt = tt.next0_
                         act += tt.get_source_text()
                     if (tt.next0_ is not None and tt.next0_.is_char(')')): 
@@ -3412,7 +3410,7 @@ class OrganizationAnalyzer(Analyzer):
                 else: 
                     return None
             if (typ.is_newline_after and typ.name is None): 
-                if (t1 is not None and isinstance(t1.get_referent(), GeoReferent) and OrgProfile.STATE in typ.profiles): 
+                if (t1 is not None and (isinstance(t1.get_referent(), GeoReferent)) and OrgProfile.STATE in typ.profiles): 
                     pass
                 elif (typ.root is not None and ((typ.root.coeff >= 3 or typ.root.is_pure_prefix))): 
                     pass
@@ -3422,7 +3420,7 @@ class OrganizationAnalyzer(Analyzer):
                     pass
                 else: 
                     return None
-            if (typ != mult_typ and ((typ.morph.number == MorphNumber.PLURAL and not typ.typ[0].isupper()))): 
+            if (typ != mult_typ and ((typ.morph.number == MorphNumber.PLURAL and not str.isupper(typ.typ[0])))): 
                 if (BracketHelper.can_be_start_of_sequence(t, True, False)): 
                     pass
                 elif (typ.end_token.is_value("ВЛАСТЬ", None)): 
@@ -3437,7 +3435,7 @@ class OrganizationAnalyzer(Analyzer):
             for ty in types: 
                 org0_.add_type(ty, False)
         if (typ is not None and typ.root is not None and typ.root.is_pure_prefix): 
-            if (isinstance(t, TextToken) and t.chars.is_all_upper and not t.is_newline_after): 
+            if ((isinstance(t, TextToken)) and t.chars.is_all_upper and not t.is_newline_after): 
                 b = BracketHelper.try_parse(t.next0_, BracketParseAttr.NO, 100)
                 if (b is not None and b.is_quote_type): 
                     org0_.add_type_str((t if isinstance(t, TextToken) else None).term)
@@ -3447,16 +3445,16 @@ class OrganizationAnalyzer(Analyzer):
                     if (len(s) == 2 and s[len(s) - 1] == 'К'): 
                         org0_.add_type_str(s)
                         t = t.next0_
-                    elif (((t.get_morph_class_in_dictionary().is_undefined and t.next0_ is not None and isinstance(t.next0_, TextToken)) and t.next0_.chars.is_capital_upper and t.next0_.next0_ is not None) and not t.next0_.is_newline_after): 
+                    elif (((t.get_morph_class_in_dictionary().is_undefined and t.next0_ is not None and (isinstance(t.next0_, TextToken))) and t.next0_.chars.is_capital_upper and t.next0_.next0_ is not None) and not t.next0_.is_newline_after): 
                         if (t.next0_.next0_.is_char_of(",.;") or BracketHelper.can_be_end_of_sequence(t.next0_.next0_, False, None, False)): 
                             org0_.add_type_str(s)
                             t = t.next0_
-            elif (isinstance(t, TextToken) and t.morph.class0_.is_adjective and not t.chars.is_all_lower): 
+            elif ((isinstance(t, TextToken)) and t.morph.class0_.is_adjective and not t.chars.is_all_lower): 
                 rtg = (self.__is_geo(t, True) if isinstance(self.__is_geo(t, True), ReferentToken) else None)
                 if (rtg is not None and BracketHelper.can_be_start_of_sequence(rtg.end_token.next0_, False, False)): 
                     org0_._add_geo_object(rtg)
                     t = rtg.end_token.next0_
-            elif ((t is not None and isinstance(t.get_referent(), GeoReferent) and t.next0_ is not None) and BracketHelper.can_be_start_of_sequence(t.next0_, True, False)): 
+            elif ((t is not None and (isinstance(t.get_referent(), GeoReferent)) and t.next0_ is not None) and BracketHelper.can_be_start_of_sequence(t.next0_, True, False)): 
                 org0_._add_geo_object(t.get_referent())
                 t = t.next0_
         te = None
@@ -3519,7 +3517,7 @@ class OrganizationAnalyzer(Analyzer):
         if (t is not None): 
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
             if (typ is not None and br is None and BracketHelper.can_be_start_of_sequence(t, False, False)): 
-                if (t.next0_ is not None and isinstance(t.next0_.get_referent(), OrganizationReferent)): 
+                if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), OrganizationReferent))): 
                     org0 = (t.next0_.get_referent() if isinstance(t.next0_.get_referent(), OrganizationReferent) else None)
                     if (not OrgItemTypeToken.is_types_antagonisticoo(org0_, org0)): 
                         org0.merge_slots(org0_, False)
@@ -3542,12 +3540,12 @@ class OrganizationAnalyzer(Analyzer):
                             return rt2
         if (br is not None and typ is not None and org0_.kind == OrganizationKind.GOVENMENT): 
             if (typ.root is not None and not typ.root.can_has_single_name): 
-                br = None
+                br = (None)
         if (br is not None and br.is_quote_type): 
             if (br.begin_token.next0_.is_value("О", None) or br.begin_token.next0_.is_value("ОБ", None)): 
-                br = None
+                br = (None)
             elif (br.begin_token.previous is not None and br.begin_token.previous.is_char(':')): 
-                br = None
+                br = (None)
         if (br is not None and br.is_quote_type and ((br.open_char != '<' or ((typ is not None and typ.root is not None and typ.root.is_pure_prefix))))): 
             if (t.is_newline_before and ((attach_typ == OrganizationAnalyzer.AttachType.NORMAL or attach_typ == OrganizationAnalyzer.AttachType.NORMALAFTERDEP))): 
                 if (not br.is_newline_after): 
@@ -3566,25 +3564,28 @@ class OrganizationAnalyzer(Analyzer):
                     if (BracketHelper.can_be_end_of_sequence(t.next0_.next0_, False, None, False)): 
                         org0.merge_slots(org0_, False)
                         return ReferentToken(org0, t0, t.next0_.next0_)
-                    if (isinstance(t.next0_.next0_.get_referent(), OrganizationReferent) and BracketHelper.can_be_end_of_sequence(t.next0_.next0_.next0_, False, None, False)): 
+                    if ((isinstance(t.next0_.next0_.get_referent(), OrganizationReferent)) and BracketHelper.can_be_end_of_sequence(t.next0_.next0_.next0_, False, None, False)): 
                         org0.merge_slots(org0_, False)
                         return ReferentToken(org0, t0, t.next0_)
-                return None
-            if (len(br.internal) > 1): 
                 return None
             na0 = OrgItemNameToken.try_attach(br.begin_token.next0_, None, False, True)
             if (na0 is not None and na0.is_empty_word and na0.end_token.next0_ == br.end_token): 
                 return None
             rt0 = self.__try_attach_org(t.next0_, None, attach_typ, None, is_additional_attach, level + 1, -1)
+            if (len(br.internal) > 1): 
+                if (rt0 is not None and BracketHelper.can_be_end_of_sequence(rt0.end_token, False, None, False)): 
+                    br.end_token = rt0.end_token
+                else: 
+                    return None
             abbr = None
             tt00 = (None if rt0 is None else rt0.begin_token)
-            if (((rt0 is None and t.next0_ is not None and isinstance(t.next0_, TextToken)) and t.next0_.chars.is_all_upper and t.next0_.length_char > 2) and t.next0_.chars.is_cyrillic_letter): 
+            if (((rt0 is None and t.next0_ is not None and (isinstance(t.next0_, TextToken))) and t.next0_.chars.is_all_upper and t.next0_.length_char > 2) and t.next0_.chars.is_cyrillic_letter): 
                 rt0 = self.__try_attach_org(t.next0_.next0_, None, attach_typ, None, is_additional_attach, level + 1, -1)
                 if (rt0 is not None and rt0.begin_token == t.next0_.next0_): 
                     tt00 = t.next0_
                     abbr = t.next0_.get_source_text()
                 else: 
-                    rt0 = None
+                    rt0 = (None)
             ok2 = False
             if (rt0 is not None): 
                 if (rt0.end_token == br.end_token.previous or rt0.end_token == br.end_token): 
@@ -3593,7 +3594,7 @@ class OrganizationAnalyzer(Analyzer):
                     br2 = BracketHelper.try_parse(br.end_token.next0_, BracketParseAttr.NO, 100)
                     if (br2 is not None and rt0.end_token == br2.end_token): 
                         ok2 = True
-            if (ok2 and isinstance(rt0.referent, OrganizationReferent)): 
+            if (ok2 and (isinstance(rt0.referent, OrganizationReferent))): 
                 org0 = (rt0.referent if isinstance(rt0.referent, OrganizationReferent) else None)
                 if (typ is not None and typ.typ == "служба" and ((org0.kind == OrganizationKind.MEDIA or org0.kind == OrganizationKind.PRESS))): 
                     if (br.begin_token == rt0.begin_token and br.end_token == rt0.end_token): 
@@ -3622,7 +3623,7 @@ class OrganizationAnalyzer(Analyzer):
                             if (s.type_name == OrganizationReferent.ATTR_NAME): 
                                 org0_.upload_slot(s, "{0} {1}".format(abbr, s.value))
                 else: 
-                    rt0 = None
+                    rt0 = (None)
                 if (rt0 is not None): 
                     t11 = br.end_token
                     if (rt0.end_char > t11.end_char): 
@@ -3652,9 +3653,9 @@ class OrganizationAnalyzer(Analyzer):
                 pref = True
                 not_empty = 0
                 t1 = t.next0_
-                first_pass3007 = True
+                first_pass3977 = True
                 while True:
-                    if first_pass3007: first_pass3007 = False
+                    if first_pass3977: first_pass3977 = False
                     else: t1 = t1.next0_
                     if (not (t1 is not None and t1 != br.end_token)): break
                     if (t1.is_char('(')): 
@@ -3664,7 +3665,7 @@ class OrganizationAnalyzer(Analyzer):
                         if (t1.next0_ is not None): 
                             r = t1.next0_.get_referent()
                         if (r is not None and t1.next0_.next0_ is not None and t1.next0_.next0_.is_char(')')): 
-                            if (r.type_name == OrganizationAnalyzer.__geoname): 
+                            if (r.type_name == OrganizationAnalyzer.GEONAME): 
                                 org0_._add_geo_object(r)
                                 break
                         if (level == 0): 
@@ -3677,7 +3678,7 @@ class OrganizationAnalyzer(Analyzer):
                     else: 
                         org0 = (t1.get_referent() if isinstance(t1.get_referent(), OrganizationReferent) else None)
                         if ((org0) is not None): 
-                            if ((isinstance(t1.previous, NumberToken) and t1.previous.previous == br.begin_token and not OrgItemTypeToken.is_types_antagonisticoo(org0_, org0)) and org0.number is None): 
+                            if (((isinstance(t1.previous, NumberToken)) and t1.previous.previous == br.begin_token and not OrgItemTypeToken.is_types_antagonisticoo(org0_, org0)) and org0.number is None): 
                                 org0.number = str((t1.previous if isinstance(t1.previous, NumberToken) else None).value)
                                 org0.merge_slots(org0_, False)
                                 if (BracketHelper.can_be_end_of_sequence(t1.next0_, False, None, False)): 
@@ -3695,22 +3696,22 @@ class OrganizationAnalyzer(Analyzer):
                             if (typ is not None and types is not None): 
                                 for ty in types: 
                                     if (OrgItemTypeToken.is_types_antagonistictt(ty, typ)): 
-                                        typ = None
+                                        typ = (None)
                                         break
                             if (typ is not None): 
                                 if (typ.is_doubt_root_word and ((typ.end_token.next0_ == br.end_token or ((typ.end_token.next0_ is not None and typ.end_token.next0_.is_hiphen))))): 
-                                    typ = None
+                                    typ = (None)
                                 elif (typ.morph.number == MorphNumber.PLURAL): 
-                                    typ = None
+                                    typ = (None)
                                 elif (not typ.morph.case.is_undefined and not typ.morph.case.is_nominative): 
-                                    typ = None
+                                    typ = (None)
                                 elif (typ.begin_token == typ.end_token): 
                                     ttt = typ.end_token.next0_
                                     if (ttt is not None and ttt.is_hiphen): 
                                         ttt = ttt.next0_
                                     if (ttt is not None): 
                                         if (ttt.is_value("БАНК", None)): 
-                                            typ = None
+                                            typ = (None)
                             ep_ = None
                             if (typ is None): 
                                 ep_ = OrgItemEponymToken.try_attach(t1, False)
@@ -3722,7 +3723,7 @@ class OrganizationAnalyzer(Analyzer):
                                 not_empty += 2
                                 continue
                             br_spec = False
-                            if ((len(br.internal) == 0 and isinstance(br.end_token.next0_, TextToken) and ((not br.end_token.next0_.chars.is_all_lower and br.end_token.next0_.chars.is_letter))) and BracketHelper.can_be_end_of_sequence(br.end_token.next0_.next0_, True, None, False)): 
+                            if ((len(br.internal) == 0 and (isinstance(br.end_token.next0_, TextToken)) and ((not br.end_token.next0_.chars.is_all_lower and br.end_token.next0_.chars.is_letter))) and BracketHelper.can_be_end_of_sequence(br.end_token.next0_.next0_, True, None, False)): 
                                 br_spec = True
                             if (typ is not None and ((pref or not typ.is_dep))): 
                                 if (not_empty > 1): 
@@ -3767,9 +3768,9 @@ class OrganizationAnalyzer(Analyzer):
                                 not_empty += 3
                                 t1 = ep_.begin_token.previous
                                 break
-                            elif (t1 == t.next0_ and isinstance(t1, TextToken) and t1.chars.is_all_lower): 
+                            elif (t1 == t.next0_ and (isinstance(t1, TextToken)) and t1.chars.is_all_lower): 
                                 return None
-                            elif (t1.chars.is_letter or isinstance(t1, NumberToken)): 
+                            elif (t1.chars.is_letter or (isinstance(t1, NumberToken))): 
                                 if (br_spec): 
                                     tt0 = br.begin_token
                                     t1 = br.end_token.next0_.next0_
@@ -3792,9 +3793,9 @@ class OrganizationAnalyzer(Analyzer):
                 te = (Utils.ifNotNull(tt1, t1))
                 if (te is not None and tt0 is not None and (tt0.begin_char < te.begin_char)): 
                     ttt = tt0
-                    first_pass3008 = True
+                    first_pass3978 = True
                     while True:
-                        if first_pass3008: first_pass3008 = False
+                        if first_pass3978: first_pass3978 = False
                         else: ttt = ttt.next0_
                         if (not (ttt != te and ttt is not None)): break
                         oin = OrgItemNameToken.try_attach(ttt, None, attach_typ == OrganizationAnalyzer.AttachType.EXTONTOLOGY, ttt == tt0)
@@ -3815,7 +3816,7 @@ class OrganizationAnalyzer(Analyzer):
                                         org0_.add_type_str(ei.short_value)
                                 te = ttt.previous
                                 break
-                        if ((ttt != tt0 and isinstance(ttt, ReferentToken) and ttt.next0_ == te) and isinstance(ttt.get_referent(), GeoReferent)): 
+                        if ((ttt != tt0 and (isinstance(ttt, ReferentToken)) and ttt.next0_ == te) and (isinstance(ttt.get_referent(), GeoReferent))): 
                             if (ttt.previous is not None and ttt.previous.get_morph_class_in_dictionary().is_adjective): 
                                 continue
                             npt = NounPhraseHelper.try_parse(ttt.previous, NounPhraseParseAttr.REFERENTCANBENOUN, 0)
@@ -3828,7 +3829,7 @@ class OrganizationAnalyzer(Analyzer):
                             org0_._add_geo_object(ttt.get_referent())
                             break
                 if (te is not None and tt0 is not None and (tt0.begin_char < te.begin_char)): 
-                    if (isinstance(te.previous, NumberToken) and can_has_num): 
+                    if ((isinstance(te.previous, NumberToken)) and can_has_num): 
                         err = False
                         num1 = (te.previous if isinstance(te.previous, NumberToken) else None)
                         if (org0_.number is not None and org0_.number != str(num1.value)): 
@@ -3837,7 +3838,7 @@ class OrganizationAnalyzer(Analyzer):
                             err = True
                         elif (not te.previous.previous.is_hiphen and not te.previous.previous.chars.is_letter): 
                             err = True
-                        elif (num1.value == 0): 
+                        elif (num1.value == (0)): 
                             err = True
                         if (not err): 
                             org0_.number = str(num1.value)
@@ -3846,7 +3847,7 @@ class OrganizationAnalyzer(Analyzer):
                                 te = te.previous
                 s = (None if te is None else MiscHelper.get_text_value(tt0, te, GetTextAttr.NO))
                 s1 = (None if te is None else MiscHelper.get_text_value(tt0, te, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE))
-                if ((te is not None and isinstance(te.previous, NumberToken) and can_has_num) and org0_.number is None): 
+                if ((te is not None and (isinstance(te.previous, NumberToken)) and can_has_num) and org0_.number is None): 
                     org0_.number = str((te.previous if isinstance(te.previous, NumberToken) else None).value)
                     tt11 = te.previous
                     if (tt11.previous is not None and tt11.previous.is_hiphen): 
@@ -3857,18 +3858,18 @@ class OrganizationAnalyzer(Analyzer):
                 if (not Utils.isNullOrEmpty(s)): 
                     if (tt0.morph.class0_.is_preposition and tt0 != br.begin_token.next0_): 
                         for ty in org0_.types: 
-                            if (not " " in ty and ty[0].islower()): 
+                            if (not " " in ty and str.islower(ty[0])): 
                                 s = "{0} {1}".format(ty.upper(), s)
-                                s1 = None
+                                s1 = (None)
                                 break
-                    if (len(s) > OrganizationAnalyzer.__max_org_name): 
+                    if (len(s) > OrganizationAnalyzer.MAX_ORG_NAME): 
                         return None
                     if (s1 is not None and s1 != s and len(s1) <= len(s)): 
                         org0_.add_name(s1, True, None)
                     org0_.add_name(s, True, tt0)
                     ok1 = False
                     for c in s: 
-                        if (c.isalnum()): 
+                        if (str.isalnum(c)): 
                             ok1 = True
                             break
                     if (not ok1): 
@@ -3926,9 +3927,9 @@ class OrganizationAnalyzer(Analyzer):
                                 ok0 = True
                             else: 
                                 tt2 = t1.next0_
-                                first_pass3009 = True
+                                first_pass3979 = True
                                 while True:
-                                    if first_pass3009: first_pass3009 = False
+                                    if first_pass3979: first_pass3979 = False
                                     else: tt2 = tt2.next0_
                                     if (not (tt2 is not None)): break
                                     if (tt2.is_comma): 
@@ -3969,11 +3970,11 @@ class OrganizationAnalyzer(Analyzer):
             t1 = t0
         elif (t is not None and t.previous is not None and t.previous.begin_char >= t0.begin_char): 
             t1 = t.previous
-        br = None
+        br = (None)
         ok = False
-        first_pass3010 = True
+        first_pass3980 = True
         while True:
-            if first_pass3010: first_pass3010 = False
+            if first_pass3980: first_pass3980 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (isinstance(t.get_referent(), OrganizationReferent)): 
@@ -4015,7 +4016,7 @@ class OrganizationAnalyzer(Analyzer):
             if ((typ) is not None): 
                 if (typ.morph.case.is_genitive): 
                     if (typ.end_token.is_value("СЛУЖБА", None) or typ.end_token.is_value("УПРАВЛЕНИЕ", "УПРАВЛІННЯ")): 
-                        typ = None
+                        typ = (None)
                 if (typ is not None): 
                     if (not typ.is_doubt_root_word and attach_typ != OrganizationAnalyzer.AttachType.EXTONTOLOGY): 
                         break
@@ -4056,7 +4057,7 @@ class OrganizationAnalyzer(Analyzer):
                                             org0_.add_name("{0} {1} {2}".format(typ.typ.upper(), MiscHelper.get_text_value_of_meta_token(names[0], GetTextAttr.NO), n), True, None)
                                     if (typ is not None): 
                                         typ.coef = 4
-                                names = None
+                                names = (None)
                     if (names is not None and len(names) > 0 and not spec_word_before): 
                         break
                     if (not org0_.can_be_equals(org0, Referent.EqualType.FORMERGING)): 
@@ -4070,13 +4071,13 @@ class OrganizationAnalyzer(Analyzer):
                 elif (br.open_char == '('): 
                     if (t.next0_.get_referent() is not None and t.next0_.next0_ == br.end_token): 
                         r = t.next0_.get_referent()
-                        if (r.type_name == OrganizationAnalyzer.__geoname): 
+                        if (r.type_name == OrganizationAnalyzer.GEONAME): 
                             org0_._add_geo_object(r)
                             t = br.end_token
                             t1 = t
                             tmax = t1
                             continue
-                    elif ((isinstance(t.next0_, TextToken) and t.next0_.chars.is_letter and not t.next0_.chars.is_all_lower) and t.next0_.next0_ == br.end_token): 
+                    elif (((isinstance(t.next0_, TextToken)) and t.next0_.chars.is_letter and not t.next0_.chars.is_all_lower) and t.next0_.next0_ == br.end_token): 
                         typ = OrgItemTypeToken.try_attach(t.next0_, True, None)
                         if (typ is not None): 
                             or0 = OrganizationReferent()
@@ -4124,9 +4125,9 @@ class OrganizationAnalyzer(Analyzer):
                 if (org0_.kind == OrganizationKind.CHURCH or ((typ is not None and typ.typ is not None and "фермер" in typ.typ))): 
                     prt = t.kit.process_referent("PERSON", t)
                     if (prt is not None): 
-                        na = OrgItemNameToken._new2196(t, prt.end_token, True)
+                        na = OrgItemNameToken._new2205(t, prt.end_token, True)
                         na.value = MiscHelper.get_text_value_of_meta_token(na, GetTextAttr.NO)
-                        na.chars = CharsInfo._new2197(True)
+                        na.chars = CharsInfo._new2206(True)
                         na.morph = prt.morph
                         sur = prt.referent.get_string_value("LASTNAME")
                         if (sur is not None): 
@@ -4143,12 +4144,12 @@ class OrganizationAnalyzer(Analyzer):
                 if (isinstance(t.get_referent(), OrganizationReferent)): 
                     own_org = (t if isinstance(t, ReferentToken) else None)
                     continue
-                if (t.is_value("ПРИ", None) and isinstance(t.next0_, ReferentToken) and isinstance(t.next0_.get_referent(), OrganizationReferent)): 
+                if (t.is_value("ПРИ", None) and (isinstance(t.next0_, ReferentToken)) and (isinstance(t.next0_.get_referent(), OrganizationReferent))): 
                     t = t.next0_
                     own_org = (t if isinstance(t, ReferentToken) else None)
                     continue
-                if ((((names is None and t.is_char('/') and isinstance(t.next0_, TextToken)) and not t.is_whitespace_after and t.next0_.chars.is_all_upper) and t.next0_.length_char >= 3 and isinstance(t.next0_.next0_, TextToken)) and not t.next0_.is_whitespace_after and t.next0_.next0_.is_char('/')): 
-                    na = OrgItemNameToken._new2198(t, t.next0_.next0_, t.next0_.get_source_text().upper(), t.next0_.chars)
+                if ((((names is None and t.is_char('/') and (isinstance(t.next0_, TextToken))) and not t.is_whitespace_after and t.next0_.chars.is_all_upper) and t.next0_.length_char >= 3 and (isinstance(t.next0_.next0_, TextToken))) and not t.next0_.is_whitespace_after and t.next0_.next0_.is_char('/')): 
+                    na = OrgItemNameToken._new2207(t, t.next0_.next0_, t.next0_.get_source_text().upper(), t.next0_.chars)
                 elif (names is None and typ is not None and ((typ.typ == "движение" or org0_.kind == OrganizationKind.PARTY))): 
                     tt1 = None
                     if (t.is_value("ЗА", None) or t.is_value("ПРОТИВ", None)): 
@@ -4189,7 +4190,7 @@ class OrganizationAnalyzer(Analyzer):
                             break
                     if (cla.is_undefined and na.chars.is_cyrillic_letter and na.chars.is_capital_upper): 
                         if ((t.previous is not None and not t.previous.morph.class0_.is_preposition and not t.previous.morph.class0_.is_conjunction) and t.previous.chars.is_all_lower): 
-                            if ((t.next0_ is not None and isinstance(t.next0_, TextToken) and t.next0_.chars.is_letter) and not t.next0_.chars.is_all_lower): 
+                            if ((t.next0_ is not None and (isinstance(t.next0_, TextToken)) and t.next0_.chars.is_letter) and not t.next0_.chars.is_all_lower): 
                                 break
                     if (typ is not None and typ.typ == "союз" and not t.morph.case.is_genitive): 
                         break
@@ -4328,13 +4329,13 @@ class OrganizationAnalyzer(Analyzer):
                     typ.coef += 3
                     do_higher_always = True
                 else: 
-                    own_org = None
+                    own_org = (None)
             elif ((((typ.is_doubt_root_word or typ.typ == "организация" or typ.typ == "управление") or typ.typ == "служба" or typ.typ == "общество") or typ.typ == "союз" or typ.typ == "організація") or typ.typ == "керування" or typ.typ == "суспільство"): 
-                own_org = None
+                own_org = (None)
             if (org0_.kind == OrganizationKind.GOVENMENT): 
                 if (names is None and ((typ.name is None or Utils.compareStrings(typ.name, typ.typ, True) == 0))): 
                     if ((attach_typ != OrganizationAnalyzer.AttachType.EXTONTOLOGY and typ.typ != "следственный комитет" and typ.typ != "кабинет министров") and typ.typ != "слідчий комітет"): 
-                        if (((typ.typ == "администрация" or typ.typ == "адміністрація")) and isinstance(typ.end_token.next0_, TextToken)): 
+                        if (((typ.typ == "администрация" or typ.typ == "адміністрація")) and (isinstance(typ.end_token.next0_, TextToken))): 
                             rt1 = typ.kit.process_referent("PERSONPROPERTY", typ.end_token.next0_)
                             if (rt1 is not None and typ.end_token.next0_.morph.case.is_genitive): 
                                 geo_ = (rt1.referent.get_value("REF") if isinstance(rt1.referent.get_value("REF"), GeoReferent) else None)
@@ -4366,7 +4367,7 @@ class OrganizationAnalyzer(Analyzer):
                     if (t1.end_char < typ.end_token.end_char): 
                         t1 = typ.end_token
             if (name_ is not None): 
-                if (len(name_) > OrganizationAnalyzer.__max_org_name): 
+                if (len(name_) > OrganizationAnalyzer.MAX_ORG_NAME): 
                     return None
                 org0_.add_name(name_, True, None)
             if (num is not None): 
@@ -4397,7 +4398,7 @@ class OrganizationAnalyzer(Analyzer):
             if ((not ok and typ is not None and typ.can_be_dep_before_organization) and own_org is not None): 
                 org0_.add_type_str(("підрозділ" if own_org.kit.base_language.is_ua else "подразделение"))
                 org0_.higher = (own_org.referent if isinstance(own_org.referent, OrganizationReferent) else None)
-                t1 = own_org
+                t1 = (own_org)
                 ok = True
             elif (typ is not None and own_org is not None and OrgOwnershipHelper.can_be_higher((own_org.referent if isinstance(own_org.referent, OrganizationReferent) else None), org0_, True)): 
                 if (OrgItemTypeToken.is_types_antagonisticoo(own_org.referent if isinstance(own_org.referent, OrganizationReferent) else None, org0_)): 
@@ -4406,12 +4407,12 @@ class OrganizationAnalyzer(Analyzer):
                     else: 
                         org0_.higher = (own_org.referent if isinstance(own_org.referent, OrganizationReferent) else None)
                         if (t1.end_char < own_org.end_char): 
-                            t1 = own_org
+                            t1 = (own_org)
                         ok = True
                 elif (typ.root is not None and typ.root.can_be_normal_dep): 
                     org0_.higher = (own_org.referent if isinstance(own_org.referent, OrganizationReferent) else None)
                     if (t1.end_char < own_org.end_char): 
-                        t1 = own_org
+                        t1 = (own_org)
                     ok = True
         elif (names is not None): 
             if (typ is None): 
@@ -4432,10 +4433,11 @@ class OrganizationAnalyzer(Analyzer):
                         return None
                 if (names[0].chars.is_all_lower and not typ.chars.is_latin_letter): 
                     return None
-                tmp = Utils.newStringIO(None)
+                tmp = io.StringIO()
                 print(names[0].value, end="", file=tmp)
                 t1 = names[0].end_token
-                for j in range(1, len(names), 1):
+                j = 1
+                while j < len(names): 
                     if (not names[j].is_std_tail and ((names[j].is_newline_before or not names[j].chars.is_latin_letter))): 
                         tmax = names[j].begin_token.previous
                         if (typ.geo is None and org0_.find_slot(OrganizationReferent.ATTR_GEO, None, True) is not None): 
@@ -4454,7 +4456,8 @@ class OrganizationAnalyzer(Analyzer):
                             print(".{0}".format(names[j].value), end="", file=tmp, flush=True)
                         else: 
                             print(" {0}".format(names[j].value), end="", file=tmp, flush=True)
-                if (tmp.tell() > OrganizationAnalyzer.__max_org_name): 
+                    j += 1
+                if (tmp.tell() > OrganizationAnalyzer.MAX_ORG_NAME): 
                     return None
                 nnn = Utils.toStringStringIO(tmp)
                 if (nnn.startswith("OF ") or nnn.startswith("IN ")): 
@@ -4480,21 +4483,23 @@ class OrganizationAnalyzer(Analyzer):
                     if (not names[0].morph.case.is_genitive): 
                         return None
                 t1 = names[0].end_token
-                for j in range(1, len(names), 1):
+                j = 1
+                while j < len(names): 
                     if (names[j].is_newline_before or names[j].chars != names[0].chars): 
                         break
                     else: 
                         t1 = names[j].end_token
+                    j += 1
                 ok = True
                 name_ = MiscHelper.get_text_value(names[0].begin_token, t1, GetTextAttr.NO)
-                if (num is None and isinstance(t1, NumberToken) and (t1 if isinstance(t1, NumberToken) else None).typ == NumberSpellingType.DIGIT): 
+                if (num is None and (isinstance(t1, NumberToken)) and (t1 if isinstance(t1, NumberToken) else None).typ == NumberSpellingType.DIGIT): 
                     tt1 = t1.previous
                     if (tt1 is not None and tt1.is_hiphen): 
                         tt1 = tt1.previous
-                    if (tt1 is not None and tt1.end_char > names[0].begin_char and isinstance(tt1, TextToken)): 
+                    if (tt1 is not None and tt1.end_char > names[0].begin_char and (isinstance(tt1, TextToken))): 
                         name_ = MiscHelper.get_text_value(names[0].begin_token, tt1, GetTextAttr.NO)
                         org0_.number = str((t1 if isinstance(t1, NumberToken) else None).value)
-                if (len(name_) > OrganizationAnalyzer.__max_org_name): 
+                if (len(name_) > OrganizationAnalyzer.MAX_ORG_NAME): 
                     return None
                 org0_.add_name(name_, True, names[0].begin_token)
             else: 
@@ -4502,31 +4507,31 @@ class OrganizationAnalyzer(Analyzer):
                     return None
                 if (typ.morph.number == MorphNumber.PLURAL and attach_typ != OrganizationAnalyzer.AttachType.MULTIPLE): 
                     return None
-                tmp = Utils.newStringIO(None)
+                tmp = io.StringIO()
                 koef = typ.coef
                 if (koef >= 4): 
                     always = True
                 if (org0_.find_slot(OrganizationReferent.ATTR_GEO, None, True) is not None): 
-                    koef += 1
+                    koef += (1)
                 if (spec_word_before): 
-                    koef += 1
+                    koef += (1)
                 if (names[0].chars.is_all_lower and typ.chars.is_all_lower and not spec_word_before): 
                     if (koef >= 3): 
-                        if (t is not None and isinstance(t.get_referent(), GeoReferent)): 
+                        if (t is not None and (isinstance(t.get_referent(), GeoReferent))): 
                             pass
                         else: 
-                            koef -= 3
+                            koef -= (3)
                 if (typ.chars_root.is_capital_upper): 
-                    koef += 0.5
+                    koef += (.5)
                 if (len(types) > 1): 
-                    koef += len(types) - 1
+                    koef += (len(types) - 1)
                 if (typ.name is not None): 
                     to = typ.begin_token
                     while to != typ.end_token and to is not None: 
                         if (OrgItemTypeToken.is_std_adjective(to, False)): 
-                            koef += 2
+                            koef += (2)
                         if (to.chars.is_capital_upper): 
-                            koef += 0.5
+                            koef += (.5)
                         to = to.next0_
                 ki = org0_.kind
                 if (attach_typ == OrganizationAnalyzer.AttachType.MULTIPLE and ((typ.name is None or len(typ.name) == len(typ.typ)))): 
@@ -4538,7 +4543,12 @@ class OrganizationAnalyzer(Analyzer):
                     print(Utils.ifNotNull(typ.name, (typ.typ.upper() if typ is not None and typ.typ is not None else None)), end="", file=tmp)
                 if (typ != mult_typ): 
                     t1 = typ.end_token
-                for j in range(len(names)):
+                j = 0
+                first_pass3981 = True
+                while True:
+                    if first_pass3981: first_pass3981 = False
+                    else: j += 1
+                    if (not (j < len(names))): break
                     if (((names[j].is_newline_before and j > 0)) or names[j].is_noun_phrase != names[0].is_noun_phrase): 
                         break
                     elif (names[j].chars != names[0].chars and names[j].begin_token.chars != names[0].chars): 
@@ -4548,11 +4558,11 @@ class OrganizationAnalyzer(Analyzer):
                             if (not names[j].morph.case.is_genitive and ((typ.root is not None and not typ.root.can_has_single_name))): 
                                 break
                         if ((j == 0 and names[j].whitespaces_before_count > 2 and names[j].newlines_before_count == 0) and names[j].begin_token.previous is not None): 
-                            koef -= (((names[j].whitespaces_before_count)) / 2)
+                            koef -= (((names[j].whitespaces_before_count)) / (2))
                         if (names[j].is_std_name): 
-                            koef += 4
+                            koef += (4)
                         elif (names[j].std_org_name_nouns > 0 and ((ki == OrganizationKind.GOVENMENT or LanguageHelper.ends_with(typ.typ, "центр")))): 
-                            koef += names[j].std_org_name_nouns
+                            koef += (names[j].std_org_name_nouns)
                         if (ki == OrganizationKind.AIRPORT and j == 0): 
                             koef += 1
                         t1 = names[j].end_token
@@ -4560,32 +4570,32 @@ class OrganizationAnalyzer(Analyzer):
                             if (not names[j].chars.is_all_lower): 
                                 ca = names[j].morph.case
                                 if ((ca.is_dative or ca.is_genitive or ca.is_instrumental) or ca.is_prepositional): 
-                                    koef += 0.5
+                                    koef += (.5)
                                 else: 
                                     continue
                             elif (((j == 0 or names[j].is_after_conjunction)) and names[j].morph.case.is_genitive and names[j].preposition is None): 
-                                koef += 0.5
+                                koef += (.5)
                             if (j == (len(names) - 1)): 
                                 if (isinstance(names[j].end_token.next0_, TextToken)): 
                                     if (names[j].end_token.next0_.get_morph_class_in_dictionary().is_verb): 
-                                        koef += 0.5
+                                        koef += .5
                         to = names[j].begin_token
                         while to is not None: 
                             if (isinstance(to, TextToken)): 
                                 if (attach_typ == OrganizationAnalyzer.AttachType.NORMAL or attach_typ == OrganizationAnalyzer.AttachType.NORMALAFTERDEP): 
                                     if (to.chars.is_capital_upper): 
-                                        koef += 0.5
+                                        koef += (.5)
                                     elif ((j == 0 and ((to.chars.is_all_upper or to.chars.is_last_lower)) and to.length_char > 2) and typ.root is not None and typ.root.can_has_latin_name): 
-                                        koef += 1
+                                        koef += (1)
                                 elif (to.chars.is_all_upper or to.chars.is_capital_upper): 
-                                    koef += 1
+                                    koef += (1)
                             if (to == names[j].end_token): 
                                 break
                             to = to.next0_
                 ttt = typ.begin_token.previous
                 while ttt is not None: 
                     if (isinstance(ttt.get_referent(), OrganizationReferent)): 
-                        koef += 1
+                        koef += (1)
                         break
                     elif (not ((isinstance(ttt, TextToken)))): 
                         break
@@ -4594,9 +4604,9 @@ class OrganizationAnalyzer(Analyzer):
                     ttt = ttt.previous
                 oki = org0_.kind
                 if (oki == OrganizationKind.GOVENMENT or oki == OrganizationKind.STUDY or oki == OrganizationKind.PARTY): 
-                    koef += len(names)
+                    koef += (len(names))
                 if (attach_typ != OrganizationAnalyzer.AttachType.NORMAL and attach_typ != OrganizationAnalyzer.AttachType.NORMALAFTERDEP): 
-                    koef += 3
+                    koef += (3)
                 br1 = None
                 if ((t1.whitespaces_after_count < 2) and BracketHelper.can_be_start_of_sequence(t1.next0_, True, False)): 
                     br1 = BracketHelper.try_parse(t1.next0_, BracketParseAttr.NO, 100)
@@ -4604,20 +4614,20 @@ class OrganizationAnalyzer(Analyzer):
                         sss = MiscHelper.get_text_value_of_meta_token(br1, GetTextAttr.NO)
                         if (sss is not None and len(sss) > 2): 
                             org0_.add_name(sss, True, br1.begin_token.next0_)
-                            koef += 1
+                            koef += (1)
                             t1 = br1.end_token
                         else: 
-                            br1 = None
+                            br1 = (None)
                 if (koef >= 3 and t1.next0_ is not None): 
                     r = t1.next0_.get_referent()
-                    if (r is not None and ((r.type_name == OrganizationAnalyzer.__geoname or r.type_name == OrganizationReferent.OBJ_TYPENAME))): 
-                        koef += 1
+                    if (r is not None and ((r.type_name == OrganizationAnalyzer.GEONAME or r.type_name == OrganizationReferent.OBJ_TYPENAME))): 
+                        koef += (1)
                     elif (self.__is_geo(t1.next0_, False) is not None): 
-                        koef += 1
+                        koef += (1)
                     elif (t1.next0_.is_char('(') and self.__is_geo(t1.next0_.next0_, False) is not None): 
-                        koef += 1
+                        koef += (1)
                     elif (spec_word_before and t1.kit.process_referent("PERSON", t1.next0_) is not None): 
-                        koef += 1
+                        koef += (1)
                 if (koef >= 4): 
                     ok = True
                 if (not ok): 
@@ -4642,7 +4652,7 @@ class OrganizationAnalyzer(Analyzer):
                     tt1 = t1
                     if (br1 is not None): 
                         tt1 = br1.begin_token.previous
-                    if (isinstance(tt1.get_referent(), GeoReferent) and (tt1.get_referent() if isinstance(tt1.get_referent(), GeoReferent) else None).is_state): 
+                    if ((isinstance(tt1.get_referent(), GeoReferent)) and (tt1.get_referent() if isinstance(tt1.get_referent(), GeoReferent) else None).is_state): 
                         if (names[0].begin_token != tt1): 
                             tt1 = t1.previous
                             org0_._add_geo_object(t1.get_referent())
@@ -4657,9 +4667,9 @@ class OrganizationAnalyzer(Analyzer):
                                 geo_.add_slot(GeoReferent.ATTR_NAME, t1.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False), False, 0)
                                 geo_.add_slot(GeoReferent.ATTR_TYPE, ("місто" if t1.kit.base_language.is_ua else "город"), False, 0)
                                 rt = ReferentToken(geo_, t1, t1)
-                                rt.data = ad
+                                rt.data = (ad)
                                 org0_._add_geo_object(rt)
-                                s = None
+                                s = (None)
                     if (s is not None): 
                         if (tmp.tell() == 0): 
                             if (names[0].morph.case.is_genitive or names[0].preposition is not None): 
@@ -4668,7 +4678,7 @@ class OrganizationAnalyzer(Analyzer):
                         if (tmp.tell() > 0): 
                             print(' ', end="", file=tmp)
                         print(s, end="", file=tmp)
-                    if (tmp.tell() > OrganizationAnalyzer.__max_org_name): 
+                    if (tmp.tell() > OrganizationAnalyzer.MAX_ORG_NAME): 
                         return None
                     org0_.add_name(Utils.toStringStringIO(tmp), True, names[0].begin_token)
                     if (len(types) > 1 and types[0].name is not None): 
@@ -4678,7 +4688,7 @@ class OrganizationAnalyzer(Analyzer):
                 return None
             if (len(types) == 2 and types[0].coef > typ.coef): 
                 typ = types[0]
-            if ((typ.typ == "банк" and isinstance(t, ReferentToken) and not t.is_newline_before) and typ.morph.number == MorphNumber.SINGULAR): 
+            if ((typ.typ == "банк" and (isinstance(t, ReferentToken)) and not t.is_newline_before) and typ.morph.number == MorphNumber.SINGULAR): 
                 if (typ.name is not None): 
                     if (typ.begin_token.chars.is_all_lower): 
                         org0_.add_type_str(typ.name.lower())
@@ -4688,7 +4698,7 @@ class OrganizationAnalyzer(Analyzer):
                         if (s0 != typ.name): 
                             org0_.add_name(s0, True, None)
                 r = t.get_referent()
-                if (r.type_name == OrganizationAnalyzer.__geoname and t.morph.case != MorphCase.NOMINATIVE): 
+                if (r.type_name == OrganizationAnalyzer.GEONAME and t.morph.case != MorphCase.NOMINATIVE): 
                     org0_._add_geo_object(r)
                     return ReferentToken(org0_, t0, t)
             if (((typ.root is not None and typ.root.is_pure_prefix)) and (typ.coef < 4)): 
@@ -4716,21 +4726,21 @@ class OrganizationAnalyzer(Analyzer):
                                         nu = OrgItemNumberToken.try_attach(ttt.next0_, True, None)
                                         if (nu is not None): 
                                             if ((r if isinstance(r, OrganizationReferent) else None).number != nu.number): 
-                                                ttt = None
+                                                ttt = (None)
                                             else: 
                                                 org0_.number = nu.number
                                                 ttt = nu.end_token
                                         elif (len(li) > 1): 
-                                            ttt = None
+                                            ttt = (None)
                                         if (ttt is not None): 
                                             return ReferentToken(r, typ.begin_token, ttt)
                     return None
                 else: 
                     cou = 0
                     tt = typ.begin_token.previous
-                    first_pass3011 = True
+                    first_pass3982 = True
                     while True:
-                        if first_pass3011: first_pass3011 = False
+                        if first_pass3982: first_pass3982 = False
                         else: tt = tt.previous; cou += 1
                         if (not (tt is not None and (cou < 200))): break
                         org0 = (tt.get_referent() if isinstance(tt.get_referent(), OrganizationReferent) else None)
@@ -4738,7 +4748,7 @@ class OrganizationAnalyzer(Analyzer):
                             continue
                         if (not org0.can_be_equals(org0_, Referent.EqualType.WITHINONETEXT)): 
                             continue
-                        tt = (Utils.ifNotNull(self.__attach_tail_attributes(org0_, typ.end_token.next0_, ad, False, attach_typ, False), typ.end_token))
+                        tt = (Utils.ifNotNull(self.__attach_tail_attributes(org0_, typ.end_token.next0_, ad, False, attach_typ, False), (typ.end_token if typ is not None else None)))
                         if (not org0.can_be_equals(org0_, Referent.EqualType.WITHINONETEXT)): 
                             break
                         org0_.merge_slots(org0, True)
@@ -4756,35 +4766,35 @@ class OrganizationAnalyzer(Analyzer):
             if (typ.name_words_count == 1 and typ.name is not None and len(typ.name) > len(typ.typ)): 
                 koef += 1
             if (spec_word_before): 
-                koef += 1
+                koef += (1)
             ok = False
             if (typ.chars_root.is_capital_upper): 
-                koef += 0.5
+                koef += (.5)
                 if (typ.name_words_count == 1): 
-                    koef += 0.5
+                    koef += (.5)
             if (epon is not None): 
-                koef += 2
+                koef += (2)
             has_nonstd_words = False
             to = typ.begin_token
             while to != typ.end_token and to is not None: 
                 if (OrgItemTypeToken.is_std_adjective(to, False)): 
                     if (typ.root is not None and typ.root.coeff > 0): 
-                        koef += (1 if OrgItemTypeToken.is_std_adjective(to, True) else math.floor(0.5))
+                        koef += ((1 if OrgItemTypeToken.is_std_adjective(to, True) else math.floor(.5)))
                 else: 
                     has_nonstd_words = True
                 if (to.chars.is_capital_upper and not to.morph.class0_.is_pronoun): 
-                    koef += 0.5
+                    koef += (.5)
                 to = to.next0_
             if (not has_nonstd_words and org0_.kind == OrganizationKind.GOVENMENT): 
-                koef -= 2
+                koef -= (2)
             if (typ.chars.is_all_lower and (typ.coef < 4)): 
-                koef -= 2
+                koef -= (2)
             if (koef > 1 and typ.name_words_count > 2): 
-                koef += 2
+                koef += (2)
             ttt = typ.begin_token.previous
             while ttt is not None: 
                 if (isinstance(ttt.get_referent(), OrganizationReferent)): 
-                    koef += 1
+                    koef += (1)
                     break
                 elif (not ((isinstance(ttt, TextToken)))): 
                     break
@@ -4794,7 +4804,7 @@ class OrganizationAnalyzer(Analyzer):
             ttt = typ.end_token.next0_
             while ttt is not None: 
                 if (isinstance(ttt.get_referent(), OrganizationReferent)): 
-                    koef += 1
+                    koef += (1)
                     break
                 elif (not ((isinstance(ttt, TextToken)))): 
                     break
@@ -4802,12 +4812,12 @@ class OrganizationAnalyzer(Analyzer):
                     break
                 ttt = ttt.next0_
             if (typ.whitespaces_before_count > 4 and typ.whitespaces_after_count > 4): 
-                koef += 0.5
+                koef += (.5)
             if (typ.can_be_organization): 
-                koef += 3
+                koef += (3)
             org0_.add_type(typ, False)
             if (((org0_.kind == OrganizationKind.BANK or org0_.kind == OrganizationKind.JUSTICE)) and typ.name is not None and len(typ.name) > len(typ.typ)): 
-                koef += 1
+                koef += (1)
             if (org0_.kind == OrganizationKind.JUSTICE and len(org0_._geo_objects) > 0): 
                 always = True
             if (org0_.kind == OrganizationKind.AIRPORT): 
@@ -4825,7 +4835,7 @@ class OrganizationAnalyzer(Analyzer):
                     ok = True
             if (ok): 
                 if (typ.name is not None and not typ.is_not_typ): 
-                    if (len(typ.name) > OrganizationAnalyzer.__max_org_name or Utils.compareStrings(typ.name, typ.typ, True) == 0): 
+                    if (len(typ.name) > OrganizationAnalyzer.MAX_ORG_NAME or Utils.compareStrings(typ.name, typ.typ, True) == 0): 
                         return None
                     org0_.add_name(typ.name, True, None)
                 t1 = typ.end_token
@@ -4848,7 +4858,7 @@ class OrganizationAnalyzer(Analyzer):
             if (do_higher_always or OrgOwnershipHelper.can_be_higher(own_org.referent if isinstance(own_org.referent, OrganizationReferent) else None, org0_, False)): 
                 org0_.higher = (own_org.referent if isinstance(own_org.referent, OrganizationReferent) else None)
                 if (own_org.begin_char > t1.begin_char): 
-                    t1 = own_org
+                    t1 = (own_org)
                     t = self.__attach_tail_attributes(org0_, t1.next0_, None, True, attach_typ, False)
                     if (t is not None): 
                         t1 = t
@@ -4897,7 +4907,7 @@ class OrganizationAnalyzer(Analyzer):
         min_end_char = t.previous.end_char
         max_end_char = t.end_char
         t0 = t.previous
-        if (isinstance(t0, ReferentToken) and isinstance(t0.get_referent(), OrganizationReferent) and t0.previous is not None): 
+        if ((isinstance(t0, ReferentToken)) and (isinstance(t0.get_referent(), OrganizationReferent)) and t0.previous is not None): 
             min_end_char = t0.previous.end_char
             t0 = t0.previous
         res = None
@@ -4909,9 +4919,9 @@ class OrganizationAnalyzer(Analyzer):
             num = None
             num_et = None
             ttt = t0
-            first_pass3012 = True
+            first_pass3983 = True
             while True:
-                if first_pass3012: first_pass3012 = False
+                if first_pass3983: first_pass3983 = False
                 else: ttt = ttt.previous
                 if (not (ttt is not None)): break
                 if (ttt.whitespaces_after_count > 1): 
@@ -4935,7 +4945,7 @@ class OrganizationAnalyzer(Analyzer):
                 if ((cou) > 10): 
                     break
                 if (ttt.is_value("НАПРАВЛЕНИЕ", "НАПРЯМОК")): 
-                    if (num is not None or ((isinstance(ttt.previous, NumberToken) and (ttt.whitespaces_before_count < 3)))): 
+                    if (num is not None or (((isinstance(ttt.previous, NumberToken)) and (ttt.whitespaces_before_count < 3)))): 
                         oo = OrganizationReferent()
                         oo.add_profile(OrgProfile.UNIT)
                         oo.add_type_str((("НАПРЯМОК" if ttt.morph.language.is_ua else "НАПРАВЛЕНИЕ")).lower())
@@ -4976,9 +4986,9 @@ class OrganizationAnalyzer(Analyzer):
             return None
         typ = None
         t0 = t.previous
-        first_pass3013 = True
+        first_pass3984 = True
         while True:
-            if first_pass3013: first_pass3013 = False
+            if first_pass3984: first_pass3984 = False
             else: t0 = t0.previous
             if (not (t0 is not None)): break
             if (t0.whitespaces_after_count > 1): 
@@ -4997,7 +5007,7 @@ class OrganizationAnalyzer(Analyzer):
                 if (nn is not None): 
                     ty.end_token = nn.end_token
                     ty.number = nn.number
-                elif (isinstance(ty.end_token.next0_, NumberToken) and (ty.whitespaces_after_count < 2)): 
+                elif ((isinstance(ty.end_token.next0_, NumberToken)) and (ty.whitespaces_after_count < 2)): 
                     ty.end_token = ty.end_token.next0_
                     ty.number = str((ty.end_token if isinstance(ty.end_token, NumberToken) else None).value)
                 if (ty.end_char >= min_end_char and ty.end_char <= max_end_char): 
@@ -5031,9 +5041,9 @@ class OrganizationAnalyzer(Analyzer):
         words_after = 0
         is_fraction = False
         is_politic = False
-        first_pass3014 = True
+        first_pass3985 = True
         while True:
-            if first_pass3014: first_pass3014 = False
+            if first_pass3985: first_pass3985 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and t.is_newline_before): 
@@ -5044,12 +5054,12 @@ class OrganizationAnalyzer(Analyzer):
                 if (prev_toks is None): 
                     return None
                 continue
-            tokn = OrganizationAnalyzer.__m_politic_names.try_parse(t, TerminParseAttr.NO)
+            tokn = OrganizationAnalyzer.M_POLITIC_NAMES.try_parse(t, TerminParseAttr.NO)
             if (tokn is not None): 
                 if (not t.chars.is_all_lower): 
                     break
                 t1 = tokn.end_token
-            tok = OrganizationAnalyzer.__m_politic_prefs.try_parse(t, TerminParseAttr.NO)
+            tok = OrganizationAnalyzer.M_POLITIC_PREFS.try_parse(t, TerminParseAttr.NO)
             if (tok is None): 
                 if (t.morph.class0_.is_adjective): 
                     rt = t.kit.process_referent("GEO", t)
@@ -5057,7 +5067,7 @@ class OrganizationAnalyzer(Analyzer):
                         geo_ = rt
                         t = rt.end_token
                         t1 = t
-                        coef += 0.5
+                        coef += .5
                         continue
                 if (t.end_char < t1.end_char): 
                     continue
@@ -5072,10 +5082,10 @@ class OrganizationAnalyzer(Analyzer):
                 prev_toks = list()
             prev_toks.append(tok)
             if (tok.termin.tag is None): 
-                coef += 1
+                coef += (1)
                 prev_words += 1
             elif (tok.morph.class0_.is_adjective): 
-                coef += 0.5
+                coef += .5
             t = tok.end_token
             if (t.end_char > t1.end_char): 
                 t1 = t
@@ -5085,36 +5095,38 @@ class OrganizationAnalyzer(Analyzer):
             if (not t.is_value("ПАРТИЯ", None)): 
                 is_politic = True
             root = t
-            coef += 0.5
+            coef += .5
             if (t.chars.is_capital_upper and not MiscHelper.can_be_start_of_sentence(t)): 
-                coef += 0.5
+                coef += .5
             t1 = t
             t = t.next0_
         elif (t.is_value("ФРАКЦИЯ", None)): 
             t1 = t
             root = t1
             is_fraction = True
-            if (t.next0_ is not None and isinstance(t.next0_.get_referent(), OrganizationReferent)): 
-                coef += 2
+            if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), OrganizationReferent))): 
+                coef += (2)
             else: 
                 return None
         br = None
-        name_tok = OrganizationAnalyzer.__m_politic_names.try_parse(t, TerminParseAttr.NO)
+        name_tok = OrganizationAnalyzer.M_POLITIC_NAMES.try_parse(t, TerminParseAttr.NO)
         if ((name_tok) is not None): 
-            coef += 0.5
+            coef += .5
             is_politic = True
             if (not t.chars.is_all_lower): 
-                coef += 0.5
+                coef += .5
             if (name_tok.length_char > 10): 
-                coef += 0.5
+                coef += .5
             elif (t.chars.is_all_upper): 
-                coef += 0.5
+                coef += .5
             t1 = name_tok.end_token
             t = t1.next0_
         else: 
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 10)
-            if (BracketHelper.can_be_start_of_sequence(t, True, False) and (br) is not None): 
-                name_tok = OrganizationAnalyzer.__m_politic_names.try_parse(t.next0_, TerminParseAttr.NO)
+            if ((br) is not None): 
+                if (not BracketHelper.can_be_start_of_sequence(t, True, False)): 
+                    return None
+                name_tok = OrganizationAnalyzer.M_POLITIC_NAMES.try_parse(t.next0_, TerminParseAttr.NO)
                 if ((name_tok) is not None): 
                     coef += 1.5
                 elif (only_abbrs): 
@@ -5124,27 +5136,27 @@ class OrganizationAnalyzer(Analyzer):
                 else: 
                     tt = t.next0_
                     while tt is not None and tt.end_char <= br.end_char: 
-                        tok2 = OrganizationAnalyzer.__m_politic_prefs.try_parse(tt, TerminParseAttr.NO)
+                        tok2 = OrganizationAnalyzer.M_POLITIC_PREFS.try_parse(tt, TerminParseAttr.NO)
                         if (tok2 is not None and tok2.termin.tag is None): 
                             if (tok2.termin.tag2 is None): 
                                 is_politic = True
-                            coef += 0.5
+                            coef += .5
                             words_after += 1
-                        elif (OrganizationAnalyzer.__m_politic_suffs.try_parse(tt, TerminParseAttr.NO) is not None): 
-                            coef += 0.5
+                        elif (OrganizationAnalyzer.M_POLITIC_SUFFS.try_parse(tt, TerminParseAttr.NO) is not None): 
+                            coef += .5
                             words_after += 1
                         elif (isinstance(tt.get_referent(), GeoReferent)): 
-                            coef += 0.5
+                            coef += .5
                         elif (isinstance(tt, ReferentToken)): 
-                            coef = 0
+                            coef = (0)
                             break
                         else: 
                             mc = tt.get_morph_class_in_dictionary()
                             if ((mc == MorphClass.VERB or mc == MorphClass.ADVERB or mc.is_pronoun) or mc.is_personal_pronoun): 
-                                coef = 0
+                                coef = (0)
                                 break
                             if (mc.is_noun or mc.is_undefined): 
-                                coef -= 0.5
+                                coef -= .5
                         tt = tt.next0_
                 t1 = br.end_token
                 t = t1.next0_
@@ -5152,9 +5164,9 @@ class OrganizationAnalyzer(Analyzer):
                 return None
             elif (root is not None): 
                 tt = t
-                first_pass3015 = True
+                first_pass3986 = True
                 while True:
-                    if first_pass3015: first_pass3015 = False
+                    if first_pass3986: first_pass3986 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (isinstance(tt.get_referent(), GeoReferent)): 
@@ -5167,7 +5179,7 @@ class OrganizationAnalyzer(Analyzer):
                         continue
                     if (tt.is_and): 
                         npt2 = NounPhraseHelper.try_parse(tt.next0_, NounPhraseParseAttr.REFERENTCANBENOUN, 0)
-                        if (npt2 is not None and OrganizationAnalyzer.__m_politic_suffs.try_parse(npt2.end_token, TerminParseAttr.NO) is not None and npt2.end_token.chars == tt.previous.chars): 
+                        if (npt2 is not None and OrganizationAnalyzer.M_POLITIC_SUFFS.try_parse(npt2.end_token, TerminParseAttr.NO) is not None and npt2.end_token.chars == tt.previous.chars): 
                             continue
                         break
                     npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.REFERENTCANBENOUN, 0)
@@ -5178,22 +5190,22 @@ class OrganizationAnalyzer(Analyzer):
                     co = 0
                     ttt = tt
                     while ttt is not None and ttt.end_char <= npt.end_char: 
-                        tok2 = OrganizationAnalyzer.__m_politic_prefs.try_parse(ttt, TerminParseAttr.NO)
+                        tok2 = OrganizationAnalyzer.M_POLITIC_PREFS.try_parse(ttt, TerminParseAttr.NO)
                         if (tok2 is not None and tok2.termin.tag is None): 
                             if (tok2.termin.tag2 is None): 
                                 is_politic = True
-                            co += 0.5
+                            co += .5
                             words_after += 1
-                        elif (OrganizationAnalyzer.__m_politic_suffs.try_parse(ttt, TerminParseAttr.NO) is not None): 
-                            co += 0.5
+                        elif (OrganizationAnalyzer.M_POLITIC_SUFFS.try_parse(ttt, TerminParseAttr.NO) is not None): 
+                            co += .5
                             words_after += 1
                         elif (isinstance(ttt.get_referent(), GeoReferent)): 
-                            co += 0.5
+                            co += .5
                         ttt = ttt.next0_
                     if (co == 0): 
                         if (not npt.morph.case.is_genitive): 
                             break
-                        last_suf = OrganizationAnalyzer.__m_politic_suffs.try_parse(tt.previous, TerminParseAttr.NO)
+                        last_suf = OrganizationAnalyzer.M_POLITIC_SUFFS.try_parse(tt.previous, TerminParseAttr.NO)
                         if (((words_after > 0 and npt.end_token.chars == tt.previous.chars)) or ((last_suf is not None and last_suf.termin.tag is not None)) or ((tt.previous == root and npt.end_token.chars.is_all_lower and npt.morph.number == MorphNumber.PLURAL) and root.chars.is_capital_upper)): 
                             pp = tt.kit.process_referent("PERSON", tt)
                             if (pp is not None): 
@@ -5205,28 +5217,28 @@ class OrganizationAnalyzer(Analyzer):
                     t1 = tt
                     t = t1.next0_
                     coef += co
-        if (t is not None and isinstance(t.get_referent(), GeoReferent) and (t.whitespaces_before_count < 3)): 
+        if (t is not None and (isinstance(t.get_referent(), GeoReferent)) and (t.whitespaces_before_count < 3)): 
             t1 = t
-            coef += 0.5
+            coef += .5
         tt = t0.previous
-        first_pass3016 = True
+        first_pass3987 = True
         while True:
-            if first_pass3016: first_pass3016 = False
+            if first_pass3987: first_pass3987 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             if (not ((isinstance(tt, TextToken)))): 
                 org1 = (tt.get_referent() if isinstance(tt.get_referent(), OrganizationReferent) else None)
                 if (org1 is not None and org1.contains_profile(OrgProfile.POLICY)): 
-                    coef += 0.5
+                    coef += .5
                 continue
             if (not tt.chars.is_letter): 
                 continue
             if (tt.morph.class0_.is_preposition or tt.morph.class0_.is_conjunction): 
                 continue
-            if (OrganizationAnalyzer.__m_politic_prefs.try_parse(tt, TerminParseAttr.NO) is not None): 
-                coef += 0.5
+            if (OrganizationAnalyzer.M_POLITIC_PREFS.try_parse(tt, TerminParseAttr.NO) is not None): 
+                coef += .5
                 if (tt.is_value("ФРАКЦИЯ", None)): 
-                    coef += 0.5
+                    coef += .5
             else: 
                 break
         if (coef < 1): 
@@ -5239,7 +5251,7 @@ class OrganizationAnalyzer(Analyzer):
                 return None
         org0_ = OrganizationReferent()
         if (br is not None and name_tok is not None and (name_tok.end_char < br.end_token.previous.end_char)): 
-            name_tok = None
+            name_tok = (None)
         if (name_tok is not None): 
             is_politic = True
         if (is_fraction): 
@@ -5302,11 +5314,11 @@ class OrganizationAnalyzer(Analyzer):
                     org0_.add_name(typ, True, None)
                 else: 
                     org0_.add_type_str(typ.lower())
-            if (is_fraction and isinstance(t1.next0_, ReferentToken)): 
+            if (is_fraction and (isinstance(t1.next0_, ReferentToken))): 
                 org0_.add_type_str("фракция")
                 t1 = t1.next0_
                 org0_.higher = (t1.get_referent() if isinstance(t1.get_referent(), OrganizationReferent) else None)
-                if (t1.next0_ is not None and t1.next0_.is_value("В", None) and isinstance(t1.next0_.next0_, ReferentToken)): 
+                if (t1.next0_ is not None and t1.next0_.is_value("В", None) and (isinstance(t1.next0_.next0_, ReferentToken))): 
                     oo = (t1.next0_.next0_.get_referent() if isinstance(t1.next0_.next0_.get_referent(), OrganizationReferent) else None)
                     if (oo is not None and oo.kind == OrganizationKind.GOVENMENT): 
                         t1 = t1.next0_.next0_
@@ -5324,21 +5336,21 @@ class OrganizationAnalyzer(Analyzer):
     def __init_politic() -> None:
         from pullenti.ner.core.TerminCollection import TerminCollection
         from pullenti.ner.core.Termin import Termin
-        OrganizationAnalyzer.__m_politic_prefs = TerminCollection()
+        OrganizationAnalyzer.M_POLITIC_PREFS = TerminCollection()
         for s in ["либеральный", "либерал", "лейбористский", "демократический", "коммунистрический", "большевистский", "социальный", "социал", "национал", "националистическая", "свободный", "радикальный", "леворадикальный", "радикал", "революционная", "левый", "правый", "социалистический", "рабочий", "трудовой", "республиканский", "народный", "аграрный", "монархический", "анархический", "прогрессивый", "прогрессистский", "консервативный", "гражданский", "фашистский", "марксистский", "ленинский", "маоистский", "имперский", "славянский", "анархический", "баскский", "конституционный", "пиратский", "патриотический", "русский"]: 
-            OrganizationAnalyzer.__m_politic_prefs.add(Termin(s.upper()))
+            OrganizationAnalyzer.M_POLITIC_PREFS.add(Termin(s.upper()))
         for s in ["объединенный", "всероссийский", "общероссийский", "христианский", "независимый", "альтернативный"]: 
-            OrganizationAnalyzer.__m_politic_prefs.add(Termin._new2185(s.upper(), s))
+            OrganizationAnalyzer.M_POLITIC_PREFS.add(Termin._new2194(s.upper(), s))
         for s in ["политический", "правящий", "оппозиционный", "запрешенный", "террористический", "запрещенный", "экстремистский"]: 
-            OrganizationAnalyzer.__m_politic_prefs.add(Termin._new118(s.upper(), s))
+            OrganizationAnalyzer.M_POLITIC_PREFS.add(Termin._new118(s.upper(), s))
         for s in ["активист", "член", "руководство", "лидер", "глава", "демонстрация", "фракция", "съезд", "пленум", "террорист", "парламент", "депутат", "парламентарий", "оппозиция", "дума", "рада"]: 
-            OrganizationAnalyzer.__m_politic_prefs.add(Termin._new120(s.upper(), s, s))
-        OrganizationAnalyzer.__m_politic_suffs = TerminCollection()
+            OrganizationAnalyzer.M_POLITIC_PREFS.add(Termin._new120(s.upper(), s, s))
+        OrganizationAnalyzer.M_POLITIC_SUFFS = TerminCollection()
         for s in ["коммунист", "социалист", "либерал", "республиканец", "националист", "радикал", "лейборист", "анархист", "патриот", "консерватор", "левый", "правый", "новый", "зеленые", "демократ", "фашист", "защитник", "труд", "равенство", "прогресс", "жизнь", "мир", "родина", "отечество", "отчизна", "республика", "революция", "революционер", "народовластие", "фронт", "сила", "платформа", "воля", "справедливость", "преображение", "преобразование", "солидарность", "управление", "демократия", "народ", "гражданин", "предприниматель", "предпринимательство", "бизнес", "пенсионер", "христианин"]: 
-            OrganizationAnalyzer.__m_politic_suffs.add(Termin(s.upper()))
+            OrganizationAnalyzer.M_POLITIC_SUFFS.add(Termin(s.upper()))
         for s in ["реформа", "свобода", "единство", "развитие", "освобождение", "любитель", "поддержка", "возрождение", "независимость"]: 
-            OrganizationAnalyzer.__m_politic_suffs.add(Termin._new118(s.upper(), s))
-        OrganizationAnalyzer.__m_politic_names = TerminCollection()
+            OrganizationAnalyzer.M_POLITIC_SUFFS.add(Termin._new118(s.upper(), s))
+        OrganizationAnalyzer.M_POLITIC_NAMES = TerminCollection()
         for s in ["Республиканская партия", "Демократическая партия;Демпартия", "Христианско демократический союз;ХДС", "Свободная демократическая партия;СвДП", "ЯБЛОКО", "ПАРНАС", "ПАМЯТЬ", "Движение против нелегальной иммиграции;ДПНИ", "НАЦИОНАЛ БОЛЬШЕВИСТСКАЯ ПАРТИЯ;НБП", "НАЦИОНАЛЬНЫЙ ФРОНТ;НАЦФРОНТ", "Национальный патриотический фронт;НПФ", "Батькивщина;Батькiвщина", "НАРОДНАЯ САМООБОРОНА", "Гражданская платформа", "Народная воля", "Славянский союз", "ПРАВЫЙ СЕКТОР", "ПЕГИДА;PEGIDA", "Венгерский гражданский союз;ФИДЕС", "БЛОК ЮЛИИ ТИМОШЕНКО;БЮТ", "Аль Каида;Аль Каеда;Аль Кайда;Al Qaeda;Al Qaida", "Талибан;движение талибан", "Бригады мученников Аль Аксы", "Хезболла;Хезбалла;Хизбалла", "Народный фронт освобождения палестины;НФОП", "Организация освобождения палестины;ООП", "Союз исламского джихада;Исламский джихад", "Аль-Джихад;Египетский исламский джихад", "Братья-мусульмане;Аль Ихван альМуслимун", "ХАМАС", "Движение за освобождение Палестины;ФАТХ", "Фронт Аль Нусра;Аль Нусра", "Джабхат ан Нусра"]: 
             pp = Utils.splitString(s.upper(), ';', False)
             t = Termin._new118(pp[0], OrgProfile.POLICY)
@@ -5347,21 +5359,21 @@ class OrganizationAnalyzer(Analyzer):
                 if ((len(pp[i]) < 5) and t.acronym is None): 
                     t.acronym = pp[i]
                     if (t.acronym.endswith("Р") or t.acronym.endswith("РФ")): 
-                        t.tag = MiscLocationHelper.get_geo_referent_by_name("RU")
+                        t.tag = (MiscLocationHelper.get_geo_referent_by_name("RU"))
                     elif (t.acronym.endswith("У")): 
-                        t.tag = MiscLocationHelper.get_geo_referent_by_name("UA")
+                        t.tag = (MiscLocationHelper.get_geo_referent_by_name("UA"))
                     elif (t.acronym.endswith("СС")): 
-                        t.tag = MiscLocationHelper.get_geo_referent_by_name("СССР")
+                        t.tag = (MiscLocationHelper.get_geo_referent_by_name("СССР"))
                 else: 
                     t.add_variant(pp[i], False)
                 i += 1
-            OrganizationAnalyzer.__m_politic_names.add(t)
+            OrganizationAnalyzer.M_POLITIC_NAMES.add(t)
     
-    __m_politic_prefs = None
+    M_POLITIC_PREFS = None
     
-    __m_politic_suffs = None
+    M_POLITIC_SUFFS = None
     
-    __m_politic_names = None
+    M_POLITIC_NAMES = None
     
     def __try_attach_dep_before_org(self, typ : 'OrgItemTypeToken', rt_org : 'ReferentToken') -> 'ReferentToken':
         from pullenti.ner.Referent import Referent
@@ -5393,11 +5405,11 @@ class OrganizationAnalyzer(Analyzer):
         dep.add_type(typ, False)
         if (typ.name is not None): 
             nam = typ.name
-            if (nam[0].isdigit()): 
+            if (str.isdigit(nam[0])): 
                 i = nam.find(' ')
                 if (i > 0): 
-                    dep.number = nam[0 : (i)]
-                    nam = nam[i + 1 : ].strip()
+                    dep.number = nam[0:0+i]
+                    nam = nam[i + 1:].strip()
             dep.add_name(nam, True, None)
         ttt = (typ.root.canonic_text if typ.root is not None else typ.typ.upper())
         if ((((ttt == "ОТДЕЛЕНИЕ" or ttt == "ИНСПЕКЦИЯ" or ttt == "ВІДДІЛЕННЯ") or ttt == "ІНСПЕКЦІЯ")) and not t1.is_newline_after): 
@@ -5496,13 +5508,13 @@ class OrganizationAnalyzer(Analyzer):
                     after_org = (rt00.referent if isinstance(rt00.referent, OrganizationReferent) else None)
                     spec_word_before = True
                     after_org_temp = True
-                elif (isinstance(typ.end_token.next0_, TextToken) and typ.end_token.next0_.chars.is_all_upper): 
+                elif ((isinstance(typ.end_token.next0_, TextToken)) and typ.end_token.next0_.chars.is_all_upper): 
                     rrr = self.__try_attach_orgs(typ.end_token.next0_, None, 0)
                     if (rrr is not None and len(rrr) == 1): 
                         after_org = (rrr[0].referent if isinstance(rrr[0].referent, OrganizationReferent) else None)
                         spec_word_before = True
                         after_org_temp = True
-        if (((((((typ.root is not None and typ.root.can_be_normal_dep and not spec_word_before) and typ.typ != "отделение" and typ.typ != "инспекция") and typ.typ != "филиал" and typ.typ != "аппарат") and typ.typ != "відділення" and typ.typ != "інспекція") and typ.typ != "філія" and typ.typ != "апарат") and typ.typ != "совет" and typ.typ != "рада") and ((' ') not in typ.typ) and attach_typ != OrganizationAnalyzer.AttachType.EXTONTOLOGY): 
+        if (((((((typ.root is not None and typ.root.can_be_normal_dep and not spec_word_before) and typ.typ != "отделение" and typ.typ != "инспекция") and typ.typ != "филиал" and typ.typ != "аппарат") and typ.typ != "відділення" and typ.typ != "інспекція") and typ.typ != "філія" and typ.typ != "апарат") and typ.typ != "совет" and typ.typ != "рада") and (typ.typ.find(' ') < 0) and attach_typ != OrganizationAnalyzer.AttachType.EXTONTOLOGY): 
             return None
         if (typ.morph.number == MorphNumber.PLURAL): 
             if (not typ.begin_token.is_value("ОСП", None)): 
@@ -5518,12 +5530,12 @@ class OrganizationAnalyzer(Analyzer):
         elif (typ.typ == "курс" and not typ.is_newline_before): 
             nnn = NumberHelper.try_parse_roman_back(typ.begin_token.previous)
             if (nnn is not None): 
-                if (nnn.value >= 1 and nnn.value <= 6): 
+                if (nnn.value >= (1) and nnn.value <= (6)): 
                     dep.number = str(nnn.value)
                     t0 = nnn.begin_token
         t = typ.end_token.next0_
         t1 = typ.end_token
-        if (isinstance(t, TextToken) and after_org is None and (((LanguageHelper.ends_with(typ.typ, "аппарат") or LanguageHelper.ends_with(typ.typ, "апарат") or LanguageHelper.ends_with(typ.typ, "совет")) or LanguageHelper.ends_with(typ.typ, "рада")))): 
+        if ((isinstance(t, TextToken)) and after_org is None and (((LanguageHelper.ends_with(typ.typ, "аппарат") or LanguageHelper.ends_with(typ.typ, "апарат") or LanguageHelper.ends_with(typ.typ, "совет")) or LanguageHelper.ends_with(typ.typ, "рада")))): 
             tt1 = t
             if (tt1.is_value("ПРИ", None)): 
                 tt1 = tt1.next0_
@@ -5550,6 +5562,7 @@ class OrganizationAnalyzer(Analyzer):
         num = None
         names = None
         br = None
+        br00 = None
         pr = None
         is_pure_org = False
         is_pure_dep = False
@@ -5557,9 +5570,9 @@ class OrganizationAnalyzer(Analyzer):
             is_pure_dep = True
         after_org_tok = None
         br_name = None
-        first_pass3017 = True
+        first_pass3988 = True
         while True:
-            if first_pass3017: first_pass3017 = False
+            if first_pass3988: first_pass3988 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (after_org_temp): 
@@ -5582,12 +5595,13 @@ class OrganizationAnalyzer(Analyzer):
                 if ((ty0) is not None and ty0.morph.number != MorphNumber.PLURAL and not ty0.is_doubt_root_word): 
                     break
                 else: 
-                    br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
-                    if (names is None and (br) is not None): 
+                    br00 = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
+                    if ((br00) is not None and names is None): 
+                        br = br00
                         if (not br.is_quote_type or br_name is not None): 
-                            br = None
+                            br = (None)
                         elif (t.is_newline_before and not spec_word_before): 
-                            br = None
+                            br = (None)
                         else: 
                             ok1 = True
                             tt = br.begin_token
@@ -5601,11 +5615,11 @@ class OrganizationAnalyzer(Analyzer):
                                 t1 = br.end_token
                                 t = t1
                             else: 
-                                br = None
+                                br = (None)
                         break
                     else: 
                         r = t.get_referent()
-                        if ((r is None and t.morph.class0_.is_preposition and t.next0_ is not None) and isinstance(t.next0_.get_referent(), GeoReferent)): 
+                        if ((r is None and t.morph.class0_.is_preposition and t.next0_ is not None) and (isinstance(t.next0_.get_referent(), GeoReferent))): 
                             dep._add_geo_object(t.next0_.get_referent())
                             t = t.next0_
                             break
@@ -5614,7 +5628,7 @@ class OrganizationAnalyzer(Analyzer):
                                 after_org = r
                                 after_org_tok = t
                                 break
-                            if (isinstance(r, GeoReferent) and names is not None and t.previous is not None): 
+                            if ((isinstance(r, GeoReferent)) and names is not None and t.previous is not None): 
                                 is_name = False
                                 if (t.previous.is_value("СУБЪЕКТ", None) or t.previous.is_value("СУБЄКТ", None)): 
                                     is_name = True
@@ -5634,7 +5648,7 @@ class OrganizationAnalyzer(Analyzer):
                                 pass
                             else: 
                                 break
-                        if (isinstance(t, NumberToken) and typ.root is not None and dep.number is None): 
+                        if ((isinstance(t, NumberToken)) and typ.root is not None and dep.number is None): 
                             if (t.whitespaces_before_count > 1): 
                                 break
                             dep.number = str((t if isinstance(t, NumberToken) else None).value)
@@ -5646,7 +5660,7 @@ class OrganizationAnalyzer(Analyzer):
                             rtp = t.kit.process_referent("PERSON", t)
                             if (rtp is not None and rtp.referent.type_name == "PERSONPROPERTY"): 
                                 if (rtp.morph.case.is_genitive and t == typ.end_token.next0_ and (t.whitespaces_before_count < 4)): 
-                                    rtp = None
+                                    rtp = (None)
                             if (rtp is not None): 
                                 break
                         if (typ.typ == "генеральный штаб" or typ.typ == "генеральний штаб"): 
@@ -5657,7 +5671,7 @@ class OrganizationAnalyzer(Analyzer):
                         if (t.is_value("ПО", None) and t.next0_ is not None and t.next0_.is_value("РАЙОН", None)): 
                             na = OrgItemNameToken.try_attach(t.next0_.next0_, pr, attach_typ == OrganizationAnalyzer.AttachType.EXTONTOLOGY, True)
                         if (t.morph.class0_.is_preposition and ((t.is_value("ПРИ", None) or t.is_value("OF", None) or t.is_value("AT", None)))): 
-                            if (isinstance(t.next0_, ReferentToken) and isinstance(t.next0_.get_referent(), OrganizationReferent)): 
+                            if ((isinstance(t.next0_, ReferentToken)) and (isinstance(t.next0_.get_referent(), OrganizationReferent))): 
                                 after_org = (t.next0_.get_referent() if isinstance(t.next0_.get_referent(), OrganizationReferent) else None)
                                 break
                             rt0 = self.__try_attach_org(t.next0_, None, OrganizationAnalyzer.AttachType.NORMALAFTERDEP, None, False, 0, -1)
@@ -5707,16 +5721,16 @@ class OrganizationAnalyzer(Analyzer):
                 after_org_temp = True
         coef = typ.coef
         if (typ.chars.is_capital_upper): 
-            coef += 0.5
+            coef += .5
         if (br is not None and names is None): 
             nam = MiscHelper.get_text_value_of_meta_token(br, GetTextAttr.NO)
             if (not Utils.isNullOrEmpty(nam)): 
                 if (len(nam) > 100): 
                     return None
-                coef += 3
+                coef += (3)
                 na = OrgItemNameToken.try_attach(br.begin_token.next0_, None, False, True)
                 if (na is not None and na.is_std_name): 
-                    coef += 1
+                    coef += (1)
                     if (typ.typ == "группа"): 
                         dep.slots.clear()
                         typ.typ = "группа компаний"
@@ -5732,21 +5746,22 @@ class OrganizationAnalyzer(Analyzer):
                     dep.add_name_str(nam, typ, 1)
         elif (names is not None): 
             if (after_org is not None or attach_typ == OrganizationAnalyzer.AttachType.HIGH): 
-                coef += 3
+                coef += (3)
                 j = len(names)
             else: 
-                for j in range(len(names)):
+                j = 0
+                while j < len(names): 
                     if (((names[j].is_newline_before and not typ.is_newline_before and not names[j].is_after_conjunction)) or ((names[j].chars != names[0].chars and names[j].std_org_name_nouns == 0))): 
                         break
                     else: 
                         if (names[j].chars == typ.chars): 
-                            coef += 0.5
+                            coef += (.5)
                         if (names[j].is_std_name): 
-                            coef += 2
+                            coef += (2)
                         if (names[j].std_org_name_nouns > 0): 
                             if (not typ.chars.is_all_lower): 
-                                coef += names[j].std_org_name_nouns
-                else: j = len(names)
+                                coef += (names[j].std_org_name_nouns)
+                    j += 1
             t1 = names[j - 1].end_token
             s = MiscHelper.get_text_value(names[0].begin_token, t1, GetTextAttr.NO)
             if (not Utils.isNullOrEmpty(s)): 
@@ -5755,31 +5770,31 @@ class OrganizationAnalyzer(Analyzer):
                 dep.add_name_str(s, typ, 1)
             if (num is not None): 
                 dep.number = num.number
-                coef += 2
+                coef += (2)
                 t1 = num.end_token
         elif (num is not None): 
             dep.number = num.number
-            coef += 2
+            coef += (2)
             t1 = num.end_token
             if (typ is not None and ((typ.typ == "лаборатория" or typ.typ == "лабораторія"))): 
-                coef += 1
+                coef += (1)
             if (typ.name is not None): 
                 dep.add_name_str(None, typ, 1)
         elif (typ.name is not None): 
-            if (typ.typ == "курс" and typ.name[0].isdigit()): 
-                dep.number = typ.name[0 : (typ.name.find(' '))]
+            if (typ.typ == "курс" and str.isdigit(typ.name[0])): 
+                dep.number = typ.name[0:0+typ.name.find(' ')]
             else: 
                 dep.add_name_str(None, typ, 1)
         elif (typ.typ == "кафедра" or typ.typ == "факультет"): 
             t = typ.end_token.next0_
             if (t is not None and t.is_char(':')): 
                 t = t.next0_
-            if ((t is not None and isinstance(t, TextToken) and not t.is_newline_before) and t.morph.class0_.is_adjective): 
+            if ((t is not None and (isinstance(t, TextToken)) and not t.is_newline_before) and t.morph.class0_.is_adjective): 
                 if (typ.morph.gender == t.morph.gender): 
                     s = t.get_normal_case_text(MorphClass.ADJECTIVE, False, MorphGender.UNDEFINED, False)
                     if (s is not None): 
                         dep.add_name_str("{0} {1}".format(s, typ.typ.upper()), None, 1)
-                        coef += 2
+                        coef += (2)
                         t1 = t
         elif (typ.typ == "курс"): 
             t = typ.end_token.next0_
@@ -5790,16 +5805,16 @@ class OrganizationAnalyzer(Analyzer):
                 if (isinstance(t, NumberToken)): 
                     if (not t.morph.class0_.is_noun): 
                         if (t.is_whitespace_after or t.next0_.is_char_of(";,")): 
-                            val = (t if isinstance(t, NumberToken) else None).value
+                            val = ((t if isinstance(t, NumberToken) else None).value)
                 else: 
                     nt = NumberHelper.try_parse_roman(t)
                     if (nt is not None): 
-                        val = nt.value
+                        val = (nt.value)
                         t = nt.end_token
                 if (val > 0 and (val < 8)): 
                     dep.number = str(val)
                     t1 = t
-                    coef += 4
+                    coef += (4)
             if (dep.number is None): 
                 t = typ.begin_token.previous
                 if (t is not None and not t.is_newline_after): 
@@ -5807,52 +5822,52 @@ class OrganizationAnalyzer(Analyzer):
                     if (isinstance(t, NumberToken)): 
                         if (not t.morph.class0_.is_noun): 
                             if (t.is_whitespace_before or t.previous.is_char_of(",")): 
-                                val = (t if isinstance(t, NumberToken) else None).value
+                                val = ((t if isinstance(t, NumberToken) else None).value)
                     else: 
                         nt = NumberHelper.try_parse_roman_back(t)
                         if (nt is not None): 
-                            val = nt.value
+                            val = (nt.value)
                             t = nt.begin_token
                     if (val > 0 and (val < 8)): 
                         dep.number = str(val)
                         t0 = t
-                        coef += 4
+                        coef += (4)
         elif (typ.root is not None and typ.root.can_be_normal_dep and after_org is not None): 
-            coef += 3
+            coef += (3)
             if (not after_org_temp): 
                 dep.higher = (after_org if isinstance(after_org, OrganizationReferent) else None)
             if (after_org_tok is not None): 
                 t1 = after_org_tok
         elif (typ.typ == "генеральный штаб" or typ.typ == "генеральний штаб"): 
-            coef += 3
+            coef += (3)
         if (before_org is not None): 
-            coef += 1
+            coef += (1)
         if (after_org is not None): 
-            coef += 2
+            coef += (2)
             if (typ.name is not None and OrgOwnershipHelper.can_be_higher(after_org if isinstance(after_org, OrganizationReferent) else None, dep, False)): 
-                coef += 1
+                coef += (1)
                 if (not typ.chars.is_all_lower): 
-                    coef += 0.5
+                    coef += .5
         if (typ.typ == "курс" or typ.typ == "группа" or typ.typ == "група"): 
             if (dep.number is None): 
-                coef = 0
+                coef = (0)
             elif (typ.typ == "курс"): 
-                inoutarg2204 = RefOutArgWrapper(0)
-                inoutres2205 = Utils.tryParseInt(dep.number, inoutarg2204)
-                n = inoutarg2204.value
-                if (inoutres2205): 
+                inoutarg2213 = RefOutArgWrapper(0)
+                inoutres2214 = Utils.tryParseInt(dep.number, inoutarg2213)
+                n = inoutarg2213.value
+                if (inoutres2214): 
                     if (n > 0 and (n < 9)): 
-                        coef += 2
+                        coef += (2)
         if (t1.next0_ is not None and t1.next0_.is_char('(')): 
             ttt = t1.next0_.next0_
-            if ((ttt is not None and ttt.next0_ is not None and ttt.next0_.is_char(')')) and isinstance(ttt, TextToken)): 
+            if ((ttt is not None and ttt.next0_ is not None and ttt.next0_.is_char(')')) and (isinstance(ttt, TextToken))): 
                 if ((ttt if isinstance(ttt, TextToken) else None).term in dep._name_vars): 
-                    coef += 2
+                    coef += (2)
                     dep.add_name((ttt if isinstance(ttt, TextToken) else None).term, True, ttt)
                     t1 = ttt.next0_
         ep_ = OrgItemEponymToken.try_attach(t1.next0_, False)
         if (ep_ is not None): 
-            coef += 2
+            coef += (2)
             for e0_ in ep_.eponyms: 
                 dep.add_eponym(e0_)
             t1 = ep_.end_token
@@ -5865,12 +5880,12 @@ class OrganizationAnalyzer(Analyzer):
         res = ReferentToken(dep, t0, t1)
         self.__correct_dep_attrs(res, typ)
         if (dep.number is not None): 
-            coef += 2
+            coef += (2)
         if (is_pure_dep): 
-            coef += 2
+            coef += (2)
         if (spec_word_before): 
             if (dep.find_slot(OrganizationReferent.ATTR_NAME, None, True) is not None): 
-                coef += 2
+                coef += (2)
         if (coef > 3 or attach_typ == OrganizationAnalyzer.AttachType.EXTONTOLOGY): 
             return res
         else: 
@@ -5887,7 +5902,7 @@ class OrganizationAnalyzer(Analyzer):
         t0 = res.begin_token
         dep = (res.referent if isinstance(res.referent, OrganizationReferent) else None)
         if ((((((typ is not None and typ.root is not None and typ.root.can_has_number)) or "отдел" in dep.types or "отделение" in dep.types) or "инспекция" in dep.types or "лаборатория" in dep.types) or "відділ" in dep.types or "відділення" in dep.types) or "інспекція" in dep.types or "лабораторія" in dep.types): 
-            if ((isinstance(t0.previous, NumberToken) and (t0.whitespaces_before_count < 2) and not t0.previous.morph.class0_.is_noun) and t0.previous.is_whitespace_before): 
+            if (((isinstance(t0.previous, NumberToken)) and (t0.whitespaces_before_count < 2) and not t0.previous.morph.class0_.is_noun) and t0.previous.is_whitespace_before): 
                 nn = str((t0.previous if isinstance(t0.previous, NumberToken) else None).value)
                 if (dep.number is None or dep.number == nn): 
                     dep.number = nn
@@ -5895,7 +5910,7 @@ class OrganizationAnalyzer(Analyzer):
                     res.begin_token = t0
         if ("управление" in dep.types or "департамент" in dep.types or "управління" in dep.types): 
             for s in dep.slots: 
-                if (s.type_name == OrganizationReferent.ATTR_GEO and isinstance(s.value, GeoReferent)): 
+                if (s.type_name == OrganizationReferent.ATTR_GEO and (isinstance(s.value, GeoReferent))): 
                     g = (s.value if isinstance(s.value, GeoReferent) else None)
                     if (g.is_state and g.alpha2 == "RU"): 
                         dep.slots.remove(s)
@@ -5911,7 +5926,7 @@ class OrganizationAnalyzer(Analyzer):
                     dep._add_geo_object(g)
                     res.end_token = br.end_token
                     t1 = res.end_token
-            elif (isinstance(g, Referent) and br.begin_token.next0_.next0_ == br.end_token): 
+            elif ((isinstance(g, Referent)) and br.begin_token.next0_.next0_ == br.end_token): 
                 dep._add_geo_object(g)
                 res.end_token = br.end_token
                 t1 = res.end_token

@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.bank.internal.ResourceHelper import ResourceHelper
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
@@ -63,13 +63,6 @@ class UriAnalyzer(Analyzer):
         return None
     
     def process(self, kit : 'AnalysisKit') -> None:
-        """ Основная функция выделения объектов
-        
-        Args:
-            container: 
-            lastStage: 
-        
-        """
         from pullenti.ner.uri.internal.UriItemToken import UriItemToken
         from pullenti.ner.uri.UriReferent import UriReferent
         from pullenti.ner.ReferentToken import ReferentToken
@@ -78,15 +71,15 @@ class UriAnalyzer(Analyzer):
         from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         ad = kit.get_analyzer_data(self)
         t = kit.first_token
-        first_pass3075 = True
+        first_pass4052 = True
         while True:
-            if first_pass3075: first_pass3075 = False
+            if first_pass4052: first_pass4052 = False
             else: t = t.next0_
             if (not (t is not None)): break
             tt = t
             tok = UriAnalyzer.__m_schemes.try_parse(t, TerminParseAttr.NO)
             if (tok is not None): 
-                i = tok.termin.tag
+                i = (tok.termin.tag)
                 tt = tok.end_token
                 if (tt.next0_ is not None and tt.next0_.is_char('(')): 
                     tok1 = UriAnalyzer.__m_schemes.try_parse(tt.next0_.next0_, TerminParseAttr.NO)
@@ -103,13 +96,13 @@ class UriAnalyzer(Analyzer):
                     ut = UriItemToken.attach_uri_content(t1, False)
                     if (ut is None): 
                         continue
-                    ur = (ad.register_referent(UriReferent._new2526(tok.termin.canonic_text.lower(), ut.value)) if isinstance(ad.register_referent(UriReferent._new2526(tok.termin.canonic_text.lower(), ut.value)), UriReferent) else None)
+                    ur = (ad.register_referent(UriReferent._new2535(tok.termin.canonic_text.lower(), ut.value)) if isinstance(ad.register_referent(UriReferent._new2535(tok.termin.canonic_text.lower(), ut.value)), UriReferent) else None)
                     rt = ReferentToken(ad.register_referent(ur), t, ut.end_token)
                     rt.begin_token = (Utils.ifNotNull(UriAnalyzer.__site_before(t.previous), t))
                     if (rt.end_token.next0_ is not None and rt.end_token.next0_.is_char_of("/\\")): 
                         rt.end_token = rt.end_token.next0_
                     kit.embed_token(rt)
-                    t = rt
+                    t = (rt)
                     continue
                 if (i == 10): 
                     tt = tt.next0_
@@ -133,13 +126,13 @@ class UriAnalyzer(Analyzer):
                         continue
                     if (len(ut.value) < 4): 
                         continue
-                    ur = (ad.register_referent(UriReferent._new2526(tok.termin.canonic_text.lower(), ut.value)) if isinstance(ad.register_referent(UriReferent._new2526(tok.termin.canonic_text.lower(), ut.value)), UriReferent) else None)
+                    ur = (ad.register_referent(UriReferent._new2535(tok.termin.canonic_text.lower(), ut.value)) if isinstance(ad.register_referent(UriReferent._new2535(tok.termin.canonic_text.lower(), ut.value)), UriReferent) else None)
                     rt = ReferentToken(ad.register_referent(ur), t, ut.end_token)
                     rt.begin_token = (Utils.ifNotNull(UriAnalyzer.__site_before(t.previous), t))
                     if (rt.end_token.next0_ is not None and rt.end_token.next0_.is_char_of("/\\")): 
                         rt.end_token = rt.end_token.next0_
                     kit.embed_token(rt)
-                    t = rt
+                    t = (rt)
                     continue
                 if (i == 2): 
                     if (tt.next0_ is None or not tt.next0_.is_char('.') or tt.next0_.is_whitespace_before): 
@@ -149,13 +142,13 @@ class UriAnalyzer(Analyzer):
                     ut = UriItemToken.attach_uri_content(tt.next0_.next0_, True)
                     if (ut is None): 
                         continue
-                    ur = (ad.register_referent(UriReferent._new2526("http", ut.value)) if isinstance(ad.register_referent(UriReferent._new2526("http", ut.value)), UriReferent) else None)
+                    ur = (ad.register_referent(UriReferent._new2535("http", ut.value)) if isinstance(ad.register_referent(UriReferent._new2535("http", ut.value)), UriReferent) else None)
                     rt = ReferentToken(ur, t, ut.end_token)
                     rt.begin_token = (Utils.ifNotNull(UriAnalyzer.__site_before(t.previous), t))
                     if (rt.end_token.next0_ is not None and rt.end_token.next0_.is_char_of("/\\")): 
                         rt.end_token = rt.end_token.next0_
                     kit.embed_token(rt)
-                    t = rt
+                    t = (rt)
                     continue
                 if (i == 1): 
                     sch = tok.termin.canonic_text
@@ -170,7 +163,7 @@ class UriAnalyzer(Analyzer):
                                 if (tt0.is_whitespace_before): 
                                     ut = UriItemToken.attachisbn(tt0)
                                     if (ut is not None and ut.end_token.next0_ != t.previous): 
-                                        ut = None
+                                        ut = (None)
                                     break
                                 tt0 = tt0.previous
                     elif ((sch == "RFC" or sch == "ISO" or sch == "ОКФС") or sch == "ОКОПФ"): 
@@ -181,12 +174,12 @@ class UriAnalyzer(Analyzer):
                         if (tok.chars.is_all_upper): 
                             ut = UriItemToken.attachisocontent(tt.next0_, "-.")
                             if (ut is not None and (ut.length_char < 10)): 
-                                ut = None
+                                ut = (None)
                     else: 
                         ut = UriItemToken.attachbbk(tt.next0_)
                     if (ut is None): 
                         continue
-                    ur = (ad.register_referent(UriReferent._new2529(ut.value, sch)) if isinstance(ad.register_referent(UriReferent._new2529(ut.value, sch)), UriReferent) else None)
+                    ur = (ad.register_referent(UriReferent._new2538(ut.value, sch)) if isinstance(ad.register_referent(UriReferent._new2538(ut.value, sch)), UriReferent) else None)
                     if (ut.begin_char < t.begin_char): 
                         rt = ReferentToken(ur, ut.begin_token, t)
                         if (t.next0_ is not None and t.next0_.is_char(')')): 
@@ -198,21 +191,21 @@ class UriAnalyzer(Analyzer):
                     if (ur.scheme.startswith("ОК")): 
                         UriAnalyzer.__check_detail(rt)
                     kit.embed_token(rt)
-                    t = rt
+                    t = (rt)
                     if (ur.scheme.startswith("ОК")): 
                         while t.next0_ is not None:
-                            if (t.next0_.is_comma_and and isinstance(t.next0_.next0_, NumberToken)): 
+                            if (t.next0_.is_comma_and and (isinstance(t.next0_.next0_, NumberToken))): 
                                 pass
                             else: 
                                 break
                             ut = UriItemToken.attachbbk(t.next0_.next0_)
                             if (ut is None): 
                                 break
-                            ur = (ad.register_referent(UriReferent._new2529(ut.value, sch)) if isinstance(ad.register_referent(UriReferent._new2529(ut.value, sch)), UriReferent) else None)
+                            ur = (ad.register_referent(UriReferent._new2538(ut.value, sch)) if isinstance(ad.register_referent(UriReferent._new2538(ut.value, sch)), UriReferent) else None)
                             rt = ReferentToken(ur, t.next0_.next0_, ut.end_token)
                             UriAnalyzer.__check_detail(rt)
                             kit.embed_token(rt)
-                            t = rt
+                            t = (rt)
                     continue
                 if (i == 3): 
                     t0 = tt.next0_
@@ -226,10 +219,10 @@ class UriAnalyzer(Analyzer):
                     ut = UriItemToken.attach_skype(t0)
                     if (ut is None): 
                         continue
-                    ur = (ad.register_referent(UriReferent._new2529(ut.value.lower(), ("skype" if tok.termin.canonic_text == "SKYPE" else tok.termin.canonic_text))) if isinstance(ad.register_referent(UriReferent._new2529(ut.value.lower(), ("skype" if tok.termin.canonic_text == "SKYPE" else tok.termin.canonic_text))), UriReferent) else None)
+                    ur = (ad.register_referent(UriReferent._new2538(ut.value.lower(), ("skype" if tok.termin.canonic_text == "SKYPE" else tok.termin.canonic_text))) if isinstance(ad.register_referent(UriReferent._new2538(ut.value.lower(), ("skype" if tok.termin.canonic_text == "SKYPE" else tok.termin.canonic_text))), UriReferent) else None)
                     rt = ReferentToken(ur, t, ut.end_token)
                     kit.embed_token(rt)
-                    t = rt
+                    t = (rt)
                     continue
                 if (i == 4): 
                     t0 = tt.next0_
@@ -240,23 +233,29 @@ class UriAnalyzer(Analyzer):
                     ut = UriItemToken.attach_icq_content(t0)
                     if (ut is None): 
                         continue
-                    ur = (ad.register_referent(UriReferent._new2529(ut.value, "ICQ")) if isinstance(ad.register_referent(UriReferent._new2529(ut.value, "ICQ")), UriReferent) else None)
+                    ur = (ad.register_referent(UriReferent._new2538(ut.value, "ICQ")) if isinstance(ad.register_referent(UriReferent._new2538(ut.value, "ICQ")), UriReferent) else None)
                     rt = ReferentToken(ur, t, t0)
                     kit.embed_token(rt)
-                    t = rt
+                    t = (rt)
                     continue
                 if (i == 5 or i == 6): 
                     t0 = tt.next0_
                     has_tab_cel = False
-                    first_pass3076 = True
+                    is_iban = False
+                    first_pass4053 = True
                     while True:
-                        if first_pass3076: first_pass3076 = False
+                        if first_pass4053: first_pass4053 = False
                         else: t0 = t0.next0_
                         if (not (t0 is not None)): break
                         if ((((t0.is_value("БАНК", None) or t0.morph.class0_.is_preposition or t0.is_hiphen) or t0.is_char_of(".:") or t0.is_value("РУБЛЬ", None)) or t0.is_value("РУБ", None) or t0.is_value("ДОЛЛАР", None)) or t0.is_value("№", None) or t0.is_value("N", None)): 
                             pass
                         elif (t0.is_table_control_char): 
                             has_tab_cel = True
+                        elif (t0.is_char_of("\\/") and t0.next0_ is not None and t0.next0_.is_value("IBAN", None)): 
+                            is_iban = True
+                            t0 = t0.next0_
+                        elif (t0.is_value("IBAN", None)): 
+                            is_iban = True
                         elif (isinstance(t0, TextToken)): 
                             npt = NounPhraseHelper.try_parse(t0, NounPhraseParseAttr.NO, 0)
                             if (npt is not None and npt.morph.case.is_genitive): 
@@ -272,18 +271,18 @@ class UriAnalyzer(Analyzer):
                     ur2end = None
                     t00 = t0
                     val = t0.get_source_text()
-                    if (val[0].isdigit() and ((((i == 6 or tok.termin.canonic_text == "ИНН" or tok.termin.canonic_text == "БИК") or tok.termin.canonic_text == "ОГРН" or tok.termin.canonic_text == "СНИЛС") or tok.termin.canonic_text == "ОКПО"))): 
+                    if (str.isdigit(val[0]) and ((((i == 6 or tok.termin.canonic_text == "ИНН" or tok.termin.canonic_text == "БИК") or tok.termin.canonic_text == "ОГРН" or tok.termin.canonic_text == "СНИЛС") or tok.termin.canonic_text == "ОКПО"))): 
                         if (t0.chars.is_letter): 
                             continue
-                        if (Utils.isNullOrEmpty(val) or not val[0].isdigit()): 
+                        if (Utils.isNullOrEmpty(val) or not str.isdigit(val[0])): 
                             continue
                         if (t0.length_char < 9): 
-                            tmp = Utils.newStringIO(None)
+                            tmp = io.StringIO()
                             print(val, end="", file=tmp)
                             ttt = t0.next0_
-                            first_pass3077 = True
+                            first_pass4054 = True
                             while True:
-                                if first_pass3077: first_pass3077 = False
+                                if first_pass4054: first_pass4054 = False
                                 else: ttt = ttt.next0_
                                 if (not (ttt is not None)): break
                                 if (ttt.whitespaces_before_count > 1): 
@@ -299,7 +298,7 @@ class UriAnalyzer(Analyzer):
                                         break
                                     continue
                                 break
-                            val = None
+                            val = (None)
                             if (tmp.tell() == 20): 
                                 val = Utils.toStringStringIO(tmp)
                             elif (tmp.tell() == 9 and tok.termin.canonic_text == "БИК"): 
@@ -315,10 +314,38 @@ class UriAnalyzer(Analyzer):
                         if (val is None): 
                             continue
                     elif (not ((isinstance(t0, NumberToken)))): 
+                        if ((isinstance(t0, TextToken)) and is_iban): 
+                            tmp1 = io.StringIO()
+                            t1 = None
+                            ttt = t0
+                            first_pass4055 = True
+                            while True:
+                                if first_pass4055: first_pass4055 = False
+                                else: ttt = ttt.next0_
+                                if (not (ttt is not None)): break
+                                if (ttt.is_newline_before and ttt != t0): 
+                                    break
+                                if (ttt.is_hiphen): 
+                                    continue
+                                if (not ((isinstance(ttt, NumberToken)))): 
+                                    if (not ((isinstance(ttt, TextToken))) or not ttt.chars.is_latin_letter): 
+                                        break
+                                print(ttt.get_source_text(), end="", file=tmp1)
+                                t1 = ttt
+                                if (tmp1.tell() >= 34): 
+                                    break
+                            if (tmp1.tell() < 10): 
+                                continue
+                            ur1 = UriReferent._new2538(Utils.toStringStringIO(tmp1), tok.termin.canonic_text)
+                            ur1.add_slot(UriReferent.ATTR_DETAIL, "IBAN", False, 0)
+                            rt1 = ReferentToken(ad.register_referent(ur1), t, t1)
+                            kit.embed_token(rt1)
+                            t = (rt1)
+                            continue
                         if (not t0.is_char_of("/\\") or t0.next0_ is None): 
                             continue
                         tok2 = UriAnalyzer.__m_schemes.try_parse(t0.next0_, TerminParseAttr.NO)
-                        if (tok2 is None or not ((isinstance(tok2.termin.tag, int))) or tok2.termin.tag != i): 
+                        if (tok2 is None or not ((isinstance(tok2.termin.tag, int))) or (tok2.termin.tag) != i): 
                             continue
                         t0 = tok2.end_token.next0_
                         while t0 is not None:
@@ -332,7 +359,7 @@ class UriAnalyzer(Analyzer):
                                 break
                         if (not ((isinstance(t0, NumberToken)))): 
                             continue
-                        tmp = Utils.newStringIO(None)
+                        tmp = io.StringIO()
                         while t0 is not None: 
                             if (not ((isinstance(t0, NumberToken)))): 
                                 break
@@ -352,19 +379,19 @@ class UriAnalyzer(Analyzer):
                                 print(t0.get_source_text(), end="", file=tmp)
                                 ur2end = t0
                             t0 = t0.next0_
-                        ur2 = (ad.register_referent(UriReferent._new2526(tok2.termin.canonic_text, Utils.toStringStringIO(tmp))) if isinstance(ad.register_referent(UriReferent._new2526(tok2.termin.canonic_text, Utils.toStringStringIO(tmp))), UriReferent) else None)
+                        ur2 = (ad.register_referent(UriReferent._new2535(tok2.termin.canonic_text, Utils.toStringStringIO(tmp))) if isinstance(ad.register_referent(UriReferent._new2535(tok2.termin.canonic_text, Utils.toStringStringIO(tmp))), UriReferent) else None)
                     if (len(val) < 5): 
                         continue
-                    ur = (ad.register_referent(UriReferent._new2529(val, tok.termin.canonic_text)) if isinstance(ad.register_referent(UriReferent._new2529(val, tok.termin.canonic_text)), UriReferent) else None)
+                    ur = (ad.register_referent(UriReferent._new2538(val, tok.termin.canonic_text)) if isinstance(ad.register_referent(UriReferent._new2538(val, tok.termin.canonic_text)), UriReferent) else None)
                     rt = ReferentToken(ur, t, (t0 if ur2begin is None else ur2begin.previous))
                     if (has_tab_cel): 
                         rt.begin_token = t00
                     if (ur.scheme.startswith("ОК")): 
                         UriAnalyzer.__check_detail(rt)
                     ttt = t.previous
-                    first_pass3078 = True
+                    first_pass4056 = True
                     while True:
-                        if first_pass3078: first_pass3078 = False
+                        if first_pass4056: first_pass4056 = False
                         else: ttt = ttt.previous
                         if (not (ttt is not None)): break
                         if (ttt.is_table_control_char): 
@@ -378,11 +405,11 @@ class UriAnalyzer(Analyzer):
                             t = rt.begin_token
                         break
                     kit.embed_token(rt)
-                    t = rt
+                    t = (rt)
                     if (ur2 is not None): 
                         rt2 = ReferentToken(ur2, ur2begin, ur2end)
                         kit.embed_token(rt2)
-                        t = rt2
+                        t = (rt2)
                     continue
                 continue
             if (t.is_char('@')): 
@@ -393,7 +420,7 @@ class UriAnalyzer(Analyzer):
                 if (u2 is None): 
                     continue
                 for ii in range(len(u1s) - 1, -1, -1):
-                    ur = (ad.register_referent(UriReferent._new2529("{0}@{1}".format(u1s[ii].value, u2.value).lower(), "mailto")) if isinstance(ad.register_referent(UriReferent._new2529("{0}@{1}".format(u1s[ii].value, u2.value).lower(), "mailto")), UriReferent) else None)
+                    ur = (ad.register_referent(UriReferent._new2538("{0}@{1}".format(u1s[ii].value, u2.value).lower(), "mailto")) if isinstance(ad.register_referent(UriReferent._new2538("{0}@{1}".format(u1s[ii].value, u2.value).lower(), "mailto")), UriReferent) else None)
                     b = u1s[ii].begin_token
                     t0 = b.previous
                     if (t0 is not None and t0.is_char(':')): 
@@ -401,9 +428,9 @@ class UriAnalyzer(Analyzer):
                     if (t0 is not None and ii == 0): 
                         br = False
                         ttt = t0
-                        first_pass3079 = True
+                        first_pass4057 = True
                         while True:
-                            if first_pass3079: first_pass3079 = False
+                            if first_pass4057: first_pass4057 = False
                             else: ttt = ttt.previous
                             if (not (ttt is not None)): break
                             if (not ((isinstance(ttt, TextToken)))): 
@@ -440,18 +467,18 @@ class UriAnalyzer(Analyzer):
                                 continue
                     rt = ReferentToken(ur, b, (u2.end_token if ii == (len(u1s) - 1) else u1s[ii].end_token))
                     kit.embed_token(rt)
-                    t = rt
+                    t = (rt)
                 continue
             if (not t.morph.language.is_cyrillic): 
                 if (t.is_whitespace_before or ((t.previous is not None and t.previous.is_char_of(",(")))): 
                     u1 = UriItemToken.attach_url(t)
                     if (u1 is not None): 
                         if (u1.is_whitespace_after or u1.end_token.next0_ is None or not u1.end_token.next0_.is_char('@')): 
-                            ur = (ad.register_referent(UriReferent._new2526("http", u1.value)) if isinstance(ad.register_referent(UriReferent._new2526("http", u1.value)), UriReferent) else None)
+                            ur = (ad.register_referent(UriReferent._new2535("http", u1.value)) if isinstance(ad.register_referent(UriReferent._new2535("http", u1.value)), UriReferent) else None)
                             rt = ReferentToken(ur, u1.begin_token, u1.end_token)
                             rt.begin_token = (Utils.ifNotNull(UriAnalyzer.__site_before(u1.begin_token.previous), u1.begin_token))
                             kit.embed_token(rt)
-                            t = rt
+                            t = (rt)
                             continue
             if ((t.chars.is_latin_letter and not t.chars.is_all_lower and t.next0_ is not None) and not t.is_whitespace_after): 
                 if (t.next0_.is_char('/')): 
@@ -459,7 +486,7 @@ class UriAnalyzer(Analyzer):
                     if (rt is not None): 
                         rt.referent = ad.register_referent(rt.referent)
                         kit.embed_token(rt)
-                        t = rt
+                        t = (rt)
                         continue
     
     @staticmethod
@@ -568,16 +595,18 @@ class UriAnalyzer(Analyzer):
             break
         if (not ok): 
             del heads[0]
-        tmp = Utils.newStringIO(None)
-        for i in range(len(heads)):
+        tmp = io.StringIO()
+        i = 0
+        while i < len(heads): 
             if (i > 0): 
                 print(' ', end="", file=tmp)
             print(MiscHelper.convert_first_char_upper_and_other_lower(heads[i]), end="", file=tmp)
+            i += 1
         for tail in tails: 
             print("/{0}".format(tail), end="", file=tmp, flush=True)
         if (((t1.next0_ is not None and t1.next0_.is_char('@') and t1.next0_.next0_ is not None) and t1.next0_.next0_.chars.is_latin_letter and not t1.next0_.is_whitespace_after) and not t1.is_whitespace_after): 
             t1 = t1.next0_.next0_
-        uri_ = UriReferent._new2526("lotus", Utils.toStringStringIO(tmp))
+        uri_ = UriReferent._new2535("lotus", Utils.toStringStringIO(tmp))
         return ReferentToken(uri_, t0, t1)
     
     __m_schemes = None
@@ -607,8 +636,8 @@ class UriAnalyzer(Analyzer):
                     UriAnalyzer.__m_schemes.add(Termin._new694(line, MorphLang.UNKNOWN, True, 0))
             for s in ["ISBN", "УДК", "ББК", "ТНВЭД", "ОКВЭД"]: 
                 UriAnalyzer.__m_schemes.add(Termin._new694(s, MorphLang.UNKNOWN, True, 1))
-            UriAnalyzer.__m_schemes.add(Termin._new2540("Общероссийский классификатор форм собственности", "ОКФС", 1, "ОКФС"))
-            UriAnalyzer.__m_schemes.add(Termin._new2540("Общероссийский классификатор организационно правовых форм", "ОКОПФ", 1, "ОКОПФ"))
+            UriAnalyzer.__m_schemes.add(Termin._new2550("Общероссийский классификатор форм собственности", "ОКФС", 1, "ОКФС"))
+            UriAnalyzer.__m_schemes.add(Termin._new2550("Общероссийский классификатор организационно правовых форм", "ОКОПФ", 1, "ОКОПФ"))
             UriAnalyzer.__m_schemes.add(Termin._new694("WWW", MorphLang.UNKNOWN, True, 2))
             UriAnalyzer.__m_schemes.add(Termin._new694("HTTP", MorphLang.UNKNOWN, True, 10))
             UriAnalyzer.__m_schemes.add(Termin._new694("HTTPS", MorphLang.UNKNOWN, True, 10))
@@ -623,25 +652,25 @@ class UriAnalyzer(Analyzer):
             t.add_variant("СВИФТ", True)
             UriAnalyzer.__m_schemes.add(t)
             UriAnalyzer.__m_schemes.add(Termin._new694("ICQ", MorphLang.UNKNOWN, True, 4))
-            t = Termin._new2550("основной государственный регистрационный номер", "ОГРН", 5, "ОГРН", True)
+            t = Termin._new2560("основной государственный регистрационный номер", "ОГРН", 5, "ОГРН", True)
             t.add_variant("ОГРН ИП", True)
             UriAnalyzer.__m_schemes.add(t)
-            UriAnalyzer.__m_schemes.add(Termin._new2550("Индивидуальный идентификационный номер", "ИИН", 5, "ИИН", True))
-            UriAnalyzer.__m_schemes.add(Termin._new2550("Индивидуальный номер налогоплательщика", "ИНН", 5, "ИНН", True))
-            UriAnalyzer.__m_schemes.add(Termin._new2550("Код причины постановки на учет", "КПП", 5, "КПП", True))
-            UriAnalyzer.__m_schemes.add(Termin._new2550("Банковский идентификационный код", "БИК", 5, "БИК", True))
-            UriAnalyzer.__m_schemes.add(Termin._new2550("основной государственный регистрационный номер индивидуального предпринимателя", "ОГРНИП", 5, "ОГРНИП", True))
-            t = Termin._new2550("Страховой номер индивидуального лицевого счёта", "СНИЛС", 5, "СНИЛС", True)
+            UriAnalyzer.__m_schemes.add(Termin._new2560("Индивидуальный идентификационный номер", "ИИН", 5, "ИИН", True))
+            UriAnalyzer.__m_schemes.add(Termin._new2560("Индивидуальный номер налогоплательщика", "ИНН", 5, "ИНН", True))
+            UriAnalyzer.__m_schemes.add(Termin._new2560("Код причины постановки на учет", "КПП", 5, "КПП", True))
+            UriAnalyzer.__m_schemes.add(Termin._new2560("Банковский идентификационный код", "БИК", 5, "БИК", True))
+            UriAnalyzer.__m_schemes.add(Termin._new2560("основной государственный регистрационный номер индивидуального предпринимателя", "ОГРНИП", 5, "ОГРНИП", True))
+            t = Termin._new2560("Страховой номер индивидуального лицевого счёта", "СНИЛС", 5, "СНИЛС", True)
             t.add_variant("Свидетельство пенсионного страхования", False)
             t.add_variant("Страховое свидетельство обязательного пенсионного страхования", False)
             t.add_variant("Страховое свидетельство", False)
             UriAnalyzer.__m_schemes.add(t)
-            UriAnalyzer.__m_schemes.add(Termin._new2550("Общероссийский классификатор предприятий и организаций", "ОКПО", 5, "ОКПО", True))
-            UriAnalyzer.__m_schemes.add(Termin._new2550("Общероссийский классификатор объектов административно-территориального деления", "ОКАТО", 5, "ОКАТО", True))
-            UriAnalyzer.__m_schemes.add(Termin._new2550("Общероссийский классификатор территорий муниципальных образований", "ОКТМО", 5, "ОКТМО", True))
-            UriAnalyzer.__m_schemes.add(Termin._new2550("Общероссийский классификатор органов государственной власти и управления", "ОКОГУ", 5, "ОКОГУ", True))
-            UriAnalyzer.__m_schemes.add(Termin._new2550("Общероссийский классификатор Отрасли народного хозяйства", "ОКОНХ", 5, "ОКОНХ", True))
-            t = Termin._new2562("РАСЧЕТНЫЙ СЧЕТ", MorphLang.UNKNOWN, True, "Р/С", 6, 20)
+            UriAnalyzer.__m_schemes.add(Termin._new2560("Общероссийский классификатор предприятий и организаций", "ОКПО", 5, "ОКПО", True))
+            UriAnalyzer.__m_schemes.add(Termin._new2560("Общероссийский классификатор объектов административно-территориального деления", "ОКАТО", 5, "ОКАТО", True))
+            UriAnalyzer.__m_schemes.add(Termin._new2560("Общероссийский классификатор территорий муниципальных образований", "ОКТМО", 5, "ОКТМО", True))
+            UriAnalyzer.__m_schemes.add(Termin._new2560("Общероссийский классификатор органов государственной власти и управления", "ОКОГУ", 5, "ОКОГУ", True))
+            UriAnalyzer.__m_schemes.add(Termin._new2560("Общероссийский классификатор Отрасли народного хозяйства", "ОКОНХ", 5, "ОКОНХ", True))
+            t = Termin._new2572("РАСЧЕТНЫЙ СЧЕТ", MorphLang.UNKNOWN, True, "Р/С", 6, 20)
             t.add_abridge("Р.С.")
             t.add_abridge("Р.СЧ.")
             t.add_abridge("P.C.")
@@ -654,7 +683,7 @@ class UriAnalyzer(Analyzer):
             t.add_variant("СЧЕТ ОТПРАВИТЕЛЯ", False)
             t.add_variant("СЧЕТ", False)
             UriAnalyzer.__m_schemes.add(t)
-            t = Termin._new2563("ЛИЦЕВОЙ СЧЕТ", "Л/С", 6, 20)
+            t = Termin._new2573("ЛИЦЕВОЙ СЧЕТ", "Л/С", 6, 20)
             t.add_abridge("Л.С.")
             t.add_abridge("Л.СЧ.")
             t.add_abridge("Л/С")
@@ -662,14 +691,14 @@ class UriAnalyzer(Analyzer):
             t.add_abridge("ЛИЦ.СЧ.")
             t.add_abridge("Л.СЧЕТ")
             UriAnalyzer.__m_schemes.add(t)
-            t = Termin._new2562("СПЕЦИАЛЬНЫЙ ЛИЦЕВОЙ СЧЕТ", MorphLang.UNKNOWN, True, "СПЕЦ/С", 6, 20)
+            t = Termin._new2572("СПЕЦИАЛЬНЫЙ ЛИЦЕВОЙ СЧЕТ", MorphLang.UNKNOWN, True, "СПЕЦ/С", 6, 20)
             t.add_abridge("СПЕЦ.С.")
             t.add_abridge("СПЕЦ.СЧЕТ")
             t.add_abridge("СПЕЦ.СЧ.")
             t.add_variant("СПЕЦСЧЕТ", True)
             t.add_variant("СПЕЦИАЛЬНЫЙ СЧЕТ", True)
             UriAnalyzer.__m_schemes.add(t)
-            t = Termin._new2562("КОРРЕСПОНДЕНТСКИЙ СЧЕТ", MorphLang.UNKNOWN, True, "К/С", 6, 20)
+            t = Termin._new2572("КОРРЕСПОНДЕНТСКИЙ СЧЕТ", MorphLang.UNKNOWN, True, "К/С", 6, 20)
             t.add_abridge("КОРР.СЧЕТ")
             t.add_abridge("КОР.СЧЕТ")
             t.add_abridge("КОРР.СЧ.")
@@ -683,7 +712,7 @@ class UriAnalyzer(Analyzer):
             t.add_abridge("К.СЧ.")
             t.add_abridge("К/СЧ")
             UriAnalyzer.__m_schemes.add(t)
-            t = Termin._new2566("КОД БЮДЖЕТНОЙ КЛАССИФИКАЦИИ", "КБК", "КБК", 6, 20, True)
+            t = Termin._new2576("КОД БЮДЖЕТНОЙ КЛАССИФИКАЦИИ", "КБК", "КБК", 6, 20, True)
             UriAnalyzer.__m_schemes.add(t)
             UriItemToken.initialize()
         except Exception as ex: 

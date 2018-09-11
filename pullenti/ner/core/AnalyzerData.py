@@ -1,11 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
-
 
 
 class AnalyzerData:
@@ -30,12 +29,6 @@ class AnalyzerData:
         return value
     
     def register_referent(self, referent : 'Referent') -> 'Referent':
-        """ Зарегистрировать новую сущность или привязать к существующей сущности
-        
-        Args:
-            referent(Referent): 
-        
-        """
         from pullenti.ner.Referent import Referent
         if (referent is None): 
             return None
@@ -58,7 +51,7 @@ class AnalyzerData:
                             for s in rtt.referent.slots: 
                                 if (s.value == old_ref): 
                                     referent.upload_slot(s, rt.referent)
-                referent._m_ext_referents = None
+                referent._m_ext_referents = (None)
         eq = None
         if (referent in self._m_referents): 
             return referent

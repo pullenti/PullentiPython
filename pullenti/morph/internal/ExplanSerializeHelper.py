@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -7,7 +7,7 @@
 import io
 import gzip
 import shutil
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
 from pullenti.morph.internal.ByteArrayWrapper import ByteArrayWrapper
 from pullenti.morph.DerivateGroup import DerivateGroup
@@ -22,15 +22,17 @@ class ExplanSerializeHelper:
     def serializedd(res : io.IOBase, dic : 'DerivateDictionary') -> None:
         with io.BytesIO() as tmp: 
             ExplanSerializeHelper.__serialize_int(tmp, len(dic._m_all_groups))
-            for i in range(len(dic._m_all_groups)):
+            i = 0
+            while i < len(dic._m_all_groups): 
                 p0 = tmp.tell()
                 ExplanSerializeHelper.__serialize_int(tmp, 0)
                 ExplanSerializeHelper.__serialize_derivate_group(tmp, dic._m_all_groups[i])
-                dic._m_all_groups[i].tag = (i + 1)
+                dic._m_all_groups[i].tag = ((i + 1))
                 p1 = tmp.tell()
                 tmp.seek(p0, io.SEEK_SET)
                 ExplanSerializeHelper.__serialize_int(tmp, p1)
                 tmp.seek(p1, io.SEEK_SET)
+                i += 1
             ExplanSerializeHelper.__serialize_tree_node(tmp, dic._m_root)
             deflate = gzip.GzipFile(fileobj=res, mode='w')
             shutil.copyfileobj(tmp, deflate)
@@ -59,13 +61,13 @@ class ExplanSerializeHelper:
     def __serialize_derivate_group(res : io.IOBase, dg : 'DerivateGroup') -> None:
         attrs = 0
         if (dg.is_dummy): 
-            attrs |= 1
+            attrs |= (1)
         if (dg.not_generate): 
-            attrs |= 2
+            attrs |= (2)
         if (dg.transitive == 0): 
-            attrs |= 4
+            attrs |= (4)
         if (dg.transitive == 1): 
-            attrs |= 8
+            attrs |= (8)
         ExplanSerializeHelper.__serialize_short(res, attrs)
         ExplanSerializeHelper.__serialize_string(res, dg.prefix)
         for i in range(len(dg.words) - 1, -1, -1):
@@ -103,14 +105,14 @@ class ExplanSerializeHelper:
             w = DerivateWord(dg)
             w.spelling = str0_.deserialize_string()
             w.class0_ = MorphClass()
-            w.class0_.value = str0_.deserialize_short()
+            w.class0_.value = (str0_.deserialize_short())
             w.lang = MorphLang._new6(str0_.deserialize_short())
-            w.attrs._value = str0_.deserialize_short()
+            w.attrs._value = (str0_.deserialize_short())
             cou1 = str0_.deserialize_short()
             while cou1 > 0: 
                 pref = Utils.ifNotNull(str0_.deserialize_string(), "")
                 cas = MorphCase()
-                cas.value = str0_.deserialize_short()
+                cas.value = (str0_.deserialize_short())
                 if (w.nexts is None): 
                     w.nexts = dict()
                 w.nexts[pref] = cas
@@ -159,15 +161,15 @@ class ExplanSerializeHelper:
                     p0 = str0_.position
                     str0_.seek(gr._lazy.begin)
                     ExplanSerializeHelper.deserialize_derivate_group(str0_, gr)
-                    gr._lazy = None
+                    gr._lazy = (None)
                     str0_.seek(p0)
                 if (li is not None): 
                     li.append(gr)
                 else: 
-                    tn.groups = gr
+                    tn.groups = (gr)
             cou -= 1
         if (li is not None): 
-            tn.groups = li
+            tn.groups = (li)
         cou = str0_.deserialize_short()
         if (cou == 0): 
             return

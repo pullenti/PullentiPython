@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -8,9 +8,6 @@ import typing
 from pullenti.ner.person.internal.PersonAttrTerminType import PersonAttrTerminType
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphNumber import MorphNumber
-
-
-
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.core.NumberHelper import NumberHelper
@@ -55,7 +52,7 @@ class PersonHelper:
                         p.is_female = True
                     elif (a.gender == MorphGender.MASCULINE and not p.is_male): 
                         p.is_male = True
-        elif (isinstance(begin.previous, TextToken) and (begin.whitespaces_before_count < 3)): 
+        elif ((isinstance(begin.previous, TextToken)) and (begin.whitespaces_before_count < 3)): 
             if ((begin.previous if isinstance(begin.previous, TextToken) else None).term == "ИП"): 
                 a = PersonAttrToken(begin.previous, begin.previous)
                 a.prop_ref = PersonPropertyReferent()
@@ -92,8 +89,8 @@ class PersonHelper:
                     if (ttt.is_value("ИМ", "ІМ")): 
                         for_attribute = True
         if (for_attribute): 
-            return ReferentToken._new2300(p, begin, end, morph_, p._m_person_identity_typ)
-        if ((begin.previous is not None and begin.previous.is_comma_and and isinstance(begin.previous.previous, ReferentToken)) and isinstance(begin.previous.previous.get_referent(), PersonReferent)): 
+            return ReferentToken._new2309(p, begin, end, morph_, p._m_person_identity_typ)
+        if ((begin.previous is not None and begin.previous.is_comma_and and (isinstance(begin.previous.previous, ReferentToken))) and (isinstance(begin.previous.previous.get_referent(), PersonReferent))): 
             rt00 = (begin.previous.previous if isinstance(begin.previous.previous, ReferentToken) else None)
             ttt = rt00
             while ttt is not None: 
@@ -102,7 +99,7 @@ class PersonHelper:
                 if (not ttt.previous.is_comma_and or not ((isinstance(ttt.previous.previous.get_referent(), PersonReferent)))): 
                     break
                 rt00 = (ttt.previous.previous if isinstance(ttt.previous.previous, ReferentToken) else None)
-                ttt = rt00
+                ttt = (rt00)
             if (isinstance(rt00.begin_token.get_referent(), PersonPropertyReferent)): 
                 ok = False
                 if ((rt00.begin_token if isinstance(rt00.begin_token, ReferentToken) else None).end_token.next0_ is not None and (rt00.begin_token if isinstance(rt00.begin_token, ReferentToken) else None).end_token.next0_.is_char(':')): 
@@ -113,15 +110,15 @@ class PersonHelper:
                     p.add_slot(PersonReferent.ATTR_ATTR, rt00.begin_token.get_referent(), False, 0)
         if (ad is not None): 
             if (ad.overflow_level > 10): 
-                return ReferentToken._new2300(p, begin, end, morph_, p._m_person_identity_typ)
+                return ReferentToken._new2309(p, begin, end, morph_, p._m_person_identity_typ)
             ad.overflow_level += 1
         attrs1 = None
         has_position = False
         open_br = False
         t = end.next0_
-        first_pass3027 = True
+        first_pass3999 = True
         while True:
-            if first_pass3027: first_pass3027 = False
+            if first_pass3999: first_pass3999 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -170,9 +167,9 @@ class PersonHelper:
                 if (t is None): 
                     break
                 pit1 = PersonItemToken.try_attach(t, None, PersonItemToken.ParseAttr.NO, None)
-                if ((pit1 is not None and t.chars.is_capital_upper and pit1.end_token.next0_ is not None) and isinstance(t, TextToken) and pit1.end_token.next0_.is_char(')')): 
+                if ((pit1 is not None and t.chars.is_capital_upper and pit1.end_token.next0_ is not None) and (isinstance(t, TextToken)) and pit1.end_token.next0_.is_char(')')): 
                     if (pit1.lastname is not None): 
-                        inf = MorphBaseInfo._new2247(MorphCase.NOMINATIVE)
+                        inf = MorphBaseInfo._new2256(MorphCase.NOMINATIVE)
                         if (p.is_male): 
                             inf.gender |= MorphGender.MASCULINE
                         if (p.is_female): 
@@ -185,9 +182,9 @@ class PersonHelper:
                             continue
             elif (t.is_comma): 
                 t = t.next0_
-                if (isinstance(t, TextToken) and (t if isinstance(t, TextToken) else None).is_value("WHO", None)): 
+                if ((isinstance(t, TextToken)) and (t if isinstance(t, TextToken) else None).is_value("WHO", None)): 
                     continue
-            elif (isinstance(t, TextToken) and (t if isinstance(t, TextToken) else None).is_verb_be): 
+            elif ((isinstance(t, TextToken)) and (t if isinstance(t, TextToken) else None).is_verb_be): 
                 t = t.next0_
             elif (t.is_and and t.is_whitespace_after and not t.is_newline_after): 
                 if (t == end.next0_): 
@@ -236,7 +233,7 @@ class PersonHelper:
                 else: 
                     break
             if (not morph_.case.is_undefined and not attr.morph.case.is_undefined): 
-                if ((morph_.case & attr.morph.case).is_undefined and not is_be): 
+                if (((morph_.case) & attr.morph.case).is_undefined and not is_be): 
                     break
             if (open_br): 
                 if (PersonAnalyzer._try_attach_person(t, ad, False, 0, True) is not None): 
@@ -259,7 +256,7 @@ class PersonHelper:
                 if (attr.typ == PersonAttrTerminType.OTHER and attr.age is not None): 
                     pass
                 else: 
-                    attrs1 = None
+                    attrs1 = (None)
                     break
             t = attr.end_token
         if (attrs1 is not None and has_position and attrs is not None): 
@@ -277,7 +274,7 @@ class PersonHelper:
                         te = attrs1[len(attrs1) - 1].end_token
                         if (te.next0_ is not None): 
                             if (not te.next0_.is_char('.')): 
-                                attrs1 = None
+                                attrs1 = (None)
                                 break
         if (attrs1 is not None and not has_prefix): 
             attr = attrs1[len(attrs1) - 1]
@@ -286,15 +283,15 @@ class PersonHelper:
                 ok = True
             else: 
                 rt = PersonAnalyzer._try_attach_person(attr.begin_token, ad, False, -1, False)
-                if (rt is not None and isinstance(rt.referent, PersonReferent)): 
+                if (rt is not None and (isinstance(rt.referent, PersonReferent))): 
                     ok = True
             if (ok): 
                 if (attr.begin_token.whitespaces_before_count > attr.end_token.whitespaces_after_count): 
-                    attrs1 = None
+                    attrs1 = (None)
                 elif (attr.begin_token.whitespaces_before_count == attr.end_token.whitespaces_after_count): 
                     rt1 = PersonAnalyzer._try_attach_person(attr.begin_token, ad, False, -1, False)
                     if (rt1 is not None): 
-                        attrs1 = None
+                        attrs1 = (None)
         if (attrs1 is not None): 
             for a in attrs1: 
                 if (a.typ != PersonAttrTerminType.PREFIX): 
@@ -317,9 +314,9 @@ class PersonHelper:
                     end = end.next0_
         crlf_cou = 0
         t = end.next0_
-        first_pass3028 = True
+        first_pass4000 = True
         while True:
-            if first_pass3028: first_pass3028 = False
+            if first_pass4000: first_pass4000 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -358,19 +355,19 @@ class PersonHelper:
                     break
                 exist = False
                 for s in p.slots: 
-                    if (s.type_name == PersonReferent.ATTR_ATTR and isinstance(s.value, PersonPropertyReferent)): 
+                    if (s.type_name == PersonReferent.ATTR_ATTR and (isinstance(s.value, PersonPropertyReferent))): 
                         pr = (s.value if isinstance(s.value, PersonPropertyReferent) else None)
                         if (pr.find_slot(PersonPropertyReferent.ATTR_REF, r, True) is not None): 
                             exist = True
                             break
-                    elif (s.type_name == PersonReferent.ATTR_ATTR and isinstance(s.value, PersonAttrToken)): 
+                    elif (s.type_name == PersonReferent.ATTR_ATTR and (isinstance(s.value, PersonAttrToken))): 
                         pr = (s.value if isinstance(s.value, PersonAttrToken) else None)
                         if (pr.referent.find_slot(PersonPropertyReferent.ATTR_REF, r, True) is not None): 
                             exist = True
                             break
                 if (not exist): 
                     pat = PersonAttrToken(t, t)
-                    pat.prop_ref = PersonPropertyReferent._new2217("сотрудник")
+                    pat.prop_ref = PersonPropertyReferent._new2226("сотрудник")
                     pat.prop_ref.add_slot(PersonPropertyReferent.ATTR_REF, r, False, 0)
                     p.add_slot(PersonReferent.ATTR_ATTR, pat, False, 0)
                 continue
@@ -380,28 +377,19 @@ class PersonHelper:
                 break
         if (ad is not None): 
             ad.overflow_level -= 1
-        return ReferentToken._new2300(p, begin, end, morph_, p._m_person_identity_typ)
+        return ReferentToken._new2309(p, begin, end, morph_, p._m_person_identity_typ)
     
     @staticmethod
     def create_nickname(pr : 'PersonReferent', t : 'Token') -> 'Token':
-        """ Выделить кличку
-        
-        Args:
-            pr(PersonReferent): 
-            t(Token): начальный токен
-        
-        Returns:
-            Token: если не null, то последний токен клички, а в pr запишет саму кличку
-        """
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner.core.MiscHelper import MiscHelper
         from pullenti.ner.person.PersonReferent import PersonReferent
         from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         has_keyw = False
         is_br = False
-        first_pass3029 = True
+        first_pass4001 = True
         while True:
-            if first_pass3029: first_pass3029 = False
+            if first_pass4001: first_pass4001 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_hiphen or t.is_comma or t.is_char_of(".:;")): 
@@ -425,9 +413,9 @@ class PersonHelper:
                     pr.add_slot(PersonReferent.ATTR_NICKNAME, ni, False, 0)
                     t = br.end_token
                     tt = t.next0_
-                    first_pass3030 = True
+                    first_pass4002 = True
                     while True:
-                        if first_pass3030: first_pass3030 = False
+                        if first_pass4002: first_pass4002 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.is_comma_and): 
@@ -471,7 +459,7 @@ class PersonHelper:
         if (t.chars.is_latin_letter): 
             if (t.is_value("SAY", None) or t.is_value("ASK", None) or t.is_value("WHO", None)): 
                 return True
-        if (t.is_char('.') and isinstance(t.next0_, TextToken) and ((t.next0_.morph.class0_.is_pronoun or t.next0_.morph.class0_.is_personal_pronoun))): 
+        if (t.is_char('.') and (isinstance(t.next0_, TextToken)) and ((t.next0_.morph.class0_.is_pronoun or t.next0_.morph.class0_.is_personal_pronoun))): 
             if (t.next0_.morph.gender == MorphGender.FEMINIE or t.next0_.morph.gender == MorphGender.MASCULINE): 
                 return True
         if (t.is_comma and t.next0_ is not None): 

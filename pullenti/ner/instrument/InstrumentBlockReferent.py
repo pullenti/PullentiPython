@@ -1,16 +1,15 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import typing
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Referent import Referent
 from pullenti.ner.instrument.InstrumentKind import InstrumentKind
-
 
 
 class InstrumentBlockReferent(Referent):
@@ -51,7 +50,7 @@ class InstrumentBlockReferent(Referent):
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.instrument.internal.MetaInstrumentBlock import MetaInstrumentBlock
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         ki = self.kind
         str0_ = (MetaInstrumentBlock.GLOBAL_META.kind_feature.convert_inner_value_to_outer_value(Utils.enumToString(ki), lang) if isinstance(MetaInstrumentBlock.GLOBAL_META.kind_feature.convert_inner_value_to_outer_value(Utils.enumToString(ki), lang), str) else None)
         if (str0_ is not None): 
@@ -80,7 +79,7 @@ class InstrumentBlockReferent(Referent):
         if (self.is_expired): 
             print(" (утратить силу)", end="", file=res)
             ignore_ref = True
-        elif (ki != InstrumentKind.EDITIONS and ki != InstrumentKind.APPROVED and isinstance(self.ref, DecreeReferent)): 
+        elif (ki != InstrumentKind.EDITIONS and ki != InstrumentKind.APPROVED and (isinstance(self.ref, DecreeReferent))): 
             print(" (*)", end="", file=res)
             ignore_ref = True
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_NAME)
@@ -88,9 +87,9 @@ class InstrumentBlockReferent(Referent):
             str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_VALUE)
         if (str0_ is not None): 
             if (len(str0_) > 100): 
-                str0_ = (str0_[0 : 100] + "...")
+                str0_ = (str0_[0:0+100] + "...")
             print(" \"{0}\"".format(str0_), end="", file=res, flush=True)
-        elif (not ignore_ref and isinstance(self.ref, Referent) and (lev < 30)): 
+        elif (not ignore_ref and (isinstance(self.ref, Referent)) and (lev < 30)): 
             print(" \"{0}\"".format(self.ref.to_string(short_variant, lang, lev + 1)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res).strip()
     
@@ -106,7 +105,7 @@ class InstrumentBlockReferent(Referent):
             res = Utils.valToEnum(s, InstrumentKind)
             if (isinstance(res, InstrumentKind)): 
                 return Utils.valToEnum(res, InstrumentKind)
-        except Exception as ex1464: 
+        except Exception as ex1468: 
             pass
         return InstrumentKind.UNDEFINED
     
@@ -126,7 +125,7 @@ class InstrumentBlockReferent(Referent):
             res = Utils.valToEnum(s, InstrumentKind)
             if (isinstance(res, InstrumentKind)): 
                 return Utils.valToEnum(res, InstrumentKind)
-        except Exception as ex1465: 
+        except Exception as ex1469: 
             pass
         return InstrumentKind.UNDEFINED
     
@@ -165,10 +164,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_NUMBER)
         if (str0_ is None): 
             return 0
-        inoutarg1466 = RefOutArgWrapper(0)
-        inoutres1467 = Utils.tryParseInt(str0_, inoutarg1466)
-        i = inoutarg1466.value
-        if (inoutres1467): 
+        inoutarg1470 = RefOutArgWrapper(0)
+        inoutres1471 = Utils.tryParseInt(str0_, inoutarg1470)
+        i = inoutarg1470.value
+        if (inoutres1471): 
             return i
         return 0
     
@@ -183,10 +182,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_SUBNUMBER)
         if (str0_ is None): 
             return 0
-        inoutarg1468 = RefOutArgWrapper(0)
-        inoutres1469 = Utils.tryParseInt(str0_, inoutarg1468)
-        i = inoutarg1468.value
-        if (inoutres1469): 
+        inoutarg1472 = RefOutArgWrapper(0)
+        inoutres1473 = Utils.tryParseInt(str0_, inoutarg1472)
+        i = inoutarg1472.value
+        if (inoutres1473): 
             return i
         return 0
     
@@ -201,10 +200,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_SUB2NUMBER)
         if (str0_ is None): 
             return 0
-        inoutarg1470 = RefOutArgWrapper(0)
-        inoutres1471 = Utils.tryParseInt(str0_, inoutarg1470)
-        i = inoutarg1470.value
-        if (inoutres1471): 
+        inoutarg1474 = RefOutArgWrapper(0)
+        inoutres1475 = Utils.tryParseInt(str0_, inoutarg1474)
+        i = inoutarg1474.value
+        if (inoutres1475): 
             return i
         return 0
     
@@ -219,10 +218,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_SUB3NUMBER)
         if (str0_ is None): 
             return 0
-        inoutarg1472 = RefOutArgWrapper(0)
-        inoutres1473 = Utils.tryParseInt(str0_, inoutarg1472)
-        i = inoutarg1472.value
-        if (inoutres1473): 
+        inoutarg1476 = RefOutArgWrapper(0)
+        inoutres1477 = Utils.tryParseInt(str0_, inoutarg1476)
+        i = inoutarg1476.value
+        if (inoutres1477): 
             return i
         return 0
     
@@ -237,10 +236,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_MINNUMBER)
         if (str0_ is None): 
             return 0
-        inoutarg1474 = RefOutArgWrapper(0)
-        inoutres1475 = Utils.tryParseInt(str0_, inoutarg1474)
-        i = inoutarg1474.value
-        if (inoutres1475): 
+        inoutarg1478 = RefOutArgWrapper(0)
+        inoutres1479 = Utils.tryParseInt(str0_, inoutarg1478)
+        i = inoutarg1478.value
+        if (inoutres1479): 
             return i
         return 0
     
@@ -271,7 +270,7 @@ class InstrumentBlockReferent(Referent):
         return self.__m_children
     
     def add_slot(self, attr_name : str, attr_value : object, clear_old_value : bool, stat_count : int=0) -> 'Slot':
-        self.__m_children = None
+        self.__m_children = (None)
         return super().add_slot(attr_name, attr_value, clear_old_value, stat_count)
     
     def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:

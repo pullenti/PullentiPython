@@ -1,14 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.address.internal.StreetItemType import StreetItemType
-
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
 from pullenti.ner.NumberSpellingType import NumberSpellingType
@@ -73,8 +72,10 @@ class StreetDefineHelper:
                 if (sli[i].termin.canonic_text == "МЕТРО"): 
                     if ((i + 1) < len(sli)): 
                         sli1 = list()
-                        for ii in range(i + 1, len(sli), 1):
+                        ii = i + 1
+                        while ii < len(sli): 
                             sli1.append(sli[ii])
+                            ii += 1
                         str1 = StreetDefineHelper._try_parse_street(sli1, ext_onto_regim, True)
                         if (str1 is not None): 
                             str1.begin_token = sli[i].begin_token
@@ -134,7 +135,8 @@ class StreetDefineHelper:
             else: 
                 before += 1
             j += 1
-        for j in range(i + 1, len(sli), 1):
+        j = (i + 1)
+        while j < len(sli): 
             if ((sli[j].typ == StreetItemType.NAME or sli[j].typ == StreetItemType.STDNAME or sli[j].typ == StreetItemType.FIX) or sli[j].typ == StreetItemType.STDADJECTIVE or sli[j].typ == StreetItemType.STDPARTOFNAME): 
                 after += 1
             elif (sli[j].typ == StreetItemType.NUMBER): 
@@ -150,7 +152,7 @@ class StreetDefineHelper:
                 break
             else: 
                 after += 1
-        else: j = len(sli)
+            j += 1
         rli = list()
         if (before > after): 
             if (noun.termin.canonic_text == "МЕТРО"): 
@@ -217,9 +219,9 @@ class StreetDefineHelper:
             return None
         sec_number = None
         j = n0
-        first_pass2686 = True
+        first_pass3633 = True
         while True:
-            if first_pass2686: first_pass2686 = False
+            if first_pass3633: first_pass3633 = False
             else: j += 1
             if (not (j <= n1)): break
             if (sli[j].typ == StreetItemType.NUMBER): 
@@ -242,7 +244,7 @@ class StreetDefineHelper:
                 if (sli[j].number is not None and sli[j].number.typ == NumberSpellingType.DIGIT and not sli[j].number.morph.class0_.is_adjective): 
                     if (sli[j].whitespaces_before_count > 2 and j > 0): 
                         break
-                    if (sli[j].number is not None and sli[j].number.value > 20): 
+                    if (sli[j].number is not None and sli[j].number.value > (20)): 
                         if (j > n0): 
                             if (((j + 1) < len(sli)) and sli[j + 1].typ == StreetItemType.NOUN): 
                                 pass
@@ -345,8 +347,8 @@ class StreetDefineHelper:
                     res.is_doubt = False
                 elif (name.chars.is_capital_upper and noun.noun_is_doubt_coef == 1): 
                     res.is_doubt = False
-        name_base = Utils.newStringIO(None)
-        name_alt = Utils.newStringIO(None)
+        name_base = io.StringIO()
+        name_alt = io.StringIO()
         name_alt2 = None
         gen = noun.termin.gender
         adj_gen = MorphGender.UNDEFINED
@@ -372,14 +374,14 @@ class StreetDefineHelper:
             is_adj = False
             if (isinstance(name.end_token, TextToken)): 
                 for wf in name.end_token.morph.items: 
-                    if (isinstance(wf, MorphWordForm) and (wf if isinstance(wf, MorphWordForm) else None).is_in_dictionary): 
+                    if ((isinstance(wf, MorphWordForm)) and (wf if isinstance(wf, MorphWordForm) else None).is_in_dictionary): 
                         is_adj = (wf.class0_.is_adjective | wf.class0_.is_proper_geo)
                         adj_gen = wf.gender
                         break
                     elif (wf.class0_.is_adjective | wf.class0_.is_proper_geo): 
                         is_adj = True
             if (is_adj): 
-                tmp = Utils.newStringIO(None)
+                tmp = io.StringIO()
                 vars0_ = list()
                 t = name.begin_token
                 while t is not None: 
@@ -401,8 +403,8 @@ class StreetDefineHelper:
                             print(tt.term, end="", file=tmp)
                             break
                         for wf in tt.morph.items: 
-                            if (((wf.class0_.is_adjective or wf.class0_.is_proper_geo)) and ((wf.gender & gen)) != MorphGender.UNDEFINED): 
-                                if (noun.morph.case.is_undefined or not (wf.case & noun.morph.case).is_undefined): 
+                            if (((wf.class0_.is_adjective or wf.class0_.is_proper_geo)) and (((wf.gender) & (gen))) != (MorphGender.UNDEFINED)): 
+                                if (noun.morph.case.is_undefined or not ((wf.case) & noun.morph.case).is_undefined): 
                                     wff = (wf if isinstance(wf, MorphWordForm) else None)
                                     if (wff is None): 
                                         continue
@@ -437,7 +439,7 @@ class StreetDefineHelper:
                 while t is not None: 
                     if (t.morph.class0_.is_adjective or t.morph.class0_.is_conjunction): 
                         has_adj = True
-                    if (isinstance(t, TextToken) and not t.is_hiphen): 
+                    if ((isinstance(t, TextToken)) and not t.is_hiphen): 
                         if (name.termin is not None): 
                             nits.append(name.termin.canonic_text)
                             break
@@ -447,7 +449,7 @@ class StreetDefineHelper:
                             nits.append((t if isinstance(t, TextToken) else None).term)
                             if (t == name.begin_token and t.get_morph_class_in_dictionary().is_proper_name): 
                                 has_proper_name = True
-                    elif (isinstance(t, ReferentToken) and name.termin is None): 
+                    elif ((isinstance(t, ReferentToken)) and name.termin is None): 
                         nits.append(t.get_source_text().upper())
                     if (t == name.end_token): 
                         break
@@ -462,14 +464,14 @@ class StreetDefineHelper:
         adj_str = None
         adj_can_be_initial = False
         if (adj is not None): 
-            if (adj_gen == MorphGender.UNDEFINED and name is not None and ((name.morph.number & MorphNumber.PLURAL)) == MorphNumber.UNDEFINED): 
+            if (adj_gen == MorphGender.UNDEFINED and name is not None and (((name.morph.number) & (MorphNumber.PLURAL))) == (MorphNumber.UNDEFINED)): 
                 if (name.morph.gender == MorphGender.FEMINIE or name.morph.gender == MorphGender.MASCULINE or name.morph.gender == MorphGender.NEUTER): 
                     adj_gen = name.morph.gender
-            if (name is not None and ((name.morph.number & MorphNumber.PLURAL)) != MorphNumber.UNDEFINED): 
+            if (name is not None and (((name.morph.number) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
                 s = Morphology.get_wordform(adj.termin.canonic_text, MorphBaseInfo._new210(MorphClass.ADJECTIVE, MorphNumber.PLURAL))
             elif (adj_gen != MorphGender.UNDEFINED): 
                 s = Morphology.get_wordform(adj.termin.canonic_text, MorphBaseInfo._new211(MorphClass.ADJECTIVE, adj_gen))
-            elif (((adj.morph.gender & gen)) == MorphGender.UNDEFINED): 
+            elif ((((adj.morph.gender) & (gen))) == (MorphGender.UNDEFINED)): 
                 s = Morphology.get_wordform(adj.termin.canonic_text, MorphBaseInfo._new211(MorphClass.ADJECTIVE, adj.morph.gender))
             else: 
                 s = Morphology.get_wordform(adj.termin.canonic_text, MorphBaseInfo._new211(MorphClass.ADJECTIVE, gen))
@@ -559,7 +561,7 @@ class StreetDefineHelper:
                 res.end_token = non.end_token
         if (res.is_doubt): 
             if (noun.is_road): 
-                if (street.number is not None and street.number.upper().endswith("КМ".upper())): 
+                if (street.number is not None and Utils.endsWithString(street.number, "КМ", True)): 
                     res.is_doubt = False
                 elif (AddressItemToken.check_km_after(res.end_token.next0_)): 
                     res.is_doubt = False
@@ -568,9 +570,9 @@ class StreetDefineHelper:
             elif (noun.termin.canonic_text == "ПРОЕЗД" and street.find_slot(StreetReferent.ATTR_NAME, "ПРОЕКТИРУЕМЫЙ", True) is not None): 
                 res.is_doubt = False
             tt0 = res.begin_token.previous
-            first_pass2687 = True
+            first_pass3634 = True
             while True:
-                if first_pass2687: first_pass2687 = False
+                if first_pass3634: first_pass3634 = False
                 else: tt0 = tt0.previous
                 if (not (tt0 is not None)): break
                 if (tt0.is_char_of(",,") or tt0.is_comma_and): 
@@ -626,13 +628,13 @@ class StreetDefineHelper:
             if (not onto_regim): 
                 is_street_before = False
                 tt = sli[0].begin_token.previous
-                if ((tt is not None and tt.is_comma_and and tt.previous is not None) and isinstance(tt.previous.get_referent(), StreetReferent)): 
+                if ((tt is not None and tt.is_comma_and and tt.previous is not None) and (isinstance(tt.previous.get_referent(), StreetReferent))): 
                     is_street_before = True
                 cou = 0
                 tt = sli[0].end_token.next0_
-                first_pass2688 = True
+                first_pass3635 = True
                 while True:
-                    if first_pass2688: first_pass2688 = False
+                    if first_pass3635: first_pass3635 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (not tt.is_comma_and or tt.next0_ is None): 
@@ -696,7 +698,7 @@ class StreetDefineHelper:
             t0 = sli[0].begin_token.previous
             if (t0 is not None and t0.is_char(',')): 
                 t0 = t0.previous
-            if (isinstance(t0, ReferentToken) and isinstance(t0.get_referent(), GeoReferent)): 
+            if ((isinstance(t0, ReferentToken)) and (isinstance(t0.get_referent(), GeoReferent))): 
                 val = MiscHelper.get_text_value(sli[0].begin_token, sli[0].end_token, GetTextAttr.NO)
         if (val is None): 
             return None
@@ -707,7 +709,7 @@ class StreetDefineHelper:
             return None
         ok = False
         doubt = True
-        if (sli[i1].termin is not None and Utils.valToEnum(sli[i1].termin.tag, StreetItemType) == StreetItemType.FIX): 
+        if (sli[i1].termin is not None and (Utils.valToEnum(sli[i1].termin.tag, StreetItemType)) == StreetItemType.FIX): 
             ok = True
             doubt = False
         elif (((sli[i1].exist_street is not None or sli[0].exist_street is not None)) and sli[0].begin_token != sli[i1].end_token): 
@@ -744,15 +746,15 @@ class StreetDefineHelper:
                     mc = ait.end_token.next0_.get_morph_class_in_dictionary()
                     if (mc.is_adjective or mc.is_noun): 
                         return None
-                if (nt.value > 100): 
+                if (nt.value > (100)): 
                     return None
                 nex = NumberExToken.try_parse_number_with_postfix(ait.begin_token)
                 if (nex is not None): 
                     return None
                 t = sli[0].begin_token.previous
-                first_pass2689 = True
+                first_pass3636 = True
                 while True:
-                    if first_pass2689: first_pass2689 = False
+                    if first_pass3636: first_pass3636 = False
                     else: t = t.previous
                     if (not (t is not None)): break
                     if (t.is_newline_after): 

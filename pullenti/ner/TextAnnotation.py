@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -40,12 +40,9 @@ class TextAnnotation:
         return self.get_text()
     
     def get_text(self) -> str:
-        """ Извлечь фрагмент исходного текста, соответствующий аннотации
-        
-        """
         if (self.sofa is None or self.sofa.text is None): 
             return None
-        return self.sofa.text[self.begin_char : self.end_char + 1]
+        return self.sofa.text[self.begin_char:self.begin_char+(self.end_char + 1) - self.begin_char]
     
     def _compare_with(self, loc : 'TextAnnotation') -> 'TextsCompareType':
         if (loc.sofa != self.sofa): 
@@ -74,7 +71,6 @@ class TextAnnotation:
             self.end_char = loc.end_char
         if (loc.essential_for_occurence): 
             self.essential_for_occurence = True
-
     
     @staticmethod
     def _new497(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int) -> 'TextAnnotation':
@@ -94,7 +90,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2648(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
+    def _new2661(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
         res = TextAnnotation()
         res.begin_char = _arg1
         res.end_char = _arg2
@@ -102,7 +98,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2650(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
+    def _new2663(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.occurence_of = _arg2

@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -7,14 +7,12 @@
 import io
 import typing
 from enum import IntEnum
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.MetaToken import MetaToken
-
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.NumberHelper import NumberHelper
-
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.instrument.InstrumentKind import InstrumentKind
 from pullenti.ner.instrument.internal.NumberingHelper import NumberingHelper
@@ -66,10 +64,10 @@ class PartToken(MetaToken):
         def int_value(self) -> int:
             if (Utils.isNullOrEmpty(self.value)): 
                 return 0
-            inoutarg1003 = RefOutArgWrapper(0)
-            inoutres1004 = Utils.tryParseInt(self.value, inoutarg1003)
-            num = inoutarg1003.value
-            if (inoutres1004): 
+            inoutarg1005 = RefOutArgWrapper(0)
+            inoutres1006 = Utils.tryParseInt(self.value, inoutarg1005)
+            num = inoutarg1005.value
+            if (inoutres1006): 
                 return num
             return 0
         
@@ -81,16 +79,20 @@ class PartToken(MetaToken):
             from pullenti.ner.core.BracketHelper import BracketHelper
             from pullenti.ner.NumberToken import NumberToken
             from pullenti.ner.decree.DecreeReferent import DecreeReferent
-            if ((isinstance(self.end_token.next0_, TextToken) and (self.end_token.next0_ if isinstance(self.end_token.next0_, TextToken) else None).length_char == 1 and self.end_token.next0_.chars.is_letter) and not self.end_token.is_whitespace_after): 
-                self.value += (self.end_token.next0_ if isinstance(self.end_token.next0_, TextToken) else None).term
-                self.end_token = self.end_token.next0_
-            if ((BracketHelper.can_be_start_of_sequence(self.end_token.next0_, False, False) and isinstance(self.end_token.next0_.next0_, TextToken) and self.end_token.next0_.next0_.length_char == 1) and BracketHelper.can_be_end_of_sequence(self.end_token.next0_.next0_.next0_, False, self.end_token.next0_, False)): 
+            if ((isinstance(self.end_token.next0_, TextToken)) and (self.end_token.next0_ if isinstance(self.end_token.next0_, TextToken) else None).length_char == 1 and self.end_token.next0_.chars.is_letter): 
+                if (not self.end_token.is_whitespace_after): 
+                    self.value += (self.end_token.next0_ if isinstance(self.end_token.next0_, TextToken) else None).term
+                    self.end_token = self.end_token.next0_
+                elif ((self.end_token.whitespaces_after_count < 2) and self.end_token.next0_.next0_ is not None and self.end_token.next0_.next0_.is_char(')')): 
+                    self.value += (self.end_token.next0_ if isinstance(self.end_token.next0_, TextToken) else None).term
+                    self.end_token = self.end_token.next0_.next0_
+            if ((BracketHelper.can_be_start_of_sequence(self.end_token.next0_, False, False) and (isinstance(self.end_token.next0_.next0_, TextToken)) and self.end_token.next0_.next0_.length_char == 1) and BracketHelper.can_be_end_of_sequence(self.end_token.next0_.next0_.next0_, False, self.end_token.next0_, False)): 
                 self.value = "{0}.{1}".format(self.value, (self.end_token.next0_.next0_ if isinstance(self.end_token.next0_.next0_, TextToken) else None).term)
                 self.end_token = self.end_token.next0_.next0_.next0_
             t = self.end_token.next0_
-            first_pass2804 = True
+            first_pass3754 = True
             while True:
-                if first_pass2804: first_pass2804 = False
+                if first_pass3754: first_pass3754 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_whitespace_before): 
@@ -101,20 +103,20 @@ class PartToken(MetaToken):
                         t = t.next0_
                         self.end_token = t
                         continue
-                    if (((t.next0_ is not None and t.next0_.is_char('(') and isinstance(t.next0_.next0_, NumberToken)) and not t.next0_.is_whitespace_after and t.next0_.next0_.next0_ is not None) and t.next0_.next0_.next0_.is_char(')')): 
+                    if (((t.next0_ is not None and t.next0_.is_char('(') and (isinstance(t.next0_.next0_, NumberToken))) and not t.next0_.is_whitespace_after and t.next0_.next0_.next0_ is not None) and t.next0_.next0_.next0_.is_char(')')): 
                         self.value = "{0}.{1}".format(Utils.ifNotNull(self.value, ""), (t.next0_.next0_ if isinstance(t.next0_.next0_, NumberToken) else None).value)
                         self.end_token = t.next0_.next0_.next0_
                         continue
-                if (t.is_hiphen and not t.is_whitespace_after and isinstance(t.next0_, NumberToken)): 
-                    inoutarg1005 = RefOutArgWrapper(0)
-                    inoutres1006 = Utils.tryParseInt(self.value, inoutarg1005)
-                    n1 = inoutarg1005.value
-                    if (inoutres1006 and n1 >= (t.next0_ if isinstance(t.next0_, NumberToken) else None).value): 
+                if (t.is_hiphen and not t.is_whitespace_after and (isinstance(t.next0_, NumberToken))): 
+                    inoutarg1007 = RefOutArgWrapper(0)
+                    inoutres1008 = Utils.tryParseInt(self.value, inoutarg1007)
+                    n1 = inoutarg1007.value
+                    if (inoutres1008 and n1 >= (t.next0_ if isinstance(t.next0_, NumberToken) else None).value): 
                         self.value = "{0}.{1}".format(Utils.ifNotNull(self.value, ""), (t.next0_ if isinstance(t.next0_, NumberToken) else None).value)
                         t = t.next0_
                         self.end_token = t
                         continue
-                if ((t.is_char_of("(<") and isinstance(t.next0_, NumberToken) and t.next0_.next0_ is not None) and t.next0_.next0_.is_char_of(")>")): 
+                if ((t.is_char_of("(<") and (isinstance(t.next0_, NumberToken)) and t.next0_.next0_ is not None) and t.next0_.next0_.is_char_of(")>")): 
                     self.value = "{0}.{1}".format(Utils.ifNotNull(self.value, ""), (t.next0_ if isinstance(t.next0_, NumberToken) else None).value)
                     t = t.next0_.next0_
                     self.end_token = t
@@ -123,7 +125,7 @@ class PartToken(MetaToken):
                     continue
                 break
             if (self.end_token.next0_ is not None and self.end_token.next0_.is_char_of(".") and not self.end_token.is_whitespace_after): 
-                if (self.end_token.next0_.next0_ is not None and isinstance(self.end_token.next0_.next0_.get_referent(), DecreeReferent) and not self.end_token.next0_.is_newline_after): 
+                if (self.end_token.next0_.next0_ is not None and (isinstance(self.end_token.next0_.next0_.get_referent(), DecreeReferent)) and not self.end_token.next0_.is_newline_after): 
                     self.end_token = self.end_token.next0_
             if (self.begin_token == self.end_token and self.end_token.next0_ is not None and self.end_token.next0_.is_char(')')): 
                 ok = True
@@ -143,12 +145,11 @@ class PartToken(MetaToken):
                 if (ok): 
                     tt = self.end_token.next0_.next0_
                     if (tt is not None): 
-                        if (isinstance(tt.get_referent(), DecreeReferent) or PartToken.try_attach(tt, None, False, False) is not None): 
+                        if ((isinstance(tt.get_referent(), DecreeReferent)) or PartToken.try_attach(tt, None, False, False) is not None): 
                             self.end_token = self.end_token.next0_
-    
         
         @staticmethod
-        def _new1007(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'PartValue':
+        def _new1009(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'PartValue':
             res = PartToken.PartValue(_arg1, _arg2)
             res.value = _arg3
             return res
@@ -183,9 +184,6 @@ class PartToken(MetaToken):
     
     @staticmethod
     def try_attach(t : 'Token', prev : 'PartToken', in_bracket : bool=False, ignore_number : bool=False) -> 'PartToken':
-        """ Привязать с указанной позиции один примитив
-        
-        """
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
@@ -204,12 +202,12 @@ class PartToken(MetaToken):
                 res.begin_token = t
                 return res
         tt = (t if isinstance(t, TextToken) else None)
-        if (isinstance(t, NumberToken) and t.next0_ is not None and (t.whitespaces_after_count < 3)): 
+        if ((isinstance(t, NumberToken)) and t.next0_ is not None and (t.whitespaces_after_count < 3)): 
             re = PartToken.__create_part_typ0(t.next0_, prev)
             if (re is not None): 
                 t11 = re.end_token.next0_
                 ok1 = False
-                if (t11 is not None and isinstance(t11.get_referent(), DecreeReferent)): 
+                if (t11 is not None and (isinstance(t11.get_referent(), DecreeReferent))): 
                     ok1 = True
                 elif (prev is not None and t11 is not None and not ((isinstance(t11, NumberToken)))): 
                     ok1 = True
@@ -219,9 +217,9 @@ class PartToken(MetaToken):
                         ok1 = True
                 if (ok1 or in_bracket): 
                     re.begin_token = t
-                    re.values.append(PartToken.PartValue._new1007(t, t, str((t if isinstance(t, NumberToken) else None).value)))
+                    re.values.append(PartToken.PartValue._new1009(t, t, str((t if isinstance(t, NumberToken) else None).value)))
                     return re
-        if ((isinstance(t, NumberToken) and (t if isinstance(t, NumberToken) else None).typ == NumberSpellingType.DIGIT and prev is None) and t.previous is not None): 
+        if (((isinstance(t, NumberToken)) and (t if isinstance(t, NumberToken) else None).typ == NumberSpellingType.DIGIT and prev is None) and t.previous is not None): 
             t0 = t.previous
             delim = False
             if (t0.is_char(',') or t0.morph.class0_.is_conjunction): 
@@ -237,19 +235,19 @@ class PartToken(MetaToken):
                         if (te.next0_ is not None and te.next0_.is_char('.')): 
                             te = te.next0_
                         res = PartToken._new786(t, te, PartToken.ItemType.PART)
-                        res.values.append(PartToken.PartValue._new1007(t, t, str((t if isinstance(t, NumberToken) else None).value)))
+                        res.values.append(PartToken.PartValue._new1009(t, t, str((t if isinstance(t, NumberToken) else None).value)))
                         return res
                 return None
             if (dr.clause is None): 
                 return None
-            res = PartToken._new1010(t, t, PartToken.ItemType.CLAUSE, not delim)
-            pv = PartToken.PartValue._new1007(t, t, str((t if isinstance(t, NumberToken) else None).value))
+            res = PartToken._new1012(t, t, PartToken.ItemType.CLAUSE, not delim)
+            pv = PartToken.PartValue._new1009(t, t, str((t if isinstance(t, NumberToken) else None).value))
             res.values.append(pv)
             t = t.next0_
             while t is not None: 
                 if (t.is_whitespace_before): 
                     break
-                elif (t.is_char_of("._") and isinstance(t.next0_, NumberToken)): 
+                elif (t.is_char_of("._") and (isinstance(t.next0_, NumberToken))): 
                     t = t.next0_
                     res.end_token = t
                     pv.end_token = res.end_token
@@ -278,7 +276,7 @@ class PartToken(MetaToken):
             return PartToken._new786(t, t1, PartToken.ItemType.PREFIX)
         elif ((((t1.is_value("МОТИВИРОВОЧНЫЙ", None) or t1.is_value("МОТИВУВАЛЬНИЙ", None) or t1.is_value("РЕЗОЛЮТИВНЫЙ", None)) or t1.is_value("РЕЗОЛЮТИВНИЙ", None))) and t1.next0_ is not None and ((t1.next0_.is_value("ЧАСТЬ", None) or t1.next0_.is_value("ЧАСТИНА", None)))): 
             rr = PartToken._new786(t1, t1.next0_, PartToken.ItemType.PART)
-            rr.values.append(PartToken.PartValue._new1007(t1, t1, ("мотивировочная" if t1.is_value("МОТИВИРОВОЧНЫЙ", None) or t1.is_value("МОТИВУВАЛЬНИЙ", None) else "резолютивная")))
+            rr.values.append(PartToken.PartValue._new1009(t1, t1, ("мотивировочная" if t1.is_value("МОТИВИРОВОЧНЫЙ", None) or t1.is_value("МОТИВУВАЛЬНИЙ", None) else "резолютивная")))
             return rr
         if (res is None): 
             return None
@@ -294,7 +292,7 @@ class PartToken(MetaToken):
         if (t1 is None): 
             return None
         if (res.typ == PartToken.ItemType.CLAUSE): 
-            if ((isinstance(t1, NumberToken) and (t1 if isinstance(t1, NumberToken) else None).value == 3 and not t1.is_whitespace_after) and t1.next0_ is not None and t1.next0_.length_char == 2): 
+            if (((isinstance(t1, NumberToken)) and (t1 if isinstance(t1, NumberToken) else None).value == (3) and not t1.is_whitespace_after) and t1.next0_ is not None and t1.next0_.length_char == 2): 
                 return None
         if (res.typ == PartToken.ItemType.CLAUSE and t1.is_value("СТ", None)): 
             t1 = t1.next0_
@@ -311,7 +309,7 @@ class PartToken(MetaToken):
             res.alt_typ = PartToken.ItemType.SUBITEM
         if (t1 is None): 
             return None
-        if (res.typ == PartToken.ItemType.CLAUSE and isinstance(t1.get_referent(), DecreeReferent) and t1.next0_ is not None): 
+        if (res.typ == PartToken.ItemType.CLAUSE and (isinstance(t1.get_referent(), DecreeReferent)) and t1.next0_ is not None): 
             res.decree = (t1.get_referent() if isinstance(t1.get_referent(), DecreeReferent) else None)
             t1 = t1.next0_
         ttn = MiscHelper.check_number_prefix(t1)
@@ -341,9 +339,9 @@ class PartToken(MetaToken):
                 ok = True
                 newp = None
                 ttt = t1.next0_
-                first_pass2805 = True
+                first_pass3755 = True
                 while True:
-                    if first_pass2805: first_pass2805 = False
+                    if first_pass3755: first_pass3755 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if (ttt.end_char > br.end_token.previous.end_char): 
@@ -351,12 +349,12 @@ class PartToken(MetaToken):
                     if (ttt.is_char(',')): 
                         continue
                     if (isinstance(ttt, NumberToken)): 
-                        if ((ttt if isinstance(ttt, NumberToken) else None).value == 0): 
+                        if ((ttt if isinstance(ttt, NumberToken) else None).value == (0)): 
                             ok = False
                             break
                         if (newp is None): 
                             newp = list()
-                        newp.append(PartToken.PartValue._new1007(ttt, ttt, str((ttt if isinstance(ttt, NumberToken) else None).value)))
+                        newp.append(PartToken.PartValue._new1009(ttt, ttt, str((ttt if isinstance(ttt, NumberToken) else None).value)))
                         continue
                     to = (ttt if isinstance(ttt, TextToken) else None)
                     if (to is None): 
@@ -370,7 +368,7 @@ class PartToken(MetaToken):
                         break
                     if (newp is None): 
                         newp = list()
-                    pv = PartToken.PartValue._new1007(ttt, ttt, to.term)
+                    pv = PartToken.PartValue._new1009(ttt, ttt, to.term)
                     if (BracketHelper.can_be_start_of_sequence(ttt.previous, False, False)): 
                         pv.begin_token = ttt.previous
                     if (BracketHelper.can_be_end_of_sequence(ttt.next0_, False, None, False)): 
@@ -385,14 +383,14 @@ class PartToken(MetaToken):
                     break
                 if (t1 is not None and t1.is_hiphen and BracketHelper.can_be_start_of_sequence(t1.next0_, False, False)): 
                     br1 = BracketHelper.try_parse(t1.next0_, BracketParseAttr.NO, 100)
-                    if ((br1 is not None and isinstance(t1.next0_.next0_, TextToken) and t1.next0_.next0_.length_char == 1) and t1.next0_.next0_.next0_ == br1.end_token): 
-                        res.values.append(PartToken.PartValue._new1007(br1.begin_token, br1.end_token, (t1.next0_.next0_ if isinstance(t1.next0_.next0_, TextToken) else None).term))
+                    if ((br1 is not None and (isinstance(t1.next0_.next0_, TextToken)) and t1.next0_.next0_.length_char == 1) and t1.next0_.next0_.next0_ == br1.end_token): 
+                        res.values.append(PartToken.PartValue._new1009(br1.begin_token, br1.end_token, (t1.next0_.next0_ if isinstance(t1.next0_.next0_, TextToken) else None).term))
                         res.end_token = br1.end_token
                         t1 = br1.end_token.next0_
                 continue
-            if ((isinstance(t1, TextToken) and t1.length_char == 1 and t1.chars.is_letter) and len(res.values) == 0): 
+            if (((isinstance(t1, TextToken)) and t1.length_char == 1 and t1.chars.is_letter) and len(res.values) == 0): 
                 if (t1.chars.is_all_upper and res.typ == PartToken.ItemType.SUBPROGRAM): 
-                    res.values.append(PartToken.PartValue._new1007(t1, t1, (t1 if isinstance(t1, TextToken) else None).term))
+                    res.values.append(PartToken.PartValue._new1009(t1, t1, (t1 if isinstance(t1, TextToken) else None).term))
                     res.end_token = t1
                     return res
                 ok = True
@@ -410,12 +408,12 @@ class PartToken(MetaToken):
                         lev += 1
                     ttt = ttt.previous
                 if (ok and t1.next0_ is not None and t1.next0_.is_char(')')): 
-                    res.values.append(PartToken.PartValue._new1007(t1, t1.next0_, (t1 if isinstance(t1, TextToken) else None).term))
+                    res.values.append(PartToken.PartValue._new1009(t1, t1.next0_, (t1 if isinstance(t1, TextToken) else None).term))
                     res.end_token = t1.next0_
                     t1 = t1.next0_.next0_
                     continue
-                if (((ok and t1.next0_ is not None and t1.next0_.is_char('.')) and not t1.next0_.is_whitespace_after and isinstance(t1.next0_.next0_, NumberToken)) and t1.next0_.next0_.next0_ is not None and t1.next0_.next0_.next0_.is_char(')')): 
-                    res.values.append(PartToken.PartValue._new1007(t1, t1.next0_.next0_.next0_, "{0}.{1}".format((t1 if isinstance(t1, TextToken) else None).term, (t1.next0_.next0_ if isinstance(t1.next0_.next0_, NumberToken) else None).value)))
+                if (((ok and t1.next0_ is not None and t1.next0_.is_char('.')) and not t1.next0_.is_whitespace_after and (isinstance(t1.next0_.next0_, NumberToken))) and t1.next0_.next0_.next0_ is not None and t1.next0_.next0_.next0_.is_char(')')): 
+                    res.values.append(PartToken.PartValue._new1009(t1, t1.next0_.next0_.next0_, "{0}.{1}".format((t1 if isinstance(t1, TextToken) else None).term, (t1.next0_.next0_ if isinstance(t1.next0_.next0_, NumberToken) else None).value)))
                     res.end_token = t1.next0_.next0_.next0_
                     t1 = res.end_token.next0_
                     continue
@@ -428,12 +426,12 @@ class PartToken(MetaToken):
             if (isinstance(t1, NumberToken)): 
                 tt0 = Utils.ifNotNull(pref_to, t1)
                 if (len(res.values) > 0): 
-                    if (res.values[0].int_value == 0 and not res.values[0].value[0].isdigit()): 
+                    if (res.values[0].int_value == 0 and not str.isdigit(res.values[0].value[0])): 
                         break
                     if ((t1 if isinstance(t1, NumberToken) else None).typ != ntyp): 
                         break
                 ntyp = (t1 if isinstance(t1, NumberToken) else None).typ
-                val = PartToken.PartValue._new1007(tt0, t1, str((t1 if isinstance(t1, NumberToken) else None).value))
+                val = PartToken.PartValue._new1009(tt0, t1, str((t1 if isinstance(t1, NumberToken) else None).value))
                 val.correct_value()
                 res.values.append(val)
                 res.end_token = val.end_token
@@ -443,19 +441,19 @@ class PartToken(MetaToken):
                 continue
             nt = NumberHelper.try_parse_roman(t1)
             if (nt is not None): 
-                pv = PartToken.PartValue._new1007(t1, nt.end_token, str(nt.value))
+                pv = PartToken.PartValue._new1009(t1, nt.end_token, str(nt.value))
                 res.values.append(pv)
                 pv.correct_value()
                 res.end_token = pv.end_token
                 t1 = res.end_token.next0_
                 continue
-            if ((t1 == tt1 and ((res.typ == PartToken.ItemType.APPENDIX or res.typ == PartToken.ItemType.ADDAGREE)) and t1.is_value("К", None)) and t1.next0_ is not None and isinstance(t1.next0_.get_referent(), DecreeReferent)): 
-                res.values.append(PartToken.PartValue._new1007(t1, t1, ""))
+            if ((t1 == tt1 and ((res.typ == PartToken.ItemType.APPENDIX or res.typ == PartToken.ItemType.ADDAGREE)) and t1.is_value("К", None)) and t1.next0_ is not None and (isinstance(t1.next0_.get_referent(), DecreeReferent))): 
+                res.values.append(PartToken.PartValue._new1009(t1, t1, ""))
                 break
             if (res.typ == PartToken.ItemType.ADDAGREE and first_num_prefix is not None and len(res.values) == 0): 
                 ddd = DecreeToken.try_attach(first_num_prefix, None, False)
                 if (ddd is not None and ddd.typ == DecreeToken.ItemType.NUMBER and ddd.value is not None): 
-                    res.values.append(PartToken.PartValue._new1007(t1, ddd.end_token, ddd.value))
+                    res.values.append(PartToken.PartValue._new1009(t1, ddd.end_token, ddd.value))
                     res.end_token = ddd.end_token
                     t1 = res.end_token
                     break
@@ -484,7 +482,7 @@ class PartToken(MetaToken):
                     break
                 if ((max0_ - min0_) > 200): 
                     break
-                val = PartToken.PartValue._new1007(t1.next0_, t1.next0_, str(max0_))
+                val = PartToken.PartValue._new1009(t1.next0_, t1.next0_, str(max0_))
                 val.correct_value()
                 res.values.append(val)
                 res.end_token = val.end_token
@@ -507,9 +505,9 @@ class PartToken(MetaToken):
     
     @staticmethod
     def __create_part_typ0(t1 : 'Token', prev : 'PartToken') -> 'PartToken':
-        inoutarg1027 = RefOutArgWrapper(False)
-        pt = PartToken.__create_part_typ(t1, prev, inoutarg1027)
-        is_short = inoutarg1027.value
+        inoutarg1029 = RefOutArgWrapper(False)
+        pt = PartToken.__create_part_typ(t1, prev, inoutarg1029)
+        is_short = inoutarg1029.value
         if (pt is None): 
             return None
         if ((is_short and not pt.end_token.is_whitespace_after and pt.end_token.next0_ is not None) and pt.end_token.next0_.is_char('.')): 
@@ -543,7 +541,7 @@ class PartToken(MetaToken):
             return PartToken._new786(t1, t1, PartToken.ItemType.CLAUSE)
         if (t1.is_value("ПУНКТ", None) or t1.is_value("П", None) or t1.is_value("ПП", None)): 
             is_short.value = (t1.length_char < 3)
-            return PartToken._new1034(t1, t1, PartToken.ItemType.ITEM, (PartToken.ItemType.SUBITEM if t1.is_value("ПП", None) else PartToken.ItemType.UNDEFINED))
+            return PartToken._new1036(t1, t1, PartToken.ItemType.ITEM, (PartToken.ItemType.SUBITEM if t1.is_value("ПП", None) else PartToken.ItemType.UNDEFINED))
         if (t1.is_value("ПОДПУНКТ", "ПІДПУНКТ")): 
             return PartToken._new786(t1, t1, PartToken.ItemType.SUBITEM)
         if (t1.is_value("ПРЕАМБУЛА", None)): 
@@ -587,11 +585,6 @@ class PartToken(MetaToken):
     
     @staticmethod
     def try_attach_list(t : 'Token', in_bracket : bool=False, max_count : int=40) -> typing.List['PartToken']:
-        """ Привязать примитивы в контейнере с указанной позиции
-        
-        Returns:
-            typing.List[PartToken]: Список примитивов
-        """
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner.core.MiscHelper import MiscHelper
         from pullenti.ner.NumberToken import NumberToken
@@ -636,10 +629,12 @@ class PartToken(MetaToken):
                         if (li[0].typ == PartToken.ItemType.PARAGRAPH or li[0].typ == PartToken.ItemType.PART or li[0].typ == PartToken.ItemType.ITEM): 
                             if (li[len(li) - 1].end_token.next0_ == br.end_token): 
                                 if (len(p.values) > 1): 
-                                    for ii in range(1, len(p.values), 1):
+                                    ii = 1
+                                    while ii < len(p.values): 
                                         pp = PartToken._new786(p.values[ii].begin_token, (p.end_token if ii == (len(p.values) - 1) else p.values[ii].end_token), p.typ)
                                         pp.values.append(p.values[ii])
                                         res.append(pp)
+                                        ii += 1
                                     if (p.values[1].begin_token.previous is not None and p.values[1].begin_token.previous.end_char >= p.begin_token.begin_char): 
                                         p.end_token = p.values[1].begin_token.previous
                                     del p.values[1:1+len(p.values) - 1]
@@ -669,8 +664,8 @@ class PartToken(MetaToken):
                         pass
                     else: 
                         break
-                if (isinstance(tt, NumberToken) and delim): 
-                    p0 = None
+                if ((isinstance(tt, NumberToken)) and delim): 
+                    p0 = (None)
                     if (p.typ == PartToken.ItemType.CLAUSE or in_bracket): 
                         p0 = PartToken._new786(tt, tt, PartToken.ItemType.CLAUSE)
                     elif (len(res) > 1 and res[len(res) - 2].typ == PartToken.ItemType.CLAUSE and res[len(res) - 1].typ == PartToken.ItemType.PART): 
@@ -681,14 +676,14 @@ class PartToken(MetaToken):
                         p0 = PartToken._new786(tt, tt, res[len(res) - 1].typ)
                     if (p0 is None): 
                         break
-                    vv = PartToken.PartValue._new1007(tt, tt, str((tt if isinstance(tt, NumberToken) else None).value))
+                    vv = PartToken.PartValue._new1009(tt, tt, str((tt if isinstance(tt, NumberToken) else None).value))
                     p0.values.append(vv)
                     vv.correct_value()
                     p0.end_token = vv.end_token
                     tt = p0.end_token.next0_
                     if (tt is not None and tt.is_hiphen and ((isinstance(tt.next0_, NumberToken)))): 
                         tt = tt.next0_
-                        vv = PartToken.PartValue._new1007(tt, tt, str((tt if isinstance(tt, NumberToken) else None).value))
+                        vv = PartToken.PartValue._new1009(tt, tt, str((tt if isinstance(tt, NumberToken) else None).value))
                         vv.correct_value()
                         p0.values.append(vv)
                         p0.end_token = vv.end_token
@@ -708,9 +703,9 @@ class PartToken(MetaToken):
             res.append(p)
             tt = p.end_token.next0_
         i = 0
-        first_pass2806 = True
+        first_pass3756 = True
         while True:
-            if first_pass2806: first_pass2806 = False
+            if first_pass3756: first_pass3756 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].typ == PartToken.ItemType.PART and res[i + 1].typ == PartToken.ItemType.PART and len(res[i].values) > 1): 
@@ -721,7 +716,7 @@ class PartToken(MetaToken):
                 if ((v2 - v1) < 10): 
                     continue
                 pt = PartToken._new786(res[i].end_token, res[i].end_token, PartToken.ItemType.CLAUSE)
-                pt.values.append(PartToken.PartValue._new1007(res[i].end_token, res[i].end_token, str(v2)))
+                pt.values.append(PartToken.PartValue._new1009(res[i].end_token, res[i].end_token, str(v2)))
                 del res[i].values[len(res[i].values) - 1]
                 if (res[i].end_token != res[i].begin_token): 
                     res[i].end_token = res[i].end_token.previous
@@ -771,7 +766,7 @@ class PartToken(MetaToken):
                     if (st.end_token.next0_ == t0): 
                         return True
                     break
-                if (isinstance(tt, TextToken) and tt.chars.is_letter): 
+                if ((isinstance(tt, TextToken)) and tt.chars.is_letter): 
                     i += 1
                     if ((i) > 2): 
                         break
@@ -957,7 +952,7 @@ class PartToken(MetaToken):
             for s in p1.slots: 
                 val = s.value
                 if (s.type_name == not_eq_attr): 
-                    val = diap[i]
+                    val = (diap[i])
                 dpr.add_slot(s.type_name, val, False, 0)
             res.append(dpr)
             i += 1
@@ -967,39 +962,38 @@ class PartToken(MetaToken):
     def get_number(str0_ : str) -> int:
         if (Utils.isNullOrEmpty(str0_)): 
             return 0
-        inoutarg1062 = RefOutArgWrapper(0)
-        inoutres1063 = Utils.tryParseInt(str0_, inoutarg1062)
-        i = inoutarg1062.value
-        if (inoutres1063): 
+        inoutarg1064 = RefOutArgWrapper(0)
+        inoutres1065 = Utils.tryParseInt(str0_, inoutarg1064)
+        i = inoutarg1064.value
+        if (inoutres1065): 
             return i
-        if (not str0_[0].isalpha()): 
+        if (not str.isalpha(str0_[0])): 
             return 0
-        ch = str0_[0].upper()
-        if (ord(ch) < 0x80): 
-            i = ((ord(ch) - ord('A')) + 1)
-            if ((ch == 'Z' and len(str0_) > 2 and str0_[1] == '.') and str0_[2].isdigit()): 
-                inoutarg1058 = RefOutArgWrapper(0)
-                inoutres1059 = Utils.tryParseInt(str0_[2 : ], inoutarg1058)
-                n = inoutarg1058.value
-                if (inoutres1059): 
+        ch = str.upper(str0_[0])
+        if ((ord(ch)) < 0x80): 
+            i = (((ord(ch)) - (ord('A'))) + 1)
+            if ((ch == 'Z' and len(str0_) > 2 and str0_[1] == '.') and str.isdigit(str0_[2])): 
+                inoutarg1060 = RefOutArgWrapper(0)
+                inoutres1061 = Utils.tryParseInt(str0_[2:], inoutarg1060)
+                n = inoutarg1060.value
+                if (inoutres1061): 
                     i += n
         elif (LanguageHelper.is_cyrillic_char(ch)): 
-            i = PartToken.__ru_nums.find(ch)
+            i = PartToken.RU_NUMS.find(ch)
             if (i < 0): 
                 return 0
             i += 1
-            if ((ch == 'Я' and len(str0_) > 2 and str0_[1] == '.') and str0_[2].isdigit()): 
-                inoutarg1060 = RefOutArgWrapper(0)
-                inoutres1061 = Utils.tryParseInt(str0_[2 : ], inoutarg1060)
-                n = inoutarg1060.value
-                if (inoutres1061): 
+            if ((ch == 'Я' and len(str0_) > 2 and str0_[1] == '.') and str.isdigit(str0_[2])): 
+                inoutarg1062 = RefOutArgWrapper(0)
+                inoutres1063 = Utils.tryParseInt(str0_[2:], inoutarg1062)
+                n = inoutarg1062.value
+                if (inoutres1063): 
                     i += n
         if (i < 0): 
             return 0
         return i
     
-    __ru_nums = "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ"
-
+    RU_NUMS = "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ"
     
     @staticmethod
     def _new786(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType') -> 'PartToken':
@@ -1008,14 +1002,14 @@ class PartToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1010(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : bool) -> 'PartToken':
+    def _new1012(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : bool) -> 'PartToken':
         res = PartToken(_arg1, _arg2)
         res.typ = _arg3
         res.is_doubt = _arg4
         return res
     
     @staticmethod
-    def _new1034(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : 'ItemType') -> 'PartToken':
+    def _new1036(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : 'ItemType') -> 'PartToken':
         res = PartToken(_arg1, _arg2)
         res.typ = _arg3
         res.alt_typ = _arg4

@@ -1,11 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
+import io
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.named.NamedEntityKind import NamedEntityKind
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
@@ -33,7 +34,7 @@ class NamedEntityReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         typ = self.get_string_value(NamedEntityReferent.ATTR_TYPE)
         if (typ is not None): 
             print(typ, end="", file=res)
@@ -57,7 +58,7 @@ class NamedEntityReferent(Referent):
             return NamedEntityKind.UNDEFINED
         try: 
             return Utils.valToEnum(str0_, NamedEntityKind)
-        except Exception as ex1618: 
+        except Exception as ex1626: 
             pass
         return NamedEntityKind.UNDEFINED
     
@@ -128,7 +129,6 @@ class NamedEntityReferent(Referent):
         return True
     
     def create_ontology_item(self) -> 'IntOntologyItem':
-        """ Признак того, что была попытка привязаться к внешней онтологии """
         return self._create_ontology_item(2, False, False)
     
     def _create_ontology_item(self, min_len : int, only_names : bool=False, pure_names : bool=False) -> 'IntOntologyItem':
@@ -143,9 +143,11 @@ class NamedEntityReferent(Referent):
                     vars0_.append(s)
                 if (not pure_names): 
                     sp = 0
-                    for jj in range(len(s)):
+                    jj = 0
+                    while jj < len(s): 
                         if (s[jj] == ' '): 
                             sp += 1
+                        jj += 1
                     if (sp == 1): 
                         s = s.replace(" ", "")
                         if (not s in vars0_): 
@@ -167,10 +169,9 @@ class NamedEntityReferent(Referent):
         if (len(oi.termins) == 0): 
             return None
         return oi
-
     
     @staticmethod
-    def _new1617(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
+    def _new1625(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
         res = NamedEntityReferent()
         res.kind = _arg1
         return res

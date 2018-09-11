@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -7,12 +7,11 @@
 import typing
 import datetime
 import math
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.core.AnalyzerData import AnalyzerData
 from pullenti.ner.bank.internal.ResourceHelper import ResourceHelper
-
 from pullenti.ner.date.DatePointerType import DatePointerType
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
@@ -95,13 +94,6 @@ class DateAnalyzer(Analyzer):
         return DateAnalyzer.DateAnalizerData()
     
     def process(self, kit : 'AnalysisKit') -> None:
-        """ Основная функция выделения дат
-        
-        Args:
-            cnt: 
-            stage: 
-        
-        """
         
         from pullenti.ner.date.internal.DateItemToken import DateItemToken
         from pullenti.ner.date.DateReferent import DateReferent
@@ -112,9 +104,9 @@ class DateAnalyzer(Analyzer):
         from pullenti.ner.NumberToken import NumberToken
         ad = (kit.get_analyzer_data(self) if isinstance(kit.get_analyzer_data(self), DateAnalyzer.DateAnalizerData) else None)
         t = kit.first_token
-        first_pass2772 = True
+        first_pass3722 = True
         while True:
-            if first_pass2772: first_pass2772 = False
+            if first_pass3722: first_pass3722 = False
             else: t = t.next0_
             if (not (t is not None)): break
             pli = DateItemToken.try_attach_list(t, 20)
@@ -122,9 +114,9 @@ class DateAnalyzer(Analyzer):
                 continue
             high = False
             tt = t.previous
-            first_pass2773 = True
+            first_pass3723 = True
             while True:
-                if first_pass2773: first_pass2773 = False
+                if first_pass3723: first_pass3723 = False
                 else: tt = tt.previous
                 if (not (tt is not None)): break
                 if (tt.is_value("ДАТА", None) or tt.is_value("DATE", None)): 
@@ -143,7 +135,8 @@ class DateAnalyzer(Analyzer):
             if (rts is not None): 
                 dat = None
                 hi = None
-                for i in range(len(rts)):
+                i = 0
+                while i < len(rts): 
                     rt = rts[i]
                     if (isinstance(rt.referent, DateRangeReferent)): 
                         dr = (rt.referent if isinstance(rt.referent, DateRangeReferent) else None)
@@ -155,7 +148,7 @@ class DateAnalyzer(Analyzer):
                         if (rt.begin_token.previous is not None and rt.begin_token.previous.is_value("ПЕРИОД", None)): 
                             rt.begin_token = rt.begin_token.previous
                         kit.embed_token(rt)
-                        t = rt
+                        t = (rt)
                         break
                     dt = (rt.referent if isinstance(rt.referent, DateReferent) else None)
                     if (dt.higher is not None): 
@@ -167,20 +160,23 @@ class DateAnalyzer(Analyzer):
                     else: 
                         dat = (rt.referent if isinstance(rt.referent, DateReferent) else None)
                         kit.embed_token(rt)
-                        t = rt
-                        for j in range(i + 1, len(rts), 1):
+                        t = (rt)
+                        j = i + 1
+                        while j < len(rts): 
                             if (rts[j].begin_char == t.begin_char): 
                                 rts[j].begin_token = t
                             if (rts[j].end_char == t.end_char): 
                                 rts[j].end_token = t
-                if ((dat is not None and t.previous is not None and t.previous.is_hiphen) and t.previous.previous is not None and isinstance(t.previous.previous.get_referent(), DateReferent)): 
+                            j += 1
+                    i += 1
+                if ((dat is not None and t.previous is not None and t.previous.is_hiphen) and t.previous.previous is not None and (isinstance(t.previous.previous.get_referent(), DateReferent))): 
                     dat0 = (t.previous.previous.get_referent() if isinstance(t.previous.previous.get_referent(), DateReferent) else None)
                     dr = (ad.register_referent(DateRangeReferent._new717(dat0, dat)) if isinstance(ad.register_referent(DateRangeReferent._new717(dat0, dat)), DateRangeReferent) else None)
                     diap = ReferentToken(dr, t.previous.previous, t)
                     kit.embed_token(diap)
-                    t = diap
+                    t = (diap)
                     continue
-                if ((dat is not None and t.previous is not None and ((t.previous.is_hiphen or t.previous.is_value("ПО", None) or t.previous.is_value("И", None)))) and isinstance(t.previous.previous, NumberToken)): 
+                if ((dat is not None and t.previous is not None and ((t.previous.is_hiphen or t.previous.is_value("ПО", None) or t.previous.is_value("И", None)))) and (isinstance(t.previous.previous, NumberToken))): 
                     t0 = t.previous.previous
                     dat0 = None
                     num = (t0 if isinstance(t0, NumberToken) else None).value
@@ -202,7 +198,7 @@ class DateAnalyzer(Analyzer):
                         if (diap.begin_token.previous is not None and diap.begin_token.previous.is_value("С", None)): 
                             diap.begin_token = diap.begin_token.previous
                         kit.embed_token(diap)
-                        t = diap
+                        t = (diap)
                         continue
                 continue
             t = pli[len(pli) - 1].end_token
@@ -216,7 +212,7 @@ class DateAnalyzer(Analyzer):
         from pullenti.ner.date.internal.DateItemToken import DateItemToken
         if (begin is None): 
             return None
-        if (begin.is_value("ДО", None) and isinstance(begin.next0_, ReferentToken) and isinstance(begin.next0_.get_referent(), DateReferent)): 
+        if (begin.is_value("ДО", None) and (isinstance(begin.next0_, ReferentToken)) and (isinstance(begin.next0_.get_referent(), DateReferent))): 
             drr = DateRangeReferent._new722(begin.next0_.get_referent() if isinstance(begin.next0_.get_referent(), DateReferent) else None)
             res1 = ReferentToken(drr, begin, begin.next0_)
             res1.data = (begin.kit.get_analyzer_data(self) if isinstance(begin.kit.get_analyzer_data(self), DateAnalyzer.DateAnalizerData) else None)
@@ -238,13 +234,13 @@ class DateAnalyzer(Analyzer):
         res = rts[len(rts) - 1]
         i = 0
         while i < (len(rts) - 1): 
-            if (isinstance(res.referent, DateReferent) and isinstance(rts[i].referent, DateReferent)): 
+            if ((isinstance(res.referent, DateReferent)) and (isinstance(rts[i].referent, DateReferent))): 
                 res.referent.merge_slots(rts[i].referent, True)
             else: 
-                rts[i].data = ad
+                rts[i].data = (ad)
             i += 1
         res.referent.add_slot(DateReferent.ATTR_HIGHER, None, True, 0)
-        res.data = ad
+        res.data = (ad)
         return res
     
     def __try_attach(self, dts : typing.List['DateItemToken'], high : bool) -> typing.List['ReferentToken']:
@@ -263,7 +259,7 @@ class DateAnalyzer(Analyzer):
                     dts1 = list(dts)
                     del dts1[0:0+3]
                     res1 = self.__try_attach(dts1, False)
-                    if (res1 is not None and isinstance(res1[len(res1) - 1].referent, DateReferent) and (res1[len(res1) - 1].referent if isinstance(res1[len(res1) - 1].referent, DateReferent) else None).day > 0): 
+                    if (res1 is not None and (isinstance(res1[len(res1) - 1].referent, DateReferent)) and (res1[len(res1) - 1].referent if isinstance(res1[len(res1) - 1].referent, DateReferent) else None).day > 0): 
                         time = DateReferent._new723(dts[0].int_value, dts[2].int_value)
                         time.higher = (res1[len(res1) - 1].referent if isinstance(res1[len(res1) - 1].referent, DateReferent) else None)
                         res1.append(ReferentToken(time, dts[0].begin_token, res1[len(res1) - 1].end_token))
@@ -578,7 +574,7 @@ class DateAnalyzer(Analyzer):
                 dow = DateItemToken.DAYS_OF_WEEK.try_parse(tt, TerminParseAttr.NO)
                 if (dow is not None): 
                     t0 = tt
-                    dr_day.day_of_week = dow.termin.tag
+                    dr_day.day_of_week = (dow.termin.tag)
                 res.append(ReferentToken._new735(dr_day, t0, t1, day.morph))
                 if (dts[0].typ == DateItemToken.DateItemType.HOUR and dts[1].typ == DateItemToken.DateItemType.MINUTE): 
                     hou = DateReferent._new766(dr_day)
@@ -597,7 +593,7 @@ class DateAnalyzer(Analyzer):
             elif (point.string_value == "конец"): 
                 poi.pointer = DatePointerType.END
             elif (point.int_value != 0): 
-                poi.pointer = Utils.valToEnum(point.int_value, DatePointerType)
+                poi.pointer = (Utils.valToEnum(point.int_value, DatePointerType))
             poi.higher = (res[len(res) - 1].referent if isinstance(res[len(res) - 1].referent, DateReferent) else None)
             res.append(ReferentToken(poi, point.begin_token, t1))
             return res
@@ -660,7 +656,7 @@ class DateAnalyzer(Analyzer):
             tok = DateItemToken.DAYS_OF_WEEK.try_parse(tt, TerminParseAttr.NO)
             if (tok is not None): 
                 la.end_token = tok.end_token
-                dr_day.day_of_week = tok.termin.tag
+                dr_day.day_of_week = (tok.termin.tag)
         return res
     
     @staticmethod
@@ -708,9 +704,9 @@ class DateAnalyzer(Analyzer):
         from pullenti.ner.date.internal.DateItemToken import DateItemToken
         t1 = None
         t = t0
-        first_pass2774 = True
+        first_pass3724 = True
         while True:
-            if first_pass2774: first_pass2774 = False
+            if first_pass3724: first_pass3724 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -792,13 +788,13 @@ class DateAnalyzer(Analyzer):
     def __apply_rule_formal(self, its : typing.List['DateItemToken'], high : bool, year : 'DateItemToken', mon : 'DateItemToken', day : 'DateItemToken') -> bool:
         from pullenti.ner.date.internal.DateItemToken import DateItemToken
         from pullenti.ner.core.BracketHelper import BracketHelper
-        year.value = None
-        mon.value = None
-        day.value = None
+        year.value = (None)
+        mon.value = (None)
+        day.value = (None)
         i = 0
-        first_pass2775 = True
+        first_pass3725 = True
         while True:
-            if first_pass2775: first_pass2775 = False
+            if first_pass3725: first_pass3725 = False
             else: i += 1
             if (not (i < (len(its) - 4))): break
             if (its[i].begin_token.previous is not None and its[i].begin_token.previous.is_char(')') and (its[i].whitespaces_before_count < 2)): 
@@ -811,9 +807,9 @@ class DateAnalyzer(Analyzer):
                 else: 
                     continue
             j = i
-            first_pass2776 = True
+            first_pass3726 = True
             while True:
-                if first_pass2776: first_pass2776 = False
+                if first_pass3726: first_pass3726 = False
                 else: j += 1
                 if (not (j < (i + 4))): break
                 if (its[j].is_whitespace_after): 
@@ -917,9 +913,9 @@ class DateAnalyzer(Analyzer):
     def __apply_rule_with_month(self, its : typing.List['DateItemToken'], high : bool, year : 'DateItemToken', mon : 'DateItemToken', day : 'DateItemToken', year_is_diff : bool) -> bool:
         from pullenti.ner.date.internal.DateItemToken import DateItemToken
         from pullenti.morph.MorphLang import MorphLang
-        year.value = None
-        mon.value = None
-        day.value = None
+        year.value = (None)
+        mon.value = (None)
+        day.value = (None)
         year_is_diff.value = False
         if (len(its) == 2): 
             if (its[0].typ == DateItemToken.DateItemType.MONTH and its[1].typ == DateItemToken.DateItemType.YEAR): 
@@ -930,20 +926,21 @@ class DateAnalyzer(Analyzer):
                 mon.value = its[1]
                 day.value = its[0]
                 return True
-        for i in range(len(its)):
+        i = 0
+        while i < len(its): 
             if (its[i].typ == DateItemToken.DateItemType.MONTH): 
                 break
-        else: i = len(its)
+            i += 1
         if (i >= len(its)): 
             return False
         lang = its[i].lang
-        year.value = None
-        day.value = None
+        year.value = (None)
+        day.value = (None)
         mon.value = its[i]
         i0 = i
         i1 = i
         year_val = 0
-        if (((lang & (((MorphLang.RU | MorphLang.IT | MorphLang.BY) | MorphLang.UA)))) != MorphLang.UNKNOWN): 
+        if ((((lang) & ((((MorphLang.RU) | MorphLang.IT | MorphLang.BY) | MorphLang.UA)))) != MorphLang.UNKNOWN): 
             if (((i + 1) < len(its)) and its[i + 1].typ == DateItemToken.DateItemType.YEAR): 
                 year.value = its[i + 1]
                 i1 = (i + 1)
@@ -1068,18 +1065,19 @@ class DateAnalyzer(Analyzer):
         from pullenti.ner.date.internal.DateItemToken import DateItemToken
         from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.date.DateReferent import DateReferent
-        year.value = None
-        mon.value = None
-        day.value = None
+        year.value = (None)
+        mon.value = (None)
+        day.value = (None)
         doubt = False
-        for i in range(len(its)):
+        i = 0
+        while i < len(its): 
             if (its[i].typ == DateItemToken.DateItemType.YEAR): 
                 break
             elif (its[i].typ == DateItemToken.DateItemType.NUMBER): 
                 doubt = True
             elif (its[i].typ != DateItemToken.DateItemType.DELIM): 
                 return False
-        else: i = len(its)
+            i += 1
         if (i >= len(its)): 
             if (((len(its) == 1 and its[0].can_be_year and its[0].int_value > 1900) and its[0].can_be_year and (its[0].int_value < 2100)) and its[0].begin_token.previous is not None): 
                 if (((its[0].begin_token.previous.is_value("В", None) or its[0].begin_token.previous.is_value("У", None) or its[0].begin_token.previous.is_value("З", None)) or its[0].begin_token.previous.is_value("IN", None) or its[0].begin_token.previous.is_value("SINCE", None))): 
@@ -1112,7 +1110,7 @@ class DateAnalyzer(Analyzer):
             year.value = its[0]
             return True
         if (its[0].typ == DateItemToken.DateItemType.YEAR): 
-            if ((its[0].begin_token.previous is not None and its[0].begin_token.previous.is_hiphen and isinstance(its[0].begin_token.previous.previous, ReferentToken)) and isinstance(its[0].begin_token.previous.previous.get_referent(), DateReferent)): 
+            if ((its[0].begin_token.previous is not None and its[0].begin_token.previous.is_hiphen and (isinstance(its[0].begin_token.previous.previous, ReferentToken))) and (isinstance(its[0].begin_token.previous.previous.get_referent(), DateReferent))): 
                 year.value = its[0]
                 return True
         return False
@@ -1146,9 +1144,9 @@ class DateAnalyzer(Analyzer):
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.core.NumberExToken import NumberExToken
         t = kit.first_token
-        first_pass2777 = True
+        first_pass3727 = True
         while True:
-            if first_pass2777: first_pass2777 = False
+            if first_pass3727: first_pass3727 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -1160,13 +1158,13 @@ class DateAnalyzer(Analyzer):
             lang = MorphLang()
             t0 = t.next0_
             str0_ = (t if isinstance(t, TextToken) else None).term
-            if (str0_ == "ON" and isinstance(t0, TextToken)): 
+            if (str0_ == "ON" and (isinstance(t0, TextToken))): 
                 tok = DateItemToken.DAYS_OF_WEEK.try_parse(t0, TerminParseAttr.NO)
                 if (tok is not None): 
                     dow = DateReferent._new776(tok.termin.tag)
                     rtd = ReferentToken(ad.register_referent(dow), t, tok.end_token)
                     kit.embed_token(rtd)
-                    t = rtd
+                    t = (rtd)
                     continue
             if (str0_ == "С" or str0_ == "C"): 
                 lang = MorphLang.RU
@@ -1179,11 +1177,11 @@ class DateAnalyzer(Analyzer):
                 if ((t0 is not None and t0.is_value("THE", None) and t0.next0_ is not None) and t0.next0_.is_value("PERIOD", None)): 
                     t0 = t0.next0_.next0_
             elif (str0_ == "ПО" or str0_ == "ДО"): 
-                if (isinstance(t.next0_, ReferentToken) and isinstance(t.next0_.get_referent(), DateReferent)): 
+                if ((isinstance(t.next0_, ReferentToken)) and (isinstance(t.next0_.get_referent(), DateReferent))): 
                     dr = DateRangeReferent._new722(t.next0_.get_referent() if isinstance(t.next0_.get_referent(), DateReferent) else None)
                     rt0 = ReferentToken(ad.register_referent(dr), t, t.next0_)
                     kit.embed_token(rt0)
-                    t = rt0
+                    t = (rt0)
                     continue
             else: 
                 continue
@@ -1248,13 +1246,13 @@ class DateAnalyzer(Analyzer):
                 rt0 = ReferentToken(date1, t0, t0)
                 kit.embed_token(rt0)
                 if (t0 == t): 
-                    t = rt0
+                    t = (rt0)
             if (date2 is None): 
                 date2 = (ad.register_referent(DateReferent._new720(year_val2)) if isinstance(ad.register_referent(DateReferent._new720(year_val2)), DateReferent) else None)
                 rt1 = ReferentToken(date2, t1, t1)
                 kit.embed_token(rt1)
-                t1 = rt1
-            t = ReferentToken(ad.register_referent(DateRangeReferent._new717(date1, date2)), t, t1)
+                t1 = (rt1)
+            t = (ReferentToken(ad.register_referent(DateRangeReferent._new717(date1, date2)), t, t1))
             kit.embed_token(t if isinstance(t, ReferentToken) else None)
     
     @staticmethod

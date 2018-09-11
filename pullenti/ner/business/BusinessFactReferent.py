@@ -1,15 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.business.BusinessFactKind import BusinessFactKind
-
 
 
 class BusinessFactReferent(Referent):
@@ -127,7 +126,7 @@ class BusinessFactReferent(Referent):
         """ Что (артефакты события) """
         res = list()
         for s in self.slots: 
-            if (s.type_name == BusinessFactReferent.ATTR_WHAT and isinstance(s.value, Referent)): 
+            if (s.type_name == BusinessFactReferent.ATTR_WHAT and (isinstance(s.value, Referent))): 
                 res.append(s.value if isinstance(s.value, Referent) else None)
         return res
     
@@ -137,7 +136,7 @@ class BusinessFactReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         typ_ = Utils.ifNotNull(self.typ, "Бизнес-факт")
         print(MiscHelper.convert_first_char_upper_and_other_lower(typ_), end="", file=res)
         v = self.get_value(BusinessFactReferent.ATTR_WHO)
@@ -179,7 +178,6 @@ class BusinessFactReferent(Referent):
             if (not mi1.can_be_equals(mi2, Referent.EqualType.WITHINONETEXT)): 
                 return False
         return True
-
     
     @staticmethod
     def _new437(_arg1 : 'BusinessFactKind') -> 'BusinessFactReferent':

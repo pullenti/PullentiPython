@@ -1,10 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.measure.internal.Unit import Unit
 from pullenti.ner.measure.internal.UnitsFactors import UnitsFactors
 
@@ -37,7 +37,7 @@ class UnitsHelper:
         UnitsHelper.TERMINS = TerminCollection()
         Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
         u = Unit("м", "m", "метр", "meter")
-        u.keywords.extend(["ДЛИНА", "ДЛИННА", "ШИРИНА", "ГЛУБИНА", "ВЫСОТА", "РАЗМЕР", "ГАБАРИТ", "РАССТОЯНИЕ", "РАДИУС", "ПЕРИМЕТР", "ДИАМЕТР", "ПОДАЧА", "НАПОР", "LENGTH", "WIDTH", "DEPTH", "HEIGHT", "SIZE", "ENVELOPE", "DISTANCE", "RADIUS", "PERIMETER", "DIAMETER", "FLOW", "PRESSURE", "ДОВЖИНА", "ШИРИНА", "ГЛИБИНА", "ВИСОТА", "РОЗМІР", "ГАБАРИТ", "ВІДСТАНЬ", "РАДІУС", "ДІАМЕТР", "НАТИСК"])
+        u.keywords.extend(["ДЛИНА", "ДЛИННА", "ШИРИНА", "ГЛУБИНА", "ВЫСОТА", "РАЗМЕР", "ГАБАРИТ", "РАССТОЯНИЕ", "РАДИУС", "ПЕРИМЕТР", "ДИАМЕТР", "ПОДАЧА", "НАПОР", "ДАЛЬНОСТЬ", "LENGTH", "WIDTH", "DEPTH", "HEIGHT", "SIZE", "ENVELOPE", "DISTANCE", "RADIUS", "PERIMETER", "DIAMETER", "FLOW", "PRESSURE", "ДОВЖИНА", "ШИРИНА", "ГЛИБИНА", "ВИСОТА", "РОЗМІР", "ГАБАРИТ", "ВІДСТАНЬ", "РАДІУС", "ДІАМЕТР", "НАТИСК"])
         UnitsHelper.UNITS.append(u)
         t = Termin._new118("МЕТР", u)
         t.add_variant("МЕТРОВЫЙ", False)
@@ -50,7 +50,7 @@ class UnitsHelper:
             UnitsHelper.__add_factor(f, u, "М.", "M.", "МЕТР;МЕТРОВЫЙ", "МЕТР;МЕТРОВИЙ", "METER;METRE")
         uu = Unit("миль", "mile", "морская миля", "mile")
         uu.base_unit = u
-        uu.base_multiplier = 1852
+        uu.base_multiplier = (1852)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("МИЛЯ", uu)
         t.add_variant("МОРСКАЯ МИЛЯ", False)
@@ -58,13 +58,13 @@ class UnitsHelper:
         t.add_variant("MILE", False)
         t.add_variant("NAUTICAL MILE", False)
         UnitsHelper.TERMINS.add(t)
-        uu = Unit._new1533("фут", "ft", "фут", "foot", u, 0.304799472)
+        uu = Unit._new1537("фут", "ft", "фут", "foot", u, .304799472)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("ФУТ", uu)
         t.add_abridge("FT.")
         t.add_variant("FOOT", False)
         UnitsHelper.TERMINS.add(t)
-        uu = Unit._new1533("дюйм", "in", "дюйм", "inch", u, 0.0254)
+        uu = Unit._new1537("дюйм", "in", "дюйм", "inch", u, .0254)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("ДЮЙМ", uu)
         t.add_abridge("IN")
@@ -79,7 +79,7 @@ class UnitsHelper:
         UnitsHelper.TERMINS.add(t)
         uu = Unit("га", "ga", "гектар", "hectare")
         uu.base_unit = u
-        uu.base_multiplier = 100
+        uu.base_multiplier = (100)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("ГЕКТАР", uu)
         t.add_variant("HECTARE", False)
@@ -102,14 +102,14 @@ class UnitsHelper:
         UnitsHelper.TERMINS.add(t)
         for f in [UnitsFactors.KILO, UnitsFactors.MILLI]: 
             UnitsHelper.__add_factor(f, u, "Г.;ГР;", "G.;GR.", "ГРАМ;ГРАММ;ГРАММНЫЙ", "ГРАМ;ГРАМОВИЙ", "GRAM;GRAMME")
-        uu = Unit._new1533("ц", "centner", "центнер", "centner", u, 100000)
+        uu = Unit._new1537("ц", "centner", "центнер", "centner", u, 100000)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("ЦЕНТНЕР", uu)
         t.add_variant("CENTNER", False)
         t.add_variant("QUINTAL", False)
         t.add_abridge("Ц.")
         UnitsHelper.TERMINS.add(t)
-        uu = Unit._new1533("т", "t", "тонна", "tonne", u, 1000000)
+        uu = Unit._new1537("т", "t", "тонна", "tonne", u, 1000000)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("ТОННА", uu)
         t.add_variant("TONNE", False)
@@ -131,12 +131,19 @@ class UnitsHelper:
         UnitsHelper.TERMINS.add(t)
         for f in [UnitsFactors.MILLI, UnitsFactors.CENTI]: 
             UnitsHelper.__add_factor(f, u, "Л.", "L.", "ЛИТР;ЛИТРОВЫЙ", "ЛІТР;ЛІТРОВИЙ", "LITER;LITRE")
-        uu = Unit._new1533("галлон", "gallon", "галлон", "gallon", u, 4.5461)
+        uu = Unit._new1537("галлон", "gallon", "галлон", "gallon", u, 4.5461)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("ГАЛЛОН", u)
         t.add_variant("ГАЛОН", False)
         t.add_variant("GALLON", False)
         t.add_abridge("ГАЛ")
+        UnitsHelper.TERMINS.add(t)
+        uu = Unit._new1537("баррель", "bbls", "баррель нефти", "barrel", u, 158.987)
+        UnitsHelper.UNITS.append(uu)
+        t = Termin._new118("БАРРЕЛЬ", uu)
+        t.add_abridge("BBLS")
+        t.add_variant("БАРРЕЛЬ НЕФТИ", False)
+        t.add_variant("BARRREL", False)
         UnitsHelper.TERMINS.add(t)
         u = Unit("сек", "sec", "секунда", "second")
         UnitsHelper.USEC = u
@@ -157,7 +164,7 @@ class UnitsHelper:
             UnitsHelper.__add_factor(f, u, "С.;СЕК", "C;S.;SEC;", "СЕКУНДА;СЕКУНДНЫЙ", "СЕКУНДА;СЕКУНДНИЙ", "SECOND")
         uu = Unit("мин", "min", "минута", "minute")
         uu.base_unit = u
-        uu.base_multiplier = 60
+        uu.base_multiplier = (60)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("МИНУТА", uu)
         t.add_abridge("МИН.")
@@ -169,7 +176,7 @@ class UnitsHelper:
         t.add_variant("MINUTE", False)
         UnitsHelper.TERMINS.add(t)
         u = uu
-        uu = Unit._new1533("ч", "h", "час", "hour", u, 60)
+        uu = Unit._new1537("ч", "h", "час", "hour", u, 60)
         UnitsHelper.UHOUR = uu
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("ЧАС", uu)
@@ -189,14 +196,14 @@ class UnitsHelper:
         t.add_abridge("Д.")
         t.add_variant("DAY", False)
         UnitsHelper.TERMINS.add(t)
-        uu = Unit._new1533("нед", "week", "неделя", "week", u, 7)
+        uu = Unit._new1537("нед", "week", "неделя", "week", u, 7)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("НЕДЕЛЯ", uu)
         t.add_abridge("НЕД")
         t.add_variant("WEEK", False)
         t.add_variant("ТИЖДЕНЬ", False)
         UnitsHelper.TERMINS.add(t)
-        uu = Unit._new1533("мес", "mon", "месяц", "month", u, 30)
+        uu = Unit._new1537("мес", "mon", "месяц", "month", u, 30)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("МЕСЯЦ", uu)
         t.add_abridge("МЕС")
@@ -204,7 +211,7 @@ class UnitsHelper:
         t.add_variant("MONTH", False)
         t.add_variant("МІСЯЦЬ", False)
         UnitsHelper.TERMINS.add(t)
-        uu = Unit._new1533("г", "year", "год", "year", u, 365)
+        uu = Unit._new1537("г", "year", "год", "year", u, 365)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("ГОД", uu)
         t.add_abridge("Г.")
@@ -273,7 +280,7 @@ class UnitsHelper:
         UnitsHelper.TERMINS.add(t)
         for f in [UnitsFactors.KILO, UnitsFactors.MEGA, UnitsFactors.GIGA, UnitsFactors.MILLI]: 
             UnitsHelper.__add_factor(f, u, "ВТ.", "W.", "ВАТТ;ВАТТНЫЙ", "ВАТ;ВАТНИЙ", "WATT;WATTS")
-        uu = Unit._new1533("л.с.", "hp", "лошадиная сила", "horsepower", u, 735.49875)
+        uu = Unit._new1537("л.с.", "hp", "лошадиная сила", "horsepower", u, 735.49875)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("ЛОШАДИНАЯ СИЛА", uu)
         t.add_abridge("Л.С.")
@@ -285,7 +292,7 @@ class UnitsHelper:
         t.add_variant("HORSEPOWER", False)
         UnitsHelper.TERMINS.add(t)
         u = Unit("Дж", "J", "джоуль", "joule")
-        u.keywords.extend(["РАБОТА", "ЭНЕРГИЯ", "ТЕПЛОТА", "ТЕПЛОВОЙ"])
+        u.keywords.extend(["РАБОТА", "ЭНЕРГИЯ", "ТЕПЛОТА", "ТЕПЛОВОЙ", "ТЕПЛОВЫДЕЛЕНИЕ", "МОЩНОСТЬ", "ХОЛОДИЛЬНЫЙ"])
         UnitsHelper.UNITS.append(u)
         t = Termin._new118("ДЖОУЛЬ", u)
         t.add_abridge("ДЖ")
@@ -294,6 +301,14 @@ class UnitsHelper:
         UnitsHelper.TERMINS.add(t)
         for f in [UnitsFactors.KILO, UnitsFactors.MEGA, UnitsFactors.GIGA, UnitsFactors.TERA, UnitsFactors.MILLI]: 
             UnitsHelper.__add_factor(f, u, "ДЖ.", "J.", "ДЖОУЛЬ", "ДЖОУЛЬ", "JOULE")
+        uu = Unit("БТЕ", "BTU", "британская терминальная единица", "british terminal unit")
+        uu.keywords = u.keywords
+        UnitsHelper.UNITS.append(uu)
+        t = Termin._new118("БРИТАНСКАЯ ТЕРМИНАЛЬНАЯ ЕДИНИЦА", uu)
+        t.add_abridge("БТЕ")
+        t.add_abridge("BTU")
+        t.add_variant("BRITISH TERMINAL UNIT", False)
+        UnitsHelper.TERMINS.add(t)
         u = Unit("К", "K", "кельвин", "kelvin")
         u.keywords.extend(UnitsHelper.UGRADUSC.keywords)
         UnitsHelper.UNITS.append(u)
@@ -336,7 +351,7 @@ class UnitsHelper:
         t.add_variant("AMP", False)
         t.add_variant("AMPERE", False)
         UnitsHelper.TERMINS.add(t)
-        uu = Unit._new1572("Ач", "Ah", "ампер-час", "ampere-hour", u, UnitsHelper.UHOUR)
+        uu = Unit._new1579("Ач", "Ah", "ампер-час", "ampere-hour", u, UnitsHelper.UHOUR)
         uu.keywords.extend(["ЗАРЯД", "АККУМУЛЯТОР", "АККУМУЛЯТОРНЫЙ", "ЗАРЯДКА", "БАТАРЕЯ", "CHARGE", "BATTERY", "CHARGING", "АКУМУЛЯТОР", "АКУМУЛЯТОРНИЙ"])
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("АМПЕР ЧАС", uu)
@@ -366,8 +381,13 @@ class UnitsHelper:
         UnitsHelper.UNITS.append(u)
         t = Termin._new118("DBI", u)
         t.add_variant("ДБИ", False)
+        UnitsHelper.TERMINS.add(t)
+        u = Unit("дБм", "dBm", "опорная мощность", "dBm")
+        u.keywords.extend(["МОЩНОСТЬ"])
+        UnitsHelper.UNITS.append(u)
+        t = Termin._new118("DBM", u)
+        t.add_variant("ДБМ", False)
         t.add_variant("ДВМ", False)
-        t.add_variant("DBM", False)
         UnitsHelper.TERMINS.add(t)
         u = Unit("Ф", "F", "фарад", "farad")
         u.keywords.extend(["ЕМКОСТЬ", "ЭЛЕКТРИЧНСКИЙ", "КОНДЕНСАТОР"])
@@ -445,12 +465,12 @@ class UnitsHelper:
         UnitsHelper.TERMINS.add(t)
         for f in [UnitsFactors.KILO, UnitsFactors.MEGA, UnitsFactors.GIGA, UnitsFactors.MICRO, UnitsFactors.MILLI]: 
             UnitsHelper.__add_factor(f, u, "ПА", "PA", "ПАСКАЛЬ", "ПАСКАЛЬ", "PASCAL")
-        uu = Unit._new1533("бар", "bar", "бар", "bar", u, 100000)
+        uu = Unit._new1537("бар", "bar", "бар", "bar", u, 100000)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("БАР", uu)
         t.add_variant("BAR", False)
         UnitsHelper.TERMINS.add(t)
-        uu = Unit._new1533("мм.рт.ст.", "mm Hg", "миллиметр ртутного столба", "millimeter of mercury", u, 133.332)
+        uu = Unit._new1537("мм.рт.ст.", "mm Hg", "миллиметр ртутного столба", "millimeter of mercury", u, 133.332)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("МИЛЛИМЕТР РТУТНОГО СТОЛБА", uu)
         t.add_abridge("ММ.РТ.СТ.")
@@ -500,7 +520,7 @@ class UnitsHelper:
         t.add_variant("GRAM POND", False)
         t.add_variant("GRAM FORCE", False)
         UnitsHelper.TERMINS.add(t)
-        uu = Unit._new1533("кгс", "kgf", "килограмм-сила", "kilogram-force", u, 1000)
+        uu = Unit._new1537("кгс", "kgf", "килограмм-сила", "kilogram-force", u, 1000)
         UnitsHelper.UNITS.append(uu)
         t = Termin._new118("КИЛОГРАММ СИЛА", uu)
         t.add_abridge("КГС")
@@ -527,71 +547,71 @@ class UnitsHelper:
             pref_ru = "САНТИ"
             pref_ua = "САНТИ"
             pref_en = "CENTI"
-            mult = 0.1
+            mult = .1
         elif (swichVal == UnitsFactors.DECI): 
             pref_cyr = "Д"
             pref_lat = "D"
             pref_ru = "ДЕЦИ"
             pref_ua = "ДЕЦИ"
             pref_en = "DECI"
-            mult = 0.01
+            mult = .01
         elif (swichVal == UnitsFactors.GIGA): 
             pref_cyr = "Г"
             pref_lat = "G"
             pref_ru = "ГИГА"
             pref_ua = "ГІГА"
             pref_en = "GIGA"
-            mult = 1000000000
+            mult = (1000000000)
         elif (swichVal == UnitsFactors.KILO): 
             pref_cyr = "К"
             pref_lat = "K"
             pref_ru = "КИЛО"
             pref_ua = "КІЛО"
             pref_en = "KILO"
-            mult = 1000
+            mult = (1000)
         elif (swichVal == UnitsFactors.MEGA): 
             pref_cyr = "М"
             pref_lat = "M"
             pref_ru = "МЕГА"
             pref_ua = "МЕГА"
             pref_en = "MEGA"
-            mult = 1000000
+            mult = (1000000)
         elif (swichVal == UnitsFactors.MICRO): 
             pref_cyr = "МК"
             pref_lat = "MK"
             pref_ru = "МИКРО"
             pref_ua = "МІКРО"
             pref_en = "MICRO"
-            mult = 0.0001
+            mult = .0001
         elif (swichVal == UnitsFactors.MILLI): 
             pref_cyr = "М"
             pref_lat = "M"
             pref_ru = "МИЛЛИ"
             pref_ua = "МІЛІ"
             pref_en = "MILLI"
-            mult = 0.001
+            mult = .001
         elif (swichVal == UnitsFactors.NANO): 
             pref_cyr = "Н"
             pref_lat = "N"
             pref_ru = "НАНО"
             pref_ua = "НАНО"
             pref_en = "NANO"
-            mult = 0.0000000001
+            mult = .0000000001
         elif (swichVal == UnitsFactors.PICO): 
             pref_cyr = "П"
             pref_lat = "P"
             pref_ru = "ПИКО"
             pref_ua = "ПІКО"
             pref_en = "PICO"
-            mult = 0.0000000000001
+            mult = .0000000000001
         elif (swichVal == UnitsFactors.TERA): 
             pref_cyr = "Т"
             pref_lat = "T"
             pref_ru = "ТЕРА"
             pref_ua = "ТЕРА"
             pref_en = "TERA"
-            mult = 1000000000000
-        u = Unit._new1593(pref_cyr.lower() + u0.name_cyr, pref_lat.lower() + u0.name_lat, pref_ru.lower() + u0.fullname_cyr, pref_en.lower() + u0.fullname_lat, f, mult, u0)
+            mult = (1000000000000)
+        u = Unit._new1601(pref_cyr.lower() + u0.name_cyr, pref_lat.lower() + u0.name_lat, pref_ru.lower() + u0.fullname_cyr, pref_en.lower() + u0.fullname_lat, f, mult, u0)
         if (f == UnitsFactors.MEGA or f == UnitsFactors.TERA or f == UnitsFactors.GIGA): 
             u.name_cyr = (pref_cyr + u0.name_cyr)
             u.name_lat = (pref_lat + u0.name_lat)

@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -7,14 +7,12 @@
 import io
 import typing
 import datetime
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Referent import Referent
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.decree.DecreeKind import DecreeKind
 from pullenti.ner.decree.internal.DecreeHelper import DecreeHelper
-
-
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 
 
@@ -46,14 +44,14 @@ class DecreeReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         ki = self.kind
         out_part = False
         nam = self.name
         if (self.typ is not None): 
             if ((nam is not None and not nam.startswith("О") and self.typ in nam) and ki != DecreeKind.STANDARD): 
                 print(MiscHelper.convert_first_char_upper_and_other_lower(nam), end="", file=res)
-                nam = None
+                nam = (None)
             elif (ki == DecreeKind.STANDARD and (len(self.typ) < 6)): 
                 print(self.typ, end="", file=res)
             else: 
@@ -67,7 +65,8 @@ class DecreeReferent(Referent):
                 if (s.type_name == DecreeReferent.ATTR_SOURCE): 
                     srcs.append(str(s.value))
             if (len(srcs) > 1): 
-                for ii in range(len(srcs)):
+                ii = 0
+                while ii < len(srcs): 
                     if (ii > 0 and ((ii + 1) < len(srcs))): 
                         print(", ", end="", file=res)
                     elif (ii > 0): 
@@ -76,6 +75,7 @@ class DecreeReferent(Referent):
                         print(" между ", end="", file=res)
                     print(srcs[ii], end="", file=res)
                     out_src = False
+                    ii += 1
         num = self.number
         if (num is not None): 
             print(" № {0}".format(num), end="", file=res, flush=True)
@@ -120,11 +120,11 @@ class DecreeReferent(Referent):
         if (len(nam) > 100): 
             i = 100
             while i < len(nam): 
-                if (not nam[i].isalpha()): 
+                if (not str.isalpha(nam[i])): 
                     break
                 i += 1
             if (i < len(nam)): 
-                nam = (nam[0 : (i)] + "...")
+                nam = (nam[0:0+i] + "...")
         return MiscHelper.convert_first_char_upper_and_other_lower(nam)
     
     def get_compare_strings(self) -> typing.List[str]:
@@ -156,14 +156,14 @@ class DecreeReferent(Referent):
         from pullenti.ner.date.DateRangeReferent import DateRangeReferent
         if (dt is None): 
             return False
-        if (dt.ref is not None and isinstance(dt.ref.referent, DateReferent)): 
+        if (dt.ref is not None and (isinstance(dt.ref.referent, DateReferent))): 
             dr = (dt.ref.referent if isinstance(dt.ref.referent, DateReferent) else None)
             year = dr.year
             mon = dr.month
             day = dr.day
             if (year == 0): 
                 return False
-            tmp = Utils.newStringIO(None)
+            tmp = io.StringIO()
             print(year, end="", file=tmp)
             if (mon > 0): 
                 print(".{0}".format("{:02d}".format(mon)), end="", file=tmp, flush=True)
@@ -171,7 +171,7 @@ class DecreeReferent(Referent):
                 print(".{0}".format("{:02d}".format(day)), end="", file=tmp, flush=True)
             self.add_slot(DecreeReferent.ATTR_DATE, Utils.toStringStringIO(tmp), False, 0)
             return True
-        if (dt.ref is not None and isinstance(dt.ref.referent, DateRangeReferent)): 
+        if (dt.ref is not None and (isinstance(dt.ref.referent, DateRangeReferent))): 
             self.add_slot(DecreeReferent.ATTR_DATE, dt.ref.referent, False, 0)
             return True
         if (dt.value is not None): 
@@ -186,11 +186,11 @@ class DecreeReferent(Referent):
                 str0_ = str(s.value)
                 i = str0_.find('.')
                 if (i == 4): 
-                    str0_ = str0_[0 : 4]
-                inoutarg1080 = RefOutArgWrapper(0)
-                inoutres1081 = Utils.tryParseInt(str0_, inoutarg1080)
-                i = inoutarg1080.value
-                if (inoutres1081): 
+                    str0_ = str0_[0:0+4]
+                inoutarg1082 = RefOutArgWrapper(0)
+                inoutres1083 = Utils.tryParseInt(str0_, inoutarg1082)
+                i = inoutarg1082.value
+                if (inoutres1083): 
                     res.append(i)
         return res
     
@@ -228,8 +228,8 @@ class DecreeReferent(Referent):
             return "ПАСПОРТ"
         if (typ_.startswith("ОСНОВЫ") or typ_.startswith("ОСНОВИ")): 
             i = typ_.find(' ')
-            return typ_[0 : (i)]
-        return typ_[i + 1 : ]
+            return typ_[0:0+i]
+        return typ_[i + 1:]
     
     @property
     def number(self) -> str:
@@ -244,7 +244,7 @@ class DecreeReferent(Referent):
         from pullenti.ner.decree.internal.PartToken import PartToken
         
         if (isinstance(attr_value, PartToken.PartValue)): 
-            attr_value = (attr_value if isinstance(attr_value, PartToken.PartValue) else None).value
+            attr_value = ((attr_value if isinstance(attr_value, PartToken.PartValue) else None).value)
         s = super().add_slot(attr_name, attr_value, clear_old_value, stat_count)
         if (isinstance(attr_value, PartToken.PartValue)): 
             s.tag = (attr_value if isinstance(attr_value, PartToken.PartValue) else None).source_value
@@ -258,8 +258,8 @@ class DecreeReferent(Referent):
         if (Utils.isNullOrEmpty(dt.value)): 
             return
         value = dt.value
-        if ((value[len(value) - 1]) in ".,"): 
-            value = value[0 : (len(value) - 1)]
+        if (".,".find(value[len(value) - 1]) >= 0): 
+            value = value[0:0+len(value) - 1]
         self.add_slot(DecreeReferent.ATTR_NUMBER, value, False, 0)
     
     def _add_name(self, dr : 'DecreeReferent') -> None:
@@ -274,10 +274,10 @@ class DecreeReferent(Referent):
         if (name_ is None or len(name_) == 0): 
             return
         if (name_[len(name_) - 1] == '.'): 
-            if (len(name_) > 5 and name_[len(name_) - 2].isalpha() and not name_[len(name_) - 3].isalpha()): 
+            if (len(name_) > 5 and str.isalpha(name_[len(name_) - 2]) and not str.isalpha(name_[len(name_) - 3])): 
                 pass
             else: 
-                name_ = name_[0 : (len(name_) - 1)]
+                name_ = name_[0:0+len(name_) - 1]
         name_ = name_.strip()
         uname = name_.upper()
         s = self.add_slot(DecreeReferent.ATTR_NAME, uname, False, 0)
@@ -287,15 +287,17 @@ class DecreeReferent(Referent):
     def __get_number_digits(self, num : str) -> str:
         if (num is None): 
             return ""
-        tmp = Utils.newStringIO(None)
-        for i in range(len(num)):
-            if (num[i].isdigit()): 
+        tmp = io.StringIO()
+        i = 0
+        while i < len(num): 
+            if (str.isdigit(num[i])): 
                 if (num[i] == '0' and tmp.tell() == 0): 
                     pass
                 elif (num[i] == '3' and tmp.tell() > 0 and num[i - 1] == 'Ф'): 
                     pass
                 else: 
                     print(num[i], end="", file=tmp)
+            i += 1
         return Utils.toStringStringIO(tmp)
     
     def __all_number_digits(self) -> typing.List[str]:
@@ -431,7 +433,7 @@ class DecreeReferent(Referent):
             return True
         if (num_eq > 0): 
             return True
-        if (self.__str__() == str(obj)): 
+        if (str(self) == str(obj)): 
             return True
         return False
     
@@ -517,7 +519,7 @@ class DecreeReferent(Referent):
             nums.sort()
             i = 0
             while i < (len(nums) - 1): 
-                if (nums[i + 1].startswith(nums[i]) and len(nums[i + 1]) > len(nums[i]) and not nums[i + 1][len(nums[i])].isdigit()): 
+                if (nums[i + 1].startswith(nums[i]) and len(nums[i + 1]) > len(nums[i]) and not str.isdigit(nums[i + 1][len(nums[i])])): 
                     s = self.find_slot(DecreeReferent.ATTR_NUMBER, nums[i], True)
                     if (s is not None): 
                         self.slots.remove(s)
@@ -541,10 +543,9 @@ class DecreeReferent(Referent):
         for v in vars0_: 
             oi.termins.append(Termin(v))
         return oi
-
     
     @staticmethod
-    def _new1077(_arg1 : str) -> 'DecreeReferent':
+    def _new1079(_arg1 : str) -> 'DecreeReferent':
         res = DecreeReferent()
         res.typ = _arg1
         return res

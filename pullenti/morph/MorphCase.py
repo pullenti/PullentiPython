@@ -1,10 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+import io
+from pullenti.unisharp.Utils import Utils
 
 
 class MorphCase:
@@ -12,73 +13,62 @@ class MorphCase:
     
     def __init__(self, val : 'MorphCase'=None) -> None:
         self.value = 0
-        self.value = 0
+        self.value = (0)
         if (val is not None): 
             self.value = val.value
     
     @property
     def is_undefined(self) -> bool:
-        return self.value == 0
+        return self.value == (0)
     
     @is_undefined.setter
     def is_undefined(self, value_) -> bool:
-        self.value = 0
+        self.value = (0)
         return value_
     
     def __get_value(self, i : int) -> bool:
-        return ((((self.value >> i)) & 1)) != 0
+        return (((((self.value) >> i)) & 1)) != 0
     
     def __set_value(self, i : int, val : bool) -> None:
         if (val): 
-            self.value |= (1 << i)
+            self.value |= ((1 << i))
         else: 
-            self.value &= ~ ((1 << i))
+            self.value &= (~ ((1 << i)))
     
     @property
     def count(self) -> int:
         """ Количество падежей """
-        if (self.value == 0): 
+        if (self.value == (0)): 
             return 0
         cou = 0
         for i in range(12):
-            if (((self.value & ((1 << i)))) != 0): 
+            if ((((self.value) & ((1 << i)))) != 0): 
                 cou += 1
         return cou
     
     UNDEFINED = None
     
     NOMINATIVE = None
-    """ Именительный падеж """
     
     GENITIVE = None
-    """ Родительный падеж """
     
     DATIVE = None
-    """ Дательный падеж """
     
     ACCUSATIVE = None
-    """ Винительный падеж """
     
     INSTRUMENTAL = None
-    """ Творительный падеж """
     
     PREPOSITIONAL = None
-    """ Предложный падеж """
     
     VOCATIVE = None
-    """ Звательный падеж """
     
     PARTIAL = None
-    """ Частичный падеж """
     
     COMMON = None
-    """ Общий падеж """
     
     POSSESSIVE = None
-    """ Притяжательный падеж """
     
     ALL_CASES = None
-    """ Все падежи одновременно """
     
     @property
     def is_nominative(self) -> bool:
@@ -183,7 +173,7 @@ class MorphCase:
     __m_names = None
     
     def __str__(self) -> str:
-        tmp_str = Utils.newStringIO(None)
+        tmp_str = io.StringIO()
         i = 0
         while i < len(MorphCase.__m_names): 
             if (self.__get_value(i)): 
@@ -195,12 +185,6 @@ class MorphCase:
     
     @staticmethod
     def parse(str0_ : str) -> 'MorphCase':
-        """ Восстановить падежи из строки, полученной ToString
-        
-        Args:
-            str0_(str): 
-        
-        """
         res = MorphCase()
         if (Utils.isNullOrEmpty(str0_)): 
             return res
@@ -228,7 +212,7 @@ class MorphCase:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphCase._new48((val1 & val2))
+        return MorphCase._new48(((val1) & (val2)))
     
     def __or__(self : 'MorphCase', arg2 : 'MorphCase') -> 'MorphCase':
         val1 = 0
@@ -237,7 +221,7 @@ class MorphCase:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphCase._new48((val1 | val2))
+        return MorphCase._new48(((val1) | (val2)))
     
     def __xor__(self : 'MorphCase', arg2 : 'MorphCase') -> 'MorphCase':
         val1 = 0
@@ -246,7 +230,7 @@ class MorphCase:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphCase._new48((val1 ^ val2))
+        return MorphCase._new48(((val1) ^ (val2)))
     
     def __eq__(self : 'MorphCase', arg2 : 'MorphCase') -> bool:
         val1 = 0
@@ -265,7 +249,6 @@ class MorphCase:
         if (arg2 is not None): 
             val2 = arg2.value
         return val1 != val2
-
     
     @staticmethod
     def _new48(_arg1 : int) -> 'MorphCase':

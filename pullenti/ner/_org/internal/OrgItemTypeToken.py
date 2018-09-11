@@ -1,24 +1,22 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-import xml.etree.ElementTree
+import xml.etree
 import typing
-from pullenti.ntopy.Utils import Utils
+import math
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner._org.internal.ResourceHelper import ResourceHelper
 from pullenti.ner._org.OrgProfile import OrgProfile
-
-
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.morph.LanguageHelper import LanguageHelper
-
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner._org.OrganizationReferent import OrganizationReferent
 from pullenti.ner._org.OrganizationKind import OrganizationKind
@@ -72,7 +70,7 @@ class OrgItemTypeToken(MetaToken):
             for x in xml0_.getroot(): 
                 its = OrgItemTermin.deserialize_src(x, set0_)
                 if (x.tag == "set"): 
-                    set0_ = None
+                    set0_ = (None)
                     if (its is not None and len(its) > 0): 
                         set0_ = its[0]
                 elif (its is not None): 
@@ -82,46 +80,46 @@ class OrgItemTypeToken(MetaToken):
         sov2 = ["СОВБЕЗ", "НАЦСОВЕТ", "ГОССОВЕТ", "ОБЛСОВЕТ", "РАЙСОВЕТ", "ГОРСОВЕТ", "СЕЛЬСОВЕТ", "КРАЙСОВЕТ", None, None, "ГОССОБРАНИЕ", "МУНСОБРАНИЕ", "ГОРСОБРАНИЕ", "ЗАКСОБРАНИЕ", "НАРСОБРАНИЕ", "ОБЛДУМА", "ГОРДУМА", "КРАЙДУМА", "КАБМИН"]
         i = 0
         while i < len(sovs): 
-            t = OrgItemTermin._new1694(sovs[i], MorphLang.RU, OrgProfile.STATE, 4, OrgItemTermin.Types.ORG, True, True)
+            t = OrgItemTermin._new1702(sovs[i], MorphLang.RU, OrgProfile.STATE, 4, OrgItemTermin.Types.ORG, True, True)
             if (sov2[i] is not None): 
                 t.add_variant(sov2[i], False)
                 if (sov2[i] == "ГОССОВЕТ" or sov2[i] == "НАЦСОВЕТ" or sov2[i] == "ЗАКСОБРАНИЕ"): 
-                    t.coeff = 5
+                    t.coeff = (5)
             OrgItemTypeToken.__m_global.add(t)
             i += 1
         sovs = ["РАДА БЕЗПЕКИ", "НАЦІОНАЛЬНА РАДА", "ДЕРЖАВНА РАДА", "ОБЛАСНА РАДА", "РАЙОННА РАДА", "МІСЬКА РАДА", "СІЛЬСЬКА РАДА", "КРАЙОВИЙ РАДА", "СЛІДЧИЙ КОМІТЕТ", "СЛІДЧЕ УПРАВЛІННЯ", "ДЕРЖАВНІ ЗБОРИ", "МУНІЦИПАЛЬНЕ ЗБОРИ", "МІСЬКЕ ЗБОРИ", "ЗАКОНОДАВЧІ ЗБОРИ", "НАРОДНІ ЗБОРИ", "ОБЛАСНА ДУМА", "МІСЬКА ДУМА", "КРАЙОВА ДУМА", "КАБІНЕТ МІНІСТРІВ"]
         sov2 = ["РАДБЕЗ", None, None, "ОБЛРАДА", "РАЙРАДА", "МІСЬКРАДА", "СІЛЬРАДА", "КРАЙРАДА", None, None, "ДЕРЖЗБОРИ", "МУНЗБОРИ", "ГОРСОБРАНИЕ", "ЗАКЗБОРИ", "НАРСОБРАНИЕ", "ОБЛДУМА", "МІСЬКДУМА", "КРАЙДУМА", "КАБМІН"]
         i = 0
         while i < len(sovs): 
-            t = OrgItemTermin._new1694(sovs[i], MorphLang.UA, OrgProfile.STATE, 4, OrgItemTermin.Types.ORG, True, True)
+            t = OrgItemTermin._new1702(sovs[i], MorphLang.UA, OrgProfile.STATE, 4, OrgItemTermin.Types.ORG, True, True)
             if (sov2[i] is not None): 
                 t.add_variant(sov2[i], False)
             if (sov2[i] == "ГОССОВЕТ" or sov2[i] == "ЗАКЗБОРИ"): 
-                t.coeff = 5
+                t.coeff = (5)
             OrgItemTypeToken.__m_global.add(t)
             i += 1
         sovs = ["SECURITY COUNCIL", "NATIONAL COUNCIL", "STATE COUNCIL", "REGIONAL COUNCIL", "DISTRICT COUNCIL", "CITY COUNCIL", "RURAL COUNCIL", "INVESTIGATIVE COMMITTEE", "INVESTIGATION DEPARTMENT", "NATIONAL ASSEMBLY", "MUNICIPAL ASSEMBLY", "URBAN ASSEMBLY", "LEGISLATURE"]
         i = 0
         while i < len(sovs): 
-            t = OrgItemTermin._new1694(sovs[i], MorphLang.EN, OrgProfile.STATE, 4, OrgItemTermin.Types.ORG, True, True)
+            t = OrgItemTermin._new1702(sovs[i], MorphLang.EN, OrgProfile.STATE, 4, OrgItemTermin.Types.ORG, True, True)
             OrgItemTypeToken.__m_global.add(t)
             i += 1
-        t = OrgItemTermin._new1697("ГОСУДАРСТВЕННЫЙ КОМИТЕТ", OrgItemTermin.Types.ORG, OrgProfile.STATE, 2)
+        t = OrgItemTermin._new1705("ГОСУДАРСТВЕННЫЙ КОМИТЕТ", OrgItemTermin.Types.ORG, OrgProfile.STATE, 2)
         t.add_variant("ГОСКОМИТЕТ", False)
         t.add_variant("ГОСКОМ", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1698("ДЕРЖАВНИЙ КОМІТЕТ", MorphLang.UA, OrgItemTermin.Types.ORG, OrgProfile.STATE, 2)
+        t = OrgItemTermin._new1706("ДЕРЖАВНИЙ КОМІТЕТ", MorphLang.UA, OrgItemTermin.Types.ORG, OrgProfile.STATE, 2)
         t.add_variant("ДЕРЖКОМІТЕТ", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1699("КРАЕВОЙ КОМИТЕТ ГОСУДАРСТВЕННОЙ СТАТИСТИКИ", OrgItemTermin.Types.DEP, OrgProfile.STATE, 3, True)
+        t = OrgItemTermin._new1707("КРАЕВОЙ КОМИТЕТ ГОСУДАРСТВЕННОЙ СТАТИСТИКИ", OrgItemTermin.Types.DEP, OrgProfile.STATE, 3, True)
         t.add_variant("КРАЙКОМСТАТ", False)
         t._profile = OrgProfile.UNIT
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1699("ОБЛАСТНОЙ КОМИТЕТ ГОСУДАРСТВЕННОЙ СТАТИСТИКИ", OrgItemTermin.Types.DEP, OrgProfile.STATE, 3, True)
+        t = OrgItemTermin._new1707("ОБЛАСТНОЙ КОМИТЕТ ГОСУДАРСТВЕННОЙ СТАТИСТИКИ", OrgItemTermin.Types.DEP, OrgProfile.STATE, 3, True)
         t.add_variant("ОБЛКОМСТАТ", False)
         t._profile = OrgProfile.UNIT
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1699("РАЙОННЫЙ КОМИТЕТ ГОСУДАРСТВЕННОЙ СТАТИСТИКИ", OrgItemTermin.Types.DEP, OrgProfile.STATE, 3, True)
+        t = OrgItemTermin._new1707("РАЙОННЫЙ КОМИТЕТ ГОСУДАРСТВЕННОЙ СТАТИСТИКИ", OrgItemTermin.Types.DEP, OrgProfile.STATE, 3, True)
         t.add_variant("РАЙКОМСТАТ", False)
         t._profile = OrgProfile.UNIT
         OrgItemTypeToken.__m_global.add(t)
@@ -129,7 +127,7 @@ class OrgItemTypeToken(MetaToken):
         sov2 = ["ЦК", "РАЙКОМ", "ГОРКОМ", "КРАЙКОМ", "ОБКОМ", "ПОЛИТБЮРО"]
         i = 0
         while i < len(sovs): 
-            t = OrgItemTermin._new1702(sovs[i], 2, OrgItemTermin.Types.DEP, OrgProfile.UNIT)
+            t = OrgItemTermin._new1710(sovs[i], 2, OrgItemTermin.Types.DEP, OrgProfile.UNIT)
             if (i == 0): 
                 t.acronym = "ЦК"
                 t.can_be_normal_dep = True
@@ -138,11 +136,11 @@ class OrgItemTypeToken(MetaToken):
             OrgItemTypeToken.__m_global.add(t)
             i += 1
         for s in ["Standing Committee", "Political Bureau", "Central Committee"]: 
-            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1703(s.upper(), 3, OrgItemTermin.Types.DEP, OrgProfile.UNIT, True))
+            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1711(s.upper(), 3, OrgItemTermin.Types.DEP, OrgProfile.UNIT, True))
         sovs = ["ЦЕНТРАЛЬНИЙ КОМІТЕТ", "РАЙОННИЙ КОМІТЕТ", "МІСЬКИЙ КОМІТЕТ", "КРАЙОВИЙ КОМІТЕТ", "ОБЛАСНИЙ КОМІТЕТ"]
         i = 0
         while i < len(sovs): 
-            t = OrgItemTermin._new1704(sovs[i], MorphLang.UA, 2, OrgItemTermin.Types.DEP, OrgProfile.UNIT)
+            t = OrgItemTermin._new1712(sovs[i], MorphLang.UA, 2, OrgItemTermin.Types.DEP, OrgProfile.UNIT)
             if (i == 0): 
                 t.acronym = "ЦК"
                 t.can_be_normal_dep = True
@@ -150,657 +148,658 @@ class OrgItemTypeToken(MetaToken):
                 t.add_variant(sov2[i], False)
             OrgItemTypeToken.__m_global.add(t)
             i += 1
-        t = OrgItemTermin._new1705("КАЗНАЧЕЙСТВО", 3, OrgItemTermin.Types.ORG, True)
+        t = OrgItemTermin._new1713("КАЗНАЧЕЙСТВО", 3, OrgItemTermin.Types.ORG, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1706("КАЗНАЧЕЙСТВО", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True)
+        t = OrgItemTermin._new1714("КАЗНАЧЕЙСТВО", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1705("TREASURY", 3, OrgItemTermin.Types.ORG, True)
+        t = OrgItemTermin._new1713("TREASURY", 3, OrgItemTermin.Types.ORG, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1708("ГОСУДАРСТВЕННЫЙ ДЕПАРТАМЕНТ", 5, OrgItemTermin.Types.ORG, True, True)
+        t = OrgItemTermin._new1716("ГОСУДАРСТВЕННЫЙ ДЕПАРТАМЕНТ", 5, OrgItemTermin.Types.ORG, True, True)
         t.add_variant("ГОСДЕПАРТАМЕНТ", False)
         t.add_variant("ГОСДЕП", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1708("DEPARTMENT OF STATE", 5, OrgItemTermin.Types.ORG, True, True)
+        t = OrgItemTermin._new1716("DEPARTMENT OF STATE", 5, OrgItemTermin.Types.ORG, True, True)
         t.add_variant("STATE DEPARTMENT", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1710("ДЕРЖАВНИЙ ДЕПАРТАМЕНТ", MorphLang.UA, 5, OrgItemTermin.Types.ORG, True, True)
+        t = OrgItemTermin._new1718("ДЕРЖАВНИЙ ДЕПАРТАМЕНТ", MorphLang.UA, 5, OrgItemTermin.Types.ORG, True, True)
         t.add_variant("ДЕРЖДЕПАРТАМЕНТ", False)
         t.add_variant("ДЕРЖДЕП", False)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1711("ДЕПАРТАМЕНТ", 2, OrgItemTermin.Types.ORG))
-        t = OrgItemTermin._new1711("DEPARTMENT", 2, OrgItemTermin.Types.ORG)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1719("ДЕПАРТАМЕНТ", 2, OrgItemTermin.Types.ORG))
+        t = OrgItemTermin._new1719("DEPARTMENT", 2, OrgItemTermin.Types.ORG)
         t.add_abridge("DEPT.")
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1713("АГЕНТСТВО", 1, OrgItemTermin.Types.ORG, True)
+        t = OrgItemTermin._new1721("АГЕНТСТВО", 1, OrgItemTermin.Types.ORG, True)
         t.add_variant("АГЕНСТВО", False)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1713("ADGENCY", 1, OrgItemTermin.Types.ORG, True))
-        t = OrgItemTermin._new1702("АКАДЕМИЯ", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1721("ADGENCY", 1, OrgItemTermin.Types.ORG, True))
+        t = OrgItemTermin._new1710("АКАДЕМИЯ", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION)
         t.profiles.append(OrgProfile.SCIENCE)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1716("АКАДЕМІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION)
+        t = OrgItemTermin._new1724("АКАДЕМІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION)
         t.profiles.append(OrgProfile.SCIENCE)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1702("ACADEMY", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION)
+        t = OrgItemTermin._new1710("ACADEMY", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION)
         t.profiles.append(OrgProfile.SCIENCE)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1718("ГЕНЕРАЛЬНЫЙ ШТАБ", 3, OrgItemTermin.Types.DEP, True, True, OrgProfile.ARMY)
+        t = OrgItemTermin._new1726("ГЕНЕРАЛЬНЫЙ ШТАБ", 3, OrgItemTermin.Types.DEP, True, True, OrgProfile.ARMY)
         t.add_variant("ГЕНЕРАЛЬНИЙ ШТАБ", False)
         t.add_variant("ГЕНШТАБ", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1718("GENERAL STAFF", 3, OrgItemTermin.Types.DEP, True, True, OrgProfile.ARMY)
+        t = OrgItemTermin._new1726("GENERAL STAFF", 3, OrgItemTermin.Types.DEP, True, True, OrgProfile.ARMY)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1720("ФРОНТ", 3, OrgItemTermin.Types.ORG, True, True, OrgProfile.ARMY))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1721("ВОЕННЫЙ ОКРУГ", 3, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1722("ВІЙСЬКОВИЙ ОКРУГ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1720("ГРУППА АРМИЙ", 3, OrgItemTermin.Types.ORG, True, True, OrgProfile.ARMY))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1724("ГРУПА АРМІЙ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, OrgProfile.ARMY))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1720("АРМИЯ", 3, OrgItemTermin.Types.ORG, True, True, OrgProfile.ARMY))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1724("АРМІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, OrgProfile.ARMY))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1720("ARMY", 3, OrgItemTermin.Types.ORG, True, True, OrgProfile.ARMY))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1721("ГВАРДИЯ", 3, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1722("ГВАРДІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1721("GUARD", 3, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY))
-        t = OrgItemTermin._new1731("ВОЙСКОВАЯ ЧАСТЬ", 3, "ВЧ", OrgItemTermin.Types.ORG, True, OrgProfile.ARMY)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1728("ФРОНТ", 3, OrgItemTermin.Types.ORG, True, True, OrgProfile.ARMY))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1729("ВОЕННЫЙ ОКРУГ", 3, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1730("ВІЙСЬКОВИЙ ОКРУГ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1728("ГРУППА АРМИЙ", 3, OrgItemTermin.Types.ORG, True, True, OrgProfile.ARMY))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1732("ГРУПА АРМІЙ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, OrgProfile.ARMY))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1728("АРМИЯ", 3, OrgItemTermin.Types.ORG, True, True, OrgProfile.ARMY))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1732("АРМІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, OrgProfile.ARMY))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1728("ARMY", 3, OrgItemTermin.Types.ORG, True, True, OrgProfile.ARMY))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1729("ГВАРДИЯ", 3, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1730("ГВАРДІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1729("GUARD", 3, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY))
+        t = OrgItemTermin._new1739("ВОЙСКОВАЯ ЧАСТЬ", 3, "ВЧ", OrgItemTermin.Types.ORG, True, OrgProfile.ARMY)
         OrgItemTypeToken.__m_military_unit = t
         t.add_abridge("В.Ч.")
         t.add_variant("ВОИНСКАЯ ЧАСТЬ", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1732("ВІЙСЬКОВА ЧАСТИНА", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True)
+        t = OrgItemTermin._new1740("ВІЙСЬКОВА ЧАСТИНА", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True)
         t.add_abridge("В.Ч.")
         OrgItemTypeToken.__m_global.add(t)
         for s in ["ДИВИЗИЯ", "ДИВИЗИОН", "ПОЛК", "БАТАЛЬОН", "РОТА", "ВЗВОД", "АВИАДИВИЗИЯ", "АВИАПОЛК", "ПОГРАНПОЛК", "АРТБРИГАДА", "МОТОМЕХБРИГАДА", "ТАНКОВЫЙ КОРПУС", "ГАРНИЗОН"]: 
-            t = OrgItemTermin._new1733(s, 3, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY)
+            t = OrgItemTermin._new1741(s, 3, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY)
             if (s == "ГАРНИЗОН"): 
                 t.can_be_single_geo = True
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ДИВІЗІЯ", "ДИВІЗІОН", "ПОЛК", "БАТАЛЬЙОН", "РОТА", "ВЗВОД", "АВІАДИВІЗІЯ", "АВІАПОЛК", "ПОГРАНПОЛК", "АРТБРИГАДА", "МОТОМЕХБРИГАДА", "ТАНКОВИЙ КОРПУС", "ГАРНІЗОН"]: 
-            t = OrgItemTermin._new1734(s, 3, MorphLang.UA, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY)
+            t = OrgItemTermin._new1742(s, 3, MorphLang.UA, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY)
             if (s == "ГАРНІЗОН"): 
                 t.can_be_single_geo = True
             OrgItemTypeToken.__m_global.add(t)
         for s in ["КОРПУС", "БРИГАДА"]: 
-            t = OrgItemTermin._new1733(s, 1, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY)
+            t = OrgItemTermin._new1741(s, 1, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["КОРПУС", "БРИГАДА"]: 
-            t = OrgItemTermin._new1734(s, 1, MorphLang.UA, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY)
+            t = OrgItemTermin._new1742(s, 1, MorphLang.UA, OrgItemTermin.Types.ORG, True, OrgProfile.ARMY)
             OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1702("ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1716("ДЕРЖАВНИЙ УНІВЕРСИТЕТ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1702("STATE UNIVERSITY", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1702("УНИВЕРСИТЕТ", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1716("УНІВЕРСИТЕТ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1742("UNIVERSITY", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1743("УЧРЕЖДЕНИЕ", 1, OrgItemTermin.Types.ORG, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1744("УСТАНОВА", MorphLang.UA, 1, OrgItemTermin.Types.ORG, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1743("INSTITUTION", 1, OrgItemTermin.Types.ORG, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1711("ГОСУДАРСТВЕННОЕ УЧРЕЖДЕНИЕ", 3, OrgItemTermin.Types.ORG))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1747("ДЕРЖАВНА УСТАНОВА", MorphLang.UA, 3, OrgItemTermin.Types.ORG))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1705("STATE INSTITUTION", 3, OrgItemTermin.Types.ORG, True))
-        t = OrgItemTermin._new1702("ИНСТИТУТ", 2, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1710("ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1724("ДЕРЖАВНИЙ УНІВЕРСИТЕТ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1710("STATE UNIVERSITY", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1710("УНИВЕРСИТЕТ", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1724("УНІВЕРСИТЕТ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1750("UNIVERSITY", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1751("УЧРЕЖДЕНИЕ", 1, OrgItemTermin.Types.ORG, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1752("УСТАНОВА", MorphLang.UA, 1, OrgItemTermin.Types.ORG, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1751("INSTITUTION", 1, OrgItemTermin.Types.ORG, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1719("ГОСУДАРСТВЕННОЕ УЧРЕЖДЕНИЕ", 3, OrgItemTermin.Types.ORG))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1755("ДЕРЖАВНА УСТАНОВА", MorphLang.UA, 3, OrgItemTermin.Types.ORG))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1713("STATE INSTITUTION", 3, OrgItemTermin.Types.ORG, True))
+        t = OrgItemTermin._new1710("ИНСТИТУТ", 2, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION)
         t.profiles.append(OrgProfile.SCIENCE)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1716("ІНСТИТУТ", MorphLang.UA, 2, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION)
+        t = OrgItemTermin._new1724("ІНСТИТУТ", MorphLang.UA, 2, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION)
         t.profiles.append(OrgProfile.SCIENCE)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1702("INSTITUTE", 2, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION)
+        t = OrgItemTermin._new1710("INSTITUTE", 2, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION)
         t.profiles.append(OrgProfile.SCIENCE)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1752("ОТДЕЛ СУДЕБНЫХ ПРИСТАВОВ", OrgItemTermin.Types.PREFIX, "ОСП", OrgProfile.UNIT, True, True)
+        t = OrgItemTermin._new1760("ОТДЕЛ СУДЕБНЫХ ПРИСТАВОВ", OrgItemTermin.Types.PREFIX, "ОСП", OrgProfile.UNIT, True, True)
         t.profiles.append(OrgProfile.JUSTICE)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1752("МЕЖРАЙОННЫЙ ОТДЕЛ СУДЕБНЫХ ПРИСТАВОВ", OrgItemTermin.Types.PREFIX, "МОСП", OrgProfile.UNIT, True, True)
+        t = OrgItemTermin._new1760("МЕЖРАЙОННЫЙ ОТДЕЛ СУДЕБНЫХ ПРИСТАВОВ", OrgItemTermin.Types.PREFIX, "МОСП", OrgProfile.UNIT, True, True)
         t.add_variant("МЕЖРАЙОННЫЙ ОСП", False)
         t.profiles.append(OrgProfile.JUSTICE)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1752("ОТДЕЛ ВНЕВЕДОМСТВЕННОЙ ОХРАНЫ", OrgItemTermin.Types.PREFIX, "ОВО", OrgProfile.UNIT, True, True)
+        t = OrgItemTermin._new1760("ОТДЕЛ ВНЕВЕДОМСТВЕННОЙ ОХРАНЫ", OrgItemTermin.Types.PREFIX, "ОВО", OrgProfile.UNIT, True, True)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1755("ЛИЦЕЙ", 2, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1756("ЛІЦЕЙ", MorphLang.UA, 2, OrgProfile.EDUCATION, OrgItemTermin.Types.ORG, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1755("ИНТЕРНАТ", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1756("ІНТЕРНАТ", MorphLang.UA, 3, OrgProfile.EDUCATION, OrgItemTermin.Types.ORG, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1759("HIGH SCHOOL", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1759("SECONDARY SCHOOL", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1759("MIDDLE SCHOOL", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1759("PUBLIC SCHOOL", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1759("JUNIOR SCHOOL", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1759("GRAMMAR SCHOOL", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True, True))
-        t = OrgItemTermin._new1765("СРЕДНЯЯ ШКОЛА", 3, "СОШ", OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1763("ЛИЦЕЙ", 2, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1764("ЛІЦЕЙ", MorphLang.UA, 2, OrgProfile.EDUCATION, OrgItemTermin.Types.ORG, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1763("ИНТЕРНАТ", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1764("ІНТЕРНАТ", MorphLang.UA, 3, OrgProfile.EDUCATION, OrgItemTermin.Types.ORG, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1767("HIGH SCHOOL", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1767("SECONDARY SCHOOL", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1767("MIDDLE SCHOOL", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1767("PUBLIC SCHOOL", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1767("JUNIOR SCHOOL", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1767("GRAMMAR SCHOOL", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True, True))
+        t = OrgItemTermin._new1773("СРЕДНЯЯ ШКОЛА", 3, "СОШ", OrgItemTermin.Types.ORG, OrgProfile.EDUCATION, True)
         t.add_variant("СРЕДНЯЯ ОБРАЗОВАТЕЛЬНАЯ ШКОЛА", False)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1766("БИЗНЕС ШКОЛА", 3, OrgItemTermin.Types.ORG, True, True, True, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1766("БІЗНЕС ШКОЛА", 3, OrgItemTermin.Types.ORG, True, True, True, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1756("СЕРЕДНЯ ШКОЛА", MorphLang.UA, 3, OrgProfile.EDUCATION, OrgItemTermin.Types.ORG, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1702("ВЫСШАЯ ШКОЛА", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1716("ВИЩА ШКОЛА", MorphLang.UA, 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1733("НАЧАЛЬНАЯ ШКОЛА", 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1772("ПОЧАТКОВА ШКОЛА", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1733("СЕМИНАРИЯ", 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1772("СЕМІНАРІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1733("ГИМНАЗИЯ", 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1772("ГІМНАЗІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
-        t = OrgItemTermin._new1733("ДЕТСКИЙ САД", 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1774("БИЗНЕС ШКОЛА", 3, OrgItemTermin.Types.ORG, True, True, True, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1774("БІЗНЕС ШКОЛА", 3, OrgItemTermin.Types.ORG, True, True, True, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1764("СЕРЕДНЯ ШКОЛА", MorphLang.UA, 3, OrgProfile.EDUCATION, OrgItemTermin.Types.ORG, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1710("ВЫСШАЯ ШКОЛА", 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1724("ВИЩА ШКОЛА", MorphLang.UA, 3, OrgItemTermin.Types.ORG, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1741("НАЧАЛЬНАЯ ШКОЛА", 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1780("ПОЧАТКОВА ШКОЛА", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1741("СЕМИНАРИЯ", 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1780("СЕМІНАРІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1741("ГИМНАЗИЯ", 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1780("ГІМНАЗІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
+        t = OrgItemTermin._new1741("ДЕТСКИЙ САД", 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION)
         t.add_variant("ДЕТСАД", False)
         t.add_abridge("Д.С.")
         t.add_abridge("Д/С")
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1772("ДИТЯЧИЙ САДОК", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION)
+        t = OrgItemTermin._new1780("ДИТЯЧИЙ САДОК", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION)
         t.add_variant("ДИТСАДОК", False)
         t.add_abridge("Д.С.")
         t.add_abridge("Д/З")
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1733("ШКОЛА", 1, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1780("SCHOOL", 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1733("УЧИЛИЩЕ", 2, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1733("КОЛЛЕДЖ", 2, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1780("COLLEGE", 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1784("ЦЕНТР", OrgItemTermin.Types.ORG, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1702("НАУЧНЫЙ ЦЕНТР", 3, OrgItemTermin.Types.ORG, OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1716("НАУКОВИЙ ЦЕНТР", MorphLang.UA, 3, OrgItemTermin.Types.ORG, OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1733("БОЛЬНИЦА", 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1772("ЛІКАРНЯ", MorphLang.UA, 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1733("МОРГ", 3, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1772("МОРГ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1733("ХОСПИС", 3, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1772("ХОСПІС", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
-        t = OrgItemTermin._new1733("ГОРОДСКАЯ БОЛЬНИЦА", 3, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1741("ШКОЛА", 1, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1788("SCHOOL", 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1741("УЧИЛИЩЕ", 2, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1741("КОЛЛЕДЖ", 2, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1788("COLLEGE", 3, OrgItemTermin.Types.ORG, True, OrgProfile.EDUCATION, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1792("ЦЕНТР", OrgItemTermin.Types.ORG, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1710("НАУЧНЫЙ ЦЕНТР", 3, OrgItemTermin.Types.ORG, OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1724("НАУКОВИЙ ЦЕНТР", MorphLang.UA, 3, OrgItemTermin.Types.ORG, OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1741("БОЛЬНИЦА", 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1780("ЛІКАРНЯ", MorphLang.UA, 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1741("МОРГ", 3, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1780("МОРГ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1741("ХОСПИС", 3, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1780("ХОСПІС", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
+        t = OrgItemTermin._new1741("ГОРОДСКАЯ БОЛЬНИЦА", 3, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE)
         t.add_abridge("ГОР.БОЛЬНИЦА")
         t.add_variant("ГОРБОЛЬНИЦА", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1772("МІСЬКА ЛІКАРНЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE)
+        t = OrgItemTermin._new1780("МІСЬКА ЛІКАРНЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1795("ГОРОДСКАЯ КЛИНИЧЕСКАЯ БОЛЬНИЦА", 3, OrgItemTermin.Types.ORG, True, "ГКБ", OrgProfile.MEDICINE)
+        t = OrgItemTermin._new1803("ГОРОДСКАЯ КЛИНИЧЕСКАЯ БОЛЬНИЦА", 3, OrgItemTermin.Types.ORG, True, "ГКБ", OrgProfile.MEDICINE)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1796("МІСЬКА КЛІНІЧНА ЛІКАРНЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, "МКЛ", OrgProfile.MEDICINE)
+        t = OrgItemTermin._new1804("МІСЬКА КЛІНІЧНА ЛІКАРНЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, "МКЛ", OrgProfile.MEDICINE)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1797("КЛАДБИЩЕ", 3, OrgItemTermin.Types.ORG, True)
+        t = OrgItemTermin._new1805("КЛАДБИЩЕ", 3, OrgItemTermin.Types.ORG, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1732("КЛАДОВИЩЕ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True)
+        t = OrgItemTermin._new1740("КЛАДОВИЩЕ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1733("ПОЛИКЛИНИКА", 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1772("ПОЛІКЛІНІКА", MorphLang.UA, 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1733("ГОСПИТАЛЬ", 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1772("ГОСПІТАЛЬ", MorphLang.UA, 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1733("КЛИНИКА", 1, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1772("КЛІНІКА", MorphLang.UA, 1, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
-        t = OrgItemTermin._new1733("МЕДИКО САНИТАРНАЯ ЧАСТЬ", 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1741("ПОЛИКЛИНИКА", 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1780("ПОЛІКЛІНІКА", MorphLang.UA, 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1741("ГОСПИТАЛЬ", 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1780("ГОСПІТАЛЬ", MorphLang.UA, 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1741("КЛИНИКА", 1, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1780("КЛІНІКА", MorphLang.UA, 1, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE))
+        t = OrgItemTermin._new1741("МЕДИКО САНИТАРНАЯ ЧАСТЬ", 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE)
         t.add_variant("МЕДСАНЧАСТЬ", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1772("МЕДИКО САНІТАРНА ЧАСТИНА", MorphLang.UA, 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE)
+        t = OrgItemTermin._new1780("МЕДИКО САНІТАРНА ЧАСТИНА", MorphLang.UA, 2, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE)
         t.add_variant("МЕДСАНЧАСТИНА", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1807("МЕДИЦИНСКИЙ ЦЕНТР", 2, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.MEDICINE)
+        t = OrgItemTermin._new1815("МЕДИЦИНСКИЙ ЦЕНТР", 2, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.MEDICINE)
         t.add_variant("МЕДЦЕНТР", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1808("МЕДИЧНИЙ ЦЕНТР", MorphLang.UA, 2, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.MEDICINE)
+        t = OrgItemTermin._new1816("МЕДИЧНИЙ ЦЕНТР", MorphLang.UA, 2, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.MEDICINE)
         t.add_variant("МЕДЦЕНТР", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1733("РОДИЛЬНЫЙ ДОМ", 1, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE)
+        t = OrgItemTermin._new1741("РОДИЛЬНЫЙ ДОМ", 1, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE)
         t.add_variant("РОДДОМ", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1772("ПОЛОГОВИЙ БУДИНОК", MorphLang.UA, 1, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE)
+        t = OrgItemTermin._new1780("ПОЛОГОВИЙ БУДИНОК", MorphLang.UA, 1, OrgItemTermin.Types.ORG, True, OrgProfile.MEDICINE)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1811("АЭРОПОРТ", 3, OrgItemTermin.Types.ORG, True, True, True, True)
+        t = OrgItemTermin._new1819("АЭРОПОРТ", 3, OrgItemTermin.Types.ORG, True, True, True, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1812("АЕРОПОРТ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, True, True)
+        t = OrgItemTermin._new1820("АЕРОПОРТ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, True, True)
         OrgItemTypeToken.__m_global.add(t)
         for s in ["ТЕАТР", "ТЕАТР-СТУДИЯ", "КИНОТЕАТР", "МУЗЕЙ", "ГАЛЕРЕЯ", "КОНЦЕРТНЫЙ ЗАЛ", "ФИЛАРМОНИЯ", "КОНСЕРВАТОРИЯ", "ДОМ КУЛЬТУРЫ", "ДВОРЕЦ КУЛЬТУРЫ", "ДВОРЕЦ ПИОНЕРОВ"]: 
-            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1713(s, 3, OrgItemTermin.Types.ORG, True))
+            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1721(s, 3, OrgItemTermin.Types.ORG, True))
         for s in ["ТЕАТР", "ТЕАТР-СТУДІЯ", "КІНОТЕАТР", "МУЗЕЙ", "ГАЛЕРЕЯ", "КОНЦЕРТНИЙ ЗАЛ", "ФІЛАРМОНІЯ", "КОНСЕРВАТОРІЯ", "БУДИНОК КУЛЬТУРИ", "ПАЛАЦ КУЛЬТУРИ", "ПАЛАЦ ПІОНЕРІВ"]: 
-            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1814(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1815("БИБЛИОТЕКА", 3, OrgItemTermin.Types.ORG, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1816("БІБЛІОТЕКА", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True))
+            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1822(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1823("БИБЛИОТЕКА", 3, OrgItemTermin.Types.ORG, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1824("БІБЛІОТЕКА", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True))
         for s in ["ЦЕРКОВЬ", "ХРАМ", "СОБОР", "МЕЧЕТЬ", "СИНАГОГА", "МОНАСТЫРЬ", "ЛАВРА"]: 
-            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1817(s, 3, OrgItemTermin.Types.ORG, True, True))
+            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1825(s, 3, OrgItemTermin.Types.ORG, True, True))
         for s in ["ЦЕРКВА", "ХРАМ", "СОБОР", "МЕЧЕТЬ", "СИНАГОГА", "МОНАСТИР", "ЛАВРА"]: 
-            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1818(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True))
+            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1826(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True))
         for s in ["ФЕДЕРАЛЬНАЯ СЛУЖБА", "ГОСУДАРСТВЕННАЯ СЛУЖБА", "ФЕДЕРАЛЬНОЕ УПРАВЛЕНИЕ", "ГОСУДАРСТВЕННЫЙ КОМИТЕТ", "ГОСУДАРСТВЕННАЯ ИНСПЕКЦИЯ"]: 
-            t = OrgItemTermin._new1819(s, 3, OrgItemTermin.Types.ORG, True)
+            t = OrgItemTermin._new1827(s, 3, OrgItemTermin.Types.ORG, True)
             OrgItemTypeToken.__m_global.add(t)
-            t = OrgItemTermin._new1820(s, 3, OrgItemTermin.Types.ORG, s)
-            t.terms.insert(1, Termin.Term._new1821(None, True))
+            t = OrgItemTermin._new1828(s, 3, OrgItemTermin.Types.ORG, s)
+            t.terms.insert(1, Termin.Term._new1829(None, True))
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ФЕДЕРАЛЬНА СЛУЖБА", "ДЕРЖАВНА СЛУЖБА", "ФЕДЕРАЛЬНЕ УПРАВЛІННЯ", "ДЕРЖАВНИЙ КОМІТЕТ УКРАЇНИ", "ДЕРЖАВНА ІНСПЕКЦІЯ"]: 
-            t = OrgItemTermin._new1822(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True)
+            t = OrgItemTermin._new1830(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True)
             OrgItemTypeToken.__m_global.add(t)
-            t = OrgItemTermin._new1823(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, s)
-            t.terms.insert(1, Termin.Term._new1821(None, True))
+            t = OrgItemTermin._new1831(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, s)
+            t.terms.insert(1, Termin.Term._new1829(None, True))
             OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1797("СЛЕДСТВЕННЫЙ ИЗОЛЯТОР", 5, OrgItemTermin.Types.ORG, True)
+        t = OrgItemTermin._new1805("СЛЕДСТВЕННЫЙ ИЗОЛЯТОР", 5, OrgItemTermin.Types.ORG, True)
         t.add_variant("СИЗО", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1732("СЛІДЧИЙ ІЗОЛЯТОР", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True)
+        t = OrgItemTermin._new1740("СЛІДЧИЙ ІЗОЛЯТОР", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True)
         t.add_variant("СІЗО", False)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1797("КОЛОНИЯ-ПОСЕЛЕНИЕ", 3, OrgItemTermin.Types.ORG, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1732("КОЛОНІЯ-ПОСЕЛЕННЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1829("ТЮРЬМА", 3, OrgItemTermin.Types.ORG, True, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1830("ВЯЗНИЦЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1797("КОЛОНИЯ", 2, OrgItemTermin.Types.ORG, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1732("КОЛОНІЯ", MorphLang.UA, 2, OrgItemTermin.Types.ORG, True))
-        OrgItemTypeToken.__m_ispr_kolon = OrgItemTermin._new1833("ИСПРАВИТЕЛЬНАЯ КОЛОНИЯ", 3, OrgItemTermin.Types.ORG, "ИК", True)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1805("КОЛОНИЯ-ПОСЕЛЕНИЕ", 3, OrgItemTermin.Types.ORG, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1740("КОЛОНІЯ-ПОСЕЛЕННЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1837("ТЮРЬМА", 3, OrgItemTermin.Types.ORG, True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1838("ВЯЗНИЦЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1805("КОЛОНИЯ", 2, OrgItemTermin.Types.ORG, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1740("КОЛОНІЯ", MorphLang.UA, 2, OrgItemTermin.Types.ORG, True))
+        OrgItemTypeToken.__m_ispr_kolon = OrgItemTermin._new1841("ИСПРАВИТЕЛЬНАЯ КОЛОНИЯ", 3, OrgItemTermin.Types.ORG, "ИК", True)
         OrgItemTypeToken.__m_global.add(OrgItemTypeToken.__m_ispr_kolon)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1732("ВИПРАВНА КОЛОНІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1740("ВИПРАВНА КОЛОНІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True))
         for s in ["ПОЛИЦИЯ", "МИЛИЦИЯ"]: 
-            t = OrgItemTermin._new1835(s, OrgItemTermin.Types.ORG, 3, True, False)
+            t = OrgItemTermin._new1843(s, OrgItemTermin.Types.ORG, 3, True, False)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ПОЛІЦІЯ", "МІЛІЦІЯ"]: 
-            t = OrgItemTermin._new1836(s, MorphLang.UA, OrgItemTermin.Types.ORG, 3, True, False)
+            t = OrgItemTermin._new1844(s, MorphLang.UA, OrgItemTermin.Types.ORG, 3, True, False)
             OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1837("ПАЕВЫЙ ИНВЕСТИЦИОННЫЙ ФОНД", 2, OrgItemTermin.Types.ORG, "ПИФ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1838("РОССИЙСКОЕ ИНФОРМАЦИОННОЕ АГЕНТСТВО", 3, OrgItemTermin.Types.ORG, "РИА", OrgProfile.MEDIA))
-        t = OrgItemTermin._new1838("ИНФОРМАЦИОННОЕ АГЕНТСТВО", 3, OrgItemTermin.Types.ORG, "ИА", OrgProfile.MEDIA)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1845("ПАЕВЫЙ ИНВЕСТИЦИОННЫЙ ФОНД", 2, OrgItemTermin.Types.ORG, "ПИФ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1846("РОССИЙСКОЕ ИНФОРМАЦИОННОЕ АГЕНТСТВО", 3, OrgItemTermin.Types.ORG, "РИА", OrgProfile.MEDIA))
+        t = OrgItemTermin._new1846("ИНФОРМАЦИОННОЕ АГЕНТСТВО", 3, OrgItemTermin.Types.ORG, "ИА", OrgProfile.MEDIA)
         t.add_variant("ИНФОРМАГЕНТСТВО", False)
         t.add_variant("ИНФОРМАГЕНСТВО", False)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1743("ОТДЕЛ", 1, OrgItemTermin.Types.DEP, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1841("ВІДДІЛ", MorphLang.UA, 1, OrgItemTermin.Types.DEP, True))
-        t = OrgItemTermin._new1711("ФАКУЛЬТЕТ", 3, OrgItemTermin.Types.DEP)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1751("ОТДЕЛ", 1, OrgItemTermin.Types.DEP, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1849("ВІДДІЛ", MorphLang.UA, 1, OrgItemTermin.Types.DEP, True))
+        t = OrgItemTermin._new1719("ФАКУЛЬТЕТ", 3, OrgItemTermin.Types.DEP)
         t.add_abridge("ФАК.")
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1711("КАФЕДРА", 3, OrgItemTermin.Types.DEP)
+        t = OrgItemTermin._new1719("КАФЕДРА", 3, OrgItemTermin.Types.DEP)
         t.add_abridge("КАФ.")
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1711("ЛАБОРАТОРИЯ", 1, OrgItemTermin.Types.DEP)
+        t = OrgItemTermin._new1719("ЛАБОРАТОРИЯ", 1, OrgItemTermin.Types.DEP)
         t.add_abridge("ЛАБ.")
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1845("ЛАБОРАТОРІЯ", MorphLang.UA, 1, OrgItemTermin.Types.DEP)
+        t = OrgItemTermin._new1853("ЛАБОРАТОРІЯ", MorphLang.UA, 1, OrgItemTermin.Types.DEP)
         t.add_abridge("ЛАБ.")
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1721("ПАТРИАРХИЯ", 3, OrgItemTermin.Types.DEP, True, OrgProfile.RELIGION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1721("ПАТРІАРХІЯ", 3, OrgItemTermin.Types.DEP, True, OrgProfile.RELIGION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1721("ЕПАРХИЯ", 3, OrgItemTermin.Types.DEP, True, OrgProfile.RELIGION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1721("ЄПАРХІЯ", 3, OrgItemTermin.Types.DEP, True, OrgProfile.RELIGION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1850("ПРЕДСТАВИТЕЛЬСТВО", OrgItemTermin.Types.DEPADD))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1851("ПРЕДСТАВНИЦТВО", MorphLang.UA, OrgItemTermin.Types.DEPADD))
-        t = OrgItemTermin._new1784("ОТДЕЛЕНИЕ", OrgItemTermin.Types.DEPADD, True)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1729("ПАТРИАРХИЯ", 3, OrgItemTermin.Types.DEP, True, OrgProfile.RELIGION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1729("ПАТРІАРХІЯ", 3, OrgItemTermin.Types.DEP, True, OrgProfile.RELIGION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1729("ЕПАРХИЯ", 3, OrgItemTermin.Types.DEP, True, OrgProfile.RELIGION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1729("ЄПАРХІЯ", 3, OrgItemTermin.Types.DEP, True, OrgProfile.RELIGION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1858("ПРЕДСТАВИТЕЛЬСТВО", OrgItemTermin.Types.DEPADD))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1859("ПРЕДСТАВНИЦТВО", MorphLang.UA, OrgItemTermin.Types.DEPADD))
+        t = OrgItemTermin._new1792("ОТДЕЛЕНИЕ", OrgItemTermin.Types.DEPADD, True)
         t.add_abridge("ОТД.")
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1853("ВІДДІЛЕННЯ", MorphLang.UA, OrgItemTermin.Types.DEPADD, True)
+        t = OrgItemTermin._new1861("ВІДДІЛЕННЯ", MorphLang.UA, OrgItemTermin.Types.DEPADD, True)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1784("ИНСПЕКЦИЯ", OrgItemTermin.Types.DEPADD, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1853("ІНСПЕКЦІЯ", MorphLang.UA, OrgItemTermin.Types.DEPADD, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1850("ФИЛИАЛ", OrgItemTermin.Types.DEPADD))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1851("ФІЛІЯ", MorphLang.UA, OrgItemTermin.Types.DEPADD))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1792("ИНСПЕКЦИЯ", OrgItemTermin.Types.DEPADD, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1861("ІНСПЕКЦІЯ", MorphLang.UA, OrgItemTermin.Types.DEPADD, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1858("ФИЛИАЛ", OrgItemTermin.Types.DEPADD))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1859("ФІЛІЯ", MorphLang.UA, OrgItemTermin.Types.DEPADD))
         for s in ["ОТДЕЛ ПОЛИЦИИ", "ОТДЕЛ МИЛИЦИИ", "ОТДЕЛЕНИЕ ПОЛИЦИИ", "ОТДЕЛЕНИЕ МИЛИЦИИ"]: 
-            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1858(s, OrgItemTermin.Types.DEP, 1.5, True, True))
+            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1866(s, OrgItemTermin.Types.DEP, 1.5, True, True))
             if (s.startswith("ОТДЕЛ ")): 
-                t = OrgItemTermin._new1858("ГОРОДСКОЙ " + s, OrgItemTermin.Types.DEP, 3, True, True)
+                t = OrgItemTermin._new1866("ГОРОДСКОЙ " + s, OrgItemTermin.Types.DEP, 3, True, True)
                 t.add_variant("ГОР" + s, False)
                 OrgItemTypeToken.__m_global.add(t)
-                t = OrgItemTermin._new1858("РАЙОННЫЙ " + s, OrgItemTermin.Types.DEP, 3, True, True)
+                t = OrgItemTermin._new1866("РАЙОННЫЙ " + s, OrgItemTermin.Types.DEP, 3, True, True)
                 t.add_variant("РАЙ" + s, False)
                 OrgItemTypeToken.__m_global.add(t)
         for s in ["ВІДДІЛ ПОЛІЦІЇ", "ВІДДІЛ МІЛІЦІЇ", "ВІДДІЛЕННЯ ПОЛІЦІЇ", "ВІДДІЛЕННЯ МІЛІЦІЇ"]: 
-            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1861(s, MorphLang.UA, OrgItemTermin.Types.DEP, 1.5, True, True))
-        t = OrgItemTermin._new1862("ГЛАВНОЕ УПРАВЛЕНИЕ", "ГУ", OrgItemTermin.Types.DEPADD, True)
+            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1869(s, MorphLang.UA, OrgItemTermin.Types.DEP, 1.5, True, True))
+        t = OrgItemTermin._new1870("ГЛАВНОЕ УПРАВЛЕНИЕ", "ГУ", OrgItemTermin.Types.DEPADD, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1863("ГОЛОВНЕ УПРАВЛІННЯ", MorphLang.UA, "ГУ", OrgItemTermin.Types.DEPADD, True)
+        t = OrgItemTermin._new1871("ГОЛОВНЕ УПРАВЛІННЯ", MorphLang.UA, "ГУ", OrgItemTermin.Types.DEPADD, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1862("ГЛАВНОЕ ТЕРРИТОРИАЛЬНОЕ УПРАВЛЕНИЕ", "ГТУ", OrgItemTermin.Types.DEPADD, True)
+        t = OrgItemTermin._new1870("ГЛАВНОЕ ТЕРРИТОРИАЛЬНОЕ УПРАВЛЕНИЕ", "ГТУ", OrgItemTermin.Types.DEPADD, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1863("ГОЛОВНЕ ТЕРИТОРІАЛЬНЕ УПРАВЛІННЯ", MorphLang.UA, "ГТУ", OrgItemTermin.Types.DEPADD, True)
+        t = OrgItemTermin._new1871("ГОЛОВНЕ ТЕРИТОРІАЛЬНЕ УПРАВЛІННЯ", MorphLang.UA, "ГТУ", OrgItemTermin.Types.DEPADD, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1862("ОПЕРАЦИОННОЕ УПРАВЛЕНИЕ", "ОПЕРУ", OrgItemTermin.Types.DEPADD, True)
+        t = OrgItemTermin._new1870("ОПЕРАЦИОННОЕ УПРАВЛЕНИЕ", "ОПЕРУ", OrgItemTermin.Types.DEPADD, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1863("ОПЕРАЦІЙНЕ УПРАВЛІННЯ", MorphLang.UA, "ОПЕРУ", OrgItemTermin.Types.DEPADD, True)
+        t = OrgItemTermin._new1871("ОПЕРАЦІЙНЕ УПРАВЛІННЯ", MorphLang.UA, "ОПЕРУ", OrgItemTermin.Types.DEPADD, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1868("ТЕРРИТОРИАЛЬНОЕ УПРАВЛЕНИЕ", OrgItemTermin.Types.DEPADD, True)
+        t = OrgItemTermin._new1876("ТЕРРИТОРИАЛЬНОЕ УПРАВЛЕНИЕ", OrgItemTermin.Types.DEPADD, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1869("ТЕРИТОРІАЛЬНЕ УПРАВЛІННЯ", MorphLang.UA, OrgItemTermin.Types.DEPADD, True)
+        t = OrgItemTermin._new1877("ТЕРИТОРІАЛЬНЕ УПРАВЛІННЯ", MorphLang.UA, OrgItemTermin.Types.DEPADD, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1784("УПРАВЛЕНИЕ", OrgItemTermin.Types.DEPADD, True)
+        t = OrgItemTermin._new1792("УПРАВЛЕНИЕ", OrgItemTermin.Types.DEPADD, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1853("УПРАВЛІННЯ", MorphLang.UA, OrgItemTermin.Types.DEPADD, True)
+        t = OrgItemTermin._new1861("УПРАВЛІННЯ", MorphLang.UA, OrgItemTermin.Types.DEPADD, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1862("ПОГРАНИЧНОЕ УПРАВЛЕНИЕ", "ПУ", OrgItemTermin.Types.DEPADD, True)
+        t = OrgItemTermin._new1870("ПОГРАНИЧНОЕ УПРАВЛЕНИЕ", "ПУ", OrgItemTermin.Types.DEPADD, True)
         OrgItemTypeToken.__m_global.add(t)
         for s in ["ПРЕСС-СЛУЖБА", "ПРЕСС-ЦЕНТР", "КОЛЛ-ЦЕНТР", "БУХГАЛТЕРИЯ", "МАГИСТРАТУРА", "АСПИРАНТУРА", "ДОКТОРАНТУРА", "ОРДИНАТУРА", "СОВЕТ ДИРЕКТОРОВ", "УЧЕНЫЙ СОВЕТ", "КОЛЛЕГИЯ", "ПЛЕНУМ", "АППАРАТ", "НАБЛЮДАТЕЛЬНЫЙ СОВЕТ", "ОБЩЕСТВЕННЫЙ СОВЕТ", "РУКОВОДСТВО", "ДИРЕКЦИЯ", "ПРАВЛЕНИЕ", "ЖЮРИ", "ПРЕЗИДИУМ", "СЕКРЕТАРИАТ", "PRESS", "PRESS CENTER", "CLIENT CENTER", "CALL CENTER", "ACCOUNTING", "MASTER DEGREE", "POSTGRADUATE", "DOCTORATE", "RESIDENCY", "BOARD OF DIRECTORS", "DIRECTOR BOARD", "ACADEMIC COUNCIL", "BOARD", "PLENARY", "UNIT", "SUPERVISORY BOARD", "PUBLIC COUNCIL", "LEADERSHIP", "MANAGEMENT", "JURY", "BUREAU", "SECRETARIAT"]: 
-            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1873(s, OrgItemTermin.Types.DEPADD, True, OrgProfile.UNIT))
+            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1881(s, OrgItemTermin.Types.DEPADD, True, OrgProfile.UNIT))
         for s in ["ПРЕС-СЛУЖБА", "ПРЕС-ЦЕНТР", "БУХГАЛТЕРІЯ", "МАГІСТРАТУРА", "АСПІРАНТУРА", "ДОКТОРАНТУРА", "ОРДИНАТУРА", "РАДА ДИРЕКТОРІВ", "ВЧЕНА РАДА", "КОЛЕГІЯ", "ПЛЕНУМ", "АПАРАТ", "НАГЛЯДОВА РАДА", "ГРОМАДСЬКА РАДА", "КЕРІВНИЦТВО", "ДИРЕКЦІЯ", "ПРАВЛІННЯ", "ЖУРІ", "ПРЕЗИДІЯ", "СЕКРЕТАРІАТ"]: 
-            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1874(s, MorphLang.UA, OrgItemTermin.Types.DEPADD, True, OrgProfile.UNIT))
-        t = OrgItemTermin._new1873("ОТДЕЛ ИНФОРМАЦИОННОЙ БЕЗОПАСНОСТИ", OrgItemTermin.Types.DEPADD, True, OrgProfile.UNIT)
+            OrgItemTypeToken.__m_global.add(OrgItemTermin._new1882(s, MorphLang.UA, OrgItemTermin.Types.DEPADD, True, OrgProfile.UNIT))
+        t = OrgItemTermin._new1881("ОТДЕЛ ИНФОРМАЦИОННОЙ БЕЗОПАСНОСТИ", OrgItemTermin.Types.DEPADD, True, OrgProfile.UNIT)
         t.add_variant("ОТДЕЛ ИБ", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1873("ОТДЕЛ ИНФОРМАЦИОННЫХ ТЕХНОЛОГИЙ", OrgItemTermin.Types.DEPADD, True, OrgProfile.UNIT)
+        t = OrgItemTermin._new1881("ОТДЕЛ ИНФОРМАЦИОННЫХ ТЕХНОЛОГИЙ", OrgItemTermin.Types.DEPADD, True, OrgProfile.UNIT)
         t.add_variant("ОТДЕЛ ИТ", False)
         t.add_variant("ОТДЕЛ IT", False)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1784("СЕКТОР", OrgItemTermin.Types.DEP, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1878("КУРС", OrgItemTermin.Types.DEP, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1879("ГРУППА", OrgItemTermin.Types.DEP, True, True, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1880("ГРУПА", MorphLang.UA, OrgItemTermin.Types.DEP, True, True, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1873("ДНЕВНОЕ ОТДЕЛЕНИЕ", OrgItemTermin.Types.DEP, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1874("ДЕННЕ ВІДДІЛЕННЯ", MorphLang.UA, OrgItemTermin.Types.DEP, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1873("ВЕЧЕРНЕЕ ОТДЕЛЕНИЕ", OrgItemTermin.Types.DEP, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1874("ВЕЧІРНЄ ВІДДІЛЕННЯ", MorphLang.UA, OrgItemTermin.Types.DEP, True, OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1868("ДЕЖУРНАЯ ЧАСТЬ", OrgItemTermin.Types.DEP, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1869("ЧЕРГОВА ЧАСТИНА", MorphLang.UA, OrgItemTermin.Types.DEP, True))
-        t = OrgItemTermin._new1887("ПАСПОРТНЫЙ СТОЛ", OrgItemTermin.Types.DEP, True)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1792("СЕКТОР", OrgItemTermin.Types.DEP, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1886("КУРС", OrgItemTermin.Types.DEP, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1887("ГРУППА", OrgItemTermin.Types.DEP, True, True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1888("ГРУПА", MorphLang.UA, OrgItemTermin.Types.DEP, True, True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1881("ДНЕВНОЕ ОТДЕЛЕНИЕ", OrgItemTermin.Types.DEP, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1882("ДЕННЕ ВІДДІЛЕННЯ", MorphLang.UA, OrgItemTermin.Types.DEP, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1881("ВЕЧЕРНЕЕ ОТДЕЛЕНИЕ", OrgItemTermin.Types.DEP, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1882("ВЕЧІРНЄ ВІДДІЛЕННЯ", MorphLang.UA, OrgItemTermin.Types.DEP, True, OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1876("ДЕЖУРНАЯ ЧАСТЬ", OrgItemTermin.Types.DEP, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1877("ЧЕРГОВА ЧАСТИНА", MorphLang.UA, OrgItemTermin.Types.DEP, True))
+        t = OrgItemTermin._new1895("ПАСПОРТНЫЙ СТОЛ", OrgItemTermin.Types.DEP, True)
         t.add_abridge("П/С")
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1888("ПАСПОРТНИЙ СТІЛ", MorphLang.UA, OrgItemTermin.Types.DEP, True)
+        t = OrgItemTermin._new1896("ПАСПОРТНИЙ СТІЛ", MorphLang.UA, OrgItemTermin.Types.DEP, True)
         t.add_abridge("П/С")
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1889("ВЫСШЕЕ УЧЕБНОЕ ЗАВЕДЕНИЕ", OrgItemTermin.Types.PREFIX, OrgProfile.EDUCATION, "ВУЗ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1890("ВИЩИЙ НАВЧАЛЬНИЙ ЗАКЛАД", MorphLang.UA, OrgItemTermin.Types.PREFIX, OrgProfile.EDUCATION, "ВНЗ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1889("ВЫСШЕЕ ПРОФЕССИОНАЛЬНОЕ УЧИЛИЩЕ", OrgItemTermin.Types.PREFIX, OrgProfile.EDUCATION, "ВПУ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1890("ВИЩЕ ПРОФЕСІЙНЕ УЧИЛИЩЕ", MorphLang.UA, OrgItemTermin.Types.PREFIX, OrgProfile.EDUCATION, "ВПУ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1889("НАУЧНО ИССЛЕДОВАТЕЛЬСКИЙ ИНСТИТУТ", OrgItemTermin.Types.PREFIX, OrgProfile.SCIENCE, "НИИ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1890("НАУКОВО ДОСЛІДНИЙ ІНСТИТУТ", MorphLang.UA, OrgItemTermin.Types.PREFIX, OrgProfile.SCIENCE, "НДІ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("НАУЧНО ИССЛЕДОВАТЕЛЬСКИЙ ЦЕНТР", OrgItemTermin.Types.PREFIX, "НИЦ", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1896("НАУКОВО ДОСЛІДНИЙ ЦЕНТР", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НДЦ", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ЦЕНТРАЛЬНЫЙ НАУЧНО ИССЛЕДОВАТЕЛЬСКИЙ ИНСТИТУТ", OrgItemTermin.Types.PREFIX, "ЦНИИ", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ВСЕРОССИЙСКИЙ НАУЧНО ИССЛЕДОВАТЕЛЬСКИЙ ИНСТИТУТ", OrgItemTermin.Types.PREFIX, "ВНИИ", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("РОССИЙСКИЙ НАУЧНО ИССЛЕДОВАТЕЛЬСКИЙ ИНСТИТУТ", OrgItemTermin.Types.PREFIX, "РНИИ", OrgProfile.SCIENCE))
-        t = OrgItemTermin._new1900("ИННОВАЦИОННЫЙ ЦЕНТР", OrgItemTermin.Types.PREFIX, OrgProfile.SCIENCE)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1897("ВЫСШЕЕ УЧЕБНОЕ ЗАВЕДЕНИЕ", OrgItemTermin.Types.PREFIX, OrgProfile.EDUCATION, "ВУЗ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1898("ВИЩИЙ НАВЧАЛЬНИЙ ЗАКЛАД", MorphLang.UA, OrgItemTermin.Types.PREFIX, OrgProfile.EDUCATION, "ВНЗ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1897("ВЫСШЕЕ ПРОФЕССИОНАЛЬНОЕ УЧИЛИЩЕ", OrgItemTermin.Types.PREFIX, OrgProfile.EDUCATION, "ВПУ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1898("ВИЩЕ ПРОФЕСІЙНЕ УЧИЛИЩЕ", MorphLang.UA, OrgItemTermin.Types.PREFIX, OrgProfile.EDUCATION, "ВПУ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1897("НАУЧНО ИССЛЕДОВАТЕЛЬСКИЙ ИНСТИТУТ", OrgItemTermin.Types.PREFIX, OrgProfile.SCIENCE, "НИИ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1898("НАУКОВО ДОСЛІДНИЙ ІНСТИТУТ", MorphLang.UA, OrgItemTermin.Types.PREFIX, OrgProfile.SCIENCE, "НДІ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("НАУЧНО ИССЛЕДОВАТЕЛЬСКИЙ ЦЕНТР", OrgItemTermin.Types.PREFIX, "НИЦ", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1904("НАУКОВО ДОСЛІДНИЙ ЦЕНТР", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НДЦ", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ЦЕНТРАЛЬНЫЙ НАУЧНО ИССЛЕДОВАТЕЛЬСКИЙ ИНСТИТУТ", OrgItemTermin.Types.PREFIX, "ЦНИИ", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ВСЕРОССИЙСКИЙ НАУЧНО ИССЛЕДОВАТЕЛЬСКИЙ ИНСТИТУТ", OrgItemTermin.Types.PREFIX, "ВНИИ", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("РОССИЙСКИЙ НАУЧНО ИССЛЕДОВАТЕЛЬСКИЙ ИНСТИТУТ", OrgItemTermin.Types.PREFIX, "РНИИ", OrgProfile.SCIENCE))
+        t = OrgItemTermin._new1908("ИННОВАЦИОННЫЙ ЦЕНТР", OrgItemTermin.Types.PREFIX, OrgProfile.SCIENCE)
         t.add_variant("ИННОЦЕНТР", False)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("НАУЧНО ТЕХНИЧЕСКИЙ ЦЕНТР", OrgItemTermin.Types.PREFIX, "НТЦ", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1896("НАУКОВО ТЕХНІЧНИЙ ЦЕНТР", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НТЦ", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("НАУЧНО ТЕХНИЧЕСКАЯ ФИРМА", OrgItemTermin.Types.PREFIX, "НТФ", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1896("НАУКОВО ВИРОБНИЧА ФІРМА", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НВФ", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("НАУЧНО ПРОИЗВОДСТВЕННОЕ ОБЪЕДИНЕНИЕ", OrgItemTermin.Types.PREFIX, "НПО", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1896("НАУКОВО ВИРОБНИЧЕ ОБЄДНАННЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НВО", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1900("НАУЧНО ПРОИЗВОДСТВЕННЫЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1896("НАУКОВО-ВИРОБНИЧИЙ КООПЕРАТИВ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НВК", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("НАУЧНО ПРОИЗВОДСТВЕННАЯ КОРПОРАЦИЯ", OrgItemTermin.Types.PREFIX, "НПК", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("НАУЧНО ТЕХНИЧЕСКИЙ КОМПЛЕКС", OrgItemTermin.Types.PREFIX, "НТК", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("МЕЖОТРАСЛЕВОЙ НАУЧНО ТЕХНИЧЕСКИЙ КОМПЛЕКС", OrgItemTermin.Types.PREFIX, "МНТК", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("НАУЧНО ПРОИЗВОДСТВЕННОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "НПП", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1896("НАУКОВО ВИРОБНИЧЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НВП", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("НАУЧНО ПРОИЗВОДСТВЕННЫЙ ЦЕНТР", OrgItemTermin.Types.PREFIX, "НПЦ", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1896("НАУКОВО ВИРОБНИЧЕ ЦЕНТР", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НВЦ", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("НАУЧНО ПРОИЗВОДСТВЕННОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "НПУП", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ЧАСТНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1918("ПРИВАТНЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ПП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ЧАСТНОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧУП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ЧАСТНОЕ ПРОИЗВОДСТВЕННОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧПУП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ЧАСТНОЕ ИНДИВИДУАЛЬНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧИП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ЧАСТНОЕ ОХРАННОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧОП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ЧАСТНАЯ ОХРАННАЯ ОРГАНИЗАЦИЯ", OrgItemTermin.Types.PREFIX, "ЧОО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ЧАСТНОЕ ТРАНСПОРТНОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧТУП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ЧАСТНОЕ ТРАНСПОРТНО ЭКСПЛУАТАЦИОННОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧТЭУП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("НАУЧНО ПРОИЗВОДСТВЕННОЕ КОРПОРАЦИЯ", OrgItemTermin.Types.PREFIX, "НПК"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ФГУП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ГОСУДАРСТВЕННОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ГУП"))
-        t = OrgItemTermin._new1917("ГОСУДАРСТВЕННОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ГП")
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("НАУЧНО ТЕХНИЧЕСКИЙ ЦЕНТР", OrgItemTermin.Types.PREFIX, "НТЦ", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1904("НАУКОВО ТЕХНІЧНИЙ ЦЕНТР", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НТЦ", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("НАУЧНО ТЕХНИЧЕСКАЯ ФИРМА", OrgItemTermin.Types.PREFIX, "НТФ", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1904("НАУКОВО ВИРОБНИЧА ФІРМА", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НВФ", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("НАУЧНО ПРОИЗВОДСТВЕННОЕ ОБЪЕДИНЕНИЕ", OrgItemTermin.Types.PREFIX, "НПО", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1904("НАУКОВО ВИРОБНИЧЕ ОБЄДНАННЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НВО", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1908("НАУЧНО ПРОИЗВОДСТВЕННЫЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1904("НАУКОВО-ВИРОБНИЧИЙ КООПЕРАТИВ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НВК", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("НАУЧНО ПРОИЗВОДСТВЕННАЯ КОРПОРАЦИЯ", OrgItemTermin.Types.PREFIX, "НПК", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("НАУЧНО ТЕХНИЧЕСКИЙ КОМПЛЕКС", OrgItemTermin.Types.PREFIX, "НТК", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("МЕЖОТРАСЛЕВОЙ НАУЧНО ТЕХНИЧЕСКИЙ КОМПЛЕКС", OrgItemTermin.Types.PREFIX, "МНТК", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("НАУЧНО ПРОИЗВОДСТВЕННОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "НПП", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1904("НАУКОВО ВИРОБНИЧЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НВП", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("НАУЧНО ПРОИЗВОДСТВЕННЫЙ ЦЕНТР", OrgItemTermin.Types.PREFIX, "НПЦ", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1904("НАУКОВО ВИРОБНИЧЕ ЦЕНТР", MorphLang.UA, OrgItemTermin.Types.PREFIX, "НВЦ", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("НАУЧНО ПРОИЗВОДСТВЕННОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "НПУП", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ЧАСТНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1926("ПРИВАТНЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ПП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ЧАСТНОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧУП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ЧАСТНОЕ ПРОИЗВОДСТВЕННОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧПУП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ЧАСТНОЕ ИНДИВИДУАЛЬНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧИП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ЧАСТНОЕ ОХРАННОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧОП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ЧАСТНАЯ ОХРАННАЯ ОРГАНИЗАЦИЯ", OrgItemTermin.Types.PREFIX, "ЧОО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ЧАСТНОЕ ТРАНСПОРТНОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧТУП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ЧАСТНОЕ ТРАНСПОРТНО ЭКСПЛУАТАЦИОННОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ЧТЭУП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("НАУЧНО ПРОИЗВОДСТВЕННОЕ КОРПОРАЦИЯ", OrgItemTermin.Types.PREFIX, "НПК"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ФГУП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ГОСУДАРСТВЕННОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ГУП"))
+        t = OrgItemTermin._new1925("ГОСУДАРСТВЕННОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ГП")
         t.add_variant("ГОСПРЕДПРИЯТИЕ", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1918("ДЕРЖАВНЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ДП")
+        t = OrgItemTermin._new1926("ДЕРЖАВНЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ДП")
         t.add_variant("ДЕРЖПІДПРИЄМСТВО", False)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ НАУЧНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФГНУ", OrgProfile.SCIENCE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФГУ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ УЧРЕЖДЕНИЕ КУЛЬТУРЫ", OrgItemTermin.Types.PREFIX, "ФГУК"))
-        t = OrgItemTermin._new1917("ЧАСТНОЕ УЧРЕЖДЕНИЕ КУЛЬТУРЫ", OrgItemTermin.Types.PREFIX, "ЧУК")
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ НАУЧНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФГНУ", OrgProfile.SCIENCE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФГУ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ УЧРЕЖДЕНИЕ КУЛЬТУРЫ", OrgItemTermin.Types.PREFIX, "ФГУК"))
+        t = OrgItemTermin._new1925("ЧАСТНОЕ УЧРЕЖДЕНИЕ КУЛЬТУРЫ", OrgItemTermin.Types.PREFIX, "ЧУК")
         t.add_variant("ЧАСТНОЕ УЧРЕЖДЕНИЕ КУЛЬТУРЫ ЛФП", False)
         t.add_variant("ЧУК ЛФП", False)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФГКУ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ КАЗЕННОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФГКОУ"))
-        t = OrgItemTermin._new1917("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФГБУ")
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФГКУ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ КАЗЕННОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФГКОУ"))
+        t = OrgItemTermin._new1925("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФГБУ")
         t.add_variant("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ НАУКИ", False)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ВОЕННО ПРОМЫШЛЕННАЯ КОРПОРАЦИЯ", OrgItemTermin.Types.PREFIX, "ВПК"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ФЕДЕРАЛЬНОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФБУ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ФЕДЕРАЛЬНОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ФУП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ФЕДЕРАЛЬНОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФКУ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("МУНИЦИПАЛЬНОЕ НЕКОММЕРЧЕСКОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МНУ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("МУНИЦИПАЛЬНОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МБУ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("МУНИЦИПАЛЬНОЕ АВТОНОМНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МАУ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("МУНИЦИПАЛЬНОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МКУ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("МУНИЦИПАЛЬНОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "МУП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("МУНИЦИПАЛЬНОЕ УНИТАРНОЕ ПРОИЗВОДСТВЕННОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "МУПП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("МУНИЦИПАЛЬНОЕ КАЗЕННОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "МКП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("НЕБАНКОВСКАЯ КРЕДИТНАЯ ОРГАНИЗАЦИЯ", OrgItemTermin.Types.PREFIX, "НКО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("РАСЧЕТНАЯ НЕБАНКОВСКАЯ КРЕДИТНАЯ ОРГАНИЗАЦИЯ", OrgItemTermin.Types.PREFIX, "РНКО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГБУ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ГОСУДАРСТВЕННОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГКУ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ГОСУДАРСТВЕННОЕ АВТОНОМНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГАУ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1850("МАЛОЕ ИННОВАЦИОННОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("НЕГОСУДАРСТВЕННЫЙ ПЕНСИОННЫЙ ФОНД", OrgItemTermin.Types.PREFIX, "НПФ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1918("ДЕРЖАВНА АКЦІОНЕРНА КОМПАНІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ДАК"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1918("ДЕРЖАВНА КОМПАНІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ДК"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1918("КОЛЕКТИВНЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "КП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1918("КОЛЕКТИВНЕ МАЛЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "КМП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1918("ВИРОБНИЧА ФІРМА", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ВФ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1918("ВИРОБНИЧЕ ОБЄДНАННЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ВО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1918("ВИРОБНИЧЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ВП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1918("ВИРОБНИЧИЙ КООПЕРАТИВ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ВК"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1918("СТРАХОВА КОМПАНІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "СК"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1918("ТВОРЧЕ ОБЄДНАННЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ТО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ГОСУДАРСТВЕННОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ГУЗ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ФГУЗ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ФЕДЕРАЛЬНОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ФКУЗ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ГОСУДАРСТВЕННОЕ АВТОНОМНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ГАУЗ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ГБУЗ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ГОСУДАРСТВЕННОЕ ОБЛАСТНОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ГОБУЗ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ГОСУДАРСТВЕННОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ГКУЗ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ГОСУДАРСТВЕННОЕ ОБЛАСТНОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ГОКУЗ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("МУНИЦИПАЛЬНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "МУЗ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("НЕГОСУДАРСТВЕННОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "НУЗ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("МУНИЦИПАЛЬНОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "МБУЗ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("МУНИЦИПАЛЬНОЕ ОБЛАСТНОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "МОБУЗ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("МУНИЦИПАЛЬНОЕ АВТОНОМНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "МАУЗ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ОБРАЗОВАНИЯ", OrgItemTermin.Types.PREFIX, "ГБУО", OrgProfile.EDUCATION))
-        t = OrgItemTermin._new1895("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ ПРФЕСИОНАЛЬНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГБПОУ", OrgProfile.EDUCATION)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ВОЕННО ПРОМЫШЛЕННАЯ КОРПОРАЦИЯ", OrgItemTermin.Types.PREFIX, "ВПК"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ФЕДЕРАЛЬНОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФБУ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ФЕДЕРАЛЬНОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "ФУП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ФЕДЕРАЛЬНОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФКУ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("МУНИЦИПАЛЬНОЕ НЕКОММЕРЧЕСКОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МНУ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("МУНИЦИПАЛЬНОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МБУ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("МУНИЦИПАЛЬНОЕ АВТОНОМНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МАУ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("МУНИЦИПАЛЬНОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МКУ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("МУНИЦИПАЛЬНОЕ УНИТАРНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "МУП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("МУНИЦИПАЛЬНОЕ УНИТАРНОЕ ПРОИЗВОДСТВЕННОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "МУПП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("МУНИЦИПАЛЬНОЕ КАЗЕННОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "МКП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("МУНИЦИПАЛЬНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, "МП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("НЕБАНКОВСКАЯ КРЕДИТНАЯ ОРГАНИЗАЦИЯ", OrgItemTermin.Types.PREFIX, "НКО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("РАСЧЕТНАЯ НЕБАНКОВСКАЯ КРЕДИТНАЯ ОРГАНИЗАЦИЯ", OrgItemTermin.Types.PREFIX, "РНКО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГБУ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ГОСУДАРСТВЕННОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГКУ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ГОСУДАРСТВЕННОЕ АВТОНОМНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГАУ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1858("МАЛОЕ ИННОВАЦИОННОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("НЕГОСУДАРСТВЕННЫЙ ПЕНСИОННЫЙ ФОНД", OrgItemTermin.Types.PREFIX, "НПФ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1926("ДЕРЖАВНА АКЦІОНЕРНА КОМПАНІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ДАК"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1926("ДЕРЖАВНА КОМПАНІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ДК"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1926("КОЛЕКТИВНЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "КП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1926("КОЛЕКТИВНЕ МАЛЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "КМП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1926("ВИРОБНИЧА ФІРМА", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ВФ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1926("ВИРОБНИЧЕ ОБЄДНАННЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ВО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1926("ВИРОБНИЧЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ВП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1926("ВИРОБНИЧИЙ КООПЕРАТИВ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ВК"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1926("СТРАХОВА КОМПАНІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "СК"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1926("ТВОРЧЕ ОБЄДНАННЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ТО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ГОСУДАРСТВЕННОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ГУЗ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ФГУЗ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ФЕДЕРАЛЬНОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ФКУЗ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ГОСУДАРСТВЕННОЕ АВТОНОМНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ГАУЗ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ГБУЗ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ГОСУДАРСТВЕННОЕ ОБЛАСТНОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ГОБУЗ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ГОСУДАРСТВЕННОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ГКУЗ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ГОСУДАРСТВЕННОЕ ОБЛАСТНОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "ГОКУЗ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("МУНИЦИПАЛЬНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "МУЗ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("НЕГОСУДАРСТВЕННОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "НУЗ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("МУНИЦИПАЛЬНОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "МБУЗ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("МУНИЦИПАЛЬНОЕ ОБЛАСТНОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "МОБУЗ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("МУНИЦИПАЛЬНОЕ АВТОНОМНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "МАУЗ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ОБРАЗОВАНИЯ", OrgItemTermin.Types.PREFIX, "ГБУО", OrgProfile.EDUCATION))
+        t = OrgItemTermin._new1903("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ ПРФЕСИОНАЛЬНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГБПОУ", OrgProfile.EDUCATION)
         t.add_variant("ГБ ПОУ", True)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ ОБЩЕОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГБОУ", OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ДОПОЛНИТЕЛЬНОГО ОБРАЗОВАНИЯ", OrgItemTermin.Types.PREFIX, "ГБУДО", OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("МУНИЦИПАЛЬНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МОУ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("МУНИЦИПАЛЬНОЕ КАЗЕННОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МКОУ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("МУНИЦИПАЛЬНОЕ ЛЕЧЕБНО ПРОФИЛАКТИЧЕСКОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МЛПУ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ФЕДЕРАЛЬНОЕ КАЗЕННОЕ ЛЕЧЕБНО ПРОФИЛАКТИЧЕСКОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФКЛПУ", OrgProfile.MEDICINE))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ГОСУДАРСТВЕННОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГОУ", OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГБОУ", OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФГБОУ", OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ВЫСШЕЕ ПРОФЕССИОНАЛЬНОЕ ОБРАЗОВАНИЕ", OrgItemTermin.Types.PREFIX, "ВПО", OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1895("ДОПОЛНИТЕЛЬНОЕ ПРОФЕССИОНАЛЬНОЕ ОБРАЗОВАНИЕ", OrgItemTermin.Types.PREFIX, "ДПО", OrgProfile.EDUCATION))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1992("ДЕПАРТАМЕНТ ЕДИНОГО ЗАКАЗЧИКА", OrgItemTermin.Types.PREFIX, "ДЕЗ", True, True))
-        t = OrgItemTermin._new1993("СОЮЗ АРБИТРАЖНЫХ УПРАВЛЯЮЩИХ", OrgItemTermin.Types.PREFIX, "САУ", True)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ ОБЩЕОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГБОУ", OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ДОПОЛНИТЕЛЬНОГО ОБРАЗОВАНИЯ", OrgItemTermin.Types.PREFIX, "ГБУДО", OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("МУНИЦИПАЛЬНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МОУ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("МУНИЦИПАЛЬНОЕ КАЗЕННОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МКОУ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("МУНИЦИПАЛЬНОЕ ЛЕЧЕБНО ПРОФИЛАКТИЧЕСКОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "МЛПУ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ФЕДЕРАЛЬНОЕ КАЗЕННОЕ ЛЕЧЕБНО ПРОФИЛАКТИЧЕСКОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФКЛПУ", OrgProfile.MEDICINE))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ГОСУДАРСТВЕННОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГОУ", OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ГБОУ", OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ", OrgItemTermin.Types.PREFIX, "ФГБОУ", OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ВЫСШЕЕ ПРОФЕССИОНАЛЬНОЕ ОБРАЗОВАНИЕ", OrgItemTermin.Types.PREFIX, "ВПО", OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1903("ДОПОЛНИТЕЛЬНОЕ ПРОФЕССИОНАЛЬНОЕ ОБРАЗОВАНИЕ", OrgItemTermin.Types.PREFIX, "ДПО", OrgProfile.EDUCATION))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2001("ДЕПАРТАМЕНТ ЕДИНОГО ЗАКАЗЧИКА", OrgItemTermin.Types.PREFIX, "ДЕЗ", True, True))
+        t = OrgItemTermin._new2002("СОЮЗ АРБИТРАЖНЫХ УПРАВЛЯЮЩИХ", OrgItemTermin.Types.PREFIX, "САУ", True)
         t.add_variant("САМОРЕГУЛИРУЕМАЯ ОРГАНИЗАЦИЯ АРБИТРАЖНЫХ УПРАВЛЯЮЩИХ", False)
         t.add_variant("СОАУ", False)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "АО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1995("АКЦІОНЕРНЕ ТОВАРИСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АТ"))
-        OrgItemTypeToken.__m_sovm_pred = OrgItemTermin._new1994("СОВМЕСТНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, True, "СП")
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "АО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2004("АКЦІОНЕРНЕ ТОВАРИСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АТ"))
+        OrgItemTypeToken.__m_sovm_pred = OrgItemTermin._new2003("СОВМЕСТНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, True, "СП")
         OrgItemTypeToken.__m_global.add(OrgItemTypeToken.__m_sovm_pred)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1995("СПІЛЬНЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "СП"))
-        OrgItemTypeToken.__m_akcion_comp = OrgItemTermin._new1998("АКЦИОНЕРНАЯ КОМПАНИЯ", OrgItemTermin.Types.PREFIX, True)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2004("СПІЛЬНЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "СП"))
+        OrgItemTypeToken.__m_akcion_comp = OrgItemTermin._new2007("АКЦИОНЕРНАЯ КОМПАНИЯ", OrgItemTermin.Types.PREFIX, True)
         OrgItemTypeToken.__m_global.add(OrgItemTypeToken.__m_akcion_comp)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("ЗАКРЫТОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "ЗАО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2000("РОССИЙСКОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "РАО", "PAO"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("РОССИЙСКОЕ ОТКРЫТОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "РОАО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("АКЦИОНЕРНОЕ ОБЩЕСТВО ЗАКРЫТОГО ТИПА", OrgItemTermin.Types.PREFIX, True, "АОЗТ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1995("АКЦІОНЕРНЕ ТОВАРИСТВО ЗАКРИТОГО ТИПУ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АТЗТ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("АКЦИОНЕРНОЕ ОБЩЕСТВО ОТКРЫТОГО ТИПА", OrgItemTermin.Types.PREFIX, True, "АООТ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1995("АКЦІОНЕРНЕ ТОВАРИСТВО ВІДКРИТОГО ТИПУ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АТВТ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("ОБЩЕСТВЕННАЯ ОРГАНИЗАЦИЯ", OrgItemTermin.Types.PREFIX, True, "ОО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1995("ГРОМАДСЬКА ОРГАНІЗАЦІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ГО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("АВТОНОМНАЯ НЕКОММЕРЧЕСКАЯ ОРГАНИЗАЦИЯ", OrgItemTermin.Types.PREFIX, True, "АНО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1995("АВТОНОМНА НЕКОМЕРЦІЙНА ОРГАНІЗАЦІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АНО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2000("ОТКРЫТОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "ОАО", "OAO"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2011("ВІДКРИТЕ АКЦІОНЕРНЕ ТОВАРИСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ВАТ", "ВАТ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("ОТКРЫТОЕ СТРАХОВОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "ОСАО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2000("ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ", OrgItemTermin.Types.PREFIX, True, "ООО", "OOO"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2011("ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ТОВ", "ТОВ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2011("ТОВАРИСТВО З ПОВНОЮ ВІДПОВІДАЛЬНІСТЮ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ТПВ", "ТПВ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2011("ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ТЗОВ", "ТЗОВ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2011("ТОВАРИСТВО З ДОДАТКОВОЮ ВІДПОВІДАЛЬНІСТЮ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ТДВ", "ТДВ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1998("ЧАСТНОЕ АКЦИОНЕРНОЕ ТОВАРИЩЕСТВО", OrgItemTermin.Types.PREFIX, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2011("ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ПРАТ", "ПРАТ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1998("ПУБЛИЧНОЕ АКЦИОНЕРНОЕ ТОВАРИЩЕСТВО", OrgItemTermin.Types.PREFIX, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2011("ПУБЛІЧНЕ АКЦІОНЕРНЕ ТОВАРИСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ПАТ", "ПАТ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1998("ЗАКРЫТОЕ АКЦИОНЕРНОЕ ТОВАРИЩЕСТВО", OrgItemTermin.Types.PREFIX, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2011("ЗАКРИТЕ АКЦІОНЕРНЕ ТОВАРИСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ЗАТ", "ЗАТ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1998("ОТКРЫТОЕ АКЦИОНЕРНОЕ ТОВАРИЩЕСТВО", OrgItemTermin.Types.PREFIX, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2011("ВІДКРИТЕ АКЦІОНЕРНЕ ТОВАРИСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ВАТ", "ВАТ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("ПУБЛИЧНОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "ПАО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("СТРАХОВОЕ ПУБЛИЧНОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "СПАО"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2028("ТОВАРИЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ", OrgItemTermin.Types.PREFIX, "ТОО", "TOO"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1917("ПРЕДПРИНИМАТЕЛЬ БЕЗ ОБРАЗОВАНИЯ ЮРИДИЧЕСКОГО ЛИЦА", OrgItemTermin.Types.PREFIX, "ПБОЮЛ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("АКЦИОНЕРНЫЙ КОММЕРЧЕСКИЙ БАНК", OrgItemTermin.Types.PREFIX, True, "АКБ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1995("АКЦІОНЕРНИЙ КОМЕРЦІЙНИЙ БАНК", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АКБ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("АКЦИОНЕРНЫЙ БАНК", OrgItemTermin.Types.PREFIX, True, "АБ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1995("АКЦІОНЕРНИЙ БАНК", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АБ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1998("КОММЕРЧЕСКИЙ БАНК", OrgItemTermin.Types.PREFIX, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2035("КОМЕРЦІЙНИЙ БАНК", MorphLang.UA, OrgItemTermin.Types.PREFIX, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1998("КОНСТРУКТОРСКОЕ БЮРО", OrgItemTermin.Types.PREFIX, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2035("КОНСТРУКТОРСЬКЕ БЮРО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("ОПЫТНО КОНСТРУКТОРСКОЕ БЮРО", OrgItemTermin.Types.PREFIX, True, "ОКБ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1995("ДОСЛІДНО КОНСТРУКТОРСЬКЕ БЮРО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ДКБ"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1993("СПЕЦИАЛЬНОЕ КОНСТРУКТОРСКОЕ БЮРО", OrgItemTermin.Types.PREFIX, "СКБ", True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2041("СПЕЦІАЛЬНЕ КОНСТРУКТОРСЬКЕ БЮРО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "СКБ", True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("АКЦИОНЕРНАЯ СТРАХОВАЯ КОМПАНИЯ", OrgItemTermin.Types.PREFIX, True, "АСК"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1995("АКЦІОНЕРНА СТРАХОВА КОМПАНІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АСК"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2044("АВТОТРАНСПОРТНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, True, True, "АТП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2045("АВТОТРАНСПОРТНЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, True, "АТП"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1994("ТЕЛЕРАДИОКОМПАНИЯ", OrgItemTermin.Types.PREFIX, True, "ТРК"))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1995("ТЕЛЕРАДІОКОМПАНІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ТРК"))
-        t = OrgItemTermin._new1993("ОРГАНИЗОВАННАЯ ПРЕСТУПНАЯ ГРУППИРОВКА", OrgItemTermin.Types.PREFIX, "ОПГ", True)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("ЗАКРЫТОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "ЗАО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2009("РОССИЙСКОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "РАО", "PAO"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("РОССИЙСКОЕ ОТКРЫТОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "РОАО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("АКЦИОНЕРНОЕ ОБЩЕСТВО ЗАКРЫТОГО ТИПА", OrgItemTermin.Types.PREFIX, True, "АОЗТ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2004("АКЦІОНЕРНЕ ТОВАРИСТВО ЗАКРИТОГО ТИПУ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АТЗТ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("АКЦИОНЕРНОЕ ОБЩЕСТВО ОТКРЫТОГО ТИПА", OrgItemTermin.Types.PREFIX, True, "АООТ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2004("АКЦІОНЕРНЕ ТОВАРИСТВО ВІДКРИТОГО ТИПУ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АТВТ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("ОБЩЕСТВЕННАЯ ОРГАНИЗАЦИЯ", OrgItemTermin.Types.PREFIX, True, "ОО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2004("ГРОМАДСЬКА ОРГАНІЗАЦІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ГО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("АВТОНОМНАЯ НЕКОММЕРЧЕСКАЯ ОРГАНИЗАЦИЯ", OrgItemTermin.Types.PREFIX, True, "АНО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2004("АВТОНОМНА НЕКОМЕРЦІЙНА ОРГАНІЗАЦІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АНО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2009("ОТКРЫТОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "ОАО", "OAO"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2020("ВІДКРИТЕ АКЦІОНЕРНЕ ТОВАРИСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ВАТ", "ВАТ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("ОТКРЫТОЕ СТРАХОВОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "ОСАО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2009("ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ", OrgItemTermin.Types.PREFIX, True, "ООО", "OOO"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2020("ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ТОВ", "ТОВ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2020("ТОВАРИСТВО З ПОВНОЮ ВІДПОВІДАЛЬНІСТЮ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ТПВ", "ТПВ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2020("ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ТЗОВ", "ТЗОВ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2020("ТОВАРИСТВО З ДОДАТКОВОЮ ВІДПОВІДАЛЬНІСТЮ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ТДВ", "ТДВ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2007("ЧАСТНОЕ АКЦИОНЕРНОЕ ТОВАРИЩЕСТВО", OrgItemTermin.Types.PREFIX, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2020("ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ПРАТ", "ПРАТ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2007("ПУБЛИЧНОЕ АКЦИОНЕРНОЕ ТОВАРИЩЕСТВО", OrgItemTermin.Types.PREFIX, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2020("ПУБЛІЧНЕ АКЦІОНЕРНЕ ТОВАРИСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ПАТ", "ПАТ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2007("ЗАКРЫТОЕ АКЦИОНЕРНОЕ ТОВАРИЩЕСТВО", OrgItemTermin.Types.PREFIX, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2020("ЗАКРИТЕ АКЦІОНЕРНЕ ТОВАРИСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ЗАТ", "ЗАТ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2007("ОТКРЫТОЕ АКЦИОНЕРНОЕ ТОВАРИЩЕСТВО", OrgItemTermin.Types.PREFIX, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2020("ВІДКРИТЕ АКЦІОНЕРНЕ ТОВАРИСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ВАТ", "ВАТ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("ПУБЛИЧНОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "ПАО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("СТРАХОВОЕ ПУБЛИЧНОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО", OrgItemTermin.Types.PREFIX, True, "СПАО"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2037("ТОВАРИЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ", OrgItemTermin.Types.PREFIX, "ТОО", "TOO"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1925("ПРЕДПРИНИМАТЕЛЬ БЕЗ ОБРАЗОВАНИЯ ЮРИДИЧЕСКОГО ЛИЦА", OrgItemTermin.Types.PREFIX, "ПБОЮЛ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("АКЦИОНЕРНЫЙ КОММЕРЧЕСКИЙ БАНК", OrgItemTermin.Types.PREFIX, True, "АКБ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2004("АКЦІОНЕРНИЙ КОМЕРЦІЙНИЙ БАНК", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АКБ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("АКЦИОНЕРНЫЙ БАНК", OrgItemTermin.Types.PREFIX, True, "АБ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2004("АКЦІОНЕРНИЙ БАНК", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АБ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2007("КОММЕРЧЕСКИЙ БАНК", OrgItemTermin.Types.PREFIX, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2044("КОМЕРЦІЙНИЙ БАНК", MorphLang.UA, OrgItemTermin.Types.PREFIX, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2007("КОНСТРУКТОРСКОЕ БЮРО", OrgItemTermin.Types.PREFIX, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2044("КОНСТРУКТОРСЬКЕ БЮРО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("ОПЫТНО КОНСТРУКТОРСКОЕ БЮРО", OrgItemTermin.Types.PREFIX, True, "ОКБ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2004("ДОСЛІДНО КОНСТРУКТОРСЬКЕ БЮРО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ДКБ"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2002("СПЕЦИАЛЬНОЕ КОНСТРУКТОРСКОЕ БЮРО", OrgItemTermin.Types.PREFIX, "СКБ", True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2050("СПЕЦІАЛЬНЕ КОНСТРУКТОРСЬКЕ БЮРО", MorphLang.UA, OrgItemTermin.Types.PREFIX, "СКБ", True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("АКЦИОНЕРНАЯ СТРАХОВАЯ КОМПАНИЯ", OrgItemTermin.Types.PREFIX, True, "АСК"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2004("АКЦІОНЕРНА СТРАХОВА КОМПАНІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "АСК"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2053("АВТОТРАНСПОРТНОЕ ПРЕДПРИЯТИЕ", OrgItemTermin.Types.PREFIX, True, True, "АТП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2054("АВТОТРАНСПОРТНЕ ПІДПРИЄМСТВО", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, True, "АТП"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2003("ТЕЛЕРАДИОКОМПАНИЯ", OrgItemTermin.Types.PREFIX, True, "ТРК"))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2004("ТЕЛЕРАДІОКОМПАНІЯ", MorphLang.UA, OrgItemTermin.Types.PREFIX, True, "ТРК"))
+        t = OrgItemTermin._new2002("ОРГАНИЗОВАННАЯ ПРЕСТУПНАЯ ГРУППИРОВКА", OrgItemTermin.Types.PREFIX, "ОПГ", True)
         t.add_variant("ОРГАНИЗОВАННАЯ ПРЕСТУПНАЯ ГРУППА", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1993("ОРГАНИЗОВАННОЕ ПРЕСТУПНОЕ СООБЩЕСТВО", OrgItemTermin.Types.PREFIX, "ОПС", True)
+        t = OrgItemTermin._new2002("ОРГАНИЗОВАННОЕ ПРЕСТУПНОЕ СООБЩЕСТВО", OrgItemTermin.Types.PREFIX, "ОПС", True)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2050("ПОДРОСТКОВО МОЛОДЕЖНЫЙ КЛУБ", OrgItemTermin.Types.PREFIX, "ПМК", True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2050("СКЛАД ВРЕМЕННОГО ХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "СВХ", True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2050("ЖИЛИЩНО СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ЖСК", True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2050("ГАРАЖНО СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ГСК", True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2050("ГАРАЖНО ЭКСПЛУАТАЦИОННЫЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ГЭК", True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2050("ГАРАЖНО ПОТРЕБИТЕЛЬСКИЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ГПК", True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2050("ПОТРЕБИТЕЛЬСКИЙ ГАРАЖНО СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ПГСК", True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2050("ГАРАЖНЫЙ СТРОИТЕЛЬНО ПОТРЕБИТЕЛЬСКИЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ГСПК", True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2050("ДАЧНО СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ДСК", True, True))
-        t = OrgItemTermin._new2050("САДОВОЕ НЕКОММЕРЧЕСКОЕ ТОВАРИЩЕСТВО", OrgItemTermin.Types.PREFIX, "СНТ", True, True)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2059("ПОДРОСТКОВО МОЛОДЕЖНЫЙ КЛУБ", OrgItemTermin.Types.PREFIX, "ПМК", True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2059("СКЛАД ВРЕМЕННОГО ХРАНЕНИЯ", OrgItemTermin.Types.PREFIX, "СВХ", True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2059("ЖИЛИЩНО СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ЖСК", True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2059("ГАРАЖНО СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ГСК", True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2059("ГАРАЖНО ЭКСПЛУАТАЦИОННЫЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ГЭК", True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2059("ГАРАЖНО ПОТРЕБИТЕЛЬСКИЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ГПК", True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2059("ПОТРЕБИТЕЛЬСКИЙ ГАРАЖНО СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ПГСК", True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2059("ГАРАЖНЫЙ СТРОИТЕЛЬНО ПОТРЕБИТЕЛЬСКИЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ГСПК", True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2059("ДАЧНО СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", OrgItemTermin.Types.PREFIX, "ДСК", True, True))
+        t = OrgItemTermin._new2059("САДОВОЕ НЕКОММЕРЧЕСКОЕ ТОВАРИЩЕСТВО", OrgItemTermin.Types.PREFIX, "СНТ", True, True)
         t.add_abridge("САДОВОЕ НЕКОМ-Е ТОВАРИЩЕСТВО")
         t.add_variant("СНТ ПМК", False)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2050("ПРЕДПРИЯТИЕ ПОТРЕБИТЕЛЬСКОЙ КООПЕРАЦИИ", OrgItemTermin.Types.PREFIX, "ППК", True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2061("ПІДПРИЄМСТВО СПОЖИВЧОЇ КООПЕРАЦІЇ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ПСК", True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2062("ФІЗИЧНА ОСОБА ПІДПРИЄМЕЦЬ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ФОП", True, True))
-        t = OrgItemTermin._new2063("ЖЕЛЕЗНАЯ ДОРОГА", OrgItemTermin.Types.ORG, OrgProfile.TRANSPORT, True, 3)
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2059("ПРЕДПРИЯТИЕ ПОТРЕБИТЕЛЬСКОЙ КООПЕРАЦИИ", OrgItemTermin.Types.PREFIX, "ППК", True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2070("ПІДПРИЄМСТВО СПОЖИВЧОЇ КООПЕРАЦІЇ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ПСК", True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2071("ФІЗИЧНА ОСОБА ПІДПРИЄМЕЦЬ", MorphLang.UA, OrgItemTermin.Types.PREFIX, "ФОП", True, True))
+        t = OrgItemTermin._new2072("ЖЕЛЕЗНАЯ ДОРОГА", OrgItemTermin.Types.ORG, OrgProfile.TRANSPORT, True, 3)
         t.add_variant("ЖЕЛЕЗНОДОРОЖНАЯ МАГИСТРАЛЬ", False)
         t.add_abridge("Ж.Д.")
         t.add_abridge("Ж/Д")
         t.add_abridge("ЖЕЛ.ДОР.")
         OrgItemTypeToken.__m_global.add(t)
         for s in ["ЗАВОД", "ФАБРИКА", "БАНК", "КОМБИНАТ", "БАНКОВСКАЯ ГРУППА", "БИРЖА", "ФОНДОВАЯ БИРЖА", "FACTORY", "MANUFACTORY", "BANK"]: 
-            t = OrgItemTermin._new2064(s, 3.5, OrgItemTermin.Types.ORG, True, True)
+            t = OrgItemTermin._new2073(s, 3.5, OrgItemTermin.Types.ORG, True, True)
             OrgItemTypeToken.__m_global.add(t)
             if (s == "БАНК" or s == "BANK" or s.endswith("БИРЖА")): 
                 t._profile = OrgProfile.FINANCE
-                t.coeff = 2
+                t.coeff = (2)
                 t.can_has_latin_name = True
                 if (OrgItemTypeToken.__m_bank is None): 
                     OrgItemTypeToken.__m_bank = t
         for s in ["ЗАВОД", "ФАБРИКА", "БАНК", "КОМБІНАТ", "БАНКІВСЬКА ГРУПА", "БІРЖА", "ФОНДОВА БІРЖА"]: 
-            t = OrgItemTermin._new2065(s, MorphLang.UA, 3.5, OrgItemTermin.Types.ORG, True, True)
+            t = OrgItemTermin._new2074(s, MorphLang.UA, 3.5, OrgItemTermin.Types.ORG, True, True)
             OrgItemTypeToken.__m_global.add(t)
             if (s == "БАНК" or s.endswith("БІРЖА")): 
-                t.coeff = 2
+                t.coeff = (2)
                 t.can_has_latin_name = True
                 if (OrgItemTypeToken.__m_bank is None): 
                     OrgItemTypeToken.__m_bank = t
         for s in ["ТУРФИРМА", "ТУРАГЕНТСТВО", "ТУРКОМПАНИЯ", "АВИАКОМПАНИЯ", "КИНОСТУДИЯ", "БИЗНЕС-ЦЕНТР", "КООПЕРАТИВ", "РИТЕЙЛЕР", "ОНЛАЙН РИТЕЙЛЕР", "МЕДИАГИГАНТ", "МЕДИАКОМПАНИЯ", "МЕДИАХОЛДИНГ"]: 
-            t = OrgItemTermin._new2066(s, 3.5, OrgItemTermin.Types.ORG, True, True, True)
+            t = OrgItemTermin._new2075(s, 3.5, OrgItemTermin.Types.ORG, True, True, True)
             if (s.startswith("МЕДИА")): 
                 t.profiles.append(OrgProfile.MEDIA)
             if ("РИТЕЙЛЕР" in s): 
                 t.add_variant(s.replace("РИТЕЙЛЕР", "РЕТЕЙЛЕР"), False)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ТУРФІРМА", "ТУРАГЕНТСТВО", "ТУРКОМПАНІЯ", "АВІАКОМПАНІЯ", "КІНОСТУДІЯ", "БІЗНЕС-ЦЕНТР", "КООПЕРАТИВ", "РІТЕЙЛЕР", "ОНЛАЙН-РІТЕЙЛЕР", "МЕДІАГІГАНТ", "МЕДІАКОМПАНІЯ", "МЕДІАХОЛДИНГ"]: 
-            t = OrgItemTermin._new2067(s, MorphLang.UA, 3.5, OrgItemTermin.Types.ORG, True, True, True)
+            t = OrgItemTermin._new2076(s, MorphLang.UA, 3.5, OrgItemTermin.Types.ORG, True, True, True)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ТУРОПЕРАТОР"]: 
-            t = OrgItemTermin._new2066(s, 0.5, OrgItemTermin.Types.ORG, True, True, True)
+            t = OrgItemTermin._new2075(s, .5, OrgItemTermin.Types.ORG, True, True, True)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ТУРОПЕРАТОР"]: 
-            t = OrgItemTermin._new2067(s, MorphLang.UA, 0.5, OrgItemTermin.Types.ORG, True, True, True)
+            t = OrgItemTermin._new2076(s, MorphLang.UA, .5, OrgItemTermin.Types.ORG, True, True, True)
             OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2070("СБЕРЕГАТЕЛЬНЫЙ БАНК", 4, OrgItemTermin.Types.ORG, True)
+        t = OrgItemTermin._new2079("СБЕРЕГАТЕЛЬНЫЙ БАНК", 4, OrgItemTermin.Types.ORG, True)
         OrgItemTypeToken.__m_sber_bank = t
         t.add_variant("СБЕРБАНК", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2071("ОЩАДНИЙ БАНК", MorphLang.UA, 4, OrgItemTermin.Types.ORG, True)
+        t = OrgItemTermin._new2080("ОЩАДНИЙ БАНК", MorphLang.UA, 4, OrgItemTermin.Types.ORG, True)
         t.add_variant("ОЩАДБАНК", False)
         OrgItemTypeToken.__m_global.add(t)
         for s in ["ОРГАНИЗАЦИЯ", "ПРЕДПРИЯТИЕ", "КОМИТЕТ", "КОМИССИЯ", "ПРОИЗВОДИТЕЛЬ", "ГИГАНТ", "ORGANIZATION", "ENTERPRISE", "COMMITTEE", "COMMISSION", "MANUFACTURER"]: 
-            t = OrgItemTermin._new2072(s, OrgItemTermin.Types.ORG, True, True, True)
+            t = OrgItemTermin._new2081(s, OrgItemTermin.Types.ORG, True, True, True)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ОБЩЕСТВО", "АССАМБЛЕЯ", "СЛУЖБА", "ОБЪЕДИНЕНИЕ", "ФЕДЕРАЦИЯ", "COMPANY", "ASSEMBLY", "SERVICE", "UNION", "FEDERATION"]: 
-            t = OrgItemTermin._new2072(s, OrgItemTermin.Types.ORG, True, True, True)
+            t = OrgItemTermin._new2081(s, OrgItemTermin.Types.ORG, True, True, True)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["СООБЩЕСТВО", "ФОНД", "АССОЦИАЦИЯ", "АЛЬЯНС", "ГИЛЬДИЯ", "ОБЩИНА", "СОЮЗ", "КЛУБ", "ГРУППИРОВКА", "ЛИГА", "COMMUNITY", "FOUNDATION", "ASSOCIATION", "ALLIANCE", "GUILD", "UNION", "CLUB", "GROUP", "LEAGUE"]: 
-            t = OrgItemTermin._new2074(s, 3, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.UNION)
+            t = OrgItemTermin._new2083(s, 3, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.UNION)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ПАРТИЯ", "ДВИЖЕНИЕ", "PARTY", "MOVEMENT"]: 
-            t = OrgItemTermin._new2075(s, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.UNION)
+            t = OrgItemTermin._new2084(s, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.UNION)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["НОЧНОЙ КЛУБ", "NIGHTCLUB"]: 
-            t = OrgItemTermin._new2076(s, OrgItemTermin.Types.ORG, True, True, OrgProfile.MUSIC)
+            t = OrgItemTermin._new2085(s, OrgItemTermin.Types.ORG, True, True, OrgProfile.MUSIC)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ОРГАНІЗАЦІЯ", "ПІДПРИЄМСТВО", "КОМІТЕТ", "КОМІСІЯ", "ВИРОБНИК", "ГІГАНТ", "СУСПІЛЬСТВО", "СПІЛЬНОТА", "ФОНД", "СЛУЖБА", "АСОЦІАЦІЯ", "АЛЬЯНС", "АСАМБЛЕЯ", "ГІЛЬДІЯ", "ОБЄДНАННЯ", "СОЮЗ", "ПАРТІЯ", "РУХ", "ФЕДЕРАЦІЯ", "КЛУБ", "ГРУПУВАННЯ"]: 
-            t = OrgItemTermin._new2077(s, MorphLang.UA, OrgItemTermin.Types.ORG, True, True, True)
+            t = OrgItemTermin._new2086(s, MorphLang.UA, OrgItemTermin.Types.ORG, True, True, True)
             OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2078("ДЕПУТАТСКАЯ ГРУППА", OrgItemTermin.Types.ORG, 3, True)
+        t = OrgItemTermin._new2087("ДЕПУТАТСКАЯ ГРУППА", OrgItemTermin.Types.ORG, 3, True)
         t.add_variant("ГРУППА ДЕПУТАТОВ", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2079("ДЕПУТАТСЬКА ГРУПА", MorphLang.UA, OrgItemTermin.Types.ORG, 3, True)
+        t = OrgItemTermin._new2088("ДЕПУТАТСЬКА ГРУПА", MorphLang.UA, OrgItemTermin.Types.ORG, 3, True)
         t.add_variant("ГРУПА ДЕПУТАТІВ", False)
         OrgItemTypeToken.__m_global.add(t)
         for s in ["ФОНД", "СОЮЗ", "ОБЪЕДИНЕНИЕ", "ОРГАНИЗАЦИЯ", "ФЕДЕРАЦИЯ", "ДВИЖЕНИЕ"]: 
             for ss in ["ВСЕМИРНЫЙ", "МЕЖДУНАРОДНЫЙ", "ВСЕРОССИЙСКИЙ", "ОБЩЕСТВЕННЫЙ", "НЕКОММЕРЧЕСКИЙ", "ЕВРОПЕЙСКИЙ", "ВСЕУКРАИНСКИЙ"]: 
-                t = OrgItemTermin._new2064("{0} {1}".format(ss, s), 3.5, OrgItemTermin.Types.ORG, True, True)
+                t = OrgItemTermin._new2073("{0} {1}".format(ss, s), 3.5, OrgItemTermin.Types.ORG, True, True)
                 if (s == "ОБЪЕДИНЕНИЕ" or s == "ДВИЖЕНИЕ"): 
-                    t.canonic_text = "{0}ОЕ {1}".format(ss[0 : (len(ss) - 2)], s)
+                    t.canonic_text = "{0}ОЕ {1}".format(ss[0:0+len(ss) - 2], s)
                 elif (s == "ОРГАНИЗАЦИЯ" or s == "ФЕДЕРАЦИЯ"): 
-                    t.canonic_text = "{0}АЯ {1}".format(ss[0 : (len(ss) - 2)], s)
-                    t.coeff = 3
+                    t.canonic_text = "{0}АЯ {1}".format(ss[0:0+len(ss) - 2], s)
+                    t.coeff = (3)
                 OrgItemTypeToken.__m_global.add(t)
         for s in ["ФОНД", "СОЮЗ", "ОБЄДНАННЯ", "ОРГАНІЗАЦІЯ", "ФЕДЕРАЦІЯ", "РУХ"]: 
             for ss in ["СВІТОВИЙ", "МІЖНАРОДНИЙ", "ВСЕРОСІЙСЬКИЙ", "ГРОМАДСЬКИЙ", "НЕКОМЕРЦІЙНИЙ", "ЄВРОПЕЙСЬКИЙ", "ВСЕУКРАЇНСЬКИЙ"]: 
-                t = OrgItemTermin._new2065("{0} {1}".format(ss, s), MorphLang.UA, 3.5, OrgItemTermin.Types.ORG, True, True)
+                t = OrgItemTermin._new2074("{0} {1}".format(ss, s), MorphLang.UA, 3.5, OrgItemTermin.Types.ORG, True, True)
                 bi = Morphology.get_word_base_info(s, MorphLang.UA, False, False)
                 if (bi is not None and bi.gender != MorphGender.MASCULINE): 
                     adj = Morphology.get_wordform(ss, MorphBaseInfo._new504(MorphClass.ADJECTIVE, bi.gender, MorphNumber.SINGULAR, MorphLang.UA))
                     if (adj is not None): 
                         t.canonic_text = "{0} {1}".format(adj, s)
                 if (s == "ОРГАНІЗАЦІЯ" or s == "ФЕДЕРАЦІЯ"): 
-                    t.coeff = 3
+                    t.coeff = (3)
                 OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2064("ИНВЕСТИЦИОННЫЙ ФОНД", 3, OrgItemTermin.Types.ORG, True, True)
+        t = OrgItemTermin._new2073("ИНВЕСТИЦИОННЫЙ ФОНД", 3, OrgItemTermin.Types.ORG, True, True)
         t.add_variant("ИНВЕСТФОНД", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2065("ІНВЕСТИЦІЙНИЙ ФОНД", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True)
+        t = OrgItemTermin._new2074("ІНВЕСТИЦІЙНИЙ ФОНД", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True)
         t.add_variant("ІНВЕСТФОНД", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2064("СОЦИАЛЬНАЯ СЕТЬ", 3, OrgItemTermin.Types.ORG, True, True)
+        t = OrgItemTermin._new2073("СОЦИАЛЬНАЯ СЕТЬ", 3, OrgItemTermin.Types.ORG, True, True)
         t.add_variant("СОЦСЕТЬ", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2065("СОЦІАЛЬНА МЕРЕЖА", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True)
+        t = OrgItemTermin._new2074("СОЦІАЛЬНА МЕРЕЖА", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True)
         t.add_variant("СОЦМЕРЕЖА", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2064("ОФФШОРНАЯ КОМПАНИЯ", 3, OrgItemTermin.Types.ORG, True, True)
+        t = OrgItemTermin._new2073("ОФФШОРНАЯ КОМПАНИЯ", 3, OrgItemTermin.Types.ORG, True, True)
         t.add_variant("ОФФШОР", False)
         t.add_variant("ОФШОР", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2065("ОФШОРНА КОМПАНІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True)
+        t = OrgItemTermin._new2074("ОФШОРНА КОМПАНІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True)
         t.add_variant("ОФШОР", False)
         OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1817("ТЕРРОРИСТИЧЕСКАЯ ОРГАНИЗАЦИЯ", 3, OrgItemTermin.Types.ORG, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2090("ТЕРОРИСТИЧНА ОРГАНІЗАЦІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2091("АТОМНАЯ ЭЛЕКТРОСТАНЦИЯ", 3, OrgItemTermin.Types.ORG, "АЭС", True, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2092("АТОМНА ЕЛЕКТРОСТАНЦІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, "АЕС", True, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2091("ГИДРОЭЛЕКТРОСТАНЦИЯ", 3, OrgItemTermin.Types.ORG, "ГЭС", True, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2092("ГІДРОЕЛЕКТРОСТАНЦІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, "ГЕС", True, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2091("ГИДРОРЕЦИРКУЛЯЦИОННАЯ ЭЛЕКТРОСТАНЦИЯ", 3, OrgItemTermin.Types.ORG, "ГРЭС", True, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2091("ТЕПЛОВАЯ ЭЛЕКТРОСТАНЦИЯ", 3, OrgItemTermin.Types.ORG, "ТЭС", True, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2091("НЕФТЕПЕРЕРАБАТЫВАЮЩИЙ ЗАВОД", 3, OrgItemTermin.Types.ORG, "НПЗ", True, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2092("НАФТОПЕРЕРОБНИЙ ЗАВОД", MorphLang.UA, 3, OrgItemTermin.Types.ORG, "НПЗ", True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new1825("ТЕРРОРИСТИЧЕСКАЯ ОРГАНИЗАЦИЯ", 3, OrgItemTermin.Types.ORG, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2099("ТЕРОРИСТИЧНА ОРГАНІЗАЦІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2100("АТОМНАЯ ЭЛЕКТРОСТАНЦИЯ", 3, OrgItemTermin.Types.ORG, "АЭС", True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2101("АТОМНА ЕЛЕКТРОСТАНЦІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, "АЕС", True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2100("ГИДРОЭЛЕКТРОСТАНЦИЯ", 3, OrgItemTermin.Types.ORG, "ГЭС", True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2101("ГІДРОЕЛЕКТРОСТАНЦІЯ", MorphLang.UA, 3, OrgItemTermin.Types.ORG, "ГЕС", True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2100("ГИДРОРЕЦИРКУЛЯЦИОННАЯ ЭЛЕКТРОСТАНЦИЯ", 3, OrgItemTermin.Types.ORG, "ГРЭС", True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2100("ТЕПЛОВАЯ ЭЛЕКТРОСТАНЦИЯ", 3, OrgItemTermin.Types.ORG, "ТЭС", True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2100("НЕФТЕПЕРЕРАБАТЫВАЮЩИЙ ЗАВОД", 3, OrgItemTermin.Types.ORG, "НПЗ", True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2101("НАФТОПЕРЕРОБНИЙ ЗАВОД", MorphLang.UA, 3, OrgItemTermin.Types.ORG, "НПЗ", True, True, True))
         for s in ["ФИРМА", "КОМПАНИЯ", "КОРПОРАЦИЯ", "ГОСКОРПОРАЦИЯ", "КОНЦЕРН", "КОНСОРЦИУМ", "ХОЛДИНГ", "МЕДИАХОЛДИНГ", "ТОРГОВЫЙ ДОМ", "ТОРГОВЫЙ ЦЕНТР", "УЧЕБНЫЙ ЦЕНТР", "ИССЛЕДОВАТЕЛЬСКИЙ ЦЕНТР", "КОСМИЧЕСКИЙ ЦЕНТР", "АУКЦИОННЫЙ ДОМ", "ИЗДАТЕЛЬСТВО", "ИЗДАТЕЛЬСКИЙ ДОМ", "ТОРГОВЫЙ КОМПЛЕКС", "ТОРГОВО РАЗВЛЕКАТЕЛЬНЫЙ КОМПЛЕКС", "АГЕНТСТВО НЕДВИЖИМОСТИ", "ГРУППА КОМПАНИЙ", "МЕДИАГРУППА", "МАГАЗИН", "ТОРГОВЫЙ КОМПЛЕКС", "ГИПЕРМАРКЕТ", "СУПЕРМАРКЕТ", "КАФЕ", "РЕСТОРАН", "БАР", "АУКЦИОН", "АНАЛИТИЧЕСКИЙ ЦЕНТР", "COMPANY", "CORPORATION"]: 
-            t = OrgItemTermin._new2099(s, 3, OrgItemTermin.Types.ORG, True, True, True)
+            t = OrgItemTermin._new2108(s, 3, OrgItemTermin.Types.ORG, True, True, True)
             if (s == "ИЗДАТЕЛЬСТВО"): 
                 t.add_abridge("ИЗД-ВО")
                 t.add_abridge("ИЗ-ВО")
@@ -823,10 +822,10 @@ class OrgItemTypeToken(MetaToken):
             if (s.endswith(" ЦЕНТР")): 
                 t.coeff = 3.5
             if (s == "КОМПАНИЯ" or s == "ФИРМА"): 
-                t.coeff = 1
+                t.coeff = (1)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ФІРМА", "КОМПАНІЯ", "КОРПОРАЦІЯ", "ДЕРЖКОРПОРАЦІЯ", "КОНЦЕРН", "КОНСОРЦІУМ", "ХОЛДИНГ", "МЕДІАХОЛДИНГ", "ТОРГОВИЙ ДІМ", "ТОРГОВИЙ ЦЕНТР", "НАВЧАЛЬНИЙ ЦЕНТР", "ВИДАВНИЦТВО", "ВИДАВНИЧИЙ ДІМ", "ТОРГОВИЙ КОМПЛЕКС", "ТОРГОВО-РОЗВАЖАЛЬНИЙ КОМПЛЕКС", "АГЕНТСТВО НЕРУХОМОСТІ", "ГРУПА КОМПАНІЙ", "МЕДІАГРУПА", "МАГАЗИН", "ТОРГОВИЙ КОМПЛЕКС", "ГІПЕРМАРКЕТ", "СУПЕРМАРКЕТ", "КАФЕ", "БАР", "АУКЦІОН", "АНАЛІТИЧНИЙ ЦЕНТР"]: 
-            t = OrgItemTermin._new2100(s, MorphLang.UA, OrgItemTermin.Types.ORG, True, True, True)
+            t = OrgItemTermin._new2109(s, MorphLang.UA, OrgItemTermin.Types.ORG, True, True, True)
             if (s == "ВИДАВНИЦТВО"): 
                 t.add_abridge("ВИД-ВО")
                 t.add_variant("ВИДАВНИЧИЙ ДІМ", False)
@@ -839,54 +838,54 @@ class OrgItemTypeToken(MetaToken):
             elif (s == "ГРУПА КОМПАНІЙ"): 
                 t.acronym = "ГК"
             elif (s == "КОМПАНІЯ" or s == "ФІРМА"): 
-                t.coeff = 1
+                t.coeff = (1)
             if (s.startswith("МЕДІА")): 
                 t.profiles.append(OrgProfile.MEDIA)
             OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2101("РОК ГРУППА", MorphLang.RU, OrgProfile.MUSIC, OrgItemTermin.Types.ORG, 3, True)
+        t = OrgItemTermin._new2110("РОК ГРУППА", MorphLang.RU, OrgProfile.MUSIC, OrgItemTermin.Types.ORG, 3, True)
         t.add_variant("РОКГРУППА", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2101("ПАНК ГРУППА", MorphLang.RU, OrgProfile.MUSIC, OrgItemTermin.Types.ORG, 3, True)
+        t = OrgItemTermin._new2110("ПАНК ГРУППА", MorphLang.RU, OrgProfile.MUSIC, OrgItemTermin.Types.ORG, 3, True)
         t.add_variant("ПАНКГРУППА", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2101("ОРКЕСТР", MorphLang.RU, OrgProfile.MUSIC, OrgItemTermin.Types.ORG, 3, True)
+        t = OrgItemTermin._new2110("ОРКЕСТР", MorphLang.RU, OrgProfile.MUSIC, OrgItemTermin.Types.ORG, 3, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2101("ХОР", MorphLang.RU, OrgProfile.MUSIC, OrgItemTermin.Types.ORG, 3, True)
+        t = OrgItemTermin._new2110("ХОР", MorphLang.RU, OrgProfile.MUSIC, OrgItemTermin.Types.ORG, 3, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2101("МУЗЫКАЛЬНЫЙ КОЛЛЕКТИВ", MorphLang.RU, OrgProfile.MUSIC, OrgItemTermin.Types.ORG, 3, True)
+        t = OrgItemTermin._new2110("МУЗЫКАЛЬНЫЙ КОЛЛЕКТИВ", MorphLang.RU, OrgProfile.MUSIC, OrgItemTermin.Types.ORG, 3, True)
         t.add_variant("РОКГРУППА", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2106("ВОКАЛЬНО ИНСТРУМЕНТАЛЬНЫЙ АНСАМБЛЬ", MorphLang.RU, OrgProfile.MUSIC, OrgItemTermin.Types.ORG, 3, True, "ВИА")
+        t = OrgItemTermin._new2115("ВОКАЛЬНО ИНСТРУМЕНТАЛЬНЫЙ АНСАМБЛЬ", MorphLang.RU, OrgProfile.MUSIC, OrgItemTermin.Types.ORG, 3, True, "ВИА")
         t.add_variant("ИНСТРУМЕНТАЛЬНЫЙ АНСАМБЛЬ", False)
         OrgItemTypeToken.__m_global.add(t)
         for s in ["НОТАРИАЛЬНАЯ КОНТОРА", "АДВОКАТСКОЕ БЮРО", "СТРАХОВОЕ ОБЩЕСТВО", "ЮРИДИЧЕСКИЙ ДОМ"]: 
-            t = OrgItemTermin._new2107(s, OrgItemTermin.Types.ORG, True, True, True, True)
+            t = OrgItemTermin._new2116(s, OrgItemTermin.Types.ORG, True, True, True, True)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["НОТАРІАЛЬНА КОНТОРА", "АДВОКАТСЬКЕ БЮРО", "СТРАХОВЕ ТОВАРИСТВО"]: 
-            t = OrgItemTermin._new2108(s, MorphLang.UA, OrgItemTermin.Types.ORG, True, True, True, True)
+            t = OrgItemTermin._new2117(s, MorphLang.UA, OrgItemTermin.Types.ORG, True, True, True, True)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ГАЗЕТА", "ЕЖЕНЕДЕЛЬНИК", "ТАБЛОИД", "ЕЖЕНЕДЕЛЬНЫЙ ЖУРНАЛ", "NEWSPAPER", "WEEKLY", "TABLOID", "MAGAZINE"]: 
-            t = OrgItemTermin._new2109(s, 3, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.MEDIA)
+            t = OrgItemTermin._new2118(s, 3, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.MEDIA)
             t.profiles.append(OrgProfile.PRESS)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ГАЗЕТА", "ТИЖНЕВИК", "ТАБЛОЇД"]: 
-            t = OrgItemTermin._new2110(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.MEDIA)
+            t = OrgItemTermin._new2119(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.MEDIA)
             t.profiles.append(OrgProfile.PRESS)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["РАДИОСТАНЦИЯ", "РАДИО", "ТЕЛЕКАНАЛ", "ТЕЛЕКОМПАНИЯ", "НОВОСТНОЙ ПОРТАЛ", "ИНТЕРНЕТ ПОРТАЛ", "ИНТЕРНЕТ ИЗДАНИЕ", "ИНТЕРНЕТ РЕСУРС"]: 
-            t = OrgItemTermin._new2109(s, 3, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.MEDIA)
+            t = OrgItemTermin._new2118(s, 3, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.MEDIA)
             if (s == "РАДИО"): 
                 t.canonic_text = "РАДИОСТАНЦИЯ"
                 t.is_doubt_word = True
             OrgItemTypeToken.__m_global.add(t)
         for s in ["РАДІО", "РАДІО", "ТЕЛЕКАНАЛ", "ТЕЛЕКОМПАНІЯ", "НОВИННИЙ ПОРТАЛ", "ІНТЕРНЕТ ПОРТАЛ", "ІНТЕРНЕТ ВИДАННЯ", "ІНТЕРНЕТ РЕСУРС"]: 
-            t = OrgItemTermin._new2110(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.MEDIA)
+            t = OrgItemTermin._new2119(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, True, OrgProfile.MEDIA)
             if (s == "РАДІО"): 
                 t.canonic_text = "РАДІОСТАНЦІЯ"
                 t.is_doubt_word = True
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ПАНСИОНАТ", "САНАТОРИЙ", "ДОМ ОТДЫХА", "ОТЕЛЬ", "ГОСТИНИЦА", "SPA-ОТЕЛЬ", "ОЗДОРОВИТЕЛЬНЫЙ ЛАГЕРЬ", "ДЕТСКИЙ ЛАГЕРЬ", "ПИОНЕРСКИЙ ЛАГЕРЬ", "БАЗА ОТДЫХА", "СПОРТ-КЛУБ"]: 
-            t = OrgItemTermin._new2099(s, 3, OrgItemTermin.Types.ORG, True, True, True)
+            t = OrgItemTermin._new2108(s, 3, OrgItemTermin.Types.ORG, True, True, True)
             if (s == "САНАТОРИЙ"): 
                 t.add_abridge("САН.")
             elif (s == "ДОМ ОТДЫХА"): 
@@ -897,44 +896,44 @@ class OrgItemTypeToken(MetaToken):
                 t.add_abridge("ПАНС.")
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ПАНСІОНАТ", "САНАТОРІЙ", "БУДИНОК ВІДПОЧИНКУ", "ГОТЕЛЬ", "SPA-ГОТЕЛЬ", "ОЗДОРОВЧИЙ ТАБІР", "БАЗА ВІДПОЧИНКУ", "СПОРТ-КЛУБ"]: 
-            t = OrgItemTermin._new2114(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, True)
+            t = OrgItemTermin._new2123(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, True)
             if (s == "САНАТОРІЙ"): 
                 t.add_abridge("САН.")
             OrgItemTypeToken.__m_global.add(t)
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2115("ДЕТСКИЙ ОЗДОРОВИТЕЛЬНЫЙ ЛАГЕРЬ", 3, OrgItemTermin.Types.ORG, "ДОЛ", True, True, True))
-        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2115("ДЕТСКИЙ СПОРТИВНЫЙ ОЗДОРОВИТЕЛЬНЫЙ ЛАГЕРЬ", 3, OrgItemTermin.Types.ORG, "ДСОЛ", True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2124("ДЕТСКИЙ ОЗДОРОВИТЕЛЬНЫЙ ЛАГЕРЬ", 3, OrgItemTermin.Types.ORG, "ДОЛ", True, True, True))
+        OrgItemTypeToken.__m_global.add(OrgItemTermin._new2124("ДЕТСКИЙ СПОРТИВНЫЙ ОЗДОРОВИТЕЛЬНЫЙ ЛАГЕРЬ", 3, OrgItemTermin.Types.ORG, "ДСОЛ", True, True, True))
         for s in ["КОЛХОЗ", "САДОВО ОГОРОДНОЕ ТОВАРИЩЕСТВО", "КООПЕРАТИВ", "ФЕРМЕРСКОЕ ХОЗЯЙСТВО", "КРЕСТЬЯНСКО ФЕРМЕРСКОЕ ХОЗЯЙСТВО", "АГРОФИРМА", "КОНЕЗАВОД", "ПТИЦЕФЕРМА", "СВИНОФЕРМА", "ФЕРМА", "ЛЕСПРОМХОЗ"]: 
-            t = OrgItemTermin._new2117(s, 3, OrgItemTermin.Types.ORG, True, True, True, True)
+            t = OrgItemTermin._new2126(s, 3, OrgItemTermin.Types.ORG, True, True, True, True)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["КОЛГОСП", "САДОВО ГОРОДНЄ ТОВАРИСТВО", "КООПЕРАТИВ", "ФЕРМЕРСЬКЕ ГОСПОДАРСТВО", "СЕЛЯНСЬКО ФЕРМЕРСЬКЕ ГОСПОДАРСТВО", "АГРОФІРМА", "КОНЕЗАВОД", "ПТАХОФЕРМА", "СВИНОФЕРМА", "ФЕРМА"]: 
-            t = OrgItemTermin._new2118(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, True, True)
+            t = OrgItemTermin._new2127(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True, True, True, True)
             OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2117("АВТОМОБИЛЬНЫЙ ЗАВОД", 3, OrgItemTermin.Types.ORG, True, True, True, True)
+        t = OrgItemTermin._new2126("АВТОМОБИЛЬНЫЙ ЗАВОД", 3, OrgItemTermin.Types.ORG, True, True, True, True)
         t.add_variant("АВТОЗАВОД", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2117("АВТОМОБИЛЬНЫЙ ЦЕНТР", 3, OrgItemTermin.Types.ORG, True, True, True, True)
+        t = OrgItemTermin._new2126("АВТОМОБИЛЬНЫЙ ЦЕНТР", 3, OrgItemTermin.Types.ORG, True, True, True, True)
         t.add_variant("АВТОЦЕНТР", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2117("СОВХОЗ", 3, OrgItemTermin.Types.ORG, True, True, True, True)
+        t = OrgItemTermin._new2126("СОВХОЗ", 3, OrgItemTermin.Types.ORG, True, True, True, True)
         t.add_abridge("С/Х")
         t.add_abridge("С-З")
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2117("ПЛЕМЕННОЕ ХОЗЯЙСТВО", 3, OrgItemTermin.Types.ORG, True, True, True, True)
+        t = OrgItemTermin._new2126("ПЛЕМЕННОЕ ХОЗЯЙСТВО", 3, OrgItemTermin.Types.ORG, True, True, True, True)
         t.add_variant("ПЛЕМХОЗ", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2117("ЛЕСНОЕ ХОЗЯЙСТВО", 3, OrgItemTermin.Types.ORG, True, True, True, True)
+        t = OrgItemTermin._new2126("ЛЕСНОЕ ХОЗЯЙСТВО", 3, OrgItemTermin.Types.ORG, True, True, True, True)
         t.add_variant("ЛЕСХОЗ", False)
         OrgItemTypeToken.__m_global.add(t)
         sads = ["Садоводческое некоммерческое товарищество", "СНТ", "Дачное некоммерческое товарищество", "ДНТ", "Огородническое некоммерческое товарищество", "ОНТ", "Садоводческое некоммерческое партнерство", "СНП", "Дачное некоммерческое партнерство", "ДНП", "Огородническое некоммерческое партнерство", "ОНП", "Садоводческий потребительский кооператив", "СПК", "Дачный потребительский кооператив", "ДПК", "Огороднический потребительский кооператив", "ОПК"]
         i = 0
         while i < len(sads): 
-            t = OrgItemTermin._new2124(sads[i].upper(), 3, sads[i + 1], OrgItemTermin.Types.ORG, True, True, True)
+            t = OrgItemTermin._new2133(sads[i].upper(), 3, sads[i + 1], OrgItemTermin.Types.ORG, True, True, True)
             t.add_abridge(sads[i + 1])
             if (t.acronym == "СНТ"): 
                 t.add_abridge("САДОВ.НЕКОМ.ТОВ.")
             OrgItemTypeToken.__m_global.add(t)
             i += 2
-        t = OrgItemTermin._new2117("САДОВОДЧЕСКОЕ ТОВАРИЩЕСТВО", 3, OrgItemTermin.Types.ORG, True, True, True, True)
+        t = OrgItemTermin._new2126("САДОВОДЧЕСКОЕ ТОВАРИЩЕСТВО", 3, OrgItemTermin.Types.ORG, True, True, True, True)
         t.add_abridge("САДОВОДЧ.ТОВ.")
         t.add_abridge("САДОВ.ТОВ.")
         t.add_abridge("САД.ТОВ.")
@@ -942,37 +941,37 @@ class OrgItemTypeToken(MetaToken):
         t.add_variant("САДОВОЕ ТОВАРИЩЕСТВО", False)
         t.add_variant("САДОВ. ТОВАРИЩЕСТВО", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2117("САДОВОДЧЕСКИЙ КООПЕРАТИВ", 3, OrgItemTermin.Types.ORG, True, True, True, True)
+        t = OrgItemTermin._new2126("САДОВОДЧЕСКИЙ КООПЕРАТИВ", 3, OrgItemTermin.Types.ORG, True, True, True, True)
         t.add_abridge("САДОВОДЧ.КООП.")
         t.add_abridge("САДОВ.КООП.")
         t.add_variant("САДОВЫЙ КООПЕРАТИВ", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new2117("ДАЧНОЕ ТОВАРИЩЕСТВО", 3, OrgItemTermin.Types.ORG, True, True, True, True)
+        t = OrgItemTermin._new2126("ДАЧНОЕ ТОВАРИЩЕСТВО", 3, OrgItemTermin.Types.ORG, True, True, True, True)
         t.add_abridge("ДАЧН.ТОВ.")
         t.add_abridge("ДАЧ.ТОВ.")
         OrgItemTypeToken.__m_global.add(t)
         for s in ["ФЕСТИВАЛЬ", "ЧЕМПИОНАТ", "ОЛИМПИАДА", "КОНКУРС"]: 
-            t = OrgItemTermin._new1713(s, 3, OrgItemTermin.Types.ORG, True)
+            t = OrgItemTermin._new1721(s, 3, OrgItemTermin.Types.ORG, True)
             OrgItemTypeToken.__m_global.add(t)
         for s in ["ФЕСТИВАЛЬ", "ЧЕМПІОНАТ", "ОЛІМПІАДА"]: 
-            t = OrgItemTermin._new2129(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True)
+            t = OrgItemTermin._new2138(s, MorphLang.UA, 3, OrgItemTermin.Types.ORG, True)
             OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1815("ПОГРАНИЧНЫЙ ПОСТ", 3, OrgItemTermin.Types.ORG, True, True)
+        t = OrgItemTermin._new1823("ПОГРАНИЧНЫЙ ПОСТ", 3, OrgItemTermin.Types.ORG, True, True)
         t.add_variant("ПОГП", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1815("ПОГРАНИЧНАЯ ЗАСТАВА", 3, OrgItemTermin.Types.ORG, True, True)
+        t = OrgItemTermin._new1823("ПОГРАНИЧНАЯ ЗАСТАВА", 3, OrgItemTermin.Types.ORG, True, True)
         t.add_variant("ПОГЗ", False)
         t.add_variant("ПОГРАНЗАСТАВА", False)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1797("ТЕРРИТОРИАЛЬНЫЙ ПУНКТ", 3, OrgItemTermin.Types.DEP, True)
+        t = OrgItemTermin._new1805("ТЕРРИТОРИАЛЬНЫЙ ПУНКТ", 3, OrgItemTermin.Types.DEP, True)
         OrgItemTypeToken.__m_global.add(t)
-        t = OrgItemTermin._new1797("МИГРАЦИОННЫЙ ПУНКТ", 3, OrgItemTermin.Types.DEP, True)
+        t = OrgItemTermin._new1805("МИГРАЦИОННЫЙ ПУНКТ", 3, OrgItemTermin.Types.DEP, True)
         OrgItemTypeToken.__m_global.add(t)
         OrgItemTypeToken._m_pref_words = TerminCollection()
         for s in ["КАПИТАЛ", "РУКОВОДСТВО", "СЪЕЗД", "СОБРАНИЕ", "СОВЕТ", "УПРАВЛЕНИЕ", "ДЕПАРТАМЕНТ"]: 
             OrgItemTypeToken._m_pref_words.add(Termin(s))
         for s in ["КАПІТАЛ", "КЕРІВНИЦТВО", "ЗЇЗД", "ЗБОРИ", "РАДА", "УПРАВЛІННЯ"]: 
-            OrgItemTypeToken._m_pref_words.add(Termin._new885(s, MorphLang.UA))
+            OrgItemTypeToken._m_pref_words.add(Termin._new886(s, MorphLang.UA))
         for s in ["АКЦИЯ", "ВЛАДЕЛЕЦ", "ВЛАДЕЛИЦА", "СОВЛАДЕЛЕЦ", "СОВЛАДЕЛИЦА", "КОНКУРЕНТ"]: 
             OrgItemTypeToken._m_pref_words.add(Termin._new118(s, s))
         for s in ["АКЦІЯ", "ВЛАСНИК", "ВЛАСНИЦЯ", "СПІВВЛАСНИК", "СПІВВЛАСНИЦЯ", "КОНКУРЕНТ"]: 
@@ -1099,9 +1098,11 @@ class OrgItemTypeToken(MetaToken):
         cou = 1
         if (self.name is None): 
             return 1
-        for i in range(len(self.name)):
+        i = 0
+        while i < len(self.name): 
             if (self.name[i] == ' '): 
                 cou += 1
+            i += 1
         return cou
     
     @property
@@ -1139,7 +1140,7 @@ class OrgItemTypeToken(MetaToken):
         from pullenti.morph.MorphLang import MorphLang
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.morph.Morphology import Morphology
-        if (t is None or ((isinstance(t, ReferentToken) and not t.chars.is_latin_letter))): 
+        if (t is None or (((isinstance(t, ReferentToken)) and not t.chars.is_latin_letter))): 
             return None
         res = OrgItemTypeToken.__try_attach(t, can_be_first_letter_lower)
         if (res is None and t.chars.is_latin_letter): 
@@ -1149,7 +1150,7 @@ class OrgItemTypeToken(MetaToken):
                     res1.begin_token = t
                     return res1
                 return None
-            if (isinstance(t.get_referent(), GeoReferent) and isinstance(t.next0_, TextToken) and t.next0_.chars.is_latin_letter): 
+            if ((isinstance(t.get_referent(), GeoReferent)) and (isinstance(t.next0_, TextToken)) and t.next0_.chars.is_latin_letter): 
                 res1 = OrgItemTypeToken.try_attach(t.next0_, can_be_first_letter_lower, None)
                 if (res1 is not None): 
                     res1.begin_token = t
@@ -1190,7 +1191,7 @@ class OrgItemTypeToken(MetaToken):
             while tt1 is not None and tt1.end_char <= res.end_token.begin_char: 
                 rt = tt1.kit.process_referent("GEO", tt1)
                 if (rt is not None): 
-                    res.coef += 0.5
+                    res.coef += .5
                     if (res.geo is None): 
                         res.geo = rt
                     elif (res.geo.referent.can_be_equals(rt.referent, Referent.EqualType.WITHINONETEXT)): 
@@ -1206,7 +1207,7 @@ class OrgItemTypeToken(MetaToken):
                 return None
             if (res.begin_token.previous is not None and res.begin_token.previous.is_value("ГОСУДАРСТВЕННЫЙ", None)): 
                 return None
-        if (res is not None and res.geo is None and isinstance(res.begin_token.previous, TextToken)): 
+        if (res is not None and res.geo is None and (isinstance(res.begin_token.previous, TextToken))): 
             rt = res.kit.process_referent("GEO", res.begin_token.previous)
             if (rt is not None and rt.morph.class0_.is_adjective): 
                 if (res.begin_token.previous.previous is not None and res.begin_token.previous.previous.is_value("ОРДЕН", None)): 
@@ -1214,7 +1215,7 @@ class OrgItemTypeToken(MetaToken):
                 else: 
                     res.geo = rt
                     res.begin_token = rt.begin_token
-        if ((res is not None and res.typ == "комитет" and res.geo is None) and res.end_token.next0_ is not None and isinstance(res.end_token.next0_.get_referent(), GeoReferent)): 
+        if ((res is not None and res.typ == "комитет" and res.geo is None) and res.end_token.next0_ is not None and (isinstance(res.end_token.next0_.get_referent(), GeoReferent))): 
             res.geo = (res.end_token.next0_ if isinstance(res.end_token.next0_, ReferentToken) else None)
             res.end_token = res.end_token.next0_
             res.coef = 2
@@ -1225,9 +1226,9 @@ class OrgItemTypeToken(MetaToken):
         if (res is not None and res.geo is not None): 
             has_adj = False
             tt1 = res.begin_token
-            first_pass2982 = True
+            first_pass3951 = True
             while True:
-                if first_pass2982: first_pass2982 = False
+                if first_pass3951: first_pass3951 = False
                 else: tt1 = tt1.next0_
                 if (not (tt1 is not None and tt1.end_char <= res.end_token.begin_char)): break
                 rt = tt1.kit.process_referent("GEO", tt1)
@@ -1236,7 +1237,7 @@ class OrgItemTypeToken(MetaToken):
                         continue
                     if (res.geo2 is not None and res.geo2.referent.can_be_equals(rt.referent, Referent.EqualType.WITHINONETEXT)): 
                         continue
-                    res.coef += 0.5
+                    res.coef += .5
                     if (res.geo is None): 
                         res.geo = rt
                     elif (res.geo2 is None): 
@@ -1251,7 +1252,7 @@ class OrgItemTypeToken(MetaToken):
         if (res is not None and res.geo is None): 
             tt2 = res.end_token.next0_
             if (tt2 is not None and not tt2.is_newline_before and tt2.morph.class0_.is_preposition): 
-                if ((isinstance(tt2.next0_, TextToken) and (tt2.next0_ if isinstance(tt2.next0_, TextToken) else None).term == "ВАШ" and res.root is not None) and OrgProfile.JUSTICE in res.root.profiles): 
+                if (((isinstance(tt2.next0_, TextToken)) and (tt2.next0_ if isinstance(tt2.next0_, TextToken) else None).term == "ВАШ" and res.root is not None) and OrgProfile.JUSTICE in res.root.profiles): 
                     res.coef = 5
                     res.end_token = tt2.next0_
                     tt2 = tt2.next0_.next0_
@@ -1259,14 +1260,14 @@ class OrgItemTypeToken(MetaToken):
                     res.typ = "отдел"
             if (tt2 is not None and not tt2.is_newline_before and tt2.morph.class0_.is_preposition): 
                 tt2 = tt2.next0_
-                if (tt2 is not None and not tt2.is_newline_before and isinstance(tt2.get_referent(), GeoReferent)): 
+                if (tt2 is not None and not tt2.is_newline_before and (isinstance(tt2.get_referent(), GeoReferent))): 
                     res.end_token = tt2
                     res.geo = (tt2 if isinstance(tt2, ReferentToken) else None)
-                    if ((tt2.next0_ is not None and tt2.next0_.is_and and isinstance(tt2.next0_.next0_, ReferentToken)) and isinstance(tt2.next0_.next0_.get_referent(), GeoReferent)): 
+                    if ((tt2.next0_ is not None and tt2.next0_.is_and and (isinstance(tt2.next0_.next0_, ReferentToken))) and (isinstance(tt2.next0_.next0_.get_referent(), GeoReferent))): 
                         tt2 = tt2.next0_.next0_
                         res.end_token = tt2
                         res.geo2 = (tt2 if isinstance(tt2, ReferentToken) else None)
-            elif (((tt2 is not None and not tt2.is_newline_before and tt2.is_hiphen) and isinstance(tt2.next0_, TextToken) and tt2.next0_.get_morph_class_in_dictionary().is_noun) and not tt2.next0_.is_value("БАНК", None)): 
+            elif (((tt2 is not None and not tt2.is_newline_before and tt2.is_hiphen) and (isinstance(tt2.next0_, TextToken)) and tt2.next0_.get_morph_class_in_dictionary().is_noun) and not tt2.next0_.is_value("БАНК", None)): 
                 npt1 = NounPhraseHelper.try_parse(res.end_token, NounPhraseParseAttr.NO, 0)
                 if (npt1 is not None and npt1.end_token == tt2.next0_): 
                     res.alt_typ = npt1.get_normal_case_text(MorphClass(), True, MorphGender.UNDEFINED, False).lower()
@@ -1280,16 +1281,16 @@ class OrgItemTypeToken(MetaToken):
                     elif (res.root is not None and res.root.typ == OrgItemTermin.Types.PREFIX and npt.end_token.is_value("ОБРАЗОВАНИЕ", None)): 
                         res.end_token = npt.end_token
                         res.profiles.append(OrgProfile.EDUCATION)
-        if (res is not None and res.typ is not None and res.typ[0].isdigit()): 
+        if (res is not None and res.typ is not None and str.isdigit(res.typ[0])): 
             ii = res.typ.find(' ')
             if (ii < (len(res.typ) - 1)): 
-                res.number = res.typ[0 : (ii)]
-                res.typ = res.typ[ii + 1 : ].strip()
-        if (res is not None and res.name is not None and res.name[0].isdigit()): 
+                res.number = res.typ[0:0+ii]
+                res.typ = res.typ[ii + 1:].strip()
+        if (res is not None and res.name is not None and str.isdigit(res.name[0])): 
             ii = res.name.find(' ')
             if (ii < (len(res.name) - 1)): 
-                res.number = res.name[0 : (ii)]
-                res.name = res.name[ii + 1 : ].strip()
+                res.number = res.name[0:0+ii]
+                res.name = res.name[ii + 1:].strip()
         if (res is not None and res.typ == "фонд"): 
             if (t.previous is not None and ((t.previous.is_value("ПРИЗОВОЙ", None) or t.previous.is_value("ЖИЛИЩНЫЙ", None)))): 
                 return None
@@ -1330,7 +1331,7 @@ class OrgItemTypeToken(MetaToken):
                 res.end_token = npt.end_token
             elif (res.typ != "завод"): 
                 return None
-        if (res is not None and isinstance(res.begin_token.previous, TextToken) and ((res.typ == "милиция" or res.typ == "полиция"))): 
+        if (res is not None and (isinstance(res.begin_token.previous, TextToken)) and ((res.typ == "милиция" or res.typ == "полиция"))): 
             tok = OrgItemTypeToken.__m_global.try_attach(res.begin_token.previous, None, False)
             if (tok is not None): 
                 return None
@@ -1348,9 +1349,9 @@ class OrgItemTypeToken(MetaToken):
         if (res is not None and res.typ == "суд"): 
             tt1 = (res.end_token if isinstance(res.end_token, TextToken) else None)
             if (tt1 is not None and ((tt1.term == "СУДА" or tt1.term == "СУДОВ"))): 
-                if (((res.morph.number & MorphNumber.PLURAL)) != MorphNumber.UNDEFINED): 
+                if ((((res.morph.number) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
                     return None
-        if (res is not None and res.typ == "кафедра" and isinstance(t, TextToken)): 
+        if (res is not None and res.typ == "кафедра" and (isinstance(t, TextToken))): 
             if (t.is_value("КАФЕ", None) and ((t.next0_ is None or not t.next0_.is_char('.')))): 
                 return None
         if (res is not None and res.typ == "компания"): 
@@ -1364,7 +1365,7 @@ class OrgItemTypeToken(MetaToken):
             return None
         if ((res is not None and res.typ == "предприятие" and res.alt_typ is not None) and res.begin_token.morph.class0_.is_adjective and not res.root.is_pure_prefix): 
             res.typ = res.alt_typ
-            res.alt_typ = None
+            res.alt_typ = (None)
             res.coef = 3
         if (res is not None): 
             npt = NounPhraseHelper.try_parse(res.end_token.next0_, NounPhraseParseAttr.NO, 0)
@@ -1378,7 +1379,7 @@ class OrgItemTypeToken(MetaToken):
                     res.name = s
                 else: 
                     res.alt_typ = s
-        if (res is not None and OrgProfile.EDUCATION in res.profiles and isinstance(res.end_token.next0_, TextToken)): 
+        if (res is not None and OrgProfile.EDUCATION in res.profiles and (isinstance(res.end_token.next0_, TextToken))): 
             tt1 = res.end_token.next0_
             if ((tt1 if isinstance(tt1, TextToken) else None).term == "ВПО" or (tt1 if isinstance(tt1, TextToken) else None).term == "СПО"): 
                 res.end_token = res.end_token.next0_
@@ -1419,12 +1420,12 @@ class OrgItemTypeToken(MetaToken):
         if (term == "ВЧ"): 
             tt1 = t.next0_
             if (tt1 is not None and tt1.is_value("ПП", None)): 
-                res = OrgItemTypeToken._new2141(t, tt1, 3)
-            elif (isinstance(tt1, NumberToken) and (tt1.whitespaces_before_count < 3)): 
+                res = OrgItemTypeToken._new2150(t, tt1, 3)
+            elif ((isinstance(tt1, NumberToken)) and (tt1.whitespaces_before_count < 3)): 
                 res = OrgItemTypeToken(t, t)
             elif (MiscHelper.check_number_prefix(tt1) is not None): 
                 res = OrgItemTypeToken(t, t)
-            elif ((isinstance(tt1, TextToken) and not tt1.is_whitespace_after and tt1.chars.is_letter) and tt1.length_char == 1): 
+            elif (((isinstance(tt1, TextToken)) and not tt1.is_whitespace_after and tt1.chars.is_letter) and tt1.length_char == 1): 
                 res = OrgItemTypeToken(t, t)
             if (res is not None): 
                 res.root = OrgItemTypeToken.__m_military_unit
@@ -1461,11 +1462,11 @@ class OrgItemTypeToken(MetaToken):
                 oo = (tt1.get_referent() if isinstance(tt1.get_referent(), OrganizationReferent) else None)
                 if (oo is not None): 
                     if ("МИГРАЦ" in str(oo).upper()): 
-                        res = OrgItemTypeToken._new2142(t, t, ("территориальный пункт" if term == "ТП" else "миграционный пункт"), 4, True)
+                        res = OrgItemTypeToken._new2151(t, t, ("территориальный пункт" if term == "ТП" else "миграционный пункт"), 4, True)
                         return res
         if (tt.chars.is_all_upper and term == "МГТУ"): 
-            if (tt.next0_.is_value("БАНК", None) or ((isinstance(tt.next0_.get_referent(), OrganizationReferent) and (tt.next0_.get_referent() if isinstance(tt.next0_.get_referent(), OrganizationReferent) else None).kind == OrganizationKind.BANK)) or ((tt.previous is not None and tt.previous.is_value("ОПЕРУ", None)))): 
-                res = OrgItemTypeToken._new2143(tt, tt, "главное территориальное управление")
+            if (tt.next0_.is_value("БАНК", None) or (((isinstance(tt.next0_.get_referent(), OrganizationReferent)) and (tt.next0_.get_referent() if isinstance(tt.next0_.get_referent(), OrganizationReferent) else None).kind == OrganizationKind.BANK)) or ((tt.previous is not None and tt.previous.is_value("ОПЕРУ", None)))): 
+                res = OrgItemTypeToken._new2152(tt, tt, "главное территориальное управление")
                 res.alt_typ = "ГТУ"
                 res.name = "МОСКОВСКОЕ"
                 res.name_is_name = True
@@ -1491,9 +1492,9 @@ class OrgItemTypeToken(MetaToken):
             say = True
         if (((say or tt.is_value("ОБЛОЖКА", "ОБКЛАДИНКА") or tt.is_value("РЕДАКТОР", None)) or tt.is_value("КОРРЕСПОНДЕНТ", "КОРЕСПОНДЕНТ") or tt.is_value("ЖУРНАЛИСТ", "ЖУРНАЛІСТ")) or term == "ИНТЕРВЬЮ" or term == "ІНТЕРВЮ"): 
             if (OrgItemTypeToken.__m_pressru is None): 
-                OrgItemTypeToken.__m_pressru = OrgItemTermin._new2144("ИЗДАНИЕ", MorphLang.RU, OrgProfile.MEDIA, True, 4)
+                OrgItemTypeToken.__m_pressru = OrgItemTermin._new2153("ИЗДАНИЕ", MorphLang.RU, OrgProfile.MEDIA, True, 4)
             if (OrgItemTypeToken.__m_pressua is None): 
-                OrgItemTypeToken.__m_pressua = OrgItemTermin._new2144("ВИДАННЯ", MorphLang.UA, OrgProfile.MEDIA, True, 4)
+                OrgItemTypeToken.__m_pressua = OrgItemTermin._new2153("ВИДАННЯ", MorphLang.UA, OrgProfile.MEDIA, True, 4)
             pres = (OrgItemTypeToken.__m_pressua if tt.kit.base_language.is_ua else OrgItemTypeToken.__m_pressru)
             t1 = t.next0_
             if (t1 is None): 
@@ -1501,11 +1502,11 @@ class OrgItemTypeToken(MetaToken):
             if (t1.chars.is_latin_letter and not t1.chars.is_all_lower): 
                 if (tt.is_value("РЕДАКТОР", None)): 
                     return None
-                return OrgItemTypeToken._new2146(t, t, pres.canonic_text.lower(), pres, True)
+                return OrgItemTypeToken._new2155(t, t, pres.canonic_text.lower(), pres, True)
             if (not say): 
                 br = BracketHelper.try_parse(t1, BracketParseAttr.NO, 100)
                 if ((br is not None and br.is_quote_type and not t1.next0_.chars.is_all_lower) and ((br.end_char - br.begin_char) < 40)): 
-                    return OrgItemTypeToken._new2146(t, t, pres.canonic_text.lower(), pres, True)
+                    return OrgItemTypeToken._new2155(t, t, pres.canonic_text.lower(), pres, True)
             npt = NounPhraseHelper.try_parse(t1, NounPhraseParseAttr.NO, 0)
             if (npt is not None and npt.end_token.next0_ is not None): 
                 t1 = npt.end_token.next0_
@@ -1515,7 +1516,7 @@ class OrgItemTypeToken(MetaToken):
                     ok = True
                 if (ok): 
                     if ((root_ == "ИЗДАНИЕ" or root_ == "ИЗДАТЕЛЬСТВО" or root_ == "ЖУРНАЛ") or root_ == "ВИДАННЯ" or root_ == "ВИДАВНИЦТВО"): 
-                        res = OrgItemTypeToken._new2143(npt.begin_token, npt.end_token, root_.lower())
+                        res = OrgItemTypeToken._new2152(npt.begin_token, npt.end_token, root_.lower())
                         res.profiles.append(OrgProfile.MEDIA)
                         res.profiles.append(OrgProfile.PRESS)
                         if (len(npt.adjectives) > 0): 
@@ -1527,12 +1528,12 @@ class OrgItemTypeToken(MetaToken):
                                     else: 
                                         res.geo2 = rt1
                             res.alt_typ = npt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False).lower()
-                        res.root = OrgItemTermin._new2149(root_, True, 4)
+                        res.root = OrgItemTermin._new2158(root_, True, 4)
                         return res
             rt = t1.kit.process_referent("GEO", t1)
             if (rt is not None and rt.morph.class0_.is_adjective): 
                 if (rt.end_token.next0_ is not None and rt.end_token.next0_.chars.is_latin_letter): 
-                    res = OrgItemTypeToken._new2150(t1, rt.end_token, pres.canonic_text.lower(), pres)
+                    res = OrgItemTypeToken._new2159(t1, rt.end_token, pres.canonic_text.lower(), pres)
                     res.geo = rt
                     return res
             tt1 = t1
@@ -1542,7 +1543,7 @@ class OrgItemTypeToken(MetaToken):
                 if (tt1 != t1 and not BracketHelper.can_be_end_of_sequence(tt1.next0_.next0_.next0_, True, t1, False)): 
                     pass
                 else: 
-                    res = OrgItemTypeToken._new2150(t1, tt1.next0_.next0_, pres.canonic_text.lower(), pres)
+                    res = OrgItemTypeToken._new2159(t1, tt1.next0_.next0_, pres.canonic_text.lower(), pres)
                     res.name = MiscHelper.get_text_value(t1, tt1.next0_.next0_, GetTextAttr.NO).replace(" ", "")
                     if (tt1 != t1): 
                         res.end_token = res.end_token.next0_
@@ -1554,16 +1555,16 @@ class OrgItemTypeToken(MetaToken):
                 ot_ex_li = ad.local_ontology.try_attach(t.next0_, None, False)
                 if (ot_ex_li is None and t.kit.ontology is not None): 
                     ot_ex_li = t.kit.ontology.attach_token(OrganizationReferent.OBJ_TYPENAME, t.next0_)
-                if ((ot_ex_li is not None and len(ot_ex_li) > 0 and ot_ex_li[0].item is not None) and isinstance(ot_ex_li[0].item.referent, OrganizationReferent)): 
+                if ((ot_ex_li is not None and len(ot_ex_li) > 0 and ot_ex_li[0].item is not None) and (isinstance(ot_ex_li[0].item.referent, OrganizationReferent))): 
                     if ((ot_ex_li[0].item.referent if isinstance(ot_ex_li[0].item.referent, OrganizationReferent) else None).kind == OrganizationKind.PRESS): 
                         ok = True
             if (t.next0_ is not None and t.next0_.chars.is_latin_letter and not t.next0_.chars.is_all_lower): 
                 ok = True
             if (ok): 
-                res = OrgItemTypeToken._new2143(t, t, t.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False).lower())
+                res = OrgItemTypeToken._new2152(t, t, t.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False).lower())
                 res.profiles.append(OrgProfile.MEDIA)
                 res.profiles.append(OrgProfile.PRESS)
-                res.root = OrgItemTermin._new2153(t.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False), OrgItemTermin.Types.ORG, 3, True)
+                res.root = OrgItemTermin._new2162(t.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False), OrgItemTermin.Types.ORG, 3, True)
                 res.morph = t.morph
                 res.chars = t.chars
                 if (t.previous is not None and t.previous.morph.class0_.is_adjective): 
@@ -1572,10 +1573,10 @@ class OrgItemTypeToken(MetaToken):
                         res.begin_token = t.previous
                         res.geo = rt
                 return res
-        elif ((term == "МО" and t.chars.is_all_upper and isinstance(t.next0_, ReferentToken)) and isinstance(t.next0_.get_referent(), GeoReferent)): 
+        elif ((term == "МО" and t.chars.is_all_upper and (isinstance(t.next0_, ReferentToken))) and (isinstance(t.next0_.get_referent(), GeoReferent))): 
             geo_ = (t.next0_.get_referent() if isinstance(t.next0_.get_referent(), GeoReferent) else None)
             if (geo_ is not None and geo_.is_state): 
-                res = OrgItemTypeToken._new2154(t, t, "министерство", "МИНИСТЕРСТВО ОБОРОНЫ", 4, OrgItemTypeToken.__m_mo)
+                res = OrgItemTypeToken._new2163(t, t, "министерство", "МИНИСТЕРСТВО ОБОРОНЫ", 4, OrgItemTypeToken.__m_mo)
                 res.profiles.append(OrgProfile.STATE)
                 res.can_be_organization = True
                 return res
@@ -1583,26 +1584,26 @@ class OrgItemTypeToken(MetaToken):
             et = None
             if (OrgItemNumberToken.try_attach(t.next0_, False, None) is not None): 
                 et = t
-            elif (t.next0_ is not None and isinstance(t.next0_, NumberToken)): 
+            elif (t.next0_ is not None and (isinstance(t.next0_, NumberToken))): 
                 et = t
-            elif ((t.next0_ is not None and t.next0_.is_hiphen and t.next0_.next0_ is not None) and isinstance(t.next0_.next0_, NumberToken)): 
+            elif ((t.next0_ is not None and t.next0_.is_hiphen and t.next0_.next0_ is not None) and (isinstance(t.next0_.next0_, NumberToken))): 
                 et = t.next0_
             if (et is not None): 
-                return OrgItemTypeToken._new2155(t, et, "исправительная колония", "колония", OrgItemTypeToken.__m_ispr_kolon, True)
+                return OrgItemTypeToken._new2164(t, et, "исправительная колония", "колония", OrgItemTypeToken.__m_ispr_kolon, True)
         elif (t.is_value("ПАКЕТ", None) and t.next0_ is not None and t.next0_.is_value("АКЦИЯ", "АКЦІЯ")): 
-            return OrgItemTypeToken._new2156(t, t.next0_, 4, True, "")
+            return OrgItemTypeToken._new2165(t, t.next0_, 4, True, "")
         else: 
             tok = OrgItemTypeToken._m_pref_words.try_parse(t, TerminParseAttr.NO)
             if (tok is not None and tok.tag is not None): 
                 if ((tok.whitespaces_after_count < 2) and BracketHelper.can_be_start_of_sequence(tok.end_token.next0_, True, False)): 
-                    return OrgItemTypeToken._new2156(t, tok.end_token, 4, True, "")
+                    return OrgItemTypeToken._new2165(t, tok.end_token, 4, True, "")
         if (res is None and term == "АК" and t.chars.is_all_upper): 
             if (OrgItemTypeToken.try_attach(t.next0_, can_be_first_letter_lower, ad) is not None): 
-                return OrgItemTypeToken._new2158(t, t, OrgItemTypeToken.__m_akcion_comp, OrgItemTypeToken.__m_akcion_comp.canonic_text.lower())
+                return OrgItemTypeToken._new2167(t, t, OrgItemTypeToken.__m_akcion_comp, OrgItemTypeToken.__m_akcion_comp.canonic_text.lower())
         if (term == "В"): 
             if ((t.next0_ is not None and t.next0_.is_char_of("\\/") and t.next0_.next0_ is not None) and t.next0_.next0_.is_value("Ч", None)): 
                 if (OrgItemNumberToken.try_attach(t.next0_.next0_.next0_, True, None) is not None): 
-                    return OrgItemTypeToken._new2158(t, t.next0_.next0_, OrgItemTypeToken.__m_military_unit, OrgItemTypeToken.__m_military_unit.canonic_text.lower())
+                    return OrgItemTypeToken._new2167(t, t.next0_.next0_, OrgItemTypeToken.__m_military_unit, OrgItemTypeToken.__m_military_unit.canonic_text.lower())
         if (t.morph.class0_.is_adjective and t.next0_ is not None and ((t.next0_.chars.is_all_upper or t.next0_.chars.is_last_lower))): 
             if (t.chars.is_capital_upper or (((t.previous is not None and t.previous.is_hiphen and t.previous.previous is not None) and t.previous.previous.chars.is_capital_upper))): 
                 res1 = OrgItemTypeToken.__try_attach(t.next0_, True)
@@ -1612,11 +1613,11 @@ class OrgItemTypeToken(MetaToken):
                     gen = MorphGender.UNDEFINED
                     for ii in range(len(res1.root.canonic_text) - 1, -1, -1):
                         if (ii == 0 or res1.root.canonic_text[ii - 1] == ' '): 
-                            mm = Morphology.get_word_base_info(res1.root.canonic_text[ii : ], MorphLang(), False, False)
+                            mm = Morphology.get_word_base_info(res1.root.canonic_text[ii:], MorphLang(), False, False)
                             gen = mm.gender
                             break
                     nam = t.get_normal_case_text(MorphClass.ADJECTIVE, True, gen, False)
-                    if (((t.previous is not None and t.previous.is_hiphen and isinstance(t.previous.previous, TextToken)) and t.previous.previous.chars.is_capital_upper and not t.is_whitespace_before) and not t.previous.is_whitespace_before): 
+                    if (((t.previous is not None and t.previous.is_hiphen and (isinstance(t.previous.previous, TextToken))) and t.previous.previous.chars.is_capital_upper and not t.is_whitespace_before) and not t.previous.is_whitespace_before): 
                         res1.begin_token = t.previous.previous
                         nam = "{0}-{1}".format((res1.begin_token if isinstance(res1.begin_token, TextToken) else None).term, nam)
                     res1.name = nam
@@ -1626,7 +1627,7 @@ class OrgItemTypeToken(MetaToken):
             if ((res1 is not None and OrgProfile.TRANSPORT in res1.profiles and res1.name is None) and res1.root is not None): 
                 nam = t.get_normal_case_text(MorphClass.ADJECTIVE, True, (MorphGender.FEMINIE if res1.root.canonic_text.endswith("ДОРОГА") else MorphGender.MASCULINE), False)
                 if (nam is not None): 
-                    if (((t.previous is not None and t.previous.is_hiphen and isinstance(t.previous.previous, TextToken)) and t.previous.previous.chars.is_capital_upper and not t.is_whitespace_before) and not t.previous.is_whitespace_before): 
+                    if (((t.previous is not None and t.previous.is_hiphen and (isinstance(t.previous.previous, TextToken))) and t.previous.previous.chars.is_capital_upper and not t.is_whitespace_before) and not t.previous.is_whitespace_before): 
                         t = t.previous.previous
                         nam = "{0}-{1}".format((t if isinstance(t, TextToken) else None).term, nam)
                     res1.begin_token = t
@@ -1701,24 +1702,24 @@ class OrgItemTypeToken(MetaToken):
                 if ((li22 is not None and len(li22) > 0 and li22[0].termin == li[0].termin) and li22[0].end_token.next0_ is not None and li22[0].end_token.next0_.is_char(')')): 
                     res.end_token = li22[0].end_token.next0_
             return res
-        if (isinstance(t, NumberToken) and t.morph.class0_.is_adjective): 
+        if ((isinstance(t, NumberToken)) and t.morph.class0_.is_adjective): 
             pass
         elif (isinstance(t, TextToken)): 
             pass
         else: 
             return None
         if (t.is_value("СБ", None)): 
-            if (t.next0_ is not None and isinstance(t.next0_.get_referent(), GeoReferent)): 
-                return OrgItemTypeToken._new2160(t, t, "банк", OrgItemTypeToken.__m_sber_bank, OrgItemTypeToken.__m_sber_bank.canonic_text)
+            if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), GeoReferent))): 
+                return OrgItemTypeToken._new2169(t, t, "банк", OrgItemTypeToken.__m_sber_bank, OrgItemTypeToken.__m_sber_bank.canonic_text)
         npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.IGNOREADJBEST, 0)
         if (npt is None or npt.internal_noun is not None): 
             if (((not t.chars.is_all_lower and t.next0_ is not None and t.next0_.is_hiphen) and not t.is_whitespace_after and not t.next0_.is_whitespace_after) and t.next0_.next0_ is not None and t.next0_.next0_.is_value("БАНК", None)): 
                 s = t.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False)
-                res = OrgItemTypeToken._new2161(t, t.next0_.next0_, s, t.next0_.next0_.morph, t.chars, t.next0_.next0_.chars)
+                res = OrgItemTypeToken._new2170(t, t.next0_.next0_, s, t.next0_.next0_.morph, t.chars, t.next0_.next0_.chars)
                 res.root = OrgItemTypeToken.__m_bank
                 res.typ = "банк"
                 return res
-            if (isinstance(t, NumberToken) and (t.whitespaces_after_count < 3) and isinstance(t.next0_, TextToken)): 
+            if ((isinstance(t, NumberToken)) and (t.whitespaces_after_count < 3) and (isinstance(t.next0_, TextToken))): 
                 res11 = OrgItemTypeToken.__try_attach(t.next0_, False)
                 if (res11 is not None and res11.root is not None and res11.root.can_has_number): 
                     res11.begin_token = t
@@ -1732,18 +1733,18 @@ class OrgItemTypeToken(MetaToken):
             s = npt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False)
             if (LanguageHelper.ends_with_ex(s, "БАНК", "БАНКА", "БАНОК", None)): 
                 if (LanguageHelper.ends_with(s, "БАНКА")): 
-                    s = s[0 : (len(s) - 1)]
+                    s = s[0:0+len(s) - 1]
                 elif (LanguageHelper.ends_with(s, "БАНОК")): 
-                    s = (s[0 : (len(s) - 2)] + "К")
-                res = OrgItemTypeToken._new2161(npt.begin_token, npt.end_token, s, npt.morph, npt.chars, npt.chars)
+                    s = (s[0:0+len(s) - 2] + "К")
+                res = OrgItemTypeToken._new2170(npt.begin_token, npt.end_token, s, npt.morph, npt.chars, npt.chars)
                 res.root = OrgItemTypeToken.__m_bank
                 res.typ = "банк"
                 return res
             return None
         tt = npt.end_token
-        first_pass2983 = True
+        first_pass3952 = True
         while True:
-            if first_pass2983: first_pass2983 = False
+            if first_pass3952: first_pass3952 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             if (tt == npt.begin_token): 
@@ -1792,7 +1793,12 @@ class OrgItemTypeToken(MetaToken):
                 if (not npt.noun.chars.is_all_lower or not OrgItemTypeToken.is_std_adjective(npt.adjectives[0], False)): 
                     bad = True
                 else: 
-                    for i in range(1, len(npt.adjectives), 1):
+                    i = 1
+                    first_pass3953 = True
+                    while True:
+                        if first_pass3953: first_pass3953 = False
+                        else: i += 1
+                        if (not (i < len(npt.adjectives))): break
                         if (npt.kit.process_referent("GEO", npt.adjectives[i].begin_token) is not None): 
                             continue
                         if (not npt.adjectives[i].chars.is_all_lower): 
@@ -1817,7 +1823,7 @@ class OrgItemTypeToken(MetaToken):
         if (res.end_token == npt.end_token): 
             res.name = npt.get_normal_case_text(MorphClass(), True, MorphGender.UNDEFINED, False)
         if (res.name == res.alt_typ): 
-            res.alt_typ = None
+            res.alt_typ = (None)
         if (res.alt_typ is not None): 
             res.alt_typ = res.alt_typ.lower().replace('-', ' ')
         res.root = (li[0].termin if isinstance(li[0].termin, OrgItemTermin) else None)
@@ -1825,19 +1831,22 @@ class OrgItemTypeToken(MetaToken):
             return None
         res.typ = res.root.canonic_text.lower()
         if (len(npt.adjectives) > 0): 
-            for i in range(len(npt.adjectives)):
+            i = 0
+            while i < len(npt.adjectives): 
                 s = npt.get_normal_case_text_without_adjective(i)
                 ctli = OrgItemTypeToken.__m_global.find_termin_by_canonic_text(s)
-                if (ctli is not None and len(ctli) > 0 and isinstance(ctli[0], OrgItemTermin)): 
+                if (ctli is not None and len(ctli) > 0 and (isinstance(ctli[0], OrgItemTermin))): 
                     res.root = (ctli[0] if isinstance(ctli[0], OrgItemTermin) else None)
                     if (res.alt_typ is None): 
                         res.alt_typ = res.root.canonic_text.lower()
                         if (res.alt_typ == res.typ): 
-                            res.alt_typ = None
+                            res.alt_typ = (None)
                     break
+                i += 1
             res.coef = res.root.coeff
             if (res.coef == 0): 
-                for i in range(len(npt.adjectives)):
+                i = 0
+                while i < len(npt.adjectives): 
                     if (OrgItemTypeToken.is_std_adjective(npt.adjectives[i], True)): 
                         res.coef += 1
                         if (((i + 1) < len(npt.adjectives)) and not OrgItemTypeToken.is_std_adjective(npt.adjectives[i + 1], False)): 
@@ -1847,7 +1856,8 @@ class OrgItemTypeToken(MetaToken):
                             if (res.is_dep): 
                                 res.is_dep = False
                     elif (OrgItemTypeToken.is_std_adjective(npt.adjectives[i], False)): 
-                        res.coef += 0.5
+                        res.coef += .5
+                    i += 1
             else: 
                 i = 0
                 while i < (len(npt.adjectives) - 1): 
@@ -1901,12 +1911,6 @@ class OrgItemTypeToken(MetaToken):
     
     @staticmethod
     def check_org_special_word_before(t : 'Token') -> bool:
-        """ Проверка, что перед токеном есть специфическое слово типа "Президент" и т.п.
-        
-        Args:
-            t(Token): 
-        
-        """
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.NumberToken import NumberToken
         if (t is None): 
@@ -1915,14 +1919,14 @@ class OrgItemTypeToken(MetaToken):
             t = t.previous
         k = 0
         tt = t
-        first_pass2984 = True
+        first_pass3954 = True
         while True:
-            if first_pass2984: first_pass2984 = False
+            if first_pass3954: first_pass3954 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             r = tt.get_referent()
             if (r is not None): 
-                if (tt == t and isinstance(r, OrganizationReferent)): 
+                if (tt == t and (isinstance(r, OrganizationReferent))): 
                     return True
                 return False
             if (not ((isinstance(tt, TextToken)))): 
@@ -1988,9 +1992,9 @@ class OrgItemTypeToken(MetaToken):
                     return None
         cou = 0
         tt = t.previous
-        first_pass2985 = True
+        first_pass3955 = True
         while True:
-            if first_pass2985: first_pass2985 = False
+            if first_pass3955: first_pass3955 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             if (tt.is_newline_after): 
@@ -2019,7 +2023,7 @@ class OrgItemTypeToken(MetaToken):
                     if (tok.termin.tag is not None): 
                         ok = False
                         for ty in (r if isinstance(r, OrganizationReferent) else None).types: 
-                            if (ty.upper().endswith(tok.termin.canonic_text.upper())): 
+                            if (Utils.endsWithString(ty, tok.termin.canonic_text, True)): 
                                 ok = True
                                 break
                         if (not ok): 
@@ -2154,8 +2158,8 @@ class OrgItemTypeToken(MetaToken):
     
     @staticmethod
     def check_kind(obj : 'OrganizationReferent') -> 'OrganizationKind':
-        t = Utils.newStringIO(None)
-        n = Utils.newStringIO(None)
+        t = io.StringIO()
+        n = io.StringIO()
         for s in obj.slots: 
             if (s.type_name == OrganizationReferent.ATTR_NAME): 
                 print("{0};".format(s.value), end="", file=n, flush=True)
@@ -2249,7 +2253,7 @@ class OrgItemTypeToken(MetaToken):
         if ("центр;" in t): 
             if (("диагностический" in tn or "медицинский" in tn or "діагностичний" in tn) or "медичний" in tn): 
                 return OrganizationKind.MEDICAL
-            if (isinstance(r, OrganizationReferent) and (r if isinstance(r, OrganizationReferent) else None).higher is not None): 
+            if ((isinstance(r, OrganizationReferent)) and (r if isinstance(r, OrganizationReferent) else None).higher is not None): 
                 if ((r if isinstance(r, OrganizationReferent) else None).higher.kind == OrganizationKind.DEPARTMENT): 
                     return OrganizationKind.DEPARTMENT
         if ("часть;" in t or "частина;" in t): 
@@ -2260,16 +2264,15 @@ class OrgItemTypeToken(MetaToken):
             if (r.contains_profile(OrgProfile.MEDIA)): 
                 return OrganizationKind.MEDIA
         return OrganizationKind.UNDEFINED
-
     
     @staticmethod
-    def _new2141(_arg1 : 'Token', _arg2 : 'Token', _arg3 : float) -> 'OrgItemTypeToken':
+    def _new2150(_arg1 : 'Token', _arg2 : 'Token', _arg3 : float) -> 'OrgItemTypeToken':
         res = OrgItemTypeToken(_arg1, _arg2)
         res.__m_coef = _arg3
         return res
     
     @staticmethod
-    def _new2142(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : float, _arg5 : bool) -> 'OrgItemTypeToken':
+    def _new2151(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : float, _arg5 : bool) -> 'OrgItemTypeToken':
         res = OrgItemTypeToken(_arg1, _arg2)
         res.typ = _arg3
         res.coef = _arg4
@@ -2277,13 +2280,13 @@ class OrgItemTypeToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2143(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'OrgItemTypeToken':
+    def _new2152(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'OrgItemTypeToken':
         res = OrgItemTypeToken(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new2146(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'OrgItemTermin', _arg5 : bool) -> 'OrgItemTypeToken':
+    def _new2155(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'OrgItemTermin', _arg5 : bool) -> 'OrgItemTypeToken':
         res = OrgItemTypeToken(_arg1, _arg2)
         res.typ = _arg3
         res.root = _arg4
@@ -2291,14 +2294,14 @@ class OrgItemTypeToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2150(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'OrgItemTermin') -> 'OrgItemTypeToken':
+    def _new2159(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'OrgItemTermin') -> 'OrgItemTypeToken':
         res = OrgItemTypeToken(_arg1, _arg2)
         res.typ = _arg3
         res.root = _arg4
         return res
     
     @staticmethod
-    def _new2154(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : str, _arg5 : float, _arg6 : 'OrgItemTermin') -> 'OrgItemTypeToken':
+    def _new2163(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : str, _arg5 : float, _arg6 : 'OrgItemTermin') -> 'OrgItemTypeToken':
         res = OrgItemTypeToken(_arg1, _arg2)
         res.typ = _arg3
         res.name = _arg4
@@ -2307,7 +2310,7 @@ class OrgItemTypeToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2155(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : str, _arg5 : 'OrgItemTermin', _arg6 : bool) -> 'OrgItemTypeToken':
+    def _new2164(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : str, _arg5 : 'OrgItemTermin', _arg6 : bool) -> 'OrgItemTypeToken':
         res = OrgItemTypeToken(_arg1, _arg2)
         res.typ = _arg3
         res.alt_typ = _arg4
@@ -2316,7 +2319,7 @@ class OrgItemTypeToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2156(_arg1 : 'Token', _arg2 : 'Token', _arg3 : float, _arg4 : bool, _arg5 : str) -> 'OrgItemTypeToken':
+    def _new2165(_arg1 : 'Token', _arg2 : 'Token', _arg3 : float, _arg4 : bool, _arg5 : str) -> 'OrgItemTypeToken':
         res = OrgItemTypeToken(_arg1, _arg2)
         res.coef = _arg3
         res.is_not_typ = _arg4
@@ -2324,14 +2327,14 @@ class OrgItemTypeToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2158(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'OrgItemTermin', _arg4 : str) -> 'OrgItemTypeToken':
+    def _new2167(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'OrgItemTermin', _arg4 : str) -> 'OrgItemTypeToken':
         res = OrgItemTypeToken(_arg1, _arg2)
         res.root = _arg3
         res.typ = _arg4
         return res
     
     @staticmethod
-    def _new2160(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'OrgItemTermin', _arg5 : str) -> 'OrgItemTypeToken':
+    def _new2169(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'OrgItemTermin', _arg5 : str) -> 'OrgItemTypeToken':
         res = OrgItemTypeToken(_arg1, _arg2)
         res.typ = _arg3
         res.root = _arg4
@@ -2339,7 +2342,7 @@ class OrgItemTypeToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2161(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'MorphCollection', _arg5 : 'CharsInfo', _arg6 : 'CharsInfo') -> 'OrgItemTypeToken':
+    def _new2170(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'MorphCollection', _arg5 : 'CharsInfo', _arg6 : 'CharsInfo') -> 'OrgItemTypeToken':
         res = OrgItemTypeToken(_arg1, _arg2)
         res.name = _arg3
         res.morph = _arg4

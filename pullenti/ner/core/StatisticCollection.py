@@ -1,13 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
-
-
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.morph.MorphGender import MorphGender
 
 
@@ -22,7 +20,6 @@ class StatisticCollection:
             self.pair_count = 0
             self.first_has_other_second = False
             self.second_has_other_first = False
-    
         
         @staticmethod
         def _new612(_arg1 : int, _arg2 : int) -> 'BigrammInfo':
@@ -64,7 +61,6 @@ class StatisticCollection:
                 self.like_chars_after_words[w] = 1
             else: 
                 self.like_chars_after_words[w] += 1
-    
         
         @staticmethod
         def _new599(_arg1 : str) -> 'WordInfo':
@@ -84,17 +80,17 @@ class StatisticCollection:
         prev = None
         prevt = None
         t = first
-        first_pass2766 = True
+        first_pass3716 = True
         while True:
-            if first_pass2766: first_pass2766 = False
+            if first_pass3716: first_pass3716 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_hiphen): 
                 continue
             it = None
-            if ((isinstance(t, TextToken) and t.chars.is_letter and t.length_char > 1) and not t.chars.is_all_lower): 
+            if (((isinstance(t, TextToken)) and t.chars.is_letter and t.length_char > 1) and not t.chars.is_all_lower): 
                 it = self.__add_token(t if isinstance(t, TextToken) else None)
-            elif (((isinstance(t, TextToken) and (t if isinstance(t, TextToken) else None).length_char == 1 and t.chars.is_all_upper) and t.next0_ is not None and t.next0_.is_char('.')) and not t.is_whitespace_after): 
+            elif ((((isinstance(t, TextToken)) and (t if isinstance(t, TextToken) else None).length_char == 1 and t.chars.is_all_upper) and t.next0_ is not None and t.next0_.is_char('.')) and not t.is_whitespace_after): 
                 it = self.__add_token(t if isinstance(t, TextToken) else None)
                 t = t.next0_
             if (prev is not None and it is not None): 
@@ -106,7 +102,7 @@ class StatisticCollection:
             prevt = t
         t = first
         while t is not None: 
-            if (t.chars.is_letter and isinstance(t, TextToken)): 
+            if (t.chars.is_letter and (isinstance(t, TextToken))): 
                 it = self.__find_item(t if isinstance(t, TextToken) else None, False)
                 if (it is not None): 
                     if (t.chars.is_all_lower): 
@@ -147,15 +143,15 @@ class StatisticCollection:
             if (not v in self.__m_items): 
                 self.__m_items[v] = res
         res.total_count += 1
-        if (isinstance(tt.next0_, TextToken) and tt.next0_.chars.is_all_lower): 
+        if ((isinstance(tt.next0_, TextToken)) and tt.next0_.chars.is_all_lower): 
             if (tt.next0_.chars.is_cyrillic_letter and tt.next0_.get_morph_class_in_dictionary().is_verb): 
                 g = tt.next0_.morph.gender
                 if (g == MorphGender.FEMINIE): 
                     res.female_verbs_after_count += 1
-                elif (((g & MorphGender.MASCULINE)) != MorphGender.UNDEFINED): 
+                elif ((((g) & (MorphGender.MASCULINE))) != (MorphGender.UNDEFINED)): 
                     res.male_verbs_after_count += 1
         if (tt.previous is not None): 
-            if (isinstance(tt.previous, TextToken) and tt.previous.chars.is_letter and not tt.previous.chars.is_all_lower): 
+            if ((isinstance(tt.previous, TextToken)) and tt.previous.chars.is_letter and not tt.previous.chars.is_all_lower): 
                 pass
             else: 
                 res.not_capital_before_count += 1
@@ -196,7 +192,6 @@ class StatisticCollection:
         return None
     
     def __add_bigramm(self, b1 : 'WordInfo', b2 : 'WordInfo') -> None:
-        di = [ ]
         inoutarg610 = RefOutArgWrapper(None)
         inoutres611 = Utils.tryGetValue(self.__m_bigramms, b1.normal, inoutarg610)
         di = inoutarg610.value
@@ -261,7 +256,7 @@ class StatisticCollection:
             return None
         si1 = None
         inoutarg615 = RefOutArgWrapper(None)
-        inoutres616 = Utils.tryGetValue(self.__m_items, ini[0 : 1], inoutarg615)
+        inoutres616 = Utils.tryGetValue(self.__m_items, ini[0:0+1], inoutarg615)
         si1 = inoutarg615.value
         if (not inoutres616): 
             return None

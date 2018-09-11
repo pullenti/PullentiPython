@@ -1,15 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
-
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.person.PersonPropertyKind import PersonPropertyKind
 from pullenti.morph.MorphLang import MorphLang
@@ -194,7 +193,6 @@ class PersonReferent(Referent):
             return super().get_compare_strings()
     
     SHOW_LASTNAME_ON_FIRST_POSITION = False
-    """ При выводе в ToString() первым ставить фамилию, а не имя """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
@@ -207,7 +205,7 @@ class PersonReferent(Referent):
             niks = self.get_string_values(PersonReferent.ATTR_NICKNAME)
             if (len(niks) == 1): 
                 return "{0} ({1})".format(res, MiscHelper.convert_first_char_upper_and_other_lower(niks[0]))
-            tmp = Utils.newStringIO(None)
+            tmp = io.StringIO()
             print(res, end="", file=tmp)
             print(" (", end="", file=tmp)
             for s in niks: 
@@ -229,7 +227,7 @@ class PersonReferent(Referent):
             return MiscHelper.convert_first_char_upper_and_other_lower(id0_)
         n = self.get_string_value(PersonReferent.ATTR_LASTNAME)
         if (n is not None): 
-            res = Utils.newStringIO(None)
+            res = io.StringIO()
             print(n, end="", file=res)
             s = self.__find_for_surname(PersonReferent.ATTR_FIRSTNAME, n, True)
             if (s is not None): 
@@ -260,7 +258,7 @@ class PersonReferent(Referent):
             last_name_first = True
         n = self.get_string_value(PersonReferent.ATTR_LASTNAME)
         if (n is not None): 
-            res = Utils.newStringIO(None)
+            res = io.StringIO()
             if (last_name_first): 
                 print("{0} ".format(n), end="", file=res, flush=True)
             s = self.__find_for_surname(PersonReferent.ATTR_FIRSTNAME, n, False)
@@ -389,7 +387,7 @@ class PersonReferent(Referent):
                         return False
                 elif (typ == Referent.EqualType.DIFFERENTTEXTS): 
                     if (self.find_slot(PersonReferent.ATTR_MIDDLENAME, None, True) is not None or p.find_slot(PersonReferent.ATTR_MIDDLENAME, None, True) is not None): 
-                        return self.__str__() == str(p)
+                        return str(self) == str(p)
                     names1 = list()
                     names2 = list()
                     for s in self.slots: 
@@ -509,13 +507,6 @@ class PersonReferent(Referent):
         return False
     
     def __compare_surnames_strs(self, s1 : str, s2 : str) -> bool:
-        """ Сравнение с учётом возможных окончаний
-        
-        Args:
-            s1(str): 
-            s2(str): 
-        
-        """
         from pullenti.ner.core.MiscHelper import MiscHelper
         if (s1.startswith(s2) or s2.startswith(s1)): 
             return True
@@ -534,13 +525,13 @@ class PersonReferent(Referent):
         if (len(s) < 3): 
             return s
         if (LanguageHelper.ends_with_ex(s, "А", "У", "Е", None)): 
-            return s[0 : (len(s) - 1)]
+            return s[0:0+len(s) - 1]
         if (LanguageHelper.ends_with(s, "ОМ") or LanguageHelper.ends_with(s, "ЫМ")): 
-            return s[0 : (len(s) - 2)]
+            return s[0:0+len(s) - 2]
         if (LanguageHelper.ends_with_ex(s, "Я", "Ю", None, None)): 
             ch1 = s[len(s) - 2]
             if (ch1 == 'Н' or ch1 == 'Л'): 
-                return s[0 : (len(s) - 1)] + "Ь"
+                return s[0:0+len(s) - 1] + "Ь"
         return s
     
     def __check_names(self, attr_name : str, p : 'PersonReferent') -> bool:
@@ -674,7 +665,8 @@ class PersonReferent(Referent):
     def __correct_identifiers(self) -> None:
         if (self.is_female): 
             return
-        for i in range(len(self.slots)):
+        i = 0
+        while i < len(self.slots): 
             if (self.slots[i].type_name == PersonReferent.ATTR_IDENTITY): 
                 s = str(self.slots[i].value)
                 j = i + 1
@@ -688,6 +680,7 @@ class PersonReferent(Referent):
                             j -= 1
                             self.is_male = True
                     j += 1
+            i += 1
     
     def __remove_slots(self, attr_name : str, cols : typing.List['PersonMorphCollection']) -> None:
         vars0_ = list()
@@ -701,7 +694,12 @@ class PersonReferent(Referent):
             if (self.slots[i].type_name == attr_name): 
                 v = str(self.slots[i].value)
                 if (not v in vars0_): 
-                    for j in range(len(self.slots)):
+                    j = 0
+                    first_pass4019 = True
+                    while True:
+                        if first_pass4019: first_pass4019 = False
+                        else: j += 1
+                        if (not (j < len(self.slots))): break
                         if (j != i and self.slots[j].type_name == self.slots[i].type_name): 
                             if (attr_name == PersonReferent.ATTR_LASTNAME): 
                                 ee = False
@@ -721,7 +719,7 @@ class PersonReferent(Referent):
                         if (ss.type_name == s.type_name and s != ss): 
                             v = str(ss.value)
                             if (not PersonReferent.__is_initial(v) and v.startswith(str(s.value))): 
-                                if (attr_name == PersonReferent.ATTR_FIRSTNAME and len(v) == 2 and self.find_slot(PersonReferent.ATTR_MIDDLENAME, v[1 : ], True) is not None): 
+                                if (attr_name == PersonReferent.ATTR_FIRSTNAME and len(v) == 2 and self.find_slot(PersonReferent.ATTR_MIDDLENAME, v[1:], True) is not None): 
                                     self.slots.remove(ss)
                                 else: 
                                     self.slots.remove(s)
@@ -731,7 +729,7 @@ class PersonReferent(Referent):
         from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
         attrs = list()
         for s in self.slots: 
-            if (s.type_name == PersonReferent.ATTR_ATTR and isinstance(s.value, PersonPropertyReferent)): 
+            if (s.type_name == PersonReferent.ATTR_ATTR and (isinstance(s.value, PersonPropertyReferent))): 
                 attrs.append(s.value if isinstance(s.value, PersonPropertyReferent) else None)
         if (len(attrs) < 2): 
             return
@@ -739,14 +737,16 @@ class PersonReferent(Referent):
             a.tag = None
         i = 0
         while i < (len(attrs) - 1): 
-            for j in range(i + 1, len(attrs), 1):
+            j = i + 1
+            while j < len(attrs): 
                 if (attrs[i].general_referent == attrs[j] or attrs[j].can_be_general_for(attrs[i])): 
                     attrs[j].tag = attrs[i]
                 elif (attrs[j].general_referent == attrs[i] or attrs[i].can_be_general_for(attrs[j])): 
                     attrs[i].tag = attrs[j]
+                j += 1
             i += 1
         for i in range(len(self.slots) - 1, -1, -1):
-            if (self.slots[i].type_name == PersonReferent.ATTR_ATTR and isinstance(self.slots[i].value, PersonPropertyReferent)): 
+            if (self.slots[i].type_name == PersonReferent.ATTR_ATTR and (isinstance(self.slots[i].value, PersonPropertyReferent))): 
                 if ((self.slots[i].value if isinstance(self.slots[i].value, PersonPropertyReferent) else None).tag is not None): 
                     pr = ((self.slots[i].value if isinstance(self.slots[i].value, PersonPropertyReferent) else None).tag if isinstance((self.slots[i].value if isinstance(self.slots[i].value, PersonPropertyReferent) else None).tag, PersonPropertyReferent) else None)
                     if (pr is not None and pr.general_referent is None): 
@@ -759,7 +759,7 @@ class PersonReferent(Referent):
         tit = self.__find_shortest_king_titul(False)
         for a in self.slots: 
             if (a.type_name == PersonReferent.ATTR_IDENTITY): 
-                oi.termins.append(Termin._new2430(str(a.value), True))
+                oi.termins.append(Termin._new2439(str(a.value), True))
             elif (a.type_name == PersonReferent.ATTR_LASTNAME): 
                 t = Termin(str(a.value))
                 if (len(t.terms) > 20): 

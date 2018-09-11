@@ -1,13 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+import io
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.keyword.KeywordType import KeywordType
-
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 
 
@@ -71,7 +71,7 @@ class KeywordReferent(Referent):
             return 0
         res = 0
         for s in self.slots: 
-            if (s.type_name == KeywordReferent.ATTR_REF and isinstance(s.value, KeywordReferent)): 
+            if (s.type_name == KeywordReferent.ATTR_REF and (isinstance(s.value, KeywordReferent))): 
                 if (s.value == root): 
                     return 0
                 res += (s.value if isinstance(s.value, KeywordReferent) else None).__get_child_words(root, lev + 1)
@@ -113,7 +113,7 @@ class KeywordReferent(Referent):
     def _union(self, kw1 : 'KeywordReferent', kw2 : 'KeywordReferent', word2 : str) -> None:
         self.typ = kw1.typ
         tmp = list()
-        tmp2 = Utils.newStringIO(None)
+        tmp2 = io.StringIO()
         for v in kw1.get_string_values(KeywordReferent.ATTR_VALUE): 
             self.add_slot(KeywordReferent.ATTR_VALUE, "{0} {1}".format(v, word2), False, 0)
         norms1 = kw1.get_string_values(KeywordReferent.ATTR_NORMAL)
@@ -131,10 +131,12 @@ class KeywordReferent(Referent):
                         tmp.append(n)
                 tmp.sort()
                 Utils.setLengthStringIO(tmp2, 0)
-                for i in range(len(tmp)):
+                i = 0
+                while i < len(tmp): 
                     if (i > 0): 
                         print(' ', end="", file=tmp2)
                     print(tmp[i], end="", file=tmp2)
+                    i += 1
                 self.add_slot(KeywordReferent.ATTR_NORMAL, Utils.toStringStringIO(tmp2), False, 0)
         self.add_slot(KeywordReferent.ATTR_REF, kw1, False, 0)
         self.add_slot(KeywordReferent.ATTR_REF, kw2, False, 0)
@@ -146,10 +148,9 @@ class KeywordReferent(Referent):
             if (s.type_name == KeywordReferent.ATTR_NORMAL or s.type_name == KeywordReferent.ATTR_VALUE): 
                 res.termins.append(Termin(s.value))
         return res
-
     
     @staticmethod
-    def _new1487(_arg1 : 'KeywordType') -> 'KeywordReferent':
+    def _new1491(_arg1 : 'KeywordType') -> 'KeywordReferent':
         res = KeywordReferent()
         res.typ = _arg1
         return res

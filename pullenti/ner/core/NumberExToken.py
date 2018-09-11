@@ -1,13 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import math
 import io
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.NumberExType import NumberExType
 from pullenti.ner.NumberSpellingType import NumberSpellingType
@@ -36,21 +36,21 @@ class NumberExToken(NumberToken):
     @staticmethod
     def __try_parse_float(t : 'NumberToken', d : float) -> 'Token':
         from pullenti.ner.TextToken import TextToken
-        d.value = 0
+        d.value = (0)
         if (t is None or t.next0_ is None or t.typ != NumberSpellingType.DIGIT): 
             return None
         kit_ = t.kit
         ns = None
         sps = None
         t1 = t
-        first_pass2761 = True
+        first_pass3711 = True
         while True:
-            if first_pass2761: first_pass2761 = False
+            if first_pass3711: first_pass3711 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
             if (t1.next0_ is None): 
                 break
-            if ((isinstance(t1.next0_, NumberToken) and (t1.whitespaces_after_count < 3) and (t1.next0_ if isinstance(t1.next0_, NumberToken) else None).typ == NumberSpellingType.DIGIT) and t1.next0_.length_char == 3): 
+            if (((isinstance(t1.next0_, NumberToken)) and (t1.whitespaces_after_count < 3) and (t1.next0_ if isinstance(t1.next0_, NumberToken) else None).typ == NumberSpellingType.DIGIT) and t1.next0_.length_char == 3): 
                 if (ns is None): 
                     ns = list()
                     ns.append(t)
@@ -60,7 +60,7 @@ class NumberExToken(NumberToken):
                 ns.append(t1.next0_ if isinstance(t1.next0_, NumberToken) else None)
                 sps.append(' ')
                 continue
-            if ((t1.next0_.is_char_of(",.") and isinstance(t1.next0_.next0_, NumberToken) and (t1.next0_.next0_ if isinstance(t1.next0_.next0_, NumberToken) else None).typ == NumberSpellingType.DIGIT) and (t1.whitespaces_after_count < 2) and (t1.next0_.whitespaces_after_count < 2)): 
+            if ((t1.next0_.is_char_of(",.") and (isinstance(t1.next0_.next0_, NumberToken)) and (t1.next0_.next0_ if isinstance(t1.next0_.next0_, NumberToken) else None).typ == NumberSpellingType.DIGIT) and (t1.whitespaces_after_count < 2) and (t1.next0_.whitespaces_after_count < 2)): 
                 if (ns is None): 
                     ns = list()
                     ns.append(t)
@@ -89,27 +89,27 @@ class NumberExToken(NumberToken):
                     elif (ns[1].end_token.is_char('.') and ns[1].end_token.previous is not None and ns[1].end_token.previous.chars.is_letter): 
                         merge = True
                     if (ns[1].is_whitespace_before): 
-                        if (isinstance(ns[1].end_token, TextToken) and (ns[1].end_token if isinstance(ns[1].end_token, TextToken) else None).term.endswith("000")): 
+                        if ((isinstance(ns[1].end_token, TextToken)) and (ns[1].end_token if isinstance(ns[1].end_token, TextToken) else None).term.endswith("000")): 
                             return None
-            elif (ns[0].length_char > 3 or ns[0].value == 0): 
+            elif (ns[0].length_char > 3 or ns[0].value == (0)): 
                 is_last_drob = True
             else: 
                 ok = True
                 if (len(ns) == 2 and ns[1].length_char == 3): 
                     ttt = NumberExToken.__m_postfixes.try_parse(ns[1].end_token.next0_, TerminParseAttr.NO)
-                    if (ttt is not None and Utils.valToEnum(ttt.termin.tag, NumberExType) == NumberExType.MONEY): 
+                    if (ttt is not None and (Utils.valToEnum(ttt.termin.tag, NumberExType)) == NumberExType.MONEY): 
                         is_last_drob = False
                         ok = False
                         not_set_drob = False
-                    elif (ns[1].end_token.next0_ is not None and ns[1].end_token.next0_.is_char('(') and isinstance(ns[1].end_token.next0_.next0_, NumberToken)): 
+                    elif (ns[1].end_token.next0_ is not None and ns[1].end_token.next0_.is_char('(') and (isinstance(ns[1].end_token.next0_.next0_, NumberToken))): 
                         nt1 = (ns[1].end_token.next0_.next0_ if isinstance(ns[1].end_token.next0_.next0_, NumberToken) else None)
-                        if (nt1.value == ((ns[0].value * 1000) + ns[1].value)): 
+                        if (nt1.value == ((ns[0].value * (1000)) + ns[1].value)): 
                             is_last_drob = False
                             ok = False
                             not_set_drob = False
                 if (ok): 
                     if ("pt" in t.kit.misc_data): 
-                        m_prev_point_char = t.kit.misc_data["pt"]
+                        m_prev_point_char = (t.kit.misc_data["pt"])
                     if (m_prev_point_char == sps[0]): 
                         is_last_drob = True
                         not_set_drob = True
@@ -131,12 +131,13 @@ class NumberExToken(NumberToken):
                 is_last_drob = True
             elif (ns[len(ns) - 1].length_char != 3): 
                 return None
-        for i in range(len(ns)):
+        i = 0
+        while i < len(ns): 
             if ((i < (len(ns) - 1)) or not is_last_drob): 
                 if (i == 0): 
-                    d.value = ns[i].value
+                    d.value = (ns[i].value)
                 else: 
-                    d.value = ((d.value * 1000) + ns[i].value)
+                    d.value = ((d.value * (1000)) + (ns[i].value))
                 if (i == (len(ns) - 1) and not not_set_drob): 
                     if (sps[len(sps) - 1] == ','): 
                         m_prev_point_char = '.'
@@ -151,21 +152,22 @@ class NumberExToken(NumberToken):
                     sss = str(ns[i].value)
                     kkk = 0
                     while kkk < (len(sss) - ns[i].begin_token.length_char): 
-                        d.value *= 10
+                        d.value *= (10)
                         kkk += 1
-                    f2 = ns[i].value
+                    f2 = (ns[i].value)
                     kkk = 0
                     while kkk < ns[i].begin_token.length_char: 
-                        f2 /= 10
+                        f2 /= (10)
                         kkk += 1
                     d.value += f2
                 else: 
-                    f2 = ns[i].value
+                    f2 = (ns[i].value)
                     kkk = 0
                     while kkk < ns[i].length_char: 
-                        f2 /= 10
+                        f2 /= (10)
                         kkk += 1
                     d.value += f2
+            i += 1
         if ("pt" in kit_.misc_data): 
             kit_.misc_data["pt"] = m_prev_point_char
         else: 
@@ -174,8 +176,6 @@ class NumberExToken(NumberToken):
     
     @staticmethod
     def try_parse_float_number(t : 'Token', can_be_integer : bool=False) -> 'NumberExToken':
-        """ Это разделитель дроби по-умолчанию, используется для случаев, когда невозможно принять однозначного решения.
-         Устанавливается на основе последнего успешного анализа. """
         from pullenti.ner.TextToken import TextToken
         is_not = False
         t0 = t
@@ -185,23 +185,23 @@ class NumberExToken(NumberToken):
                 is_not = True
             elif (t.is_char('+') or t.is_value("ПЛЮС", None)): 
                 t = t.next0_
-        if (isinstance(t, TextToken) and ((t.is_value("НОЛЬ", None) or t.is_value("НУЛЬ", None))) and t.next0_ is not None): 
+        if ((isinstance(t, TextToken)) and ((t.is_value("НОЛЬ", None) or t.is_value("НУЛЬ", None))) and t.next0_ is not None): 
             if (t.next0_.is_value("ЦЕЛЫЙ", None)): 
                 t = t.next0_
             res0 = NumberExToken(t, t.next0_, 0, NumberSpellingType.WORDS, NumberExType.UNDEFINED)
             t = t.next0_
             if (isinstance(t, NumberToken)): 
                 val = (t if isinstance(t, NumberToken) else None).value
-                if (t.next0_ is not None and val > 0): 
+                if (t.next0_ is not None and val > (0)): 
                     if (t.next0_.is_value("ДЕСЯТЫЙ", None)): 
                         res0.end_token = t.next0_
-                        res0.real_value = (val / 10)
+                        res0.real_value = ((val) / (10))
                     elif (t.next0_.is_value("СОТЫЙ", None)): 
                         res0.end_token = t.next0_
-                        res0.real_value = (val / 100)
+                        res0.real_value = ((val) / (100))
                     elif (t.next0_.is_value("ТЫСЯЧНЫЙ", None)): 
                         res0.end_token = t.next0_
-                        res0.real_value = (val / 1000)
+                        res0.real_value = ((val) / (1000))
                 if (res0.real_value == 0): 
                     res0.end_token = t
                     str0_ = "0.{0}".format(val)
@@ -225,11 +225,11 @@ class NumberExToken(NumberToken):
             tok = NumberExToken.__m_after_points.try_parse(t, TerminParseAttr.NO)
             if (tok is not None): 
                 res0 = NumberExToken(t, tok.end_token, 0, NumberSpellingType.WORDS, NumberExType.UNDEFINED)
-                res0.real_value = (tok.termin.tag)
+                res0.real_value = ((tok.termin.tag))
                 return res0
         if (not ((isinstance(t, NumberToken)))): 
             return None
-        if (t.next0_ is not None and t.next0_.is_value("ЦЕЛЫЙ", None) and ((isinstance(t.next0_.next0_, NumberToken) or ((isinstance(t.next0_.next0_, TextToken) and t.next0_.next0_.is_value("НОЛЬ", None)))))): 
+        if (t.next0_ is not None and t.next0_.is_value("ЦЕЛЫЙ", None) and (((isinstance(t.next0_.next0_, NumberToken)) or (((isinstance(t.next0_.next0_, TextToken)) and t.next0_.next0_.is_value("НОЛЬ", None)))))): 
             res0 = NumberExToken(t, t.next0_, (t if isinstance(t, NumberToken) else None).value, NumberSpellingType.WORDS, NumberExType.UNDEFINED)
             t = t.next0_.next0_
             val = 0
@@ -243,13 +243,13 @@ class NumberExToken(NumberToken):
             if (t is not None): 
                 if (t.is_value("ДЕСЯТЫЙ", None)): 
                     res0.end_token = t
-                    res0.real_value = (((val / 10)) + res0.value)
+                    res0.real_value = ((((val) / (10))) + (res0.value))
                 elif (t.is_value("СОТЫЙ", None)): 
                     res0.end_token = t
-                    res0.real_value = (((val / 100)) + res0.value)
+                    res0.real_value = ((((val) / (100))) + (res0.value))
                 elif (t.is_value("ТЫСЯЧНЫЙ", None)): 
                     res0.end_token = t
-                    res0.real_value = (((val / 1000)) + res0.value)
+                    res0.real_value = ((((val) / (1000))) + (res0.value))
             if (res0.real_value == 0): 
                 str0_ = "0.{0}".format(val)
                 dd = 0
@@ -266,7 +266,7 @@ class NumberExToken(NumberToken):
                         pass
                     else: 
                         return None
-                res0.real_value = (dd + res0.value)
+                res0.real_value = (dd + (res0.value))
             return res0
         inoutarg516 = RefOutArgWrapper(0)
         tt = NumberExToken.__try_parse_float(t if isinstance(t, NumberToken) else None, inoutarg516)
@@ -274,7 +274,7 @@ class NumberExToken(NumberToken):
         if (tt is None): 
             if ((t.next0_ is None or t.is_whitespace_after or t.next0_.chars.is_letter) or can_be_integer): 
                 tt = t
-                d = (t if isinstance(t, NumberToken) else None).value
+                d = ((t if isinstance(t, NumberToken) else None).value)
             else: 
                 return None
         if (is_not): 
@@ -283,7 +283,6 @@ class NumberExToken(NumberToken):
     
     @staticmethod
     def try_parse_number_with_postfix(t : 'Token') -> 'NumberExToken':
-        """ Выделение стандартных мер, типа: 10 кв.м. """
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.core.BracketHelper import BracketHelper
         if (t is None): 
@@ -296,9 +295,9 @@ class NumberExToken(NumberToken):
                 t = t.next0_
         nt = (t if isinstance(t, NumberToken) else None)
         if (nt is None): 
-            if ((not ((isinstance(t.previous, NumberToken))) and t.is_char('(') and isinstance(t.next0_, NumberToken)) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
+            if ((not ((isinstance(t.previous, NumberToken))) and t.is_char('(') and (isinstance(t.next0_, NumberToken))) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
                 toks1 = NumberExToken.__m_postfixes.try_parse(t.next0_.next0_.next0_, TerminParseAttr.NO)
-                if (toks1 is not None and Utils.valToEnum(toks1.termin.tag, NumberExType) == NumberExType.MONEY): 
+                if (toks1 is not None and (Utils.valToEnum(toks1.termin.tag, NumberExType)) == NumberExType.MONEY): 
                     nt0 = (t.next0_ if isinstance(t.next0_, NumberToken) else None)
                     res = NumberExToken._new517(t, toks1.end_token, nt0.value, nt0.typ, NumberExType.MONEY, nt0.value, nt0.value, toks1.begin_token.morph)
                     return NumberExToken.__correct_money(res, toks1.begin_token)
@@ -307,20 +306,20 @@ class NumberExToken(NumberToken):
                 return None
             val = tt.term
             i = 4
-            first_pass2762 = True
+            first_pass3712 = True
             while True:
-                if first_pass2762: first_pass2762 = False
+                if first_pass3712: first_pass3712 = False
                 else: i += 1
                 if (not (i < (len(val) - 5))): break
-                v = val[0 : (i)]
+                v = val[0:0+i]
                 li = NumberHelper._m_nums.try_attach_str(v, tt.morph.language)
                 if (li is None): 
                     continue
-                vv = val[i : ]
+                vv = val[i:]
                 lii = NumberExToken.__m_postfixes.try_attach_str(vv, tt.morph.language)
                 if (lii is not None and len(lii) > 0): 
                     re = NumberExToken._new518(t, t, li[0].tag, NumberSpellingType.WORDS, Utils.valToEnum(lii[0].tag, NumberExType), t.morph)
-                    re.real_value = re.value
+                    re.real_value = (re.value)
                     NumberExToken.__correct_ext_types(re)
                     return re
                 break
@@ -330,7 +329,7 @@ class NumberExToken(NumberToken):
         f = nt.value
         cel = nt.value
         t1 = nt.next0_
-        if (((t1 is not None and t1.is_char_of(",."))) or ((isinstance(t1, NumberToken) and (t1.whitespaces_before_count < 3)))): 
+        if (((t1 is not None and t1.is_char_of(",."))) or (((isinstance(t1, NumberToken)) and (t1.whitespaces_before_count < 3)))): 
             inoutarg519 = RefOutArgWrapper(0)
             tt11 = NumberExToken.__try_parse_float(nt, inoutarg519)
             d = inoutarg519.value
@@ -341,56 +340,58 @@ class NumberExToken(NumberToken):
             if (is_dollar is None): 
                 return None
         elif ((t1.next0_ is not None and t1.next0_.is_value("С", "З") and t1.next0_.next0_ is not None) and t1.next0_.next0_.is_value("ПОЛОВИНА", None)): 
-            f += 0.5
+            f += .5
             t1 = t1.next0_.next0_
         if (t1 is not None and t1.is_hiphen and t1.next0_ is not None): 
             t1 = t1.next0_
         det = False
         altf = f
-        if ((t1 is not None and t1.next0_ is not None and t1.is_char('(')) and ((isinstance(t1.next0_, NumberToken) or t1.next0_.is_value("НОЛЬ", None))) and t1.next0_.next0_ is not None): 
+        if (((isinstance(t1, NumberToken)) and t1.previous is not None and t1.previous.is_hiphen) and (t1 if isinstance(t1, NumberToken) else None).value == (0) and t1.length_char == 2): 
+            t1 = t1.next0_
+        if ((t1 is not None and t1.next0_ is not None and t1.is_char('(')) and (((isinstance(t1.next0_, NumberToken)) or t1.next0_.is_value("НОЛЬ", None))) and t1.next0_.next0_ is not None): 
             nt1 = (t1.next0_ if isinstance(t1.next0_, NumberToken) else None)
             val = 0
             if (nt1 is not None): 
                 val = nt1.value
-            if (math.floor(f) == val): 
+            if ((math.floor(f)) == val): 
                 ttt = t1.next0_.next0_
                 if (ttt.is_char(')')): 
                     t1 = ttt.next0_
                     det = True
-                elif ((((isinstance(ttt, NumberToken) and ((ttt if isinstance(ttt, NumberToken) else None).value < 100) and ttt.next0_ is not None) and ttt.next0_.is_char('/') and ttt.next0_.next0_ is not None) and ttt.next0_.next0_.get_source_text() == "100" and ttt.next0_.next0_.next0_ is not None) and ttt.next0_.next0_.next0_.is_char(')')): 
+                elif (((((isinstance(ttt, NumberToken)) and ((ttt if isinstance(ttt, NumberToken) else None).value < (100)) and ttt.next0_ is not None) and ttt.next0_.is_char('/') and ttt.next0_.next0_ is not None) and ttt.next0_.next0_.get_source_text() == "100" and ttt.next0_.next0_.next0_ is not None) and ttt.next0_.next0_.next0_.is_char(')')): 
                     rest = NumberExToken.__get_decimal_rest100(f)
                     if (rest == (ttt if isinstance(ttt, NumberToken) else None).value): 
                         t1 = ttt.next0_.next0_.next0_.next0_
                         det = True
-                elif ((ttt.is_value("ЦЕЛЫХ", None) and isinstance(ttt.next0_, NumberToken) and ttt.next0_.next0_ is not None) and ttt.next0_.next0_.next0_ is not None and ttt.next0_.next0_.next0_.is_char(')')): 
+                elif ((ttt.is_value("ЦЕЛЫХ", None) and (isinstance(ttt.next0_, NumberToken)) and ttt.next0_.next0_ is not None) and ttt.next0_.next0_.next0_ is not None and ttt.next0_.next0_.next0_.is_char(')')): 
                     num2 = (ttt.next0_ if isinstance(ttt.next0_, NumberToken) else None)
-                    altf = num2.value
+                    altf = (num2.value)
                     if (ttt.next0_.next0_.is_value("ДЕСЯТЫЙ", None)): 
-                        altf /= 10
+                        altf /= (10)
                     elif (ttt.next0_.next0_.is_value("СОТЫЙ", None)): 
-                        altf /= 100
+                        altf /= (100)
                     elif (ttt.next0_.next0_.is_value("ТЫСЯЧНЫЙ", None)): 
-                        altf /= 1000
+                        altf /= (1000)
                     elif (ttt.next0_.next0_.is_value("ДЕСЯТИТЫСЯЧНЫЙ", None)): 
-                        altf /= 10000
+                        altf /= (10000)
                     elif (ttt.next0_.next0_.is_value("СТОТЫСЯЧНЫЙ", None)): 
-                        altf /= 100000
+                        altf /= (100000)
                     elif (ttt.next0_.next0_.is_value("МИЛЛИОННЫЙ", None)): 
-                        altf /= 1000000
+                        altf /= (1000000)
                     if (altf < 1): 
-                        altf += val
+                        altf += (val)
                         t1 = ttt.next0_.next0_.next0_.next0_
                         det = True
                 else: 
                     toks1 = NumberExToken.__m_postfixes.try_parse(ttt, TerminParseAttr.NO)
                     if (toks1 is not None): 
-                        if (Utils.valToEnum(toks1.termin.tag, NumberExType) == NumberExType.MONEY): 
+                        if ((Utils.valToEnum(toks1.termin.tag, NumberExType)) == NumberExType.MONEY): 
                             if (toks1.end_token.next0_ is not None and toks1.end_token.next0_.is_char(')')): 
                                 res = NumberExToken._new517(t, toks1.end_token.next0_, nt.value, nt.typ, NumberExType.MONEY, f, altf, toks1.begin_token.morph)
                                 return NumberExToken.__correct_money(res, toks1.begin_token)
                     res2 = NumberExToken.try_parse_number_with_postfix(t1.next0_)
                     if (res2 is not None and res2.end_token.next0_ is not None and res2.end_token.next0_.is_char(')')): 
-                        if (res2.value == math.floor(f)): 
+                        if (res2.value == (math.floor(f))): 
                             res2.begin_token = t
                             res2.end_token = res2.end_token.next0_
                             res2.alt_real_value = res2.real_value
@@ -399,11 +400,11 @@ class NumberExToken(NumberToken):
                             if (res2.whitespaces_after_count < 2): 
                                 toks2 = NumberExToken.__m_postfixes.try_parse(res2.end_token.next0_, TerminParseAttr.NO)
                                 if (toks2 is not None): 
-                                    if (Utils.valToEnum(toks2.termin.tag, NumberExType) == NumberExType.MONEY): 
+                                    if ((Utils.valToEnum(toks2.termin.tag, NumberExType)) == NumberExType.MONEY): 
                                         res2.end_token = toks2.end_token
                             return res2
             elif (nt1 is not None and nt1.typ == NumberSpellingType.WORDS and nt.typ == NumberSpellingType.DIGIT): 
-                altf = nt1.value
+                altf = (nt1.value)
                 ttt = t1.next0_.next0_
                 if (ttt.is_char(')')): 
                     t1 = ttt.next0_
@@ -429,36 +430,36 @@ class NumberExToken(NumberToken):
             val = nt.value
             if (te.is_hiphen and te.next0_ is not None): 
                 if (te.next0_.is_value("МИЛЛИОННЫЙ", None)): 
-                    val *= 1000000
-                    f *= 1000000
-                    altf *= 1000000
+                    val *= (1000000)
+                    f *= (1000000)
+                    altf *= (1000000)
                     te = te.next0_
                 elif (te.next0_.is_value("МИЛЛИАРДНЫЙ", None)): 
-                    val *= 1000000000
-                    f *= 1000000000
-                    altf *= 1000000000
+                    val *= (1000000000)
+                    f *= (1000000000)
+                    altf *= (1000000000)
                     te = te.next0_
-            if (not te.is_whitespace_after and isinstance(te.next0_, TextToken)): 
+            if (not te.is_whitespace_after and (isinstance(te.next0_, TextToken))): 
                 if (te.next0_.is_value("M", None)): 
-                    val *= 1000000
-                    f *= 1000000
-                    altf *= 1000000
+                    val *= (1000000)
+                    f *= (1000000)
+                    altf *= (1000000)
                     te = te.next0_
                 elif (te.next0_.is_value("BN", None)): 
-                    val *= 1000000000
-                    f *= 1000000000
-                    altf *= 1000000000
+                    val *= (1000000000)
+                    f *= (1000000000)
+                    altf *= (1000000000)
                     te = te.next0_
             return NumberExToken._new521(t0, te, val, nt.typ, NumberExType.MONEY, f, altf, is_dollar)
         if (t1 is None or ((t1.is_newline_before and not det))): 
             return None
         toks = NumberExToken.__m_postfixes.try_parse(t1, TerminParseAttr.NO)
-        if ((toks is None and det and isinstance(t1, NumberToken)) and (t1 if isinstance(t1, NumberToken) else None).value == 0): 
+        if ((toks is None and det and (isinstance(t1, NumberToken))) and (t1 if isinstance(t1, NumberToken) else None).value == (0)): 
             toks = NumberExToken.__m_postfixes.try_parse(t1.next0_, TerminParseAttr.NO)
         if (toks is not None): 
             t1 = toks.end_token
             if (not t1.is_char('.') and t1.next0_ is not None and t1.next0_.is_char('.')): 
-                if (isinstance(t1, TextToken) and t1.is_value(toks.termin.terms[0].canonical_text, None)): 
+                if ((isinstance(t1, TextToken)) and t1.is_value(toks.termin.terms[0].canonical_text, None)): 
                     pass
                 else: 
                     t1 = t1.next0_
@@ -489,7 +490,7 @@ class NumberExToken(NumberToken):
                 nn = NumberExToken.try_parse_number_with_postfix(t1.next0_)
                 if (nn is not None): 
                     return NumberExToken._new523(t, t, nt.value, nt.typ, nn.ex_typ, f, altf, nn.ex_typ2, nn.ex_typ_param)
-        if (not t1.is_whitespace_after and isinstance(t1.next0_, NumberToken) and isinstance(t1, TextToken)): 
+        if (not t1.is_whitespace_after and (isinstance(t1.next0_, NumberToken)) and (isinstance(t1, TextToken))): 
             term = (t1 if isinstance(t1, TextToken) else None).term
             ty = NumberExType.UNDEFINED
             if (term == "СМХ" or term == "CMX"): 
@@ -504,17 +505,11 @@ class NumberExToken(NumberToken):
     
     @staticmethod
     def __get_decimal_rest100(f : float) -> int:
-        rest = math.floor(((math.floor(((((f - math.trunc(f)) + 0.0001)) * 10000)))) / 100)
+        rest = math.floor(((math.floor(((((f - math.trunc(f)) + .0001)) * (10000))))) / 100)
         return rest
     
     @staticmethod
     def try_attach_postfix_only(t : 'Token') -> 'NumberExToken':
-        """ Это попробовать только тип (постфикс) без самого числа
-        
-        Args:
-            t(Token): 
-        
-        """
         if (t is None): 
             return None
         tok = NumberExToken.__m_postfixes.try_parse(t, TerminParseAttr.NO)
@@ -558,8 +553,8 @@ class NumberExToken(NumberToken):
         else: 
             return
         tok = NumberExToken.__m_postfixes.try_parse(t.next0_, TerminParseAttr.NO)
-        if (tok is not None and ((Utils.valToEnum(tok.termin.tag, NumberExType) != NumberExType.MONEY))): 
-            ex.ex_typ2 = Utils.valToEnum(tok.termin.tag, NumberExType)
+        if (tok is not None and (((Utils.valToEnum(tok.termin.tag, NumberExType)) != NumberExType.MONEY))): 
+            ex.ex_typ2 = (Utils.valToEnum(tok.termin.tag, NumberExType))
             ex.end_token = tok.end_token
             ty = ex.ex_typ2
             inoutarg526 = RefOutArgWrapper(ty)
@@ -580,10 +575,10 @@ class NumberExToken(NumberToken):
             num = 3
         elif (t.is_char('²')): 
             num = 2
-        elif (not t.is_whitespace_before and isinstance(t, NumberToken) and (((t if isinstance(t, NumberToken) else None).value == 3 or (t if isinstance(t, NumberToken) else None).value == 2))): 
-            num = (t if isinstance(t, NumberToken) else None).value
-        elif ((t.is_char('<') and isinstance(t.next0_, NumberToken) and t.next0_.next0_ is not None) and t.next0_.next0_.is_char('>')): 
-            num = (t.next0_ if isinstance(t.next0_, NumberToken) else None).value
+        elif (not t.is_whitespace_before and (isinstance(t, NumberToken)) and (((t if isinstance(t, NumberToken) else None).value == (3) or (t if isinstance(t, NumberToken) else None).value == (2)))): 
+            num = ((t if isinstance(t, NumberToken) else None).value)
+        elif ((t.is_char('<') and (isinstance(t.next0_, NumberToken)) and t.next0_.next0_ is not None) and t.next0_.next0_.is_char('>')): 
+            num = ((t.next0_ if isinstance(t.next0_, NumberToken) else None).value)
             tt = t.next0_.next0_
         if (num == 3): 
             if (typ_.value == NumberExType.METER): 
@@ -621,7 +616,7 @@ class NumberExToken(NumberToken):
             if (len(toks) == 0): 
                 toks = NumberExToken.__m_postfixes.try_parse_all(t1, TerminParseAttr.NO)
         if (len(toks) > 1): 
-            alpha2 = None
+            alpha2 = (None)
             str0_ = toks[0].termin.terms[0].canonical_text
             if (str0_ == "РУБЛЬ" or str0_ == "RUBLE"): 
                 alpha2 = "RU"
@@ -633,7 +628,7 @@ class NumberExToken(NumberToken):
                 for i in range(len(toks) - 1, -1, -1):
                     if (not toks[i].termin.canonic_text.startswith(alpha2)): 
                         del toks[i]
-            alpha2 = None
+            alpha2 = (None)
         if (len(toks) < 1): 
             return None
         res.ex_typ_param = toks[0].termin.canonic_text
@@ -642,9 +637,9 @@ class NumberExToken(NumberToken):
         tt = res.end_token.next0_
         if (tt is not None and tt.is_comma_and): 
             tt = tt.next0_
-        if (isinstance(tt, NumberToken) and tt.next0_ is not None and (tt.whitespaces_after_count < 4)): 
+        if ((isinstance(tt, NumberToken)) and tt.next0_ is not None and (tt.whitespaces_after_count < 4)): 
             tt1 = tt.next0_
-            if ((tt1 is not None and tt1.is_char('(') and isinstance(tt1.next0_, NumberToken)) and tt1.next0_.next0_ is not None and tt1.next0_.next0_.is_char(')')): 
+            if ((tt1 is not None and tt1.is_char('(') and (isinstance(tt1.next0_, NumberToken))) and tt1.next0_.next0_ is not None and tt1.next0_.next0_.is_char(')')): 
                 if ((tt if isinstance(tt, NumberToken) else None).value == (tt1.next0_ if isinstance(tt1.next0_, NumberToken) else None).value): 
                     tt1 = tt1.next0_.next0_.next0_
             tok = NumberExToken.__m_small_money.try_parse(tt1, TerminParseAttr.NO)
@@ -655,21 +650,21 @@ class NumberExToken(NumberToken):
                 val = (tt if isinstance(tt, NumberToken) else None).value
                 if (val < max0_): 
                     f = val
-                    f /= max0_
-                    f0 = res.real_value - math.floor(res.real_value)
-                    re0 = math.floor(((f0 * 100) + 0.0001))
+                    f /= (max0_)
+                    f0 = res.real_value - (math.floor(res.real_value))
+                    re0 = math.floor(((f0 * (100)) + .0001))
                     if (re0 > 0 and val != re0): 
                         res.alt_rest_money = val
                     elif (f0 == 0): 
                         res.real_value += f
-                    f0 = (res.alt_real_value - math.floor(res.alt_real_value))
-                    re0 = math.floor(((f0 * 100) + 0.0001))
+                    f0 = (res.alt_real_value - (math.floor(res.alt_real_value)))
+                    re0 = (math.floor(((f0 * (100)) + .0001)))
                     if (re0 > 0 and val != re0): 
                         res.alt_rest_money = val
                     elif (f0 == 0): 
                         res.alt_real_value += f
                     res.end_token = tok.end_token
-        elif (isinstance(tt, TextToken) and tt.is_value("НОЛЬ", None)): 
+        elif ((isinstance(tt, TextToken)) and tt.is_value("НОЛЬ", None)): 
             tok = NumberExToken.__m_small_money.try_parse(tt.next0_, TerminParseAttr.NO)
             if (tok is not None): 
                 res.end_token = tok.end_token
@@ -684,93 +679,93 @@ class NumberExToken(NumberToken):
             return val
         if (ty.value == NumberExType.GRAMM): 
             if (self.ex_typ == NumberExType.KILOGRAM): 
-                val *= 1000
+                val *= (1000)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.MILLIGRAM): 
-                val /= 1000
+                val /= (1000)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.TONNA): 
-                val *= 1000000
+                val *= (1000000)
                 ety = ty.value
         elif (ty.value == NumberExType.KILOGRAM): 
             if (self.ex_typ == NumberExType.GRAMM): 
-                val /= 1000
+                val /= (1000)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.TONNA): 
-                val *= 1000
+                val *= (1000)
                 ety = ty.value
         elif (ty.value == NumberExType.TONNA): 
             if (self.ex_typ == NumberExType.KILOGRAM): 
-                val /= 1000
+                val /= (1000)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.GRAMM): 
-                val /= 1000000
+                val /= (1000000)
                 ety = ty.value
         elif (ty.value == NumberExType.MILLIMETER): 
             if (self.ex_typ == NumberExType.SANTIMETER): 
-                val *= 10
+                val *= (10)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.METER): 
-                val *= 1000
+                val *= (1000)
                 ety = ty.value
         elif (ty.value == NumberExType.SANTIMETER): 
             if (self.ex_typ == NumberExType.MILLIMETER): 
-                val *= 10
+                val *= (10)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.METER): 
-                val *= 100
+                val *= (100)
                 ety = ty.value
         elif (ty.value == NumberExType.METER): 
             if (self.ex_typ == NumberExType.KILOMETER): 
-                val *= 1000
+                val *= (1000)
                 ety = ty.value
         elif (ty.value == NumberExType.LITR): 
             if (self.ex_typ == NumberExType.MILLILITR): 
-                val /= 1000
+                val /= (1000)
                 ety = ty.value
         elif (ty.value == NumberExType.MILLILITR): 
             if (self.ex_typ == NumberExType.LITR): 
-                val *= 1000
+                val *= (1000)
                 ety = ty.value
         elif (ty.value == NumberExType.GEKTAR): 
             if (self.ex_typ == NumberExType.METER2): 
-                val /= 10000
+                val /= (10000)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.AR): 
-                val /= 100
+                val /= (100)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.KILOMETER2): 
-                val *= 100
+                val *= (100)
                 ety = ty.value
         elif (ty.value == NumberExType.KILOMETER2): 
             if (self.ex_typ == NumberExType.GEKTAR): 
-                val /= 100
+                val /= (100)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.AR): 
-                val /= 10000
+                val /= (10000)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.METER2): 
-                val /= 1000000
+                val /= (1000000)
                 ety = ty.value
         elif (ty.value == NumberExType.METER2): 
             if (self.ex_typ == NumberExType.AR): 
-                val *= 100
+                val *= (100)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.GEKTAR): 
-                val *= 10000
+                val *= (10000)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.KILOMETER2): 
-                val *= 1000000
+                val *= (1000000)
                 ety = ty.value
         elif (ty.value == NumberExType.DAY): 
             if (self.ex_typ == NumberExType.YEAR): 
-                val *= 365
+                val *= (365)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.MONTH): 
-                val *= 30
+                val *= (30)
                 ety = ty.value
             elif (self.ex_typ == NumberExType.WEEK): 
-                val *= 7
+                val *= (7)
                 ety = ty.value
         ty.value = ety
         return val
@@ -778,16 +773,41 @@ class NumberExToken(NumberToken):
     @staticmethod
     def convert_to_string(d : float) -> str:
         lo = math.floor(d)
-        if (lo == 0): 
+        res = None
+        if (lo == (0)): 
             res = str(d).replace(",", ".")
             if (res.endswith(".0")): 
-                return res[0 : (len(res) - 2)]
-            else: 
-                return res
-        rest = d - lo
-        if (rest < 0.000000001): 
-            return str(lo)
-        return str(d).replace(",", ".")
+                res = res[0:0+len(res) - 2]
+        else: 
+            rest = math.fabs(d - (lo))
+            if (rest < .000000001): 
+                return str(lo)
+            res = str(d).replace(",", ".")
+        i = res.find('.')
+        if (i < 0): 
+            return res
+        i += 1
+        j = (i + 1)
+        while j < len(res): 
+            if (res[j] == '9'): 
+                k = 0
+                jj = j
+                while jj < len(res): 
+                    if (res[jj] != '9'): 
+                        break
+                    else: 
+                        k += 1
+                    jj += 1
+                if (jj >= len(res) or ((jj == (len(res) - 1) and res[jj] == '8'))): 
+                    if (k > 5): 
+                        while j > i: 
+                            if (res[j] != '9'): 
+                                if (res[j] != '.'): 
+                                    return "{0}{1}".format(res[0:0+j], ((((ord(res[j])) - (ord('0'))))) + 1)
+                            j -= 1
+                        break
+            j += 1
+        return res
     
     @staticmethod
     def ex_typ_to_string(ty : 'NumberExType', ty2 : 'NumberExType'=NumberExType.UNDEFINED) -> str:
@@ -813,17 +833,17 @@ class NumberExToken(NumberToken):
         if (NumberExToken.__m_postfixes is not None): 
             return
         NumberExToken.__m_after_points = TerminCollection()
-        t = Termin._new118("ПОЛОВИНА", 0.5)
+        t = Termin._new118("ПОЛОВИНА", .5)
         t.add_variant("ОДНА ВТОРАЯ", False)
         t.add_variant("ПОЛ", False)
         NumberExToken.__m_after_points.add(t)
-        t = Termin._new118("ТРЕТЬ", 0.33)
+        t = Termin._new118("ТРЕТЬ", .33)
         t.add_variant("ОДНА ТРЕТЬ", False)
         NumberExToken.__m_after_points.add(t)
-        t = Termin._new118("ЧЕТВЕРТЬ", 0.25)
+        t = Termin._new118("ЧЕТВЕРТЬ", .25)
         t.add_variant("ОДНА ЧЕТВЕРТАЯ", False)
         NumberExToken.__m_after_points.add(t)
-        t = Termin._new118("ПЯТАЯ ЧАСТЬ", 0.2)
+        t = Termin._new118("ПЯТАЯ ЧАСТЬ", .2)
         t.add_variant("ОДНА ПЯТАЯ", False)
         NumberExToken.__m_after_points.add(t)
         NumberExToken.__m_postfixes = TerminCollection()
@@ -1065,14 +1085,14 @@ class NumberExToken(NumberToken):
                         if (i < 2): 
                             continue
                         inoutarg579 = RefOutArgWrapper(0)
-                        inoutres580 = Utils.tryParseInt(parts[3][0 : (i)], inoutarg579)
+                        inoutres580 = Utils.tryParseInt(parts[3][0:0+i], inoutarg579)
                         num = inoutarg579.value
                         if (not inoutres580): 
                             continue
-                        vv = parts[3][i : ].strip()
+                        vv = parts[3][i:].strip()
                         t = Termin()
                         t.init_by_normal_text(parts[4], lang)
-                        t.tag = num
+                        t.tag = (num)
                         if (vv != parts[4]): 
                             t0 = Termin()
                             t0.init_by_normal_text(vv, MorphLang())
@@ -1088,7 +1108,6 @@ class NumberExToken(NumberToken):
     __m_small_money = None
     
     __m_after_points = None
-
     
     @staticmethod
     def _new515(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float) -> 'NumberExToken':

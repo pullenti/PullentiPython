@@ -1,10 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.business.internal.BusinessFactItemTyp import BusinessFactItemTyp
 from pullenti.ner.business.BusinessFactKind import BusinessFactKind
@@ -30,9 +30,9 @@ class BusinessFactItem(MetaToken):
         if (res is None): 
             return None
         tt = res.end_token.next0_
-        first_pass2716 = True
+        first_pass3665 = True
         while True:
-            if first_pass2716: first_pass2716 = False
+            if first_pass3665: first_pass3665 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.morph.class0_.is_preposition): 
@@ -70,9 +70,9 @@ class BusinessFactItem(MetaToken):
             if (ki != BusinessFactKind.UNDEFINED): 
                 return BusinessFactItem._new403(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph, tok.termin.tag2 is not None)
             tt = tok.end_token.next0_
-            first_pass2717 = True
+            first_pass3666 = True
             while True:
-                if first_pass2717: first_pass2717 = False
+                if first_pass3666: first_pass3666 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.morph.class0_.is_preposition): 
@@ -80,7 +80,7 @@ class BusinessFactItem(MetaToken):
                 tok = BusinessFactItem.__m_base_onto.try_parse(tt, TerminParseAttr.NO)
                 if (tok is None): 
                     continue
-                ki = Utils.valToEnum(tok.termin.tag, BusinessFactKind)
+                ki = (Utils.valToEnum(tok.termin.tag, BusinessFactKind))
                 if (ki != BusinessFactKind.UNDEFINED): 
                     return BusinessFactItem._new404(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph)
                 tt = tok.end_token
@@ -147,7 +147,6 @@ class BusinessFactItem(MetaToken):
             BusinessFactItem.__m_base_onto.add(Termin._new119(s, BusinessFactKind.SUBSIDIARY, MorphLang.UA))
     
     __m_base_onto = None
-
     
     @staticmethod
     def _new403(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BusinessFactItemTyp', _arg4 : 'BusinessFactKind', _arg5 : 'MorphCollection', _arg6 : bool) -> 'BusinessFactItem':

@@ -1,13 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
-
 
 
 class InstrumentArtefact(Referent):
@@ -46,7 +45,7 @@ class InstrumentArtefact(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         print(MiscHelper.convert_first_char_upper_and_other_lower(Utils.ifNotNull(self.typ, "?")), end="", file=res)
         val = self.value
         if (val is not None): 
@@ -66,10 +65,9 @@ class InstrumentArtefact(Referent):
         if (self.value != p.value): 
             return False
         return True
-
     
     @staticmethod
-    def _new1350(_arg1 : str) -> 'InstrumentArtefact':
+    def _new1354(_arg1 : str) -> 'InstrumentArtefact':
         res = InstrumentArtefact()
         res.typ = _arg1
         return res

@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import math
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 
 
@@ -56,45 +56,43 @@ class SourceOfAnalysis:
         self.text = txt
     
     def __do_cr_lf_correction(self, txt : str) -> str:
-        """ Это анализ случаев принудительно отформатированного текста
-        
-        Args:
-            txt(str): 
-        """
         cou = 0
         total_len = 0
         i = 0
-        first_pass3088 = True
+        first_pass4068 = True
         while True:
-            if first_pass3088: first_pass3088 = False
+            if first_pass4068: first_pass4068 = False
             else: i += 1
             if (not (i < len(txt))): break
             ch = txt[i]
-            if (ord(ch) != 0xD and ord(ch) != 0xA): 
+            if ((ord(ch)) != 0xD and (ord(ch)) != 0xA): 
                 continue
             len0_ = 0
             last_char = ch
-            for j in range(i + 1, len(txt), 1):
+            j = (i + 1)
+            while j < len(txt): 
                 ch = txt[j]
-                if (ord(ch) == 0xD or ord(ch) == 0xA): 
+                if ((ord(ch)) == 0xD or (ord(ch)) == 0xA): 
                     break
-                elif (ord(ch) == 0x9): 
+                elif ((ord(ch)) == 0x9): 
                     len0_ += 5
                 else: 
                     last_char = ch
                     len0_ += 1
-            else: j = len(txt)
+                j += 1
             if (j >= len(txt)): 
                 break
             if (len0_ < 30): 
                 continue
             if (last_char != '.' and last_char != ':' and last_char != ';'): 
                 next_is_dig = False
-                for k in range(j + 1, len(txt), 1):
+                k = j + 1
+                while k < len(txt): 
                     if (not Utils.isWhitespace(txt[k])): 
-                        if (txt[k].isdigit()): 
+                        if (str.isdigit(txt[k])): 
                             next_is_dig = True
                         break
+                    k += 1
                 if (not next_is_dig): 
                     cou += 1
                     total_len += len0_
@@ -113,9 +111,9 @@ class SourceOfAnalysis:
             j = (i + 1)
             while j < tmp.tell(): 
                 ch = Utils.getCharAtStringIO(tmp, j)
-                if (ord(ch) == 0xD or ord(ch) == 0xA): 
+                if ((ord(ch)) == 0xD or (ord(ch)) == 0xA): 
                     break
-                elif (ord(ch) == 0x9): 
+                elif ((ord(ch)) == 0x9): 
                     len0_ += 5
                 else: 
                     last_char = ch
@@ -130,13 +128,13 @@ class SourceOfAnalysis:
             else: jj = -1
             not_single = False
             jj = (j + 1)
-            if ((jj < tmp.tell()) and ord(Utils.getCharAtStringIO(tmp, j)) == 0xD and ord(Utils.getCharAtStringIO(tmp, jj)) == 0xA): 
+            if ((jj < tmp.tell()) and (ord(Utils.getCharAtStringIO(tmp, j))) == 0xD and (ord(Utils.getCharAtStringIO(tmp, jj))) == 0xA): 
                 jj += 1
             while jj < tmp.tell(): 
                 ch = Utils.getCharAtStringIO(tmp, jj)
                 if (not Utils.isWhitespace(ch)): 
                     break
-                if (ord(ch) == 0xD or ord(ch) == 0xA): 
+                if ((ord(ch)) == 0xD or (ord(ch)) == 0xA): 
                     not_single = True
                     break
                 jj += 1
@@ -145,7 +143,7 @@ class SourceOfAnalysis:
                 self.crlf_corrected_count += 1
                 if ((j + 1) < tmp.tell()): 
                     ch = Utils.getCharAtStringIO(tmp, j + 1)
-                    if (ord(ch) == 0xA): 
+                    if ((ord(ch)) == 0xA): 
                         Utils.setCharAtStringIO(tmp, j + 1, ' ')
                         j += 1
             i = (j - 1)
@@ -154,32 +152,23 @@ class SourceOfAnalysis:
     
     @staticmethod
     def __do_transliteral_correction(txt : io.StringIO, info : io.StringIO) -> int:
-        """ Произвести транслитеральную коррекцию
-        
-        Args:
-            txt(io.StringIO): корректируемый текст
-            info(io.StringIO): информация о замене (может быть null)
-        
-        Returns:
-            int: количество замен
-        """
         stat = 0
         pref_rus_word = False
         i = 0
         while i < txt.tell(): 
-            if (Utils.getCharAtStringIO(txt, i).isalpha()): 
+            if (str.isalpha(Utils.getCharAtStringIO(txt, i))): 
                 rus = 0
                 pure_lat = 0
                 unknown = 0
                 j = i
                 while j < txt.tell(): 
                     ch = Utils.getCharAtStringIO(txt, j)
-                    if (not ch.isalpha()): 
+                    if (not str.isalpha(ch)): 
                         break
                     code = ord(ch)
                     if (code >= 0x400 and (code < 0x500)): 
                         rus += 1
-                    elif ((ch) in SourceOfAnalysis.__m_lat_chars): 
+                    elif (SourceOfAnalysis.__m_lat_chars.find(ch) >= 0): 
                         unknown += 1
                     else: 
                         pure_lat += 1
@@ -225,32 +214,18 @@ class SourceOfAnalysis:
         return self.__m_total_transliteral_substitutions
     
     def substring(self, position : int, length : int) -> str:
-        """ Извлечь фрагмент из исходного текста
-        
-        Args:
-            position(int): 
-            length(int): 
-        
-        """
         if (length < 0): 
             length = (len(self.text) - position)
         if ((position + length) <= len(self.text) and length > 0): 
-            res = self.text[position : (position) + (length)]
-            if (("\r\n") in res): 
+            res = self.text[position:position+length]
+            if (res.find("\r\n") >= 0): 
                 res = res.replace("\r\n", " ")
-            if (('\n') in res): 
+            if (res.find('\n') >= 0): 
                 res = res.replace("\n", " ")
             return res
         return "Position + Length > Text.Length"
     
     def calc_whitespace_distance_between_positions(self, pos_from : int, pos_to : int) -> int:
-        """ Вычислить расстояние в символах между соседними элементами
-        
-        Args:
-            indFrom: 
-            indTo: 
-        
-        """
         if (pos_from == (pos_to + 1)): 
             return 0
         if (pos_from > pos_to or (pos_from < 0) or pos_to >= len(self.text)): 

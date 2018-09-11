@@ -1,15 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 from enum import IntEnum
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
-
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 
@@ -46,7 +44,7 @@ class MailLine(MetaToken):
         cou = 0
         t = self.begin_token
         while t is not None and t.end_char <= self.end_char: 
-            if (isinstance(t, TextToken) and t.chars.is_letter and t.length_char > 2): 
+            if ((isinstance(t, TextToken)) and t.chars.is_letter and t.length_char > 2): 
                 if (t.tag is None): 
                     cou += 1
             t = t.next0_
@@ -59,7 +57,7 @@ class MailLine(MetaToken):
         ru = 0
         t = self.begin_token
         while t is not None and t.end_char <= self.end_char: 
-            if (isinstance(t, TextToken) and t.chars.is_letter): 
+            if ((isinstance(t, TextToken)) and t.chars.is_letter): 
                 if (t.chars.is_cyrillic_letter): 
                     ru += 1
                 elif (t.chars.is_latin_letter): 
@@ -76,7 +74,7 @@ class MailLine(MetaToken):
         ru = 0
         t = self.begin_token
         while t is not None and t.end_char <= self.end_char: 
-            if (isinstance(t, TextToken) and t.chars.is_letter): 
+            if ((isinstance(t, TextToken)) and t.chars.is_letter): 
                 if (t.chars.is_cyrillic_letter): 
                     ru += 1
                 elif (t.chars.is_latin_letter): 
@@ -123,9 +121,9 @@ class MailLine(MetaToken):
         res = MailLine(t0, t0)
         pr = True
         t = t0
-        first_pass2960 = True
+        first_pass3926 = True
         while True:
-            if first_pass2960: first_pass2960 = False
+            if first_pass3926: first_pass3926 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before and t0 != t): 
@@ -134,11 +132,11 @@ class MailLine(MetaToken):
             if (t.is_table_control_char or t.is_hiphen): 
                 continue
             if (pr): 
-                if (isinstance(t, TextToken) and t.is_char_of(">|")): 
+                if ((isinstance(t, TextToken)) and t.is_char_of(">|")): 
                     res.lev += 1
                 else: 
                     pr = False
-                    tok = MailLine.__m_from_words.try_parse(t, TerminParseAttr.NO)
+                    tok = MailLine.M_FROM_WORDS.try_parse(t, TerminParseAttr.NO)
                     if (tok is not None and tok.end_token.next0_ is not None and tok.end_token.next0_.is_char(':')): 
                         res.typ = MailLine.Types.FROM
                         t = tok.end_token.next0_
@@ -146,7 +144,7 @@ class MailLine(MetaToken):
             if (isinstance(t, ReferentToken)): 
                 r = t.get_referent()
                 if (r is not None): 
-                    if (((isinstance(r, PersonReferent) or isinstance(r, GeoReferent) or isinstance(r, AddressReferent)) or r.type_name == "PHONE" or r.type_name == "URI") or isinstance(r, PersonPropertyReferent) or r.type_name == "ORGANIZATION"): 
+                    if ((((isinstance(r, PersonReferent)) or (isinstance(r, GeoReferent)) or (isinstance(r, AddressReferent))) or r.type_name == "PHONE" or r.type_name == "URI") or (isinstance(r, PersonPropertyReferent)) or r.type_name == "ORGANIZATION"): 
                         res.refs.append(r)
         if (res.typ == MailLine.Types.UNDEFINED): 
             t = t0
@@ -158,9 +156,9 @@ class MailLine(MetaToken):
             nams = 0
             oth = 0
             last_comma = None
-            first_pass2961 = True
+            first_pass3927 = True
             while True:
-                if first_pass2961: first_pass2961 = False
+                if first_pass3927: first_pass3927 = False
                 else: t = t.next0_
                 if (not (t is not None and (t.end_char < res.end_char))): break
                 if (isinstance(t.get_referent(), PersonReferent)): 
@@ -170,7 +168,7 @@ class MailLine(MetaToken):
                     if (not t.chars.is_letter): 
                         last_comma = t
                         continue
-                    tok = MailLine.__m_hello_words.try_parse(t, TerminParseAttr.NO)
+                    tok = MailLine.M_HELLO_WORDS.try_parse(t, TerminParseAttr.NO)
                     if (tok is not None): 
                         ok += 1
                         t = tok.end_token
@@ -196,9 +194,9 @@ class MailLine(MetaToken):
             if (t0.is_value("HAVE", None)): 
                 pass
             t = t0
-            first_pass2962 = True
+            first_pass3928 = True
             while True:
-                if first_pass2962: first_pass2962 = False
+                if first_pass3928: first_pass3928 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= res.end_char)): break
                 if (not ((isinstance(t, TextToken)))): 
@@ -210,18 +208,18 @@ class MailLine(MetaToken):
                         continue
                 if (not t.is_letters or t.is_table_control_char): 
                     continue
-                tok = MailLine.__m_regard_words.try_parse(t, TerminParseAttr.NO)
+                tok = MailLine.M_REGARD_WORDS.try_parse(t, TerminParseAttr.NO)
                 if (tok is not None): 
                     ok_words += 1
                     while t is not None and t.end_char <= tok.end_char: 
-                        t.tag = tok.termin
+                        t.tag = (tok.termin)
                         t = t.next0_
                     t = tok.end_token
-                    if (isinstance(t.next0_, TextToken) and t.next0_.morph.case.is_genitive): 
+                    if ((isinstance(t.next0_, TextToken)) and t.next0_.morph.case.is_genitive): 
                         t = t.next0_
-                        first_pass2963 = True
+                        first_pass3929 = True
                         while True:
-                            if first_pass2963: first_pass2963 = False
+                            if first_pass3929: first_pass3929 = False
                             else: t = t.next0_
                             if (not (t.end_char <= res.end_char)): break
                             if (t.morph.class0_.is_conjunction): 
@@ -232,9 +230,9 @@ class MailLine(MetaToken):
                             if (not npt1.morph.case.is_genitive): 
                                 break
                             while t.end_char < npt1.end_char: 
-                                t.tag = t
+                                t.tag = (t)
                                 t = t.next0_
-                            t.tag = t
+                            t.tag = (t)
                     continue
                 if ((t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction or t.morph.class0_.is_misc) or t.is_value("C", None)): 
                     continue
@@ -246,22 +244,22 @@ class MailLine(MetaToken):
                     if ((res.end_char - t.end_char) > 10): 
                         ok_words = 0
                     break
-                tok = MailLine.__m_regard_words.try_parse(npt.end_token, TerminParseAttr.NO)
-                if (tok is not None and isinstance(npt.end_token, TextToken)): 
+                tok = MailLine.M_REGARD_WORDS.try_parse(npt.end_token, TerminParseAttr.NO)
+                if (tok is not None and (isinstance(npt.end_token, TextToken))): 
                     term = (npt.end_token if isinstance(npt.end_token, TextToken) else None).term
                     if (term == "ДЕЛ"): 
-                        tok = None
+                        tok = (None)
                 if (tok is None): 
                     if (npt.noun.is_value("НАДЕЖДА", None)): 
-                        t.tag = t
+                        t.tag = (t)
                     elif (ok_words > 0 and t.is_value("NICE", None) and ((res.end_char - npt.end_char) < 13)): 
-                        t.tag = t
+                        t.tag = (t)
                     else: 
                         ok_words = 0
                     break
                 ok_words += 1
                 while t is not None and t.end_char <= tok.end_char: 
-                    t.tag = tok.termin
+                    t.tag = (tok.termin)
                     t = t.next0_
                 t = tok.end_token
             if (ok_words > 0): 
@@ -289,7 +287,7 @@ class MailLine(MetaToken):
                 elif (t.is_value("ПЕРЕСЛАНО", None) and t.next0_ is not None and t.next0_.is_value("ПОЛЬЗОВАТЕЛЕМ", None)): 
                     res.typ = MailLine.Types.FROM
                     res.must_be_first_line = True
-                elif (((t.get_referent() is not None and t.get_referent().type_name == "DATE")) or ((t.is_value("IL", None) and t.next0_ is not None and t.next0_.is_value("GIORNO", None))) or ((t.is_value("ON", None) and isinstance(t.next0_, ReferentToken) and t.next0_.get_referent().type_name == "DATE"))): 
+                elif (((t.get_referent() is not None and t.get_referent().type_name == "DATE")) or ((t.is_value("IL", None) and t.next0_ is not None and t.next0_.is_value("GIORNO", None))) or ((t.is_value("ON", None) and (isinstance(t.next0_, ReferentToken)) and t.next0_.get_referent().type_name == "DATE"))): 
                     has_from = False
                     has_date = t.get_referent() is not None and t.get_referent().type_name == "DATE"
                     if (t.is_newline_after and (lev_ < 5)): 
@@ -299,7 +297,7 @@ class MailLine(MetaToken):
                     next0__ = MailLine.parse(res.end_token.next0_, lev_ + 1)
                     if (next0__ is not None): 
                         if (next0__.typ != MailLine.Types.UNDEFINED): 
-                            next0__ = None
+                            next0__ = (None)
                     tmax = res.end_char
                     if (next0__ is not None): 
                         tmax = next0__.end_char
@@ -307,18 +305,18 @@ class MailLine(MetaToken):
                     while t is not None and t.end_char <= tmax: 
                         if (t.is_value("ОТ", None) or t.is_value("FROM", None)): 
                             has_from = True
-                        elif (t.get_referent() is not None and ((t.get_referent().type_name == "URI" or isinstance(t.get_referent(), PersonReferent)))): 
+                        elif (t.get_referent() is not None and ((t.get_referent().type_name == "URI" or (isinstance(t.get_referent(), PersonReferent))))): 
                             if (t.get_referent().type_name == "URI" and has_date): 
                                 if (br1 is not None): 
                                     has_from = True
-                                    next0__ = None
+                                    next0__ = (None)
                                 if (t.previous.is_char('<') and t.next0_ is not None and t.next0_.is_char('>')): 
                                     t = t.next0_
                                     if (t.next0_ is not None and t.next0_.is_char(':')): 
                                         t = t.next0_
                                     if (t.is_newline_after): 
                                         has_from = True
-                                        next0__ = None
+                                        next0__ = (None)
                             t = t.next0_
                             while t is not None and t.end_char <= res.end_char: 
                                 if (t.is_value("HA", None) and t.next0_ is not None and t.next0_.is_value("SCRITTO", None)): 
@@ -341,7 +339,7 @@ class MailLine(MetaToken):
                 else: 
                     has_uri = False
                     while t is not None and (t.end_char < res.end_char): 
-                        if (t.get_referent() is not None and ((t.get_referent().type_name == "URI" or isinstance(t.get_referent(), PersonReferent)))): 
+                        if (t.get_referent() is not None and ((t.get_referent().type_name == "URI" or (isinstance(t.get_referent(), PersonReferent))))): 
                             has_uri = True
                         elif (t.is_value("ПИСАТЬ", None) and has_uri): 
                             if (t.next0_ is not None and t.next0_.is_char('(')): 
@@ -351,21 +349,21 @@ class MailLine(MetaToken):
                         t = t.next0_
         return res
     
-    __m_regard_words = None
+    M_REGARD_WORDS = None
     
-    __m_from_words = None
+    M_FROM_WORDS = None
     
-    __m_hello_words = None
+    M_HELLO_WORDS = None
     
     @staticmethod
     def is_keyword(t : 'Token') -> bool:
         if (t is None): 
             return False
-        if (MailLine.__m_regard_words.try_parse(t, TerminParseAttr.NO) is not None): 
+        if (MailLine.M_REGARD_WORDS.try_parse(t, TerminParseAttr.NO) is not None): 
             return True
-        if (MailLine.__m_from_words.try_parse(t, TerminParseAttr.NO) is not None): 
+        if (MailLine.M_FROM_WORDS.try_parse(t, TerminParseAttr.NO) is not None): 
             return True
-        if (MailLine.__m_hello_words.try_parse(t, TerminParseAttr.NO) is not None): 
+        if (MailLine.M_HELLO_WORDS.try_parse(t, TerminParseAttr.NO) is not None): 
             return True
         return False
     
@@ -373,14 +371,14 @@ class MailLine(MetaToken):
     def initialize() -> None:
         from pullenti.ner.core.TerminCollection import TerminCollection
         from pullenti.ner.core.Termin import Termin
-        if (MailLine.__m_regard_words is not None): 
+        if (MailLine.M_REGARD_WORDS is not None): 
             return
-        MailLine.__m_regard_words = TerminCollection()
+        MailLine.M_REGARD_WORDS = TerminCollection()
         for s in ["УВАЖЕНИЕ", "ПОЧТЕНИЕ", "С УВАЖЕНИЕМ", "ПОЖЕЛАНИE", "ДЕНЬ", "ХОРОШЕГО ДНЯ", "ИСКРЕННЕ ВАШ", "УДАЧА", "СПАСИБО", "ЦЕЛОВАТЬ", "ПОВАГА", "З ПОВАГОЮ", "ПОБАЖАННЯ", "ДЕНЬ", "ЩИРО ВАШ", "ДЯКУЮ", "ЦІЛУВАТИ", "BEST REGARDS", "REGARDS", "BEST WISHES", "KIND REGARDS", "GOOD BYE", "BYE", "THANKS", "THANK YOU", "MANY THANKS", "DAY", "VERY MUCH", "HAVE", "LUCK", "Yours sincerely", "sincerely Yours", "Looking forward", "Ar cieņu"]: 
-            MailLine.__m_regard_words.add(Termin(s.upper()))
-        MailLine.__m_from_words = TerminCollection()
+            MailLine.M_REGARD_WORDS.add(Termin(s.upper()))
+        MailLine.M_FROM_WORDS = TerminCollection()
         for s in ["FROM", "TO", "CC", "SENT", "SUBJECT", "SENDER", "TIME", "ОТ КОГО", "КОМУ", "ДАТА", "ТЕМА", "КОПИЯ", "ОТ", "ОТПРАВЛЕНО", "WHEN", "WHERE"]: 
-            MailLine.__m_from_words.add(Termin(s))
-        MailLine.__m_hello_words = TerminCollection()
+            MailLine.M_FROM_WORDS.add(Termin(s))
+        MailLine.M_HELLO_WORDS = TerminCollection()
         for s in ["HI", "HELLO", "DEAR", "GOOD MORNING", "GOOD DAY", "GOOD EVENING", "GOOD NIGHT", "ЗДРАВСТВУЙ", "ЗДРАВСТВУЙТЕ", "ПРИВЕТСТВУЮ", "ПРИВЕТ", "ПРИВЕТИК", "УВАЖАЕМЫЙ", "ДОРОГОЙ", "ЛЮБЕЗНЫЙ", "ДОБРОЕ УТРО", "ДОБРЫЙ ДЕНЬ", "ДОБРЫЙ ВЕЧЕР", "ДОБРОЙ НОЧИ", "ЗДРАСТУЙ", "ЗДРАСТУЙТЕ", "ВІТАЮ", "ПРИВІТ", "ПРИВІТ", "ШАНОВНИЙ", "ДОРОГИЙ", "ЛЮБИЙ", "ДОБРОГО РАНКУ", "ДОБРИЙ ДЕНЬ", "ДОБРИЙ ВЕЧІР", "ДОБРОЇ НОЧІ"]: 
-            MailLine.__m_hello_words.add(Termin(s))
+            MailLine.M_HELLO_WORDS.add(Termin(s))

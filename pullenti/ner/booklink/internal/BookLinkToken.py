@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import datetime
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.booklink.internal.BookLinkTyp import BookLinkTyp
 from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
@@ -44,11 +44,11 @@ class BookLinkToken(MetaToken):
                 re = BookLinkToken._new344(t, (t if rtp == t else rtp.end_token), BookLinkTyp.PERSON, rtp.referent)
             else: 
                 re = BookLinkToken._new345(t, rtp.end_token, BookLinkTyp.PERSON, rtp)
-            re.person_template = Utils.valToEnum(rtp.misc_attrs, FioTemplateType)
+            re.person_template = (Utils.valToEnum(rtp.misc_attrs, FioTemplateType))
             tt = rtp.begin_token
-            first_pass2702 = True
+            first_pass3651 = True
             while True:
-                if first_pass2702: first_pass2702 = False
+                if first_pass3651: first_pass3651 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= rtp.end_char)): break
                 if (not ((isinstance(tt.get_referent(), PersonPropertyReferent)))): 
@@ -91,7 +91,7 @@ class BookLinkToken(MetaToken):
         if (res.typ == BookLinkTyp.GEO or res.typ == BookLinkTyp.PRESS): 
             re2 = BookLinkToken.__try_parse(t)
             if (re2 is not None and ((re2.typ == BookLinkTyp.PRESS or re2.typ == BookLinkTyp.YEAR))): 
-                res.add_coef += 1
+                res.add_coef += (1)
         return res
     
     @staticmethod
@@ -122,7 +122,7 @@ class BookLinkToken(MetaToken):
                     return re
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
             if (br is not None): 
-                if (isinstance(br.end_token.previous, NumberToken) and (br.length_char < 30)): 
+                if ((isinstance(br.end_token.previous, NumberToken)) and (br.length_char < 30)): 
                     return BookLinkToken._new347(t, br.end_token, BookLinkTyp.NUMBER, MiscHelper.get_text_value(br.begin_token.next0_, br.end_token.previous, GetTextAttr.NO))
         t0 = t
         if (isinstance(t, ReferentToken)): 
@@ -157,12 +157,12 @@ class BookLinkToken(MetaToken):
                 return BookLinkToken._new347(t, tok_.end_token, typ_, tok_.termin.canonic_text)
             if (typ_ == BookLinkTyp.ELECTRONRES): 
                 tt = tok_.end_token.next0_
-                first_pass2703 = True
+                first_pass3652 = True
                 while True:
-                    if first_pass2703: first_pass2703 = False
+                    if first_pass3652: first_pass3652 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
-                    if (isinstance(tt, TextToken) and not tt.chars.is_letter): 
+                    if ((isinstance(tt, TextToken)) and not tt.chars.is_letter): 
                         continue
                     if (isinstance(tt.get_referent(), UriReferent)): 
                         return BookLinkToken._new344(t, tt, BookLinkTyp.ELECTRONRES, tt.get_referent())
@@ -185,7 +185,7 @@ class BookLinkToken(MetaToken):
                 if (no): 
                     return None
             return res
-        if (isinstance(t, NumberToken) and (t if isinstance(t, NumberToken) else None).typ == NumberSpellingType.DIGIT): 
+        if ((isinstance(t, NumberToken)) and (t if isinstance(t, NumberToken) else None).typ == NumberSpellingType.DIGIT): 
             res = BookLinkToken._new347(t, t, BookLinkTyp.NUMBER, str((t if isinstance(t, NumberToken) else None).value))
             val = (t if isinstance(t, NumberToken) else None).value
             if (val >= 1930 and (val < 2030)): 
@@ -215,9 +215,9 @@ class BookLinkToken(MetaToken):
                     tt0 = tt
                     tt1 = tt
                     tt = tt.next0_
-                    first_pass2704 = True
+                    first_pass3653 = True
                     while True:
-                        if first_pass2704: first_pass2704 = False
+                        if first_pass3653: first_pass3653 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.is_char_of(",") or tt.is_hiphen): 
@@ -237,9 +237,9 @@ class BookLinkToken(MetaToken):
                     res = BookLinkToken._new346(t, t.next0_, BookLinkTyp.GEO)
                     if (t.next0_.next0_ is not None and t.next0_.next0_.is_char_of(":;")): 
                         res.end_token = t.next0_.next0_
-                    elif (t.next0_.next0_ is not None and isinstance(t.next0_.next0_, NumberToken)): 
+                    elif (t.next0_.next0_ is not None and (isinstance(t.next0_.next0_, NumberToken))): 
                         pass
-                    elif (t.next0_.next0_ is not None and t.next0_.next0_.is_comma and isinstance(t.next0_.next0_.next0_, NumberToken)): 
+                    elif (t.next0_.next0_ is not None and t.next0_.next0_.is_comma and (isinstance(t.next0_.next0_.next0_, NumberToken))): 
                         pass
                     else: 
                         return None
@@ -262,9 +262,9 @@ class BookLinkToken(MetaToken):
             if (((term == "СМ" or term == "CM" or term == "НАПР") or term == "НАПРИМЕР" or term == "SEE") or term == "ПОДРОБНЕЕ" or term == "ПОДРОБНО"): 
                 res = BookLinkToken._new346(t, t, BookLinkTyp.SEE)
                 t = t.next0_
-                first_pass2705 = True
+                first_pass3654 = True
                 while True:
-                    if first_pass2705: first_pass2705 = False
+                    if first_pass3654: first_pass3654 = False
                     else: t = t.next0_
                     if (not (t is not None)): break
                     if (t.is_char_of(".:") or t.is_value("ALSO", None)): 
@@ -287,17 +287,17 @@ class BookLinkToken(MetaToken):
             no = MiscHelper.check_number_prefix(t)
             if (isinstance(no, NumberToken)): 
                 return BookLinkToken._new346(t, no, BookLinkTyp.N)
-            if (((term == "B" or term == "В")) and isinstance(t.next0_, NumberToken) and isinstance(t.next0_.next0_, TextToken)): 
+            if (((term == "B" or term == "В")) and (isinstance(t.next0_, NumberToken)) and (isinstance(t.next0_.next0_, TextToken))): 
                 term2 = (t.next0_.next0_ if isinstance(t.next0_.next0_, TextToken) else None).term
                 if (((term2 == "Т" or term2 == "T" or term2.startswith("ТОМ")) or term2 == "TT" or term2 == "ТТ") or term2 == "КН" or term2.startswith("КНИГ")): 
                     return BookLinkToken._new346(t, t.next0_.next0_, BookLinkTyp.VOLUME)
         if (t.is_char('(')): 
-            if (isinstance(t.next0_, NumberToken) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
+            if ((isinstance(t.next0_, NumberToken)) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
                 num = (t.next0_ if isinstance(t.next0_, NumberToken) else None).value
-                if (num > 1900 and num <= 2040): 
+                if (num > (1900) and num <= (2040)): 
                     if (num <= datetime.datetime.now().year): 
                         return BookLinkToken._new347(t, t.next0_.next0_, BookLinkTyp.YEAR, str(num))
-            if ((isinstance(t.next0_, ReferentToken) and isinstance(t.next0_.get_referent(), DateReferent) and t.next0_.next0_ is not None) and t.next0_.next0_.is_char(')')): 
+            if (((isinstance(t.next0_, ReferentToken)) and (isinstance(t.next0_.get_referent(), DateReferent)) and t.next0_.next0_ is not None) and t.next0_.next0_.is_char(')')): 
                 num = (t.next0_.get_referent() if isinstance(t.next0_.get_referent(), DateReferent) else None).year
                 if (num > 0): 
                     return BookLinkToken._new347(t, t.next0_.next0_, BookLinkTyp.YEAR, str(num))
@@ -308,7 +308,7 @@ class BookLinkToken(MetaToken):
         from pullenti.ner.booklink.BookLinkRefReferent import BookLinkRefReferent
         if (num is None or t0 is None): 
             return False
-        if (t0.previous is not None and isinstance(t0.previous.get_referent(), BookLinkRefReferent)): 
+        if (t0.previous is not None and (isinstance(t0.previous.get_referent(), BookLinkRefReferent))): 
             inoutarg367 = RefOutArgWrapper(0)
             inoutres368 = Utils.tryParseInt(Utils.ifNotNull((t0.previous.get_referent() if isinstance(t0.previous.get_referent(), BookLinkRefReferent) else None).number, ""), inoutarg367)
             nn = inoutarg367.value
@@ -431,7 +431,6 @@ class BookLinkToken(MetaToken):
         if (bl is not None and bl.typ == BlkTyps.LITERATURE): 
             return bl.end_token
         return None
-
     
     @staticmethod
     def _new344(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BookLinkTyp', _arg4 : 'Referent') -> 'BookLinkToken':

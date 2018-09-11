@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -9,7 +9,6 @@ import math
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.bank.internal.ResourceHelper import ResourceHelper
 from pullenti.ner.core.NumberExType import NumberExType
-
 
 
 class MoneyAnalyzer(Analyzer):
@@ -60,25 +59,18 @@ class MoneyAnalyzer(Analyzer):
         return None
     
     def process(self, kit : 'AnalysisKit') -> None:
-        """ Основная функция выделения объектов
-        
-        Args:
-            container: 
-            lastStage: 
-        
-        """
         ad = kit.get_analyzer_data(self)
         t = kit.first_token
-        first_pass2971 = True
+        first_pass3940 = True
         while True:
-            if first_pass2971: first_pass2971 = False
+            if first_pass3940: first_pass3940 = False
             else: t = t.next0_
             if (not (t is not None)): break
             mon = MoneyAnalyzer.try_parse(t)
             if (mon is not None): 
                 mon.referent = ad.register_referent(mon.referent)
                 kit.embed_token(mon)
-                t = mon
+                t = (mon)
                 continue
     
     @staticmethod
@@ -95,12 +87,12 @@ class MoneyAnalyzer(Analyzer):
             return None
         nex = NumberExToken.try_parse_number_with_postfix(t)
         if (nex is None or nex.ex_typ != NumberExType.MONEY): 
-            if (isinstance(t, NumberToken) and isinstance(t.next0_, TextToken) and isinstance(t.next0_.next0_, NumberToken)): 
+            if ((isinstance(t, NumberToken)) and (isinstance(t.next0_, TextToken)) and (isinstance(t.next0_.next0_, NumberToken))): 
                 if (t.next0_.is_hiphen or t.next0_.morph.class0_.is_preposition): 
                     res1 = NumberExToken.try_parse_number_with_postfix(t.next0_.next0_)
                     if (res1 is not None and res1.ex_typ == NumberExType.MONEY): 
                         res0 = MoneyReferent()
-                        if ((t.next0_.is_hiphen and res1.value == 0 and res1.end_token.next0_ is not None) and res1.end_token.next0_.is_char('(')): 
+                        if ((t.next0_.is_hiphen and res1.value == (0) and res1.end_token.next0_ is not None) and res1.end_token.next0_.is_char('(')): 
                             nex2 = NumberExToken.try_parse_number_with_postfix(res1.end_token.next0_.next0_)
                             if ((nex2 is not None and nex2.ex_typ_param == res1.ex_typ_param and nex2.end_token.next0_ is not None) and nex2.end_token.next0_.is_char(')')): 
                                 if (nex2.value == (t if isinstance(t, NumberToken) else None).value): 
@@ -108,12 +100,12 @@ class MoneyAnalyzer(Analyzer):
                                     res0.value = nex2.value
                                     return ReferentToken(res0, t, nex2.end_token.next0_)
                                 if (isinstance(t.previous, NumberToken)): 
-                                    if (nex2.value == ((((t.previous if isinstance(t.previous, NumberToken) else None).value * 1000) + (t if isinstance(t, NumberToken) else None).value))): 
+                                    if (nex2.value == ((((t.previous if isinstance(t.previous, NumberToken) else None).value * (1000)) + (t if isinstance(t, NumberToken) else None).value))): 
                                         res0.currency = nex2.ex_typ_param
                                         res0.value = nex2.value
                                         return ReferentToken(res0, t.previous, nex2.end_token.next0_)
                                     elif (isinstance(t.previous.previous, NumberToken)): 
-                                        if (nex2.value == ((((t.previous.previous if isinstance(t.previous.previous, NumberToken) else None).value * 1000000) + ((t.previous if isinstance(t.previous, NumberToken) else None).value * 1000) + (t if isinstance(t, NumberToken) else None).value))): 
+                                        if (nex2.value == ((((t.previous.previous if isinstance(t.previous.previous, NumberToken) else None).value * (1000000)) + ((t.previous if isinstance(t.previous, NumberToken) else None).value * (1000)) + (t if isinstance(t, NumberToken) else None).value))): 
                                             res0.currency = nex2.ex_typ_param
                                             res0.value = nex2.value
                                             return ReferentToken(res0, t.previous.previous, nex2.end_token.next0_)
@@ -123,15 +115,15 @@ class MoneyAnalyzer(Analyzer):
             return None
         res = MoneyReferent()
         res.currency = nex.ex_typ_param
-        res.value = math.floor(nex.real_value)
-        re = round(((nex.real_value - res.value)) * 100, 6)
-        res.rest = math.floor(re)
+        res.value = (math.floor(nex.real_value))
+        re = round(((nex.real_value - (res.value))) * (100), 6)
+        res.rest = (math.floor(re))
         if (nex.real_value != nex.alt_real_value): 
-            if (res.value != math.floor(nex.alt_real_value)): 
-                res.alt_value = math.floor(nex.alt_real_value)
-            re = round(((nex.alt_real_value - math.floor(nex.alt_real_value))) * 100, 6)
-            if (math.floor(re) != res.rest): 
-                res.alt_rest = math.floor(re)
+            if (res.value != (math.floor(nex.alt_real_value))): 
+                res.alt_value = (math.floor(nex.alt_real_value))
+            re = (round(((nex.alt_real_value - (math.floor(nex.alt_real_value)))) * (100), 6))
+            if ((math.floor(re)) != res.rest): 
+                res.alt_rest = (math.floor(re))
         if (nex.alt_rest_money > 0): 
             res.alt_rest = nex.alt_rest_money
         t1 = nex.end_token
@@ -144,10 +136,10 @@ class MoneyAnalyzer(Analyzer):
                 if (rt is not None and rt.referent.can_be_equals(res, Referent.EqualType.WITHINONETEXT)): 
                     t1 = rt.end_token
         if (res.alt_value is not None and res.alt_value > res.value): 
-            if (t.whitespaces_before_count == 1 and isinstance(t.previous, NumberToken)): 
+            if (t.whitespaces_before_count == 1 and (isinstance(t.previous, NumberToken))): 
                 delt = res.alt_value - res.value
                 val = (t.previous if isinstance(t.previous, NumberToken) else None).value
-                if ((((res.value < 1000) and ((delt % 1000)) == 0)) or (((res.value < 1000000) and ((delt % 1000000)) == 0))): 
+                if ((((res.value < (1000)) and ((delt % (1000))) == (0))) or (((res.value < (1000000)) and ((delt % (1000000))) == (0)))): 
                     t = t.previous
                     res.value = res.alt_value
                     res.alt_value = None

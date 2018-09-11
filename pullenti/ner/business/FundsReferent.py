@@ -1,15 +1,15 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+import math
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Referent import Referent
 from pullenti.ner.business.FundsKind import FundsKind
-
 
 
 class FundsReferent(Referent):
@@ -40,7 +40,7 @@ class FundsReferent(Referent):
         from pullenti.ner.core.MiscHelper import MiscHelper
         from pullenti.ner.business.internal.FundsMeta import FundsMeta
         from pullenti.morph.MorphLang import MorphLang
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         if (self.typ is not None): 
             print(MiscHelper.convert_first_char_upper_and_other_lower(self.typ), end="", file=res)
         else: 
@@ -53,7 +53,7 @@ class FundsReferent(Referent):
                 print("?", end="", file=res)
         if (self.source is not None): 
             print("; {0}".format(self.source.to_string(short_variant, lang, 0)), end="", file=res, flush=True)
-        if (self.count > 0): 
+        if (self.count > (0)): 
             print("; кол-во {0}".format(self.count), end="", file=res, flush=True)
         if (self.percent > 0): 
             print("; {0}%".format(self.percent), end="", file=res, flush=True)

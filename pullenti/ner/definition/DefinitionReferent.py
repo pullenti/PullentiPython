@@ -1,10 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.definition.DefinitionKind import DefinitionKind
 
@@ -56,7 +56,7 @@ class DefinitionReferent(Referent):
             res = Utils.valToEnum(s, DefinitionKind)
             if (isinstance(res, DefinitionKind)): 
                 return Utils.valToEnum(res, DefinitionKind)
-        except Exception as ex1088: 
+        except Exception as ex1090: 
             pass
         return DefinitionKind.UNDEFINED
     
@@ -82,10 +82,9 @@ class DefinitionReferent(Referent):
         if (self.termin_add != dr.termin_add): 
             return False
         return True
-
     
     @staticmethod
-    def _new1084(_arg1 : 'DefinitionKind') -> 'DefinitionReferent':
+    def _new1086(_arg1 : 'DefinitionKind') -> 'DefinitionReferent':
         res = DefinitionReferent()
         res.kind = _arg1
         return res

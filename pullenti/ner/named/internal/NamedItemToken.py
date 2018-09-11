@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.named.NamedEntityKind import NamedEntityKind
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
@@ -29,7 +29,7 @@ class NamedItemToken(MetaToken):
         super().__init__(b, e0_, None)
     
     def __str__(self) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         if (self.kind != NamedEntityKind.UNDEFINED): 
             print(" [{0}]".format(Utils.enumToString(self.kind)), end="", file=res, flush=True)
         if (self.is_wellknown): 
@@ -78,26 +78,26 @@ class NamedItemToken(MetaToken):
             return None
         if (isinstance(t, ReferentToken)): 
             r = t.get_referent()
-            if ((r.type_name == "PERSON" or r.type_name == "PERSONPROPERTY" or isinstance(r, GeoReferent)) or r.type_name == "ORGANIZATION"): 
-                return NamedItemToken._new1610(t, t, r, t.morph)
+            if ((r.type_name == "PERSON" or r.type_name == "PERSONPROPERTY" or (isinstance(r, GeoReferent))) or r.type_name == "ORGANIZATION"): 
+                return NamedItemToken._new1618(t, t, r, t.morph)
             return None
         typ = NamedItemToken.__m_types.try_parse(t, TerminParseAttr.NO)
         nam = NamedItemToken.__m_names.try_parse(t, TerminParseAttr.NO)
         if (typ is not None): 
             if (not ((isinstance(t, TextToken)))): 
                 return None
-            res = NamedItemToken._new1611(typ.begin_token, typ.end_token, typ.morph, typ.chars)
-            res.kind = Utils.valToEnum(typ.termin.tag, NamedEntityKind)
+            res = NamedItemToken._new1619(typ.begin_token, typ.end_token, typ.morph, typ.chars)
+            res.kind = (Utils.valToEnum(typ.termin.tag, NamedEntityKind))
             res.type_value = typ.termin.canonic_text
-            if ((nam is not None and nam.end_token == typ.end_token and not t.chars.is_all_lower) and Utils.valToEnum(nam.termin.tag, NamedEntityKind) == res.kind): 
+            if ((nam is not None and nam.end_token == typ.end_token and not t.chars.is_all_lower) and (Utils.valToEnum(nam.termin.tag, NamedEntityKind)) == res.kind): 
                 res.name_value = nam.termin.canonic_text
                 res.is_wellknown = True
             return res
         if (nam is not None): 
             if (nam.begin_token.chars.is_all_lower): 
                 return None
-            res = NamedItemToken._new1611(nam.begin_token, nam.end_token, nam.morph, nam.chars)
-            res.kind = Utils.valToEnum(nam.termin.tag, NamedEntityKind)
+            res = NamedItemToken._new1619(nam.begin_token, nam.end_token, nam.morph, nam.chars)
+            res.kind = (Utils.valToEnum(nam.termin.tag, NamedEntityKind))
             res.name_value = nam.termin.canonic_text
             ok = True
             if (not t.is_whitespace_before and t.previous is not None): 
@@ -117,7 +117,7 @@ class NamedItemToken(MetaToken):
                 if (adj.end_token.is_value("ВОСТОК", None)): 
                     if (adj.begin_token == adj.end_token): 
                         return None
-                    re = NamedItemToken._new1613(t, adj.end_token, adj.morph)
+                    re = NamedItemToken._new1621(t, adj.end_token, adj.morph)
                     re.kind = NamedEntityKind.LOCATION
                     re.name_value = MiscHelper.get_text_value(t, adj.end_token, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
                     re.is_wellknown = True
@@ -125,8 +125,8 @@ class NamedItemToken(MetaToken):
                 return None
             if (adj.whitespaces_after_count > 2): 
                 return None
-            if (isinstance(adj.end_token.next0_, ReferentToken) and isinstance(adj.end_token.next0_.get_referent(), GeoReferent)): 
-                re = NamedItemToken._new1613(t, adj.end_token.next0_, adj.end_token.next0_.morph)
+            if ((isinstance(adj.end_token.next0_, ReferentToken)) and (isinstance(adj.end_token.next0_.get_referent(), GeoReferent))): 
+                re = NamedItemToken._new1621(t, adj.end_token.next0_, adj.end_token.next0_.morph)
                 re.kind = NamedEntityKind.LOCATION
                 re.name_value = MiscHelper.get_text_value(t, adj.end_token.next0_, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
                 re.is_wellknown = True
@@ -140,7 +140,7 @@ class NamedItemToken(MetaToken):
                         res.name_value = s.upper()
                     else: 
                         res.name_value = "{0} {1}".format(s.upper(), res.name_value)
-                        res.type_value = None
+                        res.type_value = (None)
                     res.begin_token = t
                     res.chars = t.chars
                     res.is_wellknown = True
@@ -151,7 +151,7 @@ class NamedItemToken(MetaToken):
                 test = NamedItemToken.try_parse(npt.noun.begin_token, loc_onto)
                 if (test is not None and test.end_token == npt.end_token and test.type_value is not None): 
                     test.begin_token = t
-                    tmp = Utils.newStringIO(None)
+                    tmp = io.StringIO()
                     for a in npt.adjectives: 
                         s = a.get_normal_case_text(MorphClass.ADJECTIVE, True, test.morph.gender, False)
                         if (tmp.tell() > 0): 
@@ -170,19 +170,19 @@ class NamedItemToken(MetaToken):
                 res.name_value = MiscHelper.get_text_value(t, br.end_token, GetTextAttr.NO)
                 nam = NamedItemToken.__m_names.try_parse(t.next0_, TerminParseAttr.NO)
                 if (nam is not None and nam.end_token == br.end_token.previous): 
-                    res.kind = Utils.valToEnum(nam.termin.tag, NamedEntityKind)
+                    res.kind = (Utils.valToEnum(nam.termin.tag, NamedEntityKind))
                     res.is_wellknown = True
                     res.name_value = nam.termin.canonic_text
                 return res
-        if ((isinstance(t, TextToken) and t.chars.is_letter and not t.chars.is_all_lower) and t.length_char > 2): 
-            res = NamedItemToken._new1613(t, t, t.morph)
+        if (((isinstance(t, TextToken)) and t.chars.is_letter and not t.chars.is_all_lower) and t.length_char > 2): 
+            res = NamedItemToken._new1621(t, t, t.morph)
             str0_ = (t if isinstance(t, TextToken) else None).term
             if (str0_.endswith("О") or str0_.endswith("И") or str0_.endswith("Ы")): 
                 res.name_value = str0_
             else: 
                 res.name_value = t.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False)
             res.chars = t.chars
-            if (((not t.is_whitespace_after and t.next0_ is not None and t.next0_.is_hiphen) and isinstance(t.next0_.next0_, TextToken) and not t.next0_.next0_.is_whitespace_after) and t.chars.is_cyrillic_letter == t.next0_.next0_.chars.is_cyrillic_letter): 
+            if (((not t.is_whitespace_after and t.next0_ is not None and t.next0_.is_hiphen) and (isinstance(t.next0_.next0_, TextToken)) and not t.next0_.next0_.is_whitespace_after) and t.chars.is_cyrillic_letter == t.next0_.next0_.chars.is_cyrillic_letter): 
                 res.end_token = t.next0_.next0_
                 t = res.end_token
                 res.name_value = "{0}-{1}".format(res.name_value, t.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False))
@@ -217,19 +217,19 @@ class NamedItemToken(MetaToken):
             t = Termin()
             t.init_by_normal_text(s, MorphLang())
             t.tag = NamedEntityKind.LOCATION
-            t.tag2 = "океан"
+            t.tag2 = ("океан")
             NamedItemToken.__m_names.add(t)
         for s in ["ЕВРАЗИЯ", "АФРИКА", "АМЕРИКА", "АВСТРАЛИЯ", "АНТАРКТИДА"]: 
             t = Termin()
             t.init_by_normal_text(s, MorphLang())
             t.tag = NamedEntityKind.LOCATION
-            t.tag2 = "континент"
+            t.tag2 = ("континент")
             NamedItemToken.__m_names.add(t)
         for s in ["ВОЛГА", "НЕВА", "АМУР", "ОБЪ", "АНГАРА", "ЛЕНА", "ИРТЫШ", "ДНЕПР", "ДОН", "ДНЕСТР", "РЕЙН", "АМУДАРЬЯ", "СЫРДАРЬЯ", "ТИГР", "ЕВФРАТ", "ИОРДАН", "МИССИСИПИ", "АМАЗОНКА", "ТЕМЗА", "СЕНА", "НИЛ", "ЯНЦЗЫ", "ХУАНХЭ", "ПАРАНА", "МЕКОНГ", "МАККЕНЗИ", "НИГЕР", "ЕНИСЕЙ", "МУРРЕЙ", "САЛУИН", "ИНД", "РИО-ГРАНДЕ", "БРАХМАПУТРА", "ДАРЛИНГ", "ДУНАЙ", "ЮКОН", "ГАНГ", "МАРРАМБИДЖИ", "ЗАМБЕЗИ", "ТОКАНТИС", "ОРИНОКО", "СИЦЗЯН", "КОЛЫМА", "КАМА", "ОКА", "ЭЛЬЮА", "ВИСЛА", "ДАУГАВА", "ЗАПАДНАЯ ДВИНА", "НЕМАН", "МЕЗЕНЬ", "КУБАНЬ", "ЮЖНЫЙ БУГ"]: 
             t = Termin()
             t.init_by_normal_text(s, MorphLang())
             t.tag = NamedEntityKind.LOCATION
-            t.tag2 = "река"
+            t.tag2 = ("река")
             NamedItemToken.__m_names.add(t)
         for s in ["ЕВРОПА", "АЗИЯ", "АРКТИКА", "КАВКАЗ", "ПРИБАЛТИКА", "СИБИРЬ", "ЗАПОЛЯРЬЕ", "ЧУКОТКА", "ПРИБАЛТИКА", "БАЛКАНЫ", "СКАНДИНАВИЯ", "ОКЕАНИЯ", "АЛЯСКА", "УРАЛ", "ПОВОЛЖЬЕ", "ПРИМОРЬЕ", "КУРИЛЫ", "ТИБЕТ", "ГИМАЛАИ", "АЛЬПЫ", "САХАРА", "ГОБИ", "СИНАЙ", "БАЙКОНУР", "ЧЕРНОБЫЛЬ", "САДОВОЕ КОЛЬЦО", "СТАРЫЙ ГОРОД"]: 
             t = Termin()
@@ -258,24 +258,23 @@ class NamedItemToken(MetaToken):
     __m_types = None
     
     __m_names = None
-
     
     @staticmethod
-    def _new1610(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent', _arg4 : 'MorphCollection') -> 'NamedItemToken':
+    def _new1618(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent', _arg4 : 'MorphCollection') -> 'NamedItemToken':
         res = NamedItemToken(_arg1, _arg2)
         res.ref = _arg3
         res.morph = _arg4
         return res
     
     @staticmethod
-    def _new1611(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : 'CharsInfo') -> 'NamedItemToken':
+    def _new1619(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : 'CharsInfo') -> 'NamedItemToken':
         res = NamedItemToken(_arg1, _arg2)
         res.morph = _arg3
         res.chars = _arg4
         return res
     
     @staticmethod
-    def _new1613(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'NamedItemToken':
+    def _new1621(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'NamedItemToken':
         res = NamedItemToken(_arg1, _arg2)
         res.morph = _arg3
         return res

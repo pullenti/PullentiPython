@@ -1,16 +1,15 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 import io
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Referent import Referent
 from pullenti.ner.measure.internal.MeasureHelper import MeasureHelper
-
 
 
 class MeasureReferent(Referent):
@@ -47,11 +46,11 @@ class MeasureReferent(Referent):
     def double_values(self) -> typing.List[float]:
         res = list()
         for s in self.slots: 
-            if (s.type_name == MeasureReferent.ATTR_VALUE and isinstance(s.value, str)): 
-                inoutarg1600 = RefOutArgWrapper(0)
-                inoutres1601 = MeasureHelper.try_parse_double(s.value if isinstance(s.value, str) else None, inoutarg1600)
-                d = inoutarg1600.value
-                if (inoutres1601): 
+            if (s.type_name == MeasureReferent.ATTR_VALUE and (isinstance(s.value, str))): 
+                inoutarg1608 = RefOutArgWrapper(0)
+                inoutres1609 = MeasureHelper.try_parse_double(s.value if isinstance(s.value, str) else None, inoutarg1608)
+                d = inoutarg1608.value
+                if (inoutres1609): 
                     res.append(d)
         return res
     
@@ -63,7 +62,7 @@ class MeasureReferent(Referent):
         from pullenti.ner.measure.UnitReferent import UnitReferent
         res = list()
         for s in self.slots: 
-            if (s.type_name == MeasureReferent.ATTR_UNIT and isinstance(s.value, UnitReferent)): 
+            if (s.type_name == MeasureReferent.ATTR_UNIT and (isinstance(s.value, UnitReferent))): 
                 res.append(s.value if isinstance(s.value, UnitReferent) else None)
         return res
     
@@ -79,9 +78,9 @@ class MeasureReferent(Referent):
                     vals.append((s.value if isinstance(s.value, Referent) else None).to_string(True, lang, 0))
         for i in range(res.tell() - 1, -1, -1):
             ch = Utils.getCharAtStringIO(res, i)
-            if (not ch.isdigit()): 
+            if (not str.isdigit(ch)): 
                 continue
-            j = (ord(ch) - ord('1'))
+            j = ((ord(ch)) - (ord('1')))
             if ((j < 0) or j >= len(vals)): 
                 continue
             Utils.removeStringIO(res, i, 1)
@@ -89,20 +88,22 @@ class MeasureReferent(Referent):
         uu = self.units
         if (len(uu) > 0): 
             print(uu[0].to_string(True, lang, 0), end="", file=res)
-            for i in range(1, len(uu), 1):
+            i = 1
+            while i < len(uu): 
                 pow0_ = uu[i].get_string_value(UnitReferent.ATTR_POW)
                 if (not Utils.isNullOrEmpty(pow0_) and pow0_[0] == '-'): 
                     print("/{0}".format(uu[i].to_string(True, lang, 1)), end="", file=res, flush=True)
                     if (pow0_ != "-1"): 
-                        print("<{0}>".format(pow0_[1 : ]), end="", file=res, flush=True)
+                        print("<{0}>".format(pow0_[1:]), end="", file=res, flush=True)
                 else: 
                     print("*{0}".format(uu[i].to_string(True, lang, 0)), end="", file=res, flush=True)
+                i += 1
         if (not short_variant): 
             nam = self.get_string_value(MeasureReferent.ATTR_NAME)
             if (nam is not None): 
                 print(" - {0}".format(nam), end="", file=res, flush=True)
             for s in self.slots: 
-                if (s.type_name == MeasureReferent.ATTR_REF and isinstance(s.value, MeasureReferent)): 
+                if (s.type_name == MeasureReferent.ATTR_REF and (isinstance(s.value, MeasureReferent))): 
                     print(" / {0}".format((s.value if isinstance(s.value, MeasureReferent) else None).to_string(True, lang, 0)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
@@ -116,16 +117,20 @@ class MeasureReferent(Referent):
         vals2 = mr.get_string_values(MeasureReferent.ATTR_VALUE)
         if (len(vals1) != len(vals2)): 
             return False
-        for i in range(len(vals2)):
+        i = 0
+        while i < len(vals2): 
             if (vals1[i] != vals2[i]): 
                 return False
+            i += 1
         units1 = self.units
         units2 = mr.units
         if (len(units1) != len(units2)): 
             return False
-        for i in range(len(units2)):
+        i = 0
+        while i < len(units2): 
             if (units1[i] != units2[i]): 
                 return False
+            i += 1
         for s in self.slots: 
             if (s.type_name == MeasureReferent.ATTR_REF or s.type_name == MeasureReferent.ATTR_NAME): 
                 if (mr.find_slot(s.type_name, s.value, True) is None): 

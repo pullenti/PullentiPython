@@ -1,11 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import math
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.internal.BlkTyps import BlkTyps
 from pullenti.ner.core.NumberHelper import NumberHelper
@@ -53,7 +53,7 @@ class BlockLine(MetaToken):
                     break
             if (t.next0_.is_char('.')): 
                 pass
-            elif (isinstance(t.next0_, TextToken) and not t.next0_.chars.is_all_lower): 
+            elif ((isinstance(t.next0_, TextToken)) and not t.next0_.chars.is_all_lower): 
                 pass
             else: 
                 break
@@ -72,7 +72,7 @@ class BlockLine(MetaToken):
                 tok = BlockLine.__m_ontology.try_parse(npt1.noun.begin_token, TerminParseAttr.NO)
         if (tok is not None): 
             if (t.previous is not None and t.previous.is_char(':')): 
-                tok = None
+                tok = (None)
         if (tok is not None): 
             typ_ = Utils.valToEnum(tok.termin.tag, BlkTyps)
             if (typ_ == BlkTyps.CONSLUSION): 
@@ -80,25 +80,25 @@ class BlockLine(MetaToken):
                     pass
                 elif (t.next0_ is not None and t.next0_.morph.class0_.is_preposition and t.next0_.next0_ is not None): 
                     tok2 = BlockLine.__m_ontology.try_parse(t.next0_.next0_, TerminParseAttr.NO)
-                    if (tok2 is not None and Utils.valToEnum(tok2.termin.tag, BlkTyps) == BlkTyps.CHAPTER): 
+                    if (tok2 is not None and (Utils.valToEnum(tok2.termin.tag, BlkTyps)) == BlkTyps.CHAPTER): 
                         pass
                     else: 
-                        tok = None
+                        tok = (None)
                 else: 
-                    tok = None
+                    tok = (None)
             if (t.kit.base_language != t.morph.language): 
-                tok = None
+                tok = (None)
             if (typ_ == BlkTyps.INDEX and not t.is_value("ОГЛАВЛЕНИЕ", None)): 
                 if (not t.is_newline_after and t.next0_ is not None): 
                     npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
                     if (npt is not None and npt.is_newline_after and npt.morph.case.is_genitive): 
-                        tok = None
+                        tok = (None)
                     elif (npt is None): 
-                        tok = None
+                        tok = (None)
             if ((typ_ == BlkTyps.INTRO and tok is not None and not tok.is_newline_after) and t.is_value("ВВЕДЕНИЕ", None)): 
                 npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
                 if (npt is not None and npt.morph.case.is_genitive): 
-                    tok = None
+                    tok = (None)
             if (tok is not None): 
                 if (res.number_end is None): 
                     res.number_end = tok.end_token
@@ -112,7 +112,7 @@ class BlockLine(MetaToken):
                 if (t.is_newline_after or t.next0_ is None): 
                     return res
                 t = t.next0_
-        if (t.is_char('§') and isinstance(t.next0_, NumberToken)): 
+        if (t.is_char('§') and (isinstance(t.next0_, NumberToken))): 
             res.typ = BlkTyps.CHAPTER
             res.number_end = t
             t = t.next0_
@@ -129,7 +129,7 @@ class BlockLine(MetaToken):
                         res.typ = BlkTyps.CHAPTER
                 return res
         t1 = res.end_token
-        if (((isinstance(t1, NumberToken) or t1.is_char('.'))) and t1.previous is not None): 
+        if ((((isinstance(t1, NumberToken)) or t1.is_char('.'))) and t1.previous is not None): 
             t1 = t1.previous
             if (t1.is_char('.')): 
                 res.has_content_item_tail = True
@@ -158,9 +158,9 @@ class BlockLine(MetaToken):
                 if (npt.noun.is_value("ХАРАКТЕРИСТИКА", None) or npt.noun.is_value("СОДЕРЖАНИЕ", "ЗМІСТ")): 
                     ok = True
                     tt = npt.end_token.next0_
-                    first_pass2736 = True
+                    first_pass3685 = True
                     while True:
-                        if first_pass2736: first_pass2736 = False
+                        if first_pass3685: first_pass3685 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.end_char <= res.end_char)): break
                         if (tt.is_char('.')): 
@@ -183,9 +183,9 @@ class BlockLine(MetaToken):
                 elif (npt.noun.is_value("ВЫВОД", "ВИСНОВОК") or npt.noun.is_value("РЕЗУЛЬТАТ", "ДОСЛІДЖЕННЯ")): 
                     ok = True
                     tt = npt.end_token.next0_
-                    first_pass2737 = True
+                    first_pass3686 = True
                     while True:
-                        if first_pass2737: first_pass2737 = False
+                        if first_pass3686: first_pass3686 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.end_char <= res.end_char)): break
                         if (tt.is_char_of(",.") or tt.is_and): 
@@ -219,9 +219,9 @@ class BlockLine(MetaToken):
                         if (npt.begin_token == npt.end_token and npt.noun.is_value("СПИСОК", None) and npt.end_char == res.end_char): 
                             ok = False
                         tt = npt.end_token.next0_
-                        first_pass2738 = True
+                        first_pass3687 = True
                         while True:
-                            if first_pass2738: first_pass2738 = False
+                            if first_pass3687: first_pass3687 = False
                             else: tt = tt.next0_
                             if (not (tt is not None and tt.end_char <= res.end_char)): break
                             if (tt.is_char_of(",.:") or tt.is_and or tt.morph.class0_.is_preposition): 

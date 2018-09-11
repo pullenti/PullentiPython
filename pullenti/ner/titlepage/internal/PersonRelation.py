@@ -1,12 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
-
+from pullenti.unisharp.Utils import Utils
 
 
 class PersonRelation:
@@ -30,15 +29,14 @@ class PersonRelation:
     
     def __str__(self) -> str:
         from pullenti.morph.MorphLang import MorphLang
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         print("{0} {1}".format(self.person.to_string(True, MorphLang.UNKNOWN, 0), Utils.enumToString(self.best)), end="", file=res, flush=True)
         for v in self.coefs.items(): 
             print(" {0}({1})".format(v[1], Utils.enumToString(v[0])), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
-
     
     @staticmethod
-    def _new2469(_arg1 : 'PersonReferent') -> 'PersonRelation':
+    def _new2478(_arg1 : 'PersonReferent') -> 'PersonRelation':
         res = PersonRelation()
         res.person = _arg1
         return res

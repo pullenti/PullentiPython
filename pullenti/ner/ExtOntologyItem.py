@@ -1,10 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 
 
 class ExtOntologyItem:
@@ -29,10 +29,9 @@ class ExtOntologyItem:
                 if (not str1 in res): 
                     res = (res + "; " + str1)
             return res
-
     
     @staticmethod
-    def _new2605(_arg1 : object, _arg2 : 'Referent', _arg3 : str) -> 'ExtOntologyItem':
+    def _new2618(_arg1 : object, _arg2 : 'Referent', _arg3 : str) -> 'ExtOntologyItem':
         res = ExtOntologyItem()
         res.ext_id = _arg1
         res.referent = _arg2

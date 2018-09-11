@@ -1,10 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+import io
+from pullenti.unisharp.Utils import Utils
 
 
 class CharsInfo:
@@ -12,17 +13,18 @@ class CharsInfo:
     
     def __init__(self, ci : 'CharsInfo'=None) -> None:
         self.value = 0
+        self.value = (0)
         if (ci is not None): 
             self.value = ci.value
     
     def __get_value(self, i : int) -> bool:
-        return ((((self.value >> i)) & 1)) != 0
+        return (((((self.value) >> i)) & 1)) != 0
     
     def __set_value(self, i : int, val : bool) -> None:
         if (val): 
-            self.value |= (1 << i)
+            self.value |= ((1 << i))
         else: 
-            self.value &= ~ ((1 << i))
+            self.value &= (~ ((1 << i)))
     
     @property
     def is_all_upper(self) -> bool:
@@ -98,7 +100,7 @@ class CharsInfo:
     def __str__(self) -> str:
         if (not self.is_letter): 
             return "Nonletter"
-        tmp_str = Utils.newStringIO(None)
+        tmp_str = io.StringIO()
         if (self.is_all_upper): 
             print("AllUpper", end="", file=tmp_str)
         elif (self.is_all_lower): 
@@ -133,7 +135,7 @@ class CharsInfo:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return CharsInfo._new38(None, (val1 & val2))
+        return CharsInfo._new38(None, ((val1) & (val2)))
     
     def __or__(self : 'CharsInfo', arg2 : 'CharsInfo') -> 'CharsInfo':
         val1 = 0
@@ -142,7 +144,7 @@ class CharsInfo:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return CharsInfo._new38(None, (val1 | val2))
+        return CharsInfo._new38(None, ((val1) | (val2)))
     
     def __eq__(self : 'CharsInfo', arg2 : 'CharsInfo') -> bool:
         val1 = 0
@@ -161,7 +163,6 @@ class CharsInfo:
         if (arg2 is not None): 
             val2 = arg2.value
         return val1 != val2
-
     
     @staticmethod
     def _new38(_arg1 : 'CharsInfo', _arg2 : int) -> 'CharsInfo':
@@ -170,26 +171,26 @@ class CharsInfo:
         return res
     
     @staticmethod
-    def _new2197(_arg1 : bool) -> 'CharsInfo':
+    def _new2206(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_capital_upper = _arg1
         return res
     
     @staticmethod
-    def _new2361(_arg1 : bool) -> 'CharsInfo':
+    def _new2370(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_cyrillic_letter = _arg1
         return res
     
     @staticmethod
-    def _new2367(_arg1 : bool, _arg2 : bool) -> 'CharsInfo':
+    def _new2376(_arg1 : bool, _arg2 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_cyrillic_letter = _arg1
         res.is_capital_upper = _arg2
         return res
     
     @staticmethod
-    def _new2372(_arg1 : bool, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'CharsInfo':
+    def _new2381(_arg1 : bool, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_capital_upper = _arg1
         res.is_cyrillic_letter = _arg2
@@ -198,13 +199,13 @@ class CharsInfo:
         return res
     
     @staticmethod
-    def _new2394(_arg1 : bool) -> 'CharsInfo':
+    def _new2403(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_latin_letter = _arg1
         return res
     
     @staticmethod
-    def _new2661(_arg1 : int) -> 'CharsInfo':
+    def _new2674(_arg1 : int) -> 'CharsInfo':
         res = CharsInfo()
         res.value = _arg1
         return res

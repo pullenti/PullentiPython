@@ -1,16 +1,15 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.decree.DecreeChangeValueKind import DecreeChangeValueKind
-
 
 
 class DecreeChangeValueReferent(Referent):
@@ -34,7 +33,7 @@ class DecreeChangeValueReferent(Referent):
     def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
         from pullenti.ner.decree.internal.MetaDecreeChangeValue import MetaDecreeChangeValue
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         nws = self.new_items
         if (len(nws) > 0): 
             for p in nws: 
@@ -43,7 +42,7 @@ class DecreeChangeValueReferent(Referent):
                 if (ii < 0): 
                     dpr.add_slot(p, "", False, 0)
                 else: 
-                    dpr.add_slot(p[0 : (ii)], p[ii + 1 : ], False, 0)
+                    dpr.add_slot(p[0:0+ii], p[ii + 1:], False, 0)
                 print(" новый '{0}'".format(dpr.to_string(True, MorphLang(), 0)), end="", file=res, flush=True)
         if (self.kind != DecreeChangeValueKind.UNDEFINED): 
             print(" {0}".format(str(MetaDecreeChangeValue.KIND_FEATURE.convert_inner_value_to_outer_value(self.kind, lang)).lower()), end="", file=res, flush=True)
@@ -52,7 +51,7 @@ class DecreeChangeValueReferent(Referent):
         val = self.value
         if (val is not None): 
             if (len(val) > 100): 
-                val = (val[0 : 100] + "...")
+                val = (val[0:0+100] + "...")
             print(" '{0}'".format(val), end="", file=res, flush=True)
             Utils.replaceStringIO(res, '\n', ' ')
             Utils.replaceStringIO(res, '\r', ' ')
@@ -68,7 +67,7 @@ class DecreeChangeValueReferent(Referent):
             res = Utils.valToEnum(s, DecreeChangeValueKind)
             if (isinstance(res, DecreeChangeValueKind)): 
                 return Utils.valToEnum(res, DecreeChangeValueKind)
-        except Exception as ex1079: 
+        except Exception as ex1081: 
             pass
         return DecreeChangeValueKind.UNDEFINED
     
@@ -104,13 +103,12 @@ class DecreeChangeValueReferent(Referent):
          (дополнить ... статьями 10.1 и 10.2 следующего содержания) """
         res = list()
         for s in self.slots: 
-            if (s.type_name == DecreeChangeValueReferent.ATTR_NEWITEM and isinstance(s.value, str)): 
+            if (s.type_name == DecreeChangeValueReferent.ATTR_NEWITEM and (isinstance(s.value, str))): 
                 res.append(s.value if isinstance(s.value, str) else None)
         return res
     
     def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
         return obj == self
-
     
     @staticmethod
     def _new791(_arg1 : 'DecreeChangeValueKind') -> 'DecreeChangeValueReferent':

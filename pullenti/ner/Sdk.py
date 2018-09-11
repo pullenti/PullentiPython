@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -11,17 +11,12 @@ class Sdk:
     """ Инициализация SDK """
     
     @staticmethod
-    def _get_version() -> str:
+    def get_version() -> str:
         from pullenti.ner.ProcessorService import ProcessorService
-        return ProcessorService._get_version()
+        return ProcessorService.get_version()
     
     @staticmethod
     def initialize(lang : 'MorphLang'=MorphLang()) -> None:
-        """ Вызывать инициализацию в самом начале
-        
-        Args:
-            lang(MorphLang): по умолчанию, русский и английский
-        """
         from pullenti.ner.ProcessorService import ProcessorService
         from pullenti.ner.money.MoneyAnalyzer import MoneyAnalyzer
         from pullenti.ner.uri.UriAnalyzer import UriAnalyzer

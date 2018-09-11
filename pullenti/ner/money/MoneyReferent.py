@@ -1,15 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import math
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Referent import Referent
-
 
 
 class MoneyReferent(Referent):
@@ -33,10 +32,10 @@ class MoneyReferent(Referent):
     ATTR_ALTREST = "ALTREST"
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         v = self.value
         r = self.rest
-        if (v > 0 or r > 0): 
+        if (v > (0) or r > 0): 
             print(v, end="", file=res)
             cou = 0
             for i in range(res.tell() - 1, 0, -1):
@@ -67,10 +66,10 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_VALUE)
         if (val is None): 
             return 0
-        inoutarg1602 = RefOutArgWrapper(0)
-        inoutres1603 = Utils.tryParseInt(val, inoutarg1602)
-        v = inoutarg1602.value
-        if (not inoutres1603): 
+        inoutarg1610 = RefOutArgWrapper(0)
+        inoutres1611 = Utils.tryParseInt(val, inoutarg1610)
+        v = inoutarg1610.value
+        if (not inoutres1611): 
             return 0
         return v
     
@@ -86,10 +85,10 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_ALTVALUE)
         if (val is None): 
             return None
-        inoutarg1604 = RefOutArgWrapper(0)
-        inoutres1605 = Utils.tryParseInt(val, inoutarg1604)
-        v = inoutarg1604.value
-        if (not inoutres1605): 
+        inoutarg1612 = RefOutArgWrapper(0)
+        inoutres1613 = Utils.tryParseInt(val, inoutarg1612)
+        v = inoutarg1612.value
+        if (not inoutres1613): 
             return None
         return v
     
@@ -104,10 +103,10 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_REST)
         if (val is None): 
             return 0
-        inoutarg1606 = RefOutArgWrapper(0)
-        inoutres1607 = Utils.tryParseInt(val, inoutarg1606)
-        v = inoutarg1606.value
-        if (not inoutres1607): 
+        inoutarg1614 = RefOutArgWrapper(0)
+        inoutres1615 = Utils.tryParseInt(val, inoutarg1614)
+        v = inoutarg1614.value
+        if (not inoutres1615): 
             return 0
         return v
     
@@ -125,10 +124,10 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_ALTREST)
         if (val is None): 
             return None
-        inoutarg1608 = RefOutArgWrapper(0)
-        inoutres1609 = Utils.tryParseInt(val, inoutarg1608)
-        v = inoutarg1608.value
-        if (not inoutres1609): 
+        inoutarg1616 = RefOutArgWrapper(0)
+        inoutres1617 = Utils.tryParseInt(val, inoutarg1616)
+        v = inoutarg1616.value
+        if (not inoutres1617): 
             return None
         return v
     
@@ -143,13 +142,13 @@ class MoneyReferent(Referent):
     @property
     def real_value(self) -> float:
         """ Действительное значение """
-        return self.value + ((self.rest / 100))
+        return (self.value) + (((self.rest) / (100)))
     
     @real_value.setter
     def real_value(self, value_) -> float:
-        self.value = math.floor(value_)
-        re = ((value_ - self.value)) * 100
-        self.rest = math.floor((re + 0.0001))
+        self.value = (math.floor(value_))
+        re = ((value_ - (self.value))) * (100)
+        self.rest = (math.floor((re + .0001)))
         return value_
     
     def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
@@ -167,7 +166,6 @@ class MoneyReferent(Referent):
         if (s.alt_rest != self.alt_rest): 
             return False
         return True
-
     
     @staticmethod
     def _new827(_arg1 : str, _arg2 : float) -> 'MoneyReferent':

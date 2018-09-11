@@ -1,15 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.mail.MailKind import MailKind
 from pullenti.morph.MorphLang import MorphLang
-
 
 
 class MailReferent(Referent):
@@ -35,7 +34,7 @@ class MailReferent(Referent):
         try: 
             if (val is not None): 
                 return Utils.valToEnum(val, MailKind)
-        except Exception as ex1501: 
+        except Exception as ex1505: 
             pass
         return MailKind.UNDEFINED
     
@@ -54,16 +53,16 @@ class MailReferent(Referent):
         return value
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         print("{0}: ".format(Utils.enumToString(self.kind)), end="", file=res, flush=True)
         for s in self.slots: 
-            if (s.type_name == MailReferent.ATTR_REF and isinstance(s.value, Referent)): 
+            if (s.type_name == MailReferent.ATTR_REF and (isinstance(s.value, Referent))): 
                 print("{0}, ".format((s.value if isinstance(s.value, Referent) else None).to_string(True, lang, lev + 1)), end="", file=res, flush=True)
         if (res.tell() < 100): 
             str0_ = Utils.ifNotNull(self.text, "")
             str0_ = str0_.replace('\r', ' ').replace('\n', ' ')
             if (len(str0_) > 100): 
-                str0_ = (str0_[0 : 100] + "...")
+                str0_ = (str0_[0:0+100] + "...")
             print(str0_, end="", file=res)
         return Utils.toStringStringIO(res)
     
@@ -77,15 +76,14 @@ class MailReferent(Referent):
         from pullenti.ner.address.AddressReferent import AddressReferent
         if (r is None or lev > 4): 
             return
-        if (((isinstance(r, PersonReferent) or isinstance(r, PersonPropertyReferent) or r.type_name == "ORGANIZATION") or r.type_name == "PHONE" or r.type_name == "URI") or isinstance(r, GeoReferent) or isinstance(r, AddressReferent)): 
+        if ((((isinstance(r, PersonReferent)) or (isinstance(r, PersonPropertyReferent)) or r.type_name == "ORGANIZATION") or r.type_name == "PHONE" or r.type_name == "URI") or (isinstance(r, GeoReferent)) or (isinstance(r, AddressReferent))): 
             self.add_slot(MailReferent.ATTR_REF, r, False, 0)
         for s in r.slots: 
             if (isinstance(s.value, Referent)): 
                 self._add_ref(s.value if isinstance(s.value, Referent) else None, lev + 1)
-
     
     @staticmethod
-    def _new1497(_arg1 : 'MailKind') -> 'MailReferent':
+    def _new1501(_arg1 : 'MailKind') -> 'MailReferent':
         res = MailReferent()
         res.kind = _arg1
         return res

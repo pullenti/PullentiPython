@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import datetime
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
 from pullenti.ner.decree.internal.DecreeHelper import DecreeHelper
 from pullenti.ner.date.DatePointerType import DatePointerType
@@ -46,7 +46,7 @@ class InstrumentReferent(InstrumentBlockReferent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         str0_ = self.get_string_value(InstrumentReferent.ATTR_APPENDIX)
         if ((str0_) is not None): 
             strs = self.get_string_values(InstrumentReferent.ATTR_APPENDIX)
@@ -54,10 +54,12 @@ class InstrumentReferent(InstrumentBlockReferent):
                 print("Приложение{0}{1}; ".format(("" if len(str0_) == 0 else " "), str0_), end="", file=res, flush=True)
             else: 
                 print("Приложения ", end="", file=res)
-                for i in range(len(strs)):
+                i = 0
+                while i < len(strs): 
                     if (i > 0): 
                         print(",", end="", file=res)
                     print(strs[i], end="", file=res)
+                    i += 1
                 print("; ", end="", file=res)
         str0_ = self.get_string_value(InstrumentReferent.ATTR_PART)
         if ((str0_) is not None): 
@@ -79,7 +81,7 @@ class InstrumentReferent(InstrumentBlockReferent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_NAME)
         if ((str0_) is not None): 
             if (len(str0_) > 100): 
-                str0_ = (str0_[0 : 100] + "...")
+                str0_ = (str0_[0:0+100] + "...")
             print(" \"{0}\"".format(str0_), end="", file=res, flush=True)
         str0_ = self.get_string_value(InstrumentReferent.ATTR_GEO)
         if ((str0_) is not None): 
@@ -106,8 +108,8 @@ class InstrumentReferent(InstrumentBlockReferent):
         if (Utils.isNullOrEmpty(value_)): 
             self.add_slot(InstrumentReferent.ATTR_REGNUMBER, None, True, 0)
             return value_
-        if ((value_[len(value_) - 1]) in ".,"): 
-            value_ = value_[0 : (len(value_) - 1)]
+        if (".,".find(value_[len(value_) - 1]) >= 0): 
+            value_ = value_[0:0+len(value_) - 1]
         self.add_slot(InstrumentReferent.ATTR_REGNUMBER, value_, True, 0)
         return value_
     
@@ -120,8 +122,8 @@ class InstrumentReferent(InstrumentBlockReferent):
     def case_number(self, value_) -> str:
         if (Utils.isNullOrEmpty(value_)): 
             return value_
-        if ((value_[len(value_) - 1]) in ".,"): 
-            value_ = value_[0 : (len(value_) - 1)]
+        if (".,".find(value_[len(value_) - 1]) >= 0): 
+            value_ = value_[0:0+len(value_) - 1]
         self.add_slot(InstrumentReferent.ATTR_CASENUMBER, value_, True, 0)
         return value_
     
@@ -170,7 +172,7 @@ class InstrumentReferent(InstrumentBlockReferent):
                         if (s.type_name == InstrumentReferent.ATTR_DATE): 
                             self.slots.remove(s)
                             break
-            tmp = Utils.newStringIO(None)
+            tmp = io.StringIO()
             print(year, end="", file=tmp)
             if (mon > 0): 
                 print(".{0}".format("{:02d}".format(mon)), end="", file=tmp, flush=True)

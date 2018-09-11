@@ -1,11 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.business.internal.ResourceHelper import ResourceHelper
 from pullenti.ner.business.internal.BusinessFactItemTyp import BusinessFactItemTyp
@@ -80,28 +80,28 @@ class BusinessAnalyzer(Analyzer):
             if (rt is not None): 
                 rt.referent = ad.register_referent(rt.referent)
                 kit.embed_token(rt)
-                t = rt
+                t = (rt)
             t = t.next0_
         t = kit.first_token
-        first_pass2721 = True
+        first_pass3670 = True
         while True:
-            if first_pass2721: first_pass2721 = False
+            if first_pass3670: first_pass3670 = False
             else: t = t.next0_
             if (not (t is not None)): break
             rt = self.__analize_fact(t)
             if (rt is not None): 
                 rt.referent = ad.register_referent(rt.referent)
                 kit.embed_token(rt)
-                t = rt
+                t = (rt)
                 rts = self.__analize_likelihoods(rt)
                 if (rts is not None): 
                     for rt0 in rts: 
                         for s in rt0.referent.slots: 
-                            if (s.type_name == BusinessFactReferent.ATTR_WHAT and isinstance(s.value, FundsReferent)): 
+                            if (s.type_name == BusinessFactReferent.ATTR_WHAT and (isinstance(s.value, FundsReferent))): 
                                 rt0.referent.upload_slot(s, ad.register_referent(s.value if isinstance(s.value, Referent) else None))
                         rt0.referent = ad.register_referent(rt0.referent)
                         kit.embed_token(rt0)
-                        t = rt0
+                        t = (rt0)
                 continue
     
     def __analize_fact(self, t : 'Token') -> 'ReferentToken':
@@ -143,9 +143,9 @@ class BusinessAnalyzer(Analyzer):
         points = 0
         t0 = None
         t1 = t
-        first_pass2722 = True
+        first_pass3671 = True
         while True:
-            if first_pass2722: first_pass2722 = False
+            if first_pass3671: first_pass3671 = False
             else: t = t.previous
             if (not (t is not None)): break
             if (t.is_newline_after): 
@@ -165,7 +165,7 @@ class BusinessAnalyzer(Analyzer):
                     break
                 continue
             r = t.get_referent()
-            if (isinstance(r, DateReferent) or isinstance(r, DateRangeReferent)): 
+            if ((isinstance(r, DateReferent)) or (isinstance(r, DateRangeReferent))): 
                 continue
             break
         if (t is None): 
@@ -184,12 +184,12 @@ class BusinessAnalyzer(Analyzer):
             refs = t.get_referents()
             if (refs is not None): 
                 for r in refs: 
-                    if (isinstance(r, PersonReferent) or isinstance(r, OrganizationReferent) or isinstance(r, FundsReferent)): 
+                    if ((isinstance(r, PersonReferent)) or (isinstance(r, OrganizationReferent)) or (isinstance(r, FundsReferent))): 
                         return ReferentToken(r, t, t1)
             return None
-        first_pass2723 = True
+        first_pass3672 = True
         while True:
-            if first_pass2723: first_pass2723 = False
+            if first_pass3672: first_pass3672 = False
             else: t = t.previous
             if (not (t is not None)): break
             if (t.is_char('.')): 
@@ -200,7 +200,7 @@ class BusinessAnalyzer(Analyzer):
             refs = t.get_referents()
             if (refs is not None): 
                 for r in refs: 
-                    if (isinstance(r, PersonReferent) or isinstance(r, OrganizationReferent)): 
+                    if ((isinstance(r, PersonReferent)) or (isinstance(r, OrganizationReferent))): 
                         return ReferentToken(r, t0, t1)
         return None
     
@@ -211,7 +211,7 @@ class BusinessAnalyzer(Analyzer):
         t = (None if rt is None else rt.begin_token.previous)
         if (t is None or t.whitespaces_after_count > 2): 
             return None
-        if (isinstance(rt.get_referent(), PersonReferent) and isinstance(t.get_referent(), OrganizationReferent)): 
+        if ((isinstance(rt.get_referent(), PersonReferent)) and (isinstance(t.get_referent(), OrganizationReferent))): 
             return (t if isinstance(t, ReferentToken) else None)
         return None
     
@@ -221,7 +221,7 @@ class BusinessAnalyzer(Analyzer):
         tt = t
         while tt is not None: 
             r = tt.get_referent()
-            if (isinstance(r, DateReferent) or isinstance(r, DateRangeReferent)): 
+            if ((isinstance(r, DateReferent)) or (isinstance(r, DateRangeReferent))): 
                 bfr.when = r
                 return True
             if (tt.is_char('.')): 
@@ -234,7 +234,7 @@ class BusinessAnalyzer(Analyzer):
             if (tt != t and tt.is_newline_before): 
                 break
             r = tt.get_referent()
-            if (isinstance(r, DateReferent) or isinstance(r, DateRangeReferent)): 
+            if ((isinstance(r, DateReferent)) or (isinstance(r, DateRangeReferent))): 
                 bfr.when = r
                 return True
             if (tt.is_char('.')): 
@@ -273,9 +273,9 @@ class BusinessAnalyzer(Analyzer):
         t1 = bfi.end_token.next0_
         if (t1 is None): 
             return None
-        first_pass2724 = True
+        first_pass3673 = True
         while True:
-            if first_pass2724: first_pass2724 = False
+            if first_pass3673: first_pass3673 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
             if (t1.morph.class0_.is_adverb): 
@@ -285,7 +285,7 @@ class BusinessAnalyzer(Analyzer):
             break
         if (t1 is None): 
             return None
-        if (isinstance(t1.get_referent(), FundsReferent) and not ((isinstance(bef.referent, FundsReferent)))): 
+        if ((isinstance(t1.get_referent(), FundsReferent)) and not ((isinstance(bef.referent, FundsReferent)))): 
             fr = (t1.get_referent() if isinstance(t1.get_referent(), FundsReferent) else None)
             bfr = BusinessFactReferent._new437(bfi.base_kind)
             bfr.who = bef.referent
@@ -301,9 +301,9 @@ class BusinessAnalyzer(Analyzer):
             if (fr.source == bef.referent): 
                 cou = 0
                 tt = bef.begin_token.previous
-                first_pass2725 = True
+                first_pass3674 = True
                 while True:
-                    if first_pass2725: first_pass2725 = False
+                    if first_pass3674: first_pass3674 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     cou += 1
@@ -313,7 +313,7 @@ class BusinessAnalyzer(Analyzer):
                     if (refs is None): 
                         continue
                     for r in refs: 
-                        if (isinstance(r, OrganizationReferent) and r != bef.referent): 
+                        if ((isinstance(r, OrganizationReferent)) and r != bef.referent): 
                             cou = 1000
                             fr.source = (r if isinstance(r, OrganizationReferent) else None)
                             break
@@ -322,8 +322,8 @@ class BusinessAnalyzer(Analyzer):
             self.__find_date(bfr, bef.begin_token)
             self.__find_sum(bfr, bef.end_token)
             return ReferentToken(bfr, bef.begin_token, t1)
-        if ((bfi.morph.class0_.is_noun and ((bfi.base_kind == BusinessFactKind.GET or bfi.base_kind == BusinessFactKind.SELL)) and isinstance(t1.get_referent(), OrganizationReferent)) or isinstance(t1.get_referent(), PersonReferent)): 
-            if (isinstance(bef.referent, FundsReferent) or isinstance(bef.referent, OrganizationReferent)): 
+        if ((bfi.morph.class0_.is_noun and ((bfi.base_kind == BusinessFactKind.GET or bfi.base_kind == BusinessFactKind.SELL)) and (isinstance(t1.get_referent(), OrganizationReferent))) or (isinstance(t1.get_referent(), PersonReferent))): 
+            if ((isinstance(bef.referent, FundsReferent)) or (isinstance(bef.referent, OrganizationReferent))): 
                 bfr = BusinessFactReferent._new437(bfi.base_kind)
                 if (bfi.base_kind == BusinessFactKind.GET): 
                     bfr.typ = ("покупка ценных бумаг" if isinstance(bef.referent, FundsReferent) else "покупка компании")
@@ -335,12 +335,12 @@ class BusinessAnalyzer(Analyzer):
                 self.__find_sum(bfr, bef.end_token)
                 t1 = BusinessAnalyzer.__add_whos_list(t1, bfr)
                 return ReferentToken(bfr, bef.begin_token, t1)
-        if (isinstance(bef.referent, OrganizationReferent) or isinstance(bef.referent, PersonReferent)): 
+        if ((isinstance(bef.referent, OrganizationReferent)) or (isinstance(bef.referent, PersonReferent))): 
             tt = t1
             if (tt is not None and tt.morph.class0_.is_preposition): 
                 tt = tt.next0_
             slav = (None if tt is None else tt.get_referent())
-            if (((isinstance(slav, PersonReferent) or isinstance(slav, OrganizationReferent))) and tt.next0_ is not None and isinstance(tt.next0_.get_referent(), FundsReferent)): 
+            if ((((isinstance(slav, PersonReferent)) or (isinstance(slav, OrganizationReferent)))) and tt.next0_ is not None and (isinstance(tt.next0_.get_referent(), FundsReferent))): 
                 bfr = BusinessFactReferent._new437(bfi.base_kind)
                 bfr.typ = ("покупка ценных бумаг" if bfi.base_kind == BusinessFactKind.GET else "продажа ценных бумаг")
                 bfr.who = bef.referent
@@ -365,7 +365,7 @@ class BusinessAnalyzer(Analyzer):
                 self.__find_date(bfr, bef.begin_token)
                 self.__find_sum(bfr, bef.end_token)
                 return ReferentToken(bfr, bef.begin_token, tt.next0_)
-        if (isinstance(bef.referent, FundsReferent) and ((isinstance(t1.get_referent(), OrganizationReferent) or isinstance(t1.get_referent(), PersonReferent)))): 
+        if ((isinstance(bef.referent, FundsReferent)) and (((isinstance(t1.get_referent(), OrganizationReferent)) or (isinstance(t1.get_referent(), PersonReferent))))): 
             bfr = BusinessFactReferent._new437(bfi.base_kind)
             bfr.typ = ("покупка ценных бумаг" if bfi.base_kind == BusinessFactKind.GET else (("продажа ценных бумаг" if bfi.base_kind == BusinessFactKind.SELL else "владение ценными бумагами")))
             bfr.who = t1.get_referent()
@@ -381,7 +381,7 @@ class BusinessAnalyzer(Analyzer):
         from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
         if (t1 is None): 
             return None
-        if ((t1.next0_ is not None and t1.next0_.is_comma_and and isinstance(t1.next0_.next0_, ReferentToken)) and t1.next0_.next0_.get_referent().type_name == t1.get_referent().type_name): 
+        if ((t1.next0_ is not None and t1.next0_.is_comma_and and (isinstance(t1.next0_.next0_, ReferentToken))) and t1.next0_.next0_.get_referent().type_name == t1.get_referent().type_name): 
             li = list()
             li.append(t1.next0_.next0_.get_referent())
             if (t1.next0_.is_and): 
@@ -403,7 +403,7 @@ class BusinessAnalyzer(Analyzer):
                         break
                     tt = tt.next0_
                 if (not ok): 
-                    li = None
+                    li = (None)
             if (li is not None): 
                 for r in li: 
                     bfr.add_slot(BusinessFactReferent.ATTR_WHO, r, False, 0)
@@ -424,7 +424,7 @@ class BusinessAnalyzer(Analyzer):
         bef = self.__find_ref_before(tt)
         master = None
         slave = None
-        if (bef is not None and isinstance(bef.referent, FundsReferent)): 
+        if (bef is not None and (isinstance(bef.referent, FundsReferent))): 
             slave = bef.referent
             ts = bef.begin_token
         tt = t.next0_
@@ -432,12 +432,12 @@ class BusinessAnalyzer(Analyzer):
             return None
         te = tt
         r = tt.get_referent()
-        if (isinstance(r, PersonReferent) or isinstance(r, OrganizationReferent)): 
+        if ((isinstance(r, PersonReferent)) or (isinstance(r, OrganizationReferent))): 
             master = r
             if (slave is None and tt.next0_ is not None): 
                 r = tt.next0_.get_referent()
                 if ((r) is not None): 
-                    if (isinstance(r, FundsReferent) or isinstance(r, OrganizationReferent)): 
+                    if ((isinstance(r, FundsReferent)) or (isinstance(r, OrganizationReferent))): 
                         slave = (r if isinstance(r, FundsReferent) else None)
                         te = tt.next0_
         if (master is not None and slave is not None): 
@@ -471,9 +471,9 @@ class BusinessAnalyzer(Analyzer):
                     t1 = t
                 tt = tt.next0_
             if (t1 is None): 
-                if (bfi.is_base_passive and t is not None and ((isinstance(t.get_referent(), PersonReferent) or isinstance(t.get_referent(), OrganizationReferent)))): 
+                if (bfi.is_base_passive and t is not None and (((isinstance(t.get_referent(), PersonReferent)) or (isinstance(t.get_referent(), OrganizationReferent))))): 
                     t1 = t
-                    if (t.next0_ is not None and isinstance(t.next0_.get_referent(), FundsReferent)): 
+                    if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), FundsReferent))): 
                         bfr = BusinessFactReferent._new437(BusinessFactKind.HAVE)
                         bfr.who = t.get_referent()
                         bfr._add_what(t.next0_.get_referent())
@@ -493,7 +493,7 @@ class BusinessAnalyzer(Analyzer):
                 return None
             t0 = bef.begin_token
             slave = bef.referent
-        elif (bfi.end_token.get_morph_class_in_dictionary().is_noun and isinstance(t.get_referent(), OrganizationReferent)): 
+        elif (bfi.end_token.get_morph_class_in_dictionary().is_noun and (isinstance(t.get_referent(), OrganizationReferent))): 
             slave = t.get_referent()
             t1 = t.next0_
             t0 = bfi.begin_token
@@ -505,7 +505,7 @@ class BusinessAnalyzer(Analyzer):
         elif (mus_be_verb): 
             return None
         r = (None if t1 is None else t1.get_referent())
-        if (isinstance(r, OrganizationReferent) or isinstance(r, PersonReferent)): 
+        if ((isinstance(r, OrganizationReferent)) or (isinstance(r, PersonReferent))): 
             bfr = BusinessFactReferent._new437(BusinessFactKind.HAVE)
             bfr.who = r
             bfr._add_what(slave)
@@ -545,9 +545,9 @@ class BusinessAnalyzer(Analyzer):
         dt = None
         sum0_ = None
         t = t.next0_
-        first_pass2726 = True
+        first_pass3675 = True
         while True:
-            if first_pass2726: first_pass2726 = False
+            if first_pass3675: first_pass3675 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char('.')): 
@@ -557,7 +557,7 @@ class BusinessAnalyzer(Analyzer):
                 if (br is not None): 
                     t = br.end_token
                     continue
-            if ((((t.morph.class0_.is_verb or t.is_value("ДО", None) or t.is_hiphen) or t.is_value("РАЗМЕР", None) or t.is_value("РОЗМІР", None))) and t.next0_ is not None and isinstance(t.next0_.get_referent(), MoneyReferent)): 
+            if ((((t.morph.class0_.is_verb or t.is_value("ДО", None) or t.is_hiphen) or t.is_value("РАЗМЕР", None) or t.is_value("РОЗМІР", None))) and t.next0_ is not None and (isinstance(t.next0_.get_referent(), MoneyReferent))): 
                 if (sum0_ is not None): 
                     break
                 sum0_ = (t.next0_.get_referent() if isinstance(t.next0_.get_referent(), MoneyReferent) else None)
@@ -565,11 +565,11 @@ class BusinessAnalyzer(Analyzer):
                 t1 = t
                 continue
             r = t.get_referent()
-            if (isinstance(r, DateRangeReferent) or isinstance(r, DateReferent)): 
+            if ((isinstance(r, DateRangeReferent)) or (isinstance(r, DateReferent))): 
                 if (dt is None): 
                     dt = r
                     t1 = t
-            elif (isinstance(r, OrganizationReferent) and org0_ is None): 
+            elif ((isinstance(r, OrganizationReferent)) and org0_ is None): 
                 org0_ = (r if isinstance(r, OrganizationReferent) else None)
                 t1 = t
         if (sum0_ is None): 
@@ -609,9 +609,9 @@ class BusinessAnalyzer(Analyzer):
         t1 = bfi.end_token
         max_lines = 1
         t = bfi.begin_token.previous
-        first_pass2727 = True
+        first_pass3676 = True
         while True:
-            if first_pass2727: first_pass2727 = False
+            if first_pass3676: first_pass3676 = False
             else: t = t.previous
             if (not (t is not None)): break
             if (t.is_char('.') or t.is_newline_after): 
@@ -633,7 +633,7 @@ class BusinessAnalyzer(Analyzer):
                     break
             if (not ((isinstance(r, OrganizationReferent)))): 
                 continue
-            if ((t.previous is not None and ((t.previous.is_and or t.previous.is_value("К", None))) and t.previous.previous is not None) and isinstance(t.previous.previous.get_referent(), OrganizationReferent)): 
+            if ((t.previous is not None and ((t.previous.is_and or t.previous.is_value("К", None))) and t.previous.previous is not None) and (isinstance(t.previous.previous.get_referent(), OrganizationReferent))): 
                 t0 = t.previous.previous
                 first = t0.get_referent()
                 second = r
@@ -644,9 +644,9 @@ class BusinessAnalyzer(Analyzer):
                 break
         if (second is None): 
             t = bfi.end_token.next0_
-            first_pass2728 = True
+            first_pass3677 = True
             while True:
-                if first_pass2728: first_pass2728 = False
+                if first_pass3677: first_pass3677 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_char('.')): 
@@ -656,7 +656,7 @@ class BusinessAnalyzer(Analyzer):
                 r = t.get_referent()
                 if (not ((isinstance(r, OrganizationReferent)))): 
                     continue
-                if ((t.next0_ is not None and ((t.next0_.is_and or t.next0_.is_value("К", None))) and t.next0_.next0_ is not None) and isinstance(t.next0_.next0_.get_referent(), OrganizationReferent)): 
+                if ((t.next0_ is not None and ((t.next0_.is_and or t.next0_.is_value("К", None))) and t.next0_.next0_ is not None) and (isinstance(t.next0_.next0_.get_referent(), OrganizationReferent))): 
                     t1 = t.next0_.next0_
                     first = r
                     second = t1.get_referent()
@@ -687,9 +687,9 @@ class BusinessAnalyzer(Analyzer):
             return None
         org0 = None
         t = bfi.begin_token.previous
-        first_pass2729 = True
+        first_pass3678 = True
         while True:
-            if first_pass2729: first_pass2729 = False
+            if first_pass3678: first_pass3678 = False
             else: t = t.previous
             if (not (t is not None)): break
             if (t.is_char('(') or t.is_char('%')): 
@@ -770,9 +770,9 @@ class BusinessAnalyzer(Analyzer):
         whos = list()
         funds = list()
         t = rt.end_token.next0_
-        first_pass2730 = True
+        first_pass3679 = True
         while True:
-            if first_pass2730: first_pass2730 = False
+            if first_pass3679: first_pass3679 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before or t.is_char('.')): 
@@ -784,7 +784,7 @@ class BusinessAnalyzer(Analyzer):
             if (t.morph.class0_.is_conjunction or t.morph.class0_.is_preposition or t.morph.class0_.is_misc): 
                 continue
             r = t.get_referent()
-            if (isinstance(r, OrganizationReferent) or isinstance(r, PersonReferent)): 
+            if ((isinstance(r, OrganizationReferent)) or (isinstance(r, PersonReferent))): 
                 whos.append(t if isinstance(t, ReferentToken) else None)
                 continue
             if (isinstance(r, FundsReferent)): 
@@ -810,7 +810,8 @@ class BusinessAnalyzer(Analyzer):
         if (len(whos) == 0 or len(whos) != len(funds)): 
             return None
         res = list()
-        for i in range(len(whos)):
+        i = 0
+        while i < len(whos): 
             bfr = BusinessFactReferent._new448(bfr0.kind, bfr0.typ)
             bfr.who = whos[i].referent
             bfr._add_what(funds[i])
@@ -818,6 +819,7 @@ class BusinessAnalyzer(Analyzer):
                 if (s.type_name == BusinessFactReferent.ATTR_MISC or s.type_name == BusinessFactReferent.ATTR_WHEN): 
                     bfr.add_slot(s.type_name, s.value, False, 0)
             res.append(ReferentToken(bfr, whos[i].begin_token, whos[i].end_token))
+            i += 1
         return res
     
     @staticmethod

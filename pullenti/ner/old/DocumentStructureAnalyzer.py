@@ -1,15 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 import math
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.booklink.internal.ResourceHelper import ResourceHelper
-
 from pullenti.ner.old.DocumentBlockType import DocumentBlockType
 
 
@@ -83,9 +82,9 @@ class DocumentStructureAnalyzer(Analyzer):
         items = list()
         last_token = None
         t = kit.first_token
-        first_pass2976 = True
+        first_pass3945 = True
         while True:
-            if first_pass2976: first_pass2976 = False
+            if first_pass3945: first_pass3945 = False
             else: t = t.next0_
             if (not (t is not None)): break
             last_token = t
@@ -105,9 +104,9 @@ class DocumentStructureAnalyzer(Analyzer):
                     tr = self.__m_title_page_analyzer.process_referent1(kit.first_token, ogl.begin_token.previous)
                 items.clear()
                 t = ogl.end_token.next0_
-                first_pass2977 = True
+                first_pass3946 = True
                 while True:
-                    if first_pass2977: first_pass2977 = False
+                    if first_pass3946: first_pass3946 = False
                     else: t = t.next0_
                     if (not (t is not None)): break
                     if (not t.is_newline_before): 
@@ -134,7 +133,7 @@ class DocumentStructureAnalyzer(Analyzer):
                 if (ogl.end_token.next0_ is not None and ((ogl.end_token.next0_.begin_char + 10) < last_token.end_char)): 
                     ttt = kit.sofa.substring(ogl.end_token.next0_.begin_char, (last_token.end_char - ogl.end_token.next0_.begin_char) + 1).strip()
                     if (ttt is not None and len(ttt) > 10): 
-                        bt = DocumentBlockReferent._new1629(DocumentBlockType.TAIL)
+                        bt = DocumentBlockReferent._new1637(DocumentBlockType.TAIL)
                         bt.add_slot(DocumentBlockReferent.ATTR_CONTENT, ttt, True, 0)
                         tail = ReferentToken(bt, ogl.end_token.next0_, last_token)
                 if (ogl.begin_token.previous is not None): 
@@ -157,7 +156,8 @@ class DocumentStructureAnalyzer(Analyzer):
             blk.add_slot(DocumentBlockReferent.ATTR_CONTENT, kit.sofa.substring(0, t0.previous.end_char + 1).strip(), True, 0)
             blk.typ = DocumentBlockType.TITLE
             blk.add_occurence(TextAnnotation(kit.first_token, t0.previous, blk))
-        for i in range(len(items)):
+        i = 0
+        while i < len(items): 
             last = last_token
             if ((i + 1) < len(items)): 
                 last = items[i + 1].begin_token.previous
@@ -185,6 +185,7 @@ class DocumentStructureAnalyzer(Analyzer):
                     cnt.typ = DocumentBlockType.LITERATURE
                 elif (swichVal == DocStructItem.Typs.APPENDIX): 
                     cnt.typ = DocumentBlockType.APPENDIX
-        if (tail is not None and isinstance(tail.referent, DocumentBlockReferent)): 
+            i += 1
+        if (tail is not None and (isinstance(tail.referent, DocumentBlockReferent))): 
             tail.referent = ad.register_referent(tail.referent)
             (tail.referent if isinstance(tail.referent, DocumentBlockReferent) else None)._add_parent(res)

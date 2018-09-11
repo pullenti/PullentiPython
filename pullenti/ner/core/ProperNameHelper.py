@@ -1,11 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphNumber import MorphNumber
@@ -29,16 +29,6 @@ class ProperNameHelper:
     
     @staticmethod
     def __get_name_without_brackets(begin : 'Token', end : 'Token', normalize_first_noun_group : bool=False, normal_first_group_single : bool=False, ignore_geo_referent : bool=False) -> str:
-        """ Получить строковое значение между токенами, при этом исключая кавычки и скобки
-        
-        Args:
-            begin(Token): начальный токен
-            end(Token): конечный токен
-            normalize_first_noun_group(bool): нормализовывать ли первую именную группу (именит. падеж)
-            normal_first_group_single(bool): приводить ли к единственному числу первую именную группу
-            ignore_geo_referent(bool): игнорировать внутри географические сущности
-        
-        """
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         from pullenti.morph.MorphClass import MorphClass
@@ -55,17 +45,17 @@ class ProperNameHelper:
             npt = NounPhraseHelper.try_parse(begin, NounPhraseParseAttr.REFERENTCANBENOUN, 0)
             if (npt is not None): 
                 if (npt.noun.get_morph_class_in_dictionary().is_undefined and len(npt.adjectives) == 0): 
-                    npt = None
+                    npt = (None)
             if (npt is not None and npt.end_token.end_char > end.end_char): 
-                npt = None
+                npt = (None)
             if (npt is not None): 
                 res = npt.get_normal_case_text(MorphClass(), normal_first_group_single, MorphGender.UNDEFINED, False)
                 te = npt.end_token.next0_
-                if (((te is not None and te.next0_ is not None and te.is_comma) and isinstance(te.next0_, TextToken) and te.next0_.end_char <= end.end_char) and te.next0_.morph.class0_.is_verb and te.next0_.morph.class0_.is_adjective): 
+                if (((te is not None and te.next0_ is not None and te.is_comma) and (isinstance(te.next0_, TextToken)) and te.next0_.end_char <= end.end_char) and te.next0_.morph.class0_.is_verb and te.next0_.morph.class0_.is_adjective): 
                     for it in te.next0_.morph.items: 
-                        if (it.gender == npt.morph.gender or ((it.gender & npt.morph.gender)) != MorphGender.UNDEFINED): 
-                            if (not (it.case & npt.morph.case).is_undefined): 
-                                if (it.number == npt.morph.number or ((it.number & npt.morph.number)) != MorphNumber.UNDEFINED): 
+                        if (it.gender == npt.morph.gender or (((it.gender) & (npt.morph.gender))) != (MorphGender.UNDEFINED)): 
+                            if (not ((it.case) & npt.morph.case).is_undefined): 
+                                if (it.number == npt.morph.number or (((it.number) & (npt.morph.number))) != (MorphNumber.UNDEFINED)): 
                                     var = (te.next0_ if isinstance(te.next0_, TextToken) else None).term
                                     if (isinstance(it, MorphWordForm)): 
                                         var = (it if isinstance(it, MorphWordForm) else None).normal_case
@@ -78,11 +68,11 @@ class ProperNameHelper:
                 if (te is not None and te.end_char <= end.end_char): 
                     s = ProperNameHelper.get_name(te, end, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, True, ignore_geo_referent)
                     if (not Utils.isNullOrEmpty(s)): 
-                        if (not s[0].isalnum()): 
+                        if (not str.isalnum(s[0])): 
                             res = "{0}{1}".format(res, s)
                         else: 
                             res = "{0} {1}".format(res, s)
-            elif (isinstance(begin, TextToken) and begin.chars.is_cyrillic_letter): 
+            elif ((isinstance(begin, TextToken)) and begin.chars.is_cyrillic_letter): 
                 mm = begin.get_morph_class_in_dictionary()
                 if (not mm.is_undefined): 
                     res = begin.get_normal_case_text(mm, False, MorphGender.UNDEFINED, False)
@@ -102,18 +92,11 @@ class ProperNameHelper:
             if (k > 0): 
                 if (k == len(res)): 
                     return None
-                res = res[0 : (len(res) - k)]
+                res = res[0:0+len(res) - k]
         return res
     
     @staticmethod
     def __get_name(begin : 'Token', end : 'Token') -> str:
-        """ Получить строковое значение между токенами без нормализации первой группы, всё в верхнем регистре.
-        
-        Args:
-            begin(Token): 
-            end(Token): 
-        
-        """
         from pullenti.morph.MorphClass import MorphClass
         from pullenti.morph.MorphCase import MorphCase
         res = ProperNameHelper.get_name(begin, end, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, False, False)
@@ -133,12 +116,12 @@ class ProperNameHelper:
             return None
         if (begin.end_char > end.begin_char and begin != end): 
             return None
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         prefix = None
         t = begin
-        first_pass2765 = True
+        first_pass3715 = True
         while True:
-            if first_pass2765: first_pass2765 = False
+            if first_pass3715: first_pass3715 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             if (res.tell() > 1000): 
@@ -168,7 +151,7 @@ class ProperNameHelper:
             tt = (t if isinstance(t, TextToken) else None)
             if (tt is not None): 
                 if (not ignore_brackets_and_hiphens): 
-                    if ((tt.next0_ is not None and tt.next0_.is_hiphen and isinstance(tt.next0_.next0_, TextToken)) and tt != end and tt.next0_ != end): 
+                    if ((tt.next0_ is not None and tt.next0_.is_hiphen and (isinstance(tt.next0_.next0_, TextToken))) and tt != end and tt.next0_ != end): 
                         if (prefix is None): 
                             prefix = tt.term
                         else: 
@@ -179,19 +162,19 @@ class ProperNameHelper:
                         else: 
                             continue
                 s = None
-                if (cla.value != 0 or not mc.is_undefined or gender != MorphGender.UNDEFINED): 
+                if (cla.value != (0) or not mc.is_undefined or gender != MorphGender.UNDEFINED): 
                     for wff in tt.morph.items: 
                         wf = (wff if isinstance(wff, MorphWordForm) else None)
                         if (wf is None): 
                             continue
-                        if (cla.value != 0): 
-                            if (((wf.class0_.value & cla.value)) == 0): 
+                        if (cla.value != (0)): 
+                            if ((((wf.class0_.value) & (cla.value))) == 0): 
                                 continue
                         if (not mc.is_undefined): 
-                            if ((wf.case & mc).is_undefined): 
+                            if (((wf.case) & mc).is_undefined): 
                                 continue
                         if (gender != MorphGender.UNDEFINED): 
-                            if (((wf.gender & gender)) == MorphGender.UNDEFINED): 
+                            if ((((wf.gender) & (gender))) == (MorphGender.UNDEFINED)): 
                                 continue
                         if (s is None or wf.normal_case == tt.term): 
                             s = wf.normal_case
@@ -200,11 +183,11 @@ class ProperNameHelper:
                             wf = (wff if isinstance(wff, MorphWordForm) else None)
                             if (wf is None): 
                                 continue
-                            if (cla.value != 0): 
-                                if (((wf.class0_.value & cla.value)) == 0): 
+                            if (cla.value != (0)): 
+                                if ((((wf.class0_.value) & (cla.value))) == 0): 
                                     continue
                             if (not mc.is_undefined): 
-                                if ((wf.case & mc).is_undefined): 
+                                if (((wf.case) & mc).is_undefined): 
                                     continue
                             if (s is None or wf.normal_case == tt.term): 
                                 s = wf.normal_case
@@ -213,17 +196,17 @@ class ProperNameHelper:
                     if (tt.chars.is_last_lower and tt.length_char > 2): 
                         s = tt.get_source_text()
                         for i in range(len(s) - 1, -1, -1):
-                            if (s[i].isupper()): 
-                                s = s[0 : (i + 1)]
+                            if (str.isupper(s[i])): 
+                                s = s[0:0+i + 1]
                                 break
                 if (prefix is not None): 
                     delim = "-"
                     if (ignore_brackets_and_hiphens): 
                         delim = " "
                     s = "{0}{1}{2}".format(prefix, delim, s)
-                prefix = None
+                prefix = (None)
                 if (res.tell() > 0 and len(s) > 0): 
-                    if (s[0].isalnum()): 
+                    if (str.isalnum(s[0])): 
                         ch0 = Utils.getCharAtStringIO(res, res.tell() - 1)
                         if (ch0 == '-'): 
                             pass
@@ -239,7 +222,7 @@ class ProperNameHelper:
                     else: 
                         print(' ', end="", file=res)
                 nt = (t if isinstance(t, NumberToken) else None)
-                if ((t.morph.class0_.is_adjective and nt.typ == NumberSpellingType.WORDS and nt.begin_token == nt.end_token) and isinstance(nt.begin_token, TextToken)): 
+                if ((t.morph.class0_.is_adjective and nt.typ == NumberSpellingType.WORDS and nt.begin_token == nt.end_token) and (isinstance(nt.begin_token, TextToken))): 
                     print((nt.begin_token if isinstance(nt.begin_token, TextToken) else None).term, end="", file=res)
                 else: 
                     print(nt.value, end="", file=res)

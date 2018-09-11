@@ -1,15 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.old.DocumentBlockType import DocumentBlockType
-
 
 
 class DocumentBlockReferent(Referent):
@@ -36,7 +35,7 @@ class DocumentBlockReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         str0_ = self.get_string_value(DocumentBlockReferent.ATTR_NUMBER)
         if ((str0_) is not None): 
             print("{0}) ".format(str0_), end="", file=res, flush=True)
@@ -93,7 +92,7 @@ class DocumentBlockReferent(Referent):
             res = Utils.valToEnum(s, DocumentBlockType)
             if (isinstance(res, DocumentBlockType)): 
                 return Utils.valToEnum(res, DocumentBlockType)
-        except Exception as ex1628: 
+        except Exception as ex1636: 
             pass
         return DocumentBlockType.UNDEFINED
     
@@ -107,10 +106,9 @@ class DocumentBlockReferent(Referent):
     
     def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
         return obj == self
-
     
     @staticmethod
-    def _new1629(_arg1 : 'DocumentBlockType') -> 'DocumentBlockReferent':
+    def _new1637(_arg1 : 'DocumentBlockType') -> 'DocumentBlockReferent':
         res = DocumentBlockReferent()
         res.typ = _arg1
         return res

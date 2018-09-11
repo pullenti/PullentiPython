@@ -1,12 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
+import io
 import typing
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Referent import Referent
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 
@@ -35,11 +36,11 @@ class DenominationReferent(Referent):
     def _add_value(self, begin : 'Token', end : 'Token') -> None:
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.TextToken import TextToken
-        tmp = Utils.newStringIO(None)
+        tmp = io.StringIO()
         t = begin
-        first_pass2840 = True
+        first_pass3790 = True
         while True:
-            if first_pass2840: first_pass2840 = False
+            if first_pass3790: first_pass3790 = False
             else: t = t.next0_
             if (not (t is not None and t.previous != end)): break
             if (isinstance(t, NumberToken)): 
@@ -55,14 +56,14 @@ class DenominationReferent(Referent):
             if (Utils.getCharAtStringIO(tmp, i) == '-' and i > 0 and ((i + 1) < tmp.tell())): 
                 ch0 = Utils.getCharAtStringIO(tmp, i - 1)
                 ch1 = Utils.getCharAtStringIO(tmp, i + 1)
-                if (ch0.isalnum() and ch1.isalnum()): 
-                    if (ch0.isdigit() and not ch1.isdigit()): 
+                if (str.isalnum(ch0) and str.isalnum(ch1)): 
+                    if (str.isdigit(ch0) and not str.isdigit(ch1)): 
                         Utils.removeStringIO(tmp, i, 1)
-                    elif (not ch0.isdigit() and ch1.isdigit()): 
+                    elif (not str.isdigit(ch0) and str.isdigit(ch1)): 
                         Utils.removeStringIO(tmp, i, 1)
             i += 1
         self.add_slot(DenominationReferent.ATTR_VALUE, Utils.toStringStringIO(tmp), False, 0)
-        self.__m_names = None
+        self.__m_names = (None)
     
     def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
         dr = (obj if isinstance(obj, DenominationReferent) else None)
@@ -89,16 +90,16 @@ class DenominationReferent(Referent):
         while i <= len(nam): 
             ty = 0
             if (i < len(nam)): 
-                if (nam[i].isdigit()): 
+                if (str.isdigit(nam[i])): 
                     ty = 1
-                elif (nam[i].isalpha()): 
+                elif (str.isalpha(nam[i])): 
                     ty = 2
                 else: 
                     ty = 3
             if (ty != ty0 or ty == 3): 
                 if (i > i0): 
                     vars0_ = list()
-                    p = nam[i0 : i]
+                    p = nam[i0:i0+i - i0]
                     DenominationReferent.__add_vars(p, vars0_)
                     items.append(vars0_)
                     if (ty == 1 and ty0 == 2): 
@@ -114,12 +115,13 @@ class DenominationReferent(Referent):
         while i < len(inds): 
             inds[i] = 0
             i += 1
-        tmp = Utils.newStringIO(None)
+        tmp = io.StringIO()
         while True:
             Utils.setLengthStringIO(tmp, 0)
-            for i in range(len(items)):
+            i = 0
+            while i < len(items): 
                 print(items[i][inds[i]], end="", file=tmp)
-            else: i = len(items)
+                i += 1
             v = Utils.toStringStringIO(tmp)
             if (not v in self.__m_names): 
                 self.__m_names.append(v)
@@ -132,7 +134,7 @@ class DenominationReferent(Referent):
             else: i = -1
             if (i < 0): 
                 break
-            ++ i
+            i += 1
             while i < len(inds): 
                 inds[i] = 0
                 i += 1
@@ -142,17 +144,18 @@ class DenominationReferent(Referent):
     def __add_vars(str0_ : str, vars0_ : typing.List[str]) -> None:
         vars0_.append(str0_)
         for k in range(2):
-            tmp = Utils.newStringIO(None)
-            for i in range(len(str0_)):
-                inoutarg1089 = RefOutArgWrapper(None)
-                inoutres1090 = Utils.tryGetValue(DenominationReferent.__m_var_chars, str0_[i], inoutarg1089)
-                v = inoutarg1089.value
-                if (not inoutres1090): 
+            tmp = io.StringIO()
+            i = 0
+            while i < len(str0_): 
+                inoutarg1091 = RefOutArgWrapper(None)
+                inoutres1092 = Utils.tryGetValue(DenominationReferent.__m_var_chars, str0_[i], inoutarg1091)
+                v = inoutarg1091.value
+                if (not inoutres1092): 
                     break
                 if ((len(v) < 2) or v[k] == '-'): 
                     break
                 print(v[k], end="", file=tmp)
-            else: i = len(str0_)
+                i += 1
             if (i >= len(str0_)): 
                 v = Utils.toStringStringIO(tmp)
                 if (not v in vars0_): 

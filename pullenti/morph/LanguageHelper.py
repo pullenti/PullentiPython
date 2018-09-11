@@ -1,11 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+import io
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.morph.internal.UnicodeInfo import UnicodeInfo
 from pullenti.morph.MorphTense import MorphTense
 from pullenti.morph.MorphPerson import MorphPerson
@@ -25,28 +26,24 @@ class LanguageHelper:
     
     @staticmethod
     def get_language_for_text(text : str) -> str:
-        """ Определить язык для неструктурированного ткста
-        
-        Args:
-            text(str): текст
-        
-        Returns:
-            str: код языка или null при ненахождении
-        """
         if (Utils.isNullOrEmpty(text)): 
             return None
         ru_chars = 0
         en_chars = 0
-        for i in range(len(text)):
+        i = 0
+        first_pass3621 = True
+        while True:
+            if first_pass3621: first_pass3621 = False
+            else: i += 1
+            if (not (i < len(text))): break
             ch = text[i]
-            if (not ch.isalpha()): 
+            if (not str.isalpha(ch)): 
                 continue
-            j = ord(ch)
+            j = (ord(ch))
             if (j >= 0x400 and (j < 0x500)): 
                 ru_chars += 1
             elif (j < 0x80): 
                 en_chars += 1
-        else: i = len(text)
         if (((ru_chars > (en_chars * 2))) and ru_chars > 10): 
             return "ru"
         if (ru_chars > 0 and en_chars == 0): 
@@ -64,10 +61,12 @@ class LanguageHelper:
     def is_latin(str0_ : str) -> bool:
         if (str0_ is None): 
             return False
-        for i in range(len(str0_)):
+        i = 0
+        while i < len(str0_): 
             if (not LanguageHelper.is_latin_char(str0_[i])): 
                 if (not Utils.isWhitespace(str0_[i]) and str0_[i] != '-'): 
                     return False
+            i += 1
         return True
     
     @staticmethod
@@ -79,10 +78,12 @@ class LanguageHelper:
     def is_cyrillic(str0_ : str) -> bool:
         if (str0_ is None): 
             return False
-        for i in range(len(str0_)):
+        i = 0
+        while i < len(str0_): 
             if (not LanguageHelper.is_cyrillic_char(str0_[i])): 
                 if (not Utils.isWhitespace(str0_[i]) and str0_[i] != '-'): 
                     return False
+            i += 1
         return True
     
     @staticmethod
@@ -92,37 +93,16 @@ class LanguageHelper:
     
     @staticmethod
     def is_cyrillic_vowel(ch : 'char') -> bool:
-        """ Проверка, что это гласная на кириллице
-        
-        Args:
-            ch('char'): 
-        
-        """
         ui = UnicodeInfo.ALL_CHARS[ord(ch)]
         return ui.is_cyrillic and ui.is_vowel
     
     @staticmethod
     def is_latin_vowel(ch : 'char') -> bool:
-        """ Проверка, что это гласная на латинице
-        
-        Args:
-            ch('char'): 
-        
-        """
         ui = UnicodeInfo.ALL_CHARS[ord(ch)]
         return ui.is_latin and ui.is_vowel
     
     @staticmethod
     def get_cyr_for_lat(lat : 'char') -> 'char':
-        """ Получить для латинской буквы её возможный графический эквивалент на кириллице
-         (для тексто-графических замен)
-        
-        Args:
-            lat('char'): 
-        
-        Returns:
-            'char': 0 - нет эквивалента
-        """
         i = LanguageHelper._m_lat_chars.find(lat)
         if (i >= 0 and (i < len(LanguageHelper._m_cyr_chars))): 
             return LanguageHelper._m_cyr_chars[i]
@@ -133,15 +113,6 @@ class LanguageHelper:
     
     @staticmethod
     def get_lat_for_cyr(cyr : 'char') -> 'char':
-        """ Получить для кириллической буквы её возможный графический эквивалент на латинице
-         (для тексто-графических замен)
-        
-        Args:
-            lat: 
-        
-        Returns:
-            'char': 0 - нет эквивалента
-        """
         i = LanguageHelper._m_cyr_chars.find(cyr)
         if ((i < 0) or i >= len(LanguageHelper._m_lat_chars)): 
             return chr(0)
@@ -150,14 +121,6 @@ class LanguageHelper:
     
     @staticmethod
     def transliteral_correction(value : str, prev_value : str, always : bool=False) -> str:
-        """ Транслитеральная корректировка
-        
-        Args:
-            value(str): 
-            prev_value(str): 
-            always(bool): 
-        
-        """
         pure_cyr = 0
         pure_lat = 0
         ques_cyr = 0
@@ -165,7 +128,12 @@ class LanguageHelper:
         udar_cyr = 0
         y = False
         udaren = False
-        for i in range(len(value)):
+        i = 0
+        first_pass3622 = True
+        while True:
+            if first_pass3622: first_pass3622 = False
+            else: i += 1
+            if (not (i < len(value))): break
             ch = value[i]
             ui = UnicodeInfo.ALL_CHARS[ord(ch)]
             if (not ui.is_letter): 
@@ -176,16 +144,16 @@ class LanguageHelper:
                     return LanguageHelper.transliteral_correction(value.replace("{0}".format(ch), ""), prev_value, False)
                 return value
             if (ui.is_cyrillic): 
-                if ((ch) in LanguageHelper._m_cyr_chars): 
+                if (LanguageHelper._m_cyr_chars.find(ch) >= 0): 
                     ques_cyr += 1
                 else: 
                     pure_cyr += 1
             elif (ui.is_latin): 
-                if ((ch) in LanguageHelper._m_lat_chars): 
+                if (LanguageHelper._m_lat_chars.find(ch) >= 0): 
                     ques_lat += 1
                 else: 
                     pure_lat += 1
-            elif ((ch) in LanguageHelper.__m_udar_chars): 
+            elif (LanguageHelper.__m_udar_chars.find(ch) >= 0): 
                 udar_cyr += 1
             else: 
                 return value
@@ -216,9 +184,9 @@ class LanguageHelper:
                 return value
         tmp = Utils.newStringIO(value)
         i = 0
-        first_pass2676 = True
+        first_pass3623 = True
         while True:
-            if first_pass2676: first_pass2676 = False
+            if first_pass3623: first_pass3623 = False
             else: i += 1
             if (not (i < tmp.tell())): break
             if (Utils.getCharAtStringIO(tmp, i) == 'Ь' and ((i + 1) < tmp.tell()) and Utils.getCharAtStringIO(tmp, i + 1) == 'I'): 
@@ -277,12 +245,6 @@ class LanguageHelper:
     
     @staticmethod
     def get_case_after_preposition(prep : str) -> 'MorphCase':
-        """ Получить возможные падежи существительных после предлогов
-        
-        Args:
-            prep(str): предлог
-        
-        """
         from pullenti.morph.MorphCase import MorphCase
         inoutarg44 = RefOutArgWrapper(None)
         inoutres45 = Utils.tryGetValue(LanguageHelper.__m_prep_cases, prep, inoutarg44)
@@ -308,13 +270,6 @@ class LanguageHelper:
     
     @staticmethod
     def ends_with(str0_ : str, substr : str) -> bool:
-        """ Замена стандартной функции, которая очень тормозит
-        
-        Args:
-            str0_(str): 
-            substr(str): 
-        
-        """
         if (str0_ is None or substr is None): 
             return False
         i = len(str0_) - 1
@@ -329,16 +284,6 @@ class LanguageHelper:
     
     @staticmethod
     def ends_with_ex(str0_ : str, substr : str, substr2 : str, substr3 : str=None, substr4 : str=None) -> bool:
-        """ Проверка окончания строки на одну из заданных подстрок
-        
-        Args:
-            str0_(str): 
-            substr(str): 
-            substr2(str): 
-            substr3(str): 
-            substr4(str): 
-        
-        """
         if (str0_ is None): 
             return False
         for k in range(4):
@@ -364,12 +309,12 @@ class LanguageHelper:
     
     @staticmethod
     def to_string_morph_tense(tense : 'MorphTense') -> str:
-        res = Utils.newStringIO(None)
-        if (((tense & MorphTense.PAST)) != MorphTense.UNDEFINED): 
+        res = io.StringIO()
+        if ((((tense) & (MorphTense.PAST))) != (MorphTense.UNDEFINED)): 
             print("прошедшее|", end="", file=res)
-        if (((tense & MorphTense.PRESENT)) != MorphTense.UNDEFINED): 
+        if ((((tense) & (MorphTense.PRESENT))) != (MorphTense.UNDEFINED)): 
             print("настоящее|", end="", file=res)
-        if (((tense & MorphTense.FUTURE)) != MorphTense.UNDEFINED): 
+        if ((((tense) & (MorphTense.FUTURE))) != (MorphTense.UNDEFINED)): 
             print("будущее|", end="", file=res)
         if (res.tell() > 0): 
             Utils.setLengthStringIO(res, res.tell() - 1)
@@ -377,12 +322,12 @@ class LanguageHelper:
     
     @staticmethod
     def to_string_morph_person(person : 'MorphPerson') -> str:
-        res = Utils.newStringIO(None)
-        if (((person & MorphPerson.FIRST)) != MorphPerson.UNDEFINED): 
+        res = io.StringIO()
+        if ((((person) & (MorphPerson.FIRST))) != (MorphPerson.UNDEFINED)): 
             print("1лицо|", end="", file=res)
-        if (((person & MorphPerson.SECOND)) != MorphPerson.UNDEFINED): 
+        if ((((person) & (MorphPerson.SECOND))) != (MorphPerson.UNDEFINED)): 
             print("2лицо|", end="", file=res)
-        if (((person & MorphPerson.THIRD)) != MorphPerson.UNDEFINED): 
+        if ((((person) & (MorphPerson.THIRD))) != (MorphPerson.UNDEFINED)): 
             print("3лицо|", end="", file=res)
         if (res.tell() > 0): 
             Utils.setLengthStringIO(res, res.tell() - 1)
@@ -390,12 +335,12 @@ class LanguageHelper:
     
     @staticmethod
     def to_string_morph_gender(gender : 'MorphGender') -> str:
-        res = Utils.newStringIO(None)
-        if (((gender & MorphGender.MASCULINE)) != MorphGender.UNDEFINED): 
+        res = io.StringIO()
+        if ((((gender) & (MorphGender.MASCULINE))) != (MorphGender.UNDEFINED)): 
             print("муж.|", end="", file=res)
-        if (((gender & MorphGender.FEMINIE)) != MorphGender.UNDEFINED): 
+        if ((((gender) & (MorphGender.FEMINIE))) != (MorphGender.UNDEFINED)): 
             print("жен.|", end="", file=res)
-        if (((gender & MorphGender.NEUTER)) != MorphGender.UNDEFINED): 
+        if ((((gender) & (MorphGender.NEUTER))) != (MorphGender.UNDEFINED)): 
             print("средн.|", end="", file=res)
         if (res.tell() > 0): 
             Utils.setLengthStringIO(res, res.tell() - 1)
@@ -403,10 +348,10 @@ class LanguageHelper:
     
     @staticmethod
     def to_string_morph_number(number : 'MorphNumber') -> str:
-        res = Utils.newStringIO(None)
-        if (((number & MorphNumber.SINGULAR)) != MorphNumber.UNDEFINED): 
+        res = io.StringIO()
+        if ((((number) & (MorphNumber.SINGULAR))) != (MorphNumber.UNDEFINED)): 
             print("единств.|", end="", file=res)
-        if (((number & MorphNumber.PLURAL)) != MorphNumber.UNDEFINED): 
+        if ((((number) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
             print("множеств.|", end="", file=res)
         if (res.tell() > 0): 
             Utils.setLengthStringIO(res, res.tell() - 1)
@@ -414,12 +359,12 @@ class LanguageHelper:
     
     @staticmethod
     def to_string_morph_voice(voice : 'MorphVoice') -> str:
-        res = Utils.newStringIO(None)
-        if (((voice & MorphVoice.ACTIVE)) != MorphVoice.UNDEFINED): 
+        res = io.StringIO()
+        if ((((voice) & (MorphVoice.ACTIVE))) != (MorphVoice.UNDEFINED)): 
             print("действит.|", end="", file=res)
-        if (((voice & MorphVoice.PASSIVE)) != MorphVoice.UNDEFINED): 
+        if ((((voice) & (MorphVoice.PASSIVE))) != (MorphVoice.UNDEFINED)): 
             print("страдат.|", end="", file=res)
-        if (((voice & MorphVoice.MIDDLE)) != MorphVoice.UNDEFINED): 
+        if ((((voice) & (MorphVoice.MIDDLE))) != (MorphVoice.UNDEFINED)): 
             print("средн.|", end="", file=res)
         if (res.tell() > 0): 
             Utils.setLengthStringIO(res, res.tell() - 1)
@@ -427,12 +372,12 @@ class LanguageHelper:
     
     @staticmethod
     def to_string_morph_mood(mood : 'MorphMood') -> str:
-        res = Utils.newStringIO(None)
-        if (((mood & MorphMood.INDICATIVE)) != MorphMood.UNDEFINED): 
+        res = io.StringIO()
+        if ((((mood) & (MorphMood.INDICATIVE))) != (MorphMood.UNDEFINED)): 
             print("изъявит.|", end="", file=res)
-        if (((mood & MorphMood.IMPERATIVE)) != MorphMood.UNDEFINED): 
+        if ((((mood) & (MorphMood.IMPERATIVE))) != (MorphMood.UNDEFINED)): 
             print("повелит.|", end="", file=res)
-        if (((mood & MorphMood.SUBJUNCTIVE)) != MorphMood.UNDEFINED): 
+        if ((((mood) & (MorphMood.SUBJUNCTIVE))) != (MorphMood.UNDEFINED)): 
             print("условн.|", end="", file=res)
         if (res.tell() > 0): 
             Utils.setLengthStringIO(res, res.tell() - 1)
@@ -440,10 +385,10 @@ class LanguageHelper:
     
     @staticmethod
     def to_string_morph_aspect(aspect : 'MorphAspect') -> str:
-        res = Utils.newStringIO(None)
-        if (((aspect & MorphAspect.IMPERFECTIVE)) != MorphAspect.UNDEFINED): 
+        res = io.StringIO()
+        if ((((aspect) & (MorphAspect.IMPERFECTIVE))) != (MorphAspect.UNDEFINED)): 
             print("несоверш.|", end="", file=res)
-        if (((aspect & MorphAspect.PERFECTIVE)) != MorphAspect.UNDEFINED): 
+        if ((((aspect) & (MorphAspect.PERFECTIVE))) != (MorphAspect.UNDEFINED)): 
             print("соверш.|", end="", file=res)
         if (res.tell() > 0): 
             Utils.setLengthStringIO(res, res.tell() - 1)
@@ -451,14 +396,14 @@ class LanguageHelper:
     
     @staticmethod
     def to_string_morph_finite(finit : 'MorphFinite') -> str:
-        res = Utils.newStringIO(None)
-        if (((finit & MorphFinite.FINITE)) != MorphFinite.UNDEFINED): 
+        res = io.StringIO()
+        if ((((finit) & (MorphFinite.FINITE))) != (MorphFinite.UNDEFINED)): 
             print("finite|", end="", file=res)
-        if (((finit & MorphFinite.GERUND)) != MorphFinite.UNDEFINED): 
+        if ((((finit) & (MorphFinite.GERUND))) != (MorphFinite.UNDEFINED)): 
             print("gerund|", end="", file=res)
-        if (((finit & MorphFinite.INFINITIVE)) != MorphFinite.UNDEFINED): 
+        if ((((finit) & (MorphFinite.INFINITIVE))) != (MorphFinite.UNDEFINED)): 
             print("инфинитив|", end="", file=res)
-        if (((finit & MorphFinite.PARTICIPLE)) != MorphFinite.UNDEFINED): 
+        if ((((finit) & (MorphFinite.PARTICIPLE))) != (MorphFinite.UNDEFINED)): 
             print("participle|", end="", file=res)
         if (res.tell() > 0): 
             Utils.setLengthStringIO(res, res.tell() - 1)
@@ -466,10 +411,10 @@ class LanguageHelper:
     
     @staticmethod
     def to_string_morph_form(form : 'MorphForm') -> str:
-        res = Utils.newStringIO(None)
-        if (((form & MorphForm.SHORT)) != MorphForm.UNDEFINED): 
+        res = io.StringIO()
+        if ((((form) & (MorphForm.SHORT))) != (MorphForm.UNDEFINED)): 
             print("кратк.|", end="", file=res)
-        if (((form & MorphForm.SYNONYM)) != MorphForm.UNDEFINED): 
+        if ((((form) & (MorphForm.SYNONYM))) != (MorphForm.UNDEFINED)): 
             print("синонимич.|", end="", file=res)
         if (res.tell() > 0): 
             Utils.setLengthStringIO(res, res.tell() - 1)
@@ -481,20 +426,12 @@ class LanguageHelper:
     
     @staticmethod
     def correct_word(w : str) -> str:
-        """ Откорректировать слово (перевод в верхний регистр и замена некоторых букв типа Ё->Е)
-        
-        Args:
-            w(str): исходное слово
-        
-        Returns:
-            str: откорректированное слово
-        """
         if (w is None): 
             return None
         w = w.upper()
         for ch in w: 
-            if ((ch) in LanguageHelper.__m_rus0): 
-                tmp = Utils.newStringIO(None)
+            if (LanguageHelper.__m_rus0.find(ch) >= 0): 
+                tmp = io.StringIO()
                 print(w, end="", file=tmp)
                 i = 0
                 while i < tmp.tell(): 
@@ -504,10 +441,10 @@ class LanguageHelper:
                     i += 1
                 w = Utils.toStringStringIO(tmp)
                 break
-        if ((chr(0x00AD)) in w): 
+        if (w.find(chr(0x00AD)) >= 0): 
             w = w.replace(chr(0x00AD), '-')
         if (w.startswith("АГЕНС")): 
-            w = ("АГЕНТС" + w[5 : ])
+            w = ("АГЕНТС" + w[5:])
         return w
     
     # static constructor for class LanguageHelper
@@ -515,7 +452,7 @@ class LanguageHelper:
     def _static_ctor():
         from pullenti.morph.MorphCase import MorphCase
         LanguageHelper.__m_preps = [("БЕЗ;ДО;ИЗ;ИЗЗА;ОТ;У;ДЛЯ;РАДИ;ВОЗЛЕ;ПОЗАДИ;ВПЕРЕДИ;БЛИЗ;ВБЛИЗИ;ВГЛУБЬ;ВВИДУ;ВДОЛЬ;ВЗАМЕН;ВКРУГ;ВМЕСТО;" + "ВНЕ;ВНИЗУ;ВНУТРИ;ВНУТРЬ;ВОКРУГ;ВРОДЕ;ВСЛЕД;ВСЛЕДСТВИЕ;ЗАМЕСТО;ИЗНУТРИ;КАСАТЕЛЬНО;КРОМЕ;" + "МИМО;НАВРОДЕ;НАЗАД;НАКАНУНЕ;НАПОДОБИЕ;НАПРОТИВ;НАСЧЕТ;ОКОЛО;ОТНОСИТЕЛЬНО;") + "ПОВЕРХ;ПОДЛЕ;ПОМИМО;ПОПЕРЕК;ПОРЯДКА;ПОСЕРЕДИНЕ;ПОСРЕДИ;ПОСЛЕ;ПРЕВЫШЕ;ПРЕЖДЕ;ПРОТИВ;СВЕРХ;" + "СВЫШЕ;СНАРУЖИ;СРЕДИ;СУПРОТИВ", "К;БЛАГОДАРЯ;ВОПРЕКИ;НАВСТРЕЧУ;СОГЛАСНО;СООБРАЗНО;ПАРАЛЛЕЛЬНО;ПОДОБНО;СООТВЕТСТВЕННО;СОРАЗМЕРНО", "ПРО;ЧЕРЕЗ;СКВОЗЬ;СПУСТЯ", "НАД;ПЕРЕД;ПРЕД", "ПРИ", "В;НА;О;ВКЛЮЧАЯ", "МЕЖДУ", "ЗА;ПОД", "ПО", "С"]
-        LanguageHelper.__m_cases = [MorphCase.GENITIVE, MorphCase.DATIVE, MorphCase.ACCUSATIVE, MorphCase.INSTRUMENTAL, MorphCase.PREPOSITIONAL, MorphCase.ACCUSATIVE | MorphCase.PREPOSITIONAL, MorphCase.GENITIVE | MorphCase.ACCUSATIVE, MorphCase.ACCUSATIVE | MorphCase.INSTRUMENTAL, MorphCase.DATIVE | MorphCase.ACCUSATIVE | MorphCase.PREPOSITIONAL, MorphCase.GENITIVE | MorphCase.ACCUSATIVE | MorphCase.INSTRUMENTAL]
+        LanguageHelper.__m_cases = [MorphCase.GENITIVE, MorphCase.DATIVE, MorphCase.ACCUSATIVE, MorphCase.INSTRUMENTAL, MorphCase.PREPOSITIONAL, (MorphCase.ACCUSATIVE) | MorphCase.PREPOSITIONAL, (MorphCase.GENITIVE) | MorphCase.ACCUSATIVE, (MorphCase.ACCUSATIVE) | MorphCase.INSTRUMENTAL, (MorphCase.DATIVE) | MorphCase.ACCUSATIVE | MorphCase.PREPOSITIONAL, (MorphCase.GENITIVE) | MorphCase.ACCUSATIVE | MorphCase.INSTRUMENTAL]
         LanguageHelper.__m_prep_norms_src = ["БЕЗ;БЕЗО", "В;ВО", "ВОКРУГ;ВКРУГ", "ВПЕРЕДИ;ВПЕРЕД", "ВСЛЕД;ВОСЛЕД", "ИЗ;ИЗО", "К;КО", "МЕЖДУ;МЕЖ", "НАД;НАДО", "О;ОБ;ОБО", "ОТ;ОТО", "ПЕРЕД;ПРЕД;ПРЕДО;ПЕРЕДО", "ПОД;ПОДО", "ПОСЕРЕДИНЕ;ПОСРЕДИ", "ПРОМЕЖДУ;ПРОМЕЖ", "С;СО", "СРЕДИ;СРЕДЬ", "ЧЕРЕЗ;ЧРЕЗ"]
         LanguageHelper.__m_prep_cases = dict()
         i = 0

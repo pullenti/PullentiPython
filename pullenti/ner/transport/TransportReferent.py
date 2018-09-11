@@ -1,15 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.transport.TransportKind import TransportKind
 from pullenti.morph.LanguageHelper import LanguageHelper
-
 
 
 class TransportReferent(Referent):
@@ -47,7 +46,7 @@ class TransportReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         str0_ = None
         for s in self.slots: 
             if (s.type_name == TransportReferent.ATTR_TYPE): 
@@ -76,7 +75,7 @@ class TransportReferent(Referent):
         if ((str0_) is not None): 
             print(" \"{0}\"".format(MiscHelper.convert_first_char_upper_and_other_lower(str0_)), end="", file=res, flush=True)
             for s in self.slots: 
-                if (s.type_name == TransportReferent.ATTR_NAME and str0_ != s.value): 
+                if (s.type_name == TransportReferent.ATTR_NAME and str0_ != (s.value)): 
                     if (LanguageHelper.is_cyrillic_char(str0_[0]) != LanguageHelper.is_cyrillic_char((s.value)[0])): 
                         print(" ({0})".format(MiscHelper.convert_first_char_upper_and_other_lower(s.value)), end="", file=res, flush=True)
                         break
@@ -130,7 +129,7 @@ class TransportReferent(Referent):
             res = Utils.valToEnum(s, TransportKind)
             if (isinstance(res, TransportKind)): 
                 return Utils.valToEnum(res, TransportKind)
-        except Exception as ex2518: 
+        except Exception as ex2527: 
             pass
         return TransportKind.UNDEFINED
     
@@ -233,7 +232,7 @@ class TransportReferent(Referent):
         has_num = False
         if (model is not None): 
             for s in model: 
-                if (not s.isalpha()): 
+                if (not str.isalpha(s)): 
                     has_num = True
                     break
         if (ki == TransportKind.AUTO): 

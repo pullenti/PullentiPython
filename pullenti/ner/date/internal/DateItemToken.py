@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -7,9 +7,8 @@
 import datetime
 import typing
 from enum import IntEnum
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
-
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.core.NumberHelper import NumberHelper
@@ -130,13 +129,6 @@ class DateItemToken(MetaToken):
     
     @staticmethod
     def try_attach(t : 'Token', prev : typing.List['DateItemToken']) -> 'DateItemToken':
-        """ Привязать с указанной позиции один примитив
-        
-        Args:
-            cnt: 
-            indFrom: 
-        
-        """
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner.TextToken import TextToken
         if (t is None): 
@@ -168,7 +160,7 @@ class DateItemToken(MetaToken):
                     if (not t.is_char('_')): 
                         break
                     t = t.next0_
-        elif (isinstance(t0, TextToken) and t0.is_value("THE", None)): 
+        elif ((isinstance(t0, TextToken)) and t0.is_value("THE", None)): 
             res0 = DateItemToken.__try_attach(t.next0_, prev)
             if (res0 is not None): 
                 res0.begin_token = t
@@ -190,13 +182,13 @@ class DateItemToken(MetaToken):
             ii = 0
             t = res.end_token.next0_
             if (t is not None and t.is_value("ДО", None)): 
-                tok = DateItemToken.__m_new_age.try_parse(t.next0_, TerminParseAttr.NO)
+                tok = DateItemToken.M_NEW_AGE.try_parse(t.next0_, TerminParseAttr.NO)
                 ii = -1
             elif (t is not None and t.is_value("ОТ", "ВІД")): 
-                tok = DateItemToken.__m_new_age.try_parse(t.next0_, TerminParseAttr.NO)
+                tok = DateItemToken.M_NEW_AGE.try_parse(t.next0_, TerminParseAttr.NO)
                 ii = 1
             else: 
-                tok = DateItemToken.__m_new_age.try_parse(t, TerminParseAttr.NO)
+                tok = DateItemToken.M_NEW_AGE.try_parse(t, TerminParseAttr.NO)
                 ii = 1
             if (tok is not None): 
                 res.new_age = (-1 if ii < 0 else 1)
@@ -210,10 +202,10 @@ class DateItemToken(MetaToken):
         if (t is None): 
             return False
         if (t.is_value("ДО", None)): 
-            return DateItemToken.__m_new_age.try_parse(t.next0_, TerminParseAttr.NO) is not None
+            return DateItemToken.M_NEW_AGE.try_parse(t.next0_, TerminParseAttr.NO) is not None
         elif (t.is_value("ОТ", "ВІД")): 
-            return DateItemToken.__m_new_age.try_parse(t.next0_, TerminParseAttr.NO) is not None
-        return DateItemToken.__m_new_age.try_parse(t, TerminParseAttr.NO) is not None
+            return DateItemToken.M_NEW_AGE.try_parse(t.next0_, TerminParseAttr.NO) is not None
+        return DateItemToken.M_NEW_AGE.try_parse(t, TerminParseAttr.NO) is not None
     
     @staticmethod
     def __try_attach(t : 'Token', prev : typing.List['DateItemToken']) -> 'DateItemToken':
@@ -229,11 +221,11 @@ class DateItemToken(MetaToken):
         begin = t
         end = t
         is_in_brack = False
-        if ((BracketHelper.can_be_start_of_sequence(t, False, False) and t.next0_ is not None and isinstance(t.next0_, NumberToken)) and BracketHelper.can_be_end_of_sequence(t.next0_.next0_, False, None, False)): 
+        if ((BracketHelper.can_be_start_of_sequence(t, False, False) and t.next0_ is not None and (isinstance(t.next0_, NumberToken))) and BracketHelper.can_be_end_of_sequence(t.next0_.next0_, False, None, False)): 
             nt = (t.next0_ if isinstance(t.next0_, NumberToken) else None)
             end = t.next0_.next0_
             is_in_brack = True
-        if ((t.is_newline_before and BracketHelper.is_bracket(t, False) and isinstance(t.next0_, NumberToken)) and BracketHelper.is_bracket(t.next0_.next0_, False)): 
+        if ((t.is_newline_before and BracketHelper.is_bracket(t, False) and (isinstance(t.next0_, NumberToken))) and BracketHelper.is_bracket(t.next0_.next0_, False)): 
             nt = (t.next0_ if isinstance(t.next0_, NumberToken) else None)
             end = t.next0_.next0_
             is_in_brack = True
@@ -247,8 +239,8 @@ class DateItemToken(MetaToken):
             if (NumberHelper.try_parse_age(nt) is not None): 
                 return None
             res = DateItemToken._new669(begin, end, DateItemToken.DateItemType.NUMBER, nt.value, nt.morph)
-            if ((res.int_value == 20 and isinstance(nt.next0_, NumberToken) and nt.next0_.length_char == 2) and prev is not None): 
-                num = 2000 + (nt.next0_ if isinstance(nt.next0_, NumberToken) else None).value
+            if ((res.int_value == 20 and (isinstance(nt.next0_, NumberToken)) and nt.next0_.length_char == 2) and prev is not None): 
+                num = 2000 + ((nt.next0_ if isinstance(nt.next0_, NumberToken) else None).value)
                 if ((num < 2030) and len(prev) > 0 and prev[len(prev) - 1].typ == DateItemToken.DateItemType.MONTH): 
                     ok = False
                     if (nt.whitespaces_after_count == 1): 
@@ -275,7 +267,7 @@ class DateItemToken(MetaToken):
             if (res.int_value <= 12 and t.next0_ is not None and (t.whitespaces_after_count < 3)): 
                 tt = t.next0_
                 if (tt.is_value("ЧАС", None)): 
-                    if ((isinstance(t.previous, TextToken) and not t.previous.chars.is_letter and not t.is_whitespace_before) and isinstance(t.previous.previous, NumberToken) and not t.previous.is_whitespace_before): 
+                    if (((isinstance(t.previous, TextToken)) and not t.previous.chars.is_letter and not t.is_whitespace_before) and (isinstance(t.previous.previous, NumberToken)) and not t.previous.is_whitespace_before): 
                         pass
                     else: 
                         res.typ = DateItemToken.DateItemType.HOUR
@@ -284,9 +276,9 @@ class DateItemToken(MetaToken):
                         if (tt is not None and tt.is_char('.')): 
                             res.end_token = tt
                             tt = tt.next0_
-                first_pass2770 = True
+                first_pass3720 = True
                 while True:
-                    if first_pass2770: first_pass2770 = False
+                    if first_pass3720: first_pass3720 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_value("УТРО", "РАНОК")): 
@@ -349,7 +341,7 @@ class DateItemToken(MetaToken):
                 if (nt.previous.is_value("В", "У") or nt.previous.is_value("К", None) or nt.previous.is_value("ДО", None)): 
                     tt = DateItemToken.__test_year_rus_word(nt.next0_, False)
                     if ((tt) is not None): 
-                        if ((res.int_value < 100) and isinstance(tt, TextToken) and (((tt if isinstance(tt, TextToken) else None).term == "ГОДА" or (tt if isinstance(tt, TextToken) else None).term == "РОКИ"))): 
+                        if ((res.int_value < 100) and (isinstance(tt, TextToken)) and (((tt if isinstance(tt, TextToken) else None).term == "ГОДА" or (tt if isinstance(tt, TextToken) else None).term == "РОКИ"))): 
                             pass
                         else: 
                             res.end_token = tt
@@ -407,9 +399,9 @@ class DateItemToken(MetaToken):
             lat = NumberHelper.try_parse_roman(t)
             if (lat is not None and lat.end_token.next0_ is not None): 
                 tt = lat.end_token.next0_
-                if (tt.is_value("КВАРТАЛ", None) and lat.value > 0 and lat.value <= 4): 
+                if (tt.is_value("КВАРТАЛ", None) and lat.value > (0) and lat.value <= (4)): 
                     return DateItemToken._new670(t, tt, DateItemToken.DateItemType.QUARTAL, lat.value)
-                if (tt.is_value("ПОЛУГОДИЕ", "ПІВРІЧЧЯ") and lat.value > 0 and lat.value <= 2): 
+                if (tt.is_value("ПОЛУГОДИЕ", "ПІВРІЧЧЯ") and lat.value > (0) and lat.value <= (2)): 
                     return DateItemToken._new670(t, lat.end_token.next0_, DateItemToken.DateItemType.HALFYEAR, lat.value)
                 if (tt.is_value("ВЕК", "ВІК") or tt.is_value("СТОЛЕТИЕ", "СТОЛІТТЯ")): 
                     return DateItemToken._new670(t, lat.end_token.next0_, DateItemToken.DateItemType.CENTURY, lat.value)
@@ -427,20 +419,20 @@ class DateItemToken(MetaToken):
             return DateItemToken._new676(t, t, DateItemToken.DateItemType.POINTER, "конец")
         if (t is not None and t.is_value("ДОНЕДАВНА", None)): 
             return DateItemToken._new676(t, t, DateItemToken.DateItemType.POINTER, "сегодня")
-        tok = DateItemToken.__m_seasons.try_parse(t, TerminParseAttr.NO)
-        if ((tok is not None and Utils.valToEnum(tok.termin.tag, DatePointerType) == DatePointerType.SUMMER and t.morph.language.is_ru) and isinstance(t, TextToken)): 
+        tok = DateItemToken.M_SEASONS.try_parse(t, TerminParseAttr.NO)
+        if ((tok is not None and (Utils.valToEnum(tok.termin.tag, DatePointerType)) == DatePointerType.SUMMER and t.morph.language.is_ru) and (isinstance(t, TextToken))): 
             str0_ = (t if isinstance(t, TextToken) else None).term
             if (str0_ != "ЛЕТОМ" and str0_ != "ЛЕТА" and str0_ != "ЛЕТО"): 
-                tok = None
+                tok = (None)
         if (tok is not None): 
             return DateItemToken._new670(t, tok.end_token, DateItemToken.DateItemType.POINTER, Utils.valToEnum(tok.termin.tag, DatePointerType))
         npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
         if (npt is not None): 
-            tok = DateItemToken.__m_seasons.try_parse(npt.end_token, TerminParseAttr.NO)
-            if ((tok is not None and Utils.valToEnum(tok.termin.tag, DatePointerType) == DatePointerType.SUMMER and t.morph.language.is_ru) and isinstance(t, TextToken)): 
+            tok = DateItemToken.M_SEASONS.try_parse(npt.end_token, TerminParseAttr.NO)
+            if ((tok is not None and (Utils.valToEnum(tok.termin.tag, DatePointerType)) == DatePointerType.SUMMER and t.morph.language.is_ru) and (isinstance(t, TextToken))): 
                 str0_ = (t if isinstance(t, TextToken) else None).term
                 if (str0_ != "ЛЕТОМ" and str0_ != "ЛЕТА" and str0_ != "ЛЕТО"): 
-                    tok = None
+                    tok = (None)
             if (tok is not None): 
                 return DateItemToken._new670(t, tok.end_token, DateItemToken.DateItemType.POINTER, Utils.valToEnum(tok.termin.tag, DatePointerType))
             typ_ = DateItemToken.DateItemType.NUMBER
@@ -471,9 +463,9 @@ class DateItemToken(MetaToken):
                         return None
                 cou = 0
                 tt = t.previous
-                first_pass2771 = True
+                first_pass3721 = True
                 while True:
-                    if first_pass2771: first_pass2771 = False
+                    if first_pass3721: first_pass3721 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (cou > 200): 
@@ -498,7 +490,7 @@ class DateItemToken(MetaToken):
                             continue
                         return DateItemToken._new670(t0, npt.end_token, typ_, ii)
         term = t0.term
-        if (not term[0].isalnum()): 
+        if (not str.isalnum(term[0])): 
             if (t0.is_char_of(".\\/:") or t0.is_hiphen): 
                 return DateItemToken._new676(t0, t0, DateItemToken.DateItemType.DELIM, term)
             elif (t0.is_char(',')): 
@@ -506,103 +498,103 @@ class DateItemToken(MetaToken):
             else: 
                 return None
         if (term == "O" or term == "О"): 
-            if (isinstance(t.next0_, NumberToken) and not t.is_whitespace_after and ((t.next0_ if isinstance(t.next0_, NumberToken) else None).value < 10)): 
+            if ((isinstance(t.next0_, NumberToken)) and not t.is_whitespace_after and ((t.next0_ if isinstance(t.next0_, NumberToken) else None).value < (10))): 
                 return DateItemToken._new670(t, t.next0_, DateItemToken.DateItemType.NUMBER, (t.next0_ if isinstance(t.next0_, NumberToken) else None).value)
-        if (term[0].isalpha()): 
-            inf = DateItemToken.__m_monthes.try_parse(t, TerminParseAttr.NO)
+        if (str.isalpha(term[0])): 
+            inf = DateItemToken.M_MONTHES.try_parse(t, TerminParseAttr.NO)
             if (inf is not None and inf.termin.tag is None): 
-                inf = DateItemToken.__m_monthes.try_parse(inf.end_token.next0_, TerminParseAttr.NO)
-            if (inf is not None and isinstance(inf.termin.tag, int)): 
+                inf = DateItemToken.M_MONTHES.try_parse(inf.end_token.next0_, TerminParseAttr.NO)
+            if (inf is not None and (isinstance(inf.termin.tag, int))): 
                 return DateItemToken._new691(inf.begin_token, inf.end_token, DateItemToken.DateItemType.MONTH, inf.termin.tag, inf.termin.lang)
         return None
     
     DAYS_OF_WEEK = None
     
-    __m_new_age = None
+    M_NEW_AGE = None
     
-    __m_monthes = None
+    M_MONTHES = None
     
-    __m_seasons = None
+    M_SEASONS = None
     
     @staticmethod
     def initialize() -> None:
         from pullenti.ner.core.TerminCollection import TerminCollection
         from pullenti.ner.core.Termin import Termin
         from pullenti.morph.MorphLang import MorphLang
-        if (DateItemToken.__m_new_age is not None): 
+        if (DateItemToken.M_NEW_AGE is not None): 
             return
-        DateItemToken.__m_new_age = TerminCollection()
+        DateItemToken.M_NEW_AGE = TerminCollection()
         tt = Termin._new692("НОВАЯ ЭРА", MorphLang.RU, True, "НОВОЙ ЭРЫ")
         tt.add_variant("НАША ЭРА", True)
         tt.add_abridge("Н.Э.")
-        DateItemToken.__m_new_age.add(tt)
+        DateItemToken.M_NEW_AGE.add(tt)
         tt = Termin._new692("НОВА ЕРА", MorphLang.UA, True, "НОВОЇ ЕРИ")
         tt.add_variant("НАША ЕРА", True)
         tt.add_abridge("Н.Е.")
-        DateItemToken.__m_new_age.add(tt)
+        DateItemToken.M_NEW_AGE.add(tt)
         tt = Termin("РОЖДЕСТВО ХРИСТОВО", MorphLang.RU, True)
         tt.add_abridge("Р.Х.")
-        DateItemToken.__m_new_age.add(tt)
+        DateItemToken.M_NEW_AGE.add(tt)
         tt = Termin("РІЗДВА ХРИСТОВОГО", MorphLang.UA, True)
         tt.add_abridge("Р.Х.")
-        DateItemToken.__m_new_age.add(tt)
-        DateItemToken.__m_seasons = TerminCollection()
-        DateItemToken.__m_seasons.add(Termin._new694("ЗИМА", MorphLang.RU, True, DatePointerType.WINTER))
-        DateItemToken.__m_seasons.add(Termin._new694("WINTER", MorphLang.EN, True, DatePointerType.WINTER))
+        DateItemToken.M_NEW_AGE.add(tt)
+        DateItemToken.M_SEASONS = TerminCollection()
+        DateItemToken.M_SEASONS.add(Termin._new694("ЗИМА", MorphLang.RU, True, DatePointerType.WINTER))
+        DateItemToken.M_SEASONS.add(Termin._new694("WINTER", MorphLang.EN, True, DatePointerType.WINTER))
         t = Termin._new694("ВЕСНА", MorphLang.RU, True, DatePointerType.SPRING)
         t.add_variant("ПРОВЕСНА", True)
-        DateItemToken.__m_seasons.add(t)
-        DateItemToken.__m_seasons.add(Termin._new694("SPRING", MorphLang.EN, True, DatePointerType.SPRING))
+        DateItemToken.M_SEASONS.add(t)
+        DateItemToken.M_SEASONS.add(Termin._new694("SPRING", MorphLang.EN, True, DatePointerType.SPRING))
         t = Termin._new694("ЛЕТО", MorphLang.RU, True, DatePointerType.SUMMER)
-        DateItemToken.__m_seasons.add(t)
+        DateItemToken.M_SEASONS.add(t)
         t = Termin._new694("ЛІТО", MorphLang.UA, True, DatePointerType.SUMMER)
-        DateItemToken.__m_seasons.add(t)
+        DateItemToken.M_SEASONS.add(t)
         t = Termin._new694("ОСЕНЬ", MorphLang.RU, True, DatePointerType.AUTUMN)
-        DateItemToken.__m_seasons.add(t)
+        DateItemToken.M_SEASONS.add(t)
         t = Termin._new694("AUTUMN", MorphLang.EN, True, DatePointerType.AUTUMN)
-        DateItemToken.__m_seasons.add(t)
+        DateItemToken.M_SEASONS.add(t)
         t = Termin._new694("ОСІНЬ", MorphLang.UA, True, DatePointerType.AUTUMN)
-        DateItemToken.__m_seasons.add(t)
-        DateItemToken.__m_monthes = TerminCollection()
+        DateItemToken.M_SEASONS.add(t)
+        DateItemToken.M_MONTHES = TerminCollection()
         months = ["ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"]
         i = 0
         while i < len(months): 
             t = Termin._new694(months[i], MorphLang.RU, True, i + 1)
-            DateItemToken.__m_monthes.add(t)
+            DateItemToken.M_MONTHES.add(t)
             i += 1
         months = ["СІЧЕНЬ", "ЛЮТИЙ", "БЕРЕЗЕНЬ", "КВІТЕНЬ", "ТРАВЕНЬ", "ЧЕРВЕНЬ", "ЛИПЕНЬ", "СЕРПЕНЬ", "ВЕРЕСЕНЬ", "ЖОВТЕНЬ", "ЛИСТОПАД", "ГРУДЕНЬ"]
         i = 0
         while i < len(months): 
             t = Termin._new694(months[i], MorphLang.UA, True, i + 1)
-            DateItemToken.__m_monthes.add(t)
+            DateItemToken.M_MONTHES.add(t)
             i += 1
         months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
         i = 0
         while i < len(months): 
             t = Termin._new694(months[i], MorphLang.EN, True, i + 1)
-            DateItemToken.__m_monthes.add(t)
+            DateItemToken.M_MONTHES.add(t)
             i += 1
         months = ["GENNAIO", "FEBBRAIO", "MARZO", "APRILE", "MAGGIO", "GUINGO", "LUGLIO", "AGOSTO", "SETTEMBRE", "OTTOBRE", "NOVEMBRE", "DICEMBRE"]
         i = 0
         while i < len(months): 
             t = Termin._new694(months[i], MorphLang.IT, True, i + 1)
-            DateItemToken.__m_monthes.add(t)
+            DateItemToken.M_MONTHES.add(t)
             i += 1
         for m in ["ЯНВ", "ФЕВ", "ФЕВР", "МАР", "АПР", "ИЮН", "ИЮЛ", "АВГ", "СЕН", "СЕНТ", "ОКТ", "НОЯ", "НОЯБ", "ДЕК", "JAN", "FEB", "MAR", "APR", "JUN", "JUL", "AUG", "SEP", "SEPT", "OCT", "NOV", "DEC"]: 
-            for ttt in DateItemToken.__m_monthes.termins: 
+            for ttt in DateItemToken.M_MONTHES.termins: 
                 if (ttt.terms[0].canonical_text.startswith(m)): 
                     ttt.add_abridge(m)
-                    DateItemToken.__m_monthes.reindex(ttt)
+                    DateItemToken.M_MONTHES.reindex(ttt)
                     break
         for m in ["OF"]: 
-            DateItemToken.__m_monthes.add(Termin(m, MorphLang.EN, True))
-        DateItemToken.__m_empty_words = dict()
-        DateItemToken.__m_empty_words["IN"] = MorphLang.EN
-        DateItemToken.__m_empty_words["SINCE"] = MorphLang.EN
-        DateItemToken.__m_empty_words["THE"] = MorphLang.EN
-        DateItemToken.__m_empty_words["NEL"] = MorphLang.IT
-        DateItemToken.__m_empty_words["DEL"] = MorphLang.IT
-        DateItemToken.__m_empty_words["IL"] = MorphLang.IT
+            DateItemToken.M_MONTHES.add(Termin(m, MorphLang.EN, True))
+        DateItemToken.M_EMPTY_WORDS = dict()
+        DateItemToken.M_EMPTY_WORDS["IN"] = MorphLang.EN
+        DateItemToken.M_EMPTY_WORDS["SINCE"] = MorphLang.EN
+        DateItemToken.M_EMPTY_WORDS["THE"] = MorphLang.EN
+        DateItemToken.M_EMPTY_WORDS["NEL"] = MorphLang.IT
+        DateItemToken.M_EMPTY_WORDS["DEL"] = MorphLang.IT
+        DateItemToken.M_EMPTY_WORDS["IL"] = MorphLang.IT
         DateItemToken.DAYS_OF_WEEK = TerminCollection()
         te = Termin._new694("SUNDAY", MorphLang.EN, True, 7)
         te.add_abridge("SUN")
@@ -648,7 +640,7 @@ class DateItemToken(MetaToken):
         te.add_variant("СУБОТА", True)
         DateItemToken.DAYS_OF_WEEK.add(te)
     
-    __m_empty_words = None
+    M_EMPTY_WORDS = None
     
     @staticmethod
     def __test_year_rus_word(t0 : 'Token', ignore_newline : bool=False) -> 'Token':
@@ -664,7 +656,7 @@ class DateItemToken(MetaToken):
         if (((tt.morph.language.is_ru and ((tt.is_value("ГГ", None) or tt.is_value("Г", None))))) or ((tt.morph.language.is_ua and ((tt.is_value("Р", None) or tt.is_value("РР", None)))))): 
             if (tt.next0_ is not None and tt.next0_.is_char('.')): 
                 tt = tt.next0_
-                if ((tt.next0_ is not None and ((((tt.next0_.is_value("Г", None) and tt.next0_.morph.language.is_ru)) or ((tt.next0_.morph.language.is_ua and tt.next0_.is_value("Р", None))))) and tt.next0_.next0_ is not None) and tt.next0_.next0_.is_char('.')): 
+                if ((tt.next0_ is not None and (tt.whitespaces_after_count < 4) and ((((tt.next0_.is_value("Г", None) and tt.next0_.morph.language.is_ru)) or ((tt.next0_.morph.language.is_ua and tt.next0_.is_value("Р", None)))))) and tt.next0_.next0_ is not None and tt.next0_.next0_.is_char('.')): 
                     tt = tt.next0_.next0_
                 return tt
             else: 
@@ -673,15 +665,6 @@ class DateItemToken(MetaToken):
     
     @staticmethod
     def try_attach_list(t : 'Token', max_count : int=20) -> typing.List['DateItemToken']:
-        """ Привязать примитивы в контейнере с указанной позиции
-        
-        Args:
-            cnt: 
-            indFrom: 
-        
-        Returns:
-            typing.List[DateItemToken]: Список примитивов
-        """
         from pullenti.ner.TextToken import TextToken
         from pullenti.morph.MorphClass import MorphClass
         from pullenti.ner.core.NumberExToken import NumberExToken
@@ -696,7 +679,7 @@ class DateItemToken(MetaToken):
         tt = p.end_token.next0_
         while tt is not None:
             if (isinstance(tt, TextToken)): 
-                if ((tt if isinstance(tt, TextToken) else None).check_value(DateItemToken.__m_empty_words) is not None): 
+                if ((tt if isinstance(tt, TextToken) else None).check_value(DateItemToken.M_EMPTY_WORDS) is not None): 
                     tt = tt.next0_
                     continue
             p0 = DateItemToken.try_attach(tt, res)
@@ -705,7 +688,7 @@ class DateItemToken(MetaToken):
                     break
                 if (tt.chars.is_latin_letter): 
                     break
-                if (tt.morph is not None and tt.morph.check(MorphClass.ADJECTIVE | MorphClass.PRONOUN)): 
+                if (tt.morph is not None and tt.morph.check((MorphClass.ADJECTIVE) | MorphClass.PRONOUN)): 
                     tt = tt.next0_
                     continue
                 break
@@ -759,7 +742,6 @@ class DateItemToken(MetaToken):
             if (not res[0].is_whitespace_before and not res[1].is_whitespace_after): 
                 return None
         return res
-
     
     @staticmethod
     def _new669(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DateItemType', _arg4 : int, _arg5 : 'MorphCollection') -> 'DateItemToken':

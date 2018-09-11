@@ -1,15 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 from enum import IntEnum
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
-
-
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 
 
 class TableHelper:
@@ -52,7 +50,7 @@ class TableHelper:
             p = t.begin_char - 1
             if (p < 0): 
                 return
-            if (ord(txt[p]) == 0xD or ord(txt[p]) == 0xA): 
+            if ((ord(txt[p])) == 0xD or (ord(txt[p])) == 0xA): 
                 self.typ = TableHelper.TableTypes.ROWEND
                 return
             self.row_span = 1
@@ -68,16 +66,6 @@ class TableHelper:
     
     @staticmethod
     def try_parse_rows(t : 'Token', max_char : int, must_be_start_of_table : bool) -> typing.List['TableRowToken']:
-        """ Получить список строк таблицы
-        
-        Args:
-            t(Token): начальная позиция
-            max_char(int): максимальная позиция (0 - не ограничена)
-            must_be_start_of_table(bool): при true первый символ должен быть 1Eh
-        
-        Returns:
-            typing.List[TableRowToken]: список строк
-        """
         from pullenti.ner.core.internal.TableRowToken import TableRowToken
         if (t is None): 
             return None
@@ -111,7 +99,8 @@ class TableHelper:
             lines0 = rla.cells[0]._lines
             lines1 = rla.cells[1]._lines
             if (len(lines0) > 2 and len(lines1) == len(lines0)): 
-                for ii in range(len(lines0)):
+                ii = 0
+                while ii < len(lines0): 
                     rw = TableRowToken((lines0[ii].begin_token if ii == 0 else lines1[ii].begin_token), (lines0[ii].end_token if ii == 0 else lines1[ii].end_token))
                     rw.cells.append(lines0[ii])
                     rw.cells.append(lines1[ii])
@@ -120,6 +109,7 @@ class TableHelper:
                         rw._last_row = rla._last_row
                         rw.end_token = rla.end_token
                     res.append(rw)
+                    ii += 1
                 res.remove(rla)
         for re in res: 
             if (len(re.cells) > 1): 
@@ -143,7 +133,7 @@ class TableHelper:
             if (tt.is_table_control_char): 
                 cell_info = TableHelper.TableInfo(tt)
                 if (cell_info.typ != TableHelper.TableTypes.CELLEND): 
-                    cell_info = None
+                    cell_info = (None)
                 break
             elif (tt.is_newline_after): 
                 if (not is_tab.value and prev is None): 
@@ -164,7 +154,7 @@ class TableHelper:
         tt = tt.next0_
         while tt is not None and ((tt.end_char <= max_char or max_char == 0)): 
             t0 = tt
-            cell_info = None
+            cell_info = (None)
             while tt is not None and ((tt.end_char <= max_char or max_char == 0)): 
                 if (tt.is_table_control_char): 
                     cell_info = TableHelper.TableInfo(tt)

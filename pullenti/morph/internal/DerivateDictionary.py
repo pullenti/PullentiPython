@@ -1,13 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import typing
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.morph.internal.ExplanTreeNode import ExplanTreeNode
 from pullenti.morph.internal.ExplanSerializeHelper import ExplanSerializeHelper
 from pullenti.morph.DerivateGroup import DerivateGroup
@@ -25,11 +25,11 @@ class DerivateDictionary:
     def init(self, lang_ : 'MorphLang') -> bool:
         if (self.__m_inited): 
             return True
-        # ignored: assembly = .
+        # ignored: assembly = 
         rsname = "d_{0}.dat".format(str(lang_))
         names = Utils.getResourcesNames('pullenti.morph.properties', '.dat')
         for n in names: 
-            if (n.upper().endswith(rsname.upper())): 
+            if (Utils.endsWithString(n, rsname, True)): 
                 inf = Utils.getResourceInfo('pullenti.morph.properties', n)
                 if (inf is None): 
                     continue
@@ -54,7 +54,8 @@ class DerivateDictionary:
             if (w.spelling is None): 
                 continue
             tn = self._m_root
-            for i in range(len(w.spelling)):
+            i = 0
+            while i < len(w.spelling): 
                 k = ord(w.spelling[i])
                 tn1 = None
                 if (tn.nodes is None): 
@@ -66,13 +67,15 @@ class DerivateDictionary:
                     tn1 = ExplanTreeNode()
                     tn.nodes[k] = tn1
                 tn = tn1
+                i += 1
             tn._add_group(dg)
     
     def find(self, word : str, try_create : bool, lang_ : 'MorphLang') -> typing.List['DerivateGroup']:
         if (Utils.isNullOrEmpty(word)): 
             return None
         tn = self._m_root
-        for i in range(len(word)):
+        i = 0
+        while i < len(word): 
             k = ord(word[i])
             tn1 = None
             if (tn.nodes is None): 
@@ -85,7 +88,7 @@ class DerivateDictionary:
             tn = tn1
             if (tn._lazy is not None): 
                 tn._load()
-        else: i = len(word)
+            i += 1
         res = (None if i < len(word) else tn.groups)
         li = None
         if (isinstance(res, list)): 
@@ -118,7 +121,7 @@ class DerivateDictionary:
         ch1 = word[len(word) - 2]
         ch2 = word[len(word) - 3]
         if (ch0 == 'О' or ((ch0 == 'И' and ch1 == 'К'))): 
-            word1 = word[0 : (len(word) - 1)]
+            word1 = word[0:0+len(word) - 1]
             li = self.find(word1 + "ИЙ", False, lang_)
             if ((li) is not None): 
                 return li
@@ -130,14 +133,14 @@ class DerivateDictionary:
                 if ((li) is not None): 
                     return li
         elif (((ch0 == 'Я' or ch0 == 'Ь')) and ((word[len(word) - 2] == 'С'))): 
-            word1 = word[0 : (len(word) - 2)]
+            word1 = word[0:0+len(word) - 2]
             if (word1 == "ЯТЬ"): 
                 return None
             li = self.find(word1, False, lang_)
             if ((li) is not None): 
                 return li
         elif (ch0 == 'Е' and ch1 == 'Ь'): 
-            word1 = word[0 : (len(word) - 2)] + "ИЕ"
+            word1 = word[0:0+len(word) - 2] + "ИЕ"
             li = self.find(word1, False, lang_)
             if ((li) is not None): 
                 return li
@@ -146,15 +149,15 @@ class DerivateDictionary:
             word1 = None
             if (ch3 != 'Н'): 
                 if (LanguageHelper.is_cyrillic_vowel(ch3)): 
-                    word1 = (word[0 : (len(word) - 3)] + "Н" + word[len(word) - 3 : ])
+                    word1 = (word[0:0+len(word) - 3] + "Н" + word[len(word) - 3:])
             else: 
-                word1 = (word[0 : (len(word) - 4)] + word[len(word) - 3 : ])
+                word1 = (word[0:0+len(word) - 4] + word[len(word) - 3:])
             if (word1 is not None): 
                 li = self.find(word1, False, lang_)
                 if ((li) is not None): 
                     return li
         if (ch0 == 'Й' and ch1 == 'О'): 
-            word2 = word[0 : (len(word) - 2)]
+            word2 = word[0:0+len(word) - 2]
             li = self.find(word2 + "ИЙ", False, lang_)
             if ((li) is not None): 
                 return li
@@ -165,16 +168,16 @@ class DerivateDictionary:
             return None
         len0_ = len(word) - 4
         i = 1
-        first_pass2665 = True
+        first_pass3608 = True
         while True:
-            if first_pass2665: first_pass2665 = False
+            if first_pass3608: first_pass3608 = False
             else: i += 1
             if (not (i <= len0_)): break
-            rest = word[i : ]
+            rest = word[i:]
             li1 = self.find(rest, False, lang_)
             if (li1 is None): 
                 continue
-            pref = word[0 : (i)]
+            pref = word[0:0+i]
             gen = list()
             for dg in li1: 
                 if (not dg.is_dummy and not dg.is_generated): 

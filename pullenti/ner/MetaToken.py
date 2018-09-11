@@ -1,11 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
+import io
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Token import Token
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphGender import MorphGender
@@ -18,7 +19,7 @@ class MetaToken(Token):
     def __init__(self, begin : 'Token', end : 'Token', kit_ : 'AnalysisKit'=None) -> None:
         self._m_begin_token = None
         self._m_end_token = None
-        super().__init__(Utils.ifNotNull(kit_, begin.kit), (0 if begin is None else begin.begin_char), (0 if end is None else end.end_char))
+        super().__init__((kit_ if kit_ is not None else ((begin.kit if begin is not None else None))), (0 if begin is None else begin.begin_char), (0 if end is None else end.end_char))
         if (begin == self or end == self): 
             pass
         self._m_begin_token = begin
@@ -128,7 +129,7 @@ class MetaToken(Token):
         return self._m_end_token.whitespaces_after_count
     
     def __str__(self) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         t = self._m_begin_token
         while t is not None: 
             if (res.tell() > 0 and t.is_whitespace_before): 
@@ -158,16 +159,15 @@ class MetaToken(Token):
         from pullenti.ner.core.MiscHelper import MiscHelper
         attr = GetTextAttr.NO
         if (single_number): 
-            attr = Utils.valToEnum(attr | GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE, GetTextAttr)
+            attr = (Utils.valToEnum((attr) | (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE), GetTextAttr))
         else: 
-            attr = Utils.valToEnum(attr | GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE, GetTextAttr)
+            attr = (Utils.valToEnum((attr) | (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE), GetTextAttr))
         if (keep_chars): 
-            attr = Utils.valToEnum(attr | GetTextAttr.KEEPREGISTER, GetTextAttr)
+            attr = (Utils.valToEnum((attr) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
         if (self.begin_token == self.end_token): 
             return self.begin_token.get_normal_case_text(mc, single_number, gender, keep_chars)
         else: 
             return MiscHelper.get_text_value(self.begin_token, self.end_token, attr)
-
     
     @staticmethod
     def _new590(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'MetaToken':
@@ -182,7 +182,7 @@ class MetaToken(Token):
         return res
     
     @staticmethod
-    def _new2174(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
+    def _new2183(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.tag = _arg3
         res.morph = _arg4

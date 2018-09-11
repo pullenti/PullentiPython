@@ -1,11 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 
 
 class Slot:
@@ -57,7 +57,7 @@ class Slot:
             elif (isinstance(self.__m_value, str)): 
                 pass
             else: 
-                self.__m_value = str(self.__m_value)
+                self.__m_value = (str(self.__m_value))
         else: 
             pass
         return value_
@@ -90,7 +90,7 @@ class Slot:
     def to_string(self, lang : 'MorphLang') -> str:
         from pullenti.ner.Referent import Referent
         from pullenti.morph.MorphLang import MorphLang
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         attr = self.defining_feature
         if (attr is not None): 
             if (self.count > 0): 
@@ -133,14 +133,12 @@ class Slot:
         return self.__tag
     
     def delete(self) -> None:
-        """ Удалить слот из сущности """
         if (self.owner is not None and self in self.owner.slots): 
             self.owner.slots.remove(self)
             self.owner = None
-
     
     @staticmethod
-    def _new1073(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
+    def _new1075(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
         res = Slot()
         res.type_name = _arg1
         res.tag = _arg2
@@ -148,7 +146,7 @@ class Slot:
         return res
     
     @staticmethod
-    def _new2649(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
+    def _new2662(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
         res = Slot()
         res.type_name = _arg1
         res.value = _arg2

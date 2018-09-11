@@ -1,16 +1,15 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
-
 
 
 class DecreeChangeReferent(Referent):
@@ -37,7 +36,7 @@ class DecreeChangeReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         from pullenti.ner.decree.internal.MetaDecreeChange import MetaDecreeChange
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         if (self.kind != DecreeChangeKind.UNDEFINED): 
             print("{0} ".format(MetaDecreeChange.KIND_FEATURE.convert_inner_value_to_outer_value(self.kind, lang)), end="", file=res, flush=True)
         if (self.is_owner_name_and_text): 
@@ -74,7 +73,7 @@ class DecreeChangeReferent(Referent):
             res = Utils.valToEnum(s, DecreeChangeKind)
             if (isinstance(res, DecreeChangeKind)): 
                 return Utils.valToEnum(res, DecreeChangeKind)
-        except Exception as ex1078: 
+        except Exception as ex1080: 
             pass
         return DecreeChangeKind.UNDEFINED
     
@@ -89,7 +88,7 @@ class DecreeChangeReferent(Referent):
         """ Структурный элемент, в который вносится изменение (м.б. несколько) """
         res = list()
         for s in self.slots: 
-            if (s.type_name == DecreeChangeReferent.ATTR_OWNER and isinstance(s.value, Referent)): 
+            if (s.type_name == DecreeChangeReferent.ATTR_OWNER and (isinstance(s.value, Referent))): 
                 res.append(s.value if isinstance(s.value, Referent) else None)
         return res
     
@@ -98,7 +97,7 @@ class DecreeChangeReferent(Referent):
         """ Внутренние изменения """
         res = list()
         for s in self.slots: 
-            if (s.type_name == DecreeChangeReferent.ATTR_CHILD and isinstance(s.value, DecreeChangeReferent)): 
+            if (s.type_name == DecreeChangeReferent.ATTR_CHILD and (isinstance(s.value, DecreeChangeReferent))): 
                 res.append(s.value if isinstance(s.value, DecreeChangeReferent) else None)
         return res
     
@@ -175,10 +174,9 @@ class DecreeChangeReferent(Referent):
                 else: 
                     return False
         return True
-
     
     @staticmethod
-    def _new1064(_arg1 : 'DecreeChangeKind') -> 'DecreeChangeReferent':
+    def _new1066(_arg1 : 'DecreeChangeKind') -> 'DecreeChangeReferent':
         res = DecreeChangeReferent()
         res.kind = _arg1
         return res

@@ -1,20 +1,19 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-import math
 import io
+import math
 import typing
-from pullenti.ntopy.Utils import Utils
-from pullenti.ntopy.Misc import RefOutArgWrapper
+from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Referent import Referent
 from pullenti.ner._org.OrganizationKind import OrganizationKind
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner._org.OrgProfile import OrgProfile
-
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 from pullenti.ner._org.internal.OrgOwnershipHelper import OrgOwnershipHelper
 
@@ -62,12 +61,11 @@ class OrganizationReferent(Referent):
     ATTR_PROFILE = "PROFILE"
     
     SHOW_NUMBER_ON_FIRST_POSITION = False
-    """ При выводе в ToString() первым ставить номер, если есть """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         from pullenti.ner._org.internal.OrgItemTypeToken import OrgItemTypeToken
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         is_dep = self.kind == OrganizationKind.DEPARTMENT
         name = None
         altname = None
@@ -108,14 +106,14 @@ class OrganizationReferent(Referent):
         if (name is not None): 
             if (altname is not None): 
                 if (altname in name.replace(" ", "")): 
-                    altname = None
+                    altname = (None)
             if (altname is not None and ((len(altname) > 30 or len(altname) > (math.floor(len(name) / 2))))): 
-                altname = None
+                altname = (None)
             if (altname is None): 
                 for s in self.slots: 
                     if (s.type_name == OrganizationReferent.ATTR_NAME): 
                         if (MiscHelper.can_be_equal_cyr_and_latss(name, s.value)): 
-                            altname = s.value
+                            altname = (s.value)
                             break
         else: 
             for s in self.slots: 
@@ -152,12 +150,14 @@ class OrganizationReferent(Referent):
         if (fams is not None): 
             fams.sort()
             print(" имени ", end="", file=res)
-            for i in range(len(fams)):
+            i = 0
+            while i < len(fams): 
                 if (i > 0 and ((i + 1) < len(fams))): 
                     print(", ", end="", file=res)
                 elif (i > 0): 
                     print(" и ", end="", file=res)
                 print(fams[i], end="", file=res)
+                i += 1
         if (altname is not None and not is_dep): 
             print(" ({0})".format(MiscHelper.convert_first_char_upper_and_other_lower(altname)), end="", file=res, flush=True)
         if (not short_variant and self.owner is not None): 
@@ -174,9 +174,9 @@ class OrganizationReferent(Referent):
                     for t in self.types: 
                         if (typ is None or len(typ) > len(t)): 
                             typ = t
-                if (name is not None and not Utils.isNullOrEmpty(typ) and not typ[0].isupper()): 
+                if (name is not None and not Utils.isNullOrEmpty(typ) and not str.isupper(typ[0])): 
                     if (typ.upper() in name.upper()): 
-                        typ = None
+                        typ = (None)
                 if (typ is not None): 
                     print(", {0}".format(typ), end="", file=res, flush=True)
             for ss in self.slots: 
@@ -188,7 +188,7 @@ class OrganizationReferent(Referent):
         if (not short_variant): 
             if (is_dep or out_own_in_name): 
                 for ss in self.slots: 
-                    if (ss.type_name == OrganizationReferent.ATTR_HIGHER and isinstance(ss.value, Referent) and (lev < 20)): 
+                    if (ss.type_name == OrganizationReferent.ATTR_HIGHER and (isinstance(ss.value, Referent)) and (lev < 20)): 
                         hi = (ss.value if isinstance(ss.value, OrganizationReferent) else None)
                         if (hi is not None): 
                             tmp = list()
@@ -305,7 +305,7 @@ class OrganizationReferent(Referent):
                 elif (isinstance(s.value, str)): 
                     str0_ = (s.value if isinstance(s.value, str) else None)
                     if (str0_.startswith(pref) and len(str0_) > (len(pref) + 1)): 
-                        return str0_[len(pref) + 1 : ]
+                        return str0_[len(pref) + 1:]
         return None
     
     __m_empty_names = None
@@ -325,35 +325,35 @@ class OrganizationReferent(Referent):
         num.value = 0
         if (name is None or (len(name) < 1)): 
             return None
-        if (name[0].isdigit() and name.find(' ') > 0): 
-            inoutarg2206 = RefOutArgWrapper(0)
-            inoutres2207 = Utils.tryParseInt(name[0 : (name.find(' '))], inoutarg2206)
-            i = inoutarg2206.value
-            if (inoutres2207): 
+        if (str.isdigit(name[0]) and name.find(' ') > 0): 
+            inoutarg2215 = RefOutArgWrapper(0)
+            inoutres2216 = Utils.tryParseInt(name[0:0+name.find(' ')], inoutarg2215)
+            i = inoutarg2215.value
+            if (inoutres2216): 
                 if (i > 1): 
                     num.value = i
-                    name = name[name.find(' ') : ].strip()
-        elif (name[len(name) - 1].isdigit()): 
+                    name = name[name.find(' '):].strip()
+        elif (str.isdigit(name[len(name) - 1])): 
             for i in range(len(name) - 1, -1, -1):
-                if (not name[i].isdigit()): 
+                if (not str.isdigit(name[i])): 
                     break
             else: i = -1
             if (i >= 0 and name[i] == '.'): 
                 pass
             else: 
-                inoutres2208 = Utils.tryParseInt(name[i + 1 : ], num)
-                if (i > 0 and inoutres2208 and num.value > 0): 
+                inoutres2217 = Utils.tryParseInt(name[i + 1:], num)
+                if (i > 0 and inoutres2217 and num.value > 0): 
                     if (i < 1): 
                         return None
-                    name = name[0 : (i)].strip()
+                    name = name[0:0+i].strip()
                     if (len(name) > 0 and name[len(name) - 1] == '-'): 
-                        name = name[0 : (len(name) - 1)].strip()
+                        name = name[0:0+len(name) - 1].strip()
         return self.__correct_name0(name)
     
     def __correct_name0(self, name : str) -> str:
         name = name.upper()
-        if (len(name) > 2 and not name[len(name) - 1].isalnum() and Utils.isWhitespace(name[len(name) - 2])): 
-            name = (name[0 : (len(name) - 2)] + name[len(name) - 1 : ])
+        if (len(name) > 2 and not str.isalnum(name[len(name) - 1]) and Utils.isWhitespace(name[len(name) - 2])): 
+            name = (name[0:0+len(name) - 2] + name[len(name) - 1:])
         if (" НА СТ." in name): 
             name = name.replace(" НА СТ.", " НА СТАНЦИИ")
         return self.__correct_type(name)
@@ -361,11 +361,16 @@ class OrganizationReferent(Referent):
     def __correct_type(self, name : str) -> str:
         if (name is None): 
             return None
-        tmp = Utils.newStringIO(None)
+        tmp = io.StringIO()
         not_empty = False
-        for i in range(len(name)):
+        i = 0
+        first_pass3989 = True
+        while True:
+            if first_pass3989: first_pass3989 = False
+            else: i += 1
+            if (not (i < len(name))): break
             ch = name[i]
-            if (ch.isalnum()): 
+            if (str.isalnum(ch)): 
                 not_empty = True
             elif (ch != '&' and ch != ',' and ch != '.'): 
                 ch = ' '
@@ -395,9 +400,9 @@ class OrganizationReferent(Referent):
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner.TextToken import TextToken
         from pullenti.morph.Morphology import Morphology
-        inoutarg2209 = RefOutArgWrapper(0)
-        s = self.__correct_name(name, inoutarg2209)
-        num = inoutarg2209.value
+        inoutarg2218 = RefOutArgWrapper(0)
+        s = self.__correct_name(name, inoutarg2218)
+        num = inoutarg2218.value
         if (s is None): 
             if (num > 0 and self.number is None): 
                 self.number = str(num)
@@ -406,15 +411,15 @@ class OrganizationReferent(Referent):
             pass
         i = s.find(' ')
         if (i == 2 and s[1] == 'К' and ((i + 3) < len(s))): 
-            self.add_slot(OrganizationReferent.ATTR_TYPE, s[0 : 2], False, 0)
-            s = s[3 : ].strip()
+            self.add_slot(OrganizationReferent.ATTR_TYPE, s[0:0+2], False, 0)
+            s = s[3:].strip()
         if (self.kind == OrganizationKind.BANK or "БАНК" in s): 
             if (s.startswith("КБ ")): 
                 self.add_type_str("коммерческий банк")
-                s = s[3 : ]
+                s = s[3:]
             elif (s.startswith("АКБ ")): 
                 self.add_type_str("акционерный коммерческий банк")
-                s = s[3 : ]
+                s = s[3:]
         if (num > 0): 
             if (len(s) > 10): 
                 self.number = str(num)
@@ -423,7 +428,7 @@ class OrganizationReferent(Referent):
         cou = 1
         if (t is not None and not t.chars.is_letter and BracketHelper.is_bracket(t, False)): 
             t = t.next0_
-        if ((isinstance(t, TextToken) and ((' ') not in s) and len(s) > 3) and s == (t if isinstance(t, TextToken) else None).term): 
+        if (((isinstance(t, TextToken)) and (s.find(' ') < 0) and len(s) > 3) and s == (t if isinstance(t, TextToken) else None).term): 
             mt = Morphology.process(s, t.morph.language, None)
             if (mt is not None and len(mt) == 1): 
                 snorm = mt[0].lemma
@@ -437,8 +442,8 @@ class OrganizationReferent(Referent):
                                     if (mt[0].lemma == self.__m_name_single_normal_real): 
                                         cou += self.slots[ii].count
                                         del self.slots[ii]
-                                        self.__m_name_vars = None
-                                        self.__m_name_hashs = None
+                                        self.__m_name_vars = (None)
+                                        self.__m_name_hashs = (None)
                 elif (snorm == self.__m_name_single_normal_real and snorm is not None): 
                     s = snorm
         for a in self.slots: 
@@ -452,10 +457,10 @@ class OrganizationReferent(Referent):
                 if (Utils.compareStrings(s, n, True) == 0): 
                     return
                 if (s.startswith(n + " ")): 
-                    s = s[len(n) + 1 : ]
+                    s = s[len(n) + 1:]
         self.add_slot(OrganizationReferent.ATTR_NAME, s, False, 1)
         if (LanguageHelper.ends_with(s, " ПО")): 
-            s = (s[0 : (len(s) - 2)] + "ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ")
+            s = (s[0:0+len(s) - 2] + "ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ")
             self.add_slot(OrganizationReferent.ATTR_NAME, s, False, 0)
         self._correct_data(remove_long_gov_names)
     
@@ -467,9 +472,9 @@ class OrganizationReferent(Referent):
                 return
             if (typ.name is not None and len(typ.name) > len(typ.typ)): 
                 num = 0
-                inoutarg2210 = RefOutArgWrapper(0)
-                s = self.__correct_name(typ.name, inoutarg2210)
-                num = inoutarg2210.value
+                inoutarg2219 = RefOutArgWrapper(0)
+                s = self.__correct_name(typ.name, inoutarg2219)
+                num = inoutarg2219.value
                 if (len(s) > len(typ.typ)): 
                     self.add_slot(OrganizationReferent.ATTR_NAME, s, False, cou)
                 if (num > 0 and typ.is_dep and self.number is None): 
@@ -484,9 +489,9 @@ class OrganizationReferent(Referent):
                 self.add_slot(OrganizationReferent.ATTR_NAME, "{0} {1}".format(typ.typ.upper(), s), False, cou)
                 if (typ.name is not None): 
                     num = 0
-                    inoutarg2211 = RefOutArgWrapper(0)
-                    ss = self.__correct_name(typ.name, inoutarg2211)
-                    num = inoutarg2211.value
+                    inoutarg2220 = RefOutArgWrapper(0)
+                    ss = self.__correct_name(typ.name, inoutarg2220)
+                    num = inoutarg2220.value
                     if (ss is not None): 
                         self.add_type_str(ss)
                         self.add_slot(OrganizationReferent.ATTR_NAME, "{0} {1}".format(ss, s), False, cou)
@@ -494,7 +499,7 @@ class OrganizationReferent(Referent):
                             self.number = str(num)
             if (LanguageHelper.ends_with_ex(name, " ОБЛАСТИ", " РАЙОНА", " КРАЯ", " РЕСПУБЛИКИ")): 
                 ii = name.rfind(' ')
-                self.add_name_str(name[0 : (ii)], typ, cou)
+                self.add_name_str(name[0:0+ii], typ, cou)
         self._correct_data(True)
     
     @property
@@ -511,7 +516,7 @@ class OrganizationReferent(Referent):
                         str0_ = "Unit"
                     v = Utils.valToEnum(str0_, OrgProfile)
                     res.append(v)
-                except Exception as ex2212: 
+                except Exception as ex2221: 
                     pass
         return res
     
@@ -558,9 +563,9 @@ class OrganizationReferent(Referent):
             if (typ.name is not None): 
                 if (typ.name_is_name): 
                     self.add_name(typ.name, True, None)
-                elif (typ.typ == "министерство" and typ.name.upper().startswith(typ.typ + " ".upper())): 
+                elif (typ.typ == "министерство" and Utils.startsWithString(typ.name, typ.typ + " ", True)): 
                     self.add_name(typ.name, True, None)
-                elif (typ.typ.endswith("электростанция") and typ.name.upper().endswith(" " + typ.typ.upper())): 
+                elif (typ.typ.endswith("электростанция") and Utils.endsWithString(typ.name, " " + typ.typ, True)): 
                     self.add_name(typ.name, True, None)
                 elif (self.find_slot(OrganizationReferent.ATTR_NAME, None, True) is not None and self.find_slot(OrganizationReferent.ATTR_NAME, typ.name, True) is None): 
                     self.add_type_str(typ.name.lower())
@@ -571,9 +576,9 @@ class OrganizationReferent(Referent):
                             sl = self.find_slot(OrganizationReferent.ATTR_NAME, typ.name, True)
                             if (sl is not None): 
                                 self.slots.remove(sl)
-                            self.add_name(ss[0 : (len(ss) - len(typ.typ) - 1)].upper(), True, None)
+                            self.add_name(ss[0:0+len(ss) - len(typ.typ) - 1].upper(), True, None)
                             self.add_name(ss.upper(), True, None)
-                            ss = None
+                            ss = (None)
                     if (ss is not None): 
                         self.add_type_str(ss)
                 if (typ.alt_name is not None): 
@@ -607,7 +612,7 @@ class OrganizationReferent(Referent):
             return
         ok = True
         for n in self.names: 
-            if (n.upper().startswith(typ.upper())): 
+            if (Utils.startsWithString(n, typ, True)): 
                 ok = False
                 break
         if (not ok): 
@@ -619,12 +624,12 @@ class OrganizationReferent(Referent):
         res = list(self.types)
         res.sort()
         i = 0
-        first_pass3018 = True
+        first_pass3990 = True
         while True:
-            if first_pass3018: first_pass3018 = False
+            if first_pass3990: first_pass3990 = False
             else: i += 1
             if (not (i < len(res))): break
-            if (res[i][0].islower()): 
+            if (str.islower(res[i][0])): 
                 into = False
                 for r in res: 
                     if (r != res[i] and res[i] in r): 
@@ -745,7 +750,7 @@ class OrganizationReferent(Referent):
         from pullenti.ner.geo.GeoReferent import GeoReferent
         res = None
         for s in self.slots: 
-            if (s.type_name == OrganizationReferent.ATTR_GEO and isinstance(s.value, GeoReferent)): 
+            if (s.type_name == OrganizationReferent.ATTR_GEO and (isinstance(s.value, GeoReferent))): 
                 if (res is None): 
                     res = list()
                 res.append(s.value if isinstance(s.value, GeoReferent) else None)
@@ -758,7 +763,7 @@ class OrganizationReferent(Referent):
         if (isinstance(r, GeoReferent)): 
             geo_ = (r if isinstance(r, GeoReferent) else None)
             for s in self.slots: 
-                if (s.type_name == OrganizationReferent.ATTR_GEO and isinstance(s.value, GeoReferent)): 
+                if (s.type_name == OrganizationReferent.ATTR_GEO and (isinstance(s.value, GeoReferent))): 
                     gg = (s.value if isinstance(s.value, GeoReferent) else None)
                     if (gg.can_be_equals(geo_, Referent.EqualType.WITHINONETEXT) or gg.higher == geo_): 
                         return True
@@ -1047,10 +1052,10 @@ class OrganizationReferent(Referent):
                 for v in self._name_vars.items(): 
                     if (typ == Referent.EqualType.DIFFERENTTEXTS and v[1]): 
                         continue
-                    inoutarg2213 = RefOutArgWrapper(False)
-                    inoutres2214 = Utils.tryGetValue(org0_._name_vars, v[0], inoutarg2213)
-                    b = inoutarg2213.value
-                    if (not inoutres2214): 
+                    inoutarg2222 = RefOutArgWrapper(False)
+                    inoutres2223 = Utils.tryGetValue(org0_._name_vars, v[0], inoutarg2222)
+                    b = inoutarg2222.value
+                    if (not inoutres2223): 
                         continue
                     if (typ == Referent.EqualType.DIFFERENTTEXTS and b): 
                         continue
@@ -1148,7 +1153,7 @@ class OrganizationReferent(Referent):
                     if (ty in typs): 
                         return True
         if (typ == Referent.EqualType.DIFFERENTTEXTS): 
-            return self.__str__() == str(org0_)
+            return str(self) == str(org0_)
         if (empty): 
             if (((len(geos1) > 0 and len(geos2) > 0)) or k1 == OrganizationKind.DEPARTMENT or k1 == OrganizationKind.JUSTICE): 
                 typs = org0_.types
@@ -1174,8 +1179,8 @@ class OrganizationReferent(Referent):
     
     def add_slot(self, attr_name : str, attr_value : object, clear_old_value : bool, stat_count : int=0) -> 'Slot':
         if (attr_name == OrganizationReferent.ATTR_NAME or attr_name == OrganizationReferent.ATTR_TYPE): 
-            self.__m_name_vars = None
-            self.__m_name_hashs = None
+            self.__m_name_vars = (None)
+            self.__m_name_hashs = (None)
         elif (attr_name == OrganizationReferent.ATTR_HIGHER): 
             self.__m_parent_calc = False
         elif (attr_name == OrganizationReferent.ATTR_NUMBER): 
@@ -1224,7 +1229,7 @@ class OrganizationReferent(Referent):
                 n = self.find_slot(OrganizationReferent.ATTR_NAME, t.replace('.', ' '), True)
                 if (n is None): 
                     self.add_slot(OrganizationReferent.ATTR_NAME, t.replace('.', ' '), False, 0)
-            elif ((' ') in t): 
+            elif (t.find(' ') >= 0): 
                 n = self.find_slot(OrganizationReferent.ATTR_NAME, t.replace(" ", ""), True)
                 if (n is not None and n.count == 0): 
                     self.slots.remove(n)
@@ -1252,8 +1257,8 @@ class OrganizationReferent(Referent):
                         if (n.startswith(nn) and len(n) > len(nn)): 
                             del self.slots[i]
                             break
-        self.__m_name_vars = None
-        self.__m_name_hashs = None
+        self.__m_name_vars = (None)
+        self.__m_name_hashs = (None)
         self.__m_kind_calc = False
         self._ext_ontology_attached = False
     
@@ -1302,8 +1307,8 @@ class OrganizationReferent(Referent):
                                 break
                         if (not nn): 
                             self.add_slot(OrganizationReferent.ATTR_NAME, "{0} {1}".format(nam, typs[0]).upper(), False, 0)
-        self.__m_name_vars = None
-        self.__m_name_hashs = None
+        self.__m_name_vars = (None)
+        self.__m_name_hashs = (None)
         self.__m_kind_calc = False
         self._ext_ontology_attached = False
     
@@ -1316,10 +1321,10 @@ class OrganizationReferent(Referent):
                 if (not s in vars0_): 
                     vars0_.append(s)
                 for t in typs: 
-                    if (s.upper().startswith(t.upper())): 
+                    if (Utils.startsWithString(s, t, True)): 
                         if ((len(s) < (len(t) + 4)) or s[len(t)] != ' '): 
                             continue
-                        ss = s[len(t) + 1 : ]
+                        ss = s[len(t) + 1:]
                         if (not ss in vars0_): 
                             vars0_.append(ss)
         return vars0_
@@ -1339,9 +1344,11 @@ class OrganizationReferent(Referent):
                     vars0_.append(s)
                 if (not pure_names): 
                     sp = 0
-                    for jj in range(len(s)):
+                    jj = 0
+                    while jj < len(s): 
                         if (s[jj] == ' '): 
                             sp += 1
+                        jj += 1
                     if (sp == 1): 
                         s = s.replace(" ", "")
                         if (not s in vars0_): 
@@ -1407,13 +1414,6 @@ class OrganizationReferent(Referent):
     
     @staticmethod
     def can_be_second_definition(master : 'OrganizationReferent', slave : 'OrganizationReferent') -> bool:
-        """ Проверка, что организация slave может быть дополнительным описанием основной организации
-        
-        Args:
-            master(OrganizationReferent): 
-            slave(OrganizationReferent): 
-        
-        """
         if (master is None or slave is None): 
             return False
         mtypes = master.types
@@ -1471,7 +1471,8 @@ class OrganizationReferent(Referent):
     def __check_acronym(acr : str, text : str) -> bool:
         i = 0
         j = 0
-        for i in range(len(acr)):
+        i = 0
+        while i < len(acr): 
             while j < len(text): 
                 if (text[j] == acr[i]): 
                     break
@@ -1479,18 +1480,11 @@ class OrganizationReferent(Referent):
             if (j >= len(text)): 
                 break
             j += 1
-        else: i = len(acr)
+            i += 1
         return i >= len(acr)
     
     @staticmethod
     def can_be_higher(higher_ : 'OrganizationReferent', lower : 'OrganizationReferent') -> bool:
-        """ Проверка на отношения "вышестоящий - нижестоящий"
-        
-        Args:
-            higher_(OrganizationReferent): 
-            lower(OrganizationReferent): 
-        
-        """
         return OrgOwnershipHelper.can_be_higher(higher_, lower, False)
     
     # static constructor for class OrganizationReferent

@@ -1,11 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+import struct
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.morph.MorphClass import MorphClass
@@ -28,7 +29,7 @@ class NumberToken(MetaToken):
         return True
     
     def __str__(self) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         print("{0} {1}".format(self.value, Utils.enumToString(self.typ)), end="", file=res, flush=True)
         if (self.morph is not None): 
             print(" {0}".format(str(self.morph)), end="", file=res, flush=True)
@@ -47,8 +48,7 @@ class NumberToken(MetaToken):
         buf = Utils.newArrayOfBytes(8, 0)
         Utils.readIO(stream, buf, 0, 8)
         self.value = int.from_bytes(buf[0:0+8], byteorder="little")
-        self.typ = Utils.valToEnum(SerializerHelper.deserialize_int(stream), NumberSpellingType)
-
+        self.typ = (Utils.valToEnum(SerializerHelper.deserialize_int(stream), NumberSpellingType))
     
     @staticmethod
     def _new585(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : 'NumberSpellingType', _arg5 : 'MorphCollection') -> 'NumberToken':

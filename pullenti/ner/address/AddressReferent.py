@@ -1,16 +1,15 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import typing
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.address.AddressHouseType import AddressHouseType
 from pullenti.ner.address.AddressBuildingType import AddressBuildingType
-
 from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
 from pullenti.ner.address.AddressDetailType import AddressDetailType
 
@@ -80,7 +79,7 @@ class AddressReferent(Referent):
         """ Улица (кстати, их может быть несколько) """
         res = list()
         for s in self.slots: 
-            if (s.type_name == AddressReferent.ATTR_STREET and isinstance(s.value, Referent)): 
+            if (s.type_name == AddressReferent.ATTR_STREET and (isinstance(s.value, Referent))): 
                 res.append(s.value if isinstance(s.value, Referent) else None)
         return res
     
@@ -281,9 +280,9 @@ class AddressReferent(Referent):
         from pullenti.ner.geo.GeoReferent import GeoReferent
         res = list()
         for a in self.slots: 
-            if (a.type_name == AddressReferent.ATTR_GEO and isinstance(a.value, GeoReferent)): 
+            if (a.type_name == AddressReferent.ATTR_GEO and (isinstance(a.value, GeoReferent))): 
                 res.append(a.value if isinstance(a.value, GeoReferent) else None)
-            elif (a.type_name == AddressReferent.ATTR_STREET and isinstance(a.value, Referent)): 
+            elif (a.type_name == AddressReferent.ATTR_STREET and (isinstance(a.value, Referent))): 
                 for s in (a.value if isinstance(a.value, Referent) else None).slots: 
                     if (isinstance(s.value, GeoReferent)): 
                         res.append(s.value if isinstance(s.value, GeoReferent) else None)
@@ -368,7 +367,7 @@ class AddressReferent(Referent):
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int) -> str:
         from pullenti.ner.address.internal.MetaAddress import MetaAddress
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         str0_ = self.get_string_value(AddressReferent.ATTR_DETAIL)
         if (str0_ is not None): 
             str0_ = (MetaAddress._global_meta.detail_feature.convert_inner_value_to_outer_value(str0_, lang) if isinstance(MetaAddress._global_meta.detail_feature.convert_inner_value_to_outer_value(str0_, lang), str) else None)
@@ -387,10 +386,12 @@ class AddressReferent(Referent):
         else: 
             if (res.tell() > 0): 
                 print(' ', end="", file=res)
-            for i in range(len(strs)):
+            i = 0
+            while i < len(strs): 
                 if (i > 0): 
                     print(", ", end="", file=res)
                 print(strs[i].to_string(True, lang, 0), end="", file=res)
+                i += 1
         if (self.kilometer is not None): 
             print(" {0}км.".format(self.kilometer), end="", file=res, flush=True)
         if (self.house is not None): 
@@ -437,7 +438,7 @@ class AddressReferent(Referent):
         if (isinstance(kladr, Referent)): 
             print(" (ФИАС: {0}".format(Utils.ifNotNull((kladr if isinstance(kladr, Referent) else None).get_string_value("GUID"), "?")), end="", file=res, flush=True)
             for s in self.slots: 
-                if (s.type_name == AddressReferent.ATTR_FIAS and isinstance(s.value, Referent) and s.value != kladr): 
+                if (s.type_name == AddressReferent.ATTR_FIAS and (isinstance(s.value, Referent)) and s.value != kladr): 
                     print(", {0}".format(Utils.ifNotNull((s.value if isinstance(s.value, Referent) else None).get_string_value("GUID"), "?")), end="", file=res, flush=True)
             print(')', end="", file=res)
         bti = self.get_string_value(AddressReferent.ATTR_BTI)
@@ -552,9 +553,9 @@ class AddressReferent(Referent):
         from pullenti.ner.geo.GeoReferent import GeoReferent
         geos_ = list()
         for a in self.slots: 
-            if (a.type_name == AddressReferent.ATTR_GEO and isinstance(a.value, GeoReferent)): 
+            if (a.type_name == AddressReferent.ATTR_GEO and (isinstance(a.value, GeoReferent))): 
                 geos_.append(a.value if isinstance(a.value, GeoReferent) else None)
-            elif (a.type_name == AddressReferent.ATTR_STREET and isinstance(a.value, Referent)): 
+            elif (a.type_name == AddressReferent.ATTR_STREET and (isinstance(a.value, Referent))): 
                 for s in (a.value if isinstance(a.value, Referent) else None).slots: 
                     if (isinstance(s.value, GeoReferent)): 
                         geos_.append(s.value if isinstance(s.value, GeoReferent) else None)
@@ -577,9 +578,11 @@ class AddressReferent(Referent):
         if (len(geos_) == 2): 
             reg = None
             cit = None
-            for ii in range(len(geos_)):
+            ii = 0
+            while ii < len(geos_): 
                 if (geos_[ii].is_territory and geos_[ii].higher is not None): 
                     geos_[ii] = geos_[ii].higher
+                ii += 1
             if (geos_[0].is_city and geos_[1].is_region): 
                 cit = geos_[0]
                 reg = geos_[1]

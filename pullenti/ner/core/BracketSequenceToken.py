@@ -1,10 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphGender import MorphGender
@@ -21,7 +21,7 @@ class BracketSequenceToken(MetaToken):
     @property
     def is_quote_type(self) -> bool:
         """ Признак обрамления кавычками (если false, то м.б. [...], (...), {...}) """
-        return (self.open_char) not in "{(["
+        return "{([".find(self.open_char) < 0
     
     @property
     def open_char(self) -> 'char':
@@ -40,9 +40,9 @@ class BracketSequenceToken(MetaToken):
         from pullenti.ner.core.MiscHelper import MiscHelper
         attr = GetTextAttr.NO
         if (single_number): 
-            attr = Utils.valToEnum(attr | GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE, GetTextAttr)
+            attr = (Utils.valToEnum((attr) | (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE), GetTextAttr))
         else: 
-            attr = Utils.valToEnum(attr | GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE, GetTextAttr)
+            attr = (Utils.valToEnum((attr) | (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE), GetTextAttr))
         if (keep_chars): 
-            attr = Utils.valToEnum(attr | GetTextAttr.KEEPREGISTER, GetTextAttr)
+            attr = (Utils.valToEnum((attr) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
         return MiscHelper.get_text_value(self.begin_token, self.end_token, attr)

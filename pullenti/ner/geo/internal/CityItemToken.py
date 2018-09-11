@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
@@ -7,11 +7,10 @@
 import io
 import typing
 import math
-import xml.etree.ElementTree
+import xml.etree
 from enum import IntEnum
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
-
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
@@ -19,10 +18,8 @@ from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
 from pullenti.ner.address.internal.StreetItemType import StreetItemType
 from pullenti.morph.MorphNumber import MorphNumber
-
 from pullenti.ner.core.NumberExType import NumberExType
 from pullenti.morph.MorphGender import MorphGender
-
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.address.internal.ResourceHelper import ResourceHelper
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
@@ -49,7 +46,7 @@ class CityItemToken(MetaToken):
         super().__init__(begin, end, None)
     
     def __str__(self) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         print("{0}".format(Utils.enumToString(self.typ)), end="", file=res, flush=True)
         if (self.value is not None): 
             print(" {0}".format(self.value), end="", file=res, flush=True)
@@ -76,7 +73,7 @@ class CityItemToken(MetaToken):
         if (ci is None): 
             if (t is None): 
                 return None
-            if ((isinstance(t, TextToken) and t.is_value("МУНИЦИПАЛЬНЫЙ", None) and t.next0_ is not None) and t.next0_.is_value("ОБРАЗОВАНИЕ", None)): 
+            if (((isinstance(t, TextToken)) and t.is_value("МУНИЦИПАЛЬНЫЙ", None) and t.next0_ is not None) and t.next0_.is_value("ОБРАЗОВАНИЕ", None)): 
                 t1 = t.next0_.next0_
                 br = False
                 if (BracketHelper.can_be_start_of_sequence(t1, False, False)): 
@@ -95,9 +92,9 @@ class CityItemToken(MetaToken):
         li = list()
         li.append(ci)
         t = ci.end_token.next0_
-        first_pass2843 = True
+        first_pass3793 = True
         while True:
-            if first_pass2843: first_pass2843 = False
+            if first_pass3793: first_pass3793 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before): 
@@ -112,7 +109,7 @@ class CityItemToken(MetaToken):
                 if (ci.typ == CityItemToken.ItemType.NOUN and BracketHelper.can_be_start_of_sequence(t, False, False)): 
                     br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
                     if ((br is not None and (br.length_char < 50) and t.next0_.chars.is_cyrillic_letter) and not t.next0_.chars.is_all_lower): 
-                        ci0 = CityItemToken._new1100(br.begin_token, br.end_token, CityItemToken.ItemType.PROPERNAME)
+                        ci0 = CityItemToken._new1102(br.begin_token, br.end_token, CityItemToken.ItemType.PROPERNAME)
                         tt = br.end_token.previous
                         num = None
                         if (isinstance(tt, NumberToken)): 
@@ -124,7 +121,7 @@ class CityItemToken(MetaToken):
                         if (tt != br.begin_token.next0_): 
                             ci0.alt_value = MiscHelper.get_text_value(br.begin_token.next0_, tt, GetTextAttr.NO)
                         if (Utils.isNullOrEmpty(ci0.value)): 
-                            ci0 = None
+                            ci0 = (None)
                         elif (num is not None): 
                             ci0.value = "{0}-{1}".format(ci0.value, num)
                             if (ci0.alt_value is not None): 
@@ -179,12 +176,12 @@ class CityItemToken(MetaToken):
             return True
         if (((tt.term == "СОЧИ" or tt.is_value("КИЕВ", None) or tt.is_value("ПСКОВ", None)) or tt.is_value("БОСТОН", None) or tt.is_value("РИГА", None)) or tt.is_value("АСТАНА", None) or tt.is_value("АЛМАТЫ", None)): 
             return False
-        if (isinstance(tt.next0_, TextToken) and (tt.whitespaces_after_count < 2) and not tt.next0_.chars.is_all_lower): 
+        if ((isinstance(tt.next0_, TextToken)) and (tt.whitespaces_after_count < 2) and not tt.next0_.chars.is_all_lower): 
             if (tt.chars == tt.next0_.chars and not tt.chars.is_latin_letter and ((not tt.morph.case.is_genitive and not tt.morph.case.is_accusative))): 
                 mc = tt.next0_.get_morph_class_in_dictionary()
                 if (mc.is_proper_surname or mc.is_proper_secname): 
                     return True
-        if (isinstance(tt.previous, TextToken) and (tt.whitespaces_before_count < 2) and not tt.previous.chars.is_all_lower): 
+        if ((isinstance(tt.previous, TextToken)) and (tt.whitespaces_before_count < 2) and not tt.previous.chars.is_all_lower): 
             mc = tt.previous.get_morph_class_in_dictionary()
             if (mc.is_proper_surname): 
                 return True
@@ -210,22 +207,22 @@ class CityItemToken(MetaToken):
         t0 = tt.previous
         if (t0 is not None and ((t0.is_char(',') or t0.morph.class0_.is_conjunction))): 
             t0 = t0.previous
-        if (t0 is not None and isinstance(t0.get_referent(), GeoReferent)): 
+        if (t0 is not None and (isinstance(t0.get_referent(), GeoReferent))): 
             return False
         t1 = tt.next0_
         if (t1 is not None and ((t1.is_char(',') or t1.morph.class0_.is_conjunction))): 
             t1 = t1.next0_
-        if (CityItemToken.__m_recursive == 0): 
-            CityItemToken.__m_recursive += 1
+        if (CityItemToken.M_RECURSIVE == 0): 
+            CityItemToken.M_RECURSIVE += 1
             cit = CityItemToken.__try_parse(t1, None, False, None)
-            CityItemToken.__m_recursive -= 1
+            CityItemToken.M_RECURSIVE -= 1
             if (cit is None): 
                 return True
             if (cit.typ == CityItemToken.ItemType.NOUN or cit.typ == CityItemToken.ItemType.CITY): 
                 return False
         return True
     
-    __m_recursive = 0
+    M_RECURSIVE = 0
     
     @staticmethod
     def try_parse(t : 'Token', loc : 'IntOntologyCollection', can_be_low_char : bool=False, prev : 'CityItemToken'=None) -> 'CityItemToken':
@@ -245,7 +242,7 @@ class CityItemToken(MetaToken):
                 res.end_token = nn.end_token
         if ((res is not None and res.typ == CityItemToken.ItemType.PROPERNAME and res.value is not None) and res.begin_token == res.end_token and len(res.value) > 4): 
             if (res.value.endswith("ГРАД") or res.value.endswith("ГОРОД")): 
-                res.alt_value = None
+                res.alt_value = (None)
                 res.typ = CityItemToken.ItemType.CITY
             elif (((res.value.endswith("СК") or res.value.endswith("ИНО") or res.value.endswith("ПОЛЬ")) or res.value.endswith("ВЛЬ") or res.value.endswith("АС")) or res.value.endswith("ЕС")): 
                 sits = StreetItemToken.try_parse_list(res.end_token.next0_, None, 3)
@@ -256,7 +253,7 @@ class CityItemToken(MetaToken):
                         return res
                 mc = res.end_token.get_morph_class_in_dictionary()
                 if (mc.is_proper_geo or mc.is_undefined): 
-                    res.alt_value = None
+                    res.alt_value = (None)
                     res.typ = CityItemToken.ItemType.CITY
             elif (res.value.endswith("АНЬ") or res.value.endswith("TOWN") or res.value.startswith("SAN")): 
                 res.typ = CityItemToken.ItemType.CITY
@@ -267,9 +264,9 @@ class CityItemToken(MetaToken):
                     res.value = lem
                     ii = res.alt_value.find('-')
                     if (ii >= 0): 
-                        res.value = (res.alt_value[0 : (ii + 1)] + lem)
+                        res.value = (res.alt_value[0:0+ii + 1] + lem)
                     if (not lem.endswith("АНЬ")): 
-                        res.alt_value = None
+                        res.alt_value = (None)
         return res
     
     @staticmethod
@@ -299,12 +296,12 @@ class CityItemToken(MetaToken):
                         res.begin_token = t
                         res.doubtful = False
                     else: 
-                        res = None
-        if ((prev is not None and prev.typ == CityItemToken.ItemType.NOUN and CityItemToken.__m_recursive == 0) and ((prev.value != "ГОРОД" and prev.value != "МІСТО"))): 
+                        res = (None)
+        if ((prev is not None and prev.typ == CityItemToken.ItemType.NOUN and CityItemToken.M_RECURSIVE == 0) and ((prev.value != "ГОРОД" and prev.value != "МІСТО"))): 
             if (res is None or ((res.typ != CityItemToken.ItemType.NOUN and res.typ != CityItemToken.ItemType.MISC and res.typ != CityItemToken.ItemType.CITY))): 
-                CityItemToken.__m_recursive += 1
+                CityItemToken.M_RECURSIVE += 1
                 det = AddressItemToken.try_attach_org(t)
-                CityItemToken.__m_recursive -= 1
+                CityItemToken.M_RECURSIVE -= 1
                 if (det is not None): 
                     cou = 0
                     ttt = det.begin_token
@@ -313,7 +310,7 @@ class CityItemToken(MetaToken):
                             cou += 1
                         ttt = ttt.next0_
                     if (cou < 6): 
-                        re = CityItemToken._new1100(det.begin_token, det.end_token, CityItemToken.ItemType.PROPERNAME)
+                        re = CityItemToken._new1102(det.begin_token, det.end_token, CityItemToken.ItemType.PROPERNAME)
                         if (det.referent.type_name == "ORGANIZATION"): 
                             re.org_ref = det.ref_token
                         else: 
@@ -325,19 +322,19 @@ class CityItemToken(MetaToken):
             if (npt is not None): 
                 if (npt.end_token.is_value("ПОДЧИНЕНИЕ", "ПІДПОРЯДКУВАННЯ")): 
                     res.end_token = npt.end_token
-        if ((res is not None and t.chars.is_all_upper and res.typ == CityItemToken.ItemType.PROPERNAME) and CityItemToken.__m_recursive == 0): 
+        if ((res is not None and t.chars.is_all_upper and res.typ == CityItemToken.ItemType.PROPERNAME) and CityItemToken.M_RECURSIVE == 0): 
             tt = t.previous
             if (tt is not None and tt.is_comma): 
                 tt = tt.previous
             geo_prev = None
-            if (tt is not None and isinstance(tt.get_referent(), GeoReferent)): 
+            if (tt is not None and (isinstance(tt.get_referent(), GeoReferent))): 
                 geo_prev = (tt.get_referent() if isinstance(tt.get_referent(), GeoReferent) else None)
             if (geo_prev is not None and ((geo_prev.is_region or geo_prev.is_city))): 
-                CityItemToken.__m_recursive += 1
+                CityItemToken.M_RECURSIVE += 1
                 det = AddressItemToken.try_attach_org(t)
-                CityItemToken.__m_recursive -= 1
+                CityItemToken.M_RECURSIVE -= 1
                 if (det is not None): 
-                    res = None
+                    res = (None)
         if (res is not None and res.typ == CityItemToken.ItemType.PROPERNAME): 
             if ((t.is_value("ДУМА", "РАДА") or t.is_value("ГЛАВА", "ГОЛОВА") or t.is_value("АДМИНИСТРАЦИЯ", "АДМІНІСТРАЦІЯ")) or t.is_value("МЭР", "МЕР") or t.is_value("ПРЕДСЕДАТЕЛЬ", "ГОЛОВА")): 
                 return None
@@ -352,7 +349,7 @@ class CityItemToken(MetaToken):
                         res.end_token = br.end_token
                         if (res.end_token.next0_ != br.end_token): 
                             res.value = MiscHelper.get_text_value(t, br.end_token, GetTextAttr.NO)
-                            res.alt_value = None
+                            res.alt_value = (None)
                         return res
             if (isinstance(t, TextToken)): 
                 txt = (t if isinstance(t, TextToken) else None).term
@@ -390,7 +387,7 @@ class CityItemToken(MetaToken):
             while tt is not None and tt.is_char_of(",."):
                 tt = tt.previous
             geo_prev = None
-            if (tt is not None and isinstance(tt.get_referent(), GeoReferent)): 
+            if (tt is not None and (isinstance(tt.get_referent(), GeoReferent))): 
                 geo_prev = (tt.get_referent() if isinstance(tt.get_referent(), GeoReferent) else None)
             tt0 = t
             ooo = False
@@ -402,15 +399,15 @@ class CityItemToken(MetaToken):
                 tt = t.next0_
                 if (tt is not None and tt.is_char('.')): 
                     tt = tt.next0_
-                if (isinstance(tt, TextToken) and not tt.chars.is_all_lower): 
+                if ((isinstance(tt, TextToken)) and not tt.chars.is_all_lower): 
                     if (MiscLocationHelper.check_geo_object_after(tt.next0_)): 
                         ooo = True
             if (ooo): 
                 tt = t
                 ttt = tt
-                first_pass2844 = True
+                first_pass3794 = True
                 while True:
-                    if first_pass2844: first_pass2844 = False
+                    if first_pass3794: first_pass3794 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if (ttt.is_char_of(",.")): 
@@ -449,9 +446,9 @@ class CityItemToken(MetaToken):
                             if (tt2.next0_ is not None and ((tt2.next0_.is_char('.') or tt2.next0_.is_hiphen)) and not tt2.is_whitespace_after): 
                                 tt2 = tt2.next0_.next0_
                         ok = False
-                        if (txt == "Д" and isinstance(tt2, NumberToken) and not tt2.is_newline_before): 
+                        if (txt == "Д" and (isinstance(tt2, NumberToken)) and not tt2.is_newline_before): 
                             ok = False
-                        elif (((txt == "С" or txt == "C")) and isinstance(tt2, TextToken) and ((tt2.is_value("О", None) or tt2.is_value("O", None)))): 
+                        elif (((txt == "С" or txt == "C")) and (isinstance(tt2, TextToken)) and ((tt2.is_value("О", None) or tt2.is_value("O", None)))): 
                             ok = False
                         elif (tt2 is not None and tt2.chars.is_capital_upper and (tt2.whitespaces_before_count < 2)): 
                             ok = True
@@ -463,7 +460,7 @@ class CityItemToken(MetaToken):
                                 if (sit is not None and sit.typ == StreetItemType.NOUN): 
                                     ok = False
                         if (ok): 
-                            res = CityItemToken._new1102(tt0, tt1, CityItemToken.ItemType.NOUN, True)
+                            res = CityItemToken._new1104(tt0, tt1, CityItemToken.ItemType.NOUN, True)
                             res.value = ("ДЕРЕВНЯ" if txt == "Д" else (("ПОСЕЛОК" if txt == "П" else (("ХУТОР" if txt == "Х" else "СЕЛО")))))
                             if (txt == "П"): 
                                 res.alt_value = "ПОСЕЛЕНИЕ"
@@ -479,27 +476,27 @@ class CityItemToken(MetaToken):
                         if (tt.next0_ is not None and tt.next0_.is_char('.')): 
                             tt = tt.next0_
                         if (tt.next0_ is not None and tt.next0_.chars.is_capital_upper): 
-                            return CityItemToken._new1103(tt0, tt, CityItemToken.ItemType.NOUN, True, ("РАБОЧИЙ ПОСЕЛОК" if txt == "РП" else (("ГОРОДСКОЕ ПОСЕЛЕНИЕ" if txt == "ГП" else (("ДАЧНЫЙ ПОСЕЛОК" if txt == "ДП" else "СЕЛЬСКОЕ ПОСЕЛЕНИЕ"))))))
+                            return CityItemToken._new1105(tt0, tt, CityItemToken.ItemType.NOUN, True, ("РАБОЧИЙ ПОСЕЛОК" if txt == "РП" else (("ГОРОДСКОЕ ПОСЕЛЕНИЕ" if txt == "ГП" else (("ДАЧНЫЙ ПОСЕЛОК" if txt == "ДП" else "СЕЛЬСКОЕ ПОСЕЛЕНИЕ"))))))
                     res = CityItemToken.__try_parse(tt, loc, can_be_low_char, None)
                     if (res is not None and res.typ == CityItemToken.ItemType.NOUN): 
                         res.geo_object_before = True
                         res.begin_token = tt0
                         return res
                     if (tt.chars.is_all_upper and tt.length_char > 2 and tt.chars.is_cyrillic_letter): 
-                        return CityItemToken._new1104(tt, tt, CityItemToken.ItemType.PROPERNAME, (tt if isinstance(tt, TextToken) else None).term)
-            if (isinstance(t, NumberToken) and t.next0_ is not None): 
+                        return CityItemToken._new1106(tt, tt, CityItemToken.ItemType.PROPERNAME, (tt if isinstance(tt, TextToken) else None).term)
+            if ((isinstance(t, NumberToken)) and t.next0_ is not None): 
                 net = NumberExToken.try_parse_number_with_postfix(t)
                 if (net is not None and net.ex_typ == NumberExType.KILOMETER): 
-                    return CityItemToken._new1104(t, net.end_token, CityItemToken.ItemType.PROPERNAME, "{0}КМ".format(math.floor(net.real_value)))
+                    return CityItemToken._new1106(t, net.end_token, CityItemToken.ItemType.PROPERNAME, "{0}КМ".format(math.floor(net.real_value)))
             rt = (t if isinstance(t, ReferentToken) else None)
-            if ((rt is not None and isinstance(rt.referent, GeoReferent) and rt.begin_token == rt.end_token) and (rt.referent if isinstance(rt.referent, GeoReferent) else None).is_state): 
+            if ((rt is not None and (isinstance(rt.referent, GeoReferent)) and rt.begin_token == rt.end_token) and (rt.referent if isinstance(rt.referent, GeoReferent) else None).is_state): 
                 if (t.previous is None): 
                     return None
                 if (t.previous.morph.number == MorphNumber.SINGULAR and t.morph.case.is_nominative and not t.morph.case.is_genitive): 
-                    return CityItemToken._new1104(t, t, CityItemToken.ItemType.PROPERNAME, rt.get_source_text().upper())
+                    return CityItemToken._new1106(t, t, CityItemToken.ItemType.PROPERNAME, rt.get_source_text().upper())
             return None
         if (res.typ == CityItemToken.ItemType.NOUN): 
-            if (res.value == "СЕЛО" and isinstance(t, TextToken)): 
+            if (res.value == "СЕЛО" and (isinstance(t, TextToken))): 
                 if (t.previous is None): 
                     pass
                 elif (t.previous.morph.class0_.is_preposition): 
@@ -538,13 +535,13 @@ class CityItemToken(MetaToken):
         if (res.typ == CityItemToken.ItemType.PROPERNAME or res.typ == CityItemToken.ItemType.CITY): 
             val = Utils.ifNotNull(res.value, ((None if res.onto_item is None else res.onto_item.canonic_text)))
             t1 = res.end_token
-            if (((not t1.is_whitespace_after and t1.next0_ is not None and t1.next0_.is_hiphen) and not t1.next0_.is_whitespace_after and isinstance(t1.next0_.next0_, NumberToken)) and ((t1.next0_.next0_ if isinstance(t1.next0_.next0_, NumberToken) else None).value < 30)): 
+            if (((not t1.is_whitespace_after and t1.next0_ is not None and t1.next0_.is_hiphen) and not t1.next0_.is_whitespace_after and (isinstance(t1.next0_.next0_, NumberToken))) and ((t1.next0_.next0_ if isinstance(t1.next0_.next0_, NumberToken) else None).value < (30))): 
                 res.end_token = t1.next0_.next0_
                 res.value = "{0}-{1}".format(val, (t1.next0_.next0_ if isinstance(t1.next0_.next0_, NumberToken) else None).value)
                 if (res.alt_value is not None): 
                     res.alt_value = "{0}-{1}".format(res.alt_value, (t1.next0_.next0_ if isinstance(t1.next0_.next0_, NumberToken) else None).value)
                 res.typ = CityItemToken.ItemType.PROPERNAME
-            elif (t1.whitespaces_after_count == 1 and isinstance(t1.next0_, NumberToken) and t1.next0_.morph.class0_.is_adjective): 
+            elif (t1.whitespaces_after_count == 1 and (isinstance(t1.next0_, NumberToken)) and t1.next0_.morph.class0_.is_adjective): 
                 ok = False
                 if (t1.next0_.next0_ is None or t1.next0_.is_newline_after): 
                     ok = True
@@ -572,10 +569,10 @@ class CityItemToken(MetaToken):
                     if (ttt is None or ttt.is_char_of(",.")): 
                         ok = True
                     t1 = res.end_token.next0_
-                    npt = None
+                    npt = (None)
                 if (ok and t1 is not None): 
                     res.typ = CityItemToken.ItemType.PROPERNAME
-                    res.onto_item = None
+                    res.onto_item = (None)
                     res.end_token = t1
                     if (npt is not None): 
                         res.value = npt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False)
@@ -590,15 +587,15 @@ class CityItemToken(MetaToken):
                         res.value = "{0}-{1}".format((res.value if res.onto_item is None else res.onto_item.canonic_text), res1.value)
                         if (res.alt_value is not None): 
                             res.alt_value = "{0}-{1}".format(res.alt_value, res1.value)
-                        res.onto_item = None
+                        res.onto_item = (None)
                         res.end_token = res1.end_token
                         res.doubtful = False
-                elif (isinstance(res.end_token.next0_.next0_, NumberToken) and ((res.end_token.next0_.next0_ if isinstance(res.end_token.next0_.next0_, NumberToken) else None).value < 30)): 
+                elif ((isinstance(res.end_token.next0_.next0_, NumberToken)) and ((res.end_token.next0_.next0_ if isinstance(res.end_token.next0_.next0_, NumberToken) else None).value < (30))): 
                     res.typ = CityItemToken.ItemType.PROPERNAME
                     res.value = "{0}-{1}".format((res.value if res.onto_item is None else res.onto_item.canonic_text), (res.end_token.next0_.next0_ if isinstance(res.end_token.next0_.next0_, NumberToken) else None).value)
                     if (res.alt_value is not None): 
                         res.alt_value = "{0}-{1}".format(res.alt_value, (res.end_token.next0_.next0_ if isinstance(res.end_token.next0_.next0_, NumberToken) else None).value)
-                    res.onto_item = None
+                    res.onto_item = (None)
                     res.end_token = res.end_token.next0_.next0_
             elif (res.begin_token.get_morph_class_in_dictionary().is_proper_name): 
                 if (res.begin_token.is_value("КИЇВ", None) or res.begin_token.is_value("АСТАНА", None) or res.begin_token.is_value("АЛМАТЫ", None)): 
@@ -617,9 +614,9 @@ class CityItemToken(MetaToken):
                             res.doubtful = False
             if ((res.begin_token == res.end_token and res.typ == CityItemToken.ItemType.CITY and res.onto_item is not None) and res.onto_item.canonic_text == "САНКТ - ПЕТЕРБУРГ"): 
                 tt = res.begin_token.previous
-                first_pass2845 = True
+                first_pass3795 = True
                 while True:
-                    if first_pass2845: first_pass2845 = False
+                    if first_pass3795: first_pass3795 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.is_hiphen or tt.is_char('.')): 
@@ -627,7 +624,7 @@ class CityItemToken(MetaToken):
                     if (tt.is_value("С", None) or tt.is_value("C", None) or tt.is_value("САНКТ", None)): 
                         res.begin_token = tt
                     break
-        if ((res.begin_token == res.end_token and res.typ == CityItemToken.ItemType.PROPERNAME and res.whitespaces_after_count == 1) and isinstance(res.end_token.next0_, TextToken) and res.end_token.chars == res.end_token.next0_.chars): 
+        if ((res.begin_token == res.end_token and res.typ == CityItemToken.ItemType.PROPERNAME and res.whitespaces_after_count == 1) and (isinstance(res.end_token.next0_, TextToken)) and res.end_token.chars == res.end_token.next0_.chars): 
             ok = False
             t1 = res.end_token
             if (t1.next0_.next0_ is None or t1.next0_.is_newline_after): 
@@ -645,7 +642,7 @@ class CityItemToken(MetaToken):
             if (ok): 
                 res.end_token = t1.next0_
                 res.value = MiscHelper.get_text_value(res.begin_token, res.end_token, GetTextAttr.NO)
-                res.alt_value = None
+                res.alt_value = (None)
                 res.typ = CityItemToken.ItemType.PROPERNAME
         return res
     
@@ -662,11 +659,11 @@ class CityItemToken(MetaToken):
         from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
         if (not ((isinstance(t, TextToken)))): 
-            if (isinstance(t, ReferentToken) and isinstance(t.get_referent(), DateReferent)): 
+            if ((isinstance(t, ReferentToken)) and (isinstance(t.get_referent(), DateReferent))): 
                 aii = StreetItemToken._try_parse_spec(t, None)
                 if (aii is not None): 
                     if (len(aii) > 1 and aii[0].typ == StreetItemType.NUMBER and aii[1].typ == StreetItemType.STDNAME): 
-                        res2 = CityItemToken._new1100(t, aii[1].end_token, CityItemToken.ItemType.PROPERNAME)
+                        res2 = CityItemToken._new1102(t, aii[1].end_token, CityItemToken.ItemType.PROPERNAME)
                         res2.value = "{0} {1}".format((aii[0].value if aii[0].number is None else str(aii[0].number.value)), aii[1].value)
                         return res2
             return None
@@ -684,7 +681,7 @@ class CityItemToken(MetaToken):
                 li.extend(li0)
                 is_in_loc_onto = True
         if (len(li) == 0): 
-            li0 = CityItemToken.__m_ontology.try_attach(t, None, False)
+            li0 = CityItemToken.M_ONTOLOGY.try_attach(t, None, False)
             if (li0 is not None): 
                 li.extend(li0)
         if (len(li) > 0): 
@@ -700,20 +697,20 @@ class CityItemToken(MetaToken):
                 for nt in li: 
                     if (nt.item is not None and nt.item.canonic_text == tt.term): 
                         if (can_be_low_char or not MiscHelper.is_all_characters_lower(nt.begin_token, nt.end_token, False)): 
-                            ci = CityItemToken._new1108(nt.begin_token, nt.end_token, CityItemToken.ItemType.CITY, nt.item, nt.morph)
+                            ci = CityItemToken._new1110(nt.begin_token, nt.end_token, CityItemToken.ItemType.CITY, nt.item, nt.morph)
                             if (nt.begin_token == nt.end_token and not is_in_loc_onto): 
                                 ci.doubtful = CityItemToken.__check_doubtful(nt.begin_token if isinstance(nt.begin_token, TextToken) else None)
                             tt1 = nt.end_token.next0_
-                            if ((((tt1 is not None and tt1.is_hiphen and not tt1.is_whitespace_before) and not tt1.is_whitespace_after and prev is not None) and prev.typ == CityItemToken.ItemType.NOUN and isinstance(tt1.next0_, TextToken)) and tt1.previous.chars == tt1.next0_.chars): 
-                                li = None
+                            if ((((tt1 is not None and tt1.is_hiphen and not tt1.is_whitespace_before) and not tt1.is_whitespace_after and prev is not None) and prev.typ == CityItemToken.ItemType.NOUN and (isinstance(tt1.next0_, TextToken))) and tt1.previous.chars == tt1.next0_.chars): 
+                                li = (None)
                                 break
                             return ci
                 if (li is not None): 
                     for nt in li: 
                         if (nt.item is not None): 
                             if (can_be_low_char or not MiscHelper.is_all_characters_lower(nt.begin_token, nt.end_token, False)): 
-                                ci = CityItemToken._new1108(nt.begin_token, nt.end_token, CityItemToken.ItemType.CITY, nt.item, nt.morph)
-                                if (nt.begin_token == nt.end_token and isinstance(nt.begin_token, TextToken)): 
+                                ci = CityItemToken._new1110(nt.begin_token, nt.end_token, CityItemToken.ItemType.CITY, nt.item, nt.morph)
+                                if (nt.begin_token == nt.end_token and (isinstance(nt.begin_token, TextToken))): 
                                     ci.doubtful = CityItemToken.__check_doubtful(nt.begin_token if isinstance(nt.begin_token, TextToken) else None)
                                     str0_ = (nt.begin_token if isinstance(nt.begin_token, TextToken) else None).term
                                     if (str0_ != nt.item.canonic_text): 
@@ -724,7 +721,7 @@ class CityItemToken(MetaToken):
                 for nt in li: 
                     if (nt.item is None): 
                         ty = (CityItemToken.ItemType.NOUN if nt.termin.tag is None else Utils.valToEnum(nt.termin.tag, CityItemToken.ItemType))
-                        ci = CityItemToken._new1110(nt.begin_token, nt.end_token, ty, nt.morph)
+                        ci = CityItemToken._new1112(nt.begin_token, nt.end_token, ty, nt.morph)
                         ci.value = nt.termin.canonic_text
                         if (ty == CityItemToken.ItemType.MISC and ci.value == "ЖИТЕЛЬ" and t.previous is not None): 
                             if (t.previous.is_value("МЕСТНЫЙ", "МІСЦЕВИЙ")): 
@@ -756,7 +753,7 @@ class CityItemToken(MetaToken):
                             elif (nt.begin_token.is_value("ГОР", None)): 
                                 if ((t if isinstance(t, TextToken) else None).term != "ГОР"): 
                                     if (t.chars.is_capital_upper): 
-                                        ci = None
+                                        ci = (None)
                                         break
                                     return None
                                 ci.doubtful = True
@@ -772,11 +769,11 @@ class CityItemToken(MetaToken):
                         return ci
         if (not ((isinstance(t, TextToken)))): 
             return None
-        if ((t if isinstance(t, TextToken) else None).term == "СПБ" and not t.chars.is_all_lower and CityItemToken.__m_st_peterburg is not None): 
-            return CityItemToken._new1111(t, t, CityItemToken.ItemType.CITY, CityItemToken.__m_st_peterburg, CityItemToken.__m_st_peterburg.canonic_text)
+        if ((t if isinstance(t, TextToken) else None).term == "СПБ" and not t.chars.is_all_lower and CityItemToken.M_ST_PETERBURG is not None): 
+            return CityItemToken._new1113(t, t, CityItemToken.ItemType.CITY, CityItemToken.M_ST_PETERBURG, CityItemToken.M_ST_PETERBURG.canonic_text)
         if (t.chars.is_all_lower): 
             return None
-        stds = CityItemToken.__m_std_adjectives.try_attach(t, None, False)
+        stds = CityItemToken.M_STD_ADJECTIVES.try_attach(t, None, False)
         if (stds is not None): 
             cit = CityItemToken.__try_parse(stds[0].end_token.next0_, loc, False, None)
             if (cit is not None and ((((cit.typ == CityItemToken.ItemType.PROPERNAME and cit.value is not None)) or cit.typ == CityItemToken.ItemType.CITY))): 
@@ -794,7 +791,7 @@ class CityItemToken(MetaToken):
                 return cit
         t1 = t
         doubt = False
-        name = Utils.newStringIO(None)
+        name = io.StringIO()
         altname = None
         k = 0
         is_prep = False
@@ -820,7 +817,7 @@ class CityItemToken(MetaToken):
                 print('-', end="", file=name)
                 if (altname is not None): 
                     print('-', end="", file=altname)
-            if (isinstance(tt, TextToken) and ((is_prep or ((k > 0 and not tt.get_morph_class_in_dictionary().is_proper_geo))))): 
+            if ((isinstance(tt, TextToken)) and ((is_prep or ((k > 0 and not tt.get_morph_class_in_dictionary().is_proper_geo))))): 
                 print((tt if isinstance(tt, TextToken) else None).term, end="", file=name)
                 if (altname is not None): 
                     print((tt if isinstance(tt, TextToken) else None).term, end="", file=altname)
@@ -828,7 +825,7 @@ class CityItemToken(MetaToken):
                 ss = CityItemToken.__get_normal_geo(tt)
                 if (ss != (tt if isinstance(tt, TextToken) else None).term): 
                     if (altname is None): 
-                        altname = Utils.newStringIO(None)
+                        altname = io.StringIO()
                     print(Utils.toStringStringIO(name), end="", file=altname)
                     print((tt if isinstance(tt, TextToken) else None).term, end="", file=altname)
                 print(ss, end="", file=name)
@@ -853,7 +850,7 @@ class CityItemToken(MetaToken):
         if (k > 0): 
             if (k > 2): 
                 return None
-            reee = CityItemToken._new1112(t, t1, CityItemToken.ItemType.PROPERNAME, Utils.toStringStringIO(name), doubt)
+            reee = CityItemToken._new1114(t, t1, CityItemToken.ItemType.PROPERNAME, Utils.toStringStringIO(name), doubt)
             if (altname is not None): 
                 reee.alt_value = Utils.toStringStringIO(altname)
             return reee
@@ -863,7 +860,7 @@ class CityItemToken(MetaToken):
         if ((npt is not None and npt.end_token != t and len(npt.adjectives) > 0) and not npt.adjectives[0].end_token.next0_.is_comma): 
             cit = CityItemToken.__try_parse(t.next0_, loc, False, None)
             if (cit is not None and cit.typ == CityItemToken.ItemType.NOUN and ((LanguageHelper.ends_with_ex(cit.value, "ПУНКТ", "ПОСЕЛЕНИЕ", "ПОСЕЛЕННЯ", "ПОСЕЛОК") or t.next0_.is_value("ГОРОДОК", None)))): 
-                return CityItemToken._new1113(t, t, CityItemToken.ItemType.CITY, t.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False), npt.morph)
+                return CityItemToken._new1115(t, t, CityItemToken.ItemType.CITY, t.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False), npt.morph)
             else: 
                 if (npt.end_token.chars != t.chars): 
                     if (npt.end_token.chars.is_all_lower and ((npt.end_token.next0_ is None or npt.end_token.next0_.is_comma))): 
@@ -878,21 +875,21 @@ class CityItemToken(MetaToken):
                     if (si is None or si.typ != StreetItemType.NOUN): 
                         t1 = npt.end_token
                         doubt = CityItemToken.__check_doubtful(t1 if isinstance(t1, TextToken) else None)
-                        return CityItemToken._new1114(t, t1, CityItemToken.ItemType.PROPERNAME, npt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False), doubt, npt.morph)
+                        return CityItemToken._new1116(t, t1, CityItemToken.ItemType.PROPERNAME, npt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False), doubt, npt.morph)
         if (t.next0_ is not None and t.next0_.chars == t.chars and not t.is_newline_after): 
             ok = False
             if (t.next0_.next0_ is None or t.next0_.next0_.chars != t.chars): 
                 ok = True
             elif (isinstance(t.next0_.next0_.get_referent(), GeoReferent)): 
                 ok = True
-            elif (CityItemToken.__m_recursive == 0): 
-                CityItemToken.__m_recursive += 1
+            elif (CityItemToken.M_RECURSIVE == 0): 
+                CityItemToken.M_RECURSIVE += 1
                 tis = TerrItemToken.try_parse_list(t.next0_.next0_, loc, 2)
-                CityItemToken.__m_recursive -= 1
+                CityItemToken.M_RECURSIVE -= 1
                 if (tis is not None and len(tis) > 1): 
                     if (tis[0].is_adjective and tis[1].termin_item is not None): 
                         ok = True
-            if (ok and isinstance(t.next0_, TextToken)): 
+            if (ok and (isinstance(t.next0_, TextToken))): 
                 doubt = CityItemToken.__check_doubtful(t.next0_ if isinstance(t.next0_, TextToken) else None)
                 stat = t.kit.statistics.get_bigramm_info(t, t.next0_)
                 ok1 = False
@@ -900,7 +897,7 @@ class CityItemToken(MetaToken):
                     if (stat.pair_count > 2): 
                         doubt = False
                     ok1 = True
-                elif (CityItemToken.__m_std_adjectives.try_attach(t, None, False) is not None and isinstance(t.next0_, TextToken)): 
+                elif (CityItemToken.M_STD_ADJECTIVES.try_attach(t, None, False) is not None and (isinstance(t.next0_, TextToken))): 
                     ok1 = True
                 elif (((t.next0_.next0_ is None or t.next0_.next0_.is_comma)) and t.morph.class0_.is_noun and ((t.next0_.morph.class0_.is_adjective or t.next0_.morph.class0_.is_noun))): 
                     ok1 = True
@@ -913,7 +910,7 @@ class CityItemToken(MetaToken):
                         if (altname is not None): 
                             print(" {0}".format((t.next0_ if isinstance(t.next0_, TextToken) else None).term), end="", file=altname, flush=True)
                         t1 = t.next0_
-                        return CityItemToken._new1115(t, t1, CityItemToken.ItemType.PROPERNAME, Utils.toStringStringIO(name), (None if altname is None else Utils.toStringStringIO(altname)), doubt, t.next0_.morph)
+                        return CityItemToken._new1117(t, t1, CityItemToken.ItemType.PROPERNAME, Utils.toStringStringIO(name), (None if altname is None else Utils.toStringStringIO(altname)), doubt, t.next0_.morph)
         if (t.length_char < 2): 
             return None
         t1 = t
@@ -928,8 +925,8 @@ class CityItemToken(MetaToken):
                 print(" {0}".format(t1.get_source_text().upper()), end="", file=name, flush=True)
         if (MiscHelper.is_eng_article(t)): 
             return None
-        res = CityItemToken._new1115(t, t1, CityItemToken.ItemType.PROPERNAME, Utils.toStringStringIO(name), (None if altname is None else Utils.toStringStringIO(altname)), doubt, t.morph)
-        if (t1 == t and isinstance(t1, TextToken) and (t1 if isinstance(t1, TextToken) else None).term0 is not None): 
+        res = CityItemToken._new1117(t, t1, CityItemToken.ItemType.PROPERNAME, Utils.toStringStringIO(name), (None if altname is None else Utils.toStringStringIO(altname)), doubt, t.morph)
+        if (t1 == t and (isinstance(t1, TextToken)) and (t1 if isinstance(t1, TextToken) else None).term0 is not None): 
             res.alt_value = (t1 if isinstance(t1, TextToken) else None).term0
         sog = False
         glas = False
@@ -940,7 +937,7 @@ class CityItemToken(MetaToken):
                 sog = True
         if (not glas or not sog): 
             return None
-        if (t == t1 and isinstance(t, TextToken)): 
+        if (t == t1 and (isinstance(t, TextToken))): 
             if ((t if isinstance(t, TextToken) else None).term != res.value): 
                 res.alt_value = (t if isinstance(t, TextToken) else None).term
         return res
@@ -954,9 +951,9 @@ class CityItemToken(MetaToken):
             return None
         cou = 0
         tt = t
-        first_pass2846 = True
+        first_pass3796 = True
         while True:
-            if first_pass2846: first_pass2846 = False
+            if first_pass3796: first_pass3796 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             if (not ((isinstance(tt, TextToken)))): 
@@ -1006,9 +1003,9 @@ class CityItemToken(MetaToken):
         from pullenti.ner.core.TerminCollection import TerminCollection
         from pullenti.ner.core.Termin import Termin
         from pullenti.morph.MorphLang import MorphLang
-        if (CityItemToken.__m_ontology is not None): 
+        if (CityItemToken.M_ONTOLOGY is not None): 
             return
-        CityItemToken.__m_ontology = IntOntologyCollection()
+        CityItemToken.M_ONTOLOGY = IntOntologyCollection()
         CityItemToken.M_CITY_ADJECTIVES = TerminCollection()
         t = Termin("ГОРОД")
         t.add_abridge("ГОР.")
@@ -1019,50 +1016,50 @@ class CityItemToken(MetaToken):
         t.add_variant("ПРИМОРСКИЙ ГОРОДОК", False)
         t.add_variant("МАЛЕНЬКИЙ ГОРОДОК", False)
         t.add_variant("НЕБОЛЬШОЙ ГОРОДОК", False)
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("CITY")
         t.tag = CityItemToken.ItemType.NOUN
         t.add_variant("TOWN", False)
         t.add_variant("CAPITAL", False)
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("МІСТО", MorphLang.UA)
         t.add_abridge("МІС.")
         t.add_abridge("М.")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
-        t = Termin._new1083("ГОРОД-ГЕРОЙ", "ГОРОД")
+        CityItemToken.M_ONTOLOGY.add(t)
+        t = Termin._new1085("ГОРОД-ГЕРОЙ", "ГОРОД")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
-        t = Termin._new1118("МІСТО-ГЕРОЙ", MorphLang.UA, "МІСТО")
+        CityItemToken.M_ONTOLOGY.add(t)
+        t = Termin._new1120("МІСТО-ГЕРОЙ", MorphLang.UA, "МІСТО")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
-        t = Termin._new1083("ГОРОД-КУРОРТ", "ГОРОД")
+        CityItemToken.M_ONTOLOGY.add(t)
+        t = Termin._new1085("ГОРОД-КУРОРТ", "ГОРОД")
         t.add_abridge("Г.К.")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
-        t = Termin._new1118("МІСТО-КУРОРТ", MorphLang.UA, "МІСТО")
+        CityItemToken.M_ONTOLOGY.add(t)
+        t = Termin._new1120("МІСТО-КУРОРТ", MorphLang.UA, "МІСТО")
         t.add_abridge("М.К.")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("СЕЛО")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("ДЕРЕВНЯ")
         t.add_abridge("ДЕР.")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("СЕЛЕНИЕ")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("СЕЛО", MorphLang.UA)
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("ПОРТ")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("ПОРТ", MorphLang.UA)
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("ПОСЕЛОК")
         t.add_abridge("ПОС.")
         t.tag = CityItemToken.ItemType.NOUN
@@ -1075,34 +1072,34 @@ class CityItemToken(MetaToken):
         t.add_variant("КУРОРТНЫЙ ПОСЕЛОК", False)
         t.add_variant("ПОСЕЛОК СОВХОЗА", False)
         t.add_variant("ПОСЕЛОК КОЛХОЗА", False)
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("СЕЛИЩЕ", MorphLang.UA)
         t.add_abridge("СЕЛ.")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("ПОСЕЛОК ГОРОДСКОГО ТИПА")
         t.acronym_smart = "ПГТ"
         t.acronym = t.acronym_smart
         t.add_abridge("ПГТ.")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("СЕЛИЩЕ МІСЬКОГО ТИПУ", MorphLang.UA)
         t.acronym_smart = "СМТ"
         t.acronym = t.acronym_smart
         t.add_abridge("СМТ.")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("РАБОЧИЙ ПОСЕЛОК")
         t.add_abridge("Р.П.")
         t.tag = CityItemToken.ItemType.NOUN
         t.add_abridge("РАБ.П.")
         t.add_abridge("Р.ПОС.")
         t.add_abridge("РАБ.ПОС.")
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("РОБОЧЕ СЕЛИЩЕ", MorphLang.UA)
         t.add_abridge("Р.С.")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("ДАЧНЫЙ ПОСЕЛОК")
         t.add_abridge("Д.П.")
         t.tag = CityItemToken.ItemType.NOUN
@@ -1111,14 +1108,14 @@ class CityItemToken(MetaToken):
         t.add_abridge("ДАЧ.ПОС.")
         t.add_variant("ЖИЛИЩНО ДАЧНЫЙ ПОСЕЛОК", False)
         t.add_variant("ДАЧНОЕ ПОСЕЛЕНИЕ", False)
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("ДАЧНЕ СЕЛИЩЕ", MorphLang.UA)
         t.add_abridge("Д.С.")
         t.tag = CityItemToken.ItemType.NOUN
         t.add_abridge("ДАЧ.С.")
         t.add_abridge("Д.СЕЛ.")
         t.add_abridge("ДАЧ.СЕЛ.")
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("ГОРОДСКОЕ ПОСЕЛЕНИЕ")
         t.add_abridge("Г.П.")
         t.tag = CityItemToken.ItemType.NOUN
@@ -1130,36 +1127,36 @@ class CityItemToken(MetaToken):
         t.add_abridge("Г.О.")
         t.add_abridge("Г.О.Г.")
         t.add_abridge("ГОРОДСКОЙ ОКРУГ Г.")
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin._new142("ПОСЕЛКОВОЕ ПОСЕЛЕНИЕ", "ПОСЕЛОК", CityItemToken.ItemType.NOUN)
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("МІСЬКЕ ПОСЕЛЕННЯ", MorphLang.UA)
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("СЕЛЬСКОЕ ПОСЕЛЕНИЕ")
         t.tag = CityItemToken.ItemType.NOUN
         t.add_abridge("С.ПОС.")
         t.add_abridge("С.П.")
         t.add_variant("СЕЛЬСОВЕТ", False)
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("СІЛЬСЬКЕ ПОСЕЛЕННЯ", MorphLang.UA)
         t.add_abridge("С.ПОС.")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("СТАНИЦА")
         t.tag = CityItemToken.ItemType.NOUN
         t.add_abridge("СТ-ЦА")
         t.add_abridge("СТАН-ЦА")
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("СТАНИЦЯ", MorphLang.UA)
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
-        t = Termin._new1083("СТОЛИЦА", "ГОРОД")
+        CityItemToken.M_ONTOLOGY.add(t)
+        t = Termin._new1085("СТОЛИЦА", "ГОРОД")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
-        t = Termin._new1118("СТОЛИЦЯ", MorphLang.UA, "МІСТО")
+        CityItemToken.M_ONTOLOGY.add(t)
+        t = Termin._new1120("СТОЛИЦЯ", MorphLang.UA, "МІСТО")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("СТАНЦИЯ")
         t.add_abridge("СТАНЦ.")
         t.add_abridge("СТ.")
@@ -1167,63 +1164,63 @@ class CityItemToken(MetaToken):
         t.tag = CityItemToken.ItemType.NOUN
         t.add_variant("ПЛАТФОРМА", False)
         t.add_abridge("ПЛАТФ.")
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("СТАНЦІЯ", MorphLang.UA)
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("ЖЕЛЕЗНОДОРОЖНАЯ СТАНЦИЯ")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("ЗАЛІЗНИЧНА СТАНЦІЯ", MorphLang.UA)
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("НАСЕЛЕННЫЙ ПУНКТ")
         t.tag = CityItemToken.ItemType.NOUN
         t.add_abridge("Н.П.")
         t.add_abridge("Б.Н.П.")
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("НАСЕЛЕНИЙ ПУНКТ", MorphLang.UA)
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
-        t = Termin._new1083("РАЙОННЫЙ ЦЕНТР", "НАСЕЛЕННЫЙ ПУНКТ")
+        CityItemToken.M_ONTOLOGY.add(t)
+        t = Termin._new1085("РАЙОННЫЙ ЦЕНТР", "НАСЕЛЕННЫЙ ПУНКТ")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
-        t = Termin._new1118("РАЙОННИЙ ЦЕНТР", MorphLang.UA, "НАСЕЛЕНИЙ ПУНКТ")
+        CityItemToken.M_ONTOLOGY.add(t)
+        t = Termin._new1120("РАЙОННИЙ ЦЕНТР", MorphLang.UA, "НАСЕЛЕНИЙ ПУНКТ")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
-        t = Termin._new1083("ГОРОДСКОЙ ОКРУГ", "НАСЕЛЕННЫЙ ПУНКТ")
+        CityItemToken.M_ONTOLOGY.add(t)
+        t = Termin._new1085("ГОРОДСКОЙ ОКРУГ", "НАСЕЛЕННЫЙ ПУНКТ")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
-        t = Termin._new1118("МІСЬКИЙ ОКРУГ", MorphLang.UA, "НАСЕЛЕНИЙ ПУНКТ")
+        CityItemToken.M_ONTOLOGY.add(t)
+        t = Termin._new1120("МІСЬКИЙ ОКРУГ", MorphLang.UA, "НАСЕЛЕНИЙ ПУНКТ")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
-        t = Termin._new1083("ОБЛАСТНОЙ ЦЕНТР", "НАСЕЛЕННЫЙ ПУНКТ")
+        CityItemToken.M_ONTOLOGY.add(t)
+        t = Termin._new1085("ОБЛАСТНОЙ ЦЕНТР", "НАСЕЛЕННЫЙ ПУНКТ")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
-        t = Termin._new1118("ОБЛАСНИЙ ЦЕНТР", MorphLang.UA, "НАСЕЛЕНИЙ ПУНКТ")
+        CityItemToken.M_ONTOLOGY.add(t)
+        t = Termin._new1120("ОБЛАСНИЙ ЦЕНТР", MorphLang.UA, "НАСЕЛЕНИЙ ПУНКТ")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("ХУТОР")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("АУЛ")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("ААЛ")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("АРБАН")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("ВЫСЕЛКИ")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("МЕСТЕЧКО")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("УРОЧИЩЕ")
         t.tag = CityItemToken.ItemType.NOUN
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         t = Termin("УСАДЬБА")
         t.tag = CityItemToken.ItemType.NOUN
         t.add_variant("ЦЕНТРАЛЬНАЯ УСАДЬБА", False)
@@ -1232,76 +1229,76 @@ class CityItemToken(MetaToken):
         t.add_abridge("Ц/У")
         t.add_abridge("УС-БА")
         t.add_abridge("ЦЕНТР.УС-БА")
-        CityItemToken.__m_ontology.add(t)
+        CityItemToken.M_ONTOLOGY.add(t)
         for s in ["ЖИТЕЛЬ", "МЭР"]: 
-            CityItemToken.__m_ontology.add(Termin._new118(s, CityItemToken.ItemType.MISC))
+            CityItemToken.M_ONTOLOGY.add(Termin._new118(s, CityItemToken.ItemType.MISC))
         for s in ["ЖИТЕЛЬ", "МЕР"]: 
-            CityItemToken.__m_ontology.add(Termin._new477(s, MorphLang.UA, CityItemToken.ItemType.MISC))
+            CityItemToken.M_ONTOLOGY.add(Termin._new477(s, MorphLang.UA, CityItemToken.ItemType.MISC))
         t = Termin._new118("АДМИНИСТРАЦИЯ", CityItemToken.ItemType.MISC)
         t.add_abridge("АДМ.")
-        CityItemToken.__m_ontology.add(t)
-        CityItemToken.__m_std_adjectives = IntOntologyCollection()
+        CityItemToken.M_ONTOLOGY.add(t)
+        CityItemToken.M_STD_ADJECTIVES = IntOntologyCollection()
         t = Termin("ВЕЛИКИЙ")
         t.add_abridge("ВЕЛ.")
         t.add_abridge("ВЕЛИК.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("БОЛЬШОЙ")
         t.add_abridge("БОЛ.")
         t.add_abridge("БОЛЬШ.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("МАЛЫЙ")
         t.add_abridge("МАЛ.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("ВЕРХНИЙ")
         t.add_abridge("ВЕР.")
         t.add_abridge("ВЕРХ.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("НИЖНИЙ")
         t.add_abridge("НИЖ.")
         t.add_abridge("НИЖН.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("СРЕДНИЙ")
         t.add_abridge("СРЕД.")
         t.add_abridge("СРЕДН.")
         t.add_abridge("СР.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("СТАРЫЙ")
         t.add_abridge("СТ.")
         t.add_abridge("СТАР.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("НОВЫЙ")
         t.add_abridge("НОВ.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("ВЕЛИКИЙ", MorphLang.UA)
         t.add_abridge("ВЕЛ.")
         t.add_abridge("ВЕЛИК.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("МАЛИЙ", MorphLang.UA)
         t.add_abridge("МАЛ.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("ВЕРХНІЙ", MorphLang.UA)
         t.add_abridge("ВЕР.")
         t.add_abridge("ВЕРХ.")
         t.add_abridge("ВЕРХН.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("НИЖНІЙ", MorphLang.UA)
         t.add_abridge("НИЖ.")
         t.add_abridge("НИЖН.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("СЕРЕДНІЙ", MorphLang.UA)
         t.add_abridge("СЕР.")
         t.add_abridge("СЕРЕД.")
         t.add_abridge("СЕРЕДН.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("СТАРИЙ", MorphLang.UA)
         t.add_abridge("СТ.")
         t.add_abridge("СТАР.")
-        CityItemToken.__m_std_adjectives.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(t)
         t = Termin("НОВИЙ", MorphLang.UA)
         t.add_abridge("НОВ.")
-        CityItemToken.__m_std_adjectives.add(t)
-        CityItemToken.__m_std_adjectives.add(Termin("SAN"))
-        CityItemToken.__m_std_adjectives.add(Termin("LOS"))
+        CityItemToken.M_STD_ADJECTIVES.add(t)
+        CityItemToken.M_STD_ADJECTIVES.add(Termin("SAN"))
+        CityItemToken.M_STD_ADJECTIVES.add(Termin("LOS"))
         dat = ResourceHelper.get_bytes("c.dat")
         if (dat is None): 
             raise Utils.newException("Not found resource file c.dat in Analyzer.Location", None)
@@ -1320,7 +1317,7 @@ class CityItemToken(MetaToken):
         from pullenti.morph.MorphLang import MorphLang
         from pullenti.ner.core.Termin import Termin
         ci = IntOntologyItem(None)
-        onto = CityItemToken.__m_ontology
+        onto = CityItemToken.M_ONTOLOGY
         lang = MorphLang.RU
         if (Utils.getXmlAttrByName(xml0_.attrib, "l") is not None and Utils.getXmlAttrByName(xml0_.attrib, "l")[1] == "ua"): 
             lang = MorphLang.UA
@@ -1332,9 +1329,9 @@ class CityItemToken(MetaToken):
                 ci.termins.append(t)
                 t.add_std_abridges()
                 if (v.startswith("SAINT ")): 
-                    t.add_abridge("ST. " + v[6 : ])
+                    t.add_abridge("ST. " + v[6:])
                 elif (v.startswith("SAITNE ")): 
-                    t.add_abridge("STE. " + v[7 : ])
+                    t.add_abridge("STE. " + v[7:])
         onto.add_item(ci)
     
     @staticmethod
@@ -1342,9 +1339,9 @@ class CityItemToken(MetaToken):
         from pullenti.morph.MorphLang import MorphLang
         from pullenti.ner.core.Termin import Termin
         ci = IntOntologyItem(None)
-        ci.misc_attr = ci
+        ci.misc_attr = (ci)
         adj = None
-        onto = CityItemToken.__m_ontology
+        onto = CityItemToken.M_ONTOLOGY
         city_adj = CityItemToken.M_CITY_ADJECTIVES
         lang = MorphLang.RU
         if (Utils.getXmlAttrByName(xml0_.attrib, "l") is not None): 
@@ -1362,52 +1359,51 @@ class CityItemToken(MetaToken):
                 t.init_by_normal_text(v, lang)
                 ci.termins.append(t)
                 if (v == "САНКТ-ПЕТЕРБУРГ"): 
-                    if (CityItemToken.__m_st_peterburg is None): 
-                        CityItemToken.__m_st_peterburg = ci
+                    if (CityItemToken.M_ST_PETERBURG is None): 
+                        CityItemToken.M_ST_PETERBURG = ci
                     t.acronym = "СПБ"
                     t.add_abridge("С.ПЕТЕРБУРГ")
                     t.add_abridge("СП-Б")
                     ci.termins.append(Termin("ПЕТЕРБУРГ", lang))
                 elif (v.startswith("SAINT ")): 
-                    t.add_abridge("ST. " + v[6 : ])
+                    t.add_abridge("ST. " + v[6:])
                 elif (v.startswith("SAITNE ")): 
-                    t.add_abridge("STE. " + v[7 : ])
+                    t.add_abridge("STE. " + v[7:])
             elif (x.tag == "a"): 
                 adj = Utils.getXmlInnerText(x)
         onto.add_item(ci)
         if (not Utils.isNullOrEmpty(adj)): 
             at = Termin()
             at.init_by_normal_text(adj, lang)
-            at.tag = ci
+            at.tag = (ci)
             city_adj.add(at)
             spb = adj == "САНКТ-ПЕТЕРБУРГСКИЙ" or adj == "САНКТ-ПЕТЕРБУРЗЬКИЙ"
             if (spb): 
-                city_adj.add(Termin._new477(adj[6 : ], lang, ci))
+                city_adj.add(Termin._new477(adj[6:], lang, ci))
     
-    __m_ontology = None
+    M_ONTOLOGY = None
     
-    __m_st_peterburg = None
+    M_ST_PETERBURG = None
     
     M_CITY_ADJECTIVES = None
     
-    __m_std_adjectives = None
-
+    M_STD_ADJECTIVES = None
     
     @staticmethod
-    def _new1100(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType') -> 'CityItemToken':
+    def _new1102(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType') -> 'CityItemToken':
         res = CityItemToken(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new1102(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : bool) -> 'CityItemToken':
+    def _new1104(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : bool) -> 'CityItemToken':
         res = CityItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.geo_object_before = _arg4
         return res
     
     @staticmethod
-    def _new1103(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : bool, _arg5 : str) -> 'CityItemToken':
+    def _new1105(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : bool, _arg5 : str) -> 'CityItemToken':
         res = CityItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.geo_object_before = _arg4
@@ -1415,14 +1411,14 @@ class CityItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1104(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str) -> 'CityItemToken':
+    def _new1106(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str) -> 'CityItemToken':
         res = CityItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new1108(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : 'IntOntologyItem', _arg5 : 'MorphCollection') -> 'CityItemToken':
+    def _new1110(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : 'IntOntologyItem', _arg5 : 'MorphCollection') -> 'CityItemToken':
         res = CityItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.onto_item = _arg4
@@ -1430,14 +1426,14 @@ class CityItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1110(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : 'MorphCollection') -> 'CityItemToken':
+    def _new1112(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : 'MorphCollection') -> 'CityItemToken':
         res = CityItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.morph = _arg4
         return res
     
     @staticmethod
-    def _new1111(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : 'IntOntologyItem', _arg5 : str) -> 'CityItemToken':
+    def _new1113(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : 'IntOntologyItem', _arg5 : str) -> 'CityItemToken':
         res = CityItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.onto_item = _arg4
@@ -1445,7 +1441,7 @@ class CityItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1112(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str, _arg5 : bool) -> 'CityItemToken':
+    def _new1114(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str, _arg5 : bool) -> 'CityItemToken':
         res = CityItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
@@ -1453,7 +1449,7 @@ class CityItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1113(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str, _arg5 : 'MorphCollection') -> 'CityItemToken':
+    def _new1115(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str, _arg5 : 'MorphCollection') -> 'CityItemToken':
         res = CityItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
@@ -1461,7 +1457,7 @@ class CityItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1114(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str, _arg5 : bool, _arg6 : 'MorphCollection') -> 'CityItemToken':
+    def _new1116(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str, _arg5 : bool, _arg6 : 'MorphCollection') -> 'CityItemToken':
         res = CityItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
@@ -1470,7 +1466,7 @@ class CityItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1115(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str, _arg5 : str, _arg6 : bool, _arg7 : 'MorphCollection') -> 'CityItemToken':
+    def _new1117(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str, _arg5 : str, _arg6 : bool, _arg7 : 'MorphCollection') -> 'CityItemToken':
         res = CityItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4

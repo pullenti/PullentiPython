@@ -1,11 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.morph.LanguageHelper import LanguageHelper
 
 
@@ -35,12 +35,7 @@ class IntOntologyItem:
         return value
     
     def set_shortest_canonical_text(self, ignore_termins_with_notnull_tags : bool=False) -> None:
-        """ В качестве канонического текста установить самый короткий среди терминов
-        
-        Args:
-            ignore_termins_with_notnull_tags(bool): 
-        """
-        self.__m_canonic_text = None
+        self.__m_canonic_text = (None)
         for t in self.termins: 
             if (ignore_termins_with_notnull_tags and t.tag is not None): 
                 continue
@@ -55,7 +50,7 @@ class IntOntologyItem:
                 self.__m_canonic_text = s
     
     def __str__(self) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         if (self.typ is not None): 
             print("{0}: ".format(self.typ), end="", file=res, flush=True)
         print(self.canonic_text, end="", file=res)

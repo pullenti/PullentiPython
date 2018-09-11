@@ -1,16 +1,15 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.chat.ChatType import ChatType
 from pullenti.ner.chat.VerbType import VerbType
-
 
 
 class ChatReferent(Referent):
@@ -31,7 +30,7 @@ class ChatReferent(Referent):
     ATTR_VERBTYPE = "VERBTYPE"
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         print(Utils.enumToString(self.typ), end="", file=res)
         if (self.not0_): 
             print(" not", end="", file=res)
@@ -41,10 +40,12 @@ class ChatReferent(Referent):
         vty = self.verb_types
         if (len(vty) > 0): 
             print("[", end="", file=res)
-            for i in range(len(vty)):
+            i = 0
+            while i < len(vty): 
                 if (i > 0): 
                     print(", ", end="", file=res)
                 print(Utils.enumToString(vty[i]), end="", file=res)
+                i += 1
             print("]", end="", file=res)
         return Utils.toStringStringIO(res)
     
@@ -112,7 +113,6 @@ class ChatReferent(Referent):
         if (tr.not0_ != self.not0_): 
             return False
         return True
-
     
     @staticmethod
     def _new471(_arg1 : 'ChatType') -> 'ChatReferent':

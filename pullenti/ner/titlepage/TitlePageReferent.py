@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the convertor N2JP from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping from Pullenti C#.NET project.
 # See www.pullenti.ru/downloadpage.aspx.
 # 
 # 
 
 import io
 import typing
-from pullenti.ntopy.Utils import Utils
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.GetTextAttr import GetTextAttr
@@ -55,7 +55,7 @@ class TitlePageReferent(Referent):
     ATTR_ATTR = "ATTR"
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
-        res = Utils.newStringIO(None)
+        res = io.StringIO()
         str0_ = self.get_string_value(TitlePageReferent.ATTR_NAME)
         print("\"{0}\"".format(Utils.ifNotNull(str0_, "?")), end="", file=res, flush=True)
         if (not short_variant): 
@@ -64,7 +64,7 @@ class TitlePageReferent(Referent):
                     print(" ({0})".format(r.value), end="", file=res, flush=True)
                     break
             for r in self.slots: 
-                if (r.type_name == TitlePageReferent.ATTR_AUTHOR and isinstance(r.value, Referent)): 
+                if (r.type_name == TitlePageReferent.ATTR_AUTHOR and (isinstance(r.value, Referent))): 
                     print(", {0}".format((r.value if isinstance(r.value, Referent) else None).to_string(True, lang, 0)), end="", file=res, flush=True)
         if (self.city is not None and not short_variant): 
             print(", {0}".format(self.city.to_string(True, lang, 0)), end="", file=res, flush=True)
@@ -107,11 +107,11 @@ class TitlePageReferent(Referent):
             if (br is not None and br.end_token == end): 
                 begin = begin.next0_
                 end = end.previous
-        val = MiscHelper.get_text_value(begin, end, Utils.valToEnum(GetTextAttr.KEEPREGISTER | GetTextAttr.KEEPQUOTES, GetTextAttr))
+        val = MiscHelper.get_text_value(begin, end, Utils.valToEnum((GetTextAttr.KEEPREGISTER) | (GetTextAttr.KEEPQUOTES), GetTextAttr))
         if (val is None): 
             return None
         if (val.endswith(".") and not val.endswith("..")): 
-            val = val[0 : (len(val) - 1)].strip()
+            val = val[0:0+len(val) - 1].strip()
         self.add_slot(TitlePageReferent.ATTR_NAME, val, False, 0)
         return Termin(val.upper())
     
