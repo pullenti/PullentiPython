@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 import typing
@@ -17,9 +15,10 @@ class MetaToken(Token):
     """ Токен - надстройка над диапазоном других токенов """
     
     def __init__(self, begin : 'Token', end : 'Token', kit_ : 'AnalysisKit'=None) -> None:
-        self._m_begin_token = None
-        self._m_end_token = None
+        from pullenti.morph.CharsInfo import CharsInfo
         super().__init__((kit_ if kit_ is not None else ((begin.kit if begin is not None else None))), (0 if begin is None else begin.begin_char), (0 if end is None else end.end_char))
+        self._m_begin_token = None;
+        self._m_end_token = None;
         if (begin == self or end == self): 
             pass
         self._m_begin_token = begin
@@ -34,12 +33,13 @@ class MetaToken(Token):
                     if (self.chars.is_capital_upper and t.chars.is_all_lower): 
                         pass
                     else: 
-                        self.chars &= t.chars
+                        self.chars = CharsInfo._new2668(((self.chars.value) & (t.chars.value)))
                 if (t == end): 
                     break
                 t = t.next0_
     
-    def __refresh_chars_info(self) -> None:
+    def __RefreshCharsInfo(self) -> None:
+        from pullenti.morph.CharsInfo import CharsInfo
         if (self._m_begin_token is None): 
             return
         self.chars = self._m_begin_token.chars
@@ -53,7 +53,7 @@ class MetaToken(Token):
                 if (t.end_char > self._m_end_token.end_char): 
                     break
                 if (t.chars.is_letter): 
-                    self.chars &= t.chars
+                    self.chars = CharsInfo._new2668(((self.chars.value) & (t.chars.value)))
                 if (t == self._m_end_token): 
                     break
                 t = t.next0_
@@ -62,7 +62,6 @@ class MetaToken(Token):
     def begin_token(self) -> 'Token':
         """ Начальный токен диапазона """
         return self._m_begin_token
-    
     @begin_token.setter
     def begin_token(self, value) -> 'Token':
         if (self._m_begin_token != value): 
@@ -72,14 +71,13 @@ class MetaToken(Token):
                 self._m_begin_token = value
                 if (value is not None): 
                     self.begin_char = self._m_begin_token.begin_char
-                self.__refresh_chars_info()
+                self.__RefreshCharsInfo()
         return value
     
     @property
     def end_token(self) -> 'Token':
         """ Конечный токен диапазона """
         return self._m_end_token
-    
     @end_token.setter
     def end_token(self, value) -> 'Token':
         if (self._m_end_token != value): 
@@ -89,7 +87,7 @@ class MetaToken(Token):
                 self._m_end_token = value
                 if (value is not None): 
                     self.end_char = self._m_end_token.end_char
-                self.__refresh_chars_info()
+                self.__RefreshCharsInfo()
         return value
     
     @property
@@ -134,7 +132,7 @@ class MetaToken(Token):
         while t is not None: 
             if (res.tell() > 0 and t.is_whitespace_before): 
                 print(' ', end="", file=res)
-            print(t.get_source_text(), end="", file=res)
+            print(t.getSourceText(), end="", file=res)
             if (t == self._m_end_token): 
                 break
             t = t.next0_
@@ -155,7 +153,7 @@ class MetaToken(Token):
             return False
         return True
     
-    def get_normal_case_text(self, mc : 'MorphClass'=MorphClass(), single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def getNormalCaseText(self, mc : 'MorphClass'=MorphClass(), single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         attr = GetTextAttr.NO
         if (single_number): 
@@ -165,24 +163,24 @@ class MetaToken(Token):
         if (keep_chars): 
             attr = (Utils.valToEnum((attr) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
         if (self.begin_token == self.end_token): 
-            return self.begin_token.get_normal_case_text(mc, single_number, gender, keep_chars)
+            return self.begin_token.getNormalCaseText(mc, single_number, gender, keep_chars)
         else: 
-            return MiscHelper.get_text_value(self.begin_token, self.end_token, attr)
+            return MiscHelper.getTextValue(self.begin_token, self.end_token, attr)
     
     @staticmethod
-    def _new590(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'MetaToken':
+    def _new600(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.morph = _arg3
         return res
     
     @staticmethod
-    def _new825(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object) -> 'MetaToken':
+    def _new836(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object) -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.tag = _arg3
         return res
     
     @staticmethod
-    def _new2183(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
+    def _new2222(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.tag = _arg3
         res.morph = _arg4

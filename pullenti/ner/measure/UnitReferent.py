@@ -1,11 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
+from pullenti.morph.MorphLang import MorphLang
 from pullenti.morph.LanguageHelper import LanguageHelper
 
 
@@ -14,8 +13,8 @@ class UnitReferent(Referent):
     
     def __init__(self) -> None:
         from pullenti.ner.measure.internal.UnitMeta import UnitMeta
-        self._m_unit = None
         super().__init__(UnitReferent.OBJ_TYPENAME)
+        self._m_unit = None;
         self.instance_of = UnitMeta.GLOBAL_META
     
     OBJ_TYPENAME = "MEASUREUNIT"
@@ -32,24 +31,24 @@ class UnitReferent(Referent):
     
     @property
     def parent_referent(self) -> 'Referent':
-        return (self.get_value(UnitReferent.ATTR_BASEUNIT) if isinstance(self.get_value(UnitReferent.ATTR_BASEUNIT), Referent) else None)
+        return Utils.asObjectOrNull(self.getSlotValue(UnitReferent.ATTR_BASEUNIT), Referent)
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         nam = None
         for l_ in range(2):
             for s in self.slots: 
                 if (((s.type_name == UnitReferent.ATTR_NAME and short_variant)) or ((s.type_name == UnitReferent.ATTR_FULLNAME and not short_variant))): 
-                    val = (s.value if isinstance(s.value, str) else None)
+                    val = Utils.asObjectOrNull(s.value, str)
                     if (lang is not None and l_ == 0): 
-                        if (lang.is_ru != LanguageHelper.is_cyrillic(val)): 
+                        if (lang.is_ru != LanguageHelper.isCyrillic(val)): 
                             continue
                     nam = val
                     break
             if (nam is not None): 
                 break
         if (nam is None): 
-            nam = self.get_string_value(UnitReferent.ATTR_NAME)
-        pow0_ = self.get_string_value(UnitReferent.ATTR_POW)
+            nam = self.getStringValue(UnitReferent.ATTR_NAME)
+        pow0_ = self.getStringValue(UnitReferent.ATTR_POW)
         if (Utils.isNullOrEmpty(pow0_) or lev > 0): 
             return Utils.ifNotNull(nam, "?")
         if (pow0_[0] != '-'): 
@@ -57,14 +56,14 @@ class UnitReferent(Referent):
         else: 
             return "{0}<{1}>".format(nam, pow0_)
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
-        ur = (obj if isinstance(obj, UnitReferent) else None)
+    def canBeEquals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+        ur = Utils.asObjectOrNull(obj, UnitReferent)
         if (ur is None): 
             return False
         for s in self.slots: 
-            if (ur.find_slot(s.type_name, s.value, True) is None): 
+            if (ur.findSlot(s.type_name, s.value, True) is None): 
                 return False
         for s in ur.slots: 
-            if (self.find_slot(s.type_name, s.value, True) is None): 
+            if (self.findSlot(s.type_name, s.value, True) is None): 
                 return False
         return True

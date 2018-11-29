@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 from enum import IntEnum
@@ -23,6 +21,10 @@ class TableHelper:
         TABLEEND = (0 + 1) + 1
         ROWEND = ((0 + 1) + 1) + 1
         CELLEND = (((0 + 1) + 1) + 1) + 1
+        
+        @classmethod
+        def has_value(cls, value):
+            return any(value == item.value for item in cls)
     
     class TableInfo:
         
@@ -33,17 +35,17 @@ class TableHelper:
             self.col_span = 0
             self.row_span = 0
             self.typ = TableHelper.TableTypes.UNDEFINED
-            self.src = None
+            self.src = None;
             self.src = t
             if (t is None): 
                 return
-            if (t.is_char(chr(0x1E))): 
+            if (t.isChar(chr(0x1E))): 
                 self.typ = TableHelper.TableTypes.TABLESTART
                 return
-            if (t.is_char(chr(0x1F))): 
+            if (t.isChar(chr(0x1F))): 
                 self.typ = TableHelper.TableTypes.TABLEEND
                 return
-            if (not t.is_char(chr(7))): 
+            if (not t.isChar(chr(7))): 
                 return
             txt = t.kit.sofa.text
             self.typ = TableHelper.TableTypes.CELLEND
@@ -65,27 +67,37 @@ class TableHelper:
                 p -= 1
     
     @staticmethod
-    def try_parse_rows(t : 'Token', max_char : int, must_be_start_of_table : bool) -> typing.List['TableRowToken']:
+    def tryParseRows(t : 'Token', max_char : int, must_be_start_of_table : bool) -> typing.List['TableRowToken']:
+        """ Получить список строк таблицы
+        
+        Args:
+            t(Token): начальная позиция
+            max_char(int): максимальная позиция (0 - не ограничена)
+            must_be_start_of_table(bool): при true первый символ должен быть 1Eh
+        
+        Returns:
+            typing.List[TableRowToken]: список строк
+        """
         from pullenti.ner.core.internal.TableRowToken import TableRowToken
         if (t is None): 
             return None
         is_tab = False
         if (must_be_start_of_table): 
-            if (not t.is_char(chr(0x1E))): 
+            if (not t.isChar(chr(0x1E))): 
                 return None
             is_tab = True
-        inoutarg485 = RefOutArgWrapper(is_tab)
-        rw = TableHelper.__parse(t, max_char, None, inoutarg485)
-        is_tab = inoutarg485.value
+        wrapis_tab495 = RefOutArgWrapper(is_tab)
+        rw = TableHelper.__parse(t, max_char, None, wrapis_tab495)
+        is_tab = wrapis_tab495.value
         if (rw is None): 
             return None
         res = list()
         res.append(rw)
         t = rw.end_token.next0_
         while t is not None: 
-            inoutarg484 = RefOutArgWrapper(is_tab)
-            rw0 = TableHelper.__parse(t, max_char, rw, inoutarg484)
-            is_tab = inoutarg484.value
+            wrapis_tab494 = RefOutArgWrapper(is_tab)
+            rw0 = TableHelper.__parse(t, max_char, rw, wrapis_tab494)
+            is_tab = wrapis_tab494.value
             if (rw0 is None): 
                 break
             rw = rw0
@@ -124,7 +136,7 @@ class TableHelper:
             return None
         txt = t.kit.sofa.text
         t0 = t
-        if (t.is_char(chr(0x1E)) and t.next0_ is not None): 
+        if (t.isChar(chr(0x1E)) and t.next0_ is not None): 
             is_tab.value = True
             t = t.next0_
         cell_info = None
@@ -150,7 +162,7 @@ class TableHelper:
         if (cell_info is None): 
             return None
         res = TableRowToken(t0, tt)
-        res.cells.append(TableCellToken._new486(t, tt, cell_info.row_span, cell_info.col_span))
+        res.cells.append(TableCellToken._new496(t, tt, cell_info.row_span, cell_info.col_span))
         tt = tt.next0_
         while tt is not None and ((tt.end_char <= max_char or max_char == 0)): 
             t0 = tt
@@ -179,25 +191,25 @@ class TableHelper:
                 break
             if (cell_info.typ != TableHelper.TableTypes.CELLEND): 
                 break
-            res.cells.append(TableCellToken._new486(t0, tt, cell_info.row_span, cell_info.col_span))
+            res.cells.append(TableCellToken._new496(t0, tt, cell_info.row_span, cell_info.col_span))
             res.end_token = tt
             tt = tt.next0_
         if ((len(res.cells) < 2) and not res._eor): 
             return None
-        if (res.end_token.next0_ is not None and res.end_token.next0_.is_char(chr(0x1F))): 
+        if (res.end_token.next0_ is not None and res.end_token.next0_.isChar(chr(0x1F))): 
             res._last_row = True
             res.end_token = res.end_token.next0_
         return res
     
     @staticmethod
-    def is_cell_end(t : 'Token') -> bool:
-        if (t is not None and t.is_char(chr(7))): 
+    def isCellEnd(t : 'Token') -> bool:
+        if (t is not None and t.isChar(chr(7))): 
             return True
         return False
     
     @staticmethod
-    def is_row_end(t : 'Token') -> bool:
-        if (t is None or not t.is_char(chr(7))): 
+    def isRowEnd(t : 'Token') -> bool:
+        if (t is None or not t.isChar(chr(7))): 
             return False
         ti = TableHelper.TableInfo(t)
         return ti.typ == TableHelper.TableTypes.ROWEND

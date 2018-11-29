@@ -1,12 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
+from pullenti.morph.MorphLang import MorphLang
 
 
 class BankDataReferent(Referent):
@@ -27,49 +26,49 @@ class BankDataReferent(Referent):
     
     ATTR_MISC = "MISC"
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         from pullenti.ner.uri.UriReferent import UriReferent
         res = io.StringIO()
         for s in self.slots: 
             if (isinstance(s.value, UriReferent)): 
-                if ((s.value if isinstance(s.value, UriReferent) else None).scheme == "Р/С"): 
+                if ((Utils.asObjectOrNull(s.value, UriReferent)).scheme == "Р/С"): 
                     print(str(s.value), end="", file=res)
                     break
         if (res.tell() == 0): 
-            print(Utils.ifNotNull(self.get_string_value(BankDataReferent.ATTR_ITEM), "?"), end="", file=res)
+            print(Utils.ifNotNull(self.getStringValue(BankDataReferent.ATTR_ITEM), "?"), end="", file=res)
         if (self.parent_referent is not None and not short_variant and (lev < 20)): 
-            print(", {0}".format(self.parent_referent.to_string(True, lang, lev + 1)), end="", file=res, flush=True)
+            print(", {0}".format(self.parent_referent.toString(True, lang, lev + 1)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
     @property
     def parent_referent(self) -> 'Referent':
-        return (self.get_value(BankDataReferent.ATTR_BANK) if isinstance(self.get_value(BankDataReferent.ATTR_BANK), Referent) else None)
+        return Utils.asObjectOrNull(self.getSlotValue(BankDataReferent.ATTR_BANK), Referent)
     
-    def find_value(self, schema : str) -> str:
+    def findValue(self, schema : str) -> str:
         from pullenti.ner.uri.UriReferent import UriReferent
         for s in self.slots: 
             if (isinstance(s.value, UriReferent)): 
-                ur = (s.value if isinstance(s.value, UriReferent) else None)
+                ur = Utils.asObjectOrNull(s.value, UriReferent)
                 if (ur.scheme == schema): 
                     return ur.value
         return None
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def canBeEquals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
         from pullenti.ner.uri.UriReferent import UriReferent
-        bd = (obj if isinstance(obj, BankDataReferent) else None)
+        bd = Utils.asObjectOrNull(obj, BankDataReferent)
         if (bd is None): 
             return False
         for s in self.slots: 
             if (s.type_name == BankDataReferent.ATTR_ITEM): 
-                ur = (s.value if isinstance(s.value, UriReferent) else None)
-                val = bd.find_value(ur.scheme)
+                ur = Utils.asObjectOrNull(s.value, UriReferent)
+                val = bd.findValue(ur.scheme)
                 if (val is not None): 
                     if (val != ur.value): 
                         return False
             elif (s.type_name == BankDataReferent.ATTR_BANK): 
-                b1 = (s.value if isinstance(s.value, Referent) else None)
-                b2 = (bd.get_value(BankDataReferent.ATTR_BANK) if isinstance(bd.get_value(BankDataReferent.ATTR_BANK), Referent) else None)
+                b1 = Utils.asObjectOrNull(s.value, Referent)
+                b2 = Utils.asObjectOrNull(bd.getSlotValue(BankDataReferent.ATTR_BANK), Referent)
                 if (b2 is not None): 
-                    if (b1 != b2 and not b1.can_be_equals(b2, Referent.EqualType.WITHINONETEXT)): 
+                    if (b1 != b2 and not b1.canBeEquals(b2, Referent.EqualType.WITHINONETEXT)): 
                         return False
         return True

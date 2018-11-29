@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -17,10 +15,10 @@ class MorphClass:
         if (val is not None): 
             self.value = val.value
     
-    def __get_value(self, i : int) -> bool:
+    def __getValue(self, i : int) -> bool:
         return (((((self.value) >> i)) & 1)) != 0
     
-    def __set_value(self, i : int, val : bool) -> None:
+    def __setValue(self, i : int, val : bool) -> None:
         if (val): 
             self.value |= ((1 << i))
         else: 
@@ -30,7 +28,6 @@ class MorphClass:
     def is_undefined(self) -> bool:
         """ Неопределённый тип """
         return self.value == (0)
-    
     @is_undefined.setter
     def is_undefined(self, value_) -> bool:
         self.value = (0)
@@ -39,217 +36,203 @@ class MorphClass:
     @property
     def is_noun(self) -> bool:
         """ Существительное """
-        return self.__get_value(0)
-    
+        return self.__getValue(0)
     @is_noun.setter
     def is_noun(self, value_) -> bool:
         if (value_): 
             self.value = (0)
-        self.__set_value(0, value_)
+        self.__setValue(0, value_)
         return value_
     
     @staticmethod
-    def is_noun_int(val : int) -> bool:
+    def isNounInt(val : int) -> bool:
         return ((val & 1)) != 0
     
     @property
     def is_adjective(self) -> bool:
         """ Прилагательное """
-        return self.__get_value(1)
-    
+        return self.__getValue(1)
     @is_adjective.setter
     def is_adjective(self, value_) -> bool:
         if (value_): 
             self.value = (0)
-        self.__set_value(1, value_)
+        self.__setValue(1, value_)
         return value_
     
     @staticmethod
-    def is_adjective_int(val : int) -> bool:
+    def isAdjectiveInt(val : int) -> bool:
         return ((val & 2)) != 0
     
     @property
     def is_verb(self) -> bool:
         """ Глагол """
-        return self.__get_value(2)
-    
+        return self.__getValue(2)
     @is_verb.setter
     def is_verb(self, value_) -> bool:
         if (value_): 
             self.value = (0)
-        self.__set_value(2, value_)
+        self.__setValue(2, value_)
         return value_
     
     @staticmethod
-    def is_verb_int(val : int) -> bool:
+    def isVerbInt(val : int) -> bool:
         return ((val & 4)) != 0
     
     @property
     def is_adverb(self) -> bool:
         """ Наречие """
-        return self.__get_value(3)
-    
+        return self.__getValue(3)
     @is_adverb.setter
     def is_adverb(self, value_) -> bool:
         if (value_): 
             self.value = (0)
-        self.__set_value(3, value_)
+        self.__setValue(3, value_)
         return value_
     
     @staticmethod
-    def is_adverb_int(val : int) -> bool:
+    def isAdverbInt(val : int) -> bool:
         return ((val & 8)) != 0
     
     @property
     def is_pronoun(self) -> bool:
         """ Местоимение """
-        return self.__get_value(4)
-    
+        return self.__getValue(4)
     @is_pronoun.setter
     def is_pronoun(self, value_) -> bool:
         if (value_): 
             self.value = (0)
-        self.__set_value(4, value_)
+        self.__setValue(4, value_)
         return value_
     
     @staticmethod
-    def is_pronoun_int(val : int) -> bool:
+    def isPronounInt(val : int) -> bool:
         return ((val & 0x10)) != 0
     
     @property
     def is_misc(self) -> bool:
         """ Всякая ерунда (частицы, междометия) """
-        return self.__get_value(5)
-    
+        return self.__getValue(5)
     @is_misc.setter
     def is_misc(self, value_) -> bool:
         if (value_): 
             self.value = (0)
-        self.__set_value(5, value_)
+        self.__setValue(5, value_)
         return value_
     
     @staticmethod
-    def is_misc_int(val : int) -> bool:
+    def isMiscInt(val : int) -> bool:
         return ((val & 0x20)) != 0
     
     @property
     def is_preposition(self) -> bool:
         """ Предлог """
-        return self.__get_value(6)
-    
+        return self.__getValue(6)
     @is_preposition.setter
     def is_preposition(self, value_) -> bool:
-        self.__set_value(6, value_)
+        self.__setValue(6, value_)
         return value_
     
     @staticmethod
-    def is_preposition_int(val : int) -> bool:
+    def isPrepositionInt(val : int) -> bool:
         return ((val & 0x40)) != 0
     
     @property
     def is_conjunction(self) -> bool:
         """ Союз """
-        return self.__get_value(7)
-    
+        return self.__getValue(7)
     @is_conjunction.setter
     def is_conjunction(self, value_) -> bool:
-        self.__set_value(7, value_)
+        self.__setValue(7, value_)
         return value_
     
     @staticmethod
-    def is_conjunction_int(val : int) -> bool:
+    def isConjunctionInt(val : int) -> bool:
         return ((val & 0x80)) != 0
     
     @property
     def is_proper(self) -> bool:
         """ Собственное имя (фамилия, имя, отчество, геогр.название и др.) """
-        return self.__get_value(8)
-    
+        return self.__getValue(8)
     @is_proper.setter
     def is_proper(self, value_) -> bool:
-        self.__set_value(8, value_)
+        self.__setValue(8, value_)
         return value_
     
     @staticmethod
-    def is_proper_int(val : int) -> bool:
+    def isProperInt(val : int) -> bool:
         return ((val & 0x100)) != 0
     
     @property
     def is_proper_surname(self) -> bool:
         """ Фамилия """
-        return self.__get_value(9)
-    
+        return self.__getValue(9)
     @is_proper_surname.setter
     def is_proper_surname(self, value_) -> bool:
         if (value_): 
             self.is_proper = True
-        self.__set_value(9, value_)
+        self.__setValue(9, value_)
         return value_
     
     @staticmethod
-    def is_proper_surname_int(val : int) -> bool:
+    def isProperSurnameInt(val : int) -> bool:
         return ((val & 0x200)) != 0
     
     @property
     def is_proper_name(self) -> bool:
         """ Фамилия """
-        return self.__get_value(10)
-    
+        return self.__getValue(10)
     @is_proper_name.setter
     def is_proper_name(self, value_) -> bool:
         if (value_): 
             self.is_proper = True
-        self.__set_value(10, value_)
+        self.__setValue(10, value_)
         return value_
     
     @staticmethod
-    def is_proper_name_int(val : int) -> bool:
+    def isProperNameInt(val : int) -> bool:
         return ((val & 0x400)) != 0
     
     @property
     def is_proper_secname(self) -> bool:
         """ Отчество """
-        return self.__get_value(11)
-    
+        return self.__getValue(11)
     @is_proper_secname.setter
     def is_proper_secname(self, value_) -> bool:
         if (value_): 
             self.is_proper = True
-        self.__set_value(11, value_)
+        self.__setValue(11, value_)
         return value_
     
     @staticmethod
-    def is_proper_secname_int(val : int) -> bool:
+    def isProperSecnameInt(val : int) -> bool:
         return ((val & 0x800)) != 0
     
     @property
     def is_proper_geo(self) -> bool:
         """ Географическое название """
-        return self.__get_value(12)
-    
+        return self.__getValue(12)
     @is_proper_geo.setter
     def is_proper_geo(self, value_) -> bool:
         if (value_): 
             self.is_proper = True
-        self.__set_value(12, value_)
+        self.__setValue(12, value_)
         return value_
     
     @staticmethod
-    def is_proper_geo_int(val : int) -> bool:
+    def isProperGeoInt(val : int) -> bool:
         return ((val & 0x1000)) != 0
     
     @property
     def is_personal_pronoun(self) -> bool:
         """ Личное местоимение (я, мой, ты, он ...) """
-        return self.__get_value(13)
-    
+        return self.__getValue(13)
     @is_personal_pronoun.setter
     def is_personal_pronoun(self, value_) -> bool:
-        self.__set_value(13, value_)
+        self.__setValue(13, value_)
         return value_
     
     @staticmethod
-    def is_personal_pronoun_int(val : int) -> bool:
+    def isPersonalPronounInt(val : int) -> bool:
         return ((val & 0x2000)) != 0
     
     __m_names = None
@@ -257,12 +240,12 @@ class MorphClass:
     def __str__(self) -> str:
         tmp_str = io.StringIO()
         i = 0
-        first_pass3624 = True
+        first_pass2732 = True
         while True:
-            if first_pass3624: first_pass3624 = False
+            if first_pass2732: first_pass2732 = False
             else: i += 1
             if (not (i < len(MorphClass.__m_names))): break
-            if (self.__get_value(i)): 
+            if (self.__getValue(i)): 
                 if (i == 5): 
                     if (self.is_conjunction or self.is_preposition or self.is_proper): 
                         continue
@@ -403,7 +386,7 @@ class MorphClass:
         return res
     
     @staticmethod
-    def _new2395(_arg1 : bool) -> 'MorphClass':
+    def _new2427(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_proper_surname = _arg1
         return res

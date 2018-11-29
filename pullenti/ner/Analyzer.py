@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 import math
@@ -20,9 +18,14 @@ class Analyzer:
         self.__last_percent = 0
         self.__persistreferentsregim = False
         self.__ignorethisanalyzer = False
-        self._persist_analizer_data = None
+        self._persist_analizer_data = None;
     
     def process(self, kit : 'AnalysisKit') -> None:
+        """ Запустить анализ
+        
+        Args:
+            kit(AnalysisKit): контейнер с данными
+        """
         pass
     
     @property
@@ -62,7 +65,13 @@ class Analyzer:
          Специфические анализаторы по умолчанию не добавляются в процессор (Processor) """
         return False
     
-    def create_referent(self, type0_ : str) -> 'Referent':
+    def createReferent(self, type0_ : str) -> 'Referent':
+        """ Создать объект указанного типа
+        
+        Args:
+            type0_(str): 
+        
+        """
         return None
     
     __empty_list = None
@@ -77,9 +86,9 @@ class Analyzer:
         """ Сколько примерно времени работает анализатор по сравнению с другими (в условных единицах) """
         return 0
     
-    def _on_progress(self, pos : int, max0_ : int, kit : 'AnalysisKit') -> bool:
+    def _onProgress(self, pos : int, max0_ : int, kit : 'AnalysisKit') -> bool:
         ret = True
-        if (self._progress.__len__() > 0): 
+        if (len(self._progress) > 0): 
             if (pos >= 0 and pos <= max0_ and max0_ > 0): 
                 percent = pos
                 percent *= (100)
@@ -87,15 +96,15 @@ class Analyzer:
                 if (percent != self.__last_percent): 
                     arg = ProgressEventArgs(percent, None)
                     for iiid in range(len(self._progress)): self._progress[iiid].call(self, arg)
-                    if (self._cancel.__len__() > 0): 
+                    if (len(self._cancel) > 0): 
                         cea = CancelEventArgs()
                         for iiid in range(len(self._cancel)): self._cancel[iiid].call(kit, cea)
                         ret = not cea.cancel
                 self.__last_percent = percent
         return ret
     
-    def _on_message(self, message : object) -> bool:
-        if (self._progress.__len__() > 0): 
+    def _onMessage(self, message : object) -> bool:
+        if (len(self._progress) > 0): 
             for iiid in range(len(self._progress)): self._progress[iiid].call(self, ProgressEventArgs(-1, message))
         return True
     
@@ -104,7 +113,6 @@ class Analyzer:
         """ Включить режим накопления выделяемых сущностей при обработке разных SourceOfText
          (то есть локальные сущности будут накапливаться) """
         return self.__persistreferentsregim
-    
     @_persist_referents_regim.setter
     def _persist_referents_regim(self, value) -> bool:
         self.__persistreferentsregim = value
@@ -114,19 +122,37 @@ class Analyzer:
     def ignore_this_analyzer(self) -> bool:
         """ При установке в true будет игнорироваться при обработке (для отладки) """
         return self.__ignorethisanalyzer
-    
     @ignore_this_analyzer.setter
     def ignore_this_analyzer(self, value) -> bool:
         self.__ignorethisanalyzer = value
         return self.__ignorethisanalyzer
     
-    def create_analyzer_data(self) -> 'AnalyzerData':
+    def createAnalyzerData(self) -> 'AnalyzerData':
+        """ Используется внутренним образом
+        
+        """
         return AnalyzerData()
     
-    def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
+    def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
+        """ Попытаться выделить сущность в указанном диапазоне (используется внутренним образом).
+         Кстати, выделенная сущность не сохраняется в локальной онтологии.
+        
+        Args:
+            begin(Token): начало диапазона
+            end(Token): конец диапазона (если null, то до конца)
+        
+        Returns:
+            ReferentToken: результат
+        """
         return None
     
-    def process_ontology_item(self, begin : 'Token') -> 'ReferentToken':
+    def processOntologyItem(self, begin : 'Token') -> 'ReferentToken':
+        """ Это используется внутренним образом для обработки внешних онтологий
+        
+        Args:
+            begin(Token): 
+        
+        """
         return None
     
     # static constructor for class Analyzer

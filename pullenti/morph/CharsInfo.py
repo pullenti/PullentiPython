@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -17,10 +15,10 @@ class CharsInfo:
         if (ci is not None): 
             self.value = ci.value
     
-    def __get_value(self, i : int) -> bool:
+    def __getValue(self, i : int) -> bool:
         return (((((self.value) >> i)) & 1)) != 0
     
-    def __set_value(self, i : int, val : bool) -> None:
+    def __setValue(self, i : int, val : bool) -> None:
         if (val): 
             self.value |= ((1 << i))
         else: 
@@ -29,72 +27,65 @@ class CharsInfo:
     @property
     def is_all_upper(self) -> bool:
         """ Все символы в верхнем регистре """
-        return self.__get_value(0)
-    
+        return self.__getValue(0)
     @is_all_upper.setter
     def is_all_upper(self, value_) -> bool:
-        self.__set_value(0, value_)
+        self.__setValue(0, value_)
         return value_
     
     @property
     def is_all_lower(self) -> bool:
         """ Все символы в нижнем регистре """
-        return self.__get_value(1)
-    
+        return self.__getValue(1)
     @is_all_lower.setter
     def is_all_lower(self, value_) -> bool:
-        self.__set_value(1, value_)
+        self.__setValue(1, value_)
         return value_
     
     @property
     def is_capital_upper(self) -> bool:
         """ ПЕрвый символ в верхнем регистре, остальные в нижнем.
          Для однобуквенной комбинации false. """
-        return self.__get_value(2)
-    
+        return self.__getValue(2)
     @is_capital_upper.setter
     def is_capital_upper(self, value_) -> bool:
-        self.__set_value(2, value_)
+        self.__setValue(2, value_)
         return value_
     
     @property
     def is_last_lower(self) -> bool:
         """ Все символы в верхнеи регистре, кроме последнего (длина >= 3) """
-        return self.__get_value(3)
-    
+        return self.__getValue(3)
     @is_last_lower.setter
     def is_last_lower(self, value_) -> bool:
-        self.__set_value(3, value_)
+        self.__setValue(3, value_)
         return value_
     
     @property
     def is_letter(self) -> bool:
         """ Это буквы """
-        return self.__get_value(4)
-    
+        return self.__getValue(4)
     @is_letter.setter
     def is_letter(self, value_) -> bool:
-        self.__set_value(4, value_)
+        self.__setValue(4, value_)
         return value_
     
     @property
     def is_latin_letter(self) -> bool:
         """ Это латиница """
-        return self.__get_value(5)
-    
+        return self.__getValue(5)
     @is_latin_letter.setter
     def is_latin_letter(self, value_) -> bool:
-        self.__set_value(5, value_)
+        self.__setValue(5, value_)
         return value_
     
     @property
     def is_cyrillic_letter(self) -> bool:
         """ Это кириллица """
-        return self.__get_value(6)
-    
+        return self.__getValue(6)
     @is_cyrillic_letter.setter
     def is_cyrillic_letter(self, value_) -> bool:
-        self.__set_value(6, value_)
+        self.__setValue(6, value_)
         return value_
     
     def __str__(self) -> str:
@@ -125,27 +116,6 @@ class CharsInfo:
             return False
         return self.value == (obj).value
     
-    def __hash__(self) -> int:
-        return self.value
-    
-    def __and__(self : 'CharsInfo', arg2 : 'CharsInfo') -> 'CharsInfo':
-        val1 = 0
-        val2 = 0
-        if (self is not None): 
-            val1 = self.value
-        if (arg2 is not None): 
-            val2 = arg2.value
-        return CharsInfo._new38(None, ((val1) & (val2)))
-    
-    def __or__(self : 'CharsInfo', arg2 : 'CharsInfo') -> 'CharsInfo':
-        val1 = 0
-        val2 = 0
-        if (self is not None): 
-            val1 = self.value
-        if (arg2 is not None): 
-            val2 = arg2.value
-        return CharsInfo._new38(None, ((val1) | (val2)))
-    
     def __eq__(self : 'CharsInfo', arg2 : 'CharsInfo') -> bool:
         val1 = 0
         val2 = 0
@@ -165,32 +135,26 @@ class CharsInfo:
         return val1 != val2
     
     @staticmethod
-    def _new38(_arg1 : 'CharsInfo', _arg2 : int) -> 'CharsInfo':
-        res = CharsInfo(_arg1)
-        res.value = _arg2
-        return res
-    
-    @staticmethod
-    def _new2206(_arg1 : bool) -> 'CharsInfo':
+    def _new2217(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_capital_upper = _arg1
         return res
     
     @staticmethod
-    def _new2370(_arg1 : bool) -> 'CharsInfo':
+    def _new2402(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_cyrillic_letter = _arg1
         return res
     
     @staticmethod
-    def _new2376(_arg1 : bool, _arg2 : bool) -> 'CharsInfo':
+    def _new2408(_arg1 : bool, _arg2 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_cyrillic_letter = _arg1
         res.is_capital_upper = _arg2
         return res
     
     @staticmethod
-    def _new2381(_arg1 : bool, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'CharsInfo':
+    def _new2413(_arg1 : bool, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_capital_upper = _arg1
         res.is_cyrillic_letter = _arg2
@@ -199,13 +163,13 @@ class CharsInfo:
         return res
     
     @staticmethod
-    def _new2403(_arg1 : bool) -> 'CharsInfo':
+    def _new2435(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_latin_letter = _arg1
         return res
     
     @staticmethod
-    def _new2674(_arg1 : int) -> 'CharsInfo':
+    def _new2668(_arg1 : int) -> 'CharsInfo':
         res = CharsInfo()
         res.value = _arg1
         return res

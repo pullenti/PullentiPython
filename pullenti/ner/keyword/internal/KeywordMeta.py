@@ -1,9 +1,8 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.keyword.KeywordType import KeywordType
 
@@ -13,10 +12,10 @@ class KeywordMeta(ReferentClass):
     def __init__(self) -> None:
         from pullenti.ner.keyword.KeywordReferent import KeywordReferent
         super().__init__()
-        self.add_feature(KeywordReferent.ATTR_TYPE, "Тип", 1, 1)
-        self.add_feature(KeywordReferent.ATTR_VALUE, "Значение", 1, 0)
-        self.add_feature(KeywordReferent.ATTR_NORMAL, "Нормализация", 1, 0)
-        self.add_feature(KeywordReferent.ATTR_REF, "Ссылка", 0, 0)
+        self.addFeature(KeywordReferent.ATTR_TYPE, "Тип", 1, 1)
+        self.addFeature(KeywordReferent.ATTR_VALUE, "Значение", 1, 0)
+        self.addFeature(KeywordReferent.ATTR_NORMAL, "Нормализация", 1, 0)
+        self.addFeature(KeywordReferent.ATTR_REF, "Ссылка", 0, 0)
     
     @property
     def name(self) -> str:
@@ -33,9 +32,9 @@ class KeywordMeta(ReferentClass):
     
     IMAGE_REF = "kwreferent"
     
-    def get_image_id(self, obj : 'Referent'=None) -> str:
+    def getImageId(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.keyword.KeywordReferent import KeywordReferent
-        m = (obj if isinstance(obj, KeywordReferent) else None)
+        m = Utils.asObjectOrNull(obj, KeywordReferent)
         if (m is not None): 
             if (m.typ == KeywordType.PREDICATE): 
                 return KeywordMeta.IMAGE_PRED

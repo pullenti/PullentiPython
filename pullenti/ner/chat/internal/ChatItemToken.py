@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 import datetime
@@ -19,11 +17,11 @@ from pullenti.morph.MorphGender import MorphGender
 class ChatItemToken(MetaToken):
     
     def __init__(self, b : 'Token', e0_ : 'Token') -> None:
+        super().__init__(b, e0_, None)
         self.not0_ = False
         self.typ = ChatType.UNDEFINED
         self.vtyp = VerbType.UNDEFINED
-        self.value = None
-        super().__init__(b, e0_, None)
+        self.value = None;
     
     def __str__(self) -> str:
         tmp = io.StringIO()
@@ -37,19 +35,19 @@ class ChatItemToken(MetaToken):
         return Utils.toStringStringIO(tmp)
     
     @staticmethod
-    def __is_empty_token(t : 'Token') -> bool:
+    def __isEmptyToken(t : 'Token') -> bool:
         from pullenti.ner.TextToken import TextToken
         if (not ((isinstance(t, TextToken)))): 
             return False
         if (t.length_char == 1): 
             return True
-        mc = t.get_morph_class_in_dictionary()
+        mc = t.getMorphClassInDictionary()
         if ((((mc.is_misc or mc.is_adverb or mc.is_conjunction) or mc.is_preposition or mc.is_personal_pronoun) or mc.is_pronoun or mc.is_conjunction) or mc.is_preposition): 
             return True
         return False
     
     @staticmethod
-    def try_parse(t : 'Token') -> 'ChatItemToken':
+    def tryParse(t : 'Token') -> 'ChatItemToken':
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.date.internal.DateExToken import DateExToken
         from pullenti.ner.chat.ChatAnalyzer import ChatAnalyzer
@@ -62,33 +60,33 @@ class ChatItemToken(MetaToken):
         t1 = None
         has_modal = False
         tt = t
-        first_pass3680 = True
+        first_pass2788 = True
         while True:
-            if first_pass3680: first_pass3680 = False
+            if first_pass2788: first_pass2788 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (not ((isinstance(tt, TextToken)))): 
                 break
             if (tt != t and tt.is_newline_before): 
                 break
-            if (tt.is_char_of(".?!")): 
+            if (tt.isCharOf(".?!")): 
                 break
             if (tt.length_char == 1): 
                 continue
-            tok = ChatItemToken.__m_ontology.try_parse(tt, TerminParseAttr.NO)
+            tok = ChatItemToken.__m_ontology.tryParse(tt, TerminParseAttr.NO)
             if (tok is not None): 
                 break
-            dtok = DateExToken.try_parse(tt)
+            dtok = DateExToken.tryParse(tt)
             if (dtok is not None): 
-                dt = dtok.get_date((datetime.datetime.now() if ChatAnalyzer.CURRENT_DATE_TIME is None else ChatAnalyzer.CURRENT_DATE_TIME), 1)
+                dt = dtok.getDate((datetime.datetime.now() if ChatAnalyzer.CURRENT_DATE_TIME is None else ChatAnalyzer.CURRENT_DATE_TIME), 1)
                 if (dt is not None): 
                     res = ChatItemToken._new457(tt, dtok.end_token, ChatType.DATE)
                     res.value = "{0}.{1}.{2}".format(dt.year, "{:02d}".format(dt.month), "{:02d}".format(dt.day))
                     if (dt.hour > 0 or dt.minute > 0): 
                         res.value = "{0} {1}:{2}".format(res.value, "{:02d}".format(dt.hour), "{:02d}".format(dt.minute))
                     return res
-            mc = tt.get_morph_class_in_dictionary()
-            term = (tt if isinstance(tt, TextToken) else None).term
+            mc = tt.getMorphClassInDictionary()
+            term = (Utils.asObjectOrNull(tt, TextToken)).term
             if (term == "НЕ"): 
                 not0__ = True
                 if (t0 is None): 
@@ -96,7 +94,7 @@ class ChatItemToken(MetaToken):
                 continue
             if ((mc.is_personal_pronoun or mc.is_pronoun or mc.is_conjunction) or mc.is_preposition): 
                 continue
-            if (tt.is_value("ХОТЕТЬ", None) or tt.is_value("ЖЕЛАТЬ", None) or tt.is_value("МОЧЬ", None)): 
+            if (tt.isValue("ХОТЕТЬ", None) or tt.isValue("ЖЕЛАТЬ", None) or tt.isValue("МОЧЬ", None)): 
                 has_modal = True
                 if (t0 is None): 
                     t0 = tt
@@ -107,7 +105,7 @@ class ChatItemToken(MetaToken):
             if (mc.is_verb): 
                 res = ChatItemToken(tt, tt)
                 res.typ = ChatType.VERB
-                res.value = (tt if isinstance(tt, TextToken) else None).get_lemma()
+                res.value = (Utils.asObjectOrNull(tt, TextToken)).getLemma()
                 if (not0__): 
                     res.not0_ = True
                 if (t0 is not None): 
@@ -119,25 +117,25 @@ class ChatItemToken(MetaToken):
             if (isinstance(tok.termin.tag2, VerbType)): 
                 res.vtyp = (Utils.valToEnum(tok.termin.tag2, VerbType))
             if (res.typ == ChatType.VERB and tok.begin_token == tok.end_token and (isinstance(tok.begin_token, TextToken))): 
-                res.value = (tok.begin_token if isinstance(tok.begin_token, TextToken) else None).get_lemma()
+                res.value = (Utils.asObjectOrNull(tok.begin_token, TextToken)).getLemma()
             else: 
-                res.value = MiscHelper.get_text_value_of_meta_token(res, GetTextAttr.NO)
+                res.value = MiscHelper.getTextValueOfMetaToken(res, GetTextAttr.NO)
             if (not0__): 
                 res.not0_ = True
             if (t0 is not None): 
                 res.begin_token = t0
             if (res.typ == ChatType.REPEAT): 
                 tt = tok.end_token.next0_
-                first_pass3681 = True
+                first_pass2789 = True
                 while True:
-                    if first_pass3681: first_pass3681 = False
+                    if first_pass2789: first_pass2789 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (not ((isinstance(tt, TextToken)))): 
                         break
-                    if (ChatItemToken.__is_empty_token(tt)): 
+                    if (ChatItemToken.__isEmptyToken(tt)): 
                         continue
-                    tok1 = ChatItemToken.__m_ontology.try_parse(tt, TerminParseAttr.NO)
+                    tok1 = ChatItemToken.__m_ontology.tryParse(tt, TerminParseAttr.NO)
                     if (tok1 is not None): 
                         if ((Utils.valToEnum(tok1.termin.tag, ChatType)) == ChatType.ACCEPT or (Utils.valToEnum(tok1.termin.tag, ChatType)) == ChatType.MISC): 
                             tt = tok1.end_token
@@ -147,12 +145,12 @@ class ChatItemToken(MetaToken):
                             tt = res.end_token
                             continue
                         break
-                    npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
+                    npt = NounPhraseHelper.tryParse(tt, NounPhraseParseAttr.NO, 0)
                     if (npt is not None): 
-                        if (npt.end_token.is_value("ВОПРОС", None) or npt.end_token.is_value("ФРАЗА", None) or npt.end_token.is_value("ПРЕДЛОЖЕНИЕ", None)): 
+                        if (npt.end_token.isValue("ВОПРОС", None) or npt.end_token.isValue("ФРАЗА", None) or npt.end_token.isValue("ПРЕДЛОЖЕНИЕ", None)): 
                             res.end_token = npt.end_token
                             tt = res.end_token
-                            res.value = npt.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False)
+                            res.value = npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
                             continue
                     break
             return res
@@ -172,70 +170,70 @@ class ChatItemToken(MetaToken):
             return
         ChatItemToken.__m_ontology = TerminCollection()
         t = Termin._new118("ДА", ChatType.ACCEPT)
-        t.add_variant("КОНЕЧНО", False)
-        t.add_variant("РАЗУМЕЕТСЯ", False)
-        t.add_variant("ПОЖАЛУЙСТА", False)
-        t.add_variant("ПОЖАЛУЙ", False)
-        t.add_variant("ПЛИЗ", False)
-        t.add_variant("НЕПРЕМЕННО", False)
-        t.add_variant("ЕСТЬ", False)
-        t.add_variant("АГА", False)
-        t.add_variant("УГУ", False)
+        t.addVariant("КОНЕЧНО", False)
+        t.addVariant("РАЗУМЕЕТСЯ", False)
+        t.addVariant("ПОЖАЛУЙСТА", False)
+        t.addVariant("ПОЖАЛУЙ", False)
+        t.addVariant("ПЛИЗ", False)
+        t.addVariant("НЕПРЕМЕННО", False)
+        t.addVariant("ЕСТЬ", False)
+        t.addVariant("АГА", False)
+        t.addVariant("УГУ", False)
         ChatItemToken.__m_ontology.add(t)
         t = Termin._new118("НЕТ", ChatType.CANCEL)
-        t.add_variant("ДА НЕТ", False)
-        t.add_variant("НИ ЗА ЧТО", False)
-        t.add_variant("НЕ ХОТЕТЬ", False)
-        t.add_variant("ОТСТАТЬ", False)
-        t.add_variant("НИКТО", False)
-        t.add_variant("НИЧТО", False)
-        t.add_variant("НИЧЕГО", False)
-        t.add_variant("НИГДЕ", False)
-        t.add_variant("НИКОГДА", False)
+        t.addVariant("ДА НЕТ", False)
+        t.addVariant("НИ ЗА ЧТО", False)
+        t.addVariant("НЕ ХОТЕТЬ", False)
+        t.addVariant("ОТСТАТЬ", False)
+        t.addVariant("НИКТО", False)
+        t.addVariant("НИЧТО", False)
+        t.addVariant("НИЧЕГО", False)
+        t.addVariant("НИГДЕ", False)
+        t.addVariant("НИКОГДА", False)
         ChatItemToken.__m_ontology.add(t)
         t = Termin._new118("СПАСИБО", ChatType.THANKS)
-        t.add_variant("БЛАГОДАРИТЬ", False)
-        t.add_variant("БЛАГОДАРСТВОВАТЬ", False)
+        t.addVariant("БЛАГОДАРИТЬ", False)
+        t.addVariant("БЛАГОДАРСТВОВАТЬ", False)
         ChatItemToken.__m_ontology.add(t)
         t = Termin._new118("НУ", ChatType.MISC)
         ChatItemToken.__m_ontology.add(t)
         t = Termin._new118("ПРИВЕТ", ChatType.MISC)
         for s in ["ЗДРАВСТВУЙ", "ЗДРАВСТВУЙТЕ", "ПРИВЕТИК", "ХЭЛЛОУ", "АЛЛЕ", "ДОБРЫЙ ДЕНЬ", "ДОБРЫЙ ВЕЧЕР", "ДОБРОЕ УТРО", "ДОБРАЯ НОЧЬ", "ЗДОРОВО"]: 
-            t.add_variant(s, False)
+            t.addVariant(s, False)
         ChatItemToken.__m_ontology.add(t)
         t = Termin._new118("ПОКА", ChatType.BYE)
         for s in ["ДО СВИДАНИЯ", "ДОСВИДАНИЯ", "ПРОЩАЙ", "ПРОЩАЙТЕ", "ХОРОШЕГО ДНЯ", "ВСЕГО ХОРОШЕГО", "ВСЕГО ДОБРОГО", "ВСЕХ БЛАГ", "СЧАСТЛИВО", "ПРОЩАЙ", "ПРОЩАЙТЕ", "ЧАО", "ГУД БАЙ", "ГУДБАЙ"]: 
-            t.add_variant(s, False)
+            t.addVariant(s, False)
         ChatItemToken.__m_ontology.add(t)
         t = Termin._new120("ГОВОРИТЬ", ChatType.VERB, VerbType.SAY)
         for s in ["СКАЗАТЬ", "РАЗГОВАРИВАТЬ", "ПРОИЗНЕСТИ", "ПРОИЗНОСИТЬ", "ОТВЕТИТЬ", "ОТВЕЧАТЬ", "СПРАШИВАТЬ", "СПРОСИТЬ", "ПОТОВОРИТЬ", "ОБЩАТЬСЯ", "ПООБЩАТЬСЯ"]: 
-            t.add_variant(s, False)
+            t.addVariant(s, False)
         ChatItemToken.__m_ontology.add(t)
         t = Termin._new120("ЗВОНИТЬ", ChatType.VERB, VerbType.CALL)
         for s in ["ПЕРЕЗВОНИТЬ", "ПОЗВОНИТЬ", "СДЕЛАТЬ ЗВОНОК", "НАБРАТЬ"]: 
-            t.add_variant(s, False)
+            t.addVariant(s, False)
         ChatItemToken.__m_ontology.add(t)
         t = Termin._new120("БЫТЬ", ChatType.VERB, VerbType.BE)
         for s in ["ЯВЛЯТЬСЯ"]: 
-            t.add_variant(s, False)
+            t.addVariant(s, False)
         ChatItemToken.__m_ontology.add(t)
         t = Termin._new120("ИМЕТЬ", ChatType.VERB, VerbType.HAVE)
         for s in ["ОБЛАДАТЬ", "ВЛАДЕТЬ"]: 
-            t.add_variant(s, False)
+            t.addVariant(s, False)
         ChatItemToken.__m_ontology.add(t)
         t = Termin._new118("ПОЗЖЕ", ChatType.LATER)
         for s in ["ПОПОЗЖЕ", "ПОЗДНЕЕ", "ПОТОМ", "НЕКОГДА"]: 
-            t.add_variant(s, False)
+            t.addVariant(s, False)
         ChatItemToken.__m_ontology.add(t)
         t = Termin._new118("ЗАНЯТ", ChatType.BUSY)
         for s in ["НЕУДОБНО", "НЕ УДОБНО", "НЕТ ВРЕМЕНИ", "ПАРАЛЛЕЛЬНЫЙ ЗВОНОК", "СОВЕЩАНИЕ", "ОБЕД", "ТРАНСПОРТ", "МЕТРО"]: 
-            t.add_variant(s, False)
+            t.addVariant(s, False)
         ChatItemToken.__m_ontology.add(t)
         t = Termin._new118("ПОВТОРИТЬ", ChatType.REPEAT)
-        t.add_variant("НЕ РАССЛЫШАТЬ", False)
-        t.add_variant("НЕ УСЛЫШАТЬ", False)
-        t.add_variant("ПЛОХО СЛЫШНО", False)
-        t.add_variant("ПЛОХАЯ СВЯЗЬ", False)
+        t.addVariant("НЕ РАССЛЫШАТЬ", False)
+        t.addVariant("НЕ УСЛЫШАТЬ", False)
+        t.addVariant("ПЛОХО СЛЫШНО", False)
+        t.addVariant("ПЛОХАЯ СВЯЗЬ", False)
         ChatItemToken.__m_ontology.add(t)
     
     @staticmethod

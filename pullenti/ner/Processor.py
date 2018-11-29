@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import threading
 import typing
@@ -17,7 +15,7 @@ from pullenti.unisharp.Misc import CancelEventArgs
 from pullenti.unisharp.Misc import Stopwatch
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.AnalysisResult import AnalysisResult
-from pullenti.ner.internal.GeneralRelationHelper import GeneralRelationHelper
+from pullenti.ner.core.internal.GeneralRelationHelper import GeneralRelationHelper
 from pullenti.ner.core.internal.ProgressPeace import ProgressPeace
 from pullenti.ner.ProxyReferent import ProxyReferent
 
@@ -28,22 +26,22 @@ class Processor(object):
     class ProgressChangedEventHandler_OnProgressHandler(EventHandler):
         
         def __init__(self, src : 'Processor') -> None:
-            self.__m_source = None
             super().__init__()
+            self.__m_source = None;
             self.__m_source = src
         
         def call(self, sender : object, e0_ : ProgressEventArgs) -> None:
-            self.__m_source._on_progress_handler(sender, e0_)
+            self.__m_source._onProgressHandler(sender, e0_)
     
     class CancelEventHandler_OnCancel(EventHandler):
         
         def __init__(self, src : 'Processor') -> None:
-            self.__m_source = None
             super().__init__()
+            self.__m_source = None;
             self.__m_source = src
         
         def call(self, sender : object, e0_ : CancelEventArgs) -> None:
-            self.__m_source._on_cancel(sender, e0_)
+            self.__m_source._onCancel(sender, e0_)
     
     def __init__(self) -> None:
         self.__m_analyzers = list()
@@ -57,12 +55,16 @@ class Processor(object):
         self.__m_links = None
         self.__m_links2 = None
         self.__m_refs = None
-        self.tag = None
+        self.tag = None;
         self.__progress_changed_event_handler_on_progress_handler = Processor.ProgressChangedEventHandler_OnProgressHandler(self)
         self.__cancel_event_handler_on_cancel = Processor.CancelEventHandler_OnCancel(self)
-        pass
     
-    def add_analyzer(self, a : 'Analyzer') -> None:
+    def addAnalyzer(self, a : 'Analyzer') -> None:
+        """ Добавить анализатор, если его ещё нет
+        
+        Args:
+            a(Analyzer): экземпляр анализатора
+        """
         if (a is None or a.name is None or a.name in self.__m_analyzers_hash): 
             return
         self.__m_analyzers_hash[a.name] = a
@@ -70,7 +72,12 @@ class Processor(object):
         a._progress.append(self.__progress_changed_event_handler_on_progress_handler)
         a._cancel.append(self.__cancel_event_handler_on_cancel)
     
-    def del_analyzer(self, a : 'Analyzer') -> None:
+    def delAnalyzer(self, a : 'Analyzer') -> None:
+        """ Удалить анализатор
+        
+        Args:
+            a(Analyzer): 
+        """
         if (not a.name in self.__m_analyzers_hash): 
             return
         del self.__m_analyzers_hash[a.name]
@@ -88,40 +95,61 @@ class Processor(object):
         """ Последовательность обработки данных (анализаторы) """
         return self.__m_analyzers
     
-    def find_analyzer(self, name : str) -> 'Analyzer':
-        inoutarg2639 = RefOutArgWrapper(None)
-        inoutres2640 = Utils.tryGetValue(self.__m_analyzers_hash, Utils.ifNotNull(name, ""), inoutarg2639)
-        a = inoutarg2639.value
-        if (not inoutres2640): 
+    def findAnalyzer(self, name : str) -> 'Analyzer':
+        """ Найти анализатор по его имени
+        
+        Args:
+            name(str): 
+        
+        """
+        wrapa2676 = RefOutArgWrapper(None)
+        inoutres2677 = Utils.tryGetValue(self.__m_analyzers_hash, Utils.ifNotNull(name, ""), wrapa2676)
+        a = wrapa2676.value
+        if (not inoutres2677): 
             return None
         else: 
             return a
     
     def process(self, text : 'SourceOfAnalysis', ext_ontology : 'ExtOntology'=None, lang : 'MorphLang'=MorphLang()) -> 'AnalysisResult':
+        """ Обработать текст
+        
+        Args:
+            text(SourceOfAnalysis): входной контейнер текста
+            ext_ontology(ExtOntology): внешняя онтология (null - не используется)
+            lang(MorphLang): язык (если не задан, то будет определён автоматически)
+        
+        Returns:
+            AnalysisResult: аналитический контейнер с результатом
+        """
         return self._process(text, False, False, ext_ontology, lang)
     
-    def process_next(self, ar : 'AnalysisResult') -> None:
+    def processNext(self, ar : 'AnalysisResult') -> None:
+        """ Доделать результат, который был сделан другим процессором
+        
+        Args:
+            ar(AnalysisResult): то, что было сделано другим процессором
+        """
         from pullenti.ner.core.AnalysisKit import AnalysisKit
         if (ar is None): 
             return
-        kit = AnalysisKit._new2641(self, ar.ontology)
-        kit._init_from(ar)
-        self.__process(kit, ar, False)
-        self.__create_res(kit, ar, ar.ontology, False)
+        kit = AnalysisKit._new2678(self, ar.ontology)
+        kit._initFrom(ar)
+        self.__process2(kit, ar, False)
+        self.__createRes(kit, ar, ar.ontology, False)
         ar.first_token = kit.first_token
     
     def _process(self, text : 'SourceOfAnalysis', no_entities_regine : bool, no_log : bool, ext_ontology : 'ExtOntology'=None, lang : 'MorphLang'=MorphLang()) -> 'AnalysisResult':
         from pullenti.ner.core.AnalysisKit import AnalysisKit
         self.__m_breaked = False
-        self.__prepare_progress()
+        self.__prepareProgress()
         sw0 = Stopwatch()
-        self.manage_referent_links()
+        self.manageReferentLinks()
         if (not no_log): 
-            self._on_progress_handler(self, ProgressEventArgs(0, "Морфологический анализ"))
-        kit = AnalysisKit._new2642(text, False, lang, self.__progress_changed_event_handler_on_progress_handler, ext_ontology, self)
+            self._onProgressHandler(self, ProgressEventArgs(0, "Морфологический анализ"))
+        kit = AnalysisKit._new2679(text, False, lang, self.__progress_changed_event_handler_on_progress_handler, ext_ontology, self)
         ar = AnalysisResult()
         sw0.stop()
-        self._on_progress_handler(self, ProgressEventArgs(100, "Морфологический анализ завершён"))
+        self._onProgressHandler(self, ProgressEventArgs(100, "Морфологический анализ завершён"))
         k = 0
         t = kit.first_token
         while t is not None: 
@@ -131,7 +159,7 @@ class Processor(object):
             msg = "Из {0} символов текста выделено {1} термов за {2} ms".format(len(text.text), k, sw0.elapsedMilliseconds)
             if (not kit.base_language.is_undefined): 
                 msg += ", базовый язык {0}".format(str(kit.base_language))
-            self.__on_message(msg)
+            self.__onMessage(msg)
             ar.log0_.append(msg)
             if (text.crlf_corrected_count > 0): 
                 ar.log0_.append("{0} переходов на новую строку заменены на пробел".format(text.crlf_corrected_count))
@@ -139,18 +167,18 @@ class Processor(object):
                 ar.log0_.append("Пустой текст")
         sw0.start()
         if (kit.first_token is not None): 
-            self.__process(kit, ar, no_log)
+            self.__process2(kit, ar, no_log)
         if (not no_entities_regine): 
-            self.__create_res(kit, ar, ext_ontology, no_log)
+            self.__createRes(kit, ar, ext_ontology, no_log)
         sw0.stop()
         if (not no_log): 
-            if (int(sw0.elapsed.total_seconds()) > (5)): 
+            if (sw0.elapsedMilliseconds > (5000)): 
                 f = len(text.text)
                 f /= (sw0.elapsedMilliseconds)
-                msg = "Обработка {0} знаков выполнена за {1} ({2} Kb/sec)".format(len(text.text), Processor.__out_secs(sw0.elapsedMilliseconds), f)
+                msg = "Обработка {0} знаков выполнена за {1} ({2} Kb/sec)".format(len(text.text), Processor.__outSecs(sw0.elapsedMilliseconds), f)
             else: 
-                msg = "Обработка {0} знаков выполнена за {1}".format(len(text.text), Processor.__out_secs(sw0.elapsedMilliseconds))
-            self.__on_message(msg)
+                msg = "Обработка {0} знаков выполнена за {1}".format(len(text.text), Processor.__outSecs(sw0.elapsedMilliseconds))
+            self.__onMessage(msg)
             ar.log0_.append(msg)
         if (self.timeout_seconds > 0): 
             if (int((datetime.datetime.now() - kit._start_date).total_seconds()) > self.timeout_seconds): 
@@ -163,14 +191,14 @@ class Processor(object):
         ar.base_language = kit.base_language
         return ar
     
-    def __process(self, kit : 'AnalysisKit', ar : 'AnalysisResult', no_log : bool) -> None:
+    def __process2(self, kit : 'AnalysisKit', ar : 'AnalysisResult', no_log : bool) -> None:
         sw = Stopwatch()
         stop_by_timeout = False
         anals = list(self.__m_analyzers)
         ii = 0
-        first_pass4066 = True
+        first_pass3175 = True
         while True:
-            if first_pass4066: first_pass4066 = False
+            if first_pass3175: first_pass3175 = False
             else: ii += 1
             if (not (ii < len(anals))): break
             c = anals[ii]
@@ -179,7 +207,7 @@ class Processor(object):
             if (self.__m_breaked): 
                 if (not no_log): 
                     msg = "Процесс прерван пользователем"
-                    self.__on_message(msg)
+                    self.__onMessage(msg)
                     ar.log0_.append(msg)
                 break
             if (self.timeout_seconds > 0 and not stop_by_timeout): 
@@ -187,7 +215,7 @@ class Processor(object):
                     self.__m_breaked = True
                     if (not no_log): 
                         msg = "Процесс прерван по таймауту"
-                        self.__on_message(msg)
+                        self.__onMessage(msg)
                         ar.log0_.append(msg)
                     stop_by_timeout = True
             if (stop_by_timeout): 
@@ -196,34 +224,34 @@ class Processor(object):
                 else: 
                     continue
             if (not no_log): 
-                self._on_progress_handler(c, ProgressEventArgs(0, "Работа \"{0}\"".format(c.caption)))
+                self._onProgressHandler(c, ProgressEventArgs(0, "Работа \"{0}\"".format(c.caption)))
             sw.reset()
             sw.start()
             c.process(kit)
             sw.stop()
-            dat = kit.get_analyzer_data(c)
+            dat = kit.getAnalyzerData(c)
             if (not no_log): 
-                msg = "Анализатор \"{0}\" выделил {1} объект(ов) за {2}".format(c.caption, (0 if dat is None else len(dat.referents)), Processor.__out_secs(sw.elapsedMilliseconds))
-                self.__on_message(msg)
+                msg = "Анализатор \"{0}\" выделил {1} объект(ов) за {2}".format(c.caption, (0 if dat is None else len(dat.referents)), Processor.__outSecs(sw.elapsedMilliseconds))
+                self.__onMessage(msg)
                 ar.log0_.append(msg)
         if (not no_log): 
-            self._on_progress_handler(None, ProgressEventArgs(0, "Пересчёт отношений обобщения"))
+            self._onProgressHandler(None, ProgressEventArgs(0, "Пересчёт отношений обобщения"))
         try: 
             sw.reset()
             sw.start()
-            GeneralRelationHelper.refresh_generals(self, kit)
+            GeneralRelationHelper.refreshGenerals(self, kit)
             sw.stop()
             if (not no_log): 
-                msg = "Отношение обобщение пересчитано за {0}".format(Processor.__out_secs(sw.elapsedMilliseconds))
-                self.__on_message(msg)
+                msg = "Отношение обобщение пересчитано за {0}".format(Processor.__outSecs(sw.elapsedMilliseconds))
+                self.__onMessage(msg)
                 ar.log0_.append(msg)
         except Exception as ex: 
             if (not no_log): 
                 ex = Utils.newException("Ошибка пересчёта отношения обобщения", ex)
-                self.__on_message(ex)
-                ar._add_exception(ex)
+                self.__onMessage(ex)
+                ar._addException(ex)
     
-    def __create_res(self, kit : 'AnalysisKit', ar : 'AnalysisResult', ext_ontology : 'ExtOntology', no_log : bool) -> None:
+    def __createRes(self, kit : 'AnalysisKit', ar : 'AnalysisResult', ext_ontology : 'ExtOntology', no_log : bool) -> None:
         sw = Stopwatch()
         onto_attached = 0
         for k in range(2):
@@ -233,23 +261,23 @@ class Processor(object):
                         continue
                 elif (c.is_specific): 
                     continue
-                dat = kit.get_analyzer_data(c)
+                dat = kit.getAnalyzerData(c)
                 if (dat is not None and len(dat.referents) > 0): 
                     if (ext_ontology is not None): 
                         for r in dat.referents: 
                             if (r.ontology_items is None): 
-                                r.ontology_items = ext_ontology.attach_referent(r)
+                                r.ontology_items = ext_ontology.attachReferent(r)
                                 if ((r.ontology_items) is not None): 
                                     onto_attached += 1
                     ar.entities.extend(dat.referents)
         sw.stop()
         if (ext_ontology is not None and not no_log): 
-            msg = "Привязано {0} объектов к внешней отнологии ({1} элементов) за {2}".format(onto_attached, len(ext_ontology.items), Processor.__out_secs(sw.elapsedMilliseconds))
-            self.__on_message(msg)
+            msg = "Привязано {0} объектов к внешней отнологии ({1} элементов) за {2}".format(onto_attached, len(ext_ontology.items), Processor.__outSecs(sw.elapsedMilliseconds))
+            self.__onMessage(msg)
             ar.log0_.append(msg)
     
     @staticmethod
-    def __out_secs(ms : int) -> str:
+    def __outSecs(ms : int) -> str:
         if (ms < (4000)): 
             return "{0}ms".format(ms)
         ms = math.floor(ms / (1000))
@@ -257,12 +285,13 @@ class Processor(object):
             return "{0}sec".format(ms)
         return "{0}min {1}sec".format(math.floor(ms / (60)), ms % (60))
     
-    def break0_(self) -> None:
+    def break_(self) -> None:
+        """ Прервать процесс анализа """
         self.__m_breaked = True
     
     MORPH_COEF = 10
     
-    def __prepare_progress(self) -> None:
+    def __prepareProgress(self) -> None:
         with self.__m_progress_peaces_lock: 
             self.__last_percent = -1
             co = Processor.MORPH_COEF
@@ -272,24 +301,24 @@ class Processor(object):
             self.__m_progress_peaces.clear()
             max0_ = co * 100
             max0_ /= (total)
-            self.__m_progress_peaces[self] = ProgressPeace._new2643(0, max0_)
+            self.__m_progress_peaces[self] = ProgressPeace._new2680(0, max0_)
             for wf in self.analyzers: 
                 min0_ = max0_
                 co += (wf.progress_weight if wf.progress_weight > 0 else 1)
                 max0_ = (co * 100)
                 max0_ /= (total)
                 if (not wf in self.__m_progress_peaces): 
-                    self.__m_progress_peaces[wf] = ProgressPeace._new2643(min0_, max0_)
+                    self.__m_progress_peaces[wf] = ProgressPeace._new2680(min0_, max0_)
     
-    def _on_progress_handler(self, sender : object, e0_ : ProgressEventArgs) -> None:
-        if (self.progress.__len__() == 0): 
+    def _onProgressHandler(self, sender : object, e0_ : ProgressEventArgs) -> None:
+        if (len(self.progress) == 0): 
             return
         if (e0_.progressPercentage >= 0): 
             with self.__m_progress_peaces_lock: 
-                inoutarg2645 = RefOutArgWrapper(None)
-                inoutres2646 = Utils.tryGetValue(self.__m_progress_peaces, Utils.ifNotNull(sender, self), inoutarg2645)
-                pi0_ = inoutarg2645.value
-                if (inoutres2646): 
+                wrappi2682 = RefOutArgWrapper(None)
+                inoutres2683 = Utils.tryGetValue(self.__m_progress_peaces, Utils.ifNotNull(sender, self), wrappi2682)
+                pi0_ = wrappi2682.value
+                if (inoutres2683): 
                     p = ((e0_.progressPercentage) * ((pi0_.max0_ - pi0_.min0_))) / (100)
                     p += pi0_.min0_
                     pers = math.floor(p)
@@ -299,51 +328,66 @@ class Processor(object):
                     self.__last_percent = pers
         for iiid in range(len(self.progress)): self.progress[iiid].call(self, e0_)
     
-    def _on_cancel(self, sender : object, e0_ : CancelEventArgs) -> None:
+    def _onCancel(self, sender : object, e0_ : CancelEventArgs) -> None:
         from pullenti.ner.core.AnalysisKit import AnalysisKit
         if (self.timeout_seconds > 0): 
             if (isinstance(sender, AnalysisKit)): 
-                if (int((datetime.datetime.now() - (sender if isinstance(sender, AnalysisKit) else None)._start_date).total_seconds()) > self.timeout_seconds): 
+                if (int((datetime.datetime.now() - (Utils.asObjectOrNull(sender, AnalysisKit))._start_date).total_seconds()) > self.timeout_seconds): 
                     self.__m_breaked = True
         e0_.cancel = self.__m_breaked
     
-    def __on_message(self, message : object) -> None:
-        if (self.progress.__len__() > 0): 
+    def __onMessage(self, message : object) -> None:
+        if (len(self.progress) > 0): 
             for iiid in range(len(self.progress)): self.progress[iiid].call(self, ProgressEventArgs(-1, message))
     
-    def manage_referent_links(self) -> None:
+    def manageReferentLinks(self) -> None:
         if (self.__m_refs is not None): 
             for pr in self.__m_refs: 
-                inoutarg2649 = RefOutArgWrapper(None)
-                inoutres2650 = Utils.tryGetValue(self.__m_links2, pr.identity, inoutarg2649)
-                r = inoutarg2649.value
-                if (pr.identity is not None and self.__m_links2 is not None and inoutres2650): 
-                    pr.owner_referent.upload_slot(pr.owner_slot, r)
+                wrapr2686 = RefOutArgWrapper(None)
+                inoutres2687 = Utils.tryGetValue(self.__m_links2, pr.identity, wrapr2686)
+                r = wrapr2686.value
+                if (pr.identity is not None and self.__m_links2 is not None and inoutres2687): 
+                    pr.owner_referent.uploadSlot(pr.owner_slot, r)
                 else: 
-                    inoutarg2647 = RefOutArgWrapper(None)
-                    inoutres2648 = Utils.tryGetValue(self.__m_links, pr.value, inoutarg2647)
-                    r = inoutarg2647.value
-                    if (self.__m_links is not None and inoutres2648): 
-                        pr.owner_referent.upload_slot(pr.owner_slot, r)
+                    wrapr2684 = RefOutArgWrapper(None)
+                    inoutres2685 = Utils.tryGetValue(self.__m_links, pr.value, wrapr2684)
+                    r = wrapr2684.value
+                    if (self.__m_links is not None and inoutres2685): 
+                        pr.owner_referent.uploadSlot(pr.owner_slot, r)
                     else: 
                         pass
         self.__m_links2 = None
         self.__m_links = self.__m_links2
         self.__m_refs = (None)
     
-    def deserialize_referent(self, data : str, identity : str, create_links1 : bool=True) -> 'Referent':
+    def deserializeReferent(self, data : str, identity : str, create_links1 : bool=True) -> 'Referent':
+        """ Десериализация сущности
+        
+        Args:
+            data(str): результат сериализации, см. Referent.Serialize()
+            ontologyElement: если не null, то элемент будет добавляться к внутренней онтологии,
+         и при привязке к нему у сущности будет устанавливаться соответствующее свойство (Referent.OntologyElement)
+        
+        """
         try: 
             xml0_ = None # new XmlDocument
             xml0_ = Utils.parseXmlFromString(data)
-            return self.deserialize_referent_from_xml(xml0_.getroot(), identity, create_links1)
+            return self.deserializeReferentFromXml(xml0_.getroot(), identity, create_links1)
         except Exception as ex: 
             return None
     
-    def deserialize_referent_from_xml(self, xml0_ : xml.etree.ElementTree.Element, identity : str, create_links1 : bool=True) -> 'Referent':
+    def deserializeReferentFromXml(self, xml0_ : xml.etree.ElementTree.Element, identity : str, create_links1 : bool=True) -> 'Referent':
+        """ Десериализация сущности из узла XML
+        
+        Args:
+            xml0_(xml.etree.ElementTree.Element): 
+            identity(str): 
+        
+        """
         try: 
             res = None
             for a in self.analyzers: 
-                res = a.create_referent(xml0_.tag)
+                res = a.createReferent(xml0_.tag)
                 if ((res) is not None): 
                     break
             if (res is None): 
@@ -357,8 +401,8 @@ class Processor(object):
                 att = Utils.getXmlAttrByName(x.attrib, "ref")
                 slot = None
                 if (att is not None and att[1] == "true"): 
-                    pr = ProxyReferent._new2651(Utils.getXmlInnerText(x), res)
-                    pr.owner_slot = res.add_slot(nam, pr, False, 0)
+                    pr = ProxyReferent._new2688(Utils.getXmlInnerText(x), res)
+                    pr.owner_slot = res.addSlot(nam, pr, False, 0)
                     slot = pr.owner_slot
                     att = Utils.getXmlAttrByName(x.attrib, "id")
                     if ((att) is not None): 
@@ -367,13 +411,13 @@ class Processor(object):
                         self.__m_refs = list()
                     self.__m_refs.append(pr)
                 else: 
-                    slot = res.add_slot(nam, Utils.getXmlInnerText(x), False, 0)
+                    slot = res.addSlot(nam, Utils.getXmlInnerText(x), False, 0)
                 att = Utils.getXmlAttrByName(x.attrib, "count")
                 if ((att) is not None): 
-                    inoutarg2652 = RefOutArgWrapper(0)
-                    inoutres2653 = Utils.tryParseInt(att[1], inoutarg2652)
-                    cou = inoutarg2652.value
-                    if (inoutres2653): 
+                    wrapcou2689 = RefOutArgWrapper(0)
+                    inoutres2690 = Utils.tryParseInt(att[1], wrapcou2689)
+                    cou = wrapcou2689.value
+                    if (inoutres2690): 
                         slot.count = cou
             if (self.__m_links is None): 
                 self.__m_links = dict()

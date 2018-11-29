@@ -1,11 +1,8 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
-import math
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Referent import Referent
@@ -36,32 +33,32 @@ class FundsReferent(Referent):
     
     ATTR_PRICE = "PRICE"
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         from pullenti.ner.business.internal.FundsMeta import FundsMeta
         from pullenti.morph.MorphLang import MorphLang
         res = io.StringIO()
         if (self.typ is not None): 
-            print(MiscHelper.convert_first_char_upper_and_other_lower(self.typ), end="", file=res)
+            print(MiscHelper.convertFirstCharUpperAndOtherLower(self.typ), end="", file=res)
         else: 
-            kind_ = self.get_string_value(FundsReferent.ATTR_KIND)
+            kind_ = self.getStringValue(FundsReferent.ATTR_KIND)
             if (kind_ is not None): 
-                kind_ = (FundsMeta.GLOBAL_META.kind_feature.convert_inner_value_to_outer_value(kind_, MorphLang()) if isinstance(FundsMeta.GLOBAL_META.kind_feature.convert_inner_value_to_outer_value(kind_, MorphLang()), str) else None)
+                kind_ = (Utils.asObjectOrNull(FundsMeta.GLOBAL_META.kind_feature.convertInnerValueToOuterValue(kind_, MorphLang()), str))
             if (kind_ is not None): 
-                print(MiscHelper.convert_first_char_upper_and_other_lower(kind_), end="", file=res)
+                print(MiscHelper.convertFirstCharUpperAndOtherLower(kind_), end="", file=res)
             else: 
                 print("?", end="", file=res)
         if (self.source is not None): 
-            print("; {0}".format(self.source.to_string(short_variant, lang, 0)), end="", file=res, flush=True)
+            print("; {0}".format(self.source.toString(short_variant, lang, 0)), end="", file=res, flush=True)
         if (self.count > (0)): 
             print("; кол-во {0}".format(self.count), end="", file=res, flush=True)
         if (self.percent > 0): 
             print("; {0}%".format(self.percent), end="", file=res, flush=True)
         if (not short_variant): 
             if (self.sum0_ is not None): 
-                print("; {0}".format(self.sum0_.to_string(False, lang, 0)), end="", file=res, flush=True)
+                print("; {0}".format(self.sum0_.toString(False, lang, 0)), end="", file=res, flush=True)
             if (self.price is not None): 
-                print("; номинал {0}".format(self.price.to_string(False, lang, 0)), end="", file=res, flush=True)
+                print("; номинал {0}".format(self.price.toString(False, lang, 0)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
     @property
@@ -71,7 +68,7 @@ class FundsReferent(Referent):
     @property
     def kind(self) -> 'FundsKind':
         """ Классификатор ценной бумаги """
-        s = self.get_string_value(FundsReferent.ATTR_KIND)
+        s = self.getStringValue(FundsReferent.ATTR_KIND)
         if (s is None): 
             return FundsKind.UNDEFINED
         try: 
@@ -81,103 +78,96 @@ class FundsReferent(Referent):
         except Exception as ex450: 
             pass
         return FundsKind.UNDEFINED
-    
     @kind.setter
     def kind(self, value) -> 'FundsKind':
         if (value != FundsKind.UNDEFINED): 
-            self.add_slot(FundsReferent.ATTR_KIND, Utils.enumToString(value), True, 0)
+            self.addSlot(FundsReferent.ATTR_KIND, Utils.enumToString(value), True, 0)
         else: 
-            self.add_slot(FundsReferent.ATTR_KIND, None, True, 0)
+            self.addSlot(FundsReferent.ATTR_KIND, None, True, 0)
         return value
     
     @property
     def source(self) -> 'OrganizationReferent':
         """ Эмитент """
-        from pullenti.ner._org.OrganizationReferent import OrganizationReferent
-        return (self.get_value(FundsReferent.ATTR_SOURCE) if isinstance(self.get_value(FundsReferent.ATTR_SOURCE), OrganizationReferent) else None)
-    
+        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+        return Utils.asObjectOrNull(self.getSlotValue(FundsReferent.ATTR_SOURCE), OrganizationReferent)
     @source.setter
     def source(self, value) -> 'OrganizationReferent':
-        self.add_slot(FundsReferent.ATTR_SOURCE, value, True, 0)
+        self.addSlot(FundsReferent.ATTR_SOURCE, value, True, 0)
         return value
     
     @property
     def typ(self) -> str:
         """ Тип (например, привелигированная акция) """
-        return self.get_string_value(FundsReferent.ATTR_TYPE)
-    
+        return self.getStringValue(FundsReferent.ATTR_TYPE)
     @typ.setter
     def typ(self, value) -> str:
-        self.add_slot(FundsReferent.ATTR_TYPE, value, True, 0)
+        self.addSlot(FundsReferent.ATTR_TYPE, value, True, 0)
         return value
     
     @property
     def percent(self) -> float:
         """ Процент от общего количества """
-        val = self.get_string_value(FundsReferent.ATTR_PERCENT)
+        val = self.getStringValue(FundsReferent.ATTR_PERCENT)
         if (val is None): 
             return 0
-        inoutarg453 = RefOutArgWrapper(0)
-        inoutres454 = Utils.tryParseFloat(val, inoutarg453)
-        f = inoutarg453.value
+        wrapf453 = RefOutArgWrapper(0)
+        inoutres454 = Utils.tryParseFloat(val, wrapf453)
+        f = wrapf453.value
         if (not inoutres454): 
-            inoutarg451 = RefOutArgWrapper(0)
-            inoutres452 = Utils.tryParseFloat(val.replace('.', ','), inoutarg451)
-            f = inoutarg451.value
+            wrapf451 = RefOutArgWrapper(0)
+            inoutres452 = Utils.tryParseFloat(val.replace('.', ','), wrapf451)
+            f = wrapf451.value
             if (not inoutres452): 
                 return 0
         return f
-    
     @percent.setter
     def percent(self, value) -> float:
         if (value > 0): 
-            self.add_slot(FundsReferent.ATTR_PERCENT, str(value).replace(',', '.'), True, 0)
+            self.addSlot(FundsReferent.ATTR_PERCENT, str(value).replace(',', '.'), True, 0)
         else: 
-            self.add_slot(FundsReferent.ATTR_PERCENT, None, True, 0)
+            self.addSlot(FundsReferent.ATTR_PERCENT, None, True, 0)
         return value
     
     @property
     def count(self) -> int:
         """ Количество """
-        val = self.get_string_value(FundsReferent.ATTR_COUNT)
+        val = self.getStringValue(FundsReferent.ATTR_COUNT)
         if (val is None): 
             return 0
-        inoutarg455 = RefOutArgWrapper(0)
-        inoutres456 = Utils.tryParseInt(val, inoutarg455)
-        v = inoutarg455.value
+        wrapv455 = RefOutArgWrapper(0)
+        inoutres456 = Utils.tryParseInt(val, wrapv455)
+        v = wrapv455.value
         if (not inoutres456): 
             return 0
         return v
-    
     @count.setter
     def count(self, value) -> int:
-        self.add_slot(FundsReferent.ATTR_COUNT, str(value), True, 0)
+        self.addSlot(FundsReferent.ATTR_COUNT, str(value), True, 0)
         return value
     
     @property
     def sum0_(self) -> 'MoneyReferent':
         """ Сумма за все акции """
         from pullenti.ner.money.MoneyReferent import MoneyReferent
-        return (self.get_value(FundsReferent.ATTR_SUM) if isinstance(self.get_value(FundsReferent.ATTR_SUM), MoneyReferent) else None)
-    
+        return Utils.asObjectOrNull(self.getSlotValue(FundsReferent.ATTR_SUM), MoneyReferent)
     @sum0_.setter
     def sum0_(self, value) -> 'MoneyReferent':
-        self.add_slot(FundsReferent.ATTR_SUM, value, True, 0)
+        self.addSlot(FundsReferent.ATTR_SUM, value, True, 0)
         return value
     
     @property
     def price(self) -> 'MoneyReferent':
         """ Сумма за одну акцию """
         from pullenti.ner.money.MoneyReferent import MoneyReferent
-        return (self.get_value(FundsReferent.ATTR_PRICE) if isinstance(self.get_value(FundsReferent.ATTR_PRICE), MoneyReferent) else None)
-    
+        return Utils.asObjectOrNull(self.getSlotValue(FundsReferent.ATTR_PRICE), MoneyReferent)
     @price.setter
     def price(self, value) -> 'MoneyReferent':
-        self.add_slot(FundsReferent.ATTR_PRICE, value, True, 0)
+        self.addSlot(FundsReferent.ATTR_PRICE, value, True, 0)
         return value
     
-    def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
-        f = (obj if isinstance(obj, FundsReferent) else None)
+    def canBeEquals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+        f = Utils.asObjectOrNull(obj, FundsReferent)
         if (f is None): 
             return False
         if (self.kind != f.kind): 
@@ -195,7 +185,7 @@ class FundsReferent(Referent):
             return False
         return True
     
-    def _check_correct(self) -> bool:
+    def _checkCorrect(self) -> bool:
         if (self.kind == FundsKind.UNDEFINED): 
             return False
         for s in self.slots: 

@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 from pullenti.morph.internal.UnicodeInfo import UnicodeInfo
 
@@ -12,7 +10,7 @@ class TextWrapper:
     
     def __init__(self, txt : str, to_upper : bool) -> None:
         self.chars = list()
-        self.text = None
+        self.text = None;
         self.length = 0
         self.text = txt
         if (to_upper and txt is not None): 

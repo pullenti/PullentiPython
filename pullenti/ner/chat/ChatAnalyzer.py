@@ -1,14 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 import datetime
 from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.business.internal.ResourceHelper import ResourceHelper
+from pullenti.ner.business.internal.EpNerBusinessInternalResourceHelper import EpNerBusinessInternalResourceHelper
 from pullenti.ner.chat.ChatType import ChatType
 from pullenti.ner.chat.VerbType import VerbType
 
@@ -41,10 +39,10 @@ class ChatAnalyzer(Analyzer):
     def images(self) -> typing.List[tuple]:
         from pullenti.ner.chat.internal.MetaChat import MetaChat
         res = dict()
-        res[MetaChat.IMAGE_ID] = ResourceHelper.get_bytes("chat.jpg")
+        res[MetaChat.IMAGE_ID] = EpNerBusinessInternalResourceHelper.getBytes("chat.jpg")
         return res
     
-    def create_referent(self, type0_ : str) -> 'Referent':
+    def createReferent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.chat.ChatReferent import ChatReferent
         if (type0_ == ChatReferent.OBJ_TYPENAME): 
             return ChatReferent()
@@ -52,7 +50,7 @@ class ChatAnalyzer(Analyzer):
     
     @property
     def used_extern_object_types(self) -> typing.List[str]:
-        return str()
+        return list()
     
     @property
     def progress_weight(self) -> int:
@@ -68,26 +66,26 @@ class ChatAnalyzer(Analyzer):
         from pullenti.ner.chat.internal.ChatItemToken import ChatItemToken
         from pullenti.ner.chat.ChatReferent import ChatReferent
         from pullenti.ner.ReferentToken import ReferentToken
-        ad = kit.get_analyzer_data(self)
+        ad = kit.getAnalyzerData(self)
         toks = list()
         t = kit.first_token
-        first_pass3682 = True
+        first_pass2790 = True
         while True:
-            if first_pass3682: first_pass3682 = False
+            if first_pass2790: first_pass2790 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            cit = ChatItemToken.try_parse(t)
+            cit = ChatItemToken.tryParse(t)
             if (cit is None): 
                 continue
             toks.append(cit)
             t = cit.end_token
         i = 0
-        first_pass3683 = True
+        first_pass2791 = True
         while True:
-            if first_pass3683: first_pass3683 = False
+            if first_pass2791: first_pass2791 = False
             else: i += 1
             if (not (i < (len(toks) - 1))): break
-            if (((toks[i].typ == ChatType.ACCEPT or toks[i].typ == ChatType.CANCEL)) and ChatAnalyzer.__can_merge(toks[i], toks[i + 1])): 
+            if (((toks[i].typ == ChatType.ACCEPT or toks[i].typ == ChatType.CANCEL)) and ChatAnalyzer.__canMerge(toks[i], toks[i + 1])): 
                 if (toks[i + 1].typ == toks[i].typ): 
                     toks[i].end_token = toks[i + 1].end_token
                     del toks[i + 1]
@@ -103,27 +101,27 @@ class ChatAnalyzer(Analyzer):
             if (cit.value is not None): 
                 cr.value = cit.value
             if (cit.vtyp != VerbType.UNDEFINED): 
-                cr.add_verb_type(cit.vtyp)
+                cr.addVerbType(cit.vtyp)
             if (cit.not0_): 
                 cr.not0_ = True
-            cr = (ad.register_referent(cr) if isinstance(ad.register_referent(cr), ChatReferent) else None)
+            cr = (Utils.asObjectOrNull(ad.registerReferent(cr), ChatReferent))
             rt = ReferentToken(cr, cit.begin_token, cit.end_token)
-            kit.embed_token(rt)
+            kit.embedToken(rt)
     
     @staticmethod
-    def __can_merge(t1 : 'ChatItemToken', t2 : 'ChatItemToken') -> bool:
+    def __canMerge(t1 : 'ChatItemToken', t2 : 'ChatItemToken') -> bool:
         from pullenti.ner.TextToken import TextToken
         t = t1.end_token.next0_
-        first_pass3684 = True
+        first_pass2792 = True
         while True:
-            if first_pass3684: first_pass3684 = False
+            if first_pass2792: first_pass2792 = False
             else: t = t.next0_
             if (not (t is not None and (t.end_char < t2.begin_char))): break
             if (not ((isinstance(t, TextToken)))): 
                 return False
             if (t.length_char < 2): 
                 continue
-            mc = t.get_morph_class_in_dictionary()
+            mc = t.getMorphClassInDictionary()
             if (((mc.is_adverb or mc.is_preposition or mc.is_pronoun) or mc.is_personal_pronoun or mc.is_misc) or mc.is_conjunction): 
                 continue
             return False
@@ -131,13 +129,16 @@ class ChatAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
+        from pullenti.ner.core.Termin import Termin
         from pullenti.ner.chat.internal.ChatItemToken import ChatItemToken
         from pullenti.ner.ProcessorService import ProcessorService
         try: 
+            Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             ChatItemToken.initialize()
+            Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False
         except Exception as ex: 
             raise Utils.newException(ex.__str__(), ex)
-        ProcessorService.register_analyzer(ChatAnalyzer())
+        ProcessorService.registerAnalyzer(ChatAnalyzer())
     
     # static constructor for class ChatAnalyzer
     @staticmethod

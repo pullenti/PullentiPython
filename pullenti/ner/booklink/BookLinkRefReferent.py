@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -32,7 +30,7 @@ class BookLinkRefReferent(Referent):
         super().__init__(BookLinkRefReferent.OBJ_TYPENAME)
         self.instance_of = MetaBookLinkRef._global_meta
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         res = io.StringIO()
         if (self.number is not None): 
             print("[{0}] ".format(self.number), end="", file=res, flush=True)
@@ -42,17 +40,17 @@ class BookLinkRefReferent(Referent):
         if (book_ is None): 
             print("?", end="", file=res)
         else: 
-            print(book_.to_string(short_variant, lang, lev), end="", file=res)
+            print(book_.toString(short_variant, lang, lev), end="", file=res)
         return Utils.toStringStringIO(res)
     
     @property
     def parent_referent(self) -> 'Referent':
-        return (self.get_value(BookLinkRefReferent.ATTR_BOOK) if isinstance(self.get_value(BookLinkRefReferent.ATTR_BOOK), Referent) else None)
+        return Utils.asObjectOrNull(self.getSlotValue(BookLinkRefReferent.ATTR_BOOK), Referent)
     
     @property
     def typ(self) -> 'BookLinkRefType':
         """ Тип ссылки """
-        val = self.get_string_value(BookLinkRefReferent.ATTR_TYPE)
+        val = self.getStringValue(BookLinkRefReferent.ATTR_TYPE)
         if (val is None): 
             return BookLinkRefType.UNDEFINED
         try: 
@@ -60,47 +58,43 @@ class BookLinkRefReferent(Referent):
         except Exception as ex398: 
             pass
         return BookLinkRefType.UNDEFINED
-    
     @typ.setter
     def typ(self, value) -> 'BookLinkRefType':
-        self.add_slot(BookLinkRefReferent.ATTR_TYPE, Utils.enumToString(value), True, 0)
+        self.addSlot(BookLinkRefReferent.ATTR_TYPE, Utils.enumToString(value), True, 0)
         return value
     
     @property
     def book(self) -> 'Referent':
         """ Собственно ссылка вовне на источник - BookLinkReferent или DecreeReferent """
-        return (self.get_value(BookLinkRefReferent.ATTR_BOOK) if isinstance(self.get_value(BookLinkRefReferent.ATTR_BOOK), Referent) else None)
-    
+        return Utils.asObjectOrNull(self.getSlotValue(BookLinkRefReferent.ATTR_BOOK), Referent)
     @book.setter
     def book(self, value) -> 'Referent':
-        self.add_slot(BookLinkRefReferent.ATTR_BOOK, value, True, 0)
+        self.addSlot(BookLinkRefReferent.ATTR_BOOK, value, True, 0)
         return value
     
     @property
     def number(self) -> str:
         """ Порядковый номер в списке """
-        return self.get_string_value(BookLinkRefReferent.ATTR_NUMBER)
-    
+        return self.getStringValue(BookLinkRefReferent.ATTR_NUMBER)
     @number.setter
     def number(self, value) -> str:
         num = value
         if (num is not None and num.find('-') > 0): 
             num = num.replace(" - ", "-")
-        self.add_slot(BookLinkRefReferent.ATTR_NUMBER, num, True, 0)
+        self.addSlot(BookLinkRefReferent.ATTR_NUMBER, num, True, 0)
         return value
     
     @property
     def pages(self) -> str:
         """ Ссылка на страницу или диапазон страниц """
-        return self.get_string_value(BookLinkRefReferent.ATTR_PAGES)
-    
+        return self.getStringValue(BookLinkRefReferent.ATTR_PAGES)
     @pages.setter
     def pages(self, value) -> str:
-        self.add_slot(BookLinkRefReferent.ATTR_PAGES, value, True, 0)
+        self.addSlot(BookLinkRefReferent.ATTR_PAGES, value, True, 0)
         return value
     
-    def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
-        r = (obj if isinstance(obj, BookLinkRefReferent) else None)
+    def canBeEquals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+        r = Utils.asObjectOrNull(obj, BookLinkRefReferent)
         if (r is None): 
             return False
         if (self.book != r.book): 
@@ -114,17 +108,24 @@ class BookLinkRefReferent(Referent):
         return True
     
     @staticmethod
-    def get_number_diff(r1 : 'Referent', r2 : 'Referent') -> int:
-        num1 = r1.get_string_value(BookLinkRefReferent.ATTR_NUMBER)
-        num2 = r2.get_string_value(BookLinkRefReferent.ATTR_NUMBER)
+    def getNumberDiff(r1 : 'Referent', r2 : 'Referent') -> int:
+        """ Возвращает разницу номеров r2 - r1, иначе null, если номеров нет
+        
+        Args:
+            r1(Referent): 
+            r2(Referent): 
+        
+        """
+        num1 = r1.getStringValue(BookLinkRefReferent.ATTR_NUMBER)
+        num2 = r2.getStringValue(BookLinkRefReferent.ATTR_NUMBER)
         if (num1 is None or num2 is None): 
             return None
-        inoutarg399 = RefOutArgWrapper(0)
-        inoutres400 = Utils.tryParseInt(num1, inoutarg399)
-        inoutarg401 = RefOutArgWrapper(0)
-        inoutres402 = Utils.tryParseInt(num2, inoutarg401)
-        n1 = inoutarg399.value
-        n2 = inoutarg401.value
+        wrapn1399 = RefOutArgWrapper(0)
+        inoutres400 = Utils.tryParseInt(num1, wrapn1399)
+        wrapn2401 = RefOutArgWrapper(0)
+        inoutres402 = Utils.tryParseInt(num2, wrapn2401)
+        n1 = wrapn1399.value
+        n2 = wrapn2401.value
         if (not inoutres400 or not inoutres402): 
             return None
         return n2 - n1

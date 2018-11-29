@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 import io
@@ -28,16 +26,16 @@ class MorphMiscInfo:
         """ Дополнительные атрибуты """
         return self.__m_attrs
     
-    def __get_value(self, i : int) -> bool:
+    def __getValue(self, i : int) -> bool:
         return (((((self._m_value) >> i)) & 1)) != 0
     
-    def __set_value(self, i : int, val : bool) -> None:
+    def __setValue(self, i : int, val : bool) -> None:
         if (val): 
             self._m_value |= ((1 << i))
         else: 
             self._m_value &= (~ ((1 << i)))
     
-    def __add_attr(self, attr : str) -> None:
+    def __addAttr(self, attr : str) -> None:
         if (not attr in self.__m_attrs): 
             self.__m_attrs.append(attr)
     
@@ -58,15 +56,14 @@ class MorphMiscInfo:
         if ("3 л." in self.__m_attrs): 
             res = (Utils.valToEnum((res) | (MorphPerson.THIRD), MorphPerson))
         return res
-    
     @person.setter
     def person(self, value) -> 'MorphPerson':
         if ((((value) & (MorphPerson.FIRST))) != (MorphPerson.UNDEFINED)): 
-            self.__add_attr("1 л.")
+            self.__addAttr("1 л.")
         if ((((value) & (MorphPerson.SECOND))) != (MorphPerson.UNDEFINED)): 
-            self.__add_attr("2 л.")
+            self.__addAttr("2 л.")
         if ((((value) & (MorphPerson.THIRD))) != (MorphPerson.UNDEFINED)): 
-            self.__add_attr("3 л.")
+            self.__addAttr("3 л.")
         return value
     
     @property
@@ -79,15 +76,14 @@ class MorphMiscInfo:
         if ("б.вр." in self.__m_attrs): 
             return MorphTense.FUTURE
         return MorphTense.UNDEFINED
-    
     @tense.setter
     def tense(self, value) -> 'MorphTense':
         if (value == MorphTense.PAST): 
-            self.__add_attr("п.вр.")
+            self.__addAttr("п.вр.")
         if (value == MorphTense.PRESENT): 
-            self.__add_attr("н.вр.")
+            self.__addAttr("н.вр.")
         if (value == MorphTense.FUTURE): 
-            self.__add_attr("б.вр.")
+            self.__addAttr("б.вр.")
         return value
     
     @property
@@ -98,13 +94,12 @@ class MorphMiscInfo:
         if ("сов.в." in self.__m_attrs): 
             return MorphAspect.PERFECTIVE
         return MorphAspect.UNDEFINED
-    
     @aspect.setter
     def aspect(self, value) -> 'MorphAspect':
         if (value == MorphAspect.IMPERFECTIVE): 
-            self.__add_attr("нес.в.")
+            self.__addAttr("нес.в.")
         if (value == MorphAspect.PERFECTIVE): 
-            self.__add_attr("сов.в.")
+            self.__addAttr("сов.в.")
         return value
     
     @property
@@ -113,11 +108,10 @@ class MorphMiscInfo:
         if ("пов.накл." in self.__m_attrs): 
             return MorphMood.IMPERATIVE
         return MorphMood.UNDEFINED
-    
     @mood.setter
     def mood(self, value) -> 'MorphMood':
         if (value == MorphMood.IMPERATIVE): 
-            self.__add_attr("пов.накл.")
+            self.__addAttr("пов.накл.")
         return value
     
     @property
@@ -128,13 +122,12 @@ class MorphMiscInfo:
         if ("страд.з." in self.__m_attrs): 
             return MorphVoice.PASSIVE
         return MorphVoice.UNDEFINED
-    
     @voice.setter
     def voice(self, value) -> 'MorphVoice':
         if (value == MorphVoice.ACTIVE): 
-            self.__add_attr("дейст.з.")
+            self.__addAttr("дейст.з.")
         if (value == MorphVoice.PASSIVE): 
-            self.__add_attr("страд.з.")
+            self.__addAttr("страд.з.")
         return value
     
     @property
@@ -151,11 +144,10 @@ class MorphMiscInfo:
     @property
     def is_synonym_form(self) -> bool:
         """ Синонимическая форма """
-        return self.__get_value(0)
-    
+        return self.__getValue(0)
     @is_synonym_form.setter
     def is_synonym_form(self, value) -> bool:
-        self.__set_value(0, value)
+        self.__setValue(0, value)
         return value
     
     def __str__(self) -> str:

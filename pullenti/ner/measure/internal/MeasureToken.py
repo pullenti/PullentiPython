@@ -1,94 +1,125 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
+from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.measure.MeasureKind import MeasureKind
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.measure.internal.MeasureHelper import MeasureHelper
 
 
 class MeasureToken(MetaToken):
     
     def __init__(self, b : 'Token', e0_ : 'Token') -> None:
-        self.nums = None
-        self.name = None
+        super().__init__(b, e0_, None)
+        self.nums = None;
+        self.name = None;
         self.internals = list()
         self.is_set = False
         self.reliable = False
-        super().__init__(b, e0_, None)
     
     def __str__(self) -> str:
         return "{0}: {1}".format(self.name, str(self.nums))
     
-    def create_refenets_tokens_with_register(self, ad : 'AnalyzerData', register : bool=True) -> typing.List['ReferentToken']:
+    def createRefenetsTokensWithRegister(self, ad : 'AnalyzerData', register : bool=True) -> typing.List['ReferentToken']:
         from pullenti.ner.measure.MeasureReferent import MeasureReferent
+        from pullenti.ner.measure.UnitReferent import UnitReferent
         from pullenti.ner.ReferentToken import ReferentToken
         if (len(self.internals) == 0 and not self.reliable): 
             if (len(self.nums.units) == 1 and self.nums.units[0].is_doubt and ((self.nums.from_val is None or self.nums.to_val is None))): 
                 return None
         res = list()
-        if (self.nums is None and len(self.internals) > 0): 
+        if (((self.nums is None or self.nums.plus_minus_percent)) and len(self.internals) > 0): 
             mr = MeasureReferent()
             templ0 = "1"
             templ = None
             if (self.name is not None): 
-                mr.add_slot(MeasureReferent.ATTR_NAME, self.name, False, 0)
+                mr.addSlot(MeasureReferent.ATTR_NAME, self.name, False, 0)
+            ints = list()
             k = 0
-            first_pass3935 = True
+            first_pass3048 = True
             while True:
-                if first_pass3935: first_pass3935 = False
+                if first_pass3048: first_pass3048 = False
                 else: k += 1
                 if (not (k < len(self.internals))): break
                 ii = self.internals[k]
                 ii.reliable = True
-                li = ii.create_refenets_tokens_with_register(ad, False)
+                li = ii.createRefenetsTokensWithRegister(ad, False)
                 if (li is None): 
                     continue
                 res.extend(li)
-                mr0 = (res[len(res) - 1].referent if isinstance(res[len(res) - 1].referent, MeasureReferent) else None)
+                mr0 = Utils.asObjectOrNull(res[len(res) - 1].referent, MeasureReferent)
                 if (k == 0): 
                     templ0 = mr0.template
                     mr0.template = "1"
-                mr0 = (ad.register_referent(mr0) if isinstance(ad.register_referent(mr0), MeasureReferent) else None)
-                mr.add_slot(MeasureReferent.ATTR_VALUE, mr0, False, 0)
+                mr0 = (Utils.asObjectOrNull(ad.registerReferent(mr0), MeasureReferent))
+                mr.addSlot(MeasureReferent.ATTR_VALUE, mr0, False, 0)
+                ints.append(mr0)
                 if (templ is None): 
                     templ = "1"
                 else: 
-                    nu = len(mr.get_string_values(MeasureReferent.ATTR_VALUE))
+                    nu = len(mr.getStringValues(MeasureReferent.ATTR_VALUE))
                     templ = "{0}{1}{2}".format(templ, (", " if self.is_set else " × "), nu)
             if (self.is_set): 
                 templ = ("{" + templ + "}")
             if (templ0 != "1"): 
                 templ = templ0.replace("1", templ)
+            if (self.nums is not None and self.nums.plus_minus_percent and self.nums.single_val is not None): 
+                templ = "[{0} ±{1}%]".format(templ, len(self.internals) + 1)
+                mr.addValue(self.nums.single_val)
             mr.template = templ
-            res.append(ReferentToken(ad.register_referent(mr), self.begin_token, self.end_token))
+            has_length = False
+            uref = None
+            i = 0
+            while i < len(ints): 
+                if (ints[i].kind == MeasureKind.LENGTH): 
+                    has_length = True
+                    uref = (Utils.asObjectOrNull(ints[i].getSlotValue(MeasureReferent.ATTR_UNIT), UnitReferent))
+                elif (len(ints[i].units) > 0): 
+                    break
+                i += 1
+            if (len(ints) > 1 and has_length and uref is not None): 
+                for ii in ints: 
+                    if (ii.findSlot(MeasureReferent.ATTR_UNIT, None, True) is None): 
+                        ii.addSlot(MeasureReferent.ATTR_UNIT, uref, False, 0)
+                        ii.kind = MeasureKind.LENGTH
+            if (len(ints) == 3): 
+                if (ints[0].kind == MeasureKind.LENGTH and ints[1].kind == MeasureKind.LENGTH and ints[2].kind == MeasureKind.LENGTH): 
+                    mr.kind = MeasureKind.VOLUME
+                elif (len(ints[0].units) == 0 and len(ints[1].units) == 0 and len(ints[2].units) == 0): 
+                    nam = mr.getStringValue(MeasureReferent.ATTR_NAME)
+                    if (nam is not None): 
+                        if ("РАЗМЕР" in nam or "ГАБАРИТ" in nam): 
+                            mr.kind = MeasureKind.VOLUME
+            if (len(ints) == 2): 
+                if (ints[0].kind == MeasureKind.LENGTH and ints[1].kind == MeasureKind.LENGTH): 
+                    mr.kind = MeasureKind.AREA
+            res.append(ReferentToken(ad.registerReferent(mr), self.begin_token, self.end_token))
             return res
-        re2 = self.nums.create_refenets_tokens_with_register(ad, self.name, register)
+        re2 = self.nums.createRefenetsTokensWithRegister(ad, self.name, register)
         for ii in self.internals: 
-            li = ii.create_refenets_tokens_with_register(ad, True)
+            li = ii.createRefenetsTokensWithRegister(ad, True)
             if (li is None): 
                 continue
             res.extend(li)
-            re2[len(re2) - 1].referent.add_slot(MeasureReferent.ATTR_REF, res[len(res) - 1].referent, False, 0)
+            re2[len(re2) - 1].referent.addSlot(MeasureReferent.ATTR_REF, res[len(res) - 1].referent, False, 0)
         re2[len(re2) - 1].begin_token = self.begin_token
         re2[len(re2) - 1].end_token = self.end_token
         res.extend(re2)
         return res
     
     @staticmethod
-    def try_parse_minimal(t : 'Token', add_units : 'TerminCollection', can_omit_number : bool=False) -> 'MeasureToken':
+    def tryParseMinimal(t : 'Token', add_units : 'TerminCollection', can_omit_number : bool=False) -> 'MeasureToken':
         from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
         if (t is None or (isinstance(t, ReferentToken))): 
             return None
-        mt = NumbersWithUnitToken.try_parse_multi(t, add_units, can_omit_number)
+        mt = NumbersWithUnitToken.tryParseMulti(t, add_units, can_omit_number, False)
         if (mt is None): 
             return None
         if (len(mt[0].units) == 0): 
@@ -96,36 +127,42 @@ class MeasureToken(MetaToken):
         if (len(mt) == 1 and len(mt[0].units) == 1 and mt[0].units[0].is_doubt): 
             return None
         if (len(mt) == 1): 
-            res = MeasureToken._new1508(mt[0].begin_token, mt[len(mt) - 1].end_token, mt[0])
-            res.__parse_internals(add_units)
+            res = MeasureToken._new1519(mt[0].begin_token, mt[len(mt) - 1].end_token, mt[0])
+            res.__parseInternals(add_units)
             return res
         res = MeasureToken(mt[0].begin_token, mt[len(mt) - 1].end_token)
         for m in mt: 
-            res.internals.append(MeasureToken._new1508(m.begin_token, m.end_token, m))
+            res.internals.append(MeasureToken._new1519(m.begin_token, m.end_token, m))
         return res
     
-    def __parse_internals(self, add_units : 'TerminCollection') -> None:
+    def __parseInternals(self, add_units : 'TerminCollection') -> None:
         from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
         from pullenti.ner.measure.internal.UnitToken import UnitToken
-        if (self.end_token.next0_ is not None and ((self.end_token.next0_.is_char_of("\\/") or self.end_token.next0_.is_value("ПРИ", None)))): 
-            mt1 = MeasureToken.try_parse(self.end_token.next0_.next0_, add_units, True)
+        if (self.end_token.next0_ is not None and ((self.end_token.next0_.isCharOf("\\/") or self.end_token.next0_.isValue("ПРИ", None)))): 
+            mt1 = MeasureToken.tryParse(self.end_token.next0_.next0_, add_units, True)
             if (mt1 is not None): 
                 self.internals.append(mt1)
                 self.end_token = mt1.end_token
             else: 
-                mt = NumbersWithUnitToken.try_parse(self.end_token.next0_.next0_, add_units, False)
-                if (mt is not None and len(mt.units) > 0 and not UnitToken.can_be_equals(self.nums.units, mt.units)): 
-                    self.internals.append(MeasureToken._new1508(mt.begin_token, mt.end_token, mt))
+                mt = NumbersWithUnitToken.tryParse(self.end_token.next0_.next0_, add_units, False, False)
+                if (mt is not None and len(mt.units) > 0 and not UnitToken.canBeEquals(self.nums.units, mt.units)): 
+                    self.internals.append(MeasureToken._new1519(mt.begin_token, mt.end_token, mt))
                     self.end_token = mt.end_token
     
     @staticmethod
-    def try_parse(t : 'Token', add_units : 'TerminCollection', can_be_set : bool=True) -> 'MeasureToken':
+    def tryParse(t : 'Token', add_units : 'TerminCollection', can_be_set : bool=True) -> 'MeasureToken':
+        """ Выделение вместе с наименованием
+        
+        Args:
+            t(Token): 
+        
+        """
         from pullenti.ner.TextToken import TextToken
+        from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
         from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         from pullenti.ner.core.NounPhraseToken import NounPhraseToken
         from pullenti.ner.core.NumberExToken import NumberExToken
         from pullenti.ner.date.internal.DateItemToken import DateItemToken
-        from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
         from pullenti.ner.measure.internal.UnitToken import UnitToken
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner.core.MiscHelper import MiscHelper
@@ -134,51 +171,58 @@ class MeasureToken(MetaToken):
         t0 = t
         whd = None
         minmax = 0
-        inoutarg1518 = RefOutArgWrapper(minmax)
-        tt = MeasureToken.__is_min_or_max(t0, inoutarg1518)
-        minmax = inoutarg1518.value
+        wrapminmax1529 = RefOutArgWrapper(minmax)
+        tt = NumbersWithUnitToken._isMinOrMax(t0, wrapminmax1529)
+        minmax = wrapminmax1529.value
         if (tt is not None): 
             t = tt.next0_
-        npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.PARSEPREPOSITION, 0)
+        npt = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.PARSEPREPOSITION, 0)
         if (npt is None): 
-            whd = MeasureToken.__try_parsewhl(t)
+            whd = NumbersWithUnitToken._tryParseWHL(t)
             if (whd is not None): 
                 npt = NounPhraseToken(t0, whd.end_token)
-            elif (t0.is_value("КПД", None)): 
+            elif (t0.isValue("КПД", None)): 
                 npt = NounPhraseToken(t0, t0)
-            elif ((isinstance(t0, TextToken)) and t0.length_char > 3 and t0.get_morph_class_in_dictionary().is_undefined): 
+            elif ((isinstance(t0, TextToken)) and t0.length_char > 3 and t0.getMorphClassInDictionary().is_undefined): 
                 npt = NounPhraseToken(t0, t0)
             else: 
                 return None
-        elif (NumberExToken.try_parse_float_number(t, True) is not None): 
+        elif (NumberExToken.tryParseFloatNumber(t, True) is not None): 
             return None
         else: 
-            dtok = DateItemToken.try_attach(t, None)
+            dtok = DateItemToken.tryAttach(t, None)
             if (dtok is not None): 
                 return None
         t1 = npt.end_token
         t = npt.end_token
-        name_ = MetaToken._new590(npt.begin_token, npt.end_token, npt.morph)
+        name_ = MetaToken._new600(npt.begin_token, npt.end_token, npt.morph)
         units = None
         units2 = None
         internals_ = list()
+        not0_ = False
         tt = t1.next0_
-        first_pass3936 = True
+        first_pass3049 = True
         while True:
-            if first_pass3936: first_pass3936 = False
+            if first_pass3049: first_pass3049 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 
                 break
-            inoutarg1512 = RefOutArgWrapper(minmax)
-            tt2 = MeasureToken.__is_min_or_max(tt, inoutarg1512)
-            minmax = inoutarg1512.value
+            wrapminmax1523 = RefOutArgWrapper(minmax)
+            tt2 = NumbersWithUnitToken._isMinOrMax(tt, wrapminmax1523)
+            minmax = wrapminmax1523.value
             if (tt2 is not None): 
                 tt = tt2
                 t = tt
                 t1 = t
                 continue
-            www = MeasureToken.__try_parsewhl(tt)
+            if ((tt.isValue("БЫТЬ", None) or tt.isValue("ДОЛЖЕН", None) or tt.isValue("ДОЛЖНЫЙ", None)) or tt.isValue("МОЖЕТ", None) or ((tt.isValue("СОСТАВЛЯТЬ", None) and not tt.getMorphClassInDictionary().is_adjective))): 
+                t = tt
+                t1 = t
+                if (tt.previous.isValue("НЕ", None)): 
+                    not0_ = True
+                continue
+            www = NumbersWithUnitToken._tryParseWHL(tt)
             if (www is not None): 
                 whd = www
                 tt = www.end_token
@@ -187,19 +231,19 @@ class MeasureToken(MetaToken):
                 continue
             if (len(internals_) > 0 and tt.is_comma_and): 
                 continue
-            if (tt.is_value("ПРИ", None) or len(internals_) > 0): 
-                mt1 = MeasureToken.try_parse(tt.next0_, add_units, False)
+            if (tt.isValue("ПРИ", None) or len(internals_) > 0): 
+                mt1 = MeasureToken.tryParse(tt.next0_, add_units, False)
                 if (mt1 is not None and mt1.reliable): 
                     internals_.append(mt1)
                     tt = mt1.end_token
                     t = tt
                     t1 = t
                     continue
-            mt0 = NumbersWithUnitToken.try_parse(t1, add_units, False)
+            mt0 = NumbersWithUnitToken.tryParse(tt, add_units, False, False)
             if (mt0 is not None): 
                 break
-            if (((tt.is_comma or tt.is_char('('))) and tt.next0_ is not None): 
-                www = MeasureToken.__try_parsewhl(tt.next0_)
+            if (((tt.is_comma or tt.isChar('('))) and tt.next0_ is not None): 
+                www = NumbersWithUnitToken._tryParseWHL(tt.next0_)
                 if (www is not None): 
                     whd = www
                     tt = www.end_token
@@ -208,23 +252,23 @@ class MeasureToken(MetaToken):
                     if (tt.next0_ is not None and tt.next0_.is_comma): 
                         tt = tt.next0_
                         t1 = tt
-                    if (tt.next0_ is not None and tt.next0_.is_char(')')): 
+                    if (tt.next0_ is not None and tt.next0_.isChar(')')): 
                         tt = tt.next0_
                         t1 = tt
                         continue
-                uu = UnitToken.try_parse_list(tt.next0_, add_units)
+                uu = UnitToken.tryParseList(tt.next0_, add_units)
                 if (uu is not None): 
                     t = uu[len(uu) - 1].end_token
                     t1 = t
                     units = uu
-                    if (tt.is_char('(') and t1.next0_ is not None and t1.next0_.is_char(')')): 
+                    if (tt.isChar('(') and t1.next0_ is not None and t1.next0_.isChar(')')): 
                         tt = t1.next0_
                         t = tt
                         t1 = t
                         continue
-                    elif (t1.next0_ is not None and t1.next0_.is_char('(')): 
-                        uu = UnitToken.try_parse_list(t1.next0_.next0_, add_units)
-                        if (uu is not None and uu[len(uu) - 1].end_token.next0_ is not None and uu[len(uu) - 1].end_token.next0_.is_char(')')): 
+                    elif (t1.next0_ is not None and t1.next0_.isChar('(')): 
+                        uu = UnitToken.tryParseList(t1.next0_.next0_, add_units)
+                        if (uu is not None and uu[len(uu) - 1].end_token.next0_ is not None and uu[len(uu) - 1].end_token.next0_.isChar(')')): 
                             units2 = uu
                             tt = uu[len(uu) - 1].end_token.next0_
                             t = tt
@@ -232,19 +276,24 @@ class MeasureToken(MetaToken):
                             continue
                     if (uu is not None and len(uu) > 0 and not uu[0].is_doubt): 
                         break
-            if (BracketHelper.can_be_start_of_sequence(tt, False, False)): 
-                br = BracketHelper.try_parse(tt, BracketParseAttr.NO, 100)
+            if (BracketHelper.canBeStartOfSequence(tt, False, False)): 
+                br = BracketHelper.tryParse(tt, BracketParseAttr.NO, 100)
                 if (br is not None): 
                     tt = br.end_token
                     t = tt
                     t1 = t
                     continue
-            if (tt.is_value("ЯМЗ", None)): 
+            if (tt.isValue("НЕ", None) and tt.next0_ is not None): 
+                mc = tt.next0_.getMorphClassInDictionary()
+                if (mc.is_adverb or mc.is_misc): 
+                    break
+                continue
+            if (tt.isValue("ЯМЗ", None)): 
                 pass
-            npt2 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.PARSEPREPOSITION, 0)
+            npt2 = NounPhraseHelper.tryParse(tt, NounPhraseParseAttr.PARSEPREPOSITION, 0)
             if (npt2 is None): 
                 if (tt.morph.class0_.is_preposition or tt.morph.class0_.is_conjunction): 
-                    to = NumbersWithUnitToken.M_TERMINS.try_parse(tt, TerminParseAttr.NO)
+                    to = NumbersWithUnitToken.M_TERMINS.tryParse(tt, TerminParseAttr.NO)
                     if (to is not None): 
                         if ((isinstance(to.end_token.next0_, TextToken)) and to.end_token.next0_.is_letters): 
                             pass
@@ -252,8 +301,15 @@ class MeasureToken(MetaToken):
                             break
                     t1 = tt
                     continue
-                mc = tt.get_morph_class_in_dictionary()
+                mc = tt.getMorphClassInDictionary()
                 if (((isinstance(tt, TextToken)) and tt.chars.is_letter and tt.length_char > 1) and (((tt.chars.is_all_upper or mc.is_adverb or mc.is_undefined) or mc.is_adjective))): 
+                    uu = UnitToken.tryParseList(tt, add_units)
+                    if (uu is not None): 
+                        if (uu[0].length_char > 2 or len(uu) > 1): 
+                            units = uu
+                            t = uu[len(uu) - 1].end_token
+                            t1 = t
+                            break
                     t = tt
                     t1 = t
                     if (len(internals_) == 0): 
@@ -261,26 +317,36 @@ class MeasureToken(MetaToken):
                     continue
                 if (tt.is_comma): 
                     continue
+                if (tt.isChar('.')): 
+                    if (not MiscHelper.canBeStartOfSentence(tt.next0_)): 
+                        continue
+                    uu = UnitToken.tryParseList(tt.next0_, add_units)
+                    if (uu is not None): 
+                        if (uu[0].length_char > 2 or len(uu) > 1): 
+                            units = uu
+                            t = uu[len(uu) - 1].end_token
+                            t1 = t
+                            break
                 break
             tt = npt2.end_token
             t = tt
             t1 = t
             if (len(internals_) > 0): 
                 pass
-            elif (t.is_value("ПРЕДЕЛ", None) or t.is_value("ГРАНИЦА", None) or t.is_value("ДИАПАЗОН", None)): 
+            elif (t.isValue("ПРЕДЕЛ", None) or t.isValue("ГРАНИЦА", None) or t.isValue("ДИАПАЗОН", None)): 
                 pass
             elif (t.chars.is_letter): 
                 name_.end_token = t1
         t1 = t1.next0_
-        first_pass3937 = True
+        first_pass3050 = True
         while True:
-            if first_pass3937: first_pass3937 = False
+            if first_pass3050: first_pass3050 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
             if (t1.is_table_control_char): 
                 pass
-            elif (t1.is_char_of(":,_")): 
-                www = MeasureToken.__try_parsewhl(t1.next0_)
+            elif (t1.isCharOf(":,_")): 
+                www = NumbersWithUnitToken._tryParseWHL(t1.next0_)
                 if (www is not None): 
                     whd = www
                     t = www.end_token
@@ -292,7 +358,7 @@ class MeasureToken(MetaToken):
                 break
         if (t1 is None): 
             return None
-        mts = NumbersWithUnitToken.try_parse_multi(t1, add_units, False)
+        mts = NumbersWithUnitToken.tryParseMulti(t1, add_units, False, not0_)
         if (mts is None): 
             return None
         mt = mts[0]
@@ -303,27 +369,45 @@ class MeasureToken(MetaToken):
                 if (units is not None): 
                     for m in mts: 
                         m.units = units
-            res1 = MeasureToken._new1513(t0, mts[len(mts) - 1].end_token, name_.morph, True)
-            res1.name = MiscHelper.get_text_value_of_meta_token(name_, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
+            res1 = MeasureToken._new1524(t0, mts[len(mts) - 1].end_token, name_.morph, True)
+            res1.name = MiscHelper.getTextValueOfMetaToken(name_, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
             k = 0
             while k < len(mts): 
-                ttt = MeasureToken._new1508(mts[k].begin_token, mts[k].end_token, mts[k])
+                ttt = MeasureToken._new1519(mts[k].begin_token, mts[k].end_token, mts[k])
                 if (whd is not None): 
-                    nams = (whd.tag if isinstance(whd.tag, list) else None)
+                    nams = Utils.asObjectOrNull(whd.tag, list)
                     if (k < len(nams)): 
                         ttt.name = nams[k]
                 res1.internals.append(ttt)
                 k += 1
+            tt1 = res1.end_token.next0_
+            if (tt1 is not None and tt1.isChar('±')): 
+                nn = NumbersWithUnitToken._tryParse(tt1, add_units, True, False)
+                if (nn is not None and nn.plus_minus_percent): 
+                    res1.end_token = nn.end_token
+                    res1.nums = nn
             return res1
         if (not mt.is_whitespace_before): 
             if (mt.begin_token.previous is None): 
                 return None
-            if (mt.begin_token.previous.is_char_of(":),")): 
+            if (mt.begin_token.previous.isCharOf(":),")): 
                 pass
             else: 
                 return None
         if (len(mt.units) == 0 and units is not None): 
             mt.units = units
+            if (mt.div_num is not None and len(units) > 1 and len(mt.div_num.units) == 0): 
+                i = 1
+                while i < len(units): 
+                    if (units[i].pow0_ == -1): 
+                        j = i
+                        while j < len(units): 
+                            mt.div_num.units.append(units[j])
+                            units[j].pow0_ = (- units[j].pow0_)
+                            j += 1
+                        del mt.units[i:i+len(units) - i]
+                        break
+                    i += 1
         if ((minmax < 0) and mt.single_val is not None): 
             mt.from_val = mt.single_val
             mt.from_include = True
@@ -334,135 +418,45 @@ class MeasureToken(MetaToken):
             mt.single_val = (None)
         if (len(mt.units) == 0): 
             return None
-        res = MeasureToken._new1515(t0, mt.end_token, name_.morph, internals_)
+        res = MeasureToken._new1526(t0, mt.end_token, name_.morph, internals_)
         if (((not t0.is_whitespace_before and t0.previous is not None and t0 == name_.begin_token) and t0.previous.is_hiphen and not t0.previous.is_whitespace_before) and (isinstance(t0.previous.previous, TextToken))): 
-            res.begin_token = name_.begin_token.previous.previous
-            name_.begin_token = res.begin_token
-        res.name = MiscHelper.get_text_value_of_meta_token(name_, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
+            name_.begin_token = res.begin_token = name_.begin_token.previous.previous
+        res.name = MiscHelper.getTextValueOfMetaToken(name_, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
         res.nums = mt
         for u in res.nums.units: 
             if (u.keyword is not None): 
                 if (u.keyword.begin_char >= res.begin_char): 
                     res.reliable = True
-        res.__parse_internals(add_units)
+        res.__parseInternals(add_units)
         if (len(res.internals) > 0 or not can_be_set): 
             return res
         t1 = res.end_token.next0_
         if (t1 is not None and t1.is_comma_and): 
             t1 = t1.next0_
-        mts1 = NumbersWithUnitToken.try_parse_multi(t1, add_units, False)
-        if ((mts1 is not None and len(mts1) == 1 and (t1.whitespaces_before_count < 3)) and len(mts1[0].units) > 0 and not UnitToken.can_be_equals(mts[0].units, mts1[0].units)): 
+        mts1 = NumbersWithUnitToken.tryParseMulti(t1, add_units, False, False)
+        if ((mts1 is not None and len(mts1) == 1 and (t1.whitespaces_before_count < 3)) and len(mts1[0].units) > 0 and not UnitToken.canBeEquals(mts[0].units, mts1[0].units)): 
             res.is_set = True
             res.nums = (None)
-            res.internals.append(MeasureToken._new1508(mt.begin_token, mt.end_token, mt))
-            res.internals.append(MeasureToken._new1508(mts1[0].begin_token, mts1[0].end_token, mts1[0]))
+            res.internals.append(MeasureToken._new1519(mt.begin_token, mt.end_token, mt))
+            res.internals.append(MeasureToken._new1519(mts1[0].begin_token, mts1[0].end_token, mts1[0]))
             res.end_token = mts1[0].end_token
         return res
     
     @staticmethod
-    def __is_min_or_max(t : 'Token', res : int) -> 'Token':
-        if (t is None): 
-            return None
-        if (t.is_value("МИНИМАЛЬНЫЙ", None) or t.is_value("МИНИМУМ", None) or t.is_value("MINIMUM", None)): 
-            res.value = -1
-            return t
-        if (t.is_value("MIN", None) or t.is_value("МИН", None)): 
-            res.value = -1
-            if (t.next0_ is not None and t.next0_.is_char('.')): 
-                t = t.next0_
-            return t
-        if (t.is_value("МАКСИМАЛЬНЫЙ", None) or t.is_value("МАКСИМУМ", None) or t.is_value("MAXIMUM", None)): 
-            res.value = 1
-            return t
-        if (t.is_value("MAX", None) or t.is_value("МАКС", None) or t.is_value("МАХ", None)): 
-            res.value = 1
-            if (t.next0_ is not None and t.next0_.is_char('.')): 
-                t = t.next0_
-            return t
-        if (t.is_char('(')): 
-            t = MeasureToken.__is_min_or_max(t.next0_, res)
-            if (t is not None and t.next0_ is not None and t.next0_.is_char(')')): 
-                t = t.next0_
-            return t
-        return None
-    
-    @staticmethod
-    def __try_parsewhl(t : 'Token') -> 'MetaToken':
-        from pullenti.ner.TextToken import TextToken
-        if (not ((isinstance(t, TextToken)))): 
-            return None
-        if (t.is_char('(')): 
-            re0 = MeasureToken.__try_parsewhl(t.next0_)
-            if (re0 is not None): 
-                if (re0.end_token.next0_ is not None and re0.end_token.next0_.is_char(')')): 
-                    re0.begin_token = t
-                    re0.end_token = re0.end_token.next0_
-                    return re0
-        txt = (t if isinstance(t, TextToken) else None).term
-        nams = None
-        if (len(txt) == 5 and txt[1] == 'Х' and txt[3] == 'Х'): 
-            nams = list()
-            for i in range(3):
-                ch = txt[i * 2]
-                if (ch == 'Г'): 
-                    nams.append("ГЛУБИНА")
-                elif (ch == 'В'): 
-                    nams.append("ВЫСОТА")
-                elif (ch == 'Ш'): 
-                    nams.append("ШИРИНА")
-                elif (ch == 'Д'): 
-                    nams.append("ДЛИНА")
-                else: 
-                    return None
-            return MetaToken._new825(t, t, nams)
-        t0 = t
-        t1 = t
-        while t is not None: 
-            if (not ((isinstance(t, TextToken))) or ((t.whitespaces_before_count > 1 and t != t0))): 
-                break
-            term = (t if isinstance(t, TextToken) else None).term
-            nam = None
-            if ((t.is_value("ДЛИНА", None) or t.is_value("ДЛИННА", None) or term == "Д") or term == "ДЛ" or term == "ДЛИН"): 
-                nam = "ДЛИНА"
-            elif ((t.is_value("ШИРИНА", None) or t.is_value("ШИРОТА", None) or term == "Ш") or term == "ШИР" or term == "ШИРИН"): 
-                nam = "ШИРИНА"
-            elif ((t.is_value("ГЛУБИНА", None) or term == "Г" or term == "ГЛ") or term == "ГЛУБ"): 
-                nam = "ГЛУБИНА"
-            elif (t.is_value("ВЫСОТА", None) or term == "В" or term == "ВЫС"): 
-                nam = "ВЫСОТА"
-            else: 
-                break
-            if (nams is None): 
-                nams = list()
-            nams.append(nam)
-            t1 = t
-            if (t.next0_ is not None and t.next0_.is_char('.')): 
-                t = t.next0_
-                t1 = t
-            if (t.next0_ is None): 
-                break
-            if (MeasureHelper.is_mult_char(t.next0_) or t.next0_.is_comma or t.next0_.is_char_of("\\/")): 
-                t = t.next0_
-            t = t.next0_
-        if (nams is None or (len(nams) < 2)): 
-            return None
-        return MetaToken._new825(t0, t1, nams)
-    
-    @staticmethod
-    def _new1508(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'NumbersWithUnitToken') -> 'MeasureToken':
+    def _new1519(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'NumbersWithUnitToken') -> 'MeasureToken':
         res = MeasureToken(_arg1, _arg2)
         res.nums = _arg3
         return res
     
     @staticmethod
-    def _new1513(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : bool) -> 'MeasureToken':
+    def _new1524(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : bool) -> 'MeasureToken':
         res = MeasureToken(_arg1, _arg2)
         res.morph = _arg3
         res.reliable = _arg4
         return res
     
     @staticmethod
-    def _new1515(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : typing.List['MeasureToken']) -> 'MeasureToken':
+    def _new1526(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : typing.List['MeasureToken']) -> 'MeasureToken':
         res = MeasureToken(_arg1, _arg2)
         res.morph = _arg3
         res.internals = _arg4

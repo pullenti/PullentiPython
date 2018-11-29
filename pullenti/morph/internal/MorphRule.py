@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 import typing
@@ -18,32 +16,54 @@ class MorphRule:
         self.variants = dict()
         self.variants_list = list()
         self.variants_key = list()
-        self._lazy = None
+        self._lazy = None;
+    
+    def refreshVariants(self) -> None:
+        vars0_ = list()
+        for v in self.variants_list: 
+            vars0_.extend(v)
+        self.variants.clear()
+        self.variants_key.clear()
+        self.variants_list.clear()
+        for v in vars0_: 
+            li = [ ]
+            wrapli33 = RefOutArgWrapper(None)
+            inoutres34 = Utils.tryGetValue(self.variants, Utils.ifNotNull(v.tail, ""), wrapli33)
+            li = wrapli33.value
+            if (not inoutres34): 
+                li = list()
+                self.variants[Utils.ifNotNull(v.tail, "")] = li
+            li.append(v)
+        for kp in self.variants.items(): 
+            self.variants_key.append(kp[0])
+            self.variants_list.append(kp[1])
     
     def __str__(self) -> str:
         res = io.StringIO()
-        for k in self.variants_key: 
+        i = 0
+        while i < len(self.variants_key): 
             if (res.tell() > 0): 
                 print(", ", end="", file=res)
-            print("-{0}".format(k), end="", file=res, flush=True)
+            print("-{0}".format(self.variants_key[i]), end="", file=res, flush=True)
+            i += 1
         return Utils.toStringStringIO(res)
     
     def add(self, tail : str, var : 'MorphRuleVariant') -> None:
-        tail = LanguageHelper.correct_word(tail)
+        tail = LanguageHelper.correctWord(tail)
         if (var.class0_.is_undefined): 
             pass
         li = [ ]
-        inoutarg33 = RefOutArgWrapper(None)
-        inoutres34 = Utils.tryGetValue(self.variants, tail, inoutarg33)
-        li = inoutarg33.value
-        if (not inoutres34): 
+        wrapli35 = RefOutArgWrapper(None)
+        inoutres36 = Utils.tryGetValue(self.variants, tail, wrapli35)
+        li = wrapli35.value
+        if (not inoutres36): 
             li = list()
             self.variants[tail] = li
         var.tail = tail
         li.append(var)
         var.rule = self
     
-    def process_result(self, res : typing.List['MorphWordForm'], word_begin : str, mvs : typing.List['MorphRuleVariant']) -> None:
+    def processResult(self, res : typing.List['MorphWordForm'], word_begin : str, mvs : typing.List['MorphRuleVariant']) -> None:
         from pullenti.morph.MorphWordForm import MorphWordForm
         for mv in mvs: 
             r = MorphWordForm(mv, None)
@@ -56,6 +76,6 @@ class MorphRule:
                     r.normal_full = (word_begin + mv.full_normal_tail)
                 else: 
                     r.normal_full = word_begin
-            if (not MorphWordForm._has_morph_equals(res, r)): 
+            if (not MorphWordForm._hasMorphEquals(res, r)): 
                 r.undef_coef = (0)
                 res.append(r)

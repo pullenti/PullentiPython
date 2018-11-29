@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -13,8 +11,8 @@ class Feature:
     """ Атрибут класса сущностей """
     
     def __init__(self) -> None:
-        self.__name = None
-        self.__caption = None
+        self.__name = None;
+        self.__caption = None;
         self.__lowerbound = 0
         self.__upperbound = 0
         self.__showasparent = False
@@ -27,7 +25,6 @@ class Feature:
     def name(self) -> str:
         """ Внутреннее имя """
         return self.__name
-    
     @name.setter
     def name(self, value) -> str:
         self.__name = value
@@ -37,7 +34,6 @@ class Feature:
     def caption(self) -> str:
         """ Заголовок """
         return self.__caption
-    
     @caption.setter
     def caption(self, value) -> str:
         self.__caption = value
@@ -47,7 +43,6 @@ class Feature:
     def lower_bound(self) -> int:
         """ Минимальное количество """
         return self.__lowerbound
-    
     @lower_bound.setter
     def lower_bound(self, value) -> int:
         self.__lowerbound = value
@@ -57,7 +52,6 @@ class Feature:
     def upper_bound(self) -> int:
         """ Максимальное количество (0 - неограничено) """
         return self.__upperbound
-    
     @upper_bound.setter
     def upper_bound(self, value) -> int:
         self.__upperbound = value
@@ -67,7 +61,6 @@ class Feature:
     def show_as_parent(self) -> bool:
         """ Это для внутреннего использования """
         return self.__showasparent
-    
     @show_as_parent.setter
     def show_as_parent(self, value) -> bool:
         self.__showasparent = value
@@ -84,7 +77,7 @@ class Feature:
                 print("[{0}..{1}]".format(self.lower_bound, self.upper_bound), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
-    def convert_inner_value_to_outer_value(self, inner_value : object, lang : 'MorphLang'=MorphLang()) -> object:
+    def convertInnerValueToOuterValue(self, inner_value : object, lang : 'MorphLang'=MorphLang()) -> object:
         if (inner_value is None): 
             return None
         val = str(inner_value)
@@ -100,8 +93,8 @@ class Feature:
             i += 1
         return inner_value
     
-    def convert_outer_value_to_inner_value(self, outer_value : object) -> object:
-        val = (outer_value if isinstance(outer_value, str) else None)
+    def convertOuterValueToInnerValue(self, outer_value : object) -> object:
+        val = Utils.asObjectOrNull(outer_value, str)
         if (val is None): 
             return outer_value
         i = 0
@@ -113,14 +106,14 @@ class Feature:
             i += 1
         return outer_value
     
-    def add_value(self, int_val : str, ext_val : str, ext_val_ua : str=None, ext_val_eng : str=None) -> None:
+    def addValue(self, int_val : str, ext_val : str, ext_val_ua : str=None, ext_val_eng : str=None) -> None:
         self.inner_values.append(int_val)
         self.outer_values.append(ext_val)
         self.outer_valuesua.append(ext_val_ua)
         self.outer_valuesen.append(ext_val_eng)
     
     @staticmethod
-    def _new2664(_arg1 : str, _arg2 : str, _arg3 : int, _arg4 : int) -> 'Feature':
+    def _new2702(_arg1 : str, _arg2 : str, _arg3 : int, _arg4 : int) -> 'Feature':
         res = Feature()
         res.name = _arg1
         res.caption = _arg2

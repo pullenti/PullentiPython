@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.Referent import Referent
@@ -13,11 +11,11 @@ class MetaPhone(ReferentClass):
     def __init__(self) -> None:
         from pullenti.ner.phone.PhoneReferent import PhoneReferent
         super().__init__()
-        self.add_feature(PhoneReferent.ATTR_NUNBER, "Номер", 1, 1)
-        self.add_feature(PhoneReferent.ATTR_ADDNUMBER, "Добавочный номер", 0, 1)
-        self.add_feature(PhoneReferent.ATTR_COUNTRYCODE, "Код страны", 0, 1)
-        self.add_feature(Referent.ATTR_GENERAL, "Обобщающий номер", 0, 1)
-        self.add_feature(PhoneReferent.ATTR_KIND, "Тип", 0, 1)
+        self.addFeature(PhoneReferent.ATTR_NUNBER, "Номер", 1, 1)
+        self.addFeature(PhoneReferent.ATTR_ADDNUMBER, "Добавочный номер", 0, 1)
+        self.addFeature(PhoneReferent.ATTR_COUNTRYCODE, "Код страны", 0, 1)
+        self.addFeature(Referent.ATTR_GENERAL, "Обобщающий номер", 0, 1)
+        self.addFeature(PhoneReferent.ATTR_KIND, "Тип", 0, 1)
     
     @property
     def name(self) -> str:
@@ -30,7 +28,7 @@ class MetaPhone(ReferentClass):
     
     PHONE_IMAGE_ID = "phone"
     
-    def get_image_id(self, obj : 'Referent'=None) -> str:
+    def getImageId(self, obj : 'Referent'=None) -> str:
         return MetaPhone.PHONE_IMAGE_ID
     
     _global_meta = None

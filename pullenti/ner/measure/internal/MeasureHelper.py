@@ -1,42 +1,50 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
-import math
 from pullenti.unisharp.Utils import Utils
 
 
 class MeasureHelper:
     
     @staticmethod
-    def try_parse_double(val : str, f : float) -> bool:
+    def tryParseDouble(val : str, f : float) -> bool:
         f.value = (0)
         if (Utils.isNullOrEmpty(val)): 
             return False
-        inoutres1507 = Utils.tryParseFloat(val.replace(',', '.'), f)
-        if (val.find(',') >= 0 and inoutres1507): 
+        inoutres1518 = Utils.tryParseFloat(val.replace(',', '.'), f)
+        if (val.find(',') >= 0 and inoutres1518): 
             return True
-        inoutres1506 = Utils.tryParseFloat(val, f)
-        if (inoutres1506): 
+        inoutres1517 = Utils.tryParseFloat(val, f)
+        if (inoutres1517): 
             return True
         return False
     
     @staticmethod
-    def double_to_string(d : float) -> str:
+    def doubleToString(d : float) -> str:
         from pullenti.ner.core.NumberExToken import NumberExToken
-        return NumberExToken.convert_to_string(d)
+        return NumberExToken.convertToString(d)
     
     @staticmethod
-    def is_mult_char(t : 'Token') -> bool:
+    def isMultChar(t : 'Token') -> bool:
         from pullenti.ner.TextToken import TextToken
-        tt = (t if isinstance(t, TextToken) else None)
+        tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             return False
         if (tt.length_char == 1): 
-            if (tt.is_char_of("*xXхХ·×◦∙•")): 
+            if (tt.isCharOf("*xXхХ·×◦∙•")): 
                 return True
+        return False
+    
+    @staticmethod
+    def isMultCharEnd(t : 'Token') -> bool:
+        from pullenti.ner.TextToken import TextToken
+        tt = Utils.asObjectOrNull(t, TextToken)
+        if (tt is None): 
+            return False
+        term = tt.term
+        if (term.endswith("X") or term.endswith("Х")): 
+            return True
         return False
     
     # static constructor for class MeasureHelper

@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import math
 import io
@@ -17,7 +15,6 @@ class SourceOfAnalysis:
     def text(self) -> str:
         """ Исходный плоский текст """
         return self.__text
-    
     @text.setter
     def text(self, value) -> str:
         self.__text = value
@@ -27,7 +24,6 @@ class SourceOfAnalysis:
     def tag(self) -> object:
         """ Используется произвольным образом """
         return self.__tag
-    
     @tag.setter
     def tag(self, value) -> object:
         self.__tag = value
@@ -42,8 +38,8 @@ class SourceOfAnalysis:
         Args:
             txt(str): Текст
         """
-        self.__text = None
-        self.__tag = None
+        self.__text = None;
+        self.__tag = None;
         self.clear_dust = False
         self.crlf_corrected_count = 0
         self.do_word_correction_by_morph = False
@@ -55,13 +51,18 @@ class SourceOfAnalysis:
             return
         self.text = txt
     
-    def __do_cr_lf_correction(self, txt : str) -> str:
+    def __doCrLfCorrection(self, txt : str) -> str:
+        """ Это анализ случаев принудительно отформатированного текста
+        
+        Args:
+            txt(str): 
+        """
         cou = 0
         total_len = 0
         i = 0
-        first_pass4068 = True
+        first_pass3177 = True
         while True:
-            if first_pass4068: first_pass4068 = False
+            if first_pass3177: first_pass3177 = False
             else: i += 1
             if (not (i < len(txt))): break
             ch = txt[i]
@@ -151,7 +152,16 @@ class SourceOfAnalysis:
         return Utils.toStringStringIO(tmp)
     
     @staticmethod
-    def __do_transliteral_correction(txt : io.StringIO, info : io.StringIO) -> int:
+    def __doTransliteralCorrection(txt : io.StringIO, info : io.StringIO) -> int:
+        """ Произвести транслитеральную коррекцию
+        
+        Args:
+            txt(io.StringIO): корректируемый текст
+            info(io.StringIO): информация о замене (может быть null)
+        
+        Returns:
+            int: количество замен
+        """
         stat = 0
         pref_rus_word = False
         i = 0
@@ -203,17 +213,24 @@ class SourceOfAnalysis:
     __m_rus_chars = "АВЕКМНОРСТУХаекморстух"
     
     @staticmethod
-    def __calc_transliteral_statistics(txt : str, info : io.StringIO) -> int:
+    def __calcTransliteralStatistics(txt : str, info : io.StringIO) -> int:
         if (txt is None): 
             return 0
         tmp = Utils.newStringIO(txt)
-        return SourceOfAnalysis.__do_transliteral_correction(tmp, info)
+        return SourceOfAnalysis.__doTransliteralCorrection(tmp, info)
     
     @property
     def __total_transliteral_substitutions(self) -> int:
         return self.__m_total_transliteral_substitutions
     
     def substring(self, position : int, length : int) -> str:
+        """ Извлечь фрагмент из исходного текста
+        
+        Args:
+            position(int): 
+            length(int): 
+        
+        """
         if (length < 0): 
             length = (len(self.text) - position)
         if ((position + length) <= len(self.text) and length > 0): 
@@ -225,7 +242,14 @@ class SourceOfAnalysis:
             return res
         return "Position + Length > Text.Length"
     
-    def calc_whitespace_distance_between_positions(self, pos_from : int, pos_to : int) -> int:
+    def calcWhitespaceDistanceBetweenPositions(self, pos_from : int, pos_to : int) -> int:
+        """ Вычислить расстояние в символах между соседними элементами
+        
+        Args:
+            indFrom: 
+            indTo: 
+        
+        """
         if (pos_from == (pos_to + 1)): 
             return 0
         if (pos_from > pos_to or (pos_from < 0) or pos_to >= len(self.text)): 
@@ -246,7 +270,7 @@ class SourceOfAnalysis:
         return res
     
     def serialize(self, stream : io.IOBase) -> None:
-        SerializerHelper.serialize_string(stream, self.text)
+        SerializerHelper.serializeString(stream, self.text)
     
     def deserialize(self, stream : io.IOBase) -> None:
-        self.text = SerializerHelper.deserialize_string(stream)
+        self.text = SerializerHelper.deserializeString(stream)

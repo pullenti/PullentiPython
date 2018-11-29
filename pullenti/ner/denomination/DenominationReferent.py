@@ -1,14 +1,13 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Referent import Referent
+from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 
 
@@ -17,8 +16,8 @@ class DenominationReferent(Referent):
     
     def __init__(self) -> None:
         from pullenti.ner.denomination.internal.MetaDenom import MetaDenom
-        self.__m_names = None
         super().__init__(DenominationReferent.OBJ_TYPENAME)
+        self.__m_names = None;
         self.instance_of = MetaDenom._global_meta
     
     OBJ_TYPENAME = "DENOMINATION"
@@ -28,27 +27,27 @@ class DenominationReferent(Referent):
     @property
     def value(self) -> str:
         """ Значение (одно или несколько) """
-        return self.get_string_value(DenominationReferent.ATTR_VALUE)
+        return self.getStringValue(DenominationReferent.ATTR_VALUE)
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         return Utils.ifNotNull(self.value, "?")
     
-    def _add_value(self, begin : 'Token', end : 'Token') -> None:
+    def _addValue(self, begin : 'Token', end : 'Token') -> None:
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.TextToken import TextToken
         tmp = io.StringIO()
         t = begin
-        first_pass3790 = True
+        first_pass2902 = True
         while True:
-            if first_pass3790: first_pass3790 = False
+            if first_pass2902: first_pass2902 = False
             else: t = t.next0_
             if (not (t is not None and t.previous != end)): break
             if (isinstance(t, NumberToken)): 
-                print(t.get_source_text(), end="", file=tmp)
+                print(t.getSourceText(), end="", file=tmp)
                 continue
             if (isinstance(t, TextToken)): 
-                s = (t if isinstance(t, TextToken) else None).term
-                if (t.is_char_of("-\\/")): 
+                s = (Utils.asObjectOrNull(t, TextToken)).term
+                if (t.isCharOf("-\\/")): 
                     s = "-"
                 print(s, end="", file=tmp)
         i = 0
@@ -62,11 +61,11 @@ class DenominationReferent(Referent):
                     elif (not str.isdigit(ch0) and str.isdigit(ch1)): 
                         Utils.removeStringIO(tmp, i, 1)
             i += 1
-        self.add_slot(DenominationReferent.ATTR_VALUE, Utils.toStringStringIO(tmp), False, 0)
+        self.addSlot(DenominationReferent.ATTR_VALUE, Utils.toStringStringIO(tmp), False, 0)
         self.__m_names = (None)
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
-        dr = (obj if isinstance(obj, DenominationReferent) else None)
+    def canBeEquals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+        dr = Utils.asObjectOrNull(obj, DenominationReferent)
         if (dr is None): 
             return False
         for n in self.__name_vars: 
@@ -100,7 +99,7 @@ class DenominationReferent(Referent):
                 if (i > i0): 
                     vars0_ = list()
                     p = nam[i0:i0+i - i0]
-                    DenominationReferent.__add_vars(p, vars0_)
+                    DenominationReferent.__addVars(p, vars0_)
                     items.append(vars0_)
                     if (ty == 1 and ty0 == 2): 
                         vars0_ = list()
@@ -141,16 +140,16 @@ class DenominationReferent(Referent):
         return self.__m_names
     
     @staticmethod
-    def __add_vars(str0_ : str, vars0_ : typing.List[str]) -> None:
+    def __addVars(str0_ : str, vars0_ : typing.List[str]) -> None:
         vars0_.append(str0_)
         for k in range(2):
             tmp = io.StringIO()
             i = 0
             while i < len(str0_): 
-                inoutarg1091 = RefOutArgWrapper(None)
-                inoutres1092 = Utils.tryGetValue(DenominationReferent.__m_var_chars, str0_[i], inoutarg1091)
-                v = inoutarg1091.value
-                if (not inoutres1092): 
+                wrapv1110 = RefOutArgWrapper(None)
+                inoutres1111 = Utils.tryGetValue(DenominationReferent.__m_var_chars, str0_[i], wrapv1110)
+                v = wrapv1110.value
+                if (not inoutres1111): 
                     break
                 if ((len(v) < 2) or v[k] == '-'): 
                     break
@@ -163,7 +162,7 @@ class DenominationReferent(Referent):
     
     __m_var_chars = None
     
-    def create_ontology_item(self) -> 'IntOntologyItem':
+    def createOntologyItem(self) -> 'IntOntologyItem':
         from pullenti.ner.core.Termin import Termin
         oi = IntOntologyItem(self)
         for v in self.__name_vars: 

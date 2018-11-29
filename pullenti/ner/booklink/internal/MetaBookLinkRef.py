@@ -1,9 +1,8 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.booklink.BookLinkRefType import BookLinkRefType
 
@@ -13,11 +12,11 @@ class MetaBookLinkRef(ReferentClass):
     def __init__(self) -> None:
         from pullenti.ner.booklink.BookLinkRefReferent import BookLinkRefReferent
         super().__init__()
-        self.add_feature(BookLinkRefReferent.ATTR_BOOK, "Источник", 1, 1)
-        self.add_feature(BookLinkRefReferent.ATTR_TYPE, "Тип", 0, 1)
-        self.add_feature(BookLinkRefReferent.ATTR_PAGES, "Страницы", 0, 1)
-        self.add_feature(BookLinkRefReferent.ATTR_NUMBER, "Номер", 0, 1)
-        self.add_feature(BookLinkRefReferent.ATTR_MISC, "Разное", 0, 0)
+        self.addFeature(BookLinkRefReferent.ATTR_BOOK, "Источник", 1, 1)
+        self.addFeature(BookLinkRefReferent.ATTR_TYPE, "Тип", 0, 1)
+        self.addFeature(BookLinkRefReferent.ATTR_PAGES, "Страницы", 0, 1)
+        self.addFeature(BookLinkRefReferent.ATTR_NUMBER, "Номер", 0, 1)
+        self.addFeature(BookLinkRefReferent.ATTR_MISC, "Разное", 0, 0)
     
     @property
     def name(self) -> str:
@@ -34,9 +33,9 @@ class MetaBookLinkRef(ReferentClass):
     
     IMAGE_ID_LAST = "booklinkreflast"
     
-    def get_image_id(self, obj : 'Referent'=None) -> str:
+    def getImageId(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.booklink.BookLinkRefReferent import BookLinkRefReferent
-        rr = (obj if isinstance(obj, BookLinkRefReferent) else None)
+        rr = Utils.asObjectOrNull(obj, BookLinkRefReferent)
         if (rr is not None): 
             if (rr.typ == BookLinkRefType.INLINE): 
                 return MetaBookLinkRef.IMAGE_ID_INLINE

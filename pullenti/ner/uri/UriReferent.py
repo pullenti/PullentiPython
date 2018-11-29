@@ -1,11 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
+from pullenti.morph.MorphLang import MorphLang
 
 
 class UriReferent(Referent):
@@ -24,7 +23,7 @@ class UriReferent(Referent):
     
     ATTR_SCHEME = "SCHEME"
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         if (self.scheme is not None): 
             split = ":"
             if (self.scheme == "ISBN" or self.scheme == "ББК" or self.scheme == "УДК"): 
@@ -38,49 +37,46 @@ class UriReferent(Referent):
     @property
     def value(self) -> str:
         """ Значение """
-        return self.get_string_value(UriReferent.ATTR_VALUE)
-    
+        return self.getStringValue(UriReferent.ATTR_VALUE)
     @value.setter
     def value(self, value_) -> str:
         val = value_
-        self.add_slot(UriReferent.ATTR_VALUE, val, True, 0)
+        self.addSlot(UriReferent.ATTR_VALUE, val, True, 0)
         return value_
     
     @property
     def scheme(self) -> str:
         """ Схема """
-        return self.get_string_value(UriReferent.ATTR_SCHEME)
-    
+        return self.getStringValue(UriReferent.ATTR_SCHEME)
     @scheme.setter
     def scheme(self, value_) -> str:
-        self.add_slot(UriReferent.ATTR_SCHEME, value_, True, 0)
+        self.addSlot(UriReferent.ATTR_SCHEME, value_, True, 0)
         return value_
     
     @property
     def detail(self) -> str:
         """ Детализация кода (если есть) """
-        return self.get_string_value(UriReferent.ATTR_DETAIL)
-    
+        return self.getStringValue(UriReferent.ATTR_DETAIL)
     @detail.setter
     def detail(self, value_) -> str:
-        self.add_slot(UriReferent.ATTR_DETAIL, value_, True, 0)
+        self.addSlot(UriReferent.ATTR_DETAIL, value_, True, 0)
         return value_
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
-        uri_ = (obj if isinstance(obj, UriReferent) else None)
+    def canBeEquals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+        uri_ = Utils.asObjectOrNull(obj, UriReferent)
         if (uri_ is None): 
             return False
         return Utils.compareStrings(self.value, uri_.value, True) == 0
     
     @staticmethod
-    def _new2535(_arg1 : str, _arg2 : str) -> 'UriReferent':
+    def _new2569(_arg1 : str, _arg2 : str) -> 'UriReferent':
         res = UriReferent()
         res.scheme = _arg1
         res.value = _arg2
         return res
     
     @staticmethod
-    def _new2538(_arg1 : str, _arg2 : str) -> 'UriReferent':
+    def _new2572(_arg1 : str, _arg2 : str) -> 'UriReferent':
         res = UriReferent()
         res.value = _arg1
         res.scheme = _arg2

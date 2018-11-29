@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 import typing
@@ -19,9 +17,9 @@ class GeoReferent(Referent):
     
     def __init__(self) -> None:
         from pullenti.ner.geo.internal.MetaGeo import MetaGeo
-        self.__m_tmp_bits = 0
-        self.__m_higher = None
         super().__init__(GeoReferent.OBJ_TYPENAME)
+        self.__m_tmp_bits = 0
+        self.__m_higher = None;
         self.instance_of = MetaGeo._global_meta
     
     OBJ_TYPENAME = "GEO"
@@ -40,25 +38,25 @@ class GeoReferent(Referent):
     
     ATTR_BTI = "BTI"
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        return self.__to_string(short_variant, lang, True, lev)
+    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+        return self.__ToString(short_variant, lang, True, lev)
     
-    def __to_string(self, short_variant : bool, lang : 'MorphLang', out_cladr : bool, lev : int) -> str:
+    def __ToString(self, short_variant : bool, lang : 'MorphLang', out_cladr : bool, lev : int) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         if (self.is_union and not self.is_state): 
             res = io.StringIO()
-            print(self.get_string_value(GeoReferent.ATTR_TYPE), end="", file=res)
+            print(self.getStringValue(GeoReferent.ATTR_TYPE), end="", file=res)
             for s in self.slots: 
                 if (s.type_name == GeoReferent.ATTR_REF and (isinstance(s.value, Referent))): 
-                    print("; {0}".format((s.value if isinstance(s.value, Referent) else None).to_string(True, lang, 0)), end="", file=res, flush=True)
+                    print("; {0}".format((Utils.asObjectOrNull(s.value, Referent)).toString(True, lang, 0)), end="", file=res, flush=True)
             return Utils.toStringStringIO(res)
-        name = MiscHelper.convert_first_char_upper_and_other_lower(self.__get_name(lang is not None and lang.is_en))
+        name = MiscHelper.convertFirstCharUpperAndOtherLower(self.__getName(lang is not None and lang.is_en))
         if (not short_variant): 
             if (not self.is_state): 
                 if (self.is_city and self.is_region): 
                     pass
                 else: 
-                    typ = self.get_string_value(GeoReferent.ATTR_TYPE)
+                    typ = self.getStringValue(GeoReferent.ATTR_TYPE)
                     if (typ is not None): 
                         if (not self.is_city): 
                             i = typ.rfind(' ')
@@ -66,18 +64,18 @@ class GeoReferent(Referent):
                                 typ = typ[i + 1:]
                         name = "{0} {1}".format(typ, name)
         if (not short_variant and out_cladr): 
-            kladr = self.get_value(GeoReferent.ATTR_FIAS)
+            kladr = self.getSlotValue(GeoReferent.ATTR_FIAS)
             if (isinstance(kladr, Referent)): 
-                name = "{0} (ФИАС: {1})".format(name, Utils.ifNotNull((kladr if isinstance(kladr, Referent) else None).get_string_value("GUID"), "?"))
-            bti = self.get_string_value(GeoReferent.ATTR_BTI)
+                name = "{0} (ФИАС: {1})".format(name, Utils.ifNotNull((Utils.asObjectOrNull(kladr, Referent)).getStringValue("GUID"), "?"))
+            bti = self.getStringValue(GeoReferent.ATTR_BTI)
             if (bti is not None): 
                 name = "{0} (БТИ {1})".format(name, bti)
         if (not short_variant and self.higher is not None and (lev < 10)): 
-            if (((self.higher.is_city and self.is_region)) or ((self.find_slot(GeoReferent.ATTR_TYPE, "город", True) is None and self.find_slot(GeoReferent.ATTR_TYPE, "місто", True) is None and self.is_city))): 
-                return "{0}; {1}".format(name, self.higher.__to_string(False, lang, False, lev + 1))
+            if (((self.higher.is_city and self.is_region)) or ((self.findSlot(GeoReferent.ATTR_TYPE, "город", True) is None and self.findSlot(GeoReferent.ATTR_TYPE, "місто", True) is None and self.is_city))): 
+                return "{0}; {1}".format(name, self.higher.__ToString(False, lang, False, lev + 1))
         return name
     
-    def __get_name(self, cyr : bool) -> str:
+    def __getName(self, cyr : bool) -> str:
         name = None
         for i in range(2):
             for s in self.slots: 
@@ -86,7 +84,7 @@ class GeoReferent(Referent):
                     if (Utils.isNullOrEmpty(v)): 
                         continue
                     if (i == 0): 
-                        if (not LanguageHelper.is_cyrillic_char(v[0])): 
+                        if (not LanguageHelper.isCyrillicChar(v[0])): 
                             if (cyr): 
                                 continue
                         elif (not cyr): 
@@ -110,7 +108,7 @@ class GeoReferent(Referent):
             name = "БЕЛОРУССИЯ"
         return Utils.ifNotNull(name, "?")
     
-    def to_sort_string(self) -> str:
+    def toSortString(self) -> str:
         typ = "GEO4"
         if (self.is_state): 
             typ = "GEO1"
@@ -118,9 +116,9 @@ class GeoReferent(Referent):
             typ = "GEO2"
         elif (self.is_city): 
             typ = "GEO3"
-        return typ + self.__get_name(False)
+        return typ + self.__getName(False)
     
-    def get_compare_strings(self) -> typing.List[str]:
+    def getCompareStrings(self) -> typing.List[str]:
         res = list()
         for s in self.slots: 
             if (s.type_name == GeoReferent.ATTR_NAME): 
@@ -128,67 +126,67 @@ class GeoReferent(Referent):
         if (len(res) > 0): 
             return res
         else: 
-            return super().get_compare_strings()
+            return super().getCompareStrings()
     
-    def _add_name(self, v : str) -> None:
+    def _addName(self, v : str) -> None:
         if (v is not None): 
             if (v.find('-') > 0): 
                 v = v.replace(" - ", "-")
-            self.add_slot(GeoReferent.ATTR_NAME, v.upper(), False, 0)
+            self.addSlot(GeoReferent.ATTR_NAME, v.upper(), False, 0)
     
-    def _add_typ(self, v : str) -> None:
+    def _addTyp(self, v : str) -> None:
         if (v is not None): 
             if (v == "ТЕРРИТОРИЯ" and self.is_state): 
                 return
-            self.add_slot(GeoReferent.ATTR_TYPE, v.lower(), False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, v.lower(), False, 0)
     
-    def _add_typ_city(self, lang : 'MorphLang') -> None:
+    def _addTypCity(self, lang : 'MorphLang') -> None:
         if (lang.is_en): 
-            self.add_slot(GeoReferent.ATTR_TYPE, "city", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "city", False, 0)
         elif (lang.is_ua): 
-            self.add_slot(GeoReferent.ATTR_TYPE, "місто", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "місто", False, 0)
         else: 
-            self.add_slot(GeoReferent.ATTR_TYPE, "город", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "город", False, 0)
     
-    def _add_typ_reg(self, lang : 'MorphLang') -> None:
+    def _addTypReg(self, lang : 'MorphLang') -> None:
         if (lang.is_en): 
-            self.add_slot(GeoReferent.ATTR_TYPE, "region", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "region", False, 0)
         elif (lang.is_ua): 
-            self.add_slot(GeoReferent.ATTR_TYPE, "регіон", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "регіон", False, 0)
         else: 
-            self.add_slot(GeoReferent.ATTR_TYPE, "регион", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "регион", False, 0)
     
-    def _add_typ_state(self, lang : 'MorphLang') -> None:
+    def _addTypState(self, lang : 'MorphLang') -> None:
         if (lang.is_en): 
-            self.add_slot(GeoReferent.ATTR_TYPE, "country", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "country", False, 0)
         elif (lang.is_ua): 
-            self.add_slot(GeoReferent.ATTR_TYPE, "держава", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "держава", False, 0)
         else: 
-            self.add_slot(GeoReferent.ATTR_TYPE, "государство", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "государство", False, 0)
     
-    def _add_typ_union(self, lang : 'MorphLang') -> None:
+    def _addTypUnion(self, lang : 'MorphLang') -> None:
         if (lang.is_en): 
-            self.add_slot(GeoReferent.ATTR_TYPE, "union", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "union", False, 0)
         elif (lang.is_ua): 
-            self.add_slot(GeoReferent.ATTR_TYPE, "союз", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "союз", False, 0)
         else: 
-            self.add_slot(GeoReferent.ATTR_TYPE, "союз", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "союз", False, 0)
     
-    def _add_typ_ter(self, lang : 'MorphLang') -> None:
+    def _addTypTer(self, lang : 'MorphLang') -> None:
         if (lang.is_en): 
-            self.add_slot(GeoReferent.ATTR_TYPE, "territory", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "territory", False, 0)
         elif (lang.is_ua): 
-            self.add_slot(GeoReferent.ATTR_TYPE, "територія", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "територія", False, 0)
         else: 
-            self.add_slot(GeoReferent.ATTR_TYPE, "территория", False, 0)
+            self.addSlot(GeoReferent.ATTR_TYPE, "территория", False, 0)
     
-    def add_slot(self, attr_name : str, attr_value : object, clear_old_value : bool, stat_count : int=0) -> 'Slot':
+    def addSlot(self, attr_name : str, attr_value : object, clear_old_value : bool, stat_count : int=0) -> 'Slot':
         self.__m_tmp_bits = (0)
-        return super().add_slot(attr_name, attr_value, clear_old_value, stat_count)
+        return super().addSlot(attr_name, attr_value, clear_old_value, stat_count)
     
-    def upload_slot(self, slot : 'Slot', new_val : object) -> None:
+    def uploadSlot(self, slot : 'Slot', new_val : object) -> None:
         self.__m_tmp_bits = (0)
-        super().upload_slot(slot, new_val)
+        super().uploadSlot(slot, new_val)
     
     __bit_iscity = 2
     
@@ -200,16 +198,16 @@ class GeoReferent(Referent):
     
     __bit_isterritory = 0x20
     
-    def __recalc_tmp_bits(self) -> None:
+    def __recalcTmpBits(self) -> None:
         self.__m_tmp_bits = (1)
         self.__m_higher = (None)
-        hi = (self.get_value(GeoReferent.ATTR_HIGHER) if isinstance(self.get_value(GeoReferent.ATTR_HIGHER), GeoReferent) else None)
+        hi = Utils.asObjectOrNull(self.getSlotValue(GeoReferent.ATTR_HIGHER), GeoReferent)
         if (hi == self or hi is None): 
             pass
         else: 
             li = None
             err = False
-            r = (hi.get_value(GeoReferent.ATTR_HIGHER) if isinstance(hi.get_value(GeoReferent.ATTR_HIGHER), Referent) else None)
+            r = Utils.asObjectOrNull(hi.getSlotValue(GeoReferent.ATTR_HIGHER), Referent)
             while r is not None: 
                 if (r == hi or r == self): 
                     err = True
@@ -220,18 +218,18 @@ class GeoReferent(Referent):
                     err = True
                     break
                 li.append(r)
-                r = (r.get_value(GeoReferent.ATTR_HIGHER) if isinstance(r.get_value(GeoReferent.ATTR_HIGHER), Referent) else None)
+                r = (Utils.asObjectOrNull(r.getSlotValue(GeoReferent.ATTR_HIGHER), Referent))
             if (not err): 
                 self.__m_higher = hi
         is_state_ = -1
         is_reg = -1
         for t in self.slots: 
             if (t.type_name == GeoReferent.ATTR_TYPE): 
-                val = (t.value if isinstance(t.value, str) else None)
+                val = Utils.asObjectOrNull(t.value, str)
                 if (val == "территория" or val == "територія" or val == "territory"): 
                     self.__m_tmp_bits = (1 | GeoReferent.__bit_isterritory)
                     return
-                if (GeoReferent.__is_city(val)): 
+                if (GeoReferent.__isCity(val)): 
                     self.__m_tmp_bits |= (GeoReferent.__bit_iscity)
                     if ((val == "город" or val == "місто" or val == "city") or val == "town"): 
                         self.__m_tmp_bits |= (GeoReferent.__bit_isbigcity)
@@ -240,14 +238,14 @@ class GeoReferent(Referent):
                     self.__m_tmp_bits |= (GeoReferent.__bit_isstate)
                     is_reg = 0
                     continue
-                if (GeoReferent.__is_region(val)): 
+                if (GeoReferent.__isRegion(val)): 
                     if (is_state_ < 0): 
                         is_state_ = 0
                     if (is_reg < 0): 
                         is_reg = 1
             elif (t.type_name == GeoReferent.ATTR_ALPHA2): 
                 self.__m_tmp_bits = (1 | GeoReferent.__bit_isstate)
-                if (self.find_slot(GeoReferent.ATTR_TYPE, "город", True) is not None or self.find_slot(GeoReferent.ATTR_TYPE, "місто", True) is not None or self.find_slot(GeoReferent.ATTR_TYPE, "city", True) is not None): 
+                if (self.findSlot(GeoReferent.ATTR_TYPE, "город", True) is not None or self.findSlot(GeoReferent.ATTR_TYPE, "місто", True) is not None or self.findSlot(GeoReferent.ATTR_TYPE, "city", True) is not None): 
                     self.__m_tmp_bits |= (GeoReferent.__bit_isbigcity | GeoReferent.__bit_iscity)
                 return
         if (is_state_ != 0): 
@@ -274,35 +272,35 @@ class GeoReferent(Referent):
     def is_city(self) -> bool:
         """ Это может быть населенным пунктом """
         if ((((self.__m_tmp_bits) & 1)) == 0): 
-            self.__recalc_tmp_bits()
+            self.__recalcTmpBits()
         return (((self.__m_tmp_bits) & GeoReferent.__bit_iscity)) != 0
     
     @property
     def is_big_city(self) -> bool:
         """ Это именно город, а не деревня или поселок """
         if ((((self.__m_tmp_bits) & 1)) == 0): 
-            self.__recalc_tmp_bits()
+            self.__recalcTmpBits()
         return (((self.__m_tmp_bits) & GeoReferent.__bit_isbigcity)) != 0
     
     @property
     def is_state(self) -> bool:
         """ Это может быть отдельным государством """
         if ((((self.__m_tmp_bits) & 1)) == 0): 
-            self.__recalc_tmp_bits()
+            self.__recalcTmpBits()
         return (((self.__m_tmp_bits) & GeoReferent.__bit_isstate)) != 0
     
     @property
     def is_region(self) -> bool:
         """ Это может быть регионом в составе другого образования """
         if ((((self.__m_tmp_bits) & 1)) == 0): 
-            self.__recalc_tmp_bits()
+            self.__recalcTmpBits()
         return (((self.__m_tmp_bits) & GeoReferent.__bit_isregion)) != 0
     
     @property
     def is_territory(self) -> bool:
         """ Просто территория (например, территория аэропорта Шереметьево) """
         if ((((self.__m_tmp_bits) & 1)) == 0): 
-            self.__recalc_tmp_bits()
+            self.__recalcTmpBits()
         return (((self.__m_tmp_bits) & GeoReferent.__bit_isterritory)) != 0
     
     @property
@@ -310,22 +308,22 @@ class GeoReferent(Referent):
         """ Союз России и Белоруссии """
         for s in self.slots: 
             if (s.type_name == GeoReferent.ATTR_TYPE): 
-                v = (s.value if isinstance(s.value, str) else None)
+                v = Utils.asObjectOrNull(s.value, str)
                 if (v.endswith("союз")): 
                     return True
         return False
     
     @staticmethod
-    def __is_city(v : str) -> bool:
+    def __isCity(v : str) -> bool:
         if ((((((((((("поселок" in v or "селение" in v or "село" in v) or "деревня" in v or "станица" in v) or "пункт" in v or "станция" in v) or "аул" in v or "хутор" in v) or "местечко" in v or "урочище" in v) or "усадьба" in v or "аал" in v) or "выселки" in v or "арбан" in v) or "місто" in v or "селище" in v) or "сіло" in v or "станиця" in v) or "станція" in v or "city" in v) or "municipality" in v or "town" in v): 
             return True
         if ("город" in v or "місто" in v): 
-            if (not GeoReferent.__is_region(v)): 
+            if (not GeoReferent.__isRegion(v)): 
                 return True
         return False
     
     @staticmethod
-    def __is_region(v : str) -> bool:
+    def __isRegion(v : str) -> bool:
         if (((((((((((("район" in v or "штат" in v or "область" in v) or "волость" in v or "провинция" in v) or "регион" in v or "округ" in v) or "край" in v or "префектура" in v) or "улус" in v or "провінція" in v) or "регіон" in v or "образование" in v) or "утворення" in v or "автономия" in v) or "автономія" in v or "district" in v) or "county" in v or "state" in v) or "area" in v or "borough" in v) or "parish" in v or "region" in v) or "province" in v or "prefecture" in v): 
             return True
         if ("городск" in v or "міськ" in v): 
@@ -336,20 +334,18 @@ class GeoReferent(Referent):
     @property
     def alpha2(self) -> str:
         """ 2-х символьный идентификатор страны (ISO 3166) """
-        return self.get_string_value(GeoReferent.ATTR_ALPHA2)
-    
+        return self.getStringValue(GeoReferent.ATTR_ALPHA2)
     @alpha2.setter
     def alpha2(self, value) -> str:
-        self.add_slot(GeoReferent.ATTR_ALPHA2, value, True, 0)
+        self.addSlot(GeoReferent.ATTR_ALPHA2, value, True, 0)
         return value
     
     @property
     def higher(self) -> 'GeoReferent':
         """ Вышестоящий объект """
         if ((((self.__m_tmp_bits) & 1)) == 0): 
-            self.__recalc_tmp_bits()
+            self.__recalcTmpBits()
         return self.__m_higher
-    
     @higher.setter
     def higher(self, value) -> 'GeoReferent':
         if (value == self): 
@@ -366,13 +362,13 @@ class GeoReferent(Referent):
                     return value
                 li.append(d)
                 d = d.higher
-        self.add_slot(GeoReferent.ATTR_HIGHER, None, True, 0)
+        self.addSlot(GeoReferent.ATTR_HIGHER, None, True, 0)
         if (value is not None): 
-            self.add_slot(GeoReferent.ATTR_HIGHER, value, True, 0)
+            self.addSlot(GeoReferent.ATTR_HIGHER, value, True, 0)
         return value
     
     @staticmethod
-    def __check_round_dep(d : 'GeoReferent') -> bool:
+    def __checkRoundDep(d : 'GeoReferent') -> bool:
         if (d is None): 
             return True
         d0 = d
@@ -389,7 +385,7 @@ class GeoReferent(Referent):
     
     @property
     def top_higher(self) -> 'GeoReferent':
-        if (GeoReferent.__check_round_dep(self)): 
+        if (GeoReferent.__checkRoundDep(self)): 
             return self
         hi = self
         while hi is not None: 
@@ -402,8 +398,8 @@ class GeoReferent(Referent):
     def parent_referent(self) -> 'Referent':
         return self.higher
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
-        geo_ = (obj if isinstance(obj, GeoReferent) else None)
+    def canBeEquals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+        geo_ = Utils.asObjectOrNull(obj, GeoReferent)
         if (geo_ is None): 
             return False
         if (geo_.alpha2 is not None and geo_.alpha2 == self.alpha2): 
@@ -415,15 +411,15 @@ class GeoReferent(Referent):
         if (self.is_union): 
             for s in self.slots: 
                 if (s.type_name == GeoReferent.ATTR_REF): 
-                    if (obj.find_slot(GeoReferent.ATTR_REF, s.value, True) is None): 
+                    if (obj.findSlot(GeoReferent.ATTR_REF, s.value, True) is None): 
                         return False
             for s in obj.slots: 
                 if (s.type_name == GeoReferent.ATTR_REF): 
-                    if (self.find_slot(GeoReferent.ATTR_REF, s.value, True) is None): 
+                    if (self.findSlot(GeoReferent.ATTR_REF, s.value, True) is None): 
                         return False
             return True
-        ref1 = (self.get_value(GeoReferent.ATTR_REF) if isinstance(self.get_value(GeoReferent.ATTR_REF), Referent) else None)
-        ref2 = (geo_.get_value(GeoReferent.ATTR_REF) if isinstance(geo_.get_value(GeoReferent.ATTR_REF), Referent) else None)
+        ref1 = Utils.asObjectOrNull(self.getSlotValue(GeoReferent.ATTR_REF), Referent)
+        ref2 = Utils.asObjectOrNull(geo_.getSlotValue(GeoReferent.ATTR_REF), Referent)
         if (ref1 is not None and ref2 is not None): 
             if (ref1 != ref2): 
                 return False
@@ -436,7 +432,7 @@ class GeoReferent(Referent):
         eq_names = False
         for s in self.slots: 
             if (s.type_name == GeoReferent.ATTR_NAME): 
-                if (geo_.find_slot(s.type_name, s.value, True) is not None): 
+                if (geo_.findSlot(s.type_name, s.value, True) is not None): 
                     eq_names = True
                     break
         if (not eq_names): 
@@ -450,47 +446,47 @@ class GeoReferent(Referent):
                     ok = True
                 else: 
                     for tt in typs2: 
-                        if (LanguageHelper.ends_with(tt, t) or LanguageHelper.ends_with(t, tt)): 
+                        if (LanguageHelper.endsWith(tt, t) or LanguageHelper.endsWith(t, tt)): 
                             ok = True
             if (not ok): 
                 return False
         if (self.higher is not None and geo_.higher is not None): 
-            if (GeoReferent.__check_round_dep(self) or GeoReferent.__check_round_dep(geo_)): 
+            if (GeoReferent.__checkRoundDep(self) or GeoReferent.__checkRoundDep(geo_)): 
                 return False
-            if (self.higher.can_be_equals(geo_.higher, typ)): 
+            if (self.higher.canBeEquals(geo_.higher, typ)): 
                 pass
-            elif (geo_.higher.higher is not None and self.higher.can_be_equals(geo_.higher.higher, typ)): 
+            elif (geo_.higher.higher is not None and self.higher.canBeEquals(geo_.higher.higher, typ)): 
                 pass
-            elif (self.higher.higher is not None and self.higher.higher.can_be_equals(geo_.higher, typ)): 
+            elif (self.higher.higher is not None and self.higher.higher.canBeEquals(geo_.higher, typ)): 
                 pass
             else: 
                 return False
         return True
     
-    def _merge_slots2(self, obj : 'Referent', lang : 'MorphLang') -> None:
+    def _mergeSlots2(self, obj : 'Referent', lang : 'MorphLang') -> None:
         merge_statistic = True
         for s in obj.slots: 
             if (s.type_name == GeoReferent.ATTR_NAME or s.type_name == GeoReferent.ATTR_TYPE): 
                 nam = s.value
-                if (LanguageHelper.is_latin_char(nam[0])): 
+                if (LanguageHelper.isLatinChar(nam[0])): 
                     if (not lang.is_en): 
                         continue
                 elif (lang.is_en): 
                     continue
-                if (LanguageHelper.ends_with(nam, " ССР")): 
+                if (LanguageHelper.endsWith(nam, " ССР")): 
                     continue
-            self.add_slot(s.type_name, s.value, False, (s.count if merge_statistic else 0))
-        if (self.find_slot(GeoReferent.ATTR_NAME, None, True) is None and obj.find_slot(GeoReferent.ATTR_NAME, None, True) is not None): 
+            self.addSlot(s.type_name, s.value, False, (s.count if merge_statistic else 0))
+        if (self.findSlot(GeoReferent.ATTR_NAME, None, True) is None and obj.findSlot(GeoReferent.ATTR_NAME, None, True) is not None): 
             for s in obj.slots: 
                 if (s.type_name == GeoReferent.ATTR_NAME): 
-                    self.add_slot(s.type_name, s.value, False, (s.count if merge_statistic else 0))
-        if (self.find_slot(GeoReferent.ATTR_TYPE, None, True) is None and obj.find_slot(GeoReferent.ATTR_TYPE, None, True) is not None): 
+                    self.addSlot(s.type_name, s.value, False, (s.count if merge_statistic else 0))
+        if (self.findSlot(GeoReferent.ATTR_TYPE, None, True) is None and obj.findSlot(GeoReferent.ATTR_TYPE, None, True) is not None): 
             for s in obj.slots: 
                 if (s.type_name == GeoReferent.ATTR_TYPE): 
-                    self.add_slot(s.type_name, s.value, False, (s.count if merge_statistic else 0))
+                    self.addSlot(s.type_name, s.value, False, (s.count if merge_statistic else 0))
         if (self.is_territory): 
-            if (((self.alpha2 is not None or self.find_slot(GeoReferent.ATTR_TYPE, "государство", True) is not None or self.find_slot(GeoReferent.ATTR_TYPE, "держава", True) is not None) or self.find_slot(GeoReferent.ATTR_TYPE, "империя", True) is not None or self.find_slot(GeoReferent.ATTR_TYPE, "імперія", True) is not None) or self.find_slot(GeoReferent.ATTR_TYPE, "state", True) is not None): 
-                s = self.find_slot(GeoReferent.ATTR_TYPE, "территория", True)
+            if (((self.alpha2 is not None or self.findSlot(GeoReferent.ATTR_TYPE, "государство", True) is not None or self.findSlot(GeoReferent.ATTR_TYPE, "держава", True) is not None) or self.findSlot(GeoReferent.ATTR_TYPE, "империя", True) is not None or self.findSlot(GeoReferent.ATTR_TYPE, "імперія", True) is not None) or self.findSlot(GeoReferent.ATTR_TYPE, "state", True) is not None): 
+                s = self.findSlot(GeoReferent.ATTR_TYPE, "территория", True)
                 if (s is not None): 
                     self.slots.remove(s)
         if (self.is_state): 
@@ -499,10 +495,10 @@ class GeoReferent(Referent):
                     self.slots.remove(s)
                     break
         if (self.is_city): 
-            s = Utils.ifNotNull(self.find_slot(GeoReferent.ATTR_TYPE, "город", True), Utils.ifNotNull(self.find_slot(GeoReferent.ATTR_TYPE, "місто", True), self.find_slot(GeoReferent.ATTR_TYPE, "city", True)))
+            s = Utils.ifNotNull(self.findSlot(GeoReferent.ATTR_TYPE, "город", True), Utils.ifNotNull(self.findSlot(GeoReferent.ATTR_TYPE, "місто", True), self.findSlot(GeoReferent.ATTR_TYPE, "city", True)))
             if (s is not None): 
                 for ss in self.slots: 
-                    if (ss.type_name == GeoReferent.ATTR_TYPE and ss != s and GeoReferent.__is_city(ss.value)): 
+                    if (ss.type_name == GeoReferent.ATTR_TYPE and ss != s and GeoReferent.__isCity(ss.value)): 
                         self.slots.remove(s)
                         break
         has = False
@@ -515,9 +511,9 @@ class GeoReferent(Referent):
                     del self.slots[i]
                     i -= 1
             i += 1
-        self._merge_ext_referents(obj)
+        self._mergeExtReferents(obj)
     
-    def create_ontology_item(self) -> 'IntOntologyItem':
+    def createOntologyItem(self) -> 'IntOntologyItem':
         from pullenti.ner.core.Termin import Termin
         is_city_ = self.is_city
         oi = IntOntologyItem(self)
@@ -525,13 +521,13 @@ class GeoReferent(Referent):
             if (a.type_name == GeoReferent.ATTR_NAME): 
                 s = str(a.value)
                 t = Termin()
-                t.init_by_normal_text(s, MorphLang())
+                t.initByNormalText(s, MorphLang())
                 if (is_city_): 
-                    t.add_std_abridges()
+                    t.addStdAbridges()
                 oi.termins.append(t)
         return oi
     
-    def _check_abbr(self, abbr : str) -> bool:
+    def _checkAbbr(self, abbr : str) -> bool:
         if (len(abbr) != 2): 
             return False
         nameq = False
@@ -540,7 +536,7 @@ class GeoReferent(Referent):
         typeq2 = False
         for s in self.slots: 
             if (s.type_name == GeoReferent.ATTR_NAME): 
-                val = (s.value if isinstance(s.value, str) else None)
+                val = Utils.asObjectOrNull(s.value, str)
                 ch = val[0]
                 if (ch == abbr[0]): 
                     nameq = True
@@ -566,52 +562,57 @@ class GeoReferent(Referent):
             return True
         return False
     
-    def _add_org_referent(self, org0_ : 'Referent') -> None:
+    def _addOrgReferent(self, org0_ : 'Referent') -> None:
+        """ Добавляем ссылку на организацию, также добавляем имена
+        
+        Args:
+            org0_(Referent): 
+        """
         if (org0_ is None): 
             return
         nam = False
-        self.add_slot(GeoReferent.ATTR_REF, org0_, False, 0)
+        self.addSlot(GeoReferent.ATTR_REF, org0_, False, 0)
         geo_ = None
         spec_typ = None
-        num = org0_.get_string_value("NUMBER")
+        num = org0_.getStringValue("NUMBER")
         for s in org0_.slots: 
             if (s.type_name == "NAME"): 
                 if (num is None): 
-                    self._add_name(s.value if isinstance(s.value, str) else None)
+                    self._addName(Utils.asObjectOrNull(s.value, str))
                 else: 
-                    self._add_name("{0}-{1}".format(s.value, num))
+                    self._addName("{0}-{1}".format(s.value, num))
                 nam = True
             elif (s.type_name == "TYPE"): 
-                v = (s.value if isinstance(s.value, str) else None)
+                v = Utils.asObjectOrNull(s.value, str)
                 if (v == "СЕЛЬСКИЙ СОВЕТ"): 
-                    self._add_typ("сельский округ")
+                    self._addTyp("сельский округ")
                 elif (v == "ГОРОДСКОЙ СОВЕТ"): 
-                    self._add_typ("городской округ")
+                    self._addTyp("городской округ")
                 elif (v == "ПОСЕЛКОВЫЙ СОВЕТ"): 
-                    self._add_typ("поселковый округ")
+                    self._addTyp("поселковый округ")
                 elif (v == "аэропорт"): 
                     spec_typ = v.upper()
             elif (s.type_name == "GEO" and (isinstance(s.value, GeoReferent))): 
-                geo_ = (s.value if isinstance(s.value, GeoReferent) else None)
+                geo_ = (Utils.asObjectOrNull(s.value, GeoReferent))
         if (not nam): 
             for s in org0_.slots: 
                 if (s.type_name == "EPONYM"): 
                     if (num is None): 
-                        self._add_name((s.value if isinstance(s.value, str) else None).upper())
+                        self._addName((Utils.asObjectOrNull(s.value, str)).upper())
                     else: 
-                        self._add_name("{0}-{1}".format((s.value if isinstance(s.value, str) else None).upper(), num))
+                        self._addName("{0}-{1}".format((Utils.asObjectOrNull(s.value, str)).upper(), num))
                     nam = True
         if (not nam and num is not None): 
             for s in org0_.slots: 
                 if (s.type_name == "TYPE"): 
-                    self._add_name("{0}-{1}".format((s.value if isinstance(s.value, str) else None).upper(), num))
+                    self._addName("{0}-{1}".format((Utils.asObjectOrNull(s.value, str)).upper(), num))
                     nam = True
         if (geo_ is not None and not nam): 
-            for n in geo_.get_string_values(GeoReferent.ATTR_NAME): 
-                self._add_name(n)
+            for n in geo_.getStringValues(GeoReferent.ATTR_NAME): 
+                self._addName(n)
                 if (spec_typ is not None): 
-                    self._add_name("{0} {1}".format(n, spec_typ))
-                    self._add_name("{0} {1}".format(spec_typ, n))
+                    self._addName("{0} {1}".format(n, spec_typ))
+                    self._addName("{0} {1}".format(spec_typ, n))
                 nam = True
         if (not nam): 
-            self._add_name(org0_.to_string(True, MorphLang.UNKNOWN, 0).upper())
+            self._addName(org0_.toString(True, MorphLang.UNKNOWN, 0).upper())

@@ -1,9 +1,8 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.Referent import Referent
 from pullenti.ner.decree.DecreeKind import DecreeKind
@@ -14,15 +13,16 @@ class MetaDecree(ReferentClass):
     def __init__(self) -> None:
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
         super().__init__()
-        self.add_feature(DecreeReferent.ATTR_TYPE, "Тип", 1, 1)
-        self.add_feature(DecreeReferent.ATTR_NUMBER, "Номер", 0, 0)
-        self.add_feature(DecreeReferent.ATTR_CASENUMBER, "Номер дела", 0, 0)
-        self.add_feature(DecreeReferent.ATTR_DATE, "Дата", 0, 0)
-        self.add_feature(DecreeReferent.ATTR_SOURCE, "Источник", 0, 1)
-        self.add_feature(DecreeReferent.ATTR_GEO, "Географический объект", 0, 1)
-        self.add_feature(DecreeReferent.ATTR_NAME, "Наименование", 0, 0)
-        self.add_feature(DecreeReferent.ATTR_READING, "Чтение", 0, 1)
-        self.add_feature(Referent.ATTR_GENERAL, "Обобщающий объект", 0, 1)
+        self.addFeature(DecreeReferent.ATTR_TYPE, "Тип", 1, 1)
+        self.addFeature(DecreeReferent.ATTR_NUMBER, "Номер", 0, 0)
+        self.addFeature(DecreeReferent.ATTR_CASENUMBER, "Номер дела", 0, 0)
+        self.addFeature(DecreeReferent.ATTR_DATE, "Дата", 0, 0)
+        self.addFeature(DecreeReferent.ATTR_SOURCE, "Источник", 0, 1)
+        self.addFeature(DecreeReferent.ATTR_GEO, "Географический объект", 0, 1)
+        self.addFeature(DecreeReferent.ATTR_NAME, "Наименование", 0, 0)
+        self.addFeature(DecreeReferent.ATTR_READING, "Чтение", 0, 1)
+        self.addFeature(DecreeReferent.ATTR_EDITION, "В редакции", 0, 0)
+        self.addFeature(Referent.ATTR_GENERAL, "Обобщающий объект", 0, 1)
     
     @property
     def name(self) -> str:
@@ -39,10 +39,10 @@ class MetaDecree(ReferentClass):
     
     STANDADR_IMAGE_ID = "decreestd"
     
-    def get_image_id(self, obj : 'Referent'=None) -> str:
+    def getImageId(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
         if (isinstance(obj, DecreeReferent)): 
-            ki = (obj if isinstance(obj, DecreeReferent) else None).kind
+            ki = (Utils.asObjectOrNull(obj, DecreeReferent)).kind
             if (ki == DecreeKind.PUBLISHER): 
                 return MetaDecree.PUBLISH_IMAGE_ID
             if (ki == DecreeKind.STANDARD): 

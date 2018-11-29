@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 from pullenti.ner.MetaToken import MetaToken
@@ -12,10 +10,10 @@ class TableCellToken(MetaToken):
     """ Токен - ячейка таблицы """
     
     def __init__(self, b : 'Token', e0_ : 'Token') -> None:
+        super().__init__(b, e0_, None)
         self.col_span = 1
         self.row_span = 1
         self._eoc = False
-        super().__init__(b, e0_, None)
     
     @property
     def _lines(self) -> typing.List['TableCellToken']:
@@ -24,9 +22,9 @@ class TableCellToken(MetaToken):
         while t is not None and t.end_char <= self.end_char: 
             t0 = t
             t1 = t
-            first_pass3692 = True
+            first_pass2800 = True
             while True:
-                if first_pass3692: first_pass3692 = False
+                if first_pass2800: first_pass2800 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= self.end_char)): break
                 t1 = t
@@ -40,7 +38,7 @@ class TableCellToken(MetaToken):
         return res
     
     @staticmethod
-    def _new486(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : int) -> 'TableCellToken':
+    def _new496(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : int) -> 'TableCellToken':
         res = TableCellToken(_arg1, _arg2)
         res.row_span = _arg3
         res.col_span = _arg4

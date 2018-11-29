@@ -1,13 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
+from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.phone.PhoneKind import PhoneKind
 from pullenti.morph.LanguageHelper import LanguageHelper
 
@@ -17,8 +16,8 @@ class PhoneReferent(Referent):
     
     def __init__(self) -> None:
         from pullenti.ner.phone.internal.MetaPhone import MetaPhone
-        self._m_template = None
         super().__init__(PhoneReferent.OBJ_TYPENAME)
+        self._m_template = None;
         self.instance_of = MetaPhone._global_meta
     
     OBJ_TYPENAME = "PHONE"
@@ -31,7 +30,7 @@ class PhoneReferent(Referent):
     
     ATTR_ADDNUMBER = "ADDNUMBER"
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         res = io.StringIO()
         if (self.country_code is not None): 
             print("+{0} ".format(self.country_code), end="", file=res, flush=True)
@@ -59,51 +58,47 @@ class PhoneReferent(Referent):
     @property
     def number(self) -> str:
         """ Основной номер (без кода города) """
-        return self.get_string_value(PhoneReferent.ATTR_NUNBER)
-    
+        return self.getStringValue(PhoneReferent.ATTR_NUNBER)
     @number.setter
     def number(self, value) -> str:
-        self.add_slot(PhoneReferent.ATTR_NUNBER, value, True, 0)
+        self.addSlot(PhoneReferent.ATTR_NUNBER, value, True, 0)
         return value
     
     @property
     def add_number(self) -> str:
         """ Добавочный номер (если есть) """
-        return self.get_string_value(PhoneReferent.ATTR_ADDNUMBER)
-    
+        return self.getStringValue(PhoneReferent.ATTR_ADDNUMBER)
     @add_number.setter
     def add_number(self, value) -> str:
-        self.add_slot(PhoneReferent.ATTR_ADDNUMBER, value, True, 0)
+        self.addSlot(PhoneReferent.ATTR_ADDNUMBER, value, True, 0)
         return value
     
     @property
     def country_code(self) -> str:
         """ Код страны """
-        return self.get_string_value(PhoneReferent.ATTR_COUNTRYCODE)
-    
+        return self.getStringValue(PhoneReferent.ATTR_COUNTRYCODE)
     @country_code.setter
     def country_code(self, value) -> str:
-        self.add_slot(PhoneReferent.ATTR_COUNTRYCODE, value, True, 0)
+        self.addSlot(PhoneReferent.ATTR_COUNTRYCODE, value, True, 0)
         return value
     
     @property
     def kind(self) -> 'PhoneKind':
         """ Тип телефона """
-        str0_ = self.get_string_value(PhoneReferent.ATTR_KIND)
+        str0_ = self.getStringValue(PhoneReferent.ATTR_KIND)
         if (str0_ is None): 
             return PhoneKind.UNDEFINED
         try: 
             return Utils.valToEnum(str0_, PhoneKind)
         except Exception as ex: 
             return PhoneKind.UNDEFINED
-    
     @kind.setter
     def kind(self, value) -> 'PhoneKind':
         if (value != PhoneKind.UNDEFINED): 
-            self.add_slot(PhoneReferent.ATTR_KIND, Utils.enumToString(value).lower(), True, 0)
+            self.addSlot(PhoneReferent.ATTR_KIND, Utils.enumToString(value).lower(), True, 0)
         return value
     
-    def get_compare_strings(self) -> typing.List[str]:
+    def getCompareStrings(self) -> typing.List[str]:
         num = self.number
         if (num is None): 
             return None
@@ -116,11 +111,11 @@ class PhoneReferent(Referent):
             res.append("{0}*{1}".format(num, add))
         return res
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
-        return self.__can_be_equal(obj, typ, False)
+    def canBeEquals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+        return self.__canBeEqual(obj, typ, False)
     
-    def __can_be_equal(self, obj : 'Referent', typ : 'EqualType', ignore_add_number : bool) -> bool:
-        ph = (obj if isinstance(obj, PhoneReferent) else None)
+    def __canBeEqual(self, obj : 'Referent', typ : 'EqualType', ignore_add_number : bool) -> bool:
+        ph = Utils.asObjectOrNull(obj, PhoneReferent)
         if (ph is None): 
             return False
         if (ph.country_code is not None and self.country_code is not None): 
@@ -138,14 +133,14 @@ class PhoneReferent(Referent):
         if (self.number == ph.number): 
             return True
         if (typ != Referent.EqualType.DIFFERENTTEXTS): 
-            if (LanguageHelper.ends_with(self.number, ph.number) or LanguageHelper.ends_with(ph.number, self.number)): 
+            if (LanguageHelper.endsWith(self.number, ph.number) or LanguageHelper.endsWith(ph.number, self.number)): 
                 return True
         return False
     
-    def can_be_general_for(self, obj : 'Referent') -> bool:
-        if (not self.__can_be_equal(obj, Referent.EqualType.WITHINONETEXT, True)): 
+    def canBeGeneralFor(self, obj : 'Referent') -> bool:
+        if (not self.__canBeEqual(obj, Referent.EqualType.WITHINONETEXT, True)): 
             return False
-        ph = (obj if isinstance(obj, PhoneReferent) else None)
+        ph = Utils.asObjectOrNull(obj, PhoneReferent)
         if (self.country_code is not None and ph.country_code is None): 
             return False
         if (self.add_number is None): 
@@ -153,22 +148,22 @@ class PhoneReferent(Referent):
                 return True
         elif (ph.add_number is None): 
             return False
-        if (LanguageHelper.ends_with(ph.number, self.number)): 
+        if (LanguageHelper.endsWith(ph.number, self.number)): 
             return True
         return False
     
-    def merge_slots(self, obj : 'Referent', merge_statistic : bool=True) -> None:
-        ph = (obj if isinstance(obj, PhoneReferent) else None)
+    def mergeSlots(self, obj : 'Referent', merge_statistic : bool=True) -> None:
+        ph = Utils.asObjectOrNull(obj, PhoneReferent)
         if (ph is None): 
             return
         if (ph.country_code is not None and self.country_code is None): 
             self.country_code = ph.country_code
-        if (ph.number is not None and LanguageHelper.ends_with(ph.number, self.number)): 
+        if (ph.number is not None and LanguageHelper.endsWith(ph.number, self.number)): 
             self.number = ph.number
     
     def _correct(self) -> None:
         if (self.kind == PhoneKind.UNDEFINED): 
-            if (self.find_slot(PhoneReferent.ATTR_ADDNUMBER, None, True) is not None): 
+            if (self.findSlot(PhoneReferent.ATTR_ADDNUMBER, None, True) is not None): 
                 self.kind = PhoneKind.WORK
             elif (self.country_code is None or self.country_code == "7"): 
                 num = self.number

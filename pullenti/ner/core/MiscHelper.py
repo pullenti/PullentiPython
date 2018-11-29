@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 import typing
@@ -13,7 +11,7 @@ from pullenti.ner.core.CanBeEqualsAttrs import CanBeEqualsAttrs
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.internal.RusLatAccord import RusLatAccord
+from pullenti.ner.core.internal.RusLatAccord import RusLatAccord
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.morph.MorphNumber import MorphNumber
@@ -25,8 +23,8 @@ class MiscHelper:
     class CyrLatWord:
         
         def __init__(self) -> None:
-            self.cyr_word = None
-            self.lat_word = None
+            self.cyr_word = None;
+            self.lat_word = None;
         
         def __str__(self) -> str:
             if (self.cyr_word is not None and self.lat_word is not None): 
@@ -41,7 +39,15 @@ class MiscHelper:
             return (len(self.cyr_word) if self.cyr_word is not None else ((len(self.lat_word) if self.lat_word is not None else 0)))
     
     @staticmethod
-    def is_not_more_than_one_error(value : str, t : 'Token') -> bool:
+    def isNotMoreThanOneError(value : str, t : 'Token') -> bool:
+        """ Сравнение, чтобы не было больше одной ошибки в написании.
+         Ошибка - это замена буквы или пропуск буквы.
+        
+        Args:
+            value(str): правильное написание
+            t(Token): проверяемый токен
+        
+        """
         from pullenti.ner.TextToken import TextToken
         from pullenti.morph.MorphWordForm import MorphWordForm
         from pullenti.ner.MetaToken import MetaToken
@@ -49,23 +55,23 @@ class MiscHelper:
         if (t is None): 
             return False
         if (isinstance(t, TextToken)): 
-            tt = (t if isinstance(t, TextToken) else None)
-            if (t.is_value(value, None)): 
+            tt = Utils.asObjectOrNull(t, TextToken)
+            if (t.isValue(value, None)): 
                 return True
-            if (MiscHelper.__is_not_more_than_one_error(value, tt.term, True)): 
+            if (MiscHelper.__isNotMoreThanOneError(value, tt.term, True)): 
                 return True
             for wf in tt.morph.items: 
                 if (isinstance(wf, MorphWordForm)): 
-                    if (MiscHelper.__is_not_more_than_one_error(value, (wf if isinstance(wf, MorphWordForm) else None).normal_case, True)): 
+                    if (MiscHelper.__isNotMoreThanOneError(value, (Utils.asObjectOrNull(wf, MorphWordForm)).normal_case, True)): 
                         return True
-        elif ((isinstance(t, MetaToken)) and (t if isinstance(t, MetaToken) else None).begin_token == (t if isinstance(t, MetaToken) else None).end_token): 
-            return MiscHelper.is_not_more_than_one_error(value, (t if isinstance(t, MetaToken) else None).begin_token)
-        elif (MiscHelper.__is_not_more_than_one_error(value, t.get_normal_case_text(MorphClass(), False, MorphGender.UNDEFINED, False), True)): 
+        elif ((isinstance(t, MetaToken)) and (Utils.asObjectOrNull(t, MetaToken)).begin_token == (Utils.asObjectOrNull(t, MetaToken)).end_token): 
+            return MiscHelper.isNotMoreThanOneError(value, (Utils.asObjectOrNull(t, MetaToken)).begin_token)
+        elif (MiscHelper.__isNotMoreThanOneError(value, t.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False), True)): 
             return True
         return False
     
     @staticmethod
-    def __is_not_more_than_one_error(pattern : str, test : str, tmp : bool=False) -> bool:
+    def __isNotMoreThanOneError(pattern : str, test : str, tmp : bool=False) -> bool:
         if (test is None or pattern is None): 
             return False
         if (len(test) == len(pattern)): 
@@ -111,10 +117,20 @@ class MiscHelper:
         return False
     
     @staticmethod
-    def try_attach_word_by_letters(word : str, t : 'Token', use_morph_variants : bool=False) -> 'Token':
+    def tryAttachWordByLetters(word : str, t : 'Token', use_morph_variants : bool=False) -> 'Token':
+        """ Проверить написание слова вразбивку по буквам (например:   П Р И К А З)
+        
+        Args:
+            word(str): проверяемое слово
+            t(Token): начальный токен
+            use_morph_variants(bool): перебирать ли падежи у слова
+        
+        Returns:
+            Token: токен последней буквы или null
+        """
         from pullenti.ner.TextToken import TextToken
         from pullenti.morph.Morphology import Morphology
-        t1 = (t if isinstance(t, TextToken) else None)
+        t1 = Utils.asObjectOrNull(t, TextToken)
         if (t1 is None): 
             return None
         i = 0
@@ -136,7 +152,7 @@ class MiscHelper:
                 while tt is not None: 
                     if (not ((isinstance(tt, TextToken))) or not tt.chars.is_letter or tt.is_newline_before): 
                         break
-                    t1 = (tt if isinstance(tt, TextToken) else None)
+                    t1 = (Utils.asObjectOrNull(tt, TextToken))
                     print(t1.term, end="", file=tmp)
                     tt = tt.next0_
                 li = Morphology.process(Utils.toStringStringIO(tmp), t.morph.language, None)
@@ -150,11 +166,23 @@ class MiscHelper:
             i += j
             if (i == len(word)): 
                 return t1
-            t1 = (t1.next0_ if isinstance(t1.next0_, TextToken) else None)
+            t1 = (Utils.asObjectOrNull(t1.next0_, TextToken))
         return None
     
     @staticmethod
-    def can_be_equals(s1 : str, s2 : str, ignore_nonletters : bool=True, ignore_case : bool=True, check_morph_equ_after_first_noun : bool=False) -> bool:
+    def canBeEquals(s1 : str, s2 : str, ignore_nonletters : bool=True, ignore_case : bool=True, check_morph_equ_after_first_noun : bool=False) -> bool:
+        """ Сравнение 2-х строк на предмет равенства с учётом морфологии и пунктуации (то есть инвариантно относительно них).
+         Функция довольно трудоёмка, не использовать без крайней необходимости.
+         ВНИМАНИЕ! Вместо этой функции теперь используйте CanBeEqualsEx.
+        
+        Args:
+            s1(str): первая строка
+            s2(str): вторая строка
+            ignore_nonletters(bool): игнорировать небуквенные символы
+            ignore_case(bool): игнорировать регистр символов
+            check_morph_equ_after_first_noun(bool): после первого существительного слова должны полностью совпадать
+        
+        """
         attrs = CanBeEqualsAttrs.NO
         if (ignore_nonletters): 
             attrs = (Utils.valToEnum((attrs) | (CanBeEqualsAttrs.IGNORENONLETTERS), CanBeEqualsAttrs))
@@ -162,10 +190,19 @@ class MiscHelper:
             attrs = (Utils.valToEnum((attrs) | (CanBeEqualsAttrs.IGNOREUPPERCASE), CanBeEqualsAttrs))
         if (check_morph_equ_after_first_noun): 
             attrs = (Utils.valToEnum((attrs) | (CanBeEqualsAttrs.CHECKMORPHEQUAFTERFIRSTNOUN), CanBeEqualsAttrs))
-        return MiscHelper.can_be_equals_ex(s1, s2, attrs)
+        return MiscHelper.canBeEqualsEx(s1, s2, attrs)
     
     @staticmethod
-    def can_be_equals_ex(s1 : str, s2 : str, attrs : 'CanBeEqualsAttrs') -> bool:
+    def canBeEqualsEx(s1 : str, s2 : str, attrs : 'CanBeEqualsAttrs') -> bool:
+        """ Сравнение 2-х строк на предмет равенства с учётом морфологии и пунктуации (то есть инвариантно относительно них).
+         Функция довольно трудоёмка, не использовать без крайней необходимости.
+        
+        Args:
+            s1(str): первая строка
+            s2(str): вторая строка
+            attrs(CanBeEqualsAttrs): дополнительные атрибуты
+        
+        """
         from pullenti.ner.core.AnalysisKit import AnalysisKit
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.core.BracketHelper import BracketHelper
@@ -184,29 +221,29 @@ class MiscHelper:
             if (t1 is not None): 
                 if (isinstance(t1, TextToken)): 
                     if (not t1.chars.is_letter): 
-                        if (BracketHelper.is_bracket(t1, False) and (((attrs) & (CanBeEqualsAttrs.USEBRACKETS))) != (CanBeEqualsAttrs.NO)): 
+                        if (BracketHelper.isBracket(t1, False) and (((attrs) & (CanBeEqualsAttrs.USEBRACKETS))) != (CanBeEqualsAttrs.NO)): 
                             pass
                         else: 
                             if (t1.is_hiphen): 
                                 was_noun = False
-                            if (((not t1.is_char_of("()") and not t1.is_hiphen)) or (((attrs) & (CanBeEqualsAttrs.IGNORENONLETTERS))) != (CanBeEqualsAttrs.NO)): 
+                            if (((not t1.isCharOf("()") and not t1.is_hiphen)) or (((attrs) & (CanBeEqualsAttrs.IGNORENONLETTERS))) != (CanBeEqualsAttrs.NO)): 
                                 t1 = t1.next0_
                                 continue
             if (t2 is not None): 
                 if (isinstance(t2, TextToken)): 
                     if (not t2.chars.is_letter): 
-                        if (BracketHelper.is_bracket(t2, False) and (((attrs) & (CanBeEqualsAttrs.USEBRACKETS))) != (CanBeEqualsAttrs.NO)): 
+                        if (BracketHelper.isBracket(t2, False) and (((attrs) & (CanBeEqualsAttrs.USEBRACKETS))) != (CanBeEqualsAttrs.NO)): 
                             pass
                         else: 
                             if (t2.is_hiphen): 
                                 was_noun = False
-                            if (((not t2.is_char_of("()") and not t2.is_hiphen)) or (((attrs) & (CanBeEqualsAttrs.IGNORENONLETTERS))) != (CanBeEqualsAttrs.NO)): 
+                            if (((not t2.isCharOf("()") and not t2.is_hiphen)) or (((attrs) & (CanBeEqualsAttrs.IGNORENONLETTERS))) != (CanBeEqualsAttrs.NO)): 
                                 t2 = t2.next0_
                                 continue
             if (isinstance(t1, NumberToken)): 
                 if (not ((isinstance(t2, NumberToken)))): 
                     break
-                if ((t1 if isinstance(t1, NumberToken) else None).value != (t2 if isinstance(t2, NumberToken) else None).value): 
+                if ((Utils.asObjectOrNull(t1, NumberToken)).value != (Utils.asObjectOrNull(t2, NumberToken)).value): 
                     break
                 t1 = t1.next0_
                 t2 = t2.next0_
@@ -219,16 +256,16 @@ class MiscHelper:
                 elif (t1.chars != t2.chars): 
                     return False
             if (not t1.chars.is_letter): 
-                bs1 = BracketHelper.can_be_start_of_sequence(t1, False, False)
-                bs2 = BracketHelper.can_be_start_of_sequence(t2, False, False)
+                bs1 = BracketHelper.canBeStartOfSequence(t1, False, False)
+                bs2 = BracketHelper.canBeStartOfSequence(t2, False, False)
                 if (bs1 != bs2): 
                     return False
                 if (bs1): 
                     t1 = t1.next0_
                     t2 = t2.next0_
                     continue
-                bs1 = BracketHelper.can_be_end_of_sequence(t1, False, None, False)
-                bs2 = BracketHelper.can_be_end_of_sequence(t2, False, None, False)
+                bs1 = BracketHelper.canBeEndOfSequence(t1, False, None, False)
+                bs2 = BracketHelper.canBeEndOfSequence(t2, False, None, False)
                 if (bs1 != bs2): 
                     return False
                 if (bs1): 
@@ -237,29 +274,29 @@ class MiscHelper:
                     continue
                 if (t1.is_hiphen and t2.is_hiphen): 
                     pass
-                elif ((t1 if isinstance(t1, TextToken) else None).term != (t2 if isinstance(t2, TextToken) else None).term): 
+                elif ((Utils.asObjectOrNull(t1, TextToken)).term != (Utils.asObjectOrNull(t2, TextToken)).term): 
                     return False
                 t1 = t1.next0_
                 t2 = t2.next0_
                 continue
             ok = False
             if (was_noun and (((attrs) & (CanBeEqualsAttrs.CHECKMORPHEQUAFTERFIRSTNOUN))) != (CanBeEqualsAttrs.NO)): 
-                if ((t1 if isinstance(t1, TextToken) else None).term == (t2 if isinstance(t2, TextToken) else None).term): 
+                if ((Utils.asObjectOrNull(t1, TextToken)).term == (Utils.asObjectOrNull(t2, TextToken)).term): 
                     ok = True
             else: 
-                tt = (t1 if isinstance(t1, TextToken) else None)
+                tt = Utils.asObjectOrNull(t1, TextToken)
                 for it in tt.morph.items: 
                     if (isinstance(it, MorphWordForm)): 
-                        wf = (it if isinstance(it, MorphWordForm) else None)
-                        if (t2.is_value(wf.normal_case, None) or t2.is_value(wf.normal_full, None)): 
+                        wf = Utils.asObjectOrNull(it, MorphWordForm)
+                        if (t2.isValue(wf.normal_case, None) or t2.isValue(wf.normal_full, None)): 
                             ok = True
                             break
-                if (tt.get_morph_class_in_dictionary().is_noun): 
+                if (tt.getMorphClassInDictionary().is_noun): 
                     was_noun = True
                 if (not ok and t1.is_hiphen and t2.is_hiphen): 
                     ok = True
                 if (not ok): 
-                    if (t2.is_value(tt.term, None) or t2.is_value(tt.lemma, None)): 
+                    if (t2.isValue(tt.term, None) or t2.isValue(tt.lemma, None)): 
                         ok = True
             if (ok): 
                 t1 = t1.next0_
@@ -272,7 +309,15 @@ class MiscHelper:
         return t1 is None and t2 is None
     
     @staticmethod
-    def can_be_start_of_sentence(t : 'Token') -> bool:
+    def canBeStartOfSentence(t : 'Token') -> bool:
+        """ Проверка того, может ли здесь начинаться новое предложение
+        
+        Args:
+            t(Token): токен начала предложения
+        
+        """
+        from pullenti.ner.ReferentToken import ReferentToken
+        from pullenti.ner.TextToken import TextToken
         from pullenti.ner.NumberToken import NumberToken
         if (t is None): 
             return False
@@ -293,89 +338,112 @@ class MiscHelper:
             return True
         if (t.previous.is_comma_and or t.previous.morph.class0_.is_conjunction): 
             return False
-        if (MiscHelper.is_eng_article(t.previous)): 
+        if (MiscHelper.isEngArticle(t.previous)): 
             return False
-        if (t.previous.is_char(':')): 
+        if (t.previous.isChar(':')): 
             return False
-        if (t.previous.is_char(';') and t.is_newline_before): 
+        if (t.previous.isChar(';') and t.is_newline_before): 
             return True
         if (t.previous.is_hiphen): 
             if (t.previous.is_newline_before): 
                 return True
             pp = t.previous.previous
-            if (pp is not None and pp.is_char('.')): 
+            if (pp is not None and pp.isChar('.')): 
                 return True
         if (t.chars.is_letter and t.chars.is_all_lower): 
             return False
         if (t.is_newline_before): 
             return True
-        if (t.previous.is_char_of("!?") or t.previous.is_table_control_char): 
+        if (t.previous.isCharOf("!?") or t.previous.is_table_control_char): 
             return True
-        if (t.previous.is_char('.')): 
+        if (t.previous.isChar('.') or (((isinstance(t.previous, ReferentToken)) and (Utils.asObjectOrNull(t.previous, ReferentToken)).end_token.isChar('.')))): 
             if (t.whitespaces_before_count > 1): 
                 return True
-            if (t.next0_ is not None and t.next0_.is_char('.')): 
-                return False
-            if ((isinstance(t.previous.previous, NumberToken)) and t.previous.is_whitespace_before): 
-                if ((t.previous.previous if isinstance(t.previous.previous, NumberToken) else None).typ != NumberSpellingType.WORDS): 
+            if (t.next0_ is not None and t.next0_.isChar('.')): 
+                if ((isinstance(t.previous.previous, TextToken)) and t.previous.previous.chars.is_all_lower): 
+                    pass
+                elif (isinstance(t.previous.previous, ReferentToken)): 
+                    pass
+                else: 
                     return False
+            if ((isinstance(t.previous.previous, NumberToken)) and t.previous.is_whitespace_before): 
+                if ((Utils.asObjectOrNull(t.previous.previous, NumberToken)).typ != NumberSpellingType.WORDS): 
+                    return False
+            return True
+        if (MiscHelper.isEngArticle(t)): 
             return True
         return False
     
     @staticmethod
-    def find_end_of_sentence(t : 'Token') -> 'Token':
+    def findEndOfSentence(t : 'Token') -> 'Token':
+        """ Переместиться на конец предложения
+        
+        Args:
+            t(Token): токен, с которого идёт поиск
+        
+        Returns:
+            Token: последний токен предложения (не обязательно точка!)
+        """
         tt = t
         while tt is not None: 
             if (tt.next0_ is None): 
                 return tt
-            elif (MiscHelper.can_be_start_of_sentence(tt)): 
+            elif (MiscHelper.canBeStartOfSentence(tt)): 
                 return (t if tt == t else tt.previous)
             tt = tt.next0_
         return None
     
     @staticmethod
-    def check_number_prefix(t : 'Token') -> 'Token':
+    def checkNumberPrefix(t : 'Token') -> 'Token':
+        """ Привязка различных способов написания ключевых слов для номеров (ном., №, рег.номер и пр.)
+        
+        Args:
+            t(Token): начало префикса
+        
+        Returns:
+            Token: null, если не префикс, или токен, следующий сразу за префиксом номера
+        """
         from pullenti.ner.TextToken import TextToken
         if (not ((isinstance(t, TextToken)))): 
             return None
-        s = (t if isinstance(t, TextToken) else None).term
+        s = (Utils.asObjectOrNull(t, TextToken)).term
         t1 = None
-        if (t.is_value("ПО", None) and t.next0_ is not None): 
+        if (t.isValue("ПО", None) and t.next0_ is not None): 
             t = t.next0_
-        if ((((t.is_value("РЕГИСТРАЦИОННЫЙ", "РЕЄСТРАЦІЙНИЙ") or t.is_value("ГОСУДАРСТВЕННЫЙ", "ДЕРЖАВНИЙ") or t.is_value("ТРАНЗИТНЫЙ", "ТРАНЗИТНИЙ")) or t.is_value("ДЕЛО", None) or t.is_value("СПРАВА", None))) and (isinstance(t.next0_, TextToken))): 
+        if ((((t.isValue("РЕГИСТРАЦИОННЫЙ", "РЕЄСТРАЦІЙНИЙ") or t.isValue("ГОСУДАРСТВЕННЫЙ", "ДЕРЖАВНИЙ") or t.isValue("ТРАНЗИТНЫЙ", "ТРАНЗИТНИЙ")) or t.isValue("ДЕЛО", None) or t.isValue("СПРАВА", None))) and (isinstance(t.next0_, TextToken))): 
             t = t.next0_
-            s = (t if isinstance(t, TextToken) else None).term
+            s = (Utils.asObjectOrNull(t, TextToken)).term
         elif (s == "РЕГ" or s == "ГОС" or s == "ТРАНЗ"): 
-            if (t.next0_ is not None and t.next0_.is_char('.')): 
+            if (t.next0_ is not None and t.next0_.isChar('.')): 
                 t = t.next0_
             if (isinstance(t.next0_, TextToken)): 
                 t = t.next0_
-                s = (t if isinstance(t, TextToken) else None).term
+                s = (Utils.asObjectOrNull(t, TextToken)).term
             else: 
                 return None
         if ((s == "НОМЕР" or s == "№" or s == "N") or s == "NO" or s == "NN"): 
             t1 = t.next0_
-            if (t1 is not None and ((t1.is_char_of("°№") or t1.is_value("О", None)))): 
+            if (t1 is not None and ((t1.isCharOf("°№") or t1.isValue("О", None)))): 
                 t1 = t1.next0_
-            if (t1 is not None and t1.is_char('.')): 
+            if (t1 is not None and t1.isChar('.')): 
                 t1 = t1.next0_
-            if (t1 is not None and t1.is_char(':')): 
+            if (t1 is not None and t1.isChar(':')): 
                 t1 = t1.next0_
         elif (s == "НОМ"): 
             t1 = t.next0_
-            if (t1 is not None and t1.is_char('.')): 
+            if (t1 is not None and t1.isChar('.')): 
                 t1 = t1.next0_
         while t1 is not None:
-            if (t1.is_value("ЗАПИСЬ", None)): 
+            if (t1.isValue("ЗАПИСЬ", None)): 
                 t1 = t1.next0_
-            elif (t1.is_value("В", None) and t1.next0_ is not None and t1.next0_.is_value("РЕЕСТР", None)): 
+            elif (t1.isValue("В", None) and t1.next0_ is not None and t1.next0_.isValue("РЕЕСТР", None)): 
                 t1 = t1.next0_.next0_
             else: 
                 break
         return t1
     
     @staticmethod
-    def _corr_xml_text(txt : str) -> str:
+    def _corrXmlText(txt : str) -> str:
         if (txt is None): 
             return ""
         for c in txt: 
@@ -391,7 +459,13 @@ class MiscHelper:
         return txt
     
     @staticmethod
-    def convert_first_char_upper_and_other_lower(str0_ : str) -> str:
+    def convertFirstCharUpperAndOtherLower(str0_ : str) -> str:
+        """ Преобразовать строку чтобы первая буква стала большой, остальные маленькие
+        
+        Args:
+            str0_(str): 
+        
+        """
         if (Utils.isNullOrEmpty(str0_)): 
             return str0_
         fstr_tmp = io.StringIO()
@@ -412,7 +486,13 @@ class MiscHelper:
         return Utils.toStringStringIO(fstr_tmp)
     
     @staticmethod
-    def get_abbreviation(name : str) -> str:
+    def getAbbreviation(name : str) -> str:
+        """ Сделать аббревиатуру для строки из нескольких слов
+        
+        Args:
+            name(str): 
+        
+        """
         abbr = io.StringIO()
         i = 0
         while i < len(name): 
@@ -435,7 +515,13 @@ class MiscHelper:
         return Utils.toStringStringIO(abbr).upper()
     
     @staticmethod
-    def get_tail_abbreviation(name : str) -> str:
+    def getTailAbbreviation(name : str) -> str:
+        """ Получить аббревиатуру (уже не помню, какую именно...)
+        
+        Args:
+            name(str): 
+        
+        """
         j = 0
         i = 0
         while i < len(name): 
@@ -471,7 +557,16 @@ class MiscHelper:
         return None
     
     @staticmethod
-    def create_cyr_lat_alternative(str0_ : str) -> str:
+    def createCyrLatAlternative(str0_ : str) -> str:
+        """ Попытка через транслитеральную замену сделать альтернативное написание строки
+         Например, А-10 => A-10  (здесь латиница и кириллица)
+        
+        Args:
+            str0_(str): 
+        
+        Returns:
+            str: если null, то не получается
+        """
         if (str0_ is None): 
             return None
         cyr = 0
@@ -481,13 +576,13 @@ class MiscHelper:
         i = 0
         while i < len(str0_): 
             ch = str0_[i]
-            if (LanguageHelper.is_latin_char(ch)): 
+            if (LanguageHelper.isLatinChar(ch)): 
                 lat += 1
-                if (LanguageHelper.get_cyr_for_lat(ch) != (chr(0))): 
+                if (LanguageHelper.getCyrForLat(ch) != (chr(0))): 
                     lat_to_cyr += 1
-            elif (LanguageHelper.is_cyrillic_char(ch)): 
+            elif (LanguageHelper.isCyrillicChar(ch)): 
                 cyr += 1
-                if (LanguageHelper.get_lat_for_cyr(ch) != (chr(0))): 
+                if (LanguageHelper.getLatForCyr(ch) != (chr(0))): 
                     cyr_to_lat += 1
             i += 1
         if (cyr > 0 and cyr_to_lat == cyr): 
@@ -496,8 +591,8 @@ class MiscHelper:
             tmp = Utils.newStringIO(str0_)
             i = 0
             while i < tmp.tell(): 
-                if (LanguageHelper.is_cyrillic_char(Utils.getCharAtStringIO(tmp, i))): 
-                    Utils.setCharAtStringIO(tmp, i, LanguageHelper.get_lat_for_cyr(Utils.getCharAtStringIO(tmp, i)))
+                if (LanguageHelper.isCyrillicChar(Utils.getCharAtStringIO(tmp, i))): 
+                    Utils.setCharAtStringIO(tmp, i, LanguageHelper.getLatForCyr(Utils.getCharAtStringIO(tmp, i)))
                 i += 1
             return Utils.toStringStringIO(tmp)
         if (lat > 0 and lat_to_cyr == lat): 
@@ -506,22 +601,39 @@ class MiscHelper:
             tmp = Utils.newStringIO(str0_)
             i = 0
             while i < tmp.tell(): 
-                if (LanguageHelper.is_latin_char(Utils.getCharAtStringIO(tmp, i))): 
-                    Utils.setCharAtStringIO(tmp, i, LanguageHelper.get_cyr_for_lat(Utils.getCharAtStringIO(tmp, i)))
+                if (LanguageHelper.isLatinChar(Utils.getCharAtStringIO(tmp, i))): 
+                    Utils.setCharAtStringIO(tmp, i, LanguageHelper.getCyrForLat(Utils.getCharAtStringIO(tmp, i)))
                 i += 1
             return Utils.toStringStringIO(tmp)
         return None
     
     @staticmethod
-    def convert_latin_word_to_russian_variants(str0_ : str) -> typing.List[str]:
-        return MiscHelper.__convert_word(str0_, True)
+    def convertLatinWordToRussianVariants(str0_ : str) -> typing.List[str]:
+        """ Преобразовать слово, написанное по латыни, в варианты на русском языке.
+         Например, "Mikhail" -> "Михаил"
+        
+        Args:
+            str0_(str): Строка на латыни
+        
+        Returns:
+            typing.List[str]: Варианты на русском языке
+        """
+        return MiscHelper.__ConvertWord(str0_, True)
     
     @staticmethod
-    def convert_russian_word_to_latin_variants(str0_ : str) -> typing.List[str]:
-        return MiscHelper.__convert_word(str0_, False)
+    def convertRussianWordToLatinVariants(str0_ : str) -> typing.List[str]:
+        """ Преобразовать слово, написанное в кириллице, в варианты на латинице.
+        
+        Args:
+            str0_(str): Строка на кириллице
+        
+        Returns:
+            typing.List[str]: Варианты на латинице
+        """
+        return MiscHelper.__ConvertWord(str0_, False)
     
     @staticmethod
-    def __convert_word(str0_ : str, latin_to_rus : bool) -> typing.List[str]:
+    def __ConvertWord(str0_ : str, latin_to_rus : bool) -> typing.List[str]:
         if (str0_ is None): 
             return None
         if (len(str0_) == 0): 
@@ -533,9 +645,9 @@ class MiscHelper:
         while i < len(str0_): 
             v = list()
             if (latin_to_rus): 
-                j = RusLatAccord.find_accords_lat_to_rus(str0_, i, v)
+                j = RusLatAccord.findAccordsLatToRus(str0_, i, v)
             else: 
-                j = RusLatAccord.find_accords_rus_to_lat(str0_, i, v)
+                j = RusLatAccord.findAccordsRusToLat(str0_, i, v)
             if (j < 1): 
                 j = 1
                 v.append(str0_[i:i+1])
@@ -572,12 +684,24 @@ class MiscHelper:
         return res
     
     @staticmethod
-    def get_absolute_normal_value(str0_ : str, get_always : bool=False) -> str:
+    def getAbsoluteNormalValue(str0_ : str, get_always : bool=False) -> str:
+        """ Получение абсолютного нормализованного значения (с учётом гласных, удалением невидимых знаков и т.п.).
+         Используется для сравнений различных вариантов написаний.
+         Преобразования:  гласные заменяются на *, Щ на Ш, Х на Г, одинаковые соседние буквы сливаются,
+         Ъ и Ь выбрасываются.
+         Например, ХАБИБУЛЛИН -  Г*Б*Б*Л*Н
+        
+        Args:
+            str0_(str): страка
+        
+        Returns:
+            str: если null, то не удалось нормализовать (слишком короткий)
+        """
         res = io.StringIO()
         k = 0
         i = 0
         while i < len(str0_): 
-            if (LanguageHelper.is_cyrillic_vowel(str0_[i]) or str0_[i] == 'Й' or LanguageHelper.is_latin_vowel(str0_[i])): 
+            if (LanguageHelper.isCyrillicVowel(str0_[i]) or str0_[i] == 'Й' or LanguageHelper.isLatinVowel(str0_[i])): 
                 if (res.tell() > 0 and Utils.getCharAtStringIO(res, res.tell() - 1) == '*'): 
                     pass
                 else: 
@@ -607,19 +731,27 @@ class MiscHelper:
         return Utils.toStringStringIO(res)
     
     @staticmethod
-    def is_exists_in_dictionary(begin : 'Token', end : 'Token', cla : 'MorphClass') -> bool:
+    def isExistsInDictionary(begin : 'Token', end : 'Token', cla : 'MorphClass') -> bool:
+        """ Проверка, что хотя бы одно из слов внутри заданного диапазона находится в морфологическом словаре
+        
+        Args:
+            begin(Token): 
+            end(Token): 
+            cla(MorphClass): 
+        
+        """
         from pullenti.ner.TextToken import TextToken
         from pullenti.morph.MorphWordForm import MorphWordForm
         ret = False
         t = begin
         while t is not None: 
-            tt = (t if isinstance(t, TextToken) else None)
+            tt = Utils.asObjectOrNull(t, TextToken)
             if (tt is not None): 
                 if (tt.is_hiphen): 
                     ret = False
                 for wf in tt.morph.items: 
                     if (cla.value == (0) or (((cla.value) & (wf.class0_.value))) != 0): 
-                        if ((isinstance(wf, MorphWordForm)) and (wf if isinstance(wf, MorphWordForm) else None).is_in_dictionary): 
+                        if ((isinstance(wf, MorphWordForm)) and (Utils.asObjectOrNull(wf, MorphWordForm)).is_in_dictionary): 
                             ret = True
                             break
             if (t == end): 
@@ -628,11 +760,19 @@ class MiscHelper:
         return ret
     
     @staticmethod
-    def is_all_characters_lower(begin : 'Token', end : 'Token', error_if_not_text : bool=False) -> bool:
+    def isAllCharactersLower(begin : 'Token', end : 'Token', error_if_not_text : bool=False) -> bool:
+        """ Проверка, что все в заданном диапазоне в нижнем регистре
+        
+        Args:
+            begin(Token): 
+            end(Token): 
+            error_if_not_text(bool): 
+        
+        """
         from pullenti.ner.TextToken import TextToken
         t = begin
         while t is not None: 
-            tt = (t if isinstance(t, TextToken) else None)
+            tt = Utils.asObjectOrNull(t, TextToken)
             if (tt is None): 
                 if (error_if_not_text): 
                     return False
@@ -644,27 +784,42 @@ class MiscHelper:
         return True
     
     @staticmethod
-    def has_vowel(t : 'TextToken') -> bool:
+    def hasVowel(t : 'TextToken') -> bool:
+        """ Текстовой токен должен иметь гласную
+        
+        Args:
+            t(TextToken): токен
+        
+        """
         if (t is None): 
             return False
         tmp = unicodedata.normalize('NFD', t.term)
         for ch in tmp: 
-            if (LanguageHelper.is_cyrillic_vowel(ch) or LanguageHelper.is_latin_vowel(ch)): 
+            if (LanguageHelper.isCyrillicVowel(ch) or LanguageHelper.isLatinVowel(ch)): 
                 return True
         return False
     
     @staticmethod
-    def test_acronym(acr : 'Token', begin : 'Token', end : 'Token') -> bool:
+    def testAcronym(acr : 'Token', begin : 'Token', end : 'Token') -> bool:
+        """ Проверка акронима, что из первых букв слов диапазона может получиться проверяемый акроним.
+         Например,  РФ = Российская Федерация, ГосПлан = государственный план
+        
+        Args:
+            acr(Token): акроним
+            begin(Token): начало диапазона
+            end(Token): конец диапазона
+        
+        """
         from pullenti.ner.TextToken import TextToken
         if (not ((isinstance(acr, TextToken)))): 
             return False
         if (begin is None or end is None or begin.end_char >= end.begin_char): 
             return False
-        str0_ = (acr if isinstance(acr, TextToken) else None).term
+        str0_ = (Utils.asObjectOrNull(acr, TextToken)).term
         i = 0
         t = begin
         while t is not None and t.previous != end: 
-            tt = (t if isinstance(t, TextToken) else None)
+            tt = Utils.asObjectOrNull(t, TextToken)
             if (tt is None): 
                 break
             if (i >= len(str0_)): 
@@ -679,25 +834,32 @@ class MiscHelper:
         return False
     
     @staticmethod
-    def get_cyr_lat_word(t : 'Token', max_len : int=0) -> 'CyrLatWord':
+    def getCyrLatWord(t : 'Token', max_len : int=0) -> 'CyrLatWord':
+        """ Получить вариант на кириллице и\или латинице
+        
+        Args:
+            t(Token): 
+            max_len(int): 
+        
+        """
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.ReferentToken import ReferentToken
-        tt = (t if isinstance(t, TextToken) else None)
+        tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
-            rt = (t if isinstance(t, ReferentToken) else None)
+            rt = Utils.asObjectOrNull(t, ReferentToken)
             if ((rt is not None and (rt.length_char < 3) and rt.begin_token == rt.end_token) and (isinstance(rt.begin_token, TextToken))): 
-                tt = (rt.begin_token if isinstance(rt.begin_token, TextToken) else None)
+                tt = (Utils.asObjectOrNull(rt.begin_token, TextToken))
             else: 
                 return None
         if (not tt.chars.is_letter): 
             return None
-        str0_ = tt.get_source_text()
+        str0_ = tt.getSourceText()
         if (max_len > 0 and len(str0_) > max_len): 
             return None
         cyr = io.StringIO()
         lat = io.StringIO()
         for s in str0_: 
-            if (LanguageHelper.is_latin_char(s)): 
+            if (LanguageHelper.isLatinChar(s)): 
                 if (lat is not None): 
                     print(s, end="", file=lat)
                 i = MiscHelper.M_LAT.find(s)
@@ -705,7 +867,7 @@ class MiscHelper:
                     cyr = (None)
                 elif (cyr is not None): 
                     print(MiscHelper.M_CYR[i], end="", file=cyr)
-            elif (LanguageHelper.is_cyrillic_char(s)): 
+            elif (LanguageHelper.isCyrillicChar(s)): 
                 if (cyr is not None): 
                     print(s, end="", file=cyr)
                 i = MiscHelper.M_CYR.find(s)
@@ -729,58 +891,100 @@ class MiscHelper:
     M_LAT = "ABDEKMHOPCTXaekopcyx"
     
     @staticmethod
-    def can_be_equal_cyr_and_latts(t : 'Token', str0_ : str) -> bool:
+    def canBeEqualCyrAndLatTS(t : 'Token', str0_ : str) -> bool:
+        """ Проверка на возможную эквивалентность русского и латинского написания одного и того же слова
+        
+        Args:
+            t(Token): 
+            str0_(str): 
+        
+        """
         from pullenti.ner.TextToken import TextToken
         from pullenti.morph.MorphWordForm import MorphWordForm
         if (t is None or Utils.isNullOrEmpty(str0_)): 
             return False
-        tt = (t if isinstance(t, TextToken) else None)
+        tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             return False
-        if (MiscHelper.can_be_equal_cyr_and_latss(tt.term, str0_)): 
+        if (MiscHelper.canBeEqualCyrAndLatSS(tt.term, str0_)): 
             return True
         for wf in tt.morph.items: 
-            if ((isinstance(wf, MorphWordForm)) and MiscHelper.can_be_equal_cyr_and_latss((wf if isinstance(wf, MorphWordForm) else None).normal_case, str0_)): 
+            if ((isinstance(wf, MorphWordForm)) and MiscHelper.canBeEqualCyrAndLatSS((Utils.asObjectOrNull(wf, MorphWordForm)).normal_case, str0_)): 
                 return True
         return False
     
     @staticmethod
-    def can_be_equal_cyr_and_lattt(t1 : 'Token', t2 : 'Token') -> bool:
+    def canBeEqualCyrAndLatTT(t1 : 'Token', t2 : 'Token') -> bool:
+        """ Проверка на возможную эквивалентность русского и латинского написания одного и того же слова.
+         Например,  ИКЕЯ ? IKEA
+        
+        Args:
+            t1(Token): токен на одном языке
+            t2(Token): токен на другом языке
+        
+        """
         from pullenti.ner.TextToken import TextToken
         from pullenti.morph.MorphWordForm import MorphWordForm
-        tt1 = (t1 if isinstance(t1, TextToken) else None)
-        tt2 = (t2 if isinstance(t2, TextToken) else None)
+        tt1 = Utils.asObjectOrNull(t1, TextToken)
+        tt2 = Utils.asObjectOrNull(t2, TextToken)
         if (tt1 is None or tt2 is None): 
             return False
-        if (MiscHelper.can_be_equal_cyr_and_latts(t2, tt1.term)): 
+        if (MiscHelper.canBeEqualCyrAndLatTS(t2, tt1.term)): 
             return True
         for wf in tt1.morph.items: 
-            if ((isinstance(wf, MorphWordForm)) and MiscHelper.can_be_equal_cyr_and_latts(t2, (wf if isinstance(wf, MorphWordForm) else None).normal_case)): 
+            if ((isinstance(wf, MorphWordForm)) and MiscHelper.canBeEqualCyrAndLatTS(t2, (Utils.asObjectOrNull(wf, MorphWordForm)).normal_case)): 
                 return True
         return False
     
     @staticmethod
-    def can_be_equal_cyr_and_latss(str1 : str, str2 : str) -> bool:
+    def canBeEqualCyrAndLatSS(str1 : str, str2 : str) -> bool:
+        """ Проверка на возможную эквивалентность русского и латинского написания одного и того же слова.
+         Например,  ИКЕЯ ? IKEA
+        
+        Args:
+            str1(str): слово на одном языке
+            str2(str): слово на другом языке
+        
+        """
         if (Utils.isNullOrEmpty(str1) or Utils.isNullOrEmpty(str2)): 
             return False
-        if (LanguageHelper.is_cyrillic_char(str1[0]) and LanguageHelper.is_latin_char(str2[0])): 
-            return RusLatAccord.can_be_equals(str1, str2)
-        if (LanguageHelper.is_cyrillic_char(str2[0]) and LanguageHelper.is_latin_char(str1[0])): 
-            return RusLatAccord.can_be_equals(str2, str1)
+        if (LanguageHelper.isCyrillicChar(str1[0]) and LanguageHelper.isLatinChar(str2[0])): 
+            return RusLatAccord.canBeEquals(str1, str2)
+        if (LanguageHelper.isCyrillicChar(str2[0]) and LanguageHelper.isLatinChar(str1[0])): 
+            return RusLatAccord.canBeEquals(str2, str1)
         return False
     
     @staticmethod
-    def get_text_value_of_meta_token(mt : 'MetaToken', attrs : 'GetTextAttr'=GetTextAttr.NO) -> str:
+    def getTextValueOfMetaToken(mt : 'MetaToken', attrs : 'GetTextAttr'=GetTextAttr.NO) -> str:
+        """ Получить текст, покрываемый метатокеном
+        
+        Args:
+            mt(MetaToken): метатокен
+            attrs(GetTextAttr): атрибуты преобразования текста
+        
+        Returns:
+            str: результат
+        """
         if (mt is None): 
             return None
-        return MiscHelper.__get_text_value_(mt.begin_token, mt.end_token, attrs, mt.get_referent())
+        return MiscHelper.__getTextValue_(mt.begin_token, mt.end_token, attrs, mt.getReferent())
     
     @staticmethod
-    def get_text_value(begin : 'Token', end : 'Token', attrs : 'GetTextAttr'=GetTextAttr.NO) -> str:
-        return MiscHelper.__get_text_value_(begin, end, attrs, None)
+    def getTextValue(begin : 'Token', end : 'Token', attrs : 'GetTextAttr'=GetTextAttr.NO) -> str:
+        """ Получить текст, задаваемый диапазоном токенов
+        
+        Args:
+            begin(Token): начальный токен
+            end(Token): конечный токен
+            attrs(GetTextAttr): атрибуты преобразования текста
+        
+        Returns:
+            str: результат
+        """
+        return MiscHelper.__getTextValue_(begin, end, attrs, None)
     
     @staticmethod
-    def __get_text_value_(begin : 'Token', end : 'Token', attrs : 'GetTextAttr', r : 'Referent') -> str:
+    def __getTextValue_(begin : 'Token', end : 'Token', attrs : 'GetTextAttr', r : 'Referent') -> str:
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner.MetaToken import MetaToken
         from pullenti.ner.NumberToken import NumberToken
@@ -797,14 +1001,14 @@ class MiscHelper:
             return None
         if ((((attrs) & (GetTextAttr.KEEPQUOTES))) == (GetTextAttr.NO)): 
             while begin is not None and begin.end_char <= end.end_char: 
-                if (BracketHelper.is_bracket(begin, True)): 
+                if (BracketHelper.isBracket(begin, True)): 
                     pass
                 else: 
                     break
                 begin = begin.next0_
         res = io.StringIO()
         if ((isinstance(begin, MetaToken)) and not ((isinstance(begin, NumberToken)))): 
-            str0_ = MiscHelper.__get_text_value_((begin if isinstance(begin, MetaToken) else None).begin_token, (begin if isinstance(begin, MetaToken) else None).end_token, attrs, begin.get_referent())
+            str0_ = MiscHelper.__getTextValue_((Utils.asObjectOrNull(begin, MetaToken)).begin_token, (Utils.asObjectOrNull(begin, MetaToken)).end_token, attrs, begin.getReferent())
             if (str0_ is not None): 
                 if (end == begin): 
                     return str0_
@@ -815,12 +1019,12 @@ class MiscHelper:
                             attrs1 = (Utils.valToEnum((attrs1) ^ (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE), GetTextAttr))
                         if ((((attrs1) & (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE))) == (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE)): 
                             attrs1 = (Utils.valToEnum((attrs1) ^ (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE), GetTextAttr))
-                        str0 = MiscHelper.__get_text_value_((begin if isinstance(begin, MetaToken) else None).begin_token, (begin if isinstance(begin, MetaToken) else None).end_token, attrs1, begin.get_referent())
-                        str1 = MiscHelper.__get_text_value_((end if isinstance(end, MetaToken) else None).begin_token, (end if isinstance(end, MetaToken) else None).end_token, attrs1, begin.get_referent())
-                        ar0 = ProcessorService.get_empty_processor().process(SourceOfAnalysis("{0} {1}".format(str0, str1)), None, MorphLang())
-                        npt1 = NounPhraseHelper.try_parse(ar0.first_token, NounPhraseParseAttr.NO, 0)
+                        str0 = MiscHelper.__getTextValue_((Utils.asObjectOrNull(begin, MetaToken)).begin_token, (Utils.asObjectOrNull(begin, MetaToken)).end_token, attrs1, begin.getReferent())
+                        str1 = MiscHelper.__getTextValue_((Utils.asObjectOrNull(end, MetaToken)).begin_token, (Utils.asObjectOrNull(end, MetaToken)).end_token, attrs1, begin.getReferent())
+                        ar0 = ProcessorService.getEmptyProcessor().process(SourceOfAnalysis("{0} {1}".format(str0, str1)), None, MorphLang())
+                        npt1 = NounPhraseHelper.tryParse(ar0.first_token, NounPhraseParseAttr.NO, 0)
                         if (npt1 is not None and npt1.end_token.next0_ is None): 
-                            return MiscHelper.__get_text_value_(npt1.begin_token, npt1.end_token, attrs, r)
+                            return MiscHelper.__getTextValue_(npt1.begin_token, npt1.end_token, attrs, r)
                 print(str0_, end="", file=res)
                 begin = begin.next0_
                 if ((((attrs) & (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE))) == (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)): 
@@ -832,20 +1036,20 @@ class MiscHelper:
             pass
         restore_chars_end_pos = -1
         if ((((attrs) & (GetTextAttr.RESTOREREGISTER))) != (GetTextAttr.NO)): 
-            if (not MiscHelper.__has_not_all_upper(begin, end)): 
+            if (not MiscHelper.__hasNotAllUpper(begin, end)): 
                 restore_chars_end_pos = end.end_char
             else: 
                 tt1 = begin
                 while tt1 is not None and (tt1.end_char < end.end_char): 
                     if (tt1.is_newline_after): 
-                        if (not MiscHelper.__has_not_all_upper(begin, tt1)): 
+                        if (not MiscHelper.__hasNotAllUpper(begin, tt1)): 
                             restore_chars_end_pos = tt1.end_char
                         break
                     tt1 = tt1.next0_
         if ((((attrs) & (((GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE) | (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE))))) != (GetTextAttr.NO)): 
-            npt = NounPhraseHelper.try_parse(begin, NounPhraseParseAttr.NO, 0)
+            npt = NounPhraseHelper.tryParse(begin, NounPhraseParseAttr.NO, 0)
             if (npt is not None and npt.end_char <= end.end_char): 
-                str0_ = npt.get_normal_case_text(MorphClass(), (((attrs) & (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE))) != (GetTextAttr.NO), npt.morph.gender, keep_chars)
+                str0_ = npt.getNormalCaseText(MorphClass(), (((attrs) & (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE))) != (GetTextAttr.NO), npt.morph.gender, keep_chars)
                 if (str0_ is not None): 
                     begin = npt.end_token.next0_
                     print(str0_, end="", file=res)
@@ -853,15 +1057,15 @@ class MiscHelper:
                     if (((te is not None and te.next0_ is not None and te.is_comma) and (isinstance(te.next0_, TextToken)) and te.next0_.end_char <= end.end_char) and te.next0_.morph.class0_.is_verb and te.next0_.morph.class0_.is_adjective): 
                         for it in te.next0_.morph.items: 
                             if (it.gender == npt.morph.gender or (((it.gender) & (npt.morph.gender))) != (MorphGender.UNDEFINED)): 
-                                if (not ((it.case) & npt.morph.case).is_undefined): 
+                                if (not ((it.case_) & npt.morph.case_).is_undefined): 
                                     if (it.number == npt.morph.number or (((it.number) & (npt.morph.number))) != (MorphNumber.UNDEFINED)): 
-                                        var = (te.next0_ if isinstance(te.next0_, TextToken) else None).term
+                                        var = (Utils.asObjectOrNull(te.next0_, TextToken)).term
                                         if (isinstance(it, MorphWordForm)): 
-                                            var = (it if isinstance(it, MorphWordForm) else None).normal_case
-                                        bi = MorphBaseInfo._new504(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
-                                        var = Morphology.get_wordform(var, bi)
+                                            var = (Utils.asObjectOrNull(it, MorphWordForm)).normal_case
+                                        bi = MorphBaseInfo._new514(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
+                                        var = Morphology.getWordform(var, bi)
                                         if (var is not None): 
-                                            var = MiscHelper.__corr_chars(var, te.next0_.chars, keep_chars, (te.next0_ if isinstance(te.next0_, TextToken) else None))
+                                            var = MiscHelper.__corrChars(var, te.next0_.chars, keep_chars, Utils.asObjectOrNull(te.next0_, TextToken))
                                             print(", {1}".format(res, var), end="", file=res, flush=True)
                                             te = te.next0_.next0_
                                         break
@@ -873,9 +1077,9 @@ class MiscHelper:
         if (begin is None or begin.end_char > end.end_char): 
             return Utils.toStringStringIO(res)
         t = begin
-        first_pass3710 = True
+        first_pass2818 = True
         while True:
-            if first_pass3710: first_pass3710 = False
+            if first_pass2818: first_pass2818 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             last = (Utils.getCharAtStringIO(res, res.tell() - 1) if res.tell() > 0 else ' ')
@@ -883,7 +1087,7 @@ class MiscHelper:
                 if (t.is_hiphen and t.is_whitespace_after and last != ' '): 
                     print(" - ", end="", file=res)
                     continue
-                if ((last != ' ' and not t.is_hiphen and last != '-') and not BracketHelper.can_be_start_of_sequence(t.previous, False, False)): 
+                if ((last != ' ' and not t.is_hiphen and last != '-') and not BracketHelper.canBeStartOfSequence(t.previous, False, False)): 
                     print(' ', end="", file=res)
             if (t.is_table_control_char): 
                 if (res.tell() > 0 and Utils.getCharAtStringIO(res, res.tell() - 1) == ' '): 
@@ -892,52 +1096,52 @@ class MiscHelper:
                     print(' ', end="", file=res)
                 continue
             if ((((attrs) & (GetTextAttr.IGNOREARTICLES))) != (GetTextAttr.NO)): 
-                if (MiscHelper.is_eng_adj_suffix(t)): 
+                if (MiscHelper.isEngAdjSuffix(t)): 
                     t = t.next0_
                     continue
-                if (MiscHelper.is_eng_article(t)): 
+                if (MiscHelper.isEngArticle(t)): 
                     if (t.is_whitespace_after): 
                         continue
             if ((((attrs) & (GetTextAttr.KEEPQUOTES))) == (GetTextAttr.NO)): 
-                if (BracketHelper.is_bracket(t, True)): 
+                if (BracketHelper.isBracket(t, True)): 
                     if (res.tell() > 0 and Utils.getCharAtStringIO(res, res.tell() - 1) != ' '): 
                         print(' ', end="", file=res)
                     continue
             if ((((attrs) & (GetTextAttr.IGNOREGEOREFERENT))) != (GetTextAttr.NO)): 
-                if ((isinstance(t, ReferentToken)) and t.get_referent() is not None): 
-                    if (t.get_referent().type_name == "GEO"): 
+                if ((isinstance(t, ReferentToken)) and t.getReferent() is not None): 
+                    if (t.getReferent().type_name == "GEO"): 
                         continue
             if (isinstance(t, NumberToken)): 
                 if ((((attrs) & (GetTextAttr.NORMALIZENUMBERS))) != (GetTextAttr.NO)): 
-                    if (str.isdigit(Utils.getCharAtStringIO(res, res.tell() - 1))): 
+                    if (res.tell() > 0 and str.isdigit(Utils.getCharAtStringIO(res, res.tell() - 1))): 
                         print(' ', end="", file=res)
-                    print((t if isinstance(t, NumberToken) else None).value, end="", file=res)
+                    print((Utils.asObjectOrNull(t, NumberToken)).value, end="", file=res)
                     continue
             if (isinstance(t, MetaToken)): 
-                str0_ = MiscHelper.__get_text_value_((t if isinstance(t, MetaToken) else None).begin_token, (t if isinstance(t, MetaToken) else None).end_token, attrs, t.get_referent())
+                str0_ = MiscHelper.__getTextValue_((Utils.asObjectOrNull(t, MetaToken)).begin_token, (Utils.asObjectOrNull(t, MetaToken)).end_token, attrs, t.getReferent())
                 if (not Utils.isNullOrEmpty(str0_)): 
                     if (str.isdigit(str0_[0]) and res.tell() > 0 and str.isdigit(Utils.getCharAtStringIO(res, res.tell() - 1))): 
                         print(' ', end="", file=res)
                     print(str0_, end="", file=res)
                 else: 
-                    print(t.get_source_text(), end="", file=res)
+                    print(t.getSourceText(), end="", file=res)
                 continue
             if (not ((isinstance(t, TextToken)))): 
-                print(t.get_source_text(), end="", file=res)
+                print(t.getSourceText(), end="", file=res)
                 continue
             if (t.chars.is_letter): 
-                str0_ = (MiscHelper.__rest_chars(t if isinstance(t, TextToken) else None, r) if t.end_char <= restore_chars_end_pos else MiscHelper.__corr_chars((t if isinstance(t, TextToken) else None).term, t.chars, keep_chars, (t if isinstance(t, TextToken) else None)))
+                str0_ = (MiscHelper.__restChars(Utils.asObjectOrNull(t, TextToken), r) if t.end_char <= restore_chars_end_pos else MiscHelper.__corrChars((Utils.asObjectOrNull(t, TextToken)).term, t.chars, keep_chars, Utils.asObjectOrNull(t, TextToken)))
                 print(str0_, end="", file=res)
                 continue
             if (last == ' ' and res.tell() > 0): 
-                if (((t.is_hiphen and not t.is_whitespace_after)) or t.is_char_of(",.;!?") or BracketHelper.can_be_end_of_sequence(t, False, None, False)): 
+                if (((t.is_hiphen and not t.is_whitespace_after)) or t.isCharOf(",.;!?") or BracketHelper.canBeEndOfSequence(t, False, None, False)): 
                     Utils.setLengthStringIO(res, res.tell() - 1)
             if (t.is_hiphen): 
                 print('-', end="", file=res)
                 if (t.is_whitespace_before and t.is_whitespace_after): 
                     print(' ', end="", file=res)
             else: 
-                print((t if isinstance(t, TextToken) else None).term, end="", file=res)
+                print((Utils.asObjectOrNull(t, TextToken)).term, end="", file=res)
         i = res.tell() - 1
         while i >= 0: 
             if (Utils.getCharAtStringIO(res, i) == '*' or Utils.isWhitespace(Utils.getCharAtStringIO(res, i))): 
@@ -947,7 +1151,7 @@ class MiscHelper:
                     Utils.setLengthStringIO(res, res.tell() - 1)
                     Utils.removeStringIO(res, 0, 1)
                     i -= 1
-                elif (begin.previous is not None and begin.previous.is_char('<')): 
+                elif (begin.previous is not None and begin.previous.isChar('<')): 
                     Utils.setLengthStringIO(res, res.tell() - 1)
                 else: 
                     break
@@ -956,7 +1160,7 @@ class MiscHelper:
                     Utils.setLengthStringIO(res, res.tell() - 1)
                     Utils.removeStringIO(res, 0, 1)
                     i -= 1
-                elif (begin.previous is not None and begin.previous.is_char('(')): 
+                elif (begin.previous is not None and begin.previous.isChar('(')): 
                     Utils.setLengthStringIO(res, res.tell() - 1)
                 else: 
                     break
@@ -966,27 +1170,33 @@ class MiscHelper:
         return Utils.toStringStringIO(res)
     
     @staticmethod
-    def is_eng_adj_suffix(t : 'Token') -> bool:
+    def isEngAdjSuffix(t : 'Token') -> bool:
+        """ Проверка, что это суффикс прилагательного (street's)
+        
+        Args:
+            t(Token): 
+        
+        """
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner.TextToken import TextToken
         if (t is None): 
             return False
-        if (not BracketHelper.is_bracket(t, True)): 
+        if (not BracketHelper.isBracket(t, True)): 
             return False
-        if ((isinstance(t.next0_, TextToken)) and (t.next0_ if isinstance(t.next0_, TextToken) else None).term == "S"): 
+        if ((isinstance(t.next0_, TextToken)) and (Utils.asObjectOrNull(t.next0_, TextToken)).term == "S"): 
             return True
         return False
     
     @staticmethod
-    def is_eng_article(t : 'Token') -> bool:
+    def isEngArticle(t : 'Token') -> bool:
         from pullenti.ner.TextToken import TextToken
         if (not ((isinstance(t, TextToken))) or not t.chars.is_latin_letter): 
             return False
-        str0_ = (t if isinstance(t, TextToken) else None).term
+        str0_ = (Utils.asObjectOrNull(t, TextToken)).term
         return ((str0_ == "THE" or str0_ == "A" or str0_ == "AN") or str0_ == "DER" or str0_ == "DIE") or str0_ == "DAS"
     
     @staticmethod
-    def __has_not_all_upper(b : 'Token', e0_ : 'Token') -> bool:
+    def __hasNotAllUpper(b : 'Token', e0_ : 'Token') -> bool:
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.MetaToken import MetaToken
         t = b
@@ -995,22 +1205,22 @@ class MiscHelper:
                 if (t.chars.is_letter and not t.chars.is_all_upper): 
                     return True
             elif (isinstance(t, MetaToken)): 
-                if (MiscHelper.__has_not_all_upper((t if isinstance(t, MetaToken) else None).begin_token, (t if isinstance(t, MetaToken) else None).end_token)): 
+                if (MiscHelper.__hasNotAllUpper((Utils.asObjectOrNull(t, MetaToken)).begin_token, (Utils.asObjectOrNull(t, MetaToken)).end_token)): 
                     return True
             t = t.next0_
         return False
     
     @staticmethod
-    def __corr_chars(str0_ : str, ci : 'CharsInfo', keep_chars : bool, t : 'TextToken') -> str:
+    def __corrChars(str0_ : str, ci : 'CharsInfo', keep_chars : bool, t : 'TextToken') -> str:
         if (not keep_chars): 
             return str0_
         if (ci.is_all_lower): 
             return str0_.lower()
         if (ci.is_capital_upper): 
-            return MiscHelper.convert_first_char_upper_and_other_lower(str0_)
+            return MiscHelper.convertFirstCharUpperAndOtherLower(str0_)
         if (ci.is_all_upper or t is None): 
             return str0_
-        src = t.get_source_text()
+        src = t.getSourceText()
         if (len(src) == len(str0_)): 
             tmp = Utils.newStringIO(str0_)
             i = 0
@@ -1022,12 +1232,12 @@ class MiscHelper:
         return str0_
     
     @staticmethod
-    def __rest_chars(t : 'TextToken', r : 'Referent') -> str:
+    def __restChars(t : 'TextToken', r : 'Referent') -> str:
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.morph.MorphClass import MorphClass
         if (not t.chars.is_all_upper or not t.chars.is_letter): 
-            return MiscHelper.__corr_chars(t.term, t.chars, True, t)
+            return MiscHelper.__corrChars(t.term, t.chars, True, t)
         if (t.term == "Г" or t.term == "ГГ"): 
             if (isinstance(t.previous, NumberToken)): 
                 return t.term.lower()
@@ -1037,33 +1247,48 @@ class MiscHelper:
         elif (t.term == "N" or t.term == "№"): 
             return t.term
         can_cap_up = False
-        if (BracketHelper.can_be_start_of_sequence(t.previous, True, False)): 
+        if (BracketHelper.canBeStartOfSequence(t.previous, True, False)): 
             can_cap_up = True
-        elif (t.previous is not None and t.previous.is_char('.') and t.is_whitespace_before): 
+        elif (t.previous is not None and t.previous.isChar('.') and t.is_whitespace_before): 
             can_cap_up = True
-        stat = t.kit.statistics.get_word_info(t)
+        stat = t.kit.statistics.getWordInfo(t)
         if (stat is None or ((r is not None and ((r.type_name == "DATE" or r.type_name == "DATERANGE"))))): 
-            return (MiscHelper.convert_first_char_upper_and_other_lower(t.term) if can_cap_up else t.term.lower())
+            return (MiscHelper.convertFirstCharUpperAndOtherLower(t.term) if can_cap_up else t.term.lower())
         if (stat.lower_count > 0): 
-            return (MiscHelper.convert_first_char_upper_and_other_lower(t.term) if can_cap_up else t.term.lower())
-        mc = t.get_morph_class_in_dictionary()
+            return (MiscHelper.convertFirstCharUpperAndOtherLower(t.term) if can_cap_up else t.term.lower())
+        mc = t.getMorphClassInDictionary()
         if (mc.is_noun): 
-            if (((t.is_value("СОЗДАНИЕ", None) or t.is_value("РАЗВИТИЕ", None) or t.is_value("ВНЕСЕНИЕ", None)) or t.is_value("ИЗМЕНЕНИЕ", None) or t.is_value("УТВЕРЖДЕНИЕ", None)) or t.is_value("ПРИНЯТИЕ", None)): 
-                return (MiscHelper.convert_first_char_upper_and_other_lower(t.term) if can_cap_up else t.term.lower())
+            if (((t.isValue("СОЗДАНИЕ", None) or t.isValue("РАЗВИТИЕ", None) or t.isValue("ВНЕСЕНИЕ", None)) or t.isValue("ИЗМЕНЕНИЕ", None) or t.isValue("УТВЕРЖДЕНИЕ", None)) or t.isValue("ПРИНЯТИЕ", None)): 
+                return (MiscHelper.convertFirstCharUpperAndOtherLower(t.term) if can_cap_up else t.term.lower())
         if (((mc.is_verb or mc.is_adverb or mc.is_conjunction) or mc.is_preposition or mc.is_pronoun) or mc.is_personal_pronoun): 
-            return (MiscHelper.convert_first_char_upper_and_other_lower(t.term) if can_cap_up else t.term.lower())
+            return (MiscHelper.convertFirstCharUpperAndOtherLower(t.term) if can_cap_up else t.term.lower())
         if (stat.capital_count > 0): 
-            return MiscHelper.convert_first_char_upper_and_other_lower(t.term)
+            return MiscHelper.convertFirstCharUpperAndOtherLower(t.term)
         if (mc.is_proper): 
-            return MiscHelper.convert_first_char_upper_and_other_lower(t.term)
+            return MiscHelper.convertFirstCharUpperAndOtherLower(t.term)
         if (mc.is_adjective): 
-            return (MiscHelper.convert_first_char_upper_and_other_lower(t.term) if can_cap_up else t.term.lower())
+            return (MiscHelper.convertFirstCharUpperAndOtherLower(t.term) if can_cap_up else t.term.lower())
         if (mc == MorphClass.NOUN): 
-            return (MiscHelper.convert_first_char_upper_and_other_lower(t.term) if can_cap_up else t.term.lower())
+            return (MiscHelper.convertFirstCharUpperAndOtherLower(t.term) if can_cap_up else t.term.lower())
         return t.term
     
     @staticmethod
-    def get_text_morph_var_by_sample(txt : str, begin_sample : 'Token', use_morph_sample : bool, use_register_sample : bool) -> str:
+    def getTextMorphVarBySample(txt : str, begin_sample : 'Token', use_morph_sample : bool, use_register_sample : bool) -> str:
+        """ Преобразовать строку в нужный род, число и падеж (точнее, преобразуется
+         первая именная группа), регистр определяется соответствующими символами примера.
+         Морфология определяется по первой именной группе примера.
+         Фукнция полезна при замене по тексту одной комбинации на другую с учётом
+         морфологии и регистра.
+        
+        Args:
+            txt(str): преобразуемая строка
+            begin_sample(Token): начало фрагмента примера
+            useMopthSample: использовать именную группу примера для морфологии
+            use_register_sample(bool): регистр определять по фрагменту пример, при false регистр исходной строки
+        
+        Returns:
+            str: результат, в худшем случае вернёт исходную строку
+        """
         from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         from pullenti.morph.MorphCase import MorphCase
         from pullenti.ner.ProcessorService import ProcessorService
@@ -1073,25 +1298,25 @@ class MiscHelper:
         from pullenti.morph.Morphology import Morphology
         if (Utils.isNullOrEmpty(txt)): 
             return txt
-        npt = NounPhraseHelper.try_parse(begin_sample, NounPhraseParseAttr.NO, 0)
+        npt = NounPhraseHelper.tryParse(begin_sample, NounPhraseParseAttr.NO, 0)
         if (npt is not None and begin_sample.previous is not None): 
             tt = begin_sample.previous
             while tt is not None: 
                 if (tt.whitespaces_after_count > 2): 
                     break
-                npt0 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
+                npt0 = NounPhraseHelper.tryParse(tt, NounPhraseParseAttr.NO, 0)
                 if (npt0 is not None): 
                     if (npt0.end_token == npt.end_token): 
                         npt.morph = npt0.morph
                     else: 
-                        if (tt == begin_sample.previous and npt.begin_token == npt.end_token and npt.morph.case.is_genitive): 
-                            npt.morph.remove_items(MorphCase.GENITIVE, False)
+                        if (tt == begin_sample.previous and npt.begin_token == npt.end_token and npt.morph.case_.is_genitive): 
+                            npt.morph.removeItems(MorphCase.GENITIVE, False)
                         break
                 tt = tt.previous
-        ar = ProcessorService.get_empty_processor().process(SourceOfAnalysis(txt), None, MorphLang())
+        ar = ProcessorService.getEmptyProcessor().process(SourceOfAnalysis(txt), None, MorphLang())
         if (ar is None or ar.first_token is None): 
             return txt
-        npt1 = NounPhraseHelper.try_parse(ar.first_token, NounPhraseParseAttr.NO, 0)
+        npt1 = NounPhraseHelper.tryParse(ar.first_token, NounPhraseParseAttr.NO, 0)
         t0 = begin_sample
         res = io.StringIO()
         t = ar.first_token
@@ -1100,13 +1325,13 @@ class MiscHelper:
                 print(' ', end="", file=res)
             word = None
             if ((isinstance(t, TextToken)) and t.chars.is_letter): 
-                word = (t if isinstance(t, TextToken) else None).term
+                word = (Utils.asObjectOrNull(t, TextToken)).term
                 if ((npt1 is not None and t.end_char <= npt1.end_char and npt is not None) and use_morph_sample): 
                     bi = MorphBaseInfo()
                     bi.number = npt.morph.number
-                    bi.case = npt.morph.case
+                    bi.case_ = npt.morph.case_
                     bi.gender = npt1.morph.gender
-                    ww = Morphology.get_wordform(word, bi)
+                    ww = Morphology.getWordform(word, bi)
                     if (ww is not None): 
                         word = ww
                 if (use_register_sample and t0 is not None): 
@@ -1116,15 +1341,26 @@ class MiscHelper:
                 if (ci.is_all_lower): 
                     word = word.lower()
                 elif (ci.is_capital_upper): 
-                    word = MiscHelper.convert_first_char_upper_and_other_lower(word)
+                    word = MiscHelper.convertFirstCharUpperAndOtherLower(word)
             else: 
-                word = t.get_source_text()
+                word = t.getSourceText()
             print(word, end="", file=res)
             t = t.next0_; t0 = (None if t0 is None else t0.next0_)
         return Utils.toStringStringIO(res)
     
     @staticmethod
-    def get_text_morph_var_by_case(txt : str, cas : 'MorphCase', plural_number : bool=False) -> str:
+    def getTextMorphVarByCase(txt : str, cas : 'MorphCase', plural_number : bool=False) -> str:
+        """ Преобразовать строку к нужному падежу (и числу).
+         Преобразуется только начало строки, содержащей в начале именную группу или персону
+        
+        Args:
+            txt(str): исходная строка
+            cas(MorphCase): падеж
+            plural_number(bool): множественное число
+        
+        Returns:
+            str: результат (в крайнем случае, вернёт исходную строку, если ничего не получилось)
+        """
         from pullenti.ner.ProcessorService import ProcessorService
         from pullenti.morph.MorphLang import MorphLang
         from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
@@ -1133,26 +1369,26 @@ class MiscHelper:
         from pullenti.morph.MorphBaseInfo import MorphBaseInfo
         from pullenti.morph.MorphWordForm import MorphWordForm
         from pullenti.morph.Morphology import Morphology
-        ar = ProcessorService.get_empty_processor().process(SourceOfAnalysis(txt), None, MorphLang())
+        ar = ProcessorService.getEmptyProcessor().process(SourceOfAnalysis(txt), None, MorphLang())
         if (ar is None or ar.first_token is None): 
             return txt
         res = io.StringIO()
         t0 = ar.first_token
-        npt = NounPhraseHelper.try_parse(ar.first_token, NounPhraseParseAttr.NO, 0)
+        npt = NounPhraseHelper.tryParse(ar.first_token, NounPhraseParseAttr.NO, 0)
         if (npt is not None): 
             t = npt.begin_token
             while t is not None and t.end_char <= npt.end_char: 
                 is_noun = t.begin_char >= npt.noun.begin_char
                 word = None
                 if (isinstance(t, NumberToken)): 
-                    word = t.get_source_text()
+                    word = t.getSourceText()
                 elif (isinstance(t, TextToken)): 
                     for it in t.morph.items: 
-                        wf = (it if isinstance(it, MorphWordForm) else None)
+                        wf = Utils.asObjectOrNull(it, MorphWordForm)
                         if (wf is None): 
                             continue
-                        if (not npt.morph.case.is_undefined): 
-                            if (((npt.morph.case) & wf.case).is_undefined): 
+                        if (not npt.morph.case_.is_undefined): 
+                            if (((npt.morph.case_) & wf.case_).is_undefined): 
                                 continue
                         if (is_noun): 
                             if ((wf.class0_.is_noun or wf.class0_.is_personal_pronoun or wf.class0_.is_pronoun) or wf.class0_.is_proper): 
@@ -1162,22 +1398,22 @@ class MiscHelper:
                             word = wf.normal_case
                             break
                     if (word is None): 
-                        word = (t if isinstance(t, TextToken) else None).lemma
+                        word = (Utils.asObjectOrNull(t, TextToken)).lemma
                     if (not t.chars.is_letter): 
                         pass
-                    elif ((t.next0_ is not None and t.next0_.is_hiphen and t.is_value("ГЕНЕРАЛ", None)) or t.is_value("КАПИТАН", None)): 
+                    elif ((t.next0_ is not None and t.next0_.is_hiphen and t.isValue("ГЕНЕРАЛ", None)) or t.isValue("КАПИТАН", None)): 
                         pass
                     else: 
-                        mbi = MorphBaseInfo._new505(npt.morph.gender, cas, MorphNumber.SINGULAR)
+                        mbi = MorphBaseInfo._new515(npt.morph.gender, cas, MorphNumber.SINGULAR)
                         if (plural_number): 
                             mbi.number = MorphNumber.PLURAL
-                        wcas = Morphology.get_wordform(word, mbi)
+                        wcas = Morphology.getWordform(word, mbi)
                         if (wcas is not None): 
                             word = wcas
                 if (t.chars.is_all_lower): 
                     word = word.lower()
                 elif (t.chars.is_capital_upper): 
-                    word = MiscHelper.convert_first_char_upper_and_other_lower(word)
+                    word = MiscHelper.convertFirstCharUpperAndOtherLower(word)
                 if (t != ar.first_token and t.is_whitespace_before): 
                     print(' ', end="", file=res)
                 print(word, end="", file=res)

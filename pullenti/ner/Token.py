@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 import io
@@ -14,17 +12,17 @@ from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 
 
 class Token:
-    """ Базовый элемент """
+    """ Базовый класс для всех токенов """
     
     def __init__(self, kit_ : 'AnalysisKit', begin : int, end : int) -> None:
-        self.kit = None
+        self.kit = None;
         self.begin_char = 0
         self.end_char = 0
-        self.tag = None
-        self._m_previous = None
-        self._m_next = None
-        self.__m_morph = None
-        self.chars = None
+        self.tag = None;
+        self._m_previous = None;
+        self._m_next = None;
+        self.__m_morph = None;
+        self.chars = None;
         self.__m_attrs = 0
         self.kit = kit_
         self.begin_char = begin
@@ -39,7 +37,6 @@ class Token:
     def previous(self) -> 'Token':
         """ Предыдущий токен """
         return self._m_previous
-    
     @previous.setter
     def previous(self, value) -> 'Token':
         self._m_previous = value
@@ -52,7 +49,6 @@ class Token:
     def next0_(self) -> 'Token':
         """ Следующий токен """
         return self._m_next
-    
     @next0_.setter
     def next0_(self, value) -> 'Token':
         self._m_next = value
@@ -68,7 +64,6 @@ class Token:
         if (self.__m_morph is None): 
             self.__m_morph = MorphCollection()
         return self.__m_morph
-    
     @morph.setter
     def morph(self, value) -> 'MorphCollection':
         self.__m_morph = value
@@ -77,36 +72,36 @@ class Token:
     def __str__(self) -> str:
         return self.kit.sofa.text[self.begin_char:self.begin_char+(self.end_char + 1) - self.begin_char]
     
-    def __get_attr(self, i : int) -> bool:
+    def __getAttr(self, i : int) -> bool:
         if ((((self.__m_attrs) & 1)) == 0): 
             self.__m_attrs = (1)
             if (self._m_previous is None): 
-                self._set_attr(1, True)
-                self._set_attr(3, True)
+                self._setAttr(1, True)
+                self._setAttr(3, True)
             else: 
                 j = self._m_previous.end_char + 1
                 while j < self.begin_char: 
                     ch = self.kit.sofa.text[j]
                     if (Utils.isWhitespace((ch))): 
-                        self._set_attr(1, True)
+                        self._setAttr(1, True)
                         if ((ord(ch)) == 0xD or (ord(ch)) == 0xA or ch == '\f'): 
-                            self._set_attr(3, True)
+                            self._setAttr(3, True)
                     j += 1
             if (self._m_next is None): 
-                self._set_attr(2, True)
-                self._set_attr(4, True)
+                self._setAttr(2, True)
+                self._setAttr(4, True)
             else: 
                 j = self.end_char + 1
                 while j < self._m_next.begin_char: 
                     ch = self.kit.sofa.text[j]
                     if (Utils.isWhitespace(ch)): 
-                        self._set_attr(2, True)
+                        self._setAttr(2, True)
                         if ((ord(ch)) == 0xD or (ord(ch)) == 0xA or ch == '\f'): 
-                            self._set_attr(4, True)
+                            self._setAttr(4, True)
                     j += 1
         return (((((self.__m_attrs) >> i)) & 1)) != 0
     
-    def _set_attr(self, i : int, val : bool) -> None:
+    def _setAttr(self, i : int, val : bool) -> None:
         if (val): 
             self.__m_attrs |= ((1 << i))
         else: 
@@ -115,64 +110,58 @@ class Token:
     @property
     def is_whitespace_before(self) -> bool:
         """ Наличие пробельных символов перед """
-        return self.__get_attr(1)
-    
+        return self.__getAttr(1)
     @is_whitespace_before.setter
     def is_whitespace_before(self, value) -> bool:
-        self._set_attr(1, value)
+        self._setAttr(1, value)
         return value
     
     @property
     def is_whitespace_after(self) -> bool:
         """ Наличие пробельных символов после """
-        return self.__get_attr(2)
-    
+        return self.__getAttr(2)
     @is_whitespace_after.setter
     def is_whitespace_after(self, value) -> bool:
-        self._set_attr(2, value)
+        self._setAttr(2, value)
         return value
     
     @property
     def is_newline_before(self) -> bool:
         """ Элемент начинается с новой строки.
          Для 1-го элемента всегда true. """
-        return self.__get_attr(3)
-    
+        return self.__getAttr(3)
     @is_newline_before.setter
     def is_newline_before(self, value) -> bool:
-        self._set_attr(3, value)
+        self._setAttr(3, value)
         return value
     
     @property
     def is_newline_after(self) -> bool:
         """ Элемент заканчивает строку.
          Для последнего элемента всегда true. """
-        return self.__get_attr(4)
-    
+        return self.__getAttr(4)
     @is_newline_after.setter
     def is_newline_after(self, value) -> bool:
-        self._set_attr(4, value)
+        self._setAttr(4, value)
         return value
     
     @property
     def inner_bool(self) -> bool:
         """ Это используется внутренним образом """
-        return self.__get_attr(5)
-    
+        return self.__getAttr(5)
     @inner_bool.setter
     def inner_bool(self, value) -> bool:
-        self._set_attr(5, value)
+        self._setAttr(5, value)
         return value
     
     @property
     def not_noun_phrase(self) -> bool:
         """ Это используется внутренним образом 
          (признак того, что здесь не начинается именная группа, чтобы повторно не пытаться выделять) """
-        return self.__get_attr(6)
-    
+        return self.__getAttr(6)
     @not_noun_phrase.setter
     def not_noun_phrase(self, value) -> bool:
-        self._set_attr(6, value)
+        self._setAttr(6, value)
         return value
     
     @property
@@ -182,7 +171,7 @@ class Token:
             return 100
         if ((self.previous.end_char + 1) == self.begin_char): 
             return 0
-        return self.__calc_whitespaces(self.previous.end_char + 1, self.begin_char - 1)
+        return self.__calcWhitespaces(self.previous.end_char + 1, self.begin_char - 1)
     
     @property
     def newlines_before_count(self) -> int:
@@ -231,18 +220,18 @@ class Token:
             return 100
         if ((self.end_char + 1) == self.next0_.begin_char): 
             return 0
-        return self.__calc_whitespaces(self.end_char + 1, self.next0_.begin_char - 1)
+        return self.__calcWhitespaces(self.end_char + 1, self.next0_.begin_char - 1)
     
-    def __calc_whitespaces(self, p0 : int, p1 : int) -> int:
+    def __calcWhitespaces(self, p0 : int, p1 : int) -> int:
         if ((p0 < 0) or p0 > p1 or p1 >= len(self.kit.sofa.text)): 
             return -1
         res = 0
         i = p0
         while i <= p1: 
-            ch = self.kit.get_text_character(i)
+            ch = self.kit.getTextCharacter(i)
             if (ch == '\r' or ch == '\n'): 
                 res += 10
-                ch1 = self.kit.get_text_character(i + 1)
+                ch1 = self.kit.getTextCharacter(i + 1)
                 if (ch != ch1 and ((ch1 == '\r' or ch1 == '\n'))): 
                     i += 1
             elif (ch == '\t'): 
@@ -260,7 +249,7 @@ class Token:
     def is_hiphen(self) -> bool:
         """ Это символ переноса """
         ch = self.kit.sofa.text[self.begin_char]
-        return LanguageHelper.is_hiphen(ch)
+        return LanguageHelper.isHiphen(ch)
     
     @property
     def is_table_control_char(self) -> bool:
@@ -273,10 +262,10 @@ class Token:
         """ Это соединительный союз И (на всех языках) """
         from pullenti.ner.TextToken import TextToken
         if (not self.morph.class0_.is_conjunction): 
-            if (self.length_char == 1 and self.is_char('&')): 
+            if (self.length_char == 1 and self.isChar('&')): 
                 return True
             return False
-        tt = (self if isinstance(self, TextToken) else None)
+        tt = Utils.asObjectOrNull(self, TextToken)
         if (tt is None): 
             return False
         val = tt.term
@@ -293,7 +282,7 @@ class Token:
         from pullenti.ner.TextToken import TextToken
         if (not self.morph.class0_.is_conjunction): 
             return False
-        tt = (self if isinstance(self, TextToken) else None)
+        tt = Utils.asObjectOrNull(self, TextToken)
         if (tt is None): 
             return False
         val = tt.term
@@ -307,33 +296,45 @@ class Token:
     @property
     def is_comma(self) -> bool:
         """ Это запятая """
-        return self.is_char(',')
+        return self.isChar(',')
     
     @property
     def is_comma_and(self) -> bool:
         """ Это запятая или союз И """
         return self.is_comma or self.is_and
     
-    def is_char(self, ch : 'char') -> bool:
+    def isChar(self, ch : 'char') -> bool:
+        """ Токен состоит из символа
+        
+        Args:
+            ch('char'): проверяемый символ
+        
+        """
         return self.kit.sofa.text[self.begin_char] == ch
     
-    def is_char_of(self, chars_ : str) -> bool:
+    def isCharOf(self, chars_ : str) -> bool:
+        """ Токен состоит из одного символа, который есть в указанной строке
+        
+        Args:
+            chars_(str): строка возможных символов
+        
+        """
         from pullenti.ner.ReferentToken import ReferentToken
         if (isinstance(self, ReferentToken)): 
             return False
         return chars_.find(self.kit.sofa.text[self.begin_char]) >= 0
     
-    def is_value(self, term : str, termua : str=None) -> bool:
+    def isValue(self, term : str, termua : str=None) -> bool:
         from pullenti.ner.MetaToken import MetaToken
         if (isinstance(self, MetaToken)): 
-            return (self if isinstance(self, MetaToken) else None).begin_token.is_value(term, termua)
+            return (Utils.asObjectOrNull(self, MetaToken)).begin_token.isValue(term, termua)
         return False
     
     @property
     def is_letters(self) -> bool:
         """ Признак того, что это буквенный текстовой токен (TextToken) """
         from pullenti.ner.TextToken import TextToken
-        tt = (self if isinstance(self, TextToken) else None)
+        tt = Utils.asObjectOrNull(self, TextToken)
         if (tt is None): 
             return False
         return str.isalpha(tt.term[0])
@@ -348,28 +349,33 @@ class Token:
         """ Это сущность (Referent) """
         return False
     
-    def get_referent(self) -> 'Referent':
+    def getReferent(self) -> 'Referent':
+        """ Ссылка на сущность (для ReferentToken) """
         from pullenti.ner.ReferentToken import ReferentToken
         if (not ((isinstance(self, ReferentToken)))): 
             return None
-        return (self if isinstance(self, ReferentToken) else None).referent
+        return (Utils.asObjectOrNull(self, ReferentToken)).referent
     
-    def get_referents(self) -> typing.List['Referent']:
+    def getReferents(self) -> typing.List['Referent']:
+        """ Получить список ссылок на все сущности, скрывающиеся под элементом
+         (дело в том, что одни сущности могут поглощать дркгие, например, адрес поглотит город)
+        
+        """
         from pullenti.ner.MetaToken import MetaToken
         from pullenti.ner.ReferentToken import ReferentToken
-        rt = (self if isinstance(self, MetaToken) else None)
+        rt = Utils.asObjectOrNull(self, MetaToken)
         if (rt is None): 
             return None
         res = list()
-        if ((isinstance(rt, ReferentToken)) and (rt if isinstance(rt, ReferentToken) else None).referent is not None): 
-            res.append((rt if isinstance(rt, ReferentToken) else None).referent)
+        if ((isinstance(rt, ReferentToken)) and (Utils.asObjectOrNull(rt, ReferentToken)).referent is not None): 
+            res.append((Utils.asObjectOrNull(rt, ReferentToken)).referent)
         t = rt.begin_token
-        first_pass4069 = True
+        first_pass3178 = True
         while True:
-            if first_pass4069: first_pass4069 = False
+            if first_pass3178: first_pass3178 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= self.end_char)): break
-            li = t.get_referents()
+            li = t.getReferents()
             if (li is None): 
                 continue
             for r in li: 
@@ -377,10 +383,20 @@ class Token:
                     res.append(r)
         return res
     
-    def get_normal_case_text(self, mc : 'MorphClass'=MorphClass(), single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def getNormalCaseText(self, mc : 'MorphClass'=MorphClass(), single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+        """ Получить связанный с токеном текст в именительном падеже
+        
+        Args:
+            mc(MorphClass): 
+            single_number(bool): переводить ли в единственное число
+        
+        """
         return str(self)
     
-    def get_source_text(self) -> str:
+    def getSourceText(self) -> str:
+        """ Получить чистый фрагмент исходного текста
+        
+        """
         len0_ = (self.end_char + 1) - self.begin_char
         if ((len0_ < 1) or (self.begin_char < 0)): 
             return None
@@ -388,32 +404,41 @@ class Token:
             return None
         return self.kit.sofa.text[self.begin_char:self.begin_char+len0_]
     
-    def get_morph_class_in_dictionary(self) -> 'MorphClass':
+    def getMorphClassInDictionary(self) -> 'MorphClass':
+        """ Проверка, что это текстовый токен и есть в словаре соотв. тип
+        
+        Args:
+            cla: 
+        
+        """
         from pullenti.ner.TextToken import TextToken
         from pullenti.morph.MorphWordForm import MorphWordForm
-        tt = (self if isinstance(self, TextToken) else None)
+        tt = Utils.asObjectOrNull(self, TextToken)
         if (tt is None): 
             return self.morph.class0_
         res = MorphClass()
         for wf in tt.morph.items: 
-            if ((isinstance(wf, MorphWordForm)) and (wf if isinstance(wf, MorphWordForm) else None).is_in_dictionary): 
+            if ((isinstance(wf, MorphWordForm)) and (Utils.asObjectOrNull(wf, MorphWordForm)).is_in_dictionary): 
                 res |= wf.class0_
         return res
     
     def _serialize(self, stream : io.IOBase) -> None:
-        SerializerHelper.serialize_int(stream, self.begin_char)
-        SerializerHelper.serialize_int(stream, self.end_char)
-        SerializerHelper.serialize_int(stream, self.__m_attrs)
-        SerializerHelper.serialize_int(stream, self.chars.value)
+        from pullenti.ner.MorphCollection import MorphCollection
+        SerializerHelper.serializeInt(stream, self.begin_char)
+        SerializerHelper.serializeInt(stream, self.end_char)
+        SerializerHelper.serializeInt(stream, self.__m_attrs)
+        SerializerHelper.serializeInt(stream, self.chars.value)
+        if (self.__m_morph is None): 
+            self.__m_morph = MorphCollection()
         self.__m_morph._serialize(stream)
     
     def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit') -> None:
         from pullenti.morph.CharsInfo import CharsInfo
         from pullenti.ner.MorphCollection import MorphCollection
         self.kit = kit_
-        self.begin_char = SerializerHelper.deserialize_int(stream)
-        self.end_char = SerializerHelper.deserialize_int(stream)
-        self.__m_attrs = (SerializerHelper.deserialize_int(stream))
-        self.chars = CharsInfo._new2674(SerializerHelper.deserialize_int(stream))
+        self.begin_char = SerializerHelper.deserializeInt(stream)
+        self.end_char = SerializerHelper.deserializeInt(stream)
+        self.__m_attrs = (SerializerHelper.deserializeInt(stream))
+        self.chars = CharsInfo._new2668(SerializerHelper.deserializeInt(stream))
         self.__m_morph = MorphCollection()
         self.__m_morph._deserialize(stream)

@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 import typing
@@ -29,7 +27,7 @@ class ChatReferent(Referent):
     
     ATTR_VERBTYPE = "VERBTYPE"
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         res = io.StringIO()
         print(Utils.enumToString(self.typ), end="", file=res)
         if (self.not0_): 
@@ -52,7 +50,7 @@ class ChatReferent(Referent):
     @property
     def typ(self) -> 'ChatType':
         """ Тип элемента """
-        str0_ = self.get_string_value(ChatReferent.ATTR_TYPE)
+        str0_ = self.getStringValue(ChatReferent.ATTR_TYPE)
         if (Utils.isNullOrEmpty(str0_)): 
             return ChatType.UNDEFINED
         try: 
@@ -60,32 +58,29 @@ class ChatReferent(Referent):
         except Exception as ex472: 
             pass
         return ChatType.UNDEFINED
-    
     @typ.setter
     def typ(self, value_) -> 'ChatType':
-        self.add_slot(ChatReferent.ATTR_TYPE, Utils.enumToString(value_).upper(), True, 0)
+        self.addSlot(ChatReferent.ATTR_TYPE, Utils.enumToString(value_).upper(), True, 0)
         return value_
     
     @property
     def not0_(self) -> bool:
-        return self.get_string_value(ChatReferent.ATTR_NOT) == "true"
-    
+        return self.getStringValue(ChatReferent.ATTR_NOT) == "true"
     @not0_.setter
     def not0_(self, value_) -> bool:
         if (not value_): 
-            self.add_slot(ChatReferent.ATTR_NOT, None, True, 0)
+            self.addSlot(ChatReferent.ATTR_NOT, None, True, 0)
         else: 
-            self.add_slot(ChatReferent.ATTR_NOT, "true", True, 0)
+            self.addSlot(ChatReferent.ATTR_NOT, "true", True, 0)
         return value_
     
     @property
     def value(self) -> str:
         """ Базовое значение """
-        return self.get_string_value(ChatReferent.ATTR_VALUE)
-    
+        return self.getStringValue(ChatReferent.ATTR_VALUE)
     @value.setter
     def value(self, value_) -> str:
-        self.add_slot(ChatReferent.ATTR_VALUE, value_, True, 0)
+        self.addSlot(ChatReferent.ATTR_VALUE, value_, True, 0)
         return value_
     
     @property
@@ -94,16 +89,16 @@ class ChatReferent(Referent):
         for s in self.slots: 
             if (s.type_name == ChatReferent.ATTR_VERBTYPE): 
                 try: 
-                    res.append(Utils.valToEnum(s.value if isinstance(s.value, str) else None, VerbType))
+                    res.append(Utils.valToEnum(Utils.asObjectOrNull(s.value, str), VerbType))
                 except Exception as ex473: 
                     pass
         return res
     
-    def add_verb_type(self, vt : 'VerbType') -> None:
-        self.add_slot(ChatReferent.ATTR_VERBTYPE, Utils.enumToString(vt).upper(), False, 0)
+    def addVerbType(self, vt : 'VerbType') -> None:
+        self.addSlot(ChatReferent.ATTR_VERBTYPE, Utils.enumToString(vt).upper(), False, 0)
     
-    def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
-        tr = (obj if isinstance(obj, ChatReferent) else None)
+    def canBeEquals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+        tr = Utils.asObjectOrNull(obj, ChatReferent)
         if (tr is None): 
             return False
         if (tr.typ != self.typ): 

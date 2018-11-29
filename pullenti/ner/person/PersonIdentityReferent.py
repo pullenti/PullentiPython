@@ -1,12 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
+from pullenti.morph.MorphLang import MorphLang
 
 
 class PersonIdentityReferent(Referent):
@@ -31,16 +30,16 @@ class PersonIdentityReferent(Referent):
     
     ATTR_ADDRESS = "ADDRESS"
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         res = io.StringIO()
         print(Utils.ifNotNull(self.typ, "?"), end="", file=res)
         if (self.number is not None): 
             print(" №{0}".format(self.number), end="", file=res, flush=True)
         if (self.state is not None): 
-            print(", {0}".format(self.state.to_string(True, lang, lev + 1)), end="", file=res, flush=True)
+            print(", {0}".format(self.state.toString(True, lang, lev + 1)), end="", file=res, flush=True)
         if (not short_variant): 
-            dat = self.get_string_value(PersonIdentityReferent.ATTR_DATE)
-            org0_ = self.get_string_value(PersonIdentityReferent.ATTR_ORG)
+            dat = self.getStringValue(PersonIdentityReferent.ATTR_DATE)
+            org0_ = self.getStringValue(PersonIdentityReferent.ATTR_ORG)
             if (dat is not None or org0_ is not None): 
                 print(", выдан", end="", file=res)
                 if (dat is not None): 
@@ -52,45 +51,41 @@ class PersonIdentityReferent(Referent):
     @property
     def typ(self) -> str:
         """ Тип документа """
-        return self.get_string_value(PersonIdentityReferent.ATTR_TYPE)
-    
+        return self.getStringValue(PersonIdentityReferent.ATTR_TYPE)
     @typ.setter
     def typ(self, value) -> str:
-        self.add_slot(PersonIdentityReferent.ATTR_TYPE, value, True, 0)
+        self.addSlot(PersonIdentityReferent.ATTR_TYPE, value, True, 0)
         return value
     
     @property
     def number(self) -> str:
         """ Номер (вместе с серией) """
-        return self.get_string_value(PersonIdentityReferent.ATTR_NUMBER)
-    
+        return self.getStringValue(PersonIdentityReferent.ATTR_NUMBER)
     @number.setter
     def number(self, value) -> str:
-        self.add_slot(PersonIdentityReferent.ATTR_NUMBER, value, True, 0)
+        self.addSlot(PersonIdentityReferent.ATTR_NUMBER, value, True, 0)
         return value
     
     @property
     def state(self) -> 'Referent':
         """ Государство """
-        return (self.get_value(PersonIdentityReferent.ATTR_STATE) if isinstance(self.get_value(PersonIdentityReferent.ATTR_STATE), Referent) else None)
-    
+        return Utils.asObjectOrNull(self.getSlotValue(PersonIdentityReferent.ATTR_STATE), Referent)
     @state.setter
     def state(self, value) -> 'Referent':
-        self.add_slot(PersonIdentityReferent.ATTR_STATE, value, True, 0)
+        self.addSlot(PersonIdentityReferent.ATTR_STATE, value, True, 0)
         return value
     
     @property
     def address(self) -> 'Referent':
         """ Адрес регистрации """
-        return (self.get_value(PersonIdentityReferent.ATTR_ADDRESS) if isinstance(self.get_value(PersonIdentityReferent.ATTR_ADDRESS), Referent) else None)
-    
+        return Utils.asObjectOrNull(self.getSlotValue(PersonIdentityReferent.ATTR_ADDRESS), Referent)
     @address.setter
     def address(self, value) -> 'Referent':
-        self.add_slot(PersonIdentityReferent.ATTR_ADDRESS, value, True, 0)
+        self.addSlot(PersonIdentityReferent.ATTR_ADDRESS, value, True, 0)
         return value
     
-    def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
-        id0_ = (obj if isinstance(obj, PersonIdentityReferent) else None)
+    def canBeEquals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+        id0_ = Utils.asObjectOrNull(obj, PersonIdentityReferent)
         if (id0_ is None): 
             return False
         if (self.typ != id0_.typ): 

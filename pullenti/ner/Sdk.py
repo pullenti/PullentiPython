@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 from pullenti.morph.MorphLang import MorphLang
 
@@ -11,12 +9,17 @@ class Sdk:
     """ Инициализация SDK """
     
     @staticmethod
-    def get_version() -> str:
+    def getVersion() -> str:
         from pullenti.ner.ProcessorService import ProcessorService
-        return ProcessorService.get_version()
+        return ProcessorService.getVersion()
     
     @staticmethod
     def initialize(lang : 'MorphLang'=MorphLang()) -> None:
+        """ Вызывать инициализацию в самом начале
+        
+        Args:
+            lang(MorphLang): по умолчанию, русский и английский
+        """
         from pullenti.ner.ProcessorService import ProcessorService
         from pullenti.ner.money.MoneyAnalyzer import MoneyAnalyzer
         from pullenti.ner.uri.UriAnalyzer import UriAnalyzer
@@ -29,7 +32,7 @@ class Sdk:
         from pullenti.ner.bank.BankAnalyzer import BankAnalyzer
         from pullenti.ner.geo.GeoAnalyzer import GeoAnalyzer
         from pullenti.ner.address.AddressAnalyzer import AddressAnalyzer
-        from pullenti.ner._org.OrganizationAnalyzer import OrganizationAnalyzer
+        from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
         from pullenti.ner.person.PersonAnalyzer import PersonAnalyzer
         from pullenti.ner.mail.MailAnalyzer import MailAnalyzer
         from pullenti.ner.transport.TransportAnalyzer import TransportAnalyzer

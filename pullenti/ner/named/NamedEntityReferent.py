@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 import typing
@@ -32,46 +30,45 @@ class NamedEntityReferent(Referent):
     
     ATTR_MISC = "MISC"
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         res = io.StringIO()
-        typ = self.get_string_value(NamedEntityReferent.ATTR_TYPE)
+        typ = self.getStringValue(NamedEntityReferent.ATTR_TYPE)
         if (typ is not None): 
             print(typ, end="", file=res)
-        name = self.get_string_value(NamedEntityReferent.ATTR_NAME)
+        name = self.getStringValue(NamedEntityReferent.ATTR_NAME)
         if (name is not None): 
             if (res.tell() > 0): 
                 print(' ', end="", file=res)
-            print(MiscHelper.convert_first_char_upper_and_other_lower(name), end="", file=res)
-        re = (self.get_value(NamedEntityReferent.ATTR_REF) if isinstance(self.get_value(NamedEntityReferent.ATTR_REF), Referent) else None)
+            print(MiscHelper.convertFirstCharUpperAndOtherLower(name), end="", file=res)
+        re = Utils.asObjectOrNull(self.getSlotValue(NamedEntityReferent.ATTR_REF), Referent)
         if (re is not None): 
             if (res.tell() > 0): 
                 print("; ", end="", file=res)
-            print(re.to_string(short_variant, lang, lev + 1), end="", file=res)
+            print(re.toString(short_variant, lang, lev + 1), end="", file=res)
         return Utils.toStringStringIO(res)
     
     @property
     def kind(self) -> 'NamedEntityKind':
         """ Класс сущности """
-        str0_ = self.get_string_value(NamedEntityReferent.ATTR_KIND)
+        str0_ = self.getStringValue(NamedEntityReferent.ATTR_KIND)
         if (str0_ is None): 
             return NamedEntityKind.UNDEFINED
         try: 
             return Utils.valToEnum(str0_, NamedEntityKind)
-        except Exception as ex1626: 
+        except Exception as ex1655: 
             pass
         return NamedEntityKind.UNDEFINED
-    
     @kind.setter
     def kind(self, value) -> 'NamedEntityKind':
-        self.add_slot(NamedEntityReferent.ATTR_KIND, Utils.enumToString(value).lower(), True, 0)
+        self.addSlot(NamedEntityReferent.ATTR_KIND, Utils.enumToString(value).lower(), True, 0)
         return value
     
-    def to_sort_string(self) -> str:
+    def toSortString(self) -> str:
         from pullenti.morph.MorphLang import MorphLang
-        return Utils.enumToString(self.kind) + self.to_string(True, MorphLang.UNKNOWN, 0)
+        return Utils.enumToString(self.kind) + self.toString(True, MorphLang.UNKNOWN, 0)
     
-    def get_compare_strings(self) -> typing.List[str]:
+    def getCompareStrings(self) -> typing.List[str]:
         res = list()
         for s in self.slots: 
             if (s.type_name == NamedEntityReferent.ATTR_NAME): 
@@ -91,16 +88,16 @@ class NamedEntityReferent(Referent):
         if (len(res) > 0): 
             return res
         else: 
-            return super().get_compare_strings()
+            return super().getCompareStrings()
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
-        ent = (obj if isinstance(obj, NamedEntityReferent) else None)
+    def canBeEquals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+        ent = Utils.asObjectOrNull(obj, NamedEntityReferent)
         if (ent is None): 
             return False
         if (ent.kind != self.kind): 
             return False
-        names = self.get_string_values(NamedEntityReferent.ATTR_NAME)
-        names2 = obj.get_string_values(NamedEntityReferent.ATTR_NAME)
+        names = self.getStringValues(NamedEntityReferent.ATTR_NAME)
+        names2 = obj.getStringValues(NamedEntityReferent.ATTR_NAME)
         eq_names = False
         if ((names is not None and len(names) > 0 and names2 is not None) and len(names2) > 0): 
             for n in names: 
@@ -108,8 +105,8 @@ class NamedEntityReferent(Referent):
                     eq_names = True
             if (not eq_names): 
                 return False
-        typs = self.get_string_values(NamedEntityReferent.ATTR_TYPE)
-        typs2 = obj.get_string_values(NamedEntityReferent.ATTR_TYPE)
+        typs = self.getStringValues(NamedEntityReferent.ATTR_TYPE)
+        typs2 = obj.getStringValues(NamedEntityReferent.ATTR_TYPE)
         eq_typs = False
         if ((typs is not None and len(typs) > 0 and typs2 is not None) and len(typs2) > 0): 
             for ty in typs: 
@@ -119,23 +116,24 @@ class NamedEntityReferent(Referent):
                 return False
         if (not eq_typs and not eq_names): 
             return False
-        re1 = (self.get_value(NamedEntityReferent.ATTR_REF) if isinstance(self.get_value(NamedEntityReferent.ATTR_REF), Referent) else None)
-        re2 = (obj.get_value(NamedEntityReferent.ATTR_REF) if isinstance(obj.get_value(NamedEntityReferent.ATTR_REF), Referent) else None)
+        re1 = Utils.asObjectOrNull(self.getSlotValue(NamedEntityReferent.ATTR_REF), Referent)
+        re2 = Utils.asObjectOrNull(obj.getSlotValue(NamedEntityReferent.ATTR_REF), Referent)
         if (re1 is not None and re2 is not None): 
-            if (not re1.can_be_equals(re2, typ)): 
+            if (not re1.canBeEquals(re2, typ)): 
                 return False
         elif (re1 is not None or re2 is not None): 
             pass
         return True
     
-    def create_ontology_item(self) -> 'IntOntologyItem':
-        return self._create_ontology_item(2, False, False)
+    def createOntologyItem(self) -> 'IntOntologyItem':
+        """ Признак того, что была попытка привязаться к внешней онтологии """
+        return self._CreateOntologyItem(2, False, False)
     
-    def _create_ontology_item(self, min_len : int, only_names : bool=False, pure_names : bool=False) -> 'IntOntologyItem':
+    def _CreateOntologyItem(self, min_len : int, only_names : bool=False, pure_names : bool=False) -> 'IntOntologyItem':
         from pullenti.ner.core.Termin import Termin
         oi = IntOntologyItem(self)
         vars0_ = list()
-        typs = Utils.ifNotNull(self.get_string_values(NamedEntityReferent.ATTR_TYPE), list())
+        typs = Utils.ifNotNull(self.getStringValues(NamedEntityReferent.ATTR_TYPE), list())
         for a in self.slots: 
             if (a.type_name == NamedEntityReferent.ATTR_NAME): 
                 s = str(a.value).upper()
@@ -171,7 +169,7 @@ class NamedEntityReferent(Referent):
         return oi
     
     @staticmethod
-    def _new1625(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
+    def _new1654(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
         res = NamedEntityReferent()
         res.kind = _arg1
         return res

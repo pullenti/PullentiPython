@@ -1,10 +1,10 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Referent import Referent
+from pullenti.morph.MorphLang import MorphLang
 
 
 class DateRangeReferent(Referent):
@@ -25,27 +25,25 @@ class DateRangeReferent(Referent):
     def date_from(self) -> 'DateReferent':
         """ Начало диапазона """
         from pullenti.ner.date.DateReferent import DateReferent
-        return (self.get_value(DateRangeReferent.ATTR_FROM) if isinstance(self.get_value(DateRangeReferent.ATTR_FROM), DateReferent) else None)
-    
+        return Utils.asObjectOrNull(self.getSlotValue(DateRangeReferent.ATTR_FROM), DateReferent)
     @date_from.setter
     def date_from(self, value) -> 'DateReferent':
-        self.add_slot(DateRangeReferent.ATTR_FROM, value, True, 0)
+        self.addSlot(DateRangeReferent.ATTR_FROM, value, True, 0)
         return value
     
     @property
     def date_to(self) -> 'DateReferent':
         """ Конец диапазона """
         from pullenti.ner.date.DateReferent import DateReferent
-        return (self.get_value(DateRangeReferent.ATTR_TO) if isinstance(self.get_value(DateRangeReferent.ATTR_TO), DateReferent) else None)
-    
+        return Utils.asObjectOrNull(self.getSlotValue(DateRangeReferent.ATTR_TO), DateReferent)
     @date_to.setter
     def date_to(self, value) -> 'DateReferent':
-        self.add_slot(DateRangeReferent.ATTR_TO, value, True, 0)
+        self.addSlot(DateRangeReferent.ATTR_TO, value, True, 0)
         return value
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int) -> str:
-        fr = (None if self.date_from is None else self.date_from._to_string(short_variant, lang, lev, 1))
-        to = (None if self.date_to is None else self.date_to._to_string(short_variant, lang, lev, 2))
+    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+        fr = (None if self.date_from is None else self.date_from._ToString(short_variant, lang, lev, 1))
+        to = (None if self.date_to is None else self.date_to._ToString(short_variant, lang, lev, 2))
         if (fr is not None and to is not None): 
             return "{0} {1}".format(fr, (to if self.date_to.century > 0 and self.date_to.year == 0 else to.lower()))
         if (fr is not None): 
@@ -54,17 +52,17 @@ class DateRangeReferent(Referent):
             return to
         return "{0} ? по ?".format(('з' if lang.is_ua else 'с'))
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
-        dr = (obj if isinstance(obj, DateRangeReferent) else None)
+    def canBeEquals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+        dr = Utils.asObjectOrNull(obj, DateRangeReferent)
         if (dr is None): 
             return False
         if (self.date_from is not None): 
-            if (not self.date_from.can_be_equals(dr.date_from, typ)): 
+            if (not self.date_from.canBeEquals(dr.date_from, typ)): 
                 return False
         elif (dr.date_from is not None): 
             return False
         if (self.date_to is not None): 
-            if (not self.date_to.can_be_equals(dr.date_to, typ)): 
+            if (not self.date_to.canBeEquals(dr.date_to, typ)): 
                 return False
         elif (dr.date_to is not None): 
             return False
@@ -101,14 +99,14 @@ class DateRangeReferent(Referent):
         return 0
     
     @staticmethod
-    def _new717(_arg1 : 'DateReferent', _arg2 : 'DateReferent') -> 'DateRangeReferent':
+    def _new728(_arg1 : 'DateReferent', _arg2 : 'DateReferent') -> 'DateRangeReferent':
         res = DateRangeReferent()
         res.date_from = _arg1
         res.date_to = _arg2
         return res
     
     @staticmethod
-    def _new722(_arg1 : 'DateReferent') -> 'DateRangeReferent':
+    def _new733(_arg1 : 'DateReferent') -> 'DateRangeReferent':
         res = DateRangeReferent()
         res.date_to = _arg1
         return res

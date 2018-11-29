@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -28,10 +26,10 @@ class Program:
         print("Initializing ... ", end="", flush=True)
         Sdk.initialize((MorphLang.RU) | MorphLang.EN)
         sw.stop()
-        print("OK (by {0} ms), version {1}".format(sw.elapsedMilliseconds, ProcessorService.get_version()), flush=True)
+        print("OK (by {0} ms), version {1}".format(sw.elapsedMilliseconds, ProcessorService.getVersion()), flush=True)
         txt = "Единственным конкурентом «Трансмаша» на этом сомнительном тендере было ООО «Плассер Алека Рейл Сервис», основным владельцем которого является австрийская компания «СТЦ-Холдинг ГМБХ». До конца 2011 г. эта же фирма была совладельцем «Трансмаша» вместе с «Тако» Краснова. Зато совладельцем «Плассера», также до конца 2011 г., был тот самый Карл Контрус, который имеет четверть акций «Трансмаша». "
         print("Text: {0}".format(txt), flush=True)
-        with ProcessorService.create_processor() as proc: 
+        with ProcessorService.createProcessor() as proc: 
             ar = proc.process(SourceOfAnalysis(txt), None, MorphLang())
             print("\r\n==========================================\r\nEntities: ", flush=True)
             for e0_ in ar.entities: 
@@ -40,19 +38,19 @@ class Program:
                     print("   {0}: {1}".format(s.type_name, s.value), flush=True)
             print("\r\n==========================================\r\nNoun groups: ", flush=True)
             t = ar.first_token
-            first_pass3605 = True
+            first_pass2713 = True
             while True:
-                if first_pass3605: first_pass3605 = False
+                if first_pass2713: first_pass2713 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
-                if (t.get_referent() is not None): 
+                if (t.getReferent() is not None): 
                     continue
-                npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.ADJECTIVECANBELAST, 0)
+                npt = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.ADJECTIVECANBELAST, 0)
                 if (npt is None): 
                     continue
                 print(npt, flush=True)
                 t = npt.end_token
-        with ProcessorService.create_specific_processor(KeywordAnalyzer.ANALYZER_NAME) as proc: 
+        with ProcessorService.createSpecificProcessor(KeywordAnalyzer.ANALYZER_NAME) as proc: 
             ar = proc.process(SourceOfAnalysis(txt), None, MorphLang())
             print("\r\n==========================================\r\nKeywords1: ", flush=True)
             for e0_ in ar.entities: 
@@ -60,16 +58,16 @@ class Program:
                     print(e0_, flush=True)
             print("\r\n==========================================\r\nKeywords2: ", flush=True)
             t = ar.first_token
-            first_pass3606 = True
+            first_pass2714 = True
             while True:
-                if first_pass3606: first_pass3606 = False
+                if first_pass2714: first_pass2714 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (isinstance(t, ReferentToken)): 
-                    kw = (t.get_referent() if isinstance(t.get_referent(), KeywordReferent) else None)
+                    kw = Utils.asObjectOrNull(t.getReferent(), KeywordReferent)
                     if (kw is None): 
                         continue
-                    kwstr = MiscHelper.get_text_value_of_meta_token(t if isinstance(t, ReferentToken) else None, Utils.valToEnum((GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
+                    kwstr = MiscHelper.getTextValueOfMetaToken(Utils.asObjectOrNull(t, ReferentToken), Utils.valToEnum((GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
                     print("{0} = {1}".format(kwstr, kw), flush=True)
         print("Over!", flush=True)
 

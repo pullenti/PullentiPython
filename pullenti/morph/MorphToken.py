@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -18,7 +16,15 @@ class MorphToken:
         """ Число символов (нормализованного фрагмента = Term.Length) """
         return (0 if self.term is None else len(self.term))
     
-    def get_source_text(self, text : str) -> str:
+    def getSourceText(self, text : str) -> str:
+        """ Извлечь фрагмент из исходного текста, соответствующий токену
+        
+        Args:
+            text(str): полный исходный текст
+        
+        Returns:
+            str: фрагмент
+        """
         return text[self.begin_char:self.begin_char+(self.end_char + 1) - self.begin_char]
     
     @property
@@ -34,7 +40,7 @@ class MorphToken:
                 for m in self.word_forms: 
                     if (m.class0_.is_proper_surname): 
                         s = Utils.ifNotNull(m.normal_full, Utils.ifNotNull(m.normal_case, ""))
-                        if (LanguageHelper.ends_with_ex(s, "ОВ", "ЕВ", None, None)): 
+                        if (LanguageHelper.endsWithEx(s, "ОВ", "ЕВ", None, None)): 
                             res = s
                             break
                     elif (m.class0_.is_proper_name and m.is_in_dictionary): 
@@ -44,28 +50,27 @@ class MorphToken:
                 for m in self.word_forms: 
                     if (best is None): 
                         best = m
-                    elif (self.__compare_forms(best, m) > 0): 
+                    elif (self.__compareForms(best, m) > 0): 
                         best = m
                 res = (Utils.ifNotNull(best.normal_full, best.normal_case))
         if (res is not None): 
-            if (LanguageHelper.ends_with_ex(res, "АНЫЙ", "ЕНЫЙ", None, None)): 
+            if (LanguageHelper.endsWithEx(res, "АНЫЙ", "ЕНЫЙ", None, None)): 
                 res = (res[0:0+len(res) - 3] + "ННЫЙ")
-            elif (LanguageHelper.ends_with(res, "ЙСЯ")): 
+            elif (LanguageHelper.endsWith(res, "ЙСЯ")): 
                 res = res[0:0+len(res) - 2]
-            elif (LanguageHelper.ends_with(res, "АНИЙ") and res == self.term): 
+            elif (LanguageHelper.endsWith(res, "АНИЙ") and res == self.term): 
                 for wf in self.word_forms: 
                     if (wf.is_in_dictionary): 
                         return res
                 return res[0:0+len(res) - 1] + "Е"
             return res
         return Utils.ifNotNull(self.term, "?")
-    
     @lemma.setter
     def lemma(self, value) -> str:
         self.__m_lemma = value
         return value
     
-    def __compare_forms(self, x : 'MorphWordForm', y : 'MorphWordForm') -> int:
+    def __compareForms(self, x : 'MorphWordForm', y : 'MorphWordForm') -> int:
         vx = Utils.ifNotNull(x.normal_full, x.normal_case)
         vy = Utils.ifNotNull(y.normal_full, y.normal_case)
         if (vx == vy): 
@@ -77,11 +82,11 @@ class MorphToken:
         lastx = vx[len(vx) - 1]
         lasty = vy[len(vy) - 1]
         if (x.class0_.is_proper_surname and not self.char_info.is_all_lower): 
-            if (LanguageHelper.ends_with_ex(vx, "ОВ", "ЕВ", "ИН", None)): 
+            if (LanguageHelper.endsWithEx(vx, "ОВ", "ЕВ", "ИН", None)): 
                 if (not y.class0_.is_proper_surname): 
                     return -1
         if (y.class0_.is_proper_surname and not self.char_info.is_all_lower): 
-            if (LanguageHelper.ends_with_ex(vy, "ОВ", "ЕВ", "ИН", None)): 
+            if (LanguageHelper.endsWithEx(vy, "ОВ", "ЕВ", "ИН", None)): 
                 if (not x.class0_.is_proper_surname): 
                     return 1
                 if (len(vx) > len(vy)): 
@@ -95,9 +100,9 @@ class MorphToken:
                     return -1
                 if (lastx != 'Й' and lasty == 'Й'): 
                     return 1
-                if (not LanguageHelper.ends_with(vx, "ОЙ") and LanguageHelper.ends_with(vy, "ОЙ")): 
+                if (not LanguageHelper.endsWith(vx, "ОЙ") and LanguageHelper.endsWith(vy, "ОЙ")): 
                     return -1
-                if (LanguageHelper.ends_with(vx, "ОЙ") and not LanguageHelper.ends_with(vy, "ОЙ")): 
+                if (LanguageHelper.endsWith(vx, "ОЙ") and not LanguageHelper.endsWith(vy, "ОЙ")): 
                     return 1
             if (x.class0_.is_noun): 
                 if (x.number == MorphNumber.SINGULAR and y.number == MorphNumber.PLURAL and len(vx) <= (len(vy) + 1)): 
@@ -159,7 +164,6 @@ class MorphToken:
                 if (wf.language != MorphLang.UNKNOWN): 
                     lang |= wf.language
         return lang
-    
     @language.setter
     def language(self, value) -> 'MorphLang':
         self.__m_language = value
@@ -168,13 +172,12 @@ class MorphToken:
     def __init__(self) -> None:
         self.begin_char = 0
         self.end_char = 0
-        self.term = None
-        self.__m_lemma = None
-        self.tag = None
-        self.__m_language = None
-        self.word_forms = None
-        self.char_info = None
-        pass
+        self.term = None;
+        self.__m_lemma = None;
+        self.tag = None;
+        self.__m_language = None;
+        self.word_forms = None;
+        self.char_info = None;
     
     def __str__(self) -> str:
         if (Utils.isNullOrEmpty(self.term)): 

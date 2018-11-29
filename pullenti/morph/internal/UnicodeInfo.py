@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 from pullenti.unisharp.Utils import Utils
 
@@ -18,16 +16,16 @@ class UnicodeInfo:
     
     def __init__(self, v : int=0) -> None:
         self.__m_value = 0
-        self.uni_char = None
+        self.uni_char = None;
         self.code = 0
         self.uni_char = (chr(v))
         self.code = (v)
         self.__m_value = (0)
     
-    def __get_value(self, i : int) -> bool:
+    def __getValue(self, i : int) -> bool:
         return (((((self.__m_value) >> i)) & 1)) != 0
     
-    def __set_value(self, i : int, val : bool) -> None:
+    def __setValue(self, i : int, val : bool) -> None:
         if (val): 
             self.__m_value |= ((1 << i))
         else: 
@@ -36,109 +34,97 @@ class UnicodeInfo:
     @property
     def is_whitespace(self) -> bool:
         return (((self.__m_value) & 0x1)) != 0
-    
     @is_whitespace.setter
     def is_whitespace(self, value) -> bool:
-        self.__set_value(0, value)
+        self.__setValue(0, value)
         return value
     
     @property
     def is_digit(self) -> bool:
         return (((self.__m_value) & 0x2)) != 0
-    
     @is_digit.setter
     def is_digit(self, value) -> bool:
-        self.__set_value(1, value)
+        self.__setValue(1, value)
         return value
     
     @property
     def is_letter(self) -> bool:
         return (((self.__m_value) & 0x4)) != 0
-    
     @is_letter.setter
     def is_letter(self, value) -> bool:
-        self.__set_value(2, value)
+        self.__setValue(2, value)
         return value
     
     @property
     def is_upper(self) -> bool:
         return (((self.__m_value) & 0x8)) != 0
-    
     @is_upper.setter
     def is_upper(self, value) -> bool:
-        self.__set_value(3, value)
+        self.__setValue(3, value)
         return value
     
     @property
     def is_lower(self) -> bool:
         return (((self.__m_value) & 0x10)) != 0
-    
     @is_lower.setter
     def is_lower(self, value) -> bool:
-        self.__set_value(4, value)
+        self.__setValue(4, value)
         return value
     
     @property
     def is_latin(self) -> bool:
         return (((self.__m_value) & 0x20)) != 0
-    
     @is_latin.setter
     def is_latin(self, value) -> bool:
-        self.__set_value(5, value)
+        self.__setValue(5, value)
         return value
     
     @property
     def is_cyrillic(self) -> bool:
         return (((self.__m_value) & 0x40)) != 0
-    
     @is_cyrillic.setter
     def is_cyrillic(self, value) -> bool:
-        self.__set_value(6, value)
+        self.__setValue(6, value)
         return value
     
     @property
     def is_hiphen(self) -> bool:
         return (((self.__m_value) & 0x80)) != 0
-    
     @is_hiphen.setter
     def is_hiphen(self, value) -> bool:
-        self.__set_value(7, value)
+        self.__setValue(7, value)
         return value
     
     @property
     def is_vowel(self) -> bool:
         return (((self.__m_value) & 0x100)) != 0
-    
     @is_vowel.setter
     def is_vowel(self, value) -> bool:
-        self.__set_value(8, value)
+        self.__setValue(8, value)
         return value
     
     @property
     def is_quot(self) -> bool:
         return (((self.__m_value) & 0x200)) != 0
-    
     @is_quot.setter
     def is_quot(self, value) -> bool:
-        self.__set_value(9, value)
+        self.__setValue(9, value)
         return value
     
     @property
     def is_apos(self) -> bool:
         return (((self.__m_value) & 0x400)) != 0
-    
     @is_apos.setter
     def is_apos(self, value) -> bool:
-        self.__set_value(10, value)
+        self.__setValue(10, value)
         return value
     
     @property
     def is_udaren(self) -> bool:
         return (((self.__m_value) & 0x800)) != 0
-    
     @is_udaren.setter
     def is_udaren(self, value) -> bool:
-        self.__set_value(11, value)
+        self.__setValue(11, value)
         return value
     
     # static constructor for class UnicodeInfo

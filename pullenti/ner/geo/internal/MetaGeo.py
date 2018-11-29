@@ -1,9 +1,8 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.ReferentClass import ReferentClass
 
 
@@ -12,13 +11,13 @@ class MetaGeo(ReferentClass):
     def __init__(self) -> None:
         from pullenti.ner.geo.GeoReferent import GeoReferent
         super().__init__()
-        self.add_feature(GeoReferent.ATTR_NAME, "Наименование", 1, 0)
-        self.add_feature(GeoReferent.ATTR_TYPE, "Тип", 1, 0)
-        self.add_feature(GeoReferent.ATTR_ALPHA2, "Код страны", 0, 1)
-        self.add_feature(GeoReferent.ATTR_HIGHER, "Вышестоящий объект", 0, 1)
-        self.add_feature(GeoReferent.ATTR_REF, "Ссылка на объект", 0, 1)
-        self.add_feature(GeoReferent.ATTR_FIAS, "Объект ФИАС", 0, 1)
-        self.add_feature(GeoReferent.ATTR_BTI, "Код БТИ", 0, 1)
+        self.addFeature(GeoReferent.ATTR_NAME, "Наименование", 1, 0)
+        self.addFeature(GeoReferent.ATTR_TYPE, "Тип", 1, 0)
+        self.addFeature(GeoReferent.ATTR_ALPHA2, "Код страны", 0, 1)
+        self.addFeature(GeoReferent.ATTR_HIGHER, "Вышестоящий объект", 0, 1)
+        self.addFeature(GeoReferent.ATTR_REF, "Ссылка на объект", 0, 1)
+        self.addFeature(GeoReferent.ATTR_FIAS, "Объект ФИАС", 0, 1)
+        self.addFeature(GeoReferent.ATTR_BTI, "Код БТИ", 0, 1)
     
     @property
     def name(self) -> str:
@@ -43,9 +42,9 @@ class MetaGeo(ReferentClass):
     
     UNION_IMAGE_ID = "union"
     
-    def get_image_id(self, obj : 'Referent'=None) -> str:
+    def getImageId(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.geo.GeoReferent import GeoReferent
-        ter = (obj if isinstance(obj, GeoReferent) else None)
+        ter = Utils.asObjectOrNull(obj, GeoReferent)
         if (ter is not None): 
             if (ter.is_union): 
                 return MetaGeo.UNION_IMAGE_ID

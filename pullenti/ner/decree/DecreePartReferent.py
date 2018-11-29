@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -62,7 +60,7 @@ class DecreePartReferent(Referent):
     
     ATTR_PAGE = "PAGE"
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         res = io.StringIO()
         if (self.sub_indention is not None): 
@@ -109,15 +107,15 @@ class DecreePartReferent(Referent):
                 print(" допсоглашение {0}".format(self.addagree), end="", file=res, flush=True)
         if (((self.owner is not None or res.tell() > 0)) and not short_variant): 
             if (not short_variant and self.subprogram is None): 
-                s = self.__get_short_name()
+                s = self.__getShortName()
                 if (s is not None): 
                     print(" ({0})".format(s), end="", file=res, flush=True)
             if (self.owner is not None and (lev < 20)): 
                 if (res.tell() > 0): 
                     print("; ", end="", file=res)
-                print(self.owner.to_string(short_variant, lang, lev + 1), end="", file=res)
+                print(self.owner.toString(short_variant, lang, lev + 1), end="", file=res)
             elif (self.local_typ is not None): 
-                print("; {0}".format(MiscHelper.convert_first_char_upper_and_other_lower(self.local_typ)), end="", file=res, flush=True)
+                print("; {0}".format(MiscHelper.convertFirstCharUpperAndOtherLower(self.local_typ)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res).strip()
     
     @property
@@ -131,7 +129,7 @@ class DecreePartReferent(Referent):
                     nam = n
         return nam
     
-    def __get_short_name(self) -> str:
+    def __getShortName(self) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         nam = self.name
         if (nam is None): 
@@ -144,208 +142,187 @@ class DecreePartReferent(Referent):
                 i += 1
             if (i < len(nam)): 
                 nam = (nam[0:0+i] + "...")
-        return MiscHelper.convert_first_char_upper_and_other_lower(nam)
+        return MiscHelper.convertFirstCharUpperAndOtherLower(nam)
     
     @property
     def local_typ(self) -> str:
         """ Локальный тип (при ссылке на текущий документ) """
-        return self.get_string_value(DecreePartReferent.ATTR_LOCALTYP)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_LOCALTYP)
     @local_typ.setter
     def local_typ(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_LOCALTYP, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_LOCALTYP, value, True, 0)
         return value
     
-    def add_slot(self, attr_name : str, attr_value : object, clear_old_value : bool, stat_count : int=0) -> 'Slot':
+    def addSlot(self, attr_name : str, attr_value : object, clear_old_value : bool, stat_count : int=0) -> 'Slot':
         from pullenti.ner.decree.internal.PartToken import PartToken
-        
         tag_ = None
         if (isinstance(attr_value, PartToken.PartValue)): 
-            tag_ = (attr_value if isinstance(attr_value, PartToken.PartValue) else None).source_value
-            attr_value = ((attr_value if isinstance(attr_value, PartToken.PartValue) else None).value)
-        s = super().add_slot(attr_name, attr_value, clear_old_value, stat_count)
+            tag_ = (Utils.asObjectOrNull(attr_value, PartToken.PartValue)).source_value
+            attr_value = ((Utils.asObjectOrNull(attr_value, PartToken.PartValue)).value)
+        s = super().addSlot(attr_name, attr_value, clear_old_value, stat_count)
         if (tag_ is not None): 
             s.tag = tag_
         return s
     
     @property
     def clause(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_CLAUSE)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_CLAUSE)
     @clause.setter
     def clause(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_CLAUSE, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_CLAUSE, value, True, 0)
         return value
     
     @property
     def part(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_PART)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_PART)
     @part.setter
     def part(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_PART, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_PART, value, True, 0)
         return value
     
     @property
     def doc_part(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_DOCPART)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_DOCPART)
     @doc_part.setter
     def doc_part(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_DOCPART, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_DOCPART, value, True, 0)
         return value
     
     @property
     def section(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_SECTION)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_SECTION)
     @section.setter
     def section(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_SECTION, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_SECTION, value, True, 0)
         return value
     
     @property
     def sub_section(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_SUBSECTION)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_SUBSECTION)
     @sub_section.setter
     def sub_section(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_SUBSECTION, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_SUBSECTION, value, True, 0)
         return value
     
     @property
     def appendix(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_APPENDIX)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_APPENDIX)
     @appendix.setter
     def appendix(self, value) -> str:
         if (value is not None and len(value) == 0): 
             value = "0"
-        self.add_slot(DecreePartReferent.ATTR_APPENDIX, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_APPENDIX, value, True, 0)
         return value
     
     @property
     def chapter(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_CHAPTER)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_CHAPTER)
     @chapter.setter
     def chapter(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_CHAPTER, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_CHAPTER, value, True, 0)
         return value
     
     @property
     def paragraph(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_PARAGRAPH)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_PARAGRAPH)
     @paragraph.setter
     def paragraph(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_PARAGRAPH, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_PARAGRAPH, value, True, 0)
         return value
     
     @property
     def sub_paragraph(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_SUBPARAGRAPH)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_SUBPARAGRAPH)
     @sub_paragraph.setter
     def sub_paragraph(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_SUBPARAGRAPH, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_SUBPARAGRAPH, value, True, 0)
         return value
     
     @property
     def item(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_ITEM)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_ITEM)
     @item.setter
     def item(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_ITEM, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_ITEM, value, True, 0)
         return value
     
     @property
     def sub_item(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_SUBITEM)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_SUBITEM)
     @sub_item.setter
     def sub_item(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_SUBITEM, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_SUBITEM, value, True, 0)
         return value
     
     @property
     def indention(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_INDENTION)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_INDENTION)
     @indention.setter
     def indention(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_INDENTION, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_INDENTION, value, True, 0)
         return value
     
     @property
     def sub_indention(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_SUBINDENTION)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_SUBINDENTION)
     @sub_indention.setter
     def sub_indention(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_SUBINDENTION, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_SUBINDENTION, value, True, 0)
         return value
     
     @property
     def preamble(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_PREAMBLE)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_PREAMBLE)
     @preamble.setter
     def preamble(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_PREAMBLE, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_PREAMBLE, value, True, 0)
         return value
     
     @property
     def notice(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_NOTICE)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_NOTICE)
     @notice.setter
     def notice(self, value) -> str:
         if (value is not None and len(value) == 0): 
             value = "0"
-        self.add_slot(DecreePartReferent.ATTR_NOTICE, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_NOTICE, value, True, 0)
         return value
     
     @property
     def page(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_PAGE)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_PAGE)
     @page.setter
     def page(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_PAGE, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_PAGE, value, True, 0)
         return value
     
     @property
     def subprogram(self) -> str:
-        return self.get_string_value(DecreePartReferent.ATTR_SUBPROGRAM)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_SUBPROGRAM)
     @subprogram.setter
     def subprogram(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_SUBPROGRAM, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_SUBPROGRAM, value, True, 0)
         return value
     
     @property
     def addagree(self) -> str:
         """ Дополнительное соглашение """
-        return self.get_string_value(DecreePartReferent.ATTR_ADDAGREE)
-    
+        return self.getStringValue(DecreePartReferent.ATTR_ADDAGREE)
     @addagree.setter
     def addagree(self, value) -> str:
-        self.add_slot(DecreePartReferent.ATTR_ADDAGREE, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_ADDAGREE, value, True, 0)
         return value
     
     @property
     def owner(self) -> 'DecreeReferent':
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        res = (self.get_value(DecreePartReferent.ATTR_OWNER) if isinstance(self.get_value(DecreePartReferent.ATTR_OWNER), DecreeReferent) else None)
+        res = Utils.asObjectOrNull(self.getSlotValue(DecreePartReferent.ATTR_OWNER), DecreeReferent)
         if (res is None): 
             return None
         return res
-    
     @owner.setter
     def owner(self, value) -> 'DecreeReferent':
-        self.add_slot(DecreePartReferent.ATTR_OWNER, value, True, 0)
+        self.addSlot(DecreePartReferent.ATTR_OWNER, value, True, 0)
         if (value is not None and self.local_typ is not None): 
             self.local_typ = None
         return value
@@ -354,20 +331,20 @@ class DecreePartReferent(Referent):
     def parent_referent(self) -> 'Referent':
         return self.owner
     
-    def _add_name(self, name_ : str) -> None:
+    def _addName(self, name_ : str) -> None:
         if (name_ is None or len(name_) == 0): 
             return
         if (name_[len(name_) - 1] == '.'): 
             name_ = name_[0:0+len(name_) - 1]
         name_ = name_.strip().upper()
-        self.add_slot(DecreePartReferent.ATTR_NAME, name_, False, 0)
+        self.addSlot(DecreePartReferent.ATTR_NAME, name_, False, 0)
     
-    def merge_slots(self, obj : 'Referent', merge_statistic : bool=True) -> None:
-        super().merge_slots(obj, merge_statistic)
+    def mergeSlots(self, obj : 'Referent', merge_statistic : bool=True) -> None:
+        super().mergeSlots(obj, merge_statistic)
         if (self.owner is not None and self.local_typ is not None): 
             self.local_typ = None
     
-    def __get_level(self, typ : str) -> int:
+    def __getLevel(self, typ : str) -> int:
         if (typ == DecreePartReferent.ATTR_ADDAGREE or typ == DecreePartReferent.ATTR_SUBPROGRAM): 
             return 0
         if (typ == DecreePartReferent.ATTR_DOCPART): 
@@ -404,17 +381,22 @@ class DecreePartReferent(Referent):
             return 13
         return -1
     
-    def __has_less_level_attr(self, typ : str) -> bool:
-        l_ = self.__get_level(typ)
+    def __hasLessLevelAttr(self, typ : str) -> bool:
+        l_ = self.__getLevel(typ)
         if (l_ < 0): 
             return False
         for s in self.slots: 
-            l1 = self.__get_level(s.type_name)
+            l1 = self.__getLevel(s.type_name)
             if (l1 >= 0 and l1 > l_): 
                 return True
         return False
     
-    def _add_high_level_info(self, dp : 'DecreePartReferent') -> None:
+    def _addHighLevelInfo(self, dp : 'DecreePartReferent') -> None:
+        """ Добавить информацию о вышележащих элементах
+        
+        Args:
+            dp(DecreePartReferent): 
+        """
         if (dp.addagree is not None and self.addagree is None): 
             self.addagree = dp.addagree
         elif (dp.addagree != self.addagree): 
@@ -427,83 +409,89 @@ class DecreePartReferent(Referent):
             self.doc_part = dp.doc_part
         elif (self.doc_part != dp.doc_part): 
             return
-        if (dp.section is not None and self.section is None and self.__has_less_level_attr(DecreePartReferent.ATTR_SECTION)): 
+        if (dp.section is not None and self.section is None and self.__hasLessLevelAttr(DecreePartReferent.ATTR_SECTION)): 
             self.section = dp.section
         elif (self.section != dp.section): 
             return
-        if (dp.sub_section is not None and self.sub_section is None and self.__has_less_level_attr(DecreePartReferent.ATTR_SUBSECTION)): 
+        if (dp.sub_section is not None and self.sub_section is None and self.__hasLessLevelAttr(DecreePartReferent.ATTR_SUBSECTION)): 
             self.sub_section = dp.sub_section
         elif (self.sub_section != dp.sub_section): 
             return
-        if (dp.chapter is not None and self.chapter is None and self.__has_less_level_attr(DecreePartReferent.ATTR_CHAPTER)): 
+        if (dp.chapter is not None and self.chapter is None and self.__hasLessLevelAttr(DecreePartReferent.ATTR_CHAPTER)): 
             self.chapter = dp.chapter
         elif (dp.chapter != self.chapter): 
             return
-        if (dp.paragraph is not None and self.paragraph is None and self.__has_less_level_attr(DecreePartReferent.ATTR_PARAGRAPH)): 
+        if (dp.paragraph is not None and self.paragraph is None and self.__hasLessLevelAttr(DecreePartReferent.ATTR_PARAGRAPH)): 
             self.paragraph = dp.paragraph
         elif (self.paragraph != dp.paragraph): 
             return
-        if (dp.sub_paragraph is not None and self.sub_paragraph is None and self.__has_less_level_attr(DecreePartReferent.ATTR_SUBPARAGRAPH)): 
+        if (dp.sub_paragraph is not None and self.sub_paragraph is None and self.__hasLessLevelAttr(DecreePartReferent.ATTR_SUBPARAGRAPH)): 
             self.sub_paragraph = dp.sub_paragraph
         elif (self.sub_paragraph != dp.sub_paragraph): 
             return
-        if (dp.clause is not None and self.clause is None and self.__has_less_level_attr(DecreePartReferent.ATTR_CLAUSE)): 
+        if (dp.clause is not None and self.clause is None and self.__hasLessLevelAttr(DecreePartReferent.ATTR_CLAUSE)): 
             self.clause = dp.clause
         elif (dp.clause != self.clause): 
             return
-        if (dp.part is not None and self.part is None and self.__has_less_level_attr(DecreePartReferent.ATTR_PART)): 
+        if (dp.part is not None and self.part is None and self.__hasLessLevelAttr(DecreePartReferent.ATTR_PART)): 
             self.part = dp.part
         elif (dp.part != self.part): 
             return
-        if (dp.item is not None and self.item is None and self.__has_less_level_attr(DecreePartReferent.ATTR_ITEM)): 
+        if (dp.item is not None and self.item is None and self.__hasLessLevelAttr(DecreePartReferent.ATTR_ITEM)): 
             if (self.sub_item is not None and self.sub_item.find('.') > 0): 
                 pass
             else: 
                 self.item = dp.item
         elif (dp.item != self.item): 
             return
-        if (dp.sub_item is not None and self.sub_item is None and self.__has_less_level_attr(DecreePartReferent.ATTR_SUBITEM)): 
+        if (dp.sub_item is not None and self.sub_item is None and self.__hasLessLevelAttr(DecreePartReferent.ATTR_SUBITEM)): 
             self.sub_item = dp.sub_item
         elif (dp.sub_item != self.sub_item): 
             return
-        if (dp.indention is not None and self.indention is None and self.__has_less_level_attr(DecreePartReferent.ATTR_INDENTION)): 
+        if (dp.indention is not None and self.indention is None and self.__hasLessLevelAttr(DecreePartReferent.ATTR_INDENTION)): 
             self.indention = dp.indention
     
-    def _is_all_items_less_level(self, upper_parts : 'Referent', ignore_equals : bool) -> bool:
+    def _isAllItemsLessLevel(self, upper_parts : 'Referent', ignore_equals : bool) -> bool:
+        """ Проверить, что все элементы находятся на более низком уровне, чем у аргумента
+        
+        Args:
+            upper_parts(Referent): 
+        
+        """
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
         if (isinstance(upper_parts, DecreeReferent)): 
             return True
         for s in self.slots: 
-            l_ = self.__get_level(s.type_name)
+            l_ = self.__getLevel(s.type_name)
             if (l_ < 0): 
                 continue
-            if (upper_parts.find_slot(s.type_name, None, True) is not None): 
-                if (upper_parts.find_slot(s.type_name, s.value, True) is None): 
+            if (upper_parts.findSlot(s.type_name, None, True) is not None): 
+                if (upper_parts.findSlot(s.type_name, s.value, True) is None): 
                     return False
                 continue
             for ss in upper_parts.slots: 
-                ll = self.__get_level(ss.type_name)
+                ll = self.__getLevel(ss.type_name)
                 if (ll >= l_): 
                     return False
         return True
     
-    def _is_all_items_over_this_level(self, typ : 'ItemType') -> bool:
+    def _isAllItemsOverThisLevel(self, typ : 'ItemType') -> bool:
         from pullenti.ner.decree.internal.PartToken import PartToken
-        l0 = self.__get_level(PartToken._get_attr_name_by_typ(typ))
+        l0 = self.__getLevel(PartToken._getAttrNameByTyp(typ))
         if (l0 <= 0): 
             return False
         for s in self.slots: 
-            l_ = self.__get_level(s.type_name)
+            l_ = self.__getLevel(s.type_name)
             if (l_ <= 0): 
                 continue
             if (l_ >= l0): 
                 return False
         return True
     
-    def _get_min_level(self) -> int:
+    def _getMinLevel(self) -> int:
         min0_ = 0
         for s in self.slots: 
-            l_ = self.__get_level(s.type_name)
+            l_ = self.__getLevel(s.type_name)
             if (l_ <= 0): 
                 continue
             if (min0_ == 0): 
@@ -512,12 +500,12 @@ class DecreePartReferent(Referent):
                 min0_ = l_
         return min0_
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
-        b = self.__can_be_equals(obj, typ, False)
+    def canBeEquals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+        b = self.__CanBeEquals(obj, typ, False)
         return b
     
-    def __can_be_equals(self, obj : 'Referent', typ : 'EqualType', ignore_geo : bool) -> bool:
-        dr = (obj if isinstance(obj, DecreePartReferent) else None)
+    def __CanBeEquals(self, obj : 'Referent', typ : 'EqualType', ignore_geo : bool) -> bool:
+        dr = Utils.asObjectOrNull(obj, DecreePartReferent)
         if (dr is None): 
             return False
         if (self.owner is not None and dr.owner is not None): 
@@ -615,27 +603,27 @@ class DecreePartReferent(Referent):
         return True
     
     @staticmethod
-    def create_range_referent(min0_ : 'DecreePartReferent', max0_ : 'DecreePartReferent') -> 'DecreePartReferent':
-        res = (min0_.clone() if isinstance(min0_.clone(), DecreePartReferent) else None)
+    def createRangeReferent(min0_ : 'DecreePartReferent', max0_ : 'DecreePartReferent') -> 'DecreePartReferent':
+        res = Utils.asObjectOrNull(min0_.clone(), DecreePartReferent)
         cou = 0
         for s in res.slots: 
-            ss = max0_.find_slot(s.type_name, None, True)
+            ss = max0_.findSlot(s.type_name, None, True)
             if (ss is None): 
                 return None
             if (ss.value == s.value): 
                 continue
-            if (max0_.find_slot(s.type_name, s.value, True) is not None): 
+            if (max0_.findSlot(s.type_name, s.value, True) is not None): 
                 continue
             cou += 1
             if ((cou) > 1): 
                 return None
-            res.upload_slot(s, "{0}-{1}".format(s.value, ss.value))
+            res.uploadSlot(s, "{0}-{1}".format(s.value, ss.value))
         if (cou != 1): 
             return None
         return res
     
     @staticmethod
-    def _new1072(_arg1 : 'DecreeReferent') -> 'DecreePartReferent':
+    def _new1091(_arg1 : 'DecreeReferent') -> 'DecreePartReferent':
         res = DecreePartReferent()
         res.owner = _arg1
         return res

@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.ner.ReferentClass import ReferentClass
@@ -14,18 +12,18 @@ class MetaDecreeChangeValue(ReferentClass):
     def __init__(self) -> None:
         from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
         super().__init__()
-        fi = self.add_feature(DecreeChangeValueReferent.ATTR_KIND, "Тип", 1, 1)
-        fi.add_value(Utils.enumToString(DecreeChangeValueKind.TEXT), "Текст", None, None)
-        fi.add_value(Utils.enumToString(DecreeChangeValueKind.WORDS), "Слова", None, None)
-        fi.add_value(Utils.enumToString(DecreeChangeValueKind.ROBUSTWORDS), "Слова (неточно)", None, None)
-        fi.add_value(Utils.enumToString(DecreeChangeValueKind.NUMBERS), "Цифры", None, None)
-        fi.add_value(Utils.enumToString(DecreeChangeValueKind.SEQUENCE), "Предложение", None, None)
-        fi.add_value(Utils.enumToString(DecreeChangeValueKind.FOOTNOTE), "Сноска", None, None)
-        fi.add_value(Utils.enumToString(DecreeChangeValueKind.BLOCK), "Блок", None, None)
+        fi = self.addFeature(DecreeChangeValueReferent.ATTR_KIND, "Тип", 1, 1)
+        fi.addValue(Utils.enumToString(DecreeChangeValueKind.TEXT), "Текст", None, None)
+        fi.addValue(Utils.enumToString(DecreeChangeValueKind.WORDS), "Слова", None, None)
+        fi.addValue(Utils.enumToString(DecreeChangeValueKind.ROBUSTWORDS), "Слова (неточно)", None, None)
+        fi.addValue(Utils.enumToString(DecreeChangeValueKind.NUMBERS), "Цифры", None, None)
+        fi.addValue(Utils.enumToString(DecreeChangeValueKind.SEQUENCE), "Предложение", None, None)
+        fi.addValue(Utils.enumToString(DecreeChangeValueKind.FOOTNOTE), "Сноска", None, None)
+        fi.addValue(Utils.enumToString(DecreeChangeValueKind.BLOCK), "Блок", None, None)
         MetaDecreeChangeValue.KIND_FEATURE = fi
-        self.add_feature(DecreeChangeValueReferent.ATTR_VALUE, "Значение", 1, 1)
-        self.add_feature(DecreeChangeValueReferent.ATTR_NUMBER, "Номер", 0, 1)
-        self.add_feature(DecreeChangeValueReferent.ATTR_NEWITEM, "Новый структурный элемент", 0, 0)
+        self.addFeature(DecreeChangeValueReferent.ATTR_VALUE, "Значение", 1, 1)
+        self.addFeature(DecreeChangeValueReferent.ATTR_NUMBER, "Номер", 0, 1)
+        self.addFeature(DecreeChangeValueReferent.ATTR_NEWITEM, "Новый структурный элемент", 0, 0)
     
     KIND_FEATURE = None
     
@@ -40,7 +38,7 @@ class MetaDecreeChangeValue(ReferentClass):
     
     IMAGE_ID = "decreechangevalue"
     
-    def get_image_id(self, obj : 'Referent'=None) -> str:
+    def getImageId(self, obj : 'Referent'=None) -> str:
         return MetaDecreeChangeValue.IMAGE_ID
     
     GLOBAL_META = None

@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 from pullenti.ner.core.internal.TextsCompareType import TextsCompareType
 
@@ -11,12 +9,12 @@ class TextAnnotation:
     """ Аннотация слитного фрагмента текста """
     
     def __init__(self, begin : 'Token'=None, end : 'Token'=None, r : 'Referent'=None) -> None:
-        self.sofa = None
+        self.sofa = None;
         self.begin_char = 0
         self.end_char = 0
-        self.__m_occurence_of = None
+        self.__m_occurence_of = None;
         self.essential_for_occurence = False
-        self.tag = None
+        self.tag = None;
         if (begin is not None): 
             self.sofa = begin.kit.sofa
             self.begin_char = begin.begin_char
@@ -28,7 +26,6 @@ class TextAnnotation:
     def occurence_of(self) -> 'Referent':
         """ Ссылка на сущность """
         return self.__m_occurence_of
-    
     @occurence_of.setter
     def occurence_of(self, value) -> 'Referent':
         self.__m_occurence_of = value
@@ -37,14 +34,17 @@ class TextAnnotation:
     def __str__(self) -> str:
         if (self.sofa is None): 
             return "{0}:{1}".format(self.begin_char, self.end_char)
-        return self.get_text()
+        return self.getText()
     
-    def get_text(self) -> str:
+    def getText(self) -> str:
+        """ Извлечь фрагмент исходного текста, соответствующий аннотации
+        
+        """
         if (self.sofa is None or self.sofa.text is None): 
             return None
         return self.sofa.text[self.begin_char:self.begin_char+(self.end_char + 1) - self.begin_char]
     
-    def _compare_with(self, loc : 'TextAnnotation') -> 'TextsCompareType':
+    def _compareWith(self, loc : 'TextAnnotation') -> 'TextsCompareType':
         if (loc.sofa != self.sofa): 
             return TextsCompareType.NONCOMPARABLE
         return self._compare(loc.begin_char, loc.end_char)
@@ -73,7 +73,7 @@ class TextAnnotation:
             self.essential_for_occurence = True
     
     @staticmethod
-    def _new497(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int) -> 'TextAnnotation':
+    def _new507(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int) -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.begin_char = _arg2
@@ -81,7 +81,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new716(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int, _arg4 : 'Referent') -> 'TextAnnotation':
+    def _new727(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int, _arg4 : 'Referent') -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.begin_char = _arg2
@@ -90,7 +90,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2661(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
+    def _new2699(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
         res = TextAnnotation()
         res.begin_char = _arg1
         res.end_char = _arg2
@@ -98,7 +98,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2663(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
+    def _new2701(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.occurence_of = _arg2

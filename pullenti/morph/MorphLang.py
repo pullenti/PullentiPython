@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -17,10 +15,10 @@ class MorphLang:
         if (lng is not None): 
             self.value = lng.value
     
-    def __get_value(self, i : int) -> bool:
+    def __getValue(self, i : int) -> bool:
         return (((((self.value) >> i)) & 1)) != 0
     
-    def __set_value(self, i : int, val : bool) -> None:
+    def __setValue(self, i : int, val : bool) -> None:
         if (val): 
             self.value |= ((1 << i))
         else: 
@@ -30,7 +28,6 @@ class MorphLang:
     def is_undefined(self) -> bool:
         """ Неопределённый язык """
         return self.value == (0)
-    
     @is_undefined.setter
     def is_undefined(self, value_) -> bool:
         self.value = (0)
@@ -39,31 +36,28 @@ class MorphLang:
     @property
     def is_ru(self) -> bool:
         """ Русский язык """
-        return self.__get_value(0)
-    
+        return self.__getValue(0)
     @is_ru.setter
     def is_ru(self, value_) -> bool:
-        self.__set_value(0, value_)
+        self.__setValue(0, value_)
         return value_
     
     @property
     def is_ua(self) -> bool:
         """ Украинский язык """
-        return self.__get_value(1)
-    
+        return self.__getValue(1)
     @is_ua.setter
     def is_ua(self, value_) -> bool:
-        self.__set_value(1, value_)
+        self.__setValue(1, value_)
         return value_
     
     @property
     def is_by(self) -> bool:
         """ Белорусский язык """
-        return self.__get_value(2)
-    
+        return self.__getValue(2)
     @is_by.setter
     def is_by(self, value_) -> bool:
-        self.__set_value(2, value_)
+        self.__setValue(2, value_)
         return value_
     
     @property
@@ -74,31 +68,28 @@ class MorphLang:
     @property
     def is_en(self) -> bool:
         """ Английский язык """
-        return self.__get_value(3)
-    
+        return self.__getValue(3)
     @is_en.setter
     def is_en(self, value_) -> bool:
-        self.__set_value(3, value_)
+        self.__setValue(3, value_)
         return value_
     
     @property
     def is_it(self) -> bool:
         """ Итальянский язык """
-        return self.__get_value(4)
-    
+        return self.__getValue(4)
     @is_it.setter
     def is_it(self, value_) -> bool:
-        self.__set_value(4, value_)
+        self.__setValue(4, value_)
         return value_
     
     @property
     def is_kz(self) -> bool:
         """ Казахский язык """
-        return self.__get_value(5)
-    
+        return self.__getValue(5)
     @is_kz.setter
     def is_kz(self, value_) -> bool:
-        self.__set_value(5, value_)
+        self.__setValue(5, value_)
         return value_
     
     __m_names = None
@@ -107,7 +98,7 @@ class MorphLang:
         tmp_str = io.StringIO()
         i = 0
         while i < len(MorphLang.__m_names): 
-            if (self.__get_value(i)): 
+            if (self.__getValue(i)): 
                 if (tmp_str.tell() > 0): 
                     print(";", end="", file=tmp_str)
                 print(MorphLang.__m_names[i], end="", file=tmp_str)
@@ -123,7 +114,14 @@ class MorphLang:
         return self.value
     
     @staticmethod
-    def try_parse(str0_ : str, lang : 'MorphLang') -> bool:
+    def tryParse(str0_ : str, lang : 'MorphLang') -> bool:
+        """ Преобразовать из строки
+        
+        Args:
+            str0_(str): 
+            lang(MorphLang): 
+        
+        """
         lang.value = MorphLang()
         while not Utils.isNullOrEmpty(str0_):
             i = 0

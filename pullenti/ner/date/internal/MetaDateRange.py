@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 from pullenti.ner.ReferentClass import ReferentClass
 
@@ -12,8 +10,8 @@ class MetaDateRange(ReferentClass):
     def __init__(self) -> None:
         from pullenti.ner.date.DateRangeReferent import DateRangeReferent
         super().__init__()
-        self.add_feature(DateRangeReferent.ATTR_FROM, "Начало периода", 0, 1)
-        self.add_feature(DateRangeReferent.ATTR_TO, "Конец периода", 0, 1)
+        self.addFeature(DateRangeReferent.ATTR_FROM, "Начало периода", 0, 1)
+        self.addFeature(DateRangeReferent.ATTR_TO, "Конец периода", 0, 1)
     
     @property
     def name(self) -> str:
@@ -26,7 +24,7 @@ class MetaDateRange(ReferentClass):
     
     DATE_RANGE_IMAGE_ID = "daterange"
     
-    def get_image_id(self, obj : 'Referent'=None) -> str:
+    def getImageId(self, obj : 'Referent'=None) -> str:
         return MetaDateRange.DATE_RANGE_IMAGE_ID
     
     GLOBAL_META = None

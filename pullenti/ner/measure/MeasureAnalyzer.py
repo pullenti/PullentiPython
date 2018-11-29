@@ -1,13 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 import threading
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.bank.internal.ResourceHelper import ResourceHelper
+from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
 from pullenti.ner.measure.internal.UnitsHelper import UnitsHelper
 
 
@@ -46,11 +45,11 @@ class MeasureAnalyzer(Analyzer):
         from pullenti.ner.measure.internal.MeasureMeta import MeasureMeta
         from pullenti.ner.measure.internal.UnitMeta import UnitMeta
         res = dict()
-        res[MeasureMeta.IMAGE_ID] = ResourceHelper.get_bytes("measure.png")
-        res[UnitMeta.IMAGE_ID] = ResourceHelper.get_bytes("munit.png")
+        res[MeasureMeta.IMAGE_ID] = EpNerBankInternalResourceHelper.getBytes("measure.png")
+        res[UnitMeta.IMAGE_ID] = EpNerBankInternalResourceHelper.getBytes("munit.png")
         return res
     
-    def create_referent(self, type0_ : str) -> 'Referent':
+    def createReferent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.measure.MeasureReferent import MeasureReferent
         from pullenti.ner.measure.UnitReferent import UnitReferent
         if (type0_ == MeasureReferent.OBJ_TYPENAME): 
@@ -64,41 +63,48 @@ class MeasureAnalyzer(Analyzer):
         return 1
     
     def process(self, kit : 'AnalysisKit') -> None:
+        """ Основная функция выделения телефонов
+        
+        Args:
+            cnt: 
+            stage: 
+        
+        """
         from pullenti.ner.core.TerminCollection import TerminCollection
         from pullenti.ner.measure.UnitReferent import UnitReferent
         from pullenti.ner.core.Termin import Termin
         from pullenti.ner.measure.internal.MeasureToken import MeasureToken
-        ad = kit.get_analyzer_data(self)
+        ad = kit.getAnalyzerData(self)
         addunits = None
         if (kit.ontology is not None): 
             addunits = TerminCollection()
             for r in kit.ontology.items: 
-                uu = (r.referent if isinstance(r.referent, UnitReferent) else None)
+                uu = Utils.asObjectOrNull(r.referent, UnitReferent)
                 if (uu is None): 
                     continue
                 if (uu._m_unit is not None): 
                     continue
                 for s in uu.slots: 
                     if (s.type_name == UnitReferent.ATTR_NAME or s.type_name == UnitReferent.ATTR_FULLNAME): 
-                        addunits.add(Termin._new118(s.value if isinstance(s.value, str) else None, uu))
+                        addunits.add(Termin._new118(Utils.asObjectOrNull(s.value, str), uu))
         t = kit.first_token
-        first_pass3939 = True
+        first_pass3052 = True
         while True:
-            if first_pass3939: first_pass3939 = False
+            if first_pass3052: first_pass3052 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            mt = MeasureToken.try_parse_minimal(t, addunits, False)
+            mt = MeasureToken.tryParseMinimal(t, addunits, False)
             if (mt is None): 
-                mt = MeasureToken.try_parse(t, addunits, True)
+                mt = MeasureToken.tryParse(t, addunits, True)
             if (mt is None): 
                 continue
-            rts = mt.create_refenets_tokens_with_register(ad, True)
+            rts = mt.createRefenetsTokensWithRegister(ad, True)
             if (rts is None): 
                 continue
             i = 0
             while i < len(rts): 
                 rt = rts[i]
-                t.kit.embed_token(rt)
+                t.kit.embedToken(rt)
                 t = (rt)
                 j = i + 1
                 while j < len(rts): 
@@ -110,17 +116,17 @@ class MeasureAnalyzer(Analyzer):
                 i += 1
         if (kit.ontology is not None): 
             for e0_ in ad.referents: 
-                u = (e0_ if isinstance(e0_, UnitReferent) else None)
+                u = Utils.asObjectOrNull(e0_, UnitReferent)
                 if (u is None): 
                     continue
                 for r in kit.ontology.items: 
-                    uu = (r.referent if isinstance(r.referent, UnitReferent) else None)
+                    uu = Utils.asObjectOrNull(r.referent, UnitReferent)
                     if (uu is None): 
                         continue
                     ok = False
                     for s in uu.slots: 
                         if (s.type_name == UnitReferent.ATTR_NAME or s.type_name == UnitReferent.ATTR_FULLNAME): 
-                            if (u.find_slot(None, s.value, True) is not None): 
+                            if (u.findSlot(None, s.value, True) is not None): 
                                 ok = True
                                 break
                     if (ok): 
@@ -128,27 +134,27 @@ class MeasureAnalyzer(Analyzer):
                         u.ontology_items.append(r)
                         break
     
-    def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
+    def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
         from pullenti.ner.measure.internal.MeasureToken import MeasureToken
-        mt = MeasureToken.try_parse_minimal(begin, None, True)
+        mt = MeasureToken.tryParseMinimal(begin, None, True)
         if (mt is not None): 
-            rts = mt.create_refenets_tokens_with_register(None, True)
+            rts = mt.createRefenetsTokensWithRegister(None, True)
             if (rts is not None): 
                 return rts[len(rts) - 1]
         return None
     
-    def process_ontology_item(self, begin : 'Token') -> 'ReferentToken':
+    def processOntologyItem(self, begin : 'Token') -> 'ReferentToken':
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.measure.internal.UnitToken import UnitToken
         from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.measure.UnitReferent import UnitReferent
         if (not ((isinstance(begin, TextToken)))): 
             return None
-        ut = UnitToken.try_parse(begin, None, None)
+        ut = UnitToken.tryParse(begin, None, None)
         if (ut is not None): 
-            return ReferentToken(ut.create_referent_with_register(None), ut.begin_token, ut.end_token)
+            return ReferentToken(ut.createReferentWithRegister(None), ut.begin_token, ut.end_token)
         u = UnitReferent()
-        u.add_slot(UnitReferent.ATTR_NAME, begin.get_source_text(), False, 0)
+        u.addSlot(UnitReferent.ATTR_NAME, begin.getSourceText(), False, 0)
         return ReferentToken(u, begin, begin)
     
     __m_initialized = False
@@ -157,15 +163,18 @@ class MeasureAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.ProcessorService import ProcessorService
+        from pullenti.ner.core.Termin import Termin
         from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
+        from pullenti.ner.ProcessorService import ProcessorService
         with MeasureAnalyzer.__m_lock: 
             if (MeasureAnalyzer.__m_initialized): 
                 return
             MeasureAnalyzer.__m_initialized = True
-            ProcessorService.register_analyzer(MeasureAnalyzer())
+            Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             UnitsHelper.initialize()
             NumbersWithUnitToken._initialize()
+            Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False
+            ProcessorService.registerAnalyzer(MeasureAnalyzer())
     
     # static constructor for class MeasureAnalyzer
     @staticmethod

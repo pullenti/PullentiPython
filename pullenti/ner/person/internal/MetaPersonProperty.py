@@ -1,9 +1,8 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.Referent import Referent
 from pullenti.ner.person.PersonPropertyKind import PersonPropertyKind
@@ -14,11 +13,11 @@ class MetaPersonProperty(ReferentClass):
     def __init__(self) -> None:
         from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
         super().__init__()
-        self.add_feature(PersonPropertyReferent.ATTR_NAME, "Наименование", 1, 1)
-        self.add_feature(PersonPropertyReferent.ATTR_HIGHER, "Вышестоящее свойство", 0, 0)
-        self.add_feature(PersonPropertyReferent.ATTR_ATTR, "Атрибут", 0, 0)
-        self.add_feature(PersonPropertyReferent.ATTR_REF, "Ссылка на объект", 0, 1)
-        self.add_feature(Referent.ATTR_GENERAL, "Обобщающее свойство", 1, 0)
+        self.addFeature(PersonPropertyReferent.ATTR_NAME, "Наименование", 1, 1)
+        self.addFeature(PersonPropertyReferent.ATTR_HIGHER, "Вышестоящее свойство", 0, 0)
+        self.addFeature(PersonPropertyReferent.ATTR_ATTR, "Атрибут", 0, 0)
+        self.addFeature(PersonPropertyReferent.ATTR_REF, "Ссылка на объект", 0, 1)
+        self.addFeature(Referent.ATTR_GENERAL, "Обобщающее свойство", 1, 0)
     
     @property
     def name(self) -> str:
@@ -41,11 +40,11 @@ class MetaPersonProperty(ReferentClass):
     
     PERSON_PROP_NATION_ID = "nationality"
     
-    def get_image_id(self, obj : 'Referent'=None) -> str:
+    def getImageId(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
         ki = PersonPropertyKind.UNDEFINED
         if (isinstance(obj, PersonPropertyReferent)): 
-            ki = (obj if isinstance(obj, PersonPropertyReferent) else None).kind
+            ki = (Utils.asObjectOrNull(obj, PersonPropertyReferent)).kind
         if (ki == PersonPropertyKind.BOSS): 
             return MetaPersonProperty.PERSON_PROP_BOSS_IMAGE_ID
         if (ki == PersonPropertyKind.KING): 

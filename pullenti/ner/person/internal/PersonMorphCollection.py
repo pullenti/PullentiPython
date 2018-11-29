@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 import typing
@@ -15,8 +13,8 @@ class PersonMorphCollection:
     class PersonMorphVariant:
         
         def __init__(self) -> None:
-            self.value = None
-            self.short_value = None
+            self.value = None;
+            self.short_value = None;
             self.gender = MorphGender.UNDEFINED
         
         def __str__(self) -> str:
@@ -29,7 +27,7 @@ class PersonMorphCollection:
             return Utils.toStringStringIO(res)
         
         @staticmethod
-        def _new2414(_arg1 : str, _arg2 : 'MorphGender', _arg3 : str) -> 'PersonMorphVariant':
+        def _new2446(_arg1 : str, _arg2 : 'MorphGender', _arg3 : str) -> 'PersonMorphVariant':
             res = PersonMorphCollection.PersonMorphVariant()
             res.value = _arg1
             res.gender = _arg2
@@ -51,14 +49,14 @@ class PersonMorphCollection:
             return 0
     
     def __init__(self) -> None:
-        self.head = None
+        self.head = None;
         self.items = list()
         self.number = 0
     
-    def check_latin_variant(self, latin : str) -> bool:
+    def checkLatinVariant(self, latin : str) -> bool:
         from pullenti.ner.core.MiscHelper import MiscHelper
         for it in self.items: 
-            if (MiscHelper.can_be_equal_cyr_and_latss(latin, it.value)): 
+            if (MiscHelper.canBeEqualCyrAndLatSS(latin, it.value)): 
                 return True
         return False
     
@@ -83,7 +81,7 @@ class PersonMorphCollection:
     def has_lastname_standard_tail(self) -> bool:
         from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         for it in self.items: 
-            if (PersonItemToken.MorphPersonItem.ends_with_std_surname(it.value)): 
+            if (PersonItemToken.MorphPersonItem.endsWithStdSurname(it.value)): 
                 return True
         return False
     
@@ -102,12 +100,12 @@ class PersonMorphCollection:
             for it in self.items: 
                 if (it.value == val and it.gender == gen): 
                     return
-            self.items.append(PersonMorphCollection.PersonMorphVariant._new2414(val, gen, shortval))
+            self.items.append(PersonMorphCollection.PersonMorphVariant._new2446(val, gen, shortval))
             if (add_other_gender_var): 
                 g0 = (MorphGender.MASCULINE if gen == MorphGender.FEMINIE else MorphGender.FEMINIE)
-                v = Morphology.get_wordform(val, MorphBaseInfo._new211(MorphClass._new2395(True), g0))
+                v = Morphology.getWordform(val, MorphBaseInfo._new211(MorphClass._new2427(True), g0))
                 if (v is not None): 
-                    self.items.append(PersonMorphCollection.PersonMorphVariant._new2414(v, g0, shortval))
+                    self.items.append(PersonMorphCollection.PersonMorphVariant._new2446(v, g0, shortval))
         else: 
             self.add(val, shortval, MorphGender.MASCULINE, False)
             self.add(val, shortval, MorphGender.FEMINIE, False)
@@ -123,7 +121,7 @@ class PersonMorphCollection:
             ret = True
         return ret
     
-    def add_prefix_str(self, prefix : str) -> None:
+    def addPrefixStr(self, prefix : str) -> None:
         self.head = "{0}{1}".format(prefix, self.head)
         for it in self.items: 
             it.value = "{0}{1}".format(prefix, it.value)
@@ -131,7 +129,7 @@ class PersonMorphCollection:
                 it.value = "{0}{1}".format(prefix, it.short_value)
     
     @staticmethod
-    def add_prefix(prefix : 'PersonMorphCollection', body : 'PersonMorphCollection') -> 'PersonMorphCollection':
+    def addPrefix(prefix : 'PersonMorphCollection', body : 'PersonMorphCollection') -> 'PersonMorphCollection':
         res = PersonMorphCollection()
         res.head = "{0}-{1}".format(prefix.head, body.head)
         for pv in prefix.items: 
@@ -172,21 +170,21 @@ class PersonMorphCollection:
         else: 
             return MorphGender.UNDEFINED
     
-    def __contains_item(self, v : str, g : 'MorphGender') -> bool:
+    def __containsItem(self, v : str, g : 'MorphGender') -> bool:
         for it in self.items: 
             if (it.value == v and it.gender == g): 
                 return True
         return False
     
     @staticmethod
-    def is_equals(col1 : 'PersonMorphCollection', col2 : 'PersonMorphCollection') -> bool:
+    def isEquals(col1 : 'PersonMorphCollection', col2 : 'PersonMorphCollection') -> bool:
         if (col1.head != col2.head): 
             return False
         for v in col1.items: 
-            if (not col2.__contains_item(v.value, v.gender)): 
+            if (not col2.__containsItem(v.value, v.gender)): 
                 return False
         for v in col2.items: 
-            if (not col1.__contains_item(v.value, v.gender)): 
+            if (not col1.__containsItem(v.value, v.gender)): 
                 return False
         return True
     
@@ -229,7 +227,7 @@ class PersonMorphCollection:
                 while j < len(list0_): 
                     if (PersonMorphCollection.__intersect2(list0_[i], list0_[j])): 
                         ch = True
-                    if (PersonMorphCollection.is_equals(list0_[i], list0_[j])): 
+                    if (PersonMorphCollection.isEquals(list0_[i], list0_[j])): 
                         del list0_[j]
                         j -= 1
                         ch = True
@@ -242,7 +240,7 @@ class PersonMorphCollection:
         return ret
     
     @staticmethod
-    def set_gender(list0_ : typing.List['PersonMorphCollection'], gen : 'MorphGender') -> None:
+    def setGender(list0_ : typing.List['PersonMorphCollection'], gen : 'MorphGender') -> None:
         for li in list0_: 
             li.remove(None, (MorphGender.FEMINIE if gen == MorphGender.MASCULINE else MorphGender.MASCULINE))
     

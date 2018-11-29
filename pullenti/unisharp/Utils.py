@@ -4,9 +4,17 @@ import pkg_resources
 from pathlib import Path
 from pathlib import PurePath
 import datetime
+import time
 import xml.etree.ElementTree
+import uuid
 
 class Utils:    
+    @staticmethod
+    def asObjectOrNull(obj, clas):
+        if(obj == None): return None
+        if(isinstance(obj, clas)): return obj
+        return None
+
     @staticmethod
     def enumToString(e):
         s = str(e)
@@ -125,6 +133,10 @@ class Utils:
     @staticmethod
     def getDate(dt):
         return datetime.datetime(dt.year, dt.month, dt.day)
+
+    @staticmethod
+    def getDateTimeFromCtime(cti):
+        return datetime.datetime.strptime(time.ctime(cti), "%a %b %d %H:%M:%S %Y")
 
     @staticmethod
     def getDateShortString(dt):
@@ -293,6 +305,30 @@ class Utils:
         return res
 
     @staticmethod
+    def fileReadAllText(f):
+        b = Path(f).read_bytes()
+        if(b is None): return None
+        if(b[0] == 0xEF and b[1] == 0xBB and b[2] == 0xBF): b = b[3:]
+        return b.decode('utf-8', 'ignore')
+
+    @staticmethod
+    def fileWriteAllText(f, txt):
+        b = bytearray()
+        b.append(0xEF)
+        b.append(0xBB)
+        b.append(0xBF)
+        b.extend(txt.encode('utf-8', 'ignore'))
+        Path(f).write_bytes(b)
+
+    @staticmethod
+    def preambleCharset(e):
+        b = bytearray()
+        b.append(0xEF)
+        b.append(0xBB)
+        b.append(0xBF)
+        return b
+
+    @staticmethod
     def insertStringIO(s, i, ins):
         v = s.getvalue()
         buf = str(ins) + v[i:]
@@ -396,3 +432,5 @@ class Utils:
             res += t
         if(len(res) == 0): return None
         return res
+
+    EMPTYUUID = uuid.UUID('{00000000-0000-0000-0000-000000000000}')

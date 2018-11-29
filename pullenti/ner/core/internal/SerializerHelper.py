@@ -1,11 +1,8 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
-import struct
 from pullenti.unisharp.Utils import Utils
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 
@@ -13,50 +10,50 @@ from pullenti.ner.NumberSpellingType import NumberSpellingType
 class SerializerHelper:
     
     @staticmethod
-    def serialize_int(stream : io.IOBase, val : int) -> None:
+    def serializeInt(stream : io.IOBase, val : int) -> None:
         Utils.writeIO(stream, (val).to_bytes(4, byteorder="little"), 0, 4)
     
     @staticmethod
-    def deserialize_int(stream : io.IOBase) -> int:
+    def deserializeInt(stream : io.IOBase) -> int:
         buf = Utils.newArrayOfBytes(4, 0)
         Utils.readIO(stream, buf, 0, 4)
         return int.from_bytes(buf[0:0+2], byteorder="little")
     
     @staticmethod
-    def serialize_short(stream : io.IOBase, val : int) -> None:
+    def serializeShort(stream : io.IOBase, val : int) -> None:
         Utils.writeIO(stream, (val).to_bytes(2, byteorder="little"), 0, 2)
     
     @staticmethod
-    def deserialize_short(stream : io.IOBase) -> int:
+    def deserializeShort(stream : io.IOBase) -> int:
         buf = Utils.newArrayOfBytes(2, 0)
         Utils.readIO(stream, buf, 0, 2)
         return int.from_bytes(buf[0:0+2], byteorder="little")
     
     @staticmethod
-    def serialize_string(stream : io.IOBase, val : str) -> None:
+    def serializeString(stream : io.IOBase, val : str) -> None:
         if (val is None): 
-            SerializerHelper.serialize_int(stream, -1)
+            SerializerHelper.serializeInt(stream, -1)
             return
         if (Utils.isNullOrEmpty(val)): 
-            SerializerHelper.serialize_int(stream, 0)
+            SerializerHelper.serializeInt(stream, 0)
             return
-        data = val.encode('utf-8', 'ignore')
-        SerializerHelper.serialize_int(stream, len(data))
+        data = val.encode("UTF-8", 'ignore')
+        SerializerHelper.serializeInt(stream, len(data))
         Utils.writeIO(stream, data, 0, len(data))
     
     @staticmethod
-    def deserialize_string(stream : io.IOBase) -> str:
-        len0_ = SerializerHelper.deserialize_int(stream)
+    def deserializeString(stream : io.IOBase) -> str:
+        len0_ = SerializerHelper.deserializeInt(stream)
         if (len0_ < 0): 
             return None
         if (len0_ == 0): 
             return ""
         data = Utils.newArrayOfBytes(len0_, 0)
         Utils.readIO(stream, data, 0, len(data))
-        return data.decode('utf-8', 'ignore')
+        return data.decode("UTF-8", 'ignore')
     
     @staticmethod
-    def serialize_tokens(stream : io.IOBase, t : 'Token', max_char : int) -> None:
+    def serializeTokens(stream : io.IOBase, t : 'Token', max_char : int) -> None:
         cou = 0
         tt = t
         while tt is not None: 
@@ -64,25 +61,25 @@ class SerializerHelper:
                 break
             cou += 1
             tt = tt.next0_
-        SerializerHelper.serialize_int(stream, cou)
+        SerializerHelper.serializeInt(stream, cou)
         while cou > 0: 
-            SerializerHelper.serialize_token(stream, t)
+            SerializerHelper.serializeToken(stream, t)
             cou -= 1; t = t.next0_
     
     @staticmethod
-    def deserialize_tokens(stream : io.IOBase, kit : 'AnalysisKit') -> 'Token':
+    def deserializeTokens(stream : io.IOBase, kit : 'AnalysisKit') -> 'Token':
         from pullenti.ner.MetaToken import MetaToken
-        cou = SerializerHelper.deserialize_int(stream)
+        cou = SerializerHelper.deserializeInt(stream)
         if (cou == 0): 
             return None
         res = None
         prev = None
-        first_pass3691 = True
+        first_pass2799 = True
         while True:
-            if first_pass3691: first_pass3691 = False
+            if first_pass2799: first_pass2799 = False
             else: cou -= 1
             if (not (cou > 0)): break
-            t = SerializerHelper.__deserialize_token(stream, kit)
+            t = SerializerHelper.__deserializeToken(stream, kit)
             if (t is None): 
                 continue
             if (res is None): 
@@ -93,23 +90,23 @@ class SerializerHelper:
         t = res
         while t is not None: 
             if (isinstance(t, MetaToken)): 
-                SerializerHelper.__corr_prev_next(t if isinstance(t, MetaToken) else None, t.previous, t.next0_)
+                SerializerHelper.__corrPrevNext(Utils.asObjectOrNull(t, MetaToken), t.previous, t.next0_)
             t = t.next0_
         return res
     
     @staticmethod
-    def __corr_prev_next(mt : 'MetaToken', prev : 'Token', next0_ : 'Token') -> None:
+    def __corrPrevNext(mt : 'MetaToken', prev : 'Token', next0_ : 'Token') -> None:
         from pullenti.ner.MetaToken import MetaToken
         mt.begin_token._m_previous = prev
         mt.end_token._m_next = next0_
         t = mt.begin_token
         while t is not None and t.end_char <= mt.end_char: 
             if (isinstance(t, MetaToken)): 
-                SerializerHelper.__corr_prev_next(t if isinstance(t, MetaToken) else None, t.previous, t.next0_)
+                SerializerHelper.__corrPrevNext(Utils.asObjectOrNull(t, MetaToken), t.previous, t.next0_)
             t = t.next0_
     
     @staticmethod
-    def serialize_token(stream : io.IOBase, t : 'Token') -> None:
+    def serializeToken(stream : io.IOBase, t : 'Token') -> None:
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.MetaToken import MetaToken
         from pullenti.ner.NumberToken import NumberToken
@@ -123,20 +120,20 @@ class SerializerHelper:
             typ = (3)
         elif (isinstance(t, MetaToken)): 
             typ = (4)
-        SerializerHelper.serialize_short(stream, typ)
+        SerializerHelper.serializeShort(stream, typ)
         if (typ == (0)): 
             return
         t._serialize(stream)
         if (isinstance(t, MetaToken)): 
-            SerializerHelper.serialize_tokens(stream, (t if isinstance(t, MetaToken) else None).begin_token, t.end_char)
+            SerializerHelper.serializeTokens(stream, (Utils.asObjectOrNull(t, MetaToken)).begin_token, t.end_char)
     
     @staticmethod
-    def __deserialize_token(stream : io.IOBase, kit : 'AnalysisKit') -> 'Token':
+    def __deserializeToken(stream : io.IOBase, kit : 'AnalysisKit') -> 'Token':
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.MetaToken import MetaToken
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.ReferentToken import ReferentToken
-        typ = SerializerHelper.deserialize_short(stream)
+        typ = SerializerHelper.deserializeShort(stream)
         if (typ == (0)): 
             return None
         t = None
@@ -150,10 +147,10 @@ class SerializerHelper:
             t = (MetaToken(None, None, kit))
         t._deserialize(stream, kit)
         if (isinstance(t, MetaToken)): 
-            tt = SerializerHelper.deserialize_tokens(stream, kit)
+            tt = SerializerHelper.deserializeTokens(stream, kit)
             if (tt is not None): 
-                (t if isinstance(t, MetaToken) else None)._m_begin_token = tt
+                (Utils.asObjectOrNull(t, MetaToken))._m_begin_token = tt
                 while tt is not None: 
-                    (t if isinstance(t, MetaToken) else None)._m_end_token = tt
+                    (Utils.asObjectOrNull(t, MetaToken))._m_end_token = tt
                     tt = tt.next0_
         return t

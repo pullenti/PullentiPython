@@ -12,6 +12,10 @@ class ProgressEventArgs:
         self.progressPercentage = p
         self.userState = st
 
+class PropertyChangedEventArgs:
+    def __init__(self, n): 
+        self.propertyName = n
+
 class CancelEventArgs:
     def __init__(self, c = False): 
         self.cancel = c

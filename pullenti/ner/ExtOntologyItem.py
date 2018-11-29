@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 from pullenti.unisharp.Utils import Utils
 
@@ -11,10 +9,10 @@ class ExtOntologyItem:
     """ Элемент внешней онтологии """
     
     def __init__(self, caption : str=None) -> None:
-        self.ext_id = None
-        self.type_name = None
-        self.referent = None
-        self.__m_caption = None
+        self.ext_id = None;
+        self.type_name = None;
+        self.referent = None;
+        self.__m_caption = None;
         self.__m_caption = caption
     
     def __str__(self) -> str:
@@ -31,7 +29,7 @@ class ExtOntologyItem:
             return res
     
     @staticmethod
-    def _new2618(_arg1 : object, _arg2 : 'Referent', _arg3 : str) -> 'ExtOntologyItem':
+    def _new2653(_arg1 : object, _arg2 : 'Referent', _arg3 : str) -> 'ExtOntologyItem':
         res = ExtOntologyItem()
         res.ext_id = _arg1
         res.referent = _arg2

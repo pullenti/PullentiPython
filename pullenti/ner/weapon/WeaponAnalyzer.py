@@ -1,14 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.business.internal.ResourceHelper import ResourceHelper
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
@@ -41,10 +39,10 @@ class WeaponAnalyzer(Analyzer):
     def images(self) -> typing.List[tuple]:
         from pullenti.ner.weapon.internal.MetaWeapon import MetaWeapon
         res = dict()
-        res[MetaWeapon.IMAGE_ID] = ResourceHelper.get_bytes("weapon.jpg")
+        res[MetaWeapon.IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("weapon.jpg")
         return res
     
-    def create_referent(self, type0_ : str) -> 'Referent':
+    def createReferent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.weapon.WeaponReferent import WeaponReferent
         if (type0_ == WeaponReferent.OBJ_TYPENAME): 
             return WeaponReferent()
@@ -69,24 +67,24 @@ class WeaponAnalyzer(Analyzer):
         from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.TextToken import TextToken
-        ad = kit.get_analyzer_data(self)
+        ad = kit.getAnalyzerData(self)
         models = TerminCollection()
         objs_by_model = dict()
         obj_by_names = TerminCollection()
         t = kit.first_token
-        first_pass4061 = True
+        first_pass3170 = True
         while True:
-            if first_pass4061: first_pass4061 = False
+            if first_pass3170: first_pass3170 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            its = WeaponItemToken.try_parse_list(t, 10)
+            its = WeaponItemToken.tryParseList(t, 10)
             if (its is None): 
                 continue
-            rts = self.__try_attach(its, False)
+            rts = self.__tryAttach(its, False)
             if (rts is not None): 
                 for rt in rts: 
-                    rt.referent = ad.register_referent(rt.referent)
-                    kit.embed_token(rt)
+                    rt.referent = ad.registerReferent(rt.referent)
+                    kit.embedToken(rt)
                     t = (rt)
                     for s in rt.referent.slots: 
                         if (s.type_name == WeaponReferent.ATTR_MODEL): 
@@ -94,18 +92,18 @@ class WeaponAnalyzer(Analyzer):
                             for k in range(2):
                                 if (not str.isdigit(mod[0])): 
                                     li = [ ]
-                                    inoutarg2615 = RefOutArgWrapper(None)
-                                    inoutres2616 = Utils.tryGetValue(objs_by_model, mod, inoutarg2615)
-                                    li = inoutarg2615.value
-                                    if (not inoutres2616): 
+                                    wrapli2650 = RefOutArgWrapper(None)
+                                    inoutres2651 = Utils.tryGetValue(objs_by_model, mod, wrapli2650)
+                                    li = wrapli2650.value
+                                    if (not inoutres2651): 
                                         li = list()
                                         objs_by_model[mod] = li
                                     if (not rt.referent in li): 
                                         li.append(rt.referent)
-                                    models.add_str(mod, li, MorphLang(), False)
+                                    models.addStr(mod, li, MorphLang(), False)
                                 if (k > 0): 
                                     break
-                                brand = rt.referent.get_string_value(WeaponReferent.ATTR_BRAND)
+                                brand = rt.referent.getStringValue(WeaponReferent.ATTR_BRAND)
                                 if (brand is None): 
                                     break
                                 mod = "{0} {1}".format(brand, mod)
@@ -114,60 +112,60 @@ class WeaponAnalyzer(Analyzer):
         if (len(objs_by_model) == 0 and len(obj_by_names.termins) == 0): 
             return
         t = kit.first_token
-        first_pass4062 = True
+        first_pass3171 = True
         while True:
-            if first_pass4062: first_pass4062 = False
+            if first_pass3171: first_pass3171 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            br = BracketHelper.try_parse(t, BracketParseAttr.NO, 10)
+            br = BracketHelper.tryParse(t, BracketParseAttr.NO, 10)
             if (br is not None): 
-                toks = obj_by_names.try_parse(t.next0_, TerminParseAttr.NO)
+                toks = obj_by_names.tryParse(t.next0_, TerminParseAttr.NO)
                 if (toks is not None and toks.end_token.next0_ == br.end_token): 
-                    rt0 = ReferentToken(toks.termin.tag if isinstance(toks.termin.tag, Referent) else None, br.begin_token, br.end_token)
-                    kit.embed_token(rt0)
+                    rt0 = ReferentToken(Utils.asObjectOrNull(toks.termin.tag, Referent), br.begin_token, br.end_token)
+                    kit.embedToken(rt0)
                     t = (rt0)
                     continue
             if (not ((isinstance(t, TextToken)))): 
                 continue
             if (not t.chars.is_letter): 
                 continue
-            tok = models.try_parse(t, TerminParseAttr.NO)
+            tok = models.tryParse(t, TerminParseAttr.NO)
             if (tok is None): 
                 if (not t.chars.is_all_lower): 
-                    tok = obj_by_names.try_parse(t, TerminParseAttr.NO)
+                    tok = obj_by_names.tryParse(t, TerminParseAttr.NO)
                 if (tok is None): 
                     continue
             if (not tok.is_whitespace_after): 
-                if (tok.end_token.next0_ is None or not tok.end_token.next0_.is_char_of(",.)")): 
-                    if (not BracketHelper.is_bracket(tok.end_token.next0_, False)): 
+                if (tok.end_token.next0_ is None or not tok.end_token.next0_.isCharOf(",.)")): 
+                    if (not BracketHelper.isBracket(tok.end_token.next0_, False)): 
                         continue
             tr = None
-            li = (tok.termin.tag if isinstance(tok.termin.tag, list) else None)
+            li = Utils.asObjectOrNull(tok.termin.tag, list)
             if (li is not None and len(li) == 1): 
                 tr = li[0]
             else: 
-                tr = (tok.termin.tag if isinstance(tok.termin.tag, Referent) else None)
+                tr = (Utils.asObjectOrNull(tok.termin.tag, Referent))
             if (tr is not None): 
-                tit = WeaponItemToken.try_parse(tok.begin_token.previous, None, False, True)
+                tit = WeaponItemToken.tryParse(tok.begin_token.previous, None, False, True)
                 if (tit is not None and tit.typ == WeaponItemToken.Typs.BRAND): 
-                    tr.add_slot(WeaponReferent.ATTR_BRAND, tit.value, False, 0)
+                    tr.addSlot(WeaponReferent.ATTR_BRAND, tit.value, False, 0)
                     tok.begin_token = tit.begin_token
                 rt0 = ReferentToken(tr, tok.begin_token, tok.end_token)
-                kit.embed_token(rt0)
+                kit.embedToken(rt0)
                 t = (rt0)
                 continue
     
-    def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
+    def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
         from pullenti.ner.weapon.internal.WeaponItemToken import WeaponItemToken
-        its = WeaponItemToken.try_parse_list(begin, 10)
+        its = WeaponItemToken.tryParseList(begin, 10)
         if (its is None): 
             return None
-        rr = self.__try_attach(its, True)
+        rr = self.__tryAttach(its, True)
         if (rr is not None and len(rr) > 0): 
             return rr[0]
         return None
     
-    def __try_attach(self, its : typing.List['WeaponItemToken'], attach : bool) -> typing.List['ReferentToken']:
+    def __tryAttach(self, its : typing.List['WeaponItemToken'], attach : bool) -> typing.List['ReferentToken']:
         from pullenti.ner.weapon.WeaponReferent import WeaponReferent
         from pullenti.ner.weapon.internal.WeaponItemToken import WeaponItemToken
         from pullenti.ner.TextToken import TextToken
@@ -178,65 +176,65 @@ class WeaponAnalyzer(Analyzer):
         brand = None
         model = None
         i = 0
-        first_pass4063 = True
+        first_pass3172 = True
         while True:
-            if first_pass4063: first_pass4063 = False
+            if first_pass3172: first_pass3172 = False
             else: i += 1
             if (not (i < len(its))): break
             if (its[i].typ == WeaponItemToken.Typs.NOUN): 
                 if (len(its) == 1): 
                     return None
-                if (tr.find_slot(WeaponReferent.ATTR_TYPE, None, True) is not None): 
-                    if (tr.find_slot(WeaponReferent.ATTR_TYPE, its[i].value, True) is None): 
+                if (tr.findSlot(WeaponReferent.ATTR_TYPE, None, True) is not None): 
+                    if (tr.findSlot(WeaponReferent.ATTR_TYPE, its[i].value, True) is None): 
                         break
                 if (not its[i].is_internal): 
                     noun = its[i]
-                tr.add_slot(WeaponReferent.ATTR_TYPE, its[i].value, False, 0)
+                tr.addSlot(WeaponReferent.ATTR_TYPE, its[i].value, False, 0)
                 if (its[i].alt_value is not None): 
-                    tr.add_slot(WeaponReferent.ATTR_TYPE, its[i].alt_value, False, 0)
+                    tr.addSlot(WeaponReferent.ATTR_TYPE, its[i].alt_value, False, 0)
                 t1 = its[i].end_token
                 continue
             if (its[i].typ == WeaponItemToken.Typs.BRAND): 
-                if (tr.find_slot(WeaponReferent.ATTR_BRAND, None, True) is not None): 
-                    if (tr.find_slot(WeaponReferent.ATTR_BRAND, its[i].value, True) is None): 
+                if (tr.findSlot(WeaponReferent.ATTR_BRAND, None, True) is not None): 
+                    if (tr.findSlot(WeaponReferent.ATTR_BRAND, its[i].value, True) is None): 
                         break
                 if (not its[i].is_internal): 
                     if (noun is not None and noun.is_doubt): 
                         noun.is_doubt = False
                 brand = its[i]
-                tr.add_slot(WeaponReferent.ATTR_BRAND, its[i].value, False, 0)
+                tr.addSlot(WeaponReferent.ATTR_BRAND, its[i].value, False, 0)
                 t1 = its[i].end_token
                 continue
             if (its[i].typ == WeaponItemToken.Typs.MODEL): 
-                if (tr.find_slot(WeaponReferent.ATTR_MODEL, None, True) is not None): 
-                    if (tr.find_slot(WeaponReferent.ATTR_MODEL, its[i].value, True) is None): 
+                if (tr.findSlot(WeaponReferent.ATTR_MODEL, None, True) is not None): 
+                    if (tr.findSlot(WeaponReferent.ATTR_MODEL, its[i].value, True) is None): 
                         break
                 model = its[i]
-                tr.add_slot(WeaponReferent.ATTR_MODEL, its[i].value, False, 0)
+                tr.addSlot(WeaponReferent.ATTR_MODEL, its[i].value, False, 0)
                 if (its[i].alt_value is not None): 
-                    tr.add_slot(WeaponReferent.ATTR_MODEL, its[i].alt_value, False, 0)
+                    tr.addSlot(WeaponReferent.ATTR_MODEL, its[i].alt_value, False, 0)
                 t1 = its[i].end_token
                 continue
             if (its[i].typ == WeaponItemToken.Typs.NAME): 
-                if (tr.find_slot(WeaponReferent.ATTR_NAME, None, True) is not None): 
+                if (tr.findSlot(WeaponReferent.ATTR_NAME, None, True) is not None): 
                     break
-                tr.add_slot(WeaponReferent.ATTR_NAME, its[i].value, False, 0)
+                tr.addSlot(WeaponReferent.ATTR_NAME, its[i].value, False, 0)
                 if (its[i].alt_value is not None): 
-                    tr.add_slot(WeaponReferent.ATTR_NAME, its[i].alt_value, False, 0)
+                    tr.addSlot(WeaponReferent.ATTR_NAME, its[i].alt_value, False, 0)
                 t1 = its[i].end_token
                 continue
             if (its[i].typ == WeaponItemToken.Typs.NUMBER): 
-                if (tr.find_slot(WeaponReferent.ATTR_NUMBER, None, True) is not None): 
+                if (tr.findSlot(WeaponReferent.ATTR_NUMBER, None, True) is not None): 
                     break
-                tr.add_slot(WeaponReferent.ATTR_NUMBER, its[i].value, False, 0)
+                tr.addSlot(WeaponReferent.ATTR_NUMBER, its[i].value, False, 0)
                 if (its[i].alt_value is not None): 
-                    tr.add_slot(WeaponReferent.ATTR_NUMBER, its[i].alt_value, False, 0)
+                    tr.addSlot(WeaponReferent.ATTR_NUMBER, its[i].alt_value, False, 0)
                 t1 = its[i].end_token
                 continue
             if (its[i].typ == WeaponItemToken.Typs.DATE): 
-                if (tr.find_slot(WeaponReferent.ATTR_DATE, None, True) is not None): 
+                if (tr.findSlot(WeaponReferent.ATTR_DATE, None, True) is not None): 
                     break
-                tr.add_slot(WeaponReferent.ATTR_DATE, its[i].ref, True, 0)
+                tr.addSlot(WeaponReferent.ATTR_DATE, its[i].ref, True, 0)
                 t1 = its[i].end_token
                 continue
         has_good_noun = (False if noun is None else not noun.is_doubt)
@@ -244,17 +242,17 @@ class WeaponAnalyzer(Analyzer):
         if (noun is None): 
             tt = its[0].begin_token.previous
             while tt is not None: 
-                prev = (tt.get_referent() if isinstance(tt.get_referent(), WeaponReferent) else None)
+                prev = Utils.asObjectOrNull(tt.getReferent(), WeaponReferent)
                 if ((prev) is not None): 
                     add_slots = list()
                     for s in prev.slots: 
                         if (s.type_name == WeaponReferent.ATTR_TYPE): 
-                            tr.add_slot(s.type_name, s.value, False, 0)
+                            tr.addSlot(s.type_name, s.value, False, 0)
                         elif (s.type_name == WeaponReferent.ATTR_BRAND or s.type_name == WeaponReferent.ATTR_BRAND or s.type_name == WeaponReferent.ATTR_MODEL): 
-                            if (tr.find_slot(s.type_name, None, True) is None): 
+                            if (tr.findSlot(s.type_name, None, True) is None): 
                                 add_slots.append(s)
                     for s in add_slots: 
-                        tr.add_slot(s.type_name, s.value, False, 0)
+                        tr.addSlot(s.type_name, s.value, False, 0)
                     has_good_noun = True
                     break
                 elif ((isinstance(tt, TextToken)) and ((not tt.chars.is_letter or tt.morph.class0_.is_conjunction))): 
@@ -265,24 +263,24 @@ class WeaponAnalyzer(Analyzer):
         if (noun is None and model is not None): 
             cou = 0
             tt = its[0].begin_token.previous
-            first_pass4064 = True
+            first_pass3173 = True
             while True:
-                if first_pass4064: first_pass4064 = False
+                if first_pass3173: first_pass3173 = False
                 else: tt = tt.previous; cou += 1
                 if (not (tt is not None and (cou < 100))): break
-                prev = (tt.get_referent() if isinstance(tt.get_referent(), WeaponReferent) else None)
+                prev = Utils.asObjectOrNull(tt.getReferent(), WeaponReferent)
                 if ((prev) is not None): 
-                    if (prev.find_slot(WeaponReferent.ATTR_MODEL, model.value, True) is None): 
+                    if (prev.findSlot(WeaponReferent.ATTR_MODEL, model.value, True) is None): 
                         continue
                     add_slots = list()
                     for s in prev.slots: 
                         if (s.type_name == WeaponReferent.ATTR_TYPE): 
-                            tr.add_slot(s.type_name, s.value, False, 0)
+                            tr.addSlot(s.type_name, s.value, False, 0)
                         elif (s.type_name == WeaponReferent.ATTR_BRAND or s.type_name == WeaponReferent.ATTR_BRAND): 
-                            if (tr.find_slot(s.type_name, None, True) is None): 
+                            if (tr.findSlot(s.type_name, None, True) is None): 
                                 add_slots.append(s)
                     for s in add_slots: 
-                        tr.add_slot(s.type_name, s.value, False, 0)
+                        tr.addSlot(s.type_name, s.value, False, 0)
                     has_good_noun = True
                     break
         if (has_good_noun): 
@@ -299,7 +297,7 @@ class WeaponAnalyzer(Analyzer):
             ok = False
             tt = t1.previous
             while tt is not None and (cou < 20): 
-                if ((tt.is_value("ОРУЖИЕ", None) or tt.is_value("ВООРУЖЕНИЕ", None) or tt.is_value("ВЫСТРЕЛ", None)) or tt.is_value("ВЫСТРЕЛИТЬ", None)): 
+                if ((tt.isValue("ОРУЖИЕ", None) or tt.isValue("ВООРУЖЕНИЕ", None) or tt.isValue("ВЫСТРЕЛ", None)) or tt.isValue("ВЫСТРЕЛИТЬ", None)): 
                     ok = True
                     break
                 tt = tt.previous; cou += 1
@@ -309,12 +307,20 @@ class WeaponAnalyzer(Analyzer):
         res.append(ReferentToken(tr, its[0].begin_token, t1))
         return res
     
+    __m_inited = None
+    
     @staticmethod
     def initialize() -> None:
+        from pullenti.ner.core.Termin import Termin
         from pullenti.ner.weapon.internal.WeaponItemToken import WeaponItemToken
         from pullenti.ner.ProcessorService import ProcessorService
+        if (WeaponAnalyzer.__m_inited): 
+            return
+        WeaponAnalyzer.__m_inited = True
         try: 
+            Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             WeaponItemToken.initialize()
+            Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False
         except Exception as ex: 
             raise Utils.newException(ex.__str__(), ex)
-        ProcessorService.register_analyzer(WeaponAnalyzer())
+        ProcessorService.registerAnalyzer(WeaponAnalyzer())

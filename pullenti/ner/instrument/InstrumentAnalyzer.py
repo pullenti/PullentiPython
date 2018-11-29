@@ -1,13 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.decree.internal.ResourceHelper import ResourceHelper
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
 from pullenti.ner.instrument.InstrumentKind import InstrumentKind
 
 
@@ -54,13 +52,13 @@ class InstrumentAnalyzer(Analyzer):
         from pullenti.ner.instrument.internal.InstrumentParticipantMeta import InstrumentParticipantMeta
         from pullenti.ner.instrument.internal.InstrumentArtefactMeta import InstrumentArtefactMeta
         res = dict()
-        res[MetaInstrument.DOC_IMAGE_ID] = ResourceHelper.get_bytes("decree.png")
-        res[MetaInstrumentBlock.PART_IMAGE_ID] = ResourceHelper.get_bytes("part.png")
-        res[InstrumentParticipantMeta.IMAGE_ID] = ResourceHelper.get_bytes("participant.png")
-        res[InstrumentArtefactMeta.IMAGE_ID] = ResourceHelper.get_bytes("artefact.png")
+        res[MetaInstrument.DOC_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("decree.png")
+        res[MetaInstrumentBlock.PART_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("part.png")
+        res[InstrumentParticipantMeta.IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("participant.png")
+        res[InstrumentArtefactMeta.IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("artefact.png")
         return res
     
-    def create_referent(self, type0_ : str) -> 'Referent':
+    def createReferent(self, type0_ : str) -> 'Referent':
         from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
         from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
         from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
@@ -81,11 +79,11 @@ class InstrumentAnalyzer(Analyzer):
         t1 = t
         if (t is None): 
             return
-        dfr = FragToken.create_document(t, 0, InstrumentKind.UNDEFINED)
+        dfr = FragToken.createDocument(t, 0, InstrumentKind.UNDEFINED)
         if (dfr is None): 
             return
-        ad = kit.get_analyzer_data(self)
-        res = dfr.create_referent(ad)
+        ad = kit.getAnalyzerData(self)
+        res = dfr.createReferent(ad)
     
     @staticmethod
     def initialize() -> None:
@@ -100,4 +98,4 @@ class InstrumentAnalyzer(Analyzer):
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False
         except Exception as ex: 
             raise Utils.newException(ex.__str__(), ex)
-        ProcessorService.register_analyzer(InstrumentAnalyzer())
+        ProcessorService.registerAnalyzer(InstrumentAnalyzer())

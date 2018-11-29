@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -16,17 +14,17 @@ class DerivateWord:
     
     def __init__(self, gr : 'DerivateGroup') -> None:
         from pullenti.morph.ExplanWordAttr import ExplanWordAttr
-        self.group = None
-        self.spelling = None
-        self.class0_ = None
+        self.group = None;
+        self.spelling = None;
+        self.class0_ = None;
         self.aspect = MorphAspect.UNDEFINED
         self.voice = MorphVoice.UNDEFINED
         self.tense = MorphTense.UNDEFINED
         self.reflexive = False
-        self.lang = None
+        self.lang = None;
         self.attrs = ExplanWordAttr()
-        self.nexts = None
-        self.tag = None
+        self.nexts = None;
+        self.tag = None;
         self.group = gr
     
     def __str__(self) -> str:

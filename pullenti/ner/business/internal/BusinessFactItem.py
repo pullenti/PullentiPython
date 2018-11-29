@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.ner.MetaToken import MetaToken
@@ -15,34 +13,34 @@ from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 class BusinessFactItem(MetaToken):
     
     def __init__(self, b : 'Token', e0_ : 'Token') -> None:
+        super().__init__(b, e0_, None)
         self.typ = BusinessFactItemTyp.BASE
         self.base_kind = BusinessFactKind.UNDEFINED
         self.is_base_passive = False
-        super().__init__(b, e0_, None)
     
     @staticmethod
-    def try_parse(t : 'Token') -> 'BusinessFactItem':
+    def tryParse(t : 'Token') -> 'BusinessFactItem':
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         if (t is None): 
             return None
-        res = BusinessFactItem.__try_parse(t)
+        res = BusinessFactItem.__tryParse(t)
         if (res is None): 
             return None
         tt = res.end_token.next0_
-        first_pass3665 = True
+        first_pass2773 = True
         while True:
-            if first_pass3665: first_pass3665 = False
+            if first_pass2773: first_pass2773 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.morph.class0_.is_preposition): 
                 continue
             if (not ((isinstance(tt, TextToken)))): 
                 break
-            npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
+            npt = NounPhraseHelper.tryParse(tt, NounPhraseParseAttr.NO, 0)
             if (npt is None): 
                 break
-            rr = BusinessFactItem.__try_parse(tt)
+            rr = BusinessFactItem.__tryParse(tt)
             if (rr is not None): 
                 if (rr.base_kind == res.base_kind): 
                     pass
@@ -53,43 +51,43 @@ class BusinessFactItem(MetaToken):
                 res.end_token = rr.end_token
                 tt = res.end_token
                 continue
-            if ((res.base_kind == BusinessFactKind.FINANCE or npt.noun.is_value("РЫНОК", None) or npt.noun.is_value("СДЕЛКА", None)) or npt.noun.is_value("РИНОК", None) or npt.noun.is_value("УГОДА", None)): 
+            if ((res.base_kind == BusinessFactKind.FINANCE or npt.noun.isValue("РЫНОК", None) or npt.noun.isValue("СДЕЛКА", None)) or npt.noun.isValue("РИНОК", None) or npt.noun.isValue("УГОДА", None)): 
                 res.end_token = tt
                 continue
             break
         return res
     
     @staticmethod
-    def __try_parse(t : 'Token') -> 'BusinessFactItem':
+    def __tryParse(t : 'Token') -> 'BusinessFactItem':
         from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        tok = BusinessFactItem.__m_base_onto.try_parse(t, TerminParseAttr.NO)
+        tok = BusinessFactItem.__m_base_onto.tryParse(t, TerminParseAttr.NO)
         if (tok is None and t.morph.class0_.is_verb and t.next0_ is not None): 
-            tok = BusinessFactItem.__m_base_onto.try_parse(t.next0_, TerminParseAttr.NO)
+            tok = BusinessFactItem.__m_base_onto.tryParse(t.next0_, TerminParseAttr.NO)
         if (tok is not None): 
             ki = Utils.valToEnum(tok.termin.tag, BusinessFactKind)
             if (ki != BusinessFactKind.UNDEFINED): 
                 return BusinessFactItem._new403(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph, tok.termin.tag2 is not None)
             tt = tok.end_token.next0_
-            first_pass3666 = True
+            first_pass2774 = True
             while True:
-                if first_pass3666: first_pass3666 = False
+                if first_pass2774: first_pass2774 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.morph.class0_.is_preposition): 
                     continue
-                tok = BusinessFactItem.__m_base_onto.try_parse(tt, TerminParseAttr.NO)
+                tok = BusinessFactItem.__m_base_onto.tryParse(tt, TerminParseAttr.NO)
                 if (tok is None): 
                     continue
                 ki = (Utils.valToEnum(tok.termin.tag, BusinessFactKind))
                 if (ki != BusinessFactKind.UNDEFINED): 
                     return BusinessFactItem._new404(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph)
                 tt = tok.end_token
-        npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
+        npt = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.NO, 0)
         if (npt is not None): 
-            if (((((npt.noun.is_value("АКЦИОНЕР", None) or npt.noun.is_value("ВЛАДЕЛЕЦ", None) or npt.noun.is_value("ВЛАДЕЛИЦА", None)) or npt.noun.is_value("СОВЛАДЕЛЕЦ", None) or npt.noun.is_value("СОВЛАДЕЛИЦА", None)) or npt.noun.is_value("АКЦІОНЕР", None) or npt.noun.is_value("ВЛАСНИК", None)) or npt.noun.is_value("ВЛАСНИЦЯ", None) or npt.noun.is_value("СПІВВЛАСНИК", None)) or npt.noun.is_value("СПІВВЛАСНИЦЯ", None)): 
+            if (((((npt.noun.isValue("АКЦИОНЕР", None) or npt.noun.isValue("ВЛАДЕЛЕЦ", None) or npt.noun.isValue("ВЛАДЕЛИЦА", None)) or npt.noun.isValue("СОВЛАДЕЛЕЦ", None) or npt.noun.isValue("СОВЛАДЕЛИЦА", None)) or npt.noun.isValue("АКЦІОНЕР", None) or npt.noun.isValue("ВЛАСНИК", None)) or npt.noun.isValue("ВЛАСНИЦЯ", None) or npt.noun.isValue("СПІВВЛАСНИК", None)) or npt.noun.isValue("СПІВВЛАСНИЦЯ", None)): 
                 return BusinessFactItem._new404(t, npt.end_token, BusinessFactItemTyp.BASE, BusinessFactKind.HAVE, npt.morph)
         if (npt is not None): 
-            if ((npt.noun.is_value("ОСНОВАТЕЛЬ", None) or npt.noun.is_value("ОСНОВАТЕЛЬНИЦА", None) or npt.noun.is_value("ЗАСНОВНИК", None)) or npt.noun.is_value("ЗАСНОВНИЦЯ", None)): 
+            if ((npt.noun.isValue("ОСНОВАТЕЛЬ", None) or npt.noun.isValue("ОСНОВАТЕЛЬНИЦА", None) or npt.noun.isValue("ЗАСНОВНИК", None)) or npt.noun.isValue("ЗАСНОВНИЦЯ", None)): 
                 return BusinessFactItem._new404(t, npt.end_token, BusinessFactItemTyp.BASE, BusinessFactKind.CREATE, npt.morph)
         return None
     

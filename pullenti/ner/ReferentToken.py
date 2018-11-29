@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -15,10 +13,10 @@ class ReferentToken(MetaToken):
     
     def __init__(self, entity : 'Referent', begin : 'Token', end : 'Token', kit_ : 'AnalysisKit'=None) -> None:
         from pullenti.ner.MorphCollection import MorphCollection
-        self.referent = None
-        self.data = None
-        self.misc_attrs = 0
         super().__init__(begin, end, kit_)
+        self.referent = None;
+        self.data = None;
+        self.misc_attrs = 0
         self.referent = entity
         if (self.morph is None): 
             self.morph = MorphCollection()
@@ -33,11 +31,11 @@ class ReferentToken(MetaToken):
     def is_referent(self) -> bool:
         return True
     
-    def save_to_local_ontology(self) -> None:
+    def saveToLocalOntology(self) -> None:
         from pullenti.ner.TextAnnotation import TextAnnotation
         if (self.data is None): 
             return
-        r = self.data.register_referent(self.referent)
+        r = self.data.registerReferent(self.referent)
         self.data = (None)
         if (r is not None): 
             self.referent = r
@@ -46,17 +44,17 @@ class ReferentToken(MetaToken):
             anno.occurence_of = self.referent
             anno.begin_char = self.begin_char
             anno.end_char = self.end_char
-            self.referent.add_occurence(anno)
+            self.referent.addOccurence(anno)
     
-    def set_default_local_onto(self, proc : 'Processor') -> None:
+    def setDefaultLocalOnto(self, proc : 'Processor') -> None:
         if (self.referent is None or self.kit is None or proc is None): 
             return
         for a in proc.analyzers: 
-            if (a.create_referent(self.referent.type_name) is not None): 
-                self.data = self.kit.get_analyzer_data(a)
+            if (a.createReferent(self.referent.type_name) is not None): 
+                self.data = self.kit.getAnalyzerData(a)
                 break
     
-    def _replace_referent(self, old_referent : 'Referent', new_referent : 'Referent') -> None:
+    def _replaceReferent(self, old_referent : 'Referent', new_referent : 'Referent') -> None:
         if (self.referent == old_referent): 
             self.referent = new_referent
         if (self.end_token is None): 
@@ -66,7 +64,7 @@ class ReferentToken(MetaToken):
             if (t.end_char > self.end_char): 
                 break
             if (isinstance(t, ReferentToken)): 
-                (t if isinstance(t, ReferentToken) else None)._replace_referent(old_referent, new_referent)
+                (Utils.asObjectOrNull(t, ReferentToken))._replaceReferent(old_referent, new_referent)
             if (t == self.end_token): 
                 break
             t = t.next0_
@@ -76,11 +74,11 @@ class ReferentToken(MetaToken):
         id0_ = 0
         if (self.referent is not None and (isinstance(self.referent.tag, int))): 
             id0_ = (self.referent.tag)
-        SerializerHelper.serialize_int(stream, id0_)
+        SerializerHelper.serializeInt(stream, id0_)
     
     def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit') -> None:
         super()._deserialize(stream, kit_)
-        id0_ = SerializerHelper.deserialize_int(stream)
+        id0_ = SerializerHelper.deserializeInt(stream)
         if (id0_ > 0): 
             self.referent = kit_.entities[id0_ - 1]
     
@@ -91,39 +89,39 @@ class ReferentToken(MetaToken):
         return res
     
     @staticmethod
-    def _new735(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection') -> 'ReferentToken':
+    def _new746(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection') -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         return res
     
     @staticmethod
-    def _new737(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : object) -> 'ReferentToken':
+    def _new748(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : object) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.tag = _arg4
         return res
     
     @staticmethod
-    def _new1233(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : 'AnalyzerData') -> 'ReferentToken':
+    def _new1252(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : 'AnalyzerData') -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         res.data = _arg5
         return res
     
     @staticmethod
-    def _new2309(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : int) -> 'ReferentToken':
+    def _new2341(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : int) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         res.misc_attrs = _arg5
         return res
     
     @staticmethod
-    def _new2408(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : int) -> 'ReferentToken':
+    def _new2440(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : int) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.misc_attrs = _arg4
         return res
     
     @staticmethod
-    def _new2418(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : object) -> 'ReferentToken':
+    def _new2450(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : object) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         res.tag = _arg5

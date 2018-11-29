@@ -1,14 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.person.internal.ResourceHelper import ResourceHelper
+from pullenti.ner.person.internal.EpNerPersonInternalResourceHelper import EpNerPersonInternalResourceHelper
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
 
 
@@ -17,14 +15,14 @@ class ShortNameHelper:
     class ShortnameVar:
         
         def __init__(self) -> None:
-            self.name = None
+            self.name = None;
             self.gender = MorphGender.UNDEFINED
         
         def __str__(self) -> str:
             return self.name
         
         @staticmethod
-        def _new2421(_arg1 : str, _arg2 : 'MorphGender') -> 'ShortnameVar':
+        def _new2453(_arg1 : str, _arg2 : 'MorphGender') -> 'ShortnameVar':
             res = ShortNameHelper.ShortnameVar()
             res.name = _arg1
             res.gender = _arg2
@@ -33,7 +31,7 @@ class ShortNameHelper:
     M_SHORTS_NAMES = None
     
     @staticmethod
-    def get_shortnames_for_name(name : str) -> typing.List[str]:
+    def getShortnamesForName(name : str) -> typing.List[str]:
         res = list()
         for kp in ShortNameHelper.M_SHORTS_NAMES.items(): 
             for v in kp[1]: 
@@ -43,12 +41,12 @@ class ShortNameHelper:
         return res
     
     @staticmethod
-    def get_names_for_shortname(shortname : str) -> typing.List['ShortnameVar']:
+    def getNamesForShortname(shortname : str) -> typing.List['ShortnameVar']:
         res = [ ]
-        inoutarg2419 = RefOutArgWrapper(None)
-        inoutres2420 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, shortname, inoutarg2419)
-        res = inoutarg2419.value
-        if (not inoutres2420): 
+        wrapres2451 = RefOutArgWrapper(None)
+        inoutres2452 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, shortname, wrapres2451)
+        res = wrapres2451.value
+        if (not inoutres2452): 
             return None
         else: 
             return res
@@ -62,32 +60,32 @@ class ShortNameHelper:
         if (ShortNameHelper.M_INITED): 
             return
         ShortNameHelper.M_INITED = True
-        obj = ResourceHelper.get_string("ShortNames.txt")
+        obj = EpNerPersonInternalResourceHelper.getString("ShortNames.txt")
         if (obj is not None): 
             kit = AnalysisKit(SourceOfAnalysis(obj))
             t = kit.first_token
             while t is not None: 
                 if (t.is_newline_before): 
-                    g = (MorphGender.FEMINIE if t.is_value("F", None) else MorphGender.MASCULINE)
+                    g = (MorphGender.FEMINIE if t.isValue("F", None) else MorphGender.MASCULINE)
                     t = t.next0_
-                    nam = (t if isinstance(t, TextToken) else None).term
+                    nam = (Utils.asObjectOrNull(t, TextToken)).term
                     shos = list()
                     t = t.next0_
                     while t is not None: 
                         if (t.is_newline_before): 
                             break
                         else: 
-                            shos.append((t if isinstance(t, TextToken) else None).term)
+                            shos.append((Utils.asObjectOrNull(t, TextToken)).term)
                         t = t.next0_
                     for s in shos: 
                         li = None
-                        inoutarg2422 = RefOutArgWrapper(None)
-                        inoutres2423 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, s, inoutarg2422)
-                        li = inoutarg2422.value
-                        if (not inoutres2423): 
+                        wrapli2454 = RefOutArgWrapper(None)
+                        inoutres2455 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, s, wrapli2454)
+                        li = wrapli2454.value
+                        if (not inoutres2455): 
                             li = list()
                             ShortNameHelper.M_SHORTS_NAMES[s] = li
-                        li.append(ShortNameHelper.ShortnameVar._new2421(nam, g))
+                        li.append(ShortNameHelper.ShortnameVar._new2453(nam, g))
                     if (t is None): 
                         break
                     t = t.previous

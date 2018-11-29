@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import datetime
 import math
@@ -19,27 +17,27 @@ class DecreeHelper:
     """ Некоторые полезные функции для НПА """
     
     @staticmethod
-    def parse_date_time(str0_ : str) -> datetime.datetime:
+    def parseDateTime(str0_ : str) -> datetime.datetime:
         if (Utils.isNullOrEmpty(str0_)): 
             return None
         try: 
             prts = Utils.splitString(str0_, '.', False)
-            inoutarg820 = RefOutArgWrapper(0)
-            inoutres821 = Utils.tryParseInt(prts[0], inoutarg820)
-            y = inoutarg820.value
-            if (not inoutres821): 
+            wrapy831 = RefOutArgWrapper(0)
+            inoutres832 = Utils.tryParseInt(prts[0], wrapy831)
+            y = wrapy831.value
+            if (not inoutres832): 
                 return None
             mon = 0
             day = 0
             if (len(prts) > 1): 
-                inoutarg818 = RefOutArgWrapper(0)
-                inoutres819 = Utils.tryParseInt(prts[1], inoutarg818)
-                mon = inoutarg818.value
-                if (inoutres819): 
+                wrapmon829 = RefOutArgWrapper(0)
+                inoutres830 = Utils.tryParseInt(prts[1], wrapmon829)
+                mon = wrapmon829.value
+                if (inoutres830): 
                     if (len(prts) > 2): 
-                        inoutarg817 = RefOutArgWrapper(0)
-                        Utils.tryParseInt(prts[2], inoutarg817)
-                        day = inoutarg817.value
+                        wrapday828 = RefOutArgWrapper(0)
+                        Utils.tryParseInt(prts[2], wrapday828)
+                        day = wrapday828.value
             if (mon <= 0): 
                 mon = 1
             if (day <= 0): 
@@ -52,7 +50,14 @@ class DecreeHelper:
         return None
     
     @staticmethod
-    def try_create_canonic_decree_ref_uri(t : 'Token') -> 'CanonicDecreeRefUri':
+    def tryCreateCanonicDecreeRefUri(t : 'Token') -> 'CanonicDecreeRefUri':
+        """ Это для оформления ссылок по некоторым стандартам (когда гиперссылкой нужно выделить не всю сущность,
+         а лишь некоторую её часть)
+        
+        Args:
+            t(Token): 
+        
+        """
         from pullenti.ner.MetaToken import MetaToken
         from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
@@ -64,22 +69,22 @@ class DecreeHelper:
         from pullenti.ner.core.BracketHelper import BracketHelper
         if (not ((isinstance(t, ReferentToken)))): 
             return None
-        dr = (t.get_referent() if isinstance(t.get_referent(), DecreeReferent) else None)
+        dr = Utils.asObjectOrNull(t.getReferent(), DecreeReferent)
         if (dr is not None): 
             if (dr.kind == DecreeKind.PUBLISHER): 
                 return None
-            res = CanonicDecreeRefUri._new822(t.kit.sofa.text, dr, t.begin_char, t.end_char)
-            if ((t.previous is not None and t.previous.is_char('(') and t.next0_ is not None) and t.next0_.is_char(')')): 
+            res = CanonicDecreeRefUri._new833(t.kit.sofa.text, dr, t.begin_char, t.end_char)
+            if ((t.previous is not None and t.previous.isChar('(') and t.next0_ is not None) and t.next0_.isChar(')')): 
                 return res
-            if ((t if isinstance(t, ReferentToken) else None).misc_attrs != 0): 
+            if ((Utils.asObjectOrNull(t, ReferentToken)).misc_attrs != 0): 
                 return res
-            rt = (t if isinstance(t, ReferentToken) else None)
-            if (rt.begin_token.is_char('(') and rt.end_token.is_char(')')): 
-                res = CanonicDecreeRefUri._new822(t.kit.sofa.text, dr, rt.begin_token.next0_.begin_char, rt.end_token.previous.end_char)
+            rt = Utils.asObjectOrNull(t, ReferentToken)
+            if (rt.begin_token.isChar('(') and rt.end_token.isChar(')')): 
+                res = CanonicDecreeRefUri._new833(t.kit.sofa.text, dr, rt.begin_token.next0_.begin_char, rt.end_token.previous.end_char)
                 return res
             next_decree_items = None
-            if ((t.next0_ is not None and t.next0_.is_comma_and and (isinstance(t.next0_.next0_, ReferentToken))) and (isinstance(t.next0_.next0_.get_referent(), DecreeReferent))): 
-                next_decree_items = DecreeToken.try_attach_list((t.next0_.next0_ if isinstance(t.next0_.next0_, ReferentToken) else None).begin_token, None, 10, False)
+            if ((t.next0_ is not None and t.next0_.is_comma_and and (isinstance(t.next0_.next0_, ReferentToken))) and (isinstance(t.next0_.next0_.getReferent(), DecreeReferent))): 
+                next_decree_items = DecreeToken.tryAttachList((Utils.asObjectOrNull(t.next0_.next0_, ReferentToken)).begin_token, None, 10, False)
                 if (next_decree_items is not None and len(next_decree_items) > 1): 
                     i = 0
                     while i < (len(next_decree_items) - 1): 
@@ -89,32 +94,32 @@ class DecreeHelper:
                         i += 1
             was_typ = False
             was_num = False
-            tt = (t if isinstance(t, MetaToken) else None).begin_token
-            first_pass3736 = True
+            tt = (Utils.asObjectOrNull(t, MetaToken)).begin_token
+            first_pass2845 = True
             while True:
-                if first_pass3736: first_pass3736 = False
+                if first_pass2845: first_pass2845 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= t.end_char)): break
-                if (tt.begin_char == t.begin_char and tt.is_char('(') and tt.next0_ is not None): 
+                if (tt.begin_char == t.begin_char and tt.isChar('(') and tt.next0_ is not None): 
                     res.begin_char = tt.next0_.begin_char
-                if (tt.is_char('(') and tt.next0_ is not None and tt.next0_.is_value("ДАЛЕЕ", None)): 
+                if (tt.isChar('(') and tt.next0_ is not None and tt.next0_.isValue("ДАЛЕЕ", None)): 
                     if (res.end_char >= tt.begin_char): 
                         res.end_char = tt.previous.end_char
                     break
-                if (tt.end_char == t.end_char and tt.is_char(')')): 
+                if (tt.end_char == t.end_char and tt.isChar(')')): 
                     res.end_char = tt.previous.end_char
                     tt1 = tt.previous
                     while tt1 is not None and tt1.begin_char >= res.begin_char: 
-                        if (tt1.is_char('(') and tt1.previous is not None): 
+                        if (tt1.isChar('(') and tt1.previous is not None): 
                             if (res.begin_char < tt1.previous.begin_char): 
                                 res.end_char = tt1.previous.end_char
                         tt1 = tt1.previous
-                li = DecreeToken.try_attach_list(tt, None, 10, False)
+                li = DecreeToken.tryAttachList(tt, None, 10, False)
                 if (li is not None and len(li) > 0): 
                     ii = 0
                     while ii < (len(li) - 1): 
                         if (li[ii].typ == DecreeToken.ItemType.TYP and li[ii + 1].typ == DecreeToken.ItemType.TERR): 
-                            res.type_with_geo = MiscHelper.get_text_value(li[ii].begin_token, li[ii + 1].end_token, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE)
+                            res.type_with_geo = MiscHelper.getTextValue(li[ii].begin_token, li[ii + 1].end_token, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE)
                         ii += 1
                     if ((next_decree_items is not None and len(next_decree_items) > 1 and (len(next_decree_items) < len(li))) and next_decree_items[0].typ != DecreeToken.ItemType.TYP): 
                         d = len(li) - len(next_decree_items)
@@ -134,9 +139,9 @@ class DecreeHelper:
                         res.begin_char = li[len(li) - 1].begin_char
                         res.end_char = li[len(li) - 1].end_char
                     i = 0
-                    first_pass3737 = True
+                    first_pass2846 = True
                     while True:
-                        if first_pass3737: first_pass3737 = False
+                        if first_pass2846: first_pass2846 = False
                         else: i += 1
                         if (not (i < len(li))): break
                         l_ = li[i]
@@ -163,9 +168,9 @@ class DecreeHelper:
                                     was_typ = True
                             if (was_typ): 
                                 tt0 = l_.begin_token.previous
-                                if (tt0 is not None and tt0.is_char('.')): 
+                                if (tt0 is not None and tt0.isChar('.')): 
                                     tt0 = tt0.previous
-                                if (tt0 is not None and ((tt0.is_value("УТВЕРЖДЕННЫЙ", None) or tt0.is_value("УТВЕРДИТЬ", None) or tt0.is_value("УТВ", None)))): 
+                                if (tt0 is not None and ((tt0.isValue("УТВЕРЖДЕННЫЙ", None) or tt0.isValue("УТВЕРДИТЬ", None) or tt0.isValue("УТВ", None)))): 
                                     if (l_.begin_char > res.begin_char): 
                                         res.begin_char = l_.begin_char
                                         if (res.end_char < res.begin_char): 
@@ -173,48 +178,48 @@ class DecreeHelper:
                                         res.is_adopted = True
                     if (len(li) > 0): 
                         tt = li[len(li) - 1].end_token
-                        if (tt.is_char(')')): 
+                        if (tt.isChar(')')): 
                             tt = tt.previous
                         continue
                 if (was_typ): 
-                    na = DecreeToken.try_attach_name(tt, dr.typ0, True, False)
+                    na = DecreeToken.tryAttachName(tt, dr.typ0, True, False)
                     if (na is not None and tt.begin_char > t.begin_char): 
                         tt1 = na.end_token.next0_
-                        if (tt1 is not None and tt1.is_char_of(",()")): 
+                        if (tt1 is not None and tt1.isCharOf(",()")): 
                             tt1 = tt1.next0_
                         if (tt1 is not None and (tt1.end_char < t.end_char)): 
-                            if (tt1.is_value("УТВЕРЖДЕННЫЙ", None) or tt1.is_value("УТВЕРДИТЬ", None) or tt1.is_value("УТВ", None)): 
+                            if (tt1.isValue("УТВЕРЖДЕННЫЙ", None) or tt1.isValue("УТВЕРДИТЬ", None) or tt1.isValue("УТВ", None)): 
                                 tt = tt1
                                 continue
-                        if (tt.previous is not None and tt.previous.is_char(':') and na.end_char <= res.end_char): 
+                        if (tt.previous is not None and tt.previous.isChar(':') and na.end_char <= res.end_char): 
                             res.begin_char = tt.begin_char
                             break
                         if (tt.previous.end_char > res.begin_char): 
                             res.end_char = tt.previous.end_char
                             break
             return res
-        dpr = (t.get_referent() if isinstance(t.get_referent(), DecreePartReferent) else None)
+        dpr = Utils.asObjectOrNull(t.getReferent(), DecreePartReferent)
         if (dpr is None): 
             return None
-        if ((t.previous is not None and t.previous.is_hiphen and (isinstance(t.previous.previous, ReferentToken))) and (isinstance(t.previous.previous.get_referent(), DecreePartReferent))): 
-            if (DecreePartReferent.create_range_referent(t.previous.previous.get_referent() if isinstance(t.previous.previous.get_referent(), DecreePartReferent) else None, dpr) is not None): 
+        if ((t.previous is not None and t.previous.is_hiphen and (isinstance(t.previous.previous, ReferentToken))) and (isinstance(t.previous.previous.getReferent(), DecreePartReferent))): 
+            if (DecreePartReferent.createRangeReferent(Utils.asObjectOrNull(t.previous.previous.getReferent(), DecreePartReferent), dpr) is not None): 
                 return None
         t1 = t
         has_diap = False
         diap_ref = None
-        if ((t.next0_ is not None and t.next0_.is_hiphen and (isinstance(t.next0_.next0_, ReferentToken))) and (isinstance(t.next0_.next0_.get_referent(), DecreePartReferent))): 
-            diap = DecreePartReferent.create_range_referent(dpr if isinstance(dpr, DecreePartReferent) else None, (t.next0_.next0_.get_referent() if isinstance(t.next0_.next0_.get_referent(), DecreePartReferent) else None))
+        if ((t.next0_ is not None and t.next0_.is_hiphen and (isinstance(t.next0_.next0_, ReferentToken))) and (isinstance(t.next0_.next0_.getReferent(), DecreePartReferent))): 
+            diap = DecreePartReferent.createRangeReferent(Utils.asObjectOrNull(dpr, DecreePartReferent), Utils.asObjectOrNull(t.next0_.next0_.getReferent(), DecreePartReferent))
             if (diap is not None): 
                 dpr = diap
                 has_diap = True
                 t1 = t.next0_.next0_
-                diap_ref = (t1 if isinstance(t1, ReferentToken) else None)
-        res = CanonicDecreeRefUri._new824(t.kit.sofa.text, dpr, t.begin_char, t1.end_char, has_diap)
-        if ((t.previous is not None and t.previous.is_char('(') and t1.next0_ is not None) and t1.next0_.is_char(')')): 
+                diap_ref = (Utils.asObjectOrNull(t1, ReferentToken))
+        res = CanonicDecreeRefUri._new835(t.kit.sofa.text, dpr, t.begin_char, t1.end_char, has_diap)
+        if ((t.previous is not None and t.previous.isChar('(') and t1.next0_ is not None) and t1.next0_.isChar(')')): 
             return res
-        tt = (t if isinstance(t, MetaToken) else None).begin_token
+        tt = (Utils.asObjectOrNull(t, MetaToken)).begin_token
         while tt is not None and tt.end_char <= t.end_char: 
-            if (isinstance(tt.get_referent(), DecreeReferent)): 
+            if (isinstance(tt.getReferent(), DecreeReferent)): 
                 if (tt.begin_char > t.begin_char): 
                     res.end_char = tt.previous.end_char
                     if (tt.previous.morph.class0_.is_preposition and tt.previous.previous is not None): 
@@ -223,20 +228,20 @@ class DecreeHelper:
                     res.begin_char = tt.begin_char
                 break
             tt = tt.next0_
-        has_same_before = DecreeHelper.__has_same_decree(t, dpr, True)
-        has_same_after = DecreeHelper.__has_same_decree(t, dpr, False)
+        has_same_before = DecreeHelper.__hasSameDecree(t, dpr, True)
+        has_same_after = DecreeHelper.__hasSameDecree(t, dpr, False)
         ptmin = PartToken.ItemType.PREFIX
         ptmin2 = PartToken.ItemType.PREFIX
         max0_ = 0
         max2 = 0
         for s in dpr.slots: 
-            pt = PartToken._get_type_by_attr_name(s.type_name)
+            pt = PartToken._getTypeByAttrName(s.type_name)
             if (pt == PartToken.ItemType.PREFIX): 
                 continue
-            co = PartToken._get_rank(pt)
+            co = PartToken._getRank(pt)
             if (co < 1): 
-                if (pt == PartToken.ItemType.PART and dpr.find_slot(DecreePartReferent.ATTR_CLAUSE, None, True) is not None): 
-                    co = PartToken._get_rank(PartToken.ItemType.PARAGRAPH)
+                if (pt == PartToken.ItemType.PART and dpr.findSlot(DecreePartReferent.ATTR_CLAUSE, None, True) is not None): 
+                    co = PartToken._getRank(PartToken.ItemType.PARAGRAPH)
                 else: 
                     continue
             if (co > max0_): 
@@ -248,18 +253,18 @@ class DecreeHelper:
                 max2 = co
                 ptmin2 = pt
         if (ptmin != PartToken.ItemType.PREFIX): 
-            tt = (t if isinstance(t, MetaToken) else None).begin_token
+            tt = (Utils.asObjectOrNull(t, MetaToken)).begin_token
             while tt is not None and tt.end_char <= res.end_char: 
                 if (tt.begin_char >= res.begin_char): 
-                    pt = PartToken.try_attach(tt, None, False, False)
+                    pt = PartToken.tryAttach(tt, None, False, False)
                     if (pt is not None and pt.typ == ptmin): 
                         res.begin_char = pt.begin_char
                         res.end_char = pt.end_char
-                        if (pt.typ == PartToken.ItemType.APPENDIX and pt.end_token.is_value("К", None) and pt.begin_token != pt.end_token): 
+                        if (pt.typ == PartToken.ItemType.APPENDIX and pt.end_token.isValue("К", None) and pt.begin_token != pt.end_token): 
                             res.end_char = pt.end_token.previous.end_char
                         if (pt.end_char == t.end_char): 
-                            if ((t.next0_ is not None and t.next0_.is_comma_and and (isinstance(t.next0_.next0_, ReferentToken))) and (isinstance(t.next0_.next0_.get_referent(), DecreePartReferent))): 
-                                tt1 = (t.next0_.next0_ if isinstance(t.next0_.next0_, ReferentToken) else None).begin_token
+                            if ((t.next0_ is not None and t.next0_.is_comma_and and (isinstance(t.next0_.next0_, ReferentToken))) and (isinstance(t.next0_.next0_.getReferent(), DecreePartReferent))): 
+                                tt1 = (Utils.asObjectOrNull(t.next0_.next0_, ReferentToken)).begin_token
                                 ok = True
                                 if (tt1.chars.is_letter): 
                                     ok = False
@@ -275,7 +280,7 @@ class DecreeHelper:
             if (has_diap and diap_ref is not None): 
                 tt = diap_ref.begin_token
                 while tt is not None and tt.end_char <= diap_ref.end_char: 
-                    if (tt.is_char(',')): 
+                    if (tt.isChar(',')): 
                         break
                     if (tt != diap_ref.begin_token and tt.is_whitespace_before): 
                         break
@@ -283,14 +288,14 @@ class DecreeHelper:
                     tt = tt.next0_
                 return res
         if (((has_same_before or has_same_after)) and ptmin != PartToken.ItemType.PREFIX): 
-            tt = (t if isinstance(t, MetaToken) else None).begin_token
-            first_pass3738 = True
+            tt = (Utils.asObjectOrNull(t, MetaToken)).begin_token
+            first_pass2847 = True
             while True:
-                if first_pass3738: first_pass3738 = False
+                if first_pass2847: first_pass2847 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= res.end_char)): break
                 if (tt.begin_char >= res.begin_char): 
-                    pt = (PartToken.try_attach(tt, None, False, False) if not has_same_before else None)
+                    pt = (PartToken.tryAttach(tt, None, False, False) if not has_same_before else None)
                     if (pt is not None): 
                         if (pt.typ == ptmin): 
                             for v in pt.values: 
@@ -302,7 +307,7 @@ class DecreeHelper:
                     if ((isinstance(tt, NumberToken)) and tt.begin_char == res.begin_char): 
                         res.end_char = tt.end_char
                         while tt is not None and tt.next0_ is not None: 
-                            if (not tt.next0_.is_char('.') or tt.is_whitespace_after or tt.next0_.is_whitespace_after): 
+                            if (not tt.next0_.isChar('.') or tt.is_whitespace_after or tt.next0_.is_whitespace_after): 
                                 break
                             if (not ((isinstance(tt.next0_.next0_, NumberToken)))): 
                                 break
@@ -313,26 +318,26 @@ class DecreeHelper:
                                 tt = tt.next0_.next0_
                                 res.end_char = tt.end_char
                                 while tt is not None and tt.next0_ is not None: 
-                                    if (not tt.next0_.is_char('.') or tt.is_whitespace_after or tt.next0_.is_whitespace_after): 
+                                    if (not tt.next0_.isChar('.') or tt.is_whitespace_after or tt.next0_.is_whitespace_after): 
                                         break
                                     if (not ((isinstance(tt.next0_.next0_, NumberToken)))): 
                                         break
                                     tt = tt.next0_.next0_
                                     res.end_char = tt.end_char
-                            elif (tt.next0_.next0_ is not None and (isinstance(tt.next0_.next0_.get_referent(), DecreePartReferent)) and has_diap): 
-                                res.end_char = (tt.next0_.next0_ if isinstance(tt.next0_.next0_, MetaToken) else None).begin_token.end_char
+                            elif (tt.next0_.next0_ is not None and (isinstance(tt.next0_.next0_.getReferent(), DecreePartReferent)) and has_diap): 
+                                res.end_char = (Utils.asObjectOrNull(tt.next0_.next0_, MetaToken)).begin_token.end_char
                         return res
-                    if (BracketHelper.can_be_start_of_sequence(tt, True, False) and tt.begin_char == res.begin_char and has_same_before): 
-                        br = BracketHelper.try_parse(tt, BracketParseAttr.NO, 100)
+                    if (BracketHelper.canBeStartOfSequence(tt, True, False) and tt.begin_char == res.begin_char and has_same_before): 
+                        br = BracketHelper.tryParse(tt, BracketParseAttr.NO, 100)
                         if (br is not None and br.end_token.previous == tt.next0_): 
                             res.end_char = br.end_char
                             return res
             return res
         if (not has_same_before and not has_same_after and ptmin != PartToken.ItemType.PREFIX): 
-            tt = (t if isinstance(t, MetaToken) else None).begin_token
+            tt = (Utils.asObjectOrNull(t, MetaToken)).begin_token
             while tt is not None and tt.end_char <= res.end_char: 
                 if (tt.begin_char >= res.begin_char): 
-                    pts = PartToken.try_attach_list(tt, False, 40)
+                    pts = PartToken.tryAttachList(tt, False, 40)
                     if (pts is None or len(pts) == 0): 
                         break
                     i = 0
@@ -344,15 +349,15 @@ class DecreeHelper:
                             if (tt.next0_ is not None and tt.next0_.is_hiphen): 
                                 if (isinstance(tt.next0_.next0_, NumberToken)): 
                                     res.end_char = tt.next0_.next0_.end_char
-                                elif (tt.next0_.next0_ is not None and (isinstance(tt.next0_.next0_.get_referent(), DecreePartReferent)) and has_diap): 
-                                    res.end_char = (tt.next0_.next0_ if isinstance(tt.next0_.next0_, MetaToken) else None).begin_token.end_char
+                                elif (tt.next0_.next0_ is not None and (isinstance(tt.next0_.next0_.getReferent(), DecreePartReferent)) and has_diap): 
+                                    res.end_char = (Utils.asObjectOrNull(tt.next0_.next0_, MetaToken)).begin_token.end_char
                             return res
                         i += 1
                 tt = tt.next0_
         return res
     
     @staticmethod
-    def __has_same_decree(t : 'Token', dpr : 'DecreePartReferent', before : bool) -> bool:
+    def __hasSameDecree(t : 'Token', dpr : 'DecreePartReferent', before : bool) -> bool:
         from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
         from pullenti.ner.decree.internal.PartToken import PartToken
         if (((t.previous if before else t.next0_)) is None): 
@@ -365,7 +370,7 @@ class DecreeHelper:
         t = (((t.previous if before else t.next0_)))
         if (t is None): 
             return False
-        dpr0 = (t.get_referent() if isinstance(t.get_referent(), DecreePartReferent) else None)
+        dpr0 = Utils.asObjectOrNull(t.getReferent(), DecreePartReferent)
         if (dpr0 is None): 
             return False
         if (dpr0.owner != dpr.owner): 
@@ -374,23 +379,30 @@ class DecreeHelper:
             if (dpr0.local_typ != dpr.local_typ): 
                 return False
         for s in dpr0.slots: 
-            if (PartToken._get_type_by_attr_name(s.type_name) != PartToken.ItemType.PREFIX): 
-                if (dpr.find_slot(s.type_name, None, True) is None): 
+            if (PartToken._getTypeByAttrName(s.type_name) != PartToken.ItemType.PREFIX): 
+                if (dpr.findSlot(s.type_name, None, True) is None): 
                     return False
         for s in dpr.slots: 
-            if (PartToken._get_type_by_attr_name(s.type_name) != PartToken.ItemType.PREFIX): 
-                if (dpr0.find_slot(s.type_name, None, True) is None): 
+            if (PartToken._getTypeByAttrName(s.type_name) != PartToken.ItemType.PREFIX): 
+                if (dpr0.findSlot(s.type_name, None, True) is None): 
                     return False
         return True
     
     @staticmethod
-    def __out_money(m : 'MoneyReferent') -> str:
+    def __outMoney(m : 'MoneyReferent') -> str:
         res = str(m)
         res = res.replace('.', ' ').replace("RUR", "руб.").replace("RUB", "руб.")
         return res
     
     @staticmethod
-    def check_nds(t : 'Token', nds : float=18, nds_mustbe_money : bool=False) -> 'MetaToken':
+    def checkNds(t : 'Token', nds : float=18, nds_mustbe_money : bool=False) -> 'MetaToken':
+        """ Проверка корректности НДС для суммы
+        
+        Args:
+            t(Token): Указывает на значение, для которой должно далее следовать НДС
+            nds(float): 
+        
+        """
         from pullenti.ner.money.MoneyReferent import MoneyReferent
         from pullenti.ner.MetaToken import MetaToken
         from pullenti.ner.ReferentToken import ReferentToken
@@ -398,7 +410,7 @@ class DecreeHelper:
         from pullenti.ner.core.NumberExToken import NumberExToken
         if (t is None or nds <= 0): 
             return None
-        m = (t.get_referent() if isinstance(t.get_referent(), MoneyReferent) else None)
+        m = Utils.asObjectOrNull(t.getReferent(), MoneyReferent)
         if (m is None): 
             return None
         has_nds = False
@@ -409,41 +421,41 @@ class DecreeHelper:
         ndst0 = None
         ndst1 = None
         tt = t.next0_
-        first_pass3739 = True
+        first_pass2848 = True
         while True:
-            if first_pass3739: first_pass3739 = False
+            if first_pass2848: first_pass2848 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
-            if (tt.is_value("НДС", None)): 
+            if (tt.isValue("НДС", None)): 
                 has_nds = True
                 ndst1 = tt
                 ndst0 = ndst1
                 continue
             if (isinstance(tt, ReferentToken)): 
-                m1 = (tt.get_referent() if isinstance(tt.get_referent(), MoneyReferent) else None)
+                m1 = (Utils.asObjectOrNull(tt.getReferent(), MoneyReferent))
                 break
             if (isinstance(tt, NumberToken)): 
-                ne = NumberExToken.try_parse_number_with_postfix(tt)
+                ne = NumberExToken.tryParseNumberWithPostfix(tt)
                 if (ne is not None and ne.ex_typ == NumberExType.PERCENT): 
                     if (math.fabs(ne.real_value - nds) > .0001): 
                         ok = False
                         if (has_nds): 
                             ok = True
                         if (ok): 
-                            return MetaToken._new825(tt, ne.end_token, "Размер НДС должен быть {0}%, а не {1}%".format(nds, ne.real_value))
+                            return MetaToken._new836(tt, ne.end_token, "Размер НДС должен быть {0}%, а не {1}%".format(nds, ne.real_value))
                     ndst1 = ne.end_token
                     tt = ndst1
                     has_nds_perc = True
                     continue
-            if (tt.is_value("ВСЕГО", None)): 
+            if (tt.isValue("ВСЕГО", None)): 
                 has_all = True
                 continue
-            if (tt.is_value("ТОМ", None) or tt.is_value("ЧИСЛО", None) or tt.is_value("ВКЛЮЧАЯ", None)): 
+            if (tt.isValue("ТОМ", None) or tt.isValue("ЧИСЛО", None) or tt.isValue("ВКЛЮЧАЯ", None)): 
                 incl = True
                 continue
-            if ((tt.is_value("КРОМЕ", None) or tt.is_value("ТОГО", None) or tt.is_value("РАЗМЕР", None)) or tt.is_value("СУММА", None) or tt.is_value("СТАВКА", None)): 
+            if ((tt.isValue("КРОМЕ", None) or tt.isValue("ТОГО", None) or tt.isValue("РАЗМЕР", None)) or tt.isValue("СУММА", None) or tt.isValue("СТАВКА", None)): 
                 continue
-            if (((tt.is_value("Т", None) and tt.next0_ is not None and tt.next0_.is_char('.')) and tt.next0_.next0_ is not None and tt.next0_.next0_.is_value("Ч", None)) and tt.next0_.next0_.next0_ is not None and tt.next0_.next0_.next0_.is_char('.')): 
+            if (((tt.isValue("Т", None) and tt.next0_ is not None and tt.next0_.isChar('.')) and tt.next0_.next0_ is not None and tt.next0_.next0_.isValue("Ч", None)) and tt.next0_.next0_.next0_ is not None and tt.next0_.next0_.next0_.isChar('.')): 
                 incl = True
                 tt = tt.next0_.next0_.next0_
                 continue
@@ -454,7 +466,7 @@ class DecreeHelper:
             return None
         if (m1 is None): 
             if (nds_mustbe_money): 
-                return MetaToken._new825(ndst0, ndst1, "Размер НДС должен быть в денежном выражении")
+                return MetaToken._new836(ndst0, ndst1, "Размер НДС должен быть в денежном выражении")
             return None
         if (has_all): 
             return None
@@ -476,27 +488,27 @@ class DecreeHelper:
             if ((delta < 1) and m1.rest == 0 and m.rest == 0): 
                 pass
             else: 
-                mr = MoneyReferent._new827(m1.currency, must_be)
-                return MetaToken._new825(t, tt, "Размер НДС должен быть {0}, а не {1}".format(DecreeHelper.__out_money(mr), DecreeHelper.__out_money(m1)))
+                mr = MoneyReferent._new838(m1.currency, must_be)
+                return MetaToken._new836(t, tt, "Размер НДС должен быть {0}, а не {1}".format(DecreeHelper.__outMoney(mr), DecreeHelper.__outMoney(m1)))
         if (incl): 
             return None
         m2 = None
         has_all = False
         tt = tt.next0_
-        first_pass3740 = True
+        first_pass2849 = True
         while True:
-            if first_pass3740: first_pass3740 = False
+            if first_pass2849: first_pass2849 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (isinstance(tt, ReferentToken)): 
-                m2 = (tt.get_referent() if isinstance(tt.get_referent(), MoneyReferent) else None)
+                m2 = (Utils.asObjectOrNull(tt.getReferent(), MoneyReferent))
                 break
             if (not tt.chars.is_letter or tt.morph.class0_.is_preposition): 
                 continue
-            if (tt.is_value("ВСЕГО", None)): 
+            if (tt.isValue("ВСЕГО", None)): 
                 has_all = True
                 continue
-            if (tt.is_value("НДС", None) or tt.is_value("ВМЕСТЕ", None)): 
+            if (tt.isValue("НДС", None) or tt.isValue("ВМЕСТЕ", None)): 
                 continue
             break
         if (m2 is not None and has_all): 
@@ -505,7 +517,7 @@ class DecreeHelper:
             if (delta < 0): 
                 delta = (- delta)
             if (delta > .01): 
-                mr = MoneyReferent._new827(m1.currency, must_be)
-                err = "Всего с НДС должно быть {0}, а не {1}".format(DecreeHelper.__out_money(mr), DecreeHelper.__out_money(m2))
-                return MetaToken._new825(t, tt, err)
+                mr = MoneyReferent._new838(m1.currency, must_be)
+                err = "Всего с НДС должно быть {0}, а не {1}".format(DecreeHelper.__outMoney(mr), DecreeHelper.__outMoney(m2))
+                return MetaToken._new836(t, tt, err)
         return None

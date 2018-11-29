@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 import io
@@ -12,6 +10,7 @@ from pullenti.ner.address.AddressHouseType import AddressHouseType
 from pullenti.ner.address.AddressBuildingType import AddressBuildingType
 from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
 from pullenti.ner.address.AddressDetailType import AddressDetailType
+from pullenti.morph.MorphLang import MorphLang
 
 
 class AddressReferent(Referent):
@@ -80,198 +79,180 @@ class AddressReferent(Referent):
         res = list()
         for s in self.slots: 
             if (s.type_name == AddressReferent.ATTR_STREET and (isinstance(s.value, Referent))): 
-                res.append(s.value if isinstance(s.value, Referent) else None)
+                res.append(Utils.asObjectOrNull(s.value, Referent))
         return res
     
     @property
     def house(self) -> str:
         """ Дом """
-        return self.get_string_value(AddressReferent.ATTR_HOUSE)
-    
+        return self.getStringValue(AddressReferent.ATTR_HOUSE)
     @house.setter
     def house(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_HOUSE, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_HOUSE, value, True, 0)
         return value
     
     @property
     def house_type(self) -> 'AddressHouseType':
-        str0_ = self.get_string_value(AddressReferent.ATTR_HOUSETYPE)
+        str0_ = self.getStringValue(AddressReferent.ATTR_HOUSETYPE)
         if (Utils.isNullOrEmpty(str0_)): 
             return AddressHouseType.HOUSE
         try: 
             return Utils.valToEnum(str0_, AddressHouseType)
         except Exception as ex341: 
             return AddressHouseType.HOUSE
-    
     @house_type.setter
     def house_type(self, value) -> 'AddressHouseType':
-        self.add_slot(AddressReferent.ATTR_HOUSETYPE, Utils.enumToString(value).upper(), True, 0)
+        self.addSlot(AddressReferent.ATTR_HOUSETYPE, Utils.enumToString(value).upper(), True, 0)
         return value
     
     @property
     def building(self) -> str:
         """ Строение """
-        return self.get_string_value(AddressReferent.ATTR_BUILDING)
-    
+        return self.getStringValue(AddressReferent.ATTR_BUILDING)
     @building.setter
     def building(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_BUILDING, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_BUILDING, value, True, 0)
         return value
     
     @property
     def building_type(self) -> 'AddressBuildingType':
         """ Тип строения """
-        str0_ = self.get_string_value(AddressReferent.ATTR_BUILDINGTYPE)
+        str0_ = self.getStringValue(AddressReferent.ATTR_BUILDINGTYPE)
         if (Utils.isNullOrEmpty(str0_)): 
             return AddressBuildingType.BUILDING
         try: 
             return Utils.valToEnum(str0_, AddressBuildingType)
         except Exception as ex342: 
             return AddressBuildingType.BUILDING
-    
     @building_type.setter
     def building_type(self, value) -> 'AddressBuildingType':
-        self.add_slot(AddressReferent.ATTR_BUILDINGTYPE, Utils.enumToString(value).upper(), True, 0)
+        self.addSlot(AddressReferent.ATTR_BUILDINGTYPE, Utils.enumToString(value).upper(), True, 0)
         return value
     
     @property
     def corpus(self) -> str:
         """ Корпус """
-        return self.get_string_value(AddressReferent.ATTR_CORPUS)
-    
+        return self.getStringValue(AddressReferent.ATTR_CORPUS)
     @corpus.setter
     def corpus(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_CORPUS, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_CORPUS, value, True, 0)
         return value
     
     @property
     def corpus_or_flat(self) -> str:
         """ Корпус или квартира """
-        return self.get_string_value(AddressReferent.ATTR_CORPUSORFLAT)
-    
+        return self.getStringValue(AddressReferent.ATTR_CORPUSORFLAT)
     @corpus_or_flat.setter
     def corpus_or_flat(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_CORPUSORFLAT, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_CORPUSORFLAT, value, True, 0)
         return value
     
     @property
     def floor0_(self) -> str:
         """ Этаж """
-        return self.get_string_value(AddressReferent.ATTR_FLOOR)
-    
+        return self.getStringValue(AddressReferent.ATTR_FLOOR)
     @floor0_.setter
     def floor0_(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_FLOOR, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_FLOOR, value, True, 0)
         return value
     
     @property
     def potch(self) -> str:
         """ Подъезд """
-        return self.get_string_value(AddressReferent.ATTR_PORCH)
-    
+        return self.getStringValue(AddressReferent.ATTR_PORCH)
     @potch.setter
     def potch(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_PORCH, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_PORCH, value, True, 0)
         return value
     
     @property
     def flat(self) -> str:
         """ Квартира """
-        return self.get_string_value(AddressReferent.ATTR_FLAT)
-    
+        return self.getStringValue(AddressReferent.ATTR_FLAT)
     @flat.setter
     def flat(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_FLAT, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_FLAT, value, True, 0)
         return value
     
     @property
     def office(self) -> str:
         """ Номер офиса """
-        return self.get_string_value(AddressReferent.ATTR_OFFICE)
-    
+        return self.getStringValue(AddressReferent.ATTR_OFFICE)
     @office.setter
     def office(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_OFFICE, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_OFFICE, value, True, 0)
         return value
     
     @property
     def plot(self) -> str:
         """ Номер участка """
-        return self.get_string_value(AddressReferent.ATTR_PLOT)
-    
+        return self.getStringValue(AddressReferent.ATTR_PLOT)
     @plot.setter
     def plot(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_PLOT, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_PLOT, value, True, 0)
         return value
     
     @property
     def block(self) -> str:
         """ Блок (ряд) """
-        return self.get_string_value(AddressReferent.ATTR_BLOCK)
-    
+        return self.getStringValue(AddressReferent.ATTR_BLOCK)
     @block.setter
     def block(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_BLOCK, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_BLOCK, value, True, 0)
         return value
     
     @property
     def box(self) -> str:
         """ Бокс (гараж) """
-        return self.get_string_value(AddressReferent.ATTR_BOX)
-    
+        return self.getStringValue(AddressReferent.ATTR_BOX)
     @box.setter
     def box(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_BOX, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_BOX, value, True, 0)
         return value
     
     @property
     def metro(self) -> str:
         """ Станция метро """
-        return self.get_string_value(AddressReferent.ATTR_METRO)
-    
+        return self.getStringValue(AddressReferent.ATTR_METRO)
     @metro.setter
     def metro(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_METRO, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_METRO, value, True, 0)
         return value
     
     @property
     def kilometer(self) -> str:
         """ Километр """
-        return self.get_string_value(AddressReferent.ATTR_KILOMETER)
-    
+        return self.getStringValue(AddressReferent.ATTR_KILOMETER)
     @kilometer.setter
     def kilometer(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_KILOMETER, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_KILOMETER, value, True, 0)
         return value
     
     @property
     def zip0_(self) -> str:
         """ Почтовый индекс """
-        return self.get_string_value(AddressReferent.ATTR_ZIP)
-    
+        return self.getStringValue(AddressReferent.ATTR_ZIP)
     @zip0_.setter
     def zip0_(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_ZIP, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_ZIP, value, True, 0)
         return value
     
     @property
     def post_office_box(self) -> str:
         """ Почтовый ящик """
-        return self.get_string_value(AddressReferent.ATTR_POSTOFFICEBOX)
-    
+        return self.getStringValue(AddressReferent.ATTR_POSTOFFICEBOX)
     @post_office_box.setter
     def post_office_box(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_POSTOFFICEBOX, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_POSTOFFICEBOX, value, True, 0)
         return value
     
     @property
     def csp(self) -> str:
         """ ГСП (абонент городской служебной почты) """
-        return self.get_string_value(AddressReferent.ATTR_CSP)
-    
+        return self.getStringValue(AddressReferent.ATTR_CSP)
     @csp.setter
     def csp(self, value) -> str:
-        self.add_slot(AddressReferent.ATTR_CSP, value, True, 0)
+        self.addSlot(AddressReferent.ATTR_CSP, value, True, 0)
         return value
     
     @property
@@ -281,35 +262,35 @@ class AddressReferent(Referent):
         res = list()
         for a in self.slots: 
             if (a.type_name == AddressReferent.ATTR_GEO and (isinstance(a.value, GeoReferent))): 
-                res.append(a.value if isinstance(a.value, GeoReferent) else None)
+                res.append(Utils.asObjectOrNull(a.value, GeoReferent))
             elif (a.type_name == AddressReferent.ATTR_STREET and (isinstance(a.value, Referent))): 
-                for s in (a.value if isinstance(a.value, Referent) else None).slots: 
+                for s in (Utils.asObjectOrNull(a.value, Referent)).slots: 
                     if (isinstance(s.value, GeoReferent)): 
-                        res.append(s.value if isinstance(s.value, GeoReferent) else None)
+                        res.append(Utils.asObjectOrNull(s.value, GeoReferent))
         i = len(res) - 1
         while i > 0: 
             for j in range(i - 1, -1, -1):
-                if (AddressReferent.__is_higher(res[i], res[j])): 
+                if (AddressReferent.__isHigher(res[i], res[j])): 
                     del res[i]
                     break
-                elif (AddressReferent.__is_higher(res[j], res[i])): 
+                elif (AddressReferent.__isHigher(res[j], res[i])): 
                     del res[j]
                     i -= 1
             i -= 1
         return res
     
     @staticmethod
-    def __is_higher(ghi : 'GeoReferent', glo : 'GeoReferent') -> bool:
+    def __isHigher(ghi : 'GeoReferent', glo : 'GeoReferent') -> bool:
         i = 0
         while glo is not None and (i < 10): 
-            if (glo.can_be_equals(ghi, Referent.EqualType.WITHINONETEXT)): 
+            if (glo.canBeEquals(ghi, Referent.EqualType.WITHINONETEXT)): 
                 return True
             glo = glo.higher; i += 1
         return False
     
     @property
     def parent_referent(self) -> 'Referent':
-        sr = (self.get_value(AddressReferent.ATTR_STREET) if isinstance(self.get_value(AddressReferent.ATTR_STREET), Referent) else None)
+        sr = Utils.asObjectOrNull(self.getSlotValue(AddressReferent.ATTR_STREET), Referent)
         if (sr is not None): 
             return sr
         geos_ = self.geos
@@ -323,32 +304,32 @@ class AddressReferent(Referent):
             return geos_[0]
         return None
     
-    def add_referent(self, r : 'Referent') -> None:
+    def addReferent(self, r : 'Referent') -> None:
         from pullenti.ner.geo.GeoReferent import GeoReferent
         from pullenti.ner.address.StreetReferent import StreetReferent
         if (r is None): 
             return
-        geo = (r if isinstance(r, GeoReferent) else None)
+        geo = Utils.asObjectOrNull(r, GeoReferent)
         if (geo is not None): 
             for s in self.slots: 
                 if (s.type_name == AddressReferent.ATTR_GEO): 
-                    geo0 = (s.value if isinstance(s.value, GeoReferent) else None)
+                    geo0 = Utils.asObjectOrNull(s.value, GeoReferent)
                     if (geo0 is None): 
                         continue
-                    if (GeoOwnerHelper.can_be_higher(geo0, geo)): 
+                    if (GeoOwnerHelper.canBeHigher(geo0, geo)): 
                         if (geo.higher == geo0 or geo.is_city): 
-                            self.upload_slot(s, geo)
+                            self.uploadSlot(s, geo)
                             return
-                    if (GeoOwnerHelper.can_be_higher(geo, geo0)): 
+                    if (GeoOwnerHelper.canBeHigher(geo, geo0)): 
                         return
-            self.add_slot(AddressReferent.ATTR_GEO, r, False, 0)
+            self.addSlot(AddressReferent.ATTR_GEO, r, False, 0)
         elif (((isinstance(r, StreetReferent))) or r.type_name == "ORGANIZATION"): 
-            self.add_slot(AddressReferent.ATTR_STREET, r, False, 0)
+            self.addSlot(AddressReferent.ATTR_STREET, r, False, 0)
     
     @property
     def detail(self) -> 'AddressDetailType':
         """ ополнительная детализация места (пересечение, около ...) """
-        s = self.get_string_value(AddressReferent.ATTR_DETAIL)
+        s = self.getStringValue(AddressReferent.ATTR_DETAIL)
         if (s is None): 
             return AddressDetailType.UNDEFINED
         try: 
@@ -358,22 +339,21 @@ class AddressReferent(Referent):
         except Exception as ex343: 
             pass
         return AddressDetailType.UNDEFINED
-    
     @detail.setter
     def detail(self, value) -> 'AddressDetailType':
         if (value != AddressDetailType.UNDEFINED): 
-            self.add_slot(AddressReferent.ATTR_DETAIL, Utils.enumToString(value).upper(), True, 0)
+            self.addSlot(AddressReferent.ATTR_DETAIL, Utils.enumToString(value).upper(), True, 0)
         return value
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         from pullenti.ner.address.internal.MetaAddress import MetaAddress
         res = io.StringIO()
-        str0_ = self.get_string_value(AddressReferent.ATTR_DETAIL)
+        str0_ = self.getStringValue(AddressReferent.ATTR_DETAIL)
         if (str0_ is not None): 
-            str0_ = (MetaAddress._global_meta.detail_feature.convert_inner_value_to_outer_value(str0_, lang) if isinstance(MetaAddress._global_meta.detail_feature.convert_inner_value_to_outer_value(str0_, lang), str) else None)
+            str0_ = (Utils.asObjectOrNull(MetaAddress._global_meta.detail_feature.convertInnerValueToOuterValue(str0_, lang), str))
         if (str0_ is not None): 
             print("[{0}".format(str0_.lower()), end="", file=res, flush=True)
-            str0_ = self.get_string_value(AddressReferent.ATTR_DETAILPARAM)
+            str0_ = self.getStringValue(AddressReferent.ATTR_DETAILPARAM)
             if ((str0_) is not None): 
                 print(", {0}".format(str0_), end="", file=res, flush=True)
             print(']', end="", file=res)
@@ -390,7 +370,7 @@ class AddressReferent(Referent):
             while i < len(strs): 
                 if (i > 0): 
                     print(", ", end="", file=res)
-                print(strs[i].to_string(True, lang, 0), end="", file=res)
+                print(strs[i].toString(True, lang, 0), end="", file=res)
                 i += 1
         if (self.kilometer is not None): 
             print(" {0}км.".format(self.kilometer), end="", file=res, flush=True)
@@ -434,14 +414,14 @@ class AddressReferent(Referent):
             print(" а\\я{0}".format(self.post_office_box), end="", file=res, flush=True)
         if (self.csp is not None): 
             print(" ГСП-{0}".format(self.csp), end="", file=res, flush=True)
-        kladr = self.get_value(AddressReferent.ATTR_FIAS)
+        kladr = self.getSlotValue(AddressReferent.ATTR_FIAS)
         if (isinstance(kladr, Referent)): 
-            print(" (ФИАС: {0}".format(Utils.ifNotNull((kladr if isinstance(kladr, Referent) else None).get_string_value("GUID"), "?")), end="", file=res, flush=True)
+            print(" (ФИАС: {0}".format(Utils.ifNotNull((Utils.asObjectOrNull(kladr, Referent)).getStringValue("GUID"), "?")), end="", file=res, flush=True)
             for s in self.slots: 
                 if (s.type_name == AddressReferent.ATTR_FIAS and (isinstance(s.value, Referent)) and s.value != kladr): 
-                    print(", {0}".format(Utils.ifNotNull((s.value if isinstance(s.value, Referent) else None).get_string_value("GUID"), "?")), end="", file=res, flush=True)
+                    print(", {0}".format(Utils.ifNotNull((Utils.asObjectOrNull(s.value, Referent)).getStringValue("GUID"), "?")), end="", file=res, flush=True)
             print(')', end="", file=res)
-        bti = self.get_string_value(AddressReferent.ATTR_BTI)
+        bti = self.getStringValue(AddressReferent.ATTR_BTI)
         if (bti is not None): 
             print(" (БТИ {0})".format(bti), end="", file=res, flush=True)
         for g in self.geos: 
@@ -451,13 +431,13 @@ class AddressReferent(Referent):
                 pass
             elif (res.tell() > 0): 
                 print(';', end="", file=res)
-            print(" {0}".format(g.to_string(True, lang, lev + 1)), end="", file=res, flush=True)
+            print(" {0}".format(g.toString(True, lang, lev + 1)), end="", file=res, flush=True)
         if (self.zip0_ is not None): 
             print("; {0}".format(self.zip0_), end="", file=res, flush=True)
         return Utils.toStringStringIO(res).strip()
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
-        addr = (obj if isinstance(obj, AddressReferent) else None)
+    def canBeEquals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+        addr = Utils.asObjectOrNull(obj, AddressReferent)
         if (addr is None): 
             return False
         strs1 = self.streets
@@ -466,7 +446,7 @@ class AddressReferent(Referent):
             ok = False
             for s in strs1: 
                 for ss in strs2: 
-                    if (ss.can_be_equals(s, typ)): 
+                    if (ss.canBeEquals(s, typ)): 
                         ok = True
                         break
             if (not ok): 
@@ -533,15 +513,15 @@ class AddressReferent(Referent):
             ok = False
             for g1 in geos1: 
                 for g2 in geos2: 
-                    if (g1.can_be_equals(g2, typ)): 
+                    if (g1.canBeEquals(g2, typ)): 
                         ok = True
                         break
             if (not ok): 
                 return False
         return True
     
-    def merge_slots(self, obj : 'Referent', merge_statistic : bool=True) -> None:
-        super().merge_slots(obj, merge_statistic)
+    def mergeSlots(self, obj : 'Referent', merge_statistic : bool=True) -> None:
+        super().mergeSlots(obj, merge_statistic)
         if (self.corpus_or_flat is not None): 
             if (self.flat == self.corpus_or_flat): 
                 self.corpus_or_flat = None
@@ -554,22 +534,22 @@ class AddressReferent(Referent):
         geos_ = list()
         for a in self.slots: 
             if (a.type_name == AddressReferent.ATTR_GEO and (isinstance(a.value, GeoReferent))): 
-                geos_.append(a.value if isinstance(a.value, GeoReferent) else None)
+                geos_.append(Utils.asObjectOrNull(a.value, GeoReferent))
             elif (a.type_name == AddressReferent.ATTR_STREET and (isinstance(a.value, Referent))): 
-                for s in (a.value if isinstance(a.value, Referent) else None).slots: 
+                for s in (Utils.asObjectOrNull(a.value, Referent)).slots: 
                     if (isinstance(s.value, GeoReferent)): 
-                        geos_.append(s.value if isinstance(s.value, GeoReferent) else None)
+                        geos_.append(Utils.asObjectOrNull(s.value, GeoReferent))
         i = len(geos_) - 1
         while i > 0: 
             for j in range(i - 1, -1, -1):
-                if (AddressReferent.__is_higher(geos_[i], geos_[j])): 
-                    s = self.find_slot(AddressReferent.ATTR_GEO, geos_[i], True)
+                if (AddressReferent.__isHigher(geos_[i], geos_[j])): 
+                    s = self.findSlot(AddressReferent.ATTR_GEO, geos_[i], True)
                     if (s is not None): 
                         self.slots.remove(s)
                     del geos_[i]
                     break
-                elif (AddressReferent.__is_higher(geos_[j], geos_[i])): 
-                    s = self.find_slot(AddressReferent.ATTR_GEO, geos_[j], True)
+                elif (AddressReferent.__isHigher(geos_[j], geos_[i])): 
+                    s = self.findSlot(AddressReferent.ATTR_GEO, geos_[j], True)
                     if (s is not None): 
                         self.slots.remove(s)
                     del geos_[j]
@@ -589,9 +569,9 @@ class AddressReferent(Referent):
             elif (geos_[1].is_city and geos_[0].is_region): 
                 cit = geos_[1]
                 reg = geos_[0]
-            if (cit is not None and cit.higher is None and GeoOwnerHelper.can_be_higher(reg, cit)): 
+            if (cit is not None and cit.higher is None and GeoOwnerHelper.canBeHigher(reg, cit)): 
                 cit.higher = reg
-                ss = self.find_slot(AddressReferent.ATTR_GEO, reg, True)
+                ss = self.findSlot(AddressReferent.ATTR_GEO, reg, True)
                 if (ss is not None): 
                     self.slots.remove(ss)
                 geos_ = self.geos
@@ -608,6 +588,6 @@ class AddressReferent(Referent):
                     geo = geo.top_higher
                     if (geo.higher is None): 
                         geo.higher = stat
-                        s = self.find_slot(AddressReferent.ATTR_GEO, stat, True)
+                        s = self.findSlot(AddressReferent.ATTR_GEO, stat, True)
                         if (s is not None): 
                             self.slots.remove(s)

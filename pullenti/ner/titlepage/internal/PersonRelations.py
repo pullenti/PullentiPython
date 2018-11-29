@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 from pullenti.ner.titlepage.internal.PersonRelation import PersonRelation
@@ -20,14 +18,14 @@ class PersonRelations:
                 r = rr
                 break
         if (r is None): 
-            r = PersonRelation._new2478(pers)
+            r = PersonRelation._new2512(pers)
             self.rels.append(r)
         if (not typ in r.coefs): 
             r.coefs[typ] = coef
         else: 
             r.coefs[typ] += coef
     
-    def get_persons(self, typ : 'Types') -> typing.List['PersonReferent']:
+    def getPersons(self, typ : 'Types') -> typing.List['PersonReferent']:
         res = list()
         for v in self.rels: 
             if (v.best == typ): 
@@ -47,7 +45,7 @@ class PersonRelations:
         res.append(TitleItemToken.Types.TRANSLATE)
         return res
     
-    def get_attr_name_for_type(self, typ : 'Types') -> str:
+    def getAttrNameForType(self, typ : 'Types') -> str:
         from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
         from pullenti.ner.titlepage.TitlePageReferent import TitlePageReferent
         if (typ == TitleItemToken.Types.WORKER): 
@@ -66,7 +64,7 @@ class PersonRelations:
             return TitlePageReferent.ATTR_TRANSLATOR
         return None
     
-    def calc_typ_from_attrs(self, pers : 'PersonReferent') -> 'Types':
+    def calcTypFromAttrs(self, pers : 'PersonReferent') -> 'Types':
         from pullenti.ner.person.PersonReferent import PersonReferent
         from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
         for a in pers.slots: 

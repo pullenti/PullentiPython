@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.ner.ReferentClass import ReferentClass
@@ -14,14 +12,14 @@ class MetaSentiment(ReferentClass):
     def __init__(self) -> None:
         from pullenti.ner.sentiment.SentimentReferent import SentimentReferent
         super().__init__()
-        f = self.add_feature(SentimentReferent.ATTR_KIND, "Тип", 1, 1)
+        f = self.addFeature(SentimentReferent.ATTR_KIND, "Тип", 1, 1)
         MetaSentiment.FTYP = f
-        f.add_value(Utils.enumToString(SentimentKind.UNDEFINED), "Неизвестно", None, None)
-        f.add_value(Utils.enumToString(SentimentKind.POSITIVE), "Положительно", None, None)
-        f.add_value(Utils.enumToString(SentimentKind.NEGATIVE), "Отрицательно", None, None)
-        self.add_feature(SentimentReferent.ATTR_SPELLING, "Текст", 0, 0)
-        self.add_feature(SentimentReferent.ATTR_REF, "Ссылка", 0, 0)
-        self.add_feature(SentimentReferent.ATTR_COEF, "Коэффициент", 0, 0)
+        f.addValue(Utils.enumToString(SentimentKind.UNDEFINED), "Неизвестно", None, None)
+        f.addValue(Utils.enumToString(SentimentKind.POSITIVE), "Положительно", None, None)
+        f.addValue(Utils.enumToString(SentimentKind.NEGATIVE), "Отрицательно", None, None)
+        self.addFeature(SentimentReferent.ATTR_SPELLING, "Текст", 0, 0)
+        self.addFeature(SentimentReferent.ATTR_REF, "Ссылка", 0, 0)
+        self.addFeature(SentimentReferent.ATTR_COEF, "Коэффициент", 0, 0)
     
     FTYP = None
     
@@ -40,9 +38,9 @@ class MetaSentiment(ReferentClass):
     
     IMAGE_ID = "unknown"
     
-    def get_image_id(self, obj : 'Referent'=None) -> str:
+    def getImageId(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.sentiment.SentimentReferent import SentimentReferent
-        sy = (obj if isinstance(obj, SentimentReferent) else None)
+        sy = Utils.asObjectOrNull(obj, SentimentReferent)
         if (sy is not None): 
             if (sy.kind == SentimentKind.POSITIVE): 
                 return MetaSentiment.IMAGE_ID_GOOD

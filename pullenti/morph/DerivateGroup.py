@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import datetime
 from pullenti.unisharp.Utils import Utils
@@ -13,8 +11,8 @@ class DerivateGroup:
     """ Дериватная группа """
     
     def __init__(self) -> None:
-        self.root = None
-        self.prefix = None
+        self.root = None;
+        self.prefix = None;
         self.words = list()
         self.ok = False
         self.is_dummy = False
@@ -22,11 +20,11 @@ class DerivateGroup:
         self.is_generated = False
         self.m_transitive = -1
         self.deleted = False
-        self.id0_ = None
+        self.id0_ = None;
         self.modified = datetime.datetime(1, 1, 1, 0, 0, 0)
         self.changed = False
         self._lazy = None
-        self.tag = None
+        self.tag = None;
     
     @property
     def transitive(self) -> int:
@@ -37,7 +35,14 @@ class DerivateGroup:
             return self.root.transitive
         return -1
     
-    def contains_word(self, word : str, lang : 'MorphLang') -> bool:
+    def containsWord(self, word : str, lang : 'MorphLang') -> bool:
+        """ Содержит ли группа слово
+        
+        Args:
+            word(str): слово
+            lang(MorphLang): возможный язык
+        
+        """
         for w in self.words: 
             if (w.spelling == word): 
                 if (lang is None or lang.is_undefined or w.lang is None): 
@@ -58,14 +63,14 @@ class DerivateGroup:
             res = "GEN: {0}".format(res)
         return res
     
-    def compare_to(self, other : 'DerivateGroup') -> int:
+    def compareTo(self, other : 'DerivateGroup') -> int:
         if (len(self.words) == 0): 
             return (-1 if len(other.words) > 0 else 0)
         if (len(other.words) == 0): 
             return 1
         return Utils.compareStrings(self.words[0].spelling, other.words[0].spelling, False)
     
-    def create_by_prefix(self, pref : str, lang : 'MorphLang') -> 'DerivateGroup':
+    def createByPrefix(self, pref : str, lang : 'MorphLang') -> 'DerivateGroup':
         res = DerivateGroup._new40(True, self, pref)
         for w in self.words: 
             if (lang is not None and not lang.is_undefined and ((w.lang) & lang).is_undefined): 

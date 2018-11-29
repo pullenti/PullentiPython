@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 from pullenti.ner.core.Termin import Termin
 from pullenti.morph.MorphLang import MorphLang
@@ -13,6 +11,7 @@ from pullenti.ner.person.internal.PersonAttrTerminType2 import PersonAttrTerminT
 class PersonAttrTermin(Termin):
     
     def __init__(self, v : str, lang_ : 'MorphLang'=MorphLang()) -> None:
+        super().__init__(None, lang_, False)
         self.typ = PersonAttrTerminType.OTHER
         self.typ2 = PersonAttrTerminType2.UNDEFINED
         self.can_be_unique_identifier = False
@@ -24,37 +23,36 @@ class PersonAttrTermin(Termin):
         self.is_military_rank = False
         self.is_nation = False
         self.is_doubt = False
-        super().__init__(None, lang_, False)
-        self.init_by_normal_text(v, lang_)
+        self.initByNormalText(v, lang_)
     
     @staticmethod
-    def _new2235(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'PersonAttrTerminType') -> 'PersonAttrTermin':
+    def _new2267(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'PersonAttrTerminType') -> 'PersonAttrTermin':
         res = PersonAttrTermin(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new2264(_arg1 : str, _arg2 : 'PersonAttrTerminType') -> 'PersonAttrTermin':
+    def _new2296(_arg1 : str, _arg2 : 'PersonAttrTerminType') -> 'PersonAttrTermin':
         res = PersonAttrTermin(_arg1)
         res.typ = _arg2
         return res
     
     @staticmethod
-    def _new2266(_arg1 : str, _arg2 : 'PersonAttrTerminType', _arg3 : 'MorphGender') -> 'PersonAttrTermin':
+    def _new2298(_arg1 : str, _arg2 : 'PersonAttrTerminType', _arg3 : 'MorphGender') -> 'PersonAttrTermin':
         res = PersonAttrTermin(_arg1)
         res.typ = _arg2
         res.gender = _arg3
         return res
     
     @staticmethod
-    def _new2267(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'PersonAttrTerminType', _arg4 : 'MorphGender') -> 'PersonAttrTermin':
+    def _new2299(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'PersonAttrTerminType', _arg4 : 'MorphGender') -> 'PersonAttrTermin':
         res = PersonAttrTermin(_arg1, _arg2)
         res.typ = _arg3
         res.gender = _arg4
         return res
     
     @staticmethod
-    def _new2275(_arg1 : str, _arg2 : str, _arg3 : 'PersonAttrTerminType2', _arg4 : 'PersonAttrTerminType') -> 'PersonAttrTermin':
+    def _new2307(_arg1 : str, _arg2 : str, _arg3 : 'PersonAttrTerminType2', _arg4 : 'PersonAttrTerminType') -> 'PersonAttrTermin':
         res = PersonAttrTermin(_arg1)
         res.canonic_text = _arg2
         res.typ2 = _arg3
@@ -62,7 +60,7 @@ class PersonAttrTermin(Termin):
         return res
     
     @staticmethod
-    def _new2276(_arg1 : str, _arg2 : 'MorphLang', _arg3 : str, _arg4 : 'PersonAttrTerminType2', _arg5 : 'PersonAttrTerminType') -> 'PersonAttrTermin':
+    def _new2308(_arg1 : str, _arg2 : 'MorphLang', _arg3 : str, _arg4 : 'PersonAttrTerminType2', _arg5 : 'PersonAttrTerminType') -> 'PersonAttrTermin':
         res = PersonAttrTermin(_arg1, _arg2)
         res.canonic_text = _arg3
         res.typ2 = _arg4
@@ -70,21 +68,21 @@ class PersonAttrTermin(Termin):
         return res
     
     @staticmethod
-    def _new2281(_arg1 : str, _arg2 : 'PersonAttrTerminType2', _arg3 : 'PersonAttrTerminType') -> 'PersonAttrTermin':
+    def _new2313(_arg1 : str, _arg2 : 'PersonAttrTerminType2', _arg3 : 'PersonAttrTerminType') -> 'PersonAttrTermin':
         res = PersonAttrTermin(_arg1)
         res.typ2 = _arg2
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new2282(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'PersonAttrTerminType2', _arg4 : 'PersonAttrTerminType') -> 'PersonAttrTermin':
+    def _new2314(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'PersonAttrTerminType2', _arg4 : 'PersonAttrTerminType') -> 'PersonAttrTermin':
         res = PersonAttrTermin(_arg1, _arg2)
         res.typ2 = _arg3
         res.typ = _arg4
         return res
     
     @staticmethod
-    def _new2301(_arg1 : str, _arg2 : str, _arg3 : 'PersonAttrTerminType', _arg4 : 'PersonAttrTerminType2') -> 'PersonAttrTermin':
+    def _new2333(_arg1 : str, _arg2 : str, _arg3 : 'PersonAttrTerminType', _arg4 : 'PersonAttrTerminType2') -> 'PersonAttrTermin':
         res = PersonAttrTermin(_arg1)
         res.canonic_text = _arg2
         res.typ = _arg3
@@ -92,7 +90,7 @@ class PersonAttrTermin(Termin):
         return res
     
     @staticmethod
-    def _new2303(_arg1 : str, _arg2 : 'PersonAttrTerminType2', _arg3 : 'PersonAttrTerminType', _arg4 : 'MorphLang') -> 'PersonAttrTermin':
+    def _new2335(_arg1 : str, _arg2 : 'PersonAttrTerminType2', _arg3 : 'PersonAttrTerminType', _arg4 : 'MorphLang') -> 'PersonAttrTermin':
         res = PersonAttrTermin(_arg1)
         res.typ2 = _arg2
         res.typ = _arg3
@@ -100,7 +98,7 @@ class PersonAttrTermin(Termin):
         return res
     
     @staticmethod
-    def _new2308(_arg1 : str, _arg2 : 'PersonAttrTerminType', _arg3 : 'MorphLang') -> 'PersonAttrTermin':
+    def _new2340(_arg1 : str, _arg2 : 'PersonAttrTerminType', _arg3 : 'MorphLang') -> 'PersonAttrTermin':
         res = PersonAttrTermin(_arg1)
         res.typ = _arg2
         res.lang = _arg3

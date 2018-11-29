@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -10,6 +8,8 @@ from pullenti.unisharp.Misc import EventHandler
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.morph.internal.UnicodeInfo import UnicodeInfo
 from pullenti.morph.internal.InnerMorphology import InnerMorphology
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphMiscInfo import MorphMiscInfo
 
 
@@ -18,28 +18,53 @@ class Morphology:
     
     @staticmethod
     def initialize(langs : 'MorphLang'=MorphLang()) -> None:
+        """ Инициализация внутренних словарей.
+         Можно не вызывать, но тогда будет автоматически вызвано при первом обращении к морфологии,
+         и соответственно первый разбор отработает на несколько секунд дольше.
+        
+        Args:
+            langs(MorphLang): по умолчанию, русский и английский
+        """
         UnicodeInfo.initialize()
         if (langs is None or langs.is_undefined): 
             langs = ((MorphLang.RU) | MorphLang.EN)
-        InnerMorphology._load_languages(langs)
+        InnerMorphology._loadLanguages(langs)
     
     @staticmethod
-    def get_loaded_languages() -> 'MorphLang':
+    def getLoadedLanguages() -> 'MorphLang':
         """ Языки, морфологические словари для которых загружены в память """
-        return InnerMorphology.get_loaded_languages()
+        return InnerMorphology.getLoadedLanguages()
     
     @staticmethod
-    def load_languages(langs : 'MorphLang') -> None:
-        InnerMorphology._load_languages(langs)
+    def loadLanguages(langs : 'MorphLang') -> None:
+        """ Загрузить язык(и), если они ещё не загружены
+        
+        Args:
+            langs(MorphLang): загружаемые языки
+        """
+        InnerMorphology._loadLanguages(langs)
     
     @staticmethod
-    def unload_languages(langs : 'MorphLang') -> None:
-        InnerMorphology._unload_languages(langs)
+    def unloadLanguages(langs : 'MorphLang') -> None:
+        """ Выгрузить язык(и), если они больше не нужны
+        
+        Args:
+            langs(MorphLang): выгружаемые языки
+        """
+        InnerMorphology._unloadLanguages(langs)
     
     __m_inner = None
     
     @staticmethod
     def tokenize(text : str) -> typing.List['MorphToken']:
+        """ Произвести чистую токенизацию без формирования морф-вариантов
+        
+        Args:
+            text(str): исходный текст
+        
+        Returns:
+            typing.List[MorphToken]: последовательность результирующих лексем
+        """
         if (Utils.isNullOrEmpty(text)): 
             return None
         res = Morphology.__m_inner.run(text, True, MorphLang.UNKNOWN, None, False)
@@ -54,6 +79,16 @@ class Morphology:
     
     @staticmethod
     def process(text : str, lang : 'MorphLang'=None, progress : EventHandler=None) -> typing.List['MorphToken']:
+        """ Произвести морфологический анализ текста
+        
+        Args:
+            text(str): исходный текст
+            lang(MorphLang): базовый язык (если null, то будет определён автоматически)
+            progress(EventHandler): это для бегунка
+        
+        Returns:
+            typing.List[MorphToken]: последовательность результирующих лексем
+        """
         if (Utils.isNullOrEmpty(text)): 
             return None
         res = Morphology.__m_inner.run(text, False, lang, progress, False)
@@ -71,8 +106,17 @@ class Morphology:
     __m_empty_misc = None
     
     @staticmethod
-    def get_all_wordforms(word : str, lang : 'MorphLang'=MorphLang()) -> typing.List['MorphWordForm']:
-        res = Morphology.__m_inner.get_all_wordforms(word, lang)
+    def getAllWordforms(word : str, lang : 'MorphLang'=MorphLang()) -> typing.List['MorphWordForm']:
+        """ Получить все варианты словоформ для нормальной формы слова
+        
+        Args:
+            word(str): 
+            lang(MorphLang): язык (по умолчанию, русский)
+        
+        Returns:
+            typing.List[MorphWordForm]: список словоформ
+        """
+        res = Morphology.__m_inner.getAllWordforms(word, lang)
         if (res is not None): 
             for r in res: 
                 if (r.misc is None): 
@@ -80,23 +124,43 @@ class Morphology:
         return res
     
     @staticmethod
-    def get_wordform(word : str, morph_info : 'MorphBaseInfo') -> str:
+    def getWordform(word : str, morph_info : 'MorphBaseInfo') -> str:
+        """ Получить вариант написания словоформы
+        
+        Args:
+            word(str): слово
+            morph_info(MorphBaseInfo): морфологическая информация
+        
+        Returns:
+            str: вариант написания
+        """
         from pullenti.morph.MorphWordForm import MorphWordForm
         if (morph_info is None or Utils.isNullOrEmpty(word)): 
             return word
         cla = morph_info.class0_
         if (cla.is_undefined): 
-            mi0 = Morphology.get_word_base_info(word, MorphLang(), False, False)
+            mi0 = Morphology.getWordBaseInfo(word, MorphLang(), False, False)
             if (mi0 is not None): 
                 cla = mi0.class0_
         for ch in word: 
             if (str.islower(ch)): 
                 word = word.upper()
                 break
-        return Utils.ifNotNull(Morphology.__m_inner.get_wordform(word, cla, morph_info.gender, morph_info.case, morph_info.number, morph_info.language, (morph_info if isinstance(morph_info, MorphWordForm) else None)), word)
+        return Utils.ifNotNull(Morphology.__m_inner.getWordform(word, cla, morph_info.gender, morph_info.case_, morph_info.number, morph_info.language, Utils.asObjectOrNull(morph_info, MorphWordForm)), word)
     
     @staticmethod
-    def get_word_base_info(word : str, lang : 'MorphLang'=MorphLang(), is_case_nominative : bool=False, in_dict_only : bool=False) -> 'MorphBaseInfo':
+    def getWordBaseInfo(word : str, lang : 'MorphLang'=MorphLang(), is_case_nominative : bool=False, in_dict_only : bool=False) -> 'MorphBaseInfo':
+        """ Получить для словоформы род\число\падеж
+        
+        Args:
+            word(str): словоформа
+            lang(MorphLang): возможный язык
+            is_case_nominative(bool): исходное слово в именительном падеже (иначе считается падеж любым)
+            in_dict_only(bool): при true не строить гипотезы для несловарных слов
+        
+        Returns:
+            MorphBaseInfo: базовая морфологическая информация
+        """
         from pullenti.morph.MorphWordForm import MorphWordForm
         from pullenti.morph.MorphClass import MorphClass
         mt = Morphology.__m_inner.run(word, False, lang, None, False)
@@ -112,12 +176,12 @@ class Morphology:
                     elif (wf.is_in_dictionary): 
                         continue
                     if (is_case_nominative): 
-                        if (not wf.case.is_nominative and not wf.case.is_undefined): 
+                        if (not wf.case_.is_nominative and not wf.case_.is_undefined): 
                             continue
                     cla.value |= wf.class0_.value
-                    bi.gender |= wf.gender
-                    bi.case |= wf.case
-                    bi.number |= wf.number
+                    bi.gender = Utils.valToEnum((bi.gender) | (wf.gender), MorphGender)
+                    bi.case_ = (bi.case_) | wf.case_
+                    bi.number = Utils.valToEnum((bi.number) | (wf.number), MorphNumber)
                     if (wf.misc is not None and bi.misc is None): 
                         bi.misc = wf.misc
                     ok = True
@@ -127,11 +191,29 @@ class Morphology:
         return bi
     
     @staticmethod
-    def correct_word(word : str, lang : 'MorphLang'=MorphLang()) -> str:
-        return Morphology.__m_inner.correct_word_by_morph(word, lang)
+    def correctWord(word : str, lang : 'MorphLang'=MorphLang()) -> str:
+        """ Попробовать откорретировать одну букву словоформы, чтобы получилось словарное слово
+        
+        Args:
+            word(str): искаженное слово
+            lang(MorphLang): возможный язык
+        
+        Returns:
+            str: откорректированное слово или null при невозможности
+        """
+        return Morphology.__m_inner.correctWordByMorph(word, lang)
     
     @staticmethod
-    def convert_adverb_to_adjective(adverb : str, bi : 'MorphBaseInfo') -> str:
+    def convertAdverbToAdjective(adverb : str, bi : 'MorphBaseInfo') -> str:
+        """ Преобразовать наречие в прилагательное (это пока только для русского языка)
+        
+        Args:
+            adverb(str): наречие
+            bi(MorphBaseInfo): род число падеж
+        
+        Returns:
+            str: прилагательное
+        """
         from pullenti.morph.MorphClass import MorphClass
         if (adverb is None or (len(adverb) < 4)): 
             return None
@@ -140,14 +222,14 @@ class Morphology:
             return adverb
         var1 = adverb[0:0+len(adverb) - 1] + "ИЙ"
         var2 = adverb[0:0+len(adverb) - 1] + "ЫЙ"
-        bi1 = Morphology.get_word_base_info(var1, MorphLang(), False, False)
-        bi2 = Morphology.get_word_base_info(var2, MorphLang(), False, False)
+        bi1 = Morphology.getWordBaseInfo(var1, MorphLang(), False, False)
+        bi2 = Morphology.getWordBaseInfo(var2, MorphLang(), False, False)
         var = var1
         if (not bi1.class0_.is_adjective and bi2.class0_.is_adjective): 
             var = var2
         if (bi is None): 
             return var
-        return Utils.ifNotNull(Morphology.__m_inner.get_wordform(var, MorphClass.ADJECTIVE, bi.gender, bi.case, bi.number, MorphLang.UNKNOWN, None), var)
+        return Utils.ifNotNull(Morphology.__m_inner.getWordform(var, MorphClass.ADJECTIVE, bi.gender, bi.case_, bi.number, MorphLang.UNKNOWN, None), var)
     
     # static constructor for class Morphology
     @staticmethod

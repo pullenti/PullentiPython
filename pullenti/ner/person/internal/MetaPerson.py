@@ -1,9 +1,8 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
+from pullenti.unisharp.Utils import Utils
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.Referent import Referent
 
@@ -17,21 +16,21 @@ class MetaPerson(ReferentClass):
     def __init__(self) -> None:
         from pullenti.ner.person.PersonReferent import PersonReferent
         super().__init__()
-        self.add_feature(PersonReferent.ATTR_IDENTITY, "Идентификация", 0, 0)
-        sex = self.add_feature(PersonReferent.ATTR_SEX, "Пол", 0, 0)
-        sex.add_value(MetaPerson.ATTR_SEXMALE, "мужской", None, None)
-        sex.add_value(MetaPerson.ATTR_SEXFEMALE, "женский", None, None)
-        self.add_feature(PersonReferent.ATTR_LASTNAME, "Фамилия", 0, 0)
-        self.add_feature(PersonReferent.ATTR_FIRSTNAME, "Имя", 0, 0)
-        self.add_feature(PersonReferent.ATTR_MIDDLENAME, "Отчество", 0, 0)
-        self.add_feature(PersonReferent.ATTR_NICKNAME, "Псевдоним", 0, 0)
-        self.add_feature(PersonReferent.ATTR_ATTR, "Свойство", 0, 0)
-        self.add_feature(PersonReferent.ATTR_AGE, "Возраст", 0, 1)
-        self.add_feature(PersonReferent.ATTR_BORN, "Родился", 0, 1)
-        self.add_feature(PersonReferent.ATTR_DIE, "Умер", 0, 1)
-        self.add_feature(PersonReferent.ATTR_CONTACT, "Контактные данные", 0, 0)
-        self.add_feature(PersonReferent.ATTR_IDDOC, "Удостоверение личности", 0, 0).show_as_parent = True
-        self.add_feature(Referent.ATTR_GENERAL, "Обобщающая персона", 0, 1)
+        self.addFeature(PersonReferent.ATTR_IDENTITY, "Идентификация", 0, 0)
+        sex = self.addFeature(PersonReferent.ATTR_SEX, "Пол", 0, 0)
+        sex.addValue(MetaPerson.ATTR_SEXMALE, "мужской", None, None)
+        sex.addValue(MetaPerson.ATTR_SEXFEMALE, "женский", None, None)
+        self.addFeature(PersonReferent.ATTR_LASTNAME, "Фамилия", 0, 0)
+        self.addFeature(PersonReferent.ATTR_FIRSTNAME, "Имя", 0, 0)
+        self.addFeature(PersonReferent.ATTR_MIDDLENAME, "Отчество", 0, 0)
+        self.addFeature(PersonReferent.ATTR_NICKNAME, "Псевдоним", 0, 0)
+        self.addFeature(PersonReferent.ATTR_ATTR, "Свойство", 0, 0)
+        self.addFeature(PersonReferent.ATTR_AGE, "Возраст", 0, 1)
+        self.addFeature(PersonReferent.ATTR_BORN, "Родился", 0, 1)
+        self.addFeature(PersonReferent.ATTR_DIE, "Умер", 0, 1)
+        self.addFeature(PersonReferent.ATTR_CONTACT, "Контактные данные", 0, 0)
+        self.addFeature(PersonReferent.ATTR_IDDOC, "Удостоверение личности", 0, 0).show_as_parent = True
+        self.addFeature(Referent.ATTR_GENERAL, "Обобщающая персона", 0, 1)
     
     @property
     def name(self) -> str:
@@ -50,11 +49,11 @@ class MetaPerson(ReferentClass):
     
     GENERAL_IMAGE_ID = "general"
     
-    def get_image_id(self, obj : 'Referent'=None) -> str:
+    def getImageId(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.person.PersonReferent import PersonReferent
-        pers = (obj if isinstance(obj, PersonReferent) else None)
+        pers = Utils.asObjectOrNull(obj, PersonReferent)
         if (pers is not None): 
-            if (pers.find_slot("@GENERAL", None, True) is not None): 
+            if (pers.findSlot("@GENERAL", None, True) is not None): 
                 return MetaPerson.GENERAL_IMAGE_ID
             if (pers.is_male): 
                 return MetaPerson.MAN_IMAGE_ID

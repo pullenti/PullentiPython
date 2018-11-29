@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 import math
@@ -16,28 +14,28 @@ from pullenti.ner.core.GetTextAttr import GetTextAttr
 class BlockTitleToken(MetaToken):
     
     def __init__(self, begin : 'Token', end : 'Token') -> None:
-        self.typ = BlkTyps.UNDEFINED
-        self.value = None
         super().__init__(begin, end, None)
+        self.typ = BlkTyps.UNDEFINED
+        self.value = None;
     
     def __str__(self) -> str:
-        return "{0} {1} {2}".format(Utils.enumToString(self.typ), Utils.ifNotNull(self.value, ""), self.get_source_text())
+        return "{0} {1} {2}".format(Utils.enumToString(self.typ), Utils.ifNotNull(self.value, ""), self.getSourceText())
     
     @staticmethod
-    def try_attach_list(t : 'Token') -> typing.List['BlockTitleToken']:
+    def tryAttachList(t : 'Token') -> typing.List['BlockTitleToken']:
         from pullenti.ner.core.internal.BlockLine import BlockLine
         from pullenti.morph.MorphLang import MorphLang
         content = None
         intro = None
         lits = None
         tt = t
-        first_pass3688 = True
+        first_pass2796 = True
         while True:
-            if first_pass3688: first_pass3688 = False
+            if first_pass2796: first_pass2796 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 
-                btt = BlockTitleToken.try_attach(tt, False, None)
+                btt = BlockTitleToken.tryAttach(tt, False, None)
                 if (btt is None): 
                     continue
                 if (btt.typ == BlkTyps.INDEX): 
@@ -76,17 +74,22 @@ class BlockTitleToken(MetaToken):
             cou = 0
             err = 0
             tt = content.end_token.next0_
-            first_pass3689 = True
+            first_pass2797 = True
             while True:
-                if first_pass3689: first_pass3689 = False
+                if first_pass2797: first_pass2797 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not tt.is_newline_before): 
                     continue
                 li = BlockLine.create(tt, None)
-                if (li is None or li.has_verb): 
+                if (li is None): 
                     break
-                btt = BlockTitleToken.try_attach(tt, True, None)
+                if (li.has_verb): 
+                    if (li.end_token.isChar('.')): 
+                        break
+                    if (li.length_char > 100): 
+                        break
+                btt = BlockTitleToken.tryAttach(tt, True, None)
                 if (btt is None): 
                     continue
                 err = 0
@@ -97,7 +100,7 @@ class BlockTitleToken(MetaToken):
                 content.end_token = btt.end_token
                 tt = content.end_token
                 if (btt.value is not None): 
-                    chapter_names.add_str(btt.value, None, MorphLang(), False)
+                    chapter_names.addStr(btt.value, None, MorphLang(), False)
             content.typ = BlkTyps.INDEX
             t0 = content.end_token.next0_
         elif (intro is not None): 
@@ -108,16 +111,16 @@ class BlockTitleToken(MetaToken):
             return None
         first = True
         tt = t0
-        first_pass3690 = True
+        first_pass2798 = True
         while True:
-            if first_pass3690: first_pass3690 = False
+            if first_pass2798: first_pass2798 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (not tt.is_newline_before): 
                 continue
-            if (tt.is_value("СЛАБОЕ", None)): 
+            if (tt.isValue("СЛАБОЕ", None)): 
                 pass
-            btt = BlockTitleToken.try_attach(tt, False, chapter_names)
+            btt = BlockTitleToken.tryAttach(tt, False, chapter_names)
             if (btt is None): 
                 continue
             if (len(res) == 104): 
@@ -149,7 +152,7 @@ class BlockTitleToken(MetaToken):
         return res
     
     @staticmethod
-    def try_attach(t : 'Token', is_content_item : bool=False, names : 'TerminCollection'=None) -> 'BlockTitleToken':
+    def tryAttach(t : 'Token', is_content_item : bool=False, names : 'TerminCollection'=None) -> 'BlockTitleToken':
         from pullenti.ner.core.internal.BlockLine import BlockLine
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.core.MiscHelper import MiscHelper
@@ -164,11 +167,11 @@ class BlockTitleToken(MetaToken):
             return None
         if (li.words == 0 and li.typ == BlkTyps.UNDEFINED): 
             return None
-        if (li.typ == BlkTyps.CHAPTER): 
+        if (li.typ == BlkTyps.INDEX): 
             pass
         if (li.is_exist_name): 
             return BlockTitleToken._new481(t, li.end_token, li.typ)
-        if (li.end_token == li.number_end or ((li.end_token.is_char_of(".:") and li.end_token.previous == li.number_end))): 
+        if (li.end_token == li.number_end or ((li.end_token.isCharOf(".:") and li.end_token.previous == li.number_end))): 
             res2 = BlockTitleToken._new481(t, li.end_token, li.typ)
             if (li.typ == BlkTyps.CHAPTER or li.typ == BlkTyps.APPENDIX): 
                 li2 = BlockLine.create(li.end_token.next0_, names)
@@ -189,7 +192,9 @@ class BlockTitleToken(MetaToken):
             return None
         res = BlockTitleToken._new481(t, li.end_token, li.typ)
         if (res.typ == BlkTyps.UNDEFINED): 
-            if (li.has_verb or (li.words < 1)): 
+            if (li.words < 1): 
+                return None
+            if (li.has_verb): 
                 return None
             if (not is_content_item): 
                 if (not li.is_all_upper or li.not_words > (math.floor(li.words / 2))): 
@@ -224,7 +229,7 @@ class BlockTitleToken(MetaToken):
         tt = res.end_token
         while tt is not None and tt.begin_char > li.number_end.end_char: 
             if ((isinstance(tt, TextToken)) and tt.chars.is_letter): 
-                res.value = MiscHelper.get_text_value(li.number_end.next0_, tt, GetTextAttr.NO)
+                res.value = MiscHelper.getTextValue(li.number_end.next0_, tt, GetTextAttr.NO)
                 break
             tt = tt.previous
         if ((res.typ == BlkTyps.INDEX or res.typ == BlkTyps.INTRO or res.typ == BlkTyps.CONSLUSION) or res.typ == BlkTyps.LITERATURE): 

@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import datetime
 import typing
@@ -11,44 +9,59 @@ from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.ImageWrapper import ImageWrapper
-from pullenti.ner.core.internal.ResourceHelper import ResourceHelper
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
 
 
 class ProcessorService:
     """ Глобальная служба семантического процессора """
     
     @staticmethod
-    def get_version() -> str:
+    def getVersion() -> str:
         """ Версия системы """
-        return "3.10"
+        return "3.13"
     
     @staticmethod
-    def get_version_date() -> datetime.datetime:
+    def getVersionDate() -> datetime.datetime:
         """ Дата-время текущей версии """
-        return datetime.datetime(2018, 9, 7, 0, 0, 0)
+        return datetime.datetime(2018, 11, 25, 0, 0, 0)
     
     @staticmethod
     def initialize(lang : 'MorphLang'=MorphLang()) -> None:
+        """ Инициализация сервиса.  
+         Внимание! После этого нужно инициализровать анализаторы (см. документацию)
+         <param name="lang">необходимые языки (по умолчанию, русский и английский)</param> """
         from pullenti.morph.Morphology import Morphology
         from pullenti.morph.Explanatory import Explanatory
+        from pullenti.ner.core.Termin import Termin
+        from pullenti.ner.core.internal.NounPhraseItem import NounPhraseItem
         from pullenti.ner.core.NumberExToken import NumberExToken
+        from pullenti.ner.core.internal.BlockLine import BlockLine
         if (ProcessorService.__m_inited): 
             return
         ProcessorService.__m_inited = True
         Morphology.initialize(lang)
         Explanatory.initialize(lang)
+        Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
+        NounPhraseItem._initialize()
         NumberHelper._initialize()
         NumberExToken._initialize()
+        BlockLine.initialize()
+        Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False
     
     __m_inited = None
     
     @staticmethod
-    def is_initialized() -> bool:
+    def isInitialized() -> bool:
         """ Признак того, что инициализация сервиса уже была """
         return ProcessorService.__m_inited
     
     @staticmethod
-    def create_processor() -> 'Processor':
+    def createProcessor() -> 'Processor':
+        """ Создать процессор со стандартным списком анализаторов (у которых свойство IsSpecific = false)
+        
+        Returns:
+            Processor: экземпляр процессора
+        """
         from pullenti.ner.Processor import Processor
         if (not ProcessorService.__m_inited): 
             return None
@@ -56,11 +69,19 @@ class ProcessorService:
         for t in ProcessorService.__m_analizer_instances: 
             a = t.clone()
             if (a is not None and not a.is_specific): 
-                proc.add_analyzer(a)
+                proc.addAnalyzer(a)
         return proc
     
     @staticmethod
-    def create_specific_processor(spec_analyzer_names : str) -> 'Processor':
+    def createSpecificProcessor(spec_analyzer_names : str) -> 'Processor':
+        """ Создать процессор с набором стандартных и указанных параметром специфических
+         анализаторов.
+        
+        Args:
+            spec_analyzer_names(str): можно несколько, разделённые запятой или точкой с запятой. 
+         Если список пустой, то эквивалентно CreateProcessor()
+        
+        """
         from pullenti.ner.Processor import Processor
         if (not ProcessorService.__m_inited): 
             return None
@@ -70,39 +91,48 @@ class ProcessorService:
             a = t.clone()
             if (a is not None): 
                 if (not a.is_specific or a.name in names): 
-                    proc.add_analyzer(a)
+                    proc.addAnalyzer(a)
         return proc
     
     @staticmethod
-    def create_empty_processor() -> 'Processor':
+    def createEmptyProcessor() -> 'Processor':
+        """ Создать экземпляр процессора с пустым списком анализаторов
+        
+        """
         from pullenti.ner.Processor import Processor
         return Processor()
     
     @staticmethod
-    def register_analyzer(analyzer : 'Analyzer') -> None:
+    def registerAnalyzer(analyzer : 'Analyzer') -> None:
+        """ Регистрация аналозатора. Вызывается при инициализации из инициализируемой сборки
+         (она сама знает, какие содержит анализаторы, и регистрирует их)
+        
+        Args:
+            analyzer(Analyzer): 
+        """
         try: 
             ProcessorService.__m_analizer_instances.append(analyzer)
             img = analyzer.images
             if (img is not None): 
                 for kp in img.items(): 
                     if (not kp[0] in ProcessorService.__m_images): 
-                        ProcessorService.__m_images[kp[0]] = ImageWrapper._new2654(kp[0], kp[1])
+                        ProcessorService.__m_images[kp[0]] = ImageWrapper._new2691(kp[0], kp[1])
         except Exception as ex: 
             pass
-        ProcessorService.__reorder_cartridges()
+        ProcessorService.__reorderCartridges()
     
     __m_analizer_instances = None
     
     @staticmethod
-    def __reorder_cartridges() -> None:
+    def __reorderCartridges() -> None:
         if (len(ProcessorService.__m_analizer_instances) == 0): 
             return
         k = 0
         while k < len(ProcessorService.__m_analizer_instances): 
             i = 0
-            first_pass4067 = True
+            first_pass3176 = True
             while True:
-                if first_pass4067: first_pass4067 = False
+                if first_pass3176: first_pass3176 = False
                 else: i += 1
                 if (not (i < (len(ProcessorService.__m_analizer_instances) - 1))): break
                 max_ind = -1
@@ -129,15 +159,23 @@ class ProcessorService:
             k += 1
     
     @staticmethod
-    def get_analyzers() -> typing.List['Analyzer']:
+    def getAnalyzers() -> typing.List['Analyzer']:
         """ Экземпляры доступных анализаторов """
         return ProcessorService.__m_analizer_instances
     
     @staticmethod
-    def create_referent(type_name : str) -> 'Referent':
+    def createReferent(type_name : str) -> 'Referent':
+        """ Создать экземпляр объекта заданного типа
+        
+        Args:
+            type_name(str): имя типа
+        
+        Returns:
+            Referent: результат
+        """
         from pullenti.ner.Referent import Referent
         for cart in ProcessorService.__m_analizer_instances: 
-            obj = cart.create_referent(type_name)
+            obj = cart.createReferent(type_name)
             if (obj is not None): 
                 return obj
         return Referent(type_name)
@@ -147,25 +185,47 @@ class ProcessorService:
     __m_unknown_image = None
     
     @staticmethod
-    def get_image_by_id(image_id : str) -> 'ImageWrapper':
+    def getImageById(image_id : str) -> 'ImageWrapper':
+        """ Получить иконку по идентификатору иконки
+        
+        Args:
+            image_id(str): 
+        
+        """
         if (image_id is not None): 
-            inoutarg2655 = RefOutArgWrapper(None)
-            inoutres2656 = Utils.tryGetValue(ProcessorService.__m_images, image_id, inoutarg2655)
-            res = inoutarg2655.value
-            if (inoutres2656): 
+            wrapres2692 = RefOutArgWrapper(None)
+            inoutres2693 = Utils.tryGetValue(ProcessorService.__m_images, image_id, wrapres2692)
+            res = wrapres2692.value
+            if (inoutres2693): 
                 return res
         if (ProcessorService.__m_unknown_image is None): 
-            ProcessorService.__m_unknown_image = ImageWrapper._new2654("unknown", ResourceHelper.get_bytes("unknown.png"))
+            ProcessorService.__m_unknown_image = ImageWrapper._new2691("unknown", EpNerCoreInternalResourceHelper.getBytes("unknown.png"))
         return ProcessorService.__m_unknown_image
+    
+    @staticmethod
+    def addImage(image_id : str, content : bytearray) -> None:
+        """ Добавить специфическую иконку
+        
+        Args:
+            image_id(str): идентификатор (возвращаемый Referent.getImageId())
+            content(bytearray): содержимое иконки
+        """
+        if (image_id is None): 
+            return
+        wr = ImageWrapper._new2691(image_id, content)
+        if (image_id in ProcessorService.__m_images): 
+            ProcessorService.__m_images[image_id] = wr
+        else: 
+            ProcessorService.__m_images[image_id] = wr
     
     __m_empty_processor = None
     
     @staticmethod
-    def get_empty_processor() -> 'Processor':
+    def getEmptyProcessor() -> 'Processor':
         """ Экземпляр процессора с пустым множеством анализаторов (используется для
          разных лингвистических процедур, где не нужны сущности) """
         if (ProcessorService.__m_empty_processor is None): 
-            ProcessorService.__m_empty_processor = ProcessorService.create_empty_processor()
+            ProcessorService.__m_empty_processor = ProcessorService.createEmptyProcessor()
         return ProcessorService.__m_empty_processor
     
     # static constructor for class ProcessorService

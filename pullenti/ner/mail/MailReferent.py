@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -30,34 +28,32 @@ class MailReferent(Referent):
     @property
     def kind(self) -> 'MailKind':
         """ Тип блока письма """
-        val = self.get_string_value(MailReferent.ATTR_KIND)
+        val = self.getStringValue(MailReferent.ATTR_KIND)
         try: 
             if (val is not None): 
                 return Utils.valToEnum(val, MailKind)
-        except Exception as ex1505: 
+        except Exception as ex1516: 
             pass
         return MailKind.UNDEFINED
-    
     @kind.setter
     def kind(self, value) -> 'MailKind':
-        self.add_slot(MailReferent.ATTR_KIND, Utils.enumToString(value).upper(), True, 0)
+        self.addSlot(MailReferent.ATTR_KIND, Utils.enumToString(value).upper(), True, 0)
         return value
     
     @property
     def text(self) -> str:
-        return self.get_string_value(MailReferent.ATTR_TEXT)
-    
+        return self.getStringValue(MailReferent.ATTR_TEXT)
     @text.setter
     def text(self, value) -> str:
-        self.add_slot(MailReferent.ATTR_TEXT, value, True, 0)
+        self.addSlot(MailReferent.ATTR_TEXT, value, True, 0)
         return value
     
-    def to_string(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
         res = io.StringIO()
         print("{0}: ".format(Utils.enumToString(self.kind)), end="", file=res, flush=True)
         for s in self.slots: 
             if (s.type_name == MailReferent.ATTR_REF and (isinstance(s.value, Referent))): 
-                print("{0}, ".format((s.value if isinstance(s.value, Referent) else None).to_string(True, lang, lev + 1)), end="", file=res, flush=True)
+                print("{0}, ".format((Utils.asObjectOrNull(s.value, Referent)).toString(True, lang, lev + 1)), end="", file=res, flush=True)
         if (res.tell() < 100): 
             str0_ = Utils.ifNotNull(self.text, "")
             str0_ = str0_.replace('\r', ' ').replace('\n', ' ')
@@ -66,10 +62,10 @@ class MailReferent(Referent):
             print(str0_, end="", file=res)
         return Utils.toStringStringIO(res)
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def canBeEquals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
         return obj == self
     
-    def _add_ref(self, r : 'Referent', lev : int=0) -> None:
+    def _addRef(self, r : 'Referent', lev : int=0) -> None:
         from pullenti.ner.person.PersonReferent import PersonReferent
         from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
         from pullenti.ner.geo.GeoReferent import GeoReferent
@@ -77,13 +73,13 @@ class MailReferent(Referent):
         if (r is None or lev > 4): 
             return
         if ((((isinstance(r, PersonReferent)) or (isinstance(r, PersonPropertyReferent)) or r.type_name == "ORGANIZATION") or r.type_name == "PHONE" or r.type_name == "URI") or (isinstance(r, GeoReferent)) or (isinstance(r, AddressReferent))): 
-            self.add_slot(MailReferent.ATTR_REF, r, False, 0)
+            self.addSlot(MailReferent.ATTR_REF, r, False, 0)
         for s in r.slots: 
             if (isinstance(s.value, Referent)): 
-                self._add_ref(s.value if isinstance(s.value, Referent) else None, lev + 1)
+                self._addRef(Utils.asObjectOrNull(s.value, Referent), lev + 1)
     
     @staticmethod
-    def _new1501(_arg1 : 'MailKind') -> 'MailReferent':
+    def _new1512(_arg1 : 'MailKind') -> 'MailReferent':
         res = MailReferent()
         res.kind = _arg1
         return res

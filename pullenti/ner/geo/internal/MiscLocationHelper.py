@@ -1,8 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping from Pullenti C#.NET project.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
-# 
-# 
 
 import typing
 import io
@@ -18,7 +16,7 @@ from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
 class MiscLocationHelper:
     
     @staticmethod
-    def check_geo_object_before(t : 'Token') -> bool:
+    def checkGeoObjectBefore(t : 'Token') -> bool:
         from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.geo.GeoReferent import GeoReferent
         from pullenti.ner.address.AddressReferent import AddressReferent
@@ -26,20 +24,20 @@ class MiscLocationHelper:
         if (t is None): 
             return False
         tt = t.previous
-        first_pass3797 = True
+        first_pass2909 = True
         while True:
-            if first_pass3797: first_pass3797 = False
+            if first_pass2909: first_pass2909 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
-            if ((tt.is_char_of(",.;:") or tt.is_hiphen or tt.is_and) or tt.morph.class0_.is_conjunction or tt.morph.class0_.is_preposition): 
+            if ((tt.isCharOf(",.;:") or tt.is_hiphen or tt.is_and) or tt.morph.class0_.is_conjunction or tt.morph.class0_.is_preposition): 
                 continue
-            if (tt.is_value("ТЕРРИТОРИЯ", "ТЕРИТОРІЯ")): 
+            if (tt.isValue("ТЕРРИТОРИЯ", "ТЕРИТОРІЯ")): 
                 continue
-            if ((tt.is_value("ПРОЖИВАТЬ", "ПРОЖИВАТИ") or tt.is_value("РОДИТЬ", "НАРОДИТИ") or tt.is_value("ЗАРЕГИСТРИРОВАТЬ", "ЗАРЕЄСТРУВАТИ")) or tt.is_value("АДРЕС", None)): 
+            if ((tt.isValue("ПРОЖИВАТЬ", "ПРОЖИВАТИ") or tt.isValue("РОДИТЬ", "НАРОДИТИ") or tt.isValue("ЗАРЕГИСТРИРОВАТЬ", "ЗАРЕЄСТРУВАТИ")) or tt.isValue("АДРЕС", None)): 
                 return True
-            if (tt.is_value("УРОЖЕНЕЦ", "УРОДЖЕНЕЦЬ") or tt.is_value("УРОЖЕНКА", "УРОДЖЕНКА")): 
+            if (tt.isValue("УРОЖЕНЕЦ", "УРОДЖЕНЕЦЬ") or tt.isValue("УРОЖЕНКА", "УРОДЖЕНКА")): 
                 return True
-            rt = (tt if isinstance(tt, ReferentToken) else None)
+            rt = Utils.asObjectOrNull(tt, ReferentToken)
             if (rt is None): 
                 break
             if ((isinstance(rt.referent, GeoReferent)) or (isinstance(rt.referent, AddressReferent)) or (isinstance(rt.referent, StreetReferent))): 
@@ -50,7 +48,7 @@ class MiscLocationHelper:
         return False
     
     @staticmethod
-    def check_geo_object_after(t : 'Token') -> bool:
+    def checkGeoObjectAfter(t : 'Token') -> bool:
         from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.geo.GeoReferent import GeoReferent
@@ -60,16 +58,16 @@ class MiscLocationHelper:
             return False
         cou = 0
         tt = t.next0_
-        first_pass3798 = True
+        first_pass2910 = True
         while True:
-            if first_pass3798: first_pass3798 = False
+            if first_pass2910: first_pass2910 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
-            if ((tt.is_char_of(",.;") or tt.is_hiphen or tt.morph.class0_.is_conjunction) or tt.morph.class0_.is_preposition): 
+            if ((tt.isCharOf(",.;") or tt.is_hiphen or tt.morph.class0_.is_conjunction) or tt.morph.class0_.is_preposition): 
                 continue
-            if (tt.is_value("ТЕРРИТОРИЯ", "ТЕРИТОРІЯ")): 
+            if (tt.isValue("ТЕРРИТОРИЯ", "ТЕРИТОРІЯ")): 
                 continue
-            rt = (tt if isinstance(tt, ReferentToken) else None)
+            rt = Utils.asObjectOrNull(tt, ReferentToken)
             if (rt is None): 
                 if ((isinstance(tt, TextToken)) and tt.length_char > 2 and cou == 0): 
                     cou += 1
@@ -82,39 +80,45 @@ class MiscLocationHelper:
         return False
     
     @staticmethod
-    def check_near_before(t : 'Token') -> 'Token':
+    def checkNearBefore(t : 'Token') -> 'Token':
         if (t is None or not t.morph.class0_.is_preposition): 
             return None
-        if (t.is_value("У", None) or t.is_value("ОКОЛО", None) or t.is_value("ВБЛИЗИ", None)): 
+        if (t.isValue("У", None) or t.isValue("ОКОЛО", None) or t.isValue("ВБЛИЗИ", None)): 
             return t
-        if (t.is_value("ОТ", None) and t.previous is not None): 
-            if (t.previous.is_value("НЕДАЛЕКО", None) or t.previous.is_value("ВБЛИЗИ", None) or t.previous.is_value("НЕПОДАЛЕКУ", None)): 
+        if (t.isValue("ОТ", None) and t.previous is not None): 
+            if (t.previous.isValue("НЕДАЛЕКО", None) or t.previous.isValue("ВБЛИЗИ", None) or t.previous.isValue("НЕПОДАЛЕКУ", None)): 
                 return t.previous
         return None
     
     @staticmethod
-    def check_unknown_region(t : 'Token') -> 'Token':
+    def checkUnknownRegion(t : 'Token') -> 'Token':
+        """ Проверка, что здесь какой-то непонятный регион типа "Европа", "Средняя Азия", "Дикий запад" и т.п.
+        
+        Args:
+            t(Token): 
+        
+        """
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         if (not ((isinstance(t, TextToken)))): 
             return None
-        npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
+        npt = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.NO, 0)
         if (npt is None): 
             return None
-        if (TerrItemToken._m_unknown_regions.try_parse(npt.end_token, TerminParseAttr.FULLWORDSONLY) is not None): 
+        if (TerrItemToken._m_unknown_regions.tryParse(npt.end_token, TerminParseAttr.FULLWORDSONLY) is not None): 
             return npt.end_token
         return None
     
     @staticmethod
-    def get_std_adj_full(t : 'Token', gen : 'MorphGender', num : 'MorphNumber', strict : bool) -> typing.List[str]:
+    def getStdAdjFull(t : 'Token', gen : 'MorphGender', num : 'MorphNumber', strict : bool) -> typing.List[str]:
         from pullenti.ner.TextToken import TextToken
         if (not ((isinstance(t, TextToken)))): 
             return None
-        return MiscLocationHelper.get_std_adj_full_str((t if isinstance(t, TextToken) else None).term, gen, num, strict)
+        return MiscLocationHelper.getStdAdjFullStr((Utils.asObjectOrNull(t, TextToken)).term, gen, num, strict)
     
     @staticmethod
-    def get_std_adj_full_str(v : str, gen : 'MorphGender', num : 'MorphNumber', strict : bool) -> typing.List[str]:
+    def getStdAdjFullStr(v : str, gen : 'MorphGender', num : 'MorphNumber', strict : bool) -> typing.List[str]:
         res = list()
         if (v.startswith("Б")): 
             if (num == MorphNumber.PLURAL): 
@@ -171,8 +175,8 @@ class MiscLocationHelper:
                 return res
             return None
         if (v == "Н"): 
-            r1 = MiscLocationHelper.get_std_adj_full_str("НОВ", gen, num, strict)
-            r2 = MiscLocationHelper.get_std_adj_full_str("НИЖ", gen, num, strict)
+            r1 = MiscLocationHelper.getStdAdjFullStr("НОВ", gen, num, strict)
+            r2 = MiscLocationHelper.getStdAdjFullStr("НИЖ", gen, num, strict)
             if (r1 is None and r2 is None): 
                 return None
             if (r1 is None): 
@@ -184,8 +188,8 @@ class MiscLocationHelper:
             r1.extend(r2)
             return r1
         if (v == "С" or v == "C"): 
-            r1 = MiscLocationHelper.get_std_adj_full_str("СТ", gen, num, strict)
-            r2 = MiscLocationHelper.get_std_adj_full_str("СР", gen, num, strict)
+            r1 = MiscLocationHelper.getStdAdjFullStr("СТ", gen, num, strict)
+            r2 = MiscLocationHelper.getStdAdjFullStr("СР", gen, num, strict)
             if (r1 is None and r2 is None): 
                 return None
             if (r1 is None): 
@@ -271,18 +275,24 @@ class MiscLocationHelper:
         return None
     
     @staticmethod
-    def get_geo_referent_by_name(name : str) -> 'GeoReferent':
+    def getGeoReferentByName(name : str) -> 'GeoReferent':
+        """ Прлучить глобальный экземпляр существующего объекта по ALPHA2 или краткой текстовой форме (РФ, РОССИЯ, КИТАЙ ...)
+        
+        Args:
+            name(str): 
+        
+        """
         from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         from pullenti.ner.geo.GeoReferent import GeoReferent
         res = None
-        inoutarg1136 = RefOutArgWrapper(None)
-        inoutres1137 = Utils.tryGetValue(MiscLocationHelper.__m_geo_ref_by_name, name, inoutarg1136)
-        res = inoutarg1136.value
-        if (inoutres1137): 
+        wrapres1155 = RefOutArgWrapper(None)
+        inoutres1156 = Utils.tryGetValue(MiscLocationHelper.__m_geo_ref_by_name, name, wrapres1155)
+        res = wrapres1155.value
+        if (inoutres1156): 
             return res
         for r in TerrItemToken._m_all_states: 
-            if (r.find_slot(None, name, True) is not None): 
-                res = (r if isinstance(r, GeoReferent) else None)
+            if (r.findSlot(None, name, True) is not None): 
+                res = (Utils.asObjectOrNull(r, GeoReferent))
                 break
         MiscLocationHelper.__m_geo_ref_by_name[name] = res
         return res
@@ -290,22 +300,28 @@ class MiscLocationHelper:
     __m_geo_ref_by_name = None
     
     @staticmethod
-    def try_attach_nord_west(t : 'Token') -> 'MetaToken':
+    def tryAttachNordWest(t : 'Token') -> 'MetaToken':
+        """ Выделение существительных и прилагательных типа "северо-западное", "южное"
+        
+        Args:
+            t(Token): 
+        
+        """
         from pullenti.ner.TextToken import TextToken
         from pullenti.ner.MetaToken import MetaToken
         if (not ((isinstance(t, TextToken)))): 
             return None
-        tok = MiscLocationHelper.__m_nords.try_parse(t, TerminParseAttr.NO)
+        tok = MiscLocationHelper.__m_nords.tryParse(t, TerminParseAttr.NO)
         if (tok is None): 
             return None
-        res = MetaToken._new590(t, t, t.morph)
+        res = MetaToken._new600(t, t, t.morph)
         t1 = None
         if ((t.next0_ is not None and t.next0_.is_hiphen and not t.is_whitespace_after) and not t.is_whitespace_after): 
             t1 = t.next0_.next0_
         elif (t.morph.class0_.is_adjective and (t.whitespaces_after_count < 2)): 
             t1 = t.next0_
         if (t1 is not None): 
-            tok = MiscLocationHelper.__m_nords.try_parse(t1, TerminParseAttr.NO)
+            tok = MiscLocationHelper.__m_nords.tryParse(t1, TerminParseAttr.NO)
             if ((tok) is not None): 
                 res.end_token = tok.end_token
                 res.morph = tok.morph
@@ -346,9 +362,9 @@ class MiscLocationHelper:
         with io.BytesIO() as unzip: 
             data = io.BytesIO(zip0_)
             data.seek(0, io.SEEK_SET)
-            MorphSerializeHelper.deflate_gzip(data, unzip)
+            MorphSerializeHelper.deflateGzip(data, unzip)
             data.close()
-            return unzip.getvalue()
+            return bytearray(unzip.getvalue())
     
     # static constructor for class MiscLocationHelper
     @staticmethod
