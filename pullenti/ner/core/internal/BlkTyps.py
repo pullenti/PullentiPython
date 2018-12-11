@@ -4,17 +4,16 @@
 
 from enum import IntEnum
 
-
 class BlkTyps(IntEnum):
     UNDEFINED = 0
-    INDEX = 0 + 1
-    INDEXITEM = (0 + 1) + 1
-    INTRO = ((0 + 1) + 1) + 1
-    LITERATURE = (((0 + 1) + 1) + 1) + 1
-    APPENDIX = ((((0 + 1) + 1) + 1) + 1) + 1
-    CONSLUSION = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
-    MISC = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
-    CHAPTER = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+    INDEX = 1
+    INDEXITEM = 2
+    INTRO = 3
+    LITERATURE = 4
+    APPENDIX = 5
+    CONSLUSION = 6
+    MISC = 7
+    CHAPTER = 8
     
     @classmethod
     def has_value(cls, value):

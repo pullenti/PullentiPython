@@ -4,12 +4,11 @@
 
 from enum import IntEnum
 
-
 class StreetKind(IntEnum):
     """ Типы улиц """
     UNDEFINED = 0
-    ROAD = 0 + 1
-    METRO = (0 + 1) + 1
+    ROAD = 1
+    METRO = 2
     
     @classmethod
     def has_value(cls, value):

@@ -6,7 +6,6 @@ import typing
 import io
 from pullenti.unisharp.Utils import Utils
 
-
 class AnalysisResult:
     """ Результат анализа """
     

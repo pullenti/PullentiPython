@@ -4,8 +4,6 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.MorphLang import MorphLang
-
 
 class Feature:
     """ Атрибут класса сущностей """
@@ -77,7 +75,7 @@ class Feature:
                 print("[{0}..{1}]".format(self.lower_bound, self.upper_bound), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
-    def convertInnerValueToOuterValue(self, inner_value : object, lang : 'MorphLang'=MorphLang()) -> object:
+    def convertInnerValueToOuterValue(self, inner_value : object, lang : 'MorphLang'=None) -> object:
         if (inner_value is None): 
             return None
         val = str(inner_value)

@@ -5,17 +5,20 @@
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.address.StreetKind import StreetKind
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 
+from pullenti.ner.address.StreetKind import StreetKind
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.address.internal.MetaStreet import MetaStreet
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.geo.GeoReferent import GeoReferent
 
 class StreetReferent(Referent):
     """ Улица, проспект, площадь, шоссе и т.п. """
     
     def __init__(self) -> None:
-        from pullenti.ner.address.internal.MetaStreet import MetaStreet
         super().__init__(StreetReferent.OBJ_TYPENAME)
         self.instance_of = MetaStreet._global_meta
     
@@ -76,7 +79,6 @@ class StreetReferent(Referent):
     @property
     def geos(self) -> typing.List['GeoReferent']:
         """ Ссылка на географические объекты """
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         res = list()
         for a in self.slots: 
             if (a.type_name == StreetReferent.ATTR_GEO and (isinstance(a.value, GeoReferent))): 
@@ -95,11 +97,9 @@ class StreetReferent(Referent):
     
     @property
     def parent_referent(self) -> 'Referent':
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         return Utils.asObjectOrNull(self.getSlotValue(StreetReferent.ATTR_GEO), GeoReferent)
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         tmp = io.StringIO()
         nam = self.getStringValue(StreetReferent.ATTR_NAME)
         typs_ = self.typs
@@ -126,10 +126,10 @@ class StreetReferent(Referent):
         if (not short_variant): 
             kladr = self.getSlotValue(StreetReferent.ATTR_FIAS)
             if (isinstance(kladr, Referent)): 
-                print(" (ФИАС: {0}".format(Utils.ifNotNull((Utils.asObjectOrNull(kladr, Referent)).getStringValue("GUID"), "?")), end="", file=tmp, flush=True)
+                print(" (ФИАС: {0}".format(Utils.ifNotNull((kladr).getStringValue("GUID"), "?")), end="", file=tmp, flush=True)
                 for s in self.slots: 
                     if (s.type_name == StreetReferent.ATTR_FIAS and (isinstance(s.value, Referent)) and s.value != kladr): 
-                        print(", {0}".format(Utils.ifNotNull((Utils.asObjectOrNull(s.value, Referent)).getStringValue("GUID"), "?")), end="", file=tmp, flush=True)
+                        print(", {0}".format(Utils.ifNotNull((s.value).getStringValue("GUID"), "?")), end="", file=tmp, flush=True)
                 print(')', end="", file=tmp)
             bti = self.getStringValue(StreetReferent.ATTR_BTI)
             if (bti is not None): 
@@ -234,13 +234,12 @@ class StreetReferent(Referent):
         if (not self.__canBeEquals(obj, Referent.EqualType.WITHINONETEXT, True)): 
             return False
         geos1 = self.geos
-        geos2 = (Utils.asObjectOrNull(obj, StreetReferent)).geos
+        geos2 = (obj).geos
         if (len(geos2) == 0 or len(geos1) > 0): 
             return False
         return True
     
     def createOntologyItem(self) -> 'IntOntologyItem':
-        from pullenti.ner.core.Termin import Termin
         oi = IntOntologyItem(self)
         names_ = self.names
         for n in names_: 

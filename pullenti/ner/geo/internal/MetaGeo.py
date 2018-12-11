@@ -3,21 +3,22 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.ReferentClass import ReferentClass
 
+from pullenti.ner.ReferentClass import ReferentClass
 
 class MetaGeo(ReferentClass):
     
-    def __init__(self) -> None:
+    @staticmethod
+    def initialize() -> None:
         from pullenti.ner.geo.GeoReferent import GeoReferent
-        super().__init__()
-        self.addFeature(GeoReferent.ATTR_NAME, "Наименование", 1, 0)
-        self.addFeature(GeoReferent.ATTR_TYPE, "Тип", 1, 0)
-        self.addFeature(GeoReferent.ATTR_ALPHA2, "Код страны", 0, 1)
-        self.addFeature(GeoReferent.ATTR_HIGHER, "Вышестоящий объект", 0, 1)
-        self.addFeature(GeoReferent.ATTR_REF, "Ссылка на объект", 0, 1)
-        self.addFeature(GeoReferent.ATTR_FIAS, "Объект ФИАС", 0, 1)
-        self.addFeature(GeoReferent.ATTR_BTI, "Код БТИ", 0, 1)
+        MetaGeo._global_meta = MetaGeo()
+        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_NAME, "Наименование", 1, 0)
+        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_TYPE, "Тип", 1, 0)
+        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_ALPHA2, "Код страны", 0, 1)
+        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_HIGHER, "Вышестоящий объект", 0, 1)
+        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_REF, "Ссылка на объект", 0, 1)
+        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_FIAS, "Объект ФИАС", 0, 1)
+        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_BTI, "Код БТИ", 0, 1)
     
     @property
     def name(self) -> str:
@@ -61,10 +62,3 @@ class MetaGeo(ReferentClass):
         return MetaGeo.REGION_IMAGE_ID
     
     _global_meta = None
-    
-    # static constructor for class MetaGeo
-    @staticmethod
-    def _static_ctor():
-        MetaGeo._global_meta = MetaGeo()
-
-MetaGeo._static_ctor()

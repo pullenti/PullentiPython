@@ -2,8 +2,8 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
-from pullenti.morph.internal.UnicodeInfo import UnicodeInfo
 
+from pullenti.morph.internal.UnicodeInfo import UnicodeInfo
 
 class TextWrapper:
     """ Введено для ускорения Питона! """

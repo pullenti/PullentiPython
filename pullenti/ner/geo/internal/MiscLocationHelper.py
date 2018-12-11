@@ -6,21 +6,28 @@ import typing
 import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
 
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.address.StreetReferent import StreetReferent
+from pullenti.ner.address.AddressReferent import AddressReferent
+from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
 
 class MiscLocationHelper:
     
     @staticmethod
     def checkGeoObjectBefore(t : 'Token') -> bool:
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.address.StreetReferent import StreetReferent
         if (t is None): 
             return False
         tt = t.previous
@@ -49,11 +56,6 @@ class MiscLocationHelper:
     
     @staticmethod
     def checkGeoObjectAfter(t : 'Token') -> bool:
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.address.StreetReferent import StreetReferent
         if (t is None): 
             return False
         cou = 0
@@ -98,9 +100,6 @@ class MiscLocationHelper:
             t(Token): 
         
         """
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         if (not ((isinstance(t, TextToken)))): 
             return None
         npt = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.NO, 0)
@@ -112,10 +111,9 @@ class MiscLocationHelper:
     
     @staticmethod
     def getStdAdjFull(t : 'Token', gen : 'MorphGender', num : 'MorphNumber', strict : bool) -> typing.List[str]:
-        from pullenti.ner.TextToken import TextToken
         if (not ((isinstance(t, TextToken)))): 
             return None
-        return MiscLocationHelper.getStdAdjFullStr((Utils.asObjectOrNull(t, TextToken)).term, gen, num, strict)
+        return MiscLocationHelper.getStdAdjFullStr((t).term, gen, num, strict)
     
     @staticmethod
     def getStdAdjFullStr(v : str, gen : 'MorphGender', num : 'MorphNumber', strict : bool) -> typing.List[str]:
@@ -282,8 +280,6 @@ class MiscLocationHelper:
             name(str): 
         
         """
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         res = None
         wrapres1155 = RefOutArgWrapper(None)
         inoutres1156 = Utils.tryGetValue(MiscLocationHelper.__m_geo_ref_by_name, name, wrapres1155)
@@ -307,8 +303,6 @@ class MiscLocationHelper:
             t(Token): 
         
         """
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.MetaToken import MetaToken
         if (not ((isinstance(t, TextToken)))): 
             return None
         tok = MiscLocationHelper.__m_nords.tryParse(t, TerminParseAttr.NO)
@@ -329,9 +323,6 @@ class MiscLocationHelper:
     
     @staticmethod
     def _initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (MiscLocationHelper.__m_nords is not None): 
             return
         MiscLocationHelper.__m_nords = TerminCollection()

@@ -5,7 +5,6 @@
 import io
 from pullenti.unisharp.Utils import Utils
 
-
 class EpNerAddressInternalResourceHelper:
     """ Это для поддержки получения встроенных ресурсов """
     

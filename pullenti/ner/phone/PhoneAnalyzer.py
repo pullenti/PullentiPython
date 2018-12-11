@@ -6,13 +6,23 @@ import typing
 import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.AnalyzerData import AnalyzerData
+
+from pullenti.ner.Token import Token
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.phone.internal.PhoneHelper import PhoneHelper
+from pullenti.ner.phone.internal.MetaPhone import MetaPhone
+from pullenti.ner.phone.PhoneReferent import PhoneReferent
+from pullenti.ner.Referent import Referent
 from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
 from pullenti.ner.phone.PhoneKind import PhoneKind
-from pullenti.ner.phone.internal.PhoneHelper import PhoneHelper
-from pullenti.morph.LanguageHelper import LanguageHelper
-
+from pullenti.ner.core.AnalyzerData import AnalyzerData
+from pullenti.ner.phone.internal.PhoneItemToken import PhoneItemToken
+from pullenti.ner.Analyzer import Analyzer
 
 class PhoneAnalyzer(Analyzer):
     """ Семантический картридж для выделения телефонов """
@@ -66,18 +76,15 @@ class PhoneAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.phone.internal.MetaPhone import MetaPhone
         return [MetaPhone._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.phone.internal.MetaPhone import MetaPhone
         res = dict()
         res[MetaPhone.PHONE_IMAGE_ID] = EpNerBankInternalResourceHelper.getBytes("phone.png")
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.phone.PhoneReferent import PhoneReferent
         if (type0_ == PhoneReferent.OBJ_TYPENAME): 
             return PhoneReferent()
         return None
@@ -97,9 +104,6 @@ class PhoneAnalyzer(Analyzer):
             stage: 
         
         """
-        from pullenti.ner.phone.internal.PhoneItemToken import PhoneItemToken
-        from pullenti.ner.phone.PhoneReferent import PhoneReferent
-        from pullenti.ner.TextToken import TextToken
         ad = Utils.asObjectOrNull(kit.getAnalyzerData(self), PhoneAnalyzer.PhoneAnalizerData)
         t = kit.first_token
         first_pass3130 = True
@@ -177,7 +181,7 @@ class PhoneAnalyzer(Analyzer):
                             if (tt1 is not None and tt1.is_table_control_char): 
                                 tt1 = tt1.previous
                             if ((isinstance(tt1, TextToken)) and ((tt1.is_newline_before or ((tt1.previous is not None and tt1.previous.is_table_control_char))))): 
-                                term = (Utils.asObjectOrNull(tt1, TextToken)).term
+                                term = (tt1).term
                                 if (term == "T" or term == "Т"): 
                                     rt.begin_token = tt1
                                 elif (term == "Ф" or term == "F"): 
@@ -194,9 +198,6 @@ class PhoneAnalyzer(Analyzer):
                     t = (rt)
     
     def __tryAttach(self, pli : typing.List['PhoneItemToken'], ind : int, is_phone_before : bool, prev_phone : 'PhoneReferent') -> typing.List['ReferentToken']:
-        from pullenti.ner.phone.PhoneReferent import PhoneReferent
-        from pullenti.ner.phone.internal.PhoneItemToken import PhoneItemToken
-        from pullenti.ner.ReferentToken import ReferentToken
         rt = self.__TryAttach_(pli, ind, is_phone_before, prev_phone, 0)
         if (rt is None): 
             return None
@@ -223,12 +224,11 @@ class PhoneAnalyzer(Analyzer):
         add = PhoneItemToken.tryAttachAdditional(rt.end_token.next0_)
         if (add is not None): 
             for rr in res: 
-                (Utils.asObjectOrNull(rr.referent, PhoneReferent)).add_number = add.value
+                (rr.referent).add_number = add.value
             res[len(res) - 1].end_token = add.end_token
         return res
     
     def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        from pullenti.ner.phone.internal.PhoneItemToken import PhoneItemToken
         pli = PhoneItemToken.tryAttachAll(begin)
         if (pli is None or len(pli) == 0): 
             return None
@@ -244,9 +244,6 @@ class PhoneAnalyzer(Analyzer):
         return None
     
     def __TryAttach_(self, pli : typing.List['PhoneItemToken'], ind : int, is_phone_before : bool, prev_phone : 'PhoneReferent', lev : int=0) -> 'ReferentToken':
-        from pullenti.ner.phone.internal.PhoneItemToken import PhoneItemToken
-        from pullenti.ner.phone.PhoneReferent import PhoneReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (ind >= len(pli) or lev > 4): 
             return None
         country_code = None
@@ -597,8 +594,6 @@ class PhoneAnalyzer(Analyzer):
         return res
     
     def __getNextPhone(self, t : 'Token', lev : int) -> 'PhoneReferent':
-        from pullenti.ner.phone.internal.PhoneItemToken import PhoneItemToken
-        from pullenti.ner.phone.PhoneReferent import PhoneReferent
         if (t is not None and t.isChar(',')): 
             t = t.next0_
         if (t is None or lev > 3): 
@@ -611,11 +606,14 @@ class PhoneAnalyzer(Analyzer):
             return None
         return Utils.asObjectOrNull(rt.referent, PhoneReferent)
     
+    M_INITED = None
+    
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.phone.internal.PhoneItemToken import PhoneItemToken
-        from pullenti.ner.ProcessorService import ProcessorService
+        if (PhoneAnalyzer.M_INITED): 
+            return
+        PhoneAnalyzer.M_INITED = True
+        MetaPhone.initialize()
         try: 
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             PhoneHelper.initialize()

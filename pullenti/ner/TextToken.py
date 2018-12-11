@@ -6,20 +6,21 @@ import io
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Token import Token
+
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
-
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.MorphCollection import MorphCollection
+from pullenti.ner.Token import Token
 
 class TextToken(Token):
     """ Входной токен (после морфанализа) """
     
     def __init__(self, source : 'MorphToken', kit_ : 'AnalysisKit') -> None:
-        from pullenti.ner.MorphCollection import MorphCollection
-        from pullenti.morph.MorphWordForm import MorphWordForm
         super().__init__(kit_, (0 if source is None else source.begin_char), (0 if source is None else source.end_char))
         self.term = None;
         self.lemma = None;
@@ -83,7 +84,6 @@ class TextToken(Token):
             dict0_(typing.List[tuple]): 
         
         """
-        from pullenti.morph.MorphWordForm import MorphWordForm
         if (dict0_ is None): 
             return None
         wrapres2709 = RefOutArgWrapper(None)
@@ -113,7 +113,6 @@ class TextToken(Token):
         return super().getSourceText()
     
     def isValue(self, term_ : str, termua : str=None) -> bool:
-        from pullenti.morph.MorphWordForm import MorphWordForm
         if (termua is not None and self.morph.language.is_ua): 
             if (self.isValue(termua, None)): 
                 return True
@@ -126,15 +125,51 @@ class TextToken(Token):
         if (term_ == self.term): 
             return True
         for wf in self.morph.items: 
-            if ((Utils.asObjectOrNull(wf, MorphWordForm)).normal_case == term_ or (Utils.asObjectOrNull(wf, MorphWordForm)).normal_full == term_): 
+            if ((wf).normal_case == term_ or (wf).normal_full == term_): 
                 return True
         return False
     
-    def getNormalCaseText(self, mc : 'MorphClass'=MorphClass(), single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.morph.MorphWordForm import MorphWordForm
+    @property
+    def is_and(self) -> bool:
+        """ Это соединительный союз И (на всех языках) """
+        if (not self.morph.class0_.is_conjunction): 
+            if (self.length_char == 1 and self.isChar('&')): 
+                return True
+            return False
+        val = self.term
+        if (val == "И" or val == "AND" or val == "UND"): 
+            return True
+        if (self.morph.language.is_ua): 
+            if (val == "І" or val == "ТА"): 
+                return True
+        return False
+    
+    @property
+    def is_or(self) -> bool:
+        """ Это соединительный союз ИЛИ (на всех языках) """
+        if (not self.morph.class0_.is_conjunction): 
+            return False
+        val = self.term
+        if (val == "ИЛИ" or val == "OR"): 
+            return True
+        if (self.morph.language.is_ua): 
+            if (val == "АБО"): 
+                return True
+        return False
+    
+    @property
+    def is_letters(self) -> bool:
+        return str.isalpha(self.term[0])
+    
+    def getMorphClassInDictionary(self) -> 'MorphClass':
+        res = MorphClass()
+        for wf in self.morph.items: 
+            if ((isinstance(wf, MorphWordForm)) and (wf).is_in_dictionary): 
+                res |= wf.class0_
+        return res
+    
+    def getNormalCaseText(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.morph.Morphology import Morphology
         empty = True
         for it in self.morph.items: 
             if (mc is not None and not mc.is_undefined): 
@@ -206,23 +241,22 @@ class TextToken(Token):
             if (isinstance(t, TextToken)): 
                 res.append(Utils.asObjectOrNull(t, TextToken))
             elif (isinstance(t, MetaToken)): 
-                res.extend(TextToken.getSourceTextTokens((Utils.asObjectOrNull(t, MetaToken)).begin_token, (Utils.asObjectOrNull(t, MetaToken)).end_token))
+                res.extend(TextToken.getSourceTextTokens((t).begin_token, (t).end_token))
             t = t.next0_
         return res
     
     @property
     def is_pure_verb(self) -> bool:
         """ Признак того, что это чистый глагол """
-        from pullenti.morph.MorphWordForm import MorphWordForm
         ret = False
         if ((self.isValue("МОЖНО", None) or self.isValue("МОЖЕТ", None) or self.isValue("ДОЛЖНЫЙ", None)) or self.isValue("НУЖНО", None)): 
             return True
         for it in self.morph.items: 
-            if ((isinstance(it, MorphWordForm)) and (Utils.asObjectOrNull(it, MorphWordForm)).is_in_dictionary): 
+            if ((isinstance(it, MorphWordForm)) and (it).is_in_dictionary): 
                 if (it.class0_.is_verb and it.case_.is_undefined): 
                     ret = True
                 elif (not it.class0_.is_verb): 
-                    if (it.class0_.is_adjective and it.containsAttr("к.ф.", MorphClass())): 
+                    if (it.class0_.is_adjective and it.containsAttr("к.ф.", None)): 
                         pass
                     else: 
                         return False
@@ -240,6 +274,7 @@ class TextToken(Token):
         return False
     
     def _serialize(self, stream : io.IOBase) -> None:
+        from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         super()._serialize(stream)
         SerializerHelper.serializeString(stream, self.term)
         SerializerHelper.serializeString(stream, self.lemma)
@@ -247,6 +282,7 @@ class TextToken(Token):
         SerializerHelper.serializeShort(stream, self.max_length)
     
     def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit') -> None:
+        from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         super()._deserialize(stream, kit_)
         self.term = SerializerHelper.deserializeString(stream)
         self.lemma = SerializerHelper.deserializeString(stream)

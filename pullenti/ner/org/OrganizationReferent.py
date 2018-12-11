@@ -7,20 +7,28 @@ import math
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Referent import Referent
-from pullenti.ner.org.OrganizationKind import OrganizationKind
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.org.OrgProfile import OrgProfile
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-from pullenti.ner.org.internal.OrgOwnershipHelper import OrgOwnershipHelper
 
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.ner.org.OrgProfile import OrgProfile
+from pullenti.ner.address.AddressReferent import AddressReferent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.org.internal.MetaOrganization import MetaOrganization
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.org.OrganizationKind import OrganizationKind
 
 class OrganizationReferent(Referent):
     """ Организация как сущность """
     
     def __init__(self) -> None:
-        from pullenti.ner.org.internal.MetaOrganization import MetaOrganization
         super().__init__(OrganizationReferent.OBJ_TYPENAME)
         self.__m_number_calc = False
         self.__m_number = None;
@@ -60,8 +68,7 @@ class OrganizationReferent(Referent):
     
     SHOW_NUMBER_ON_FIRST_POSITION = False
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
         res = io.StringIO()
         is_dep = self.kind == OrganizationKind.DEPARTMENT
@@ -200,7 +207,7 @@ class OrganizationReferent(Referent):
                             if (hi is not None): 
                                 continue
                         print(';', end="", file=res)
-                        print(" {0}".format((Utils.asObjectOrNull(ss.value, Referent)).toString(short_variant, lang, lev + 1)), end="", file=res, flush=True)
+                        print(" {0}".format((ss.value).toString(short_variant, lang, lev + 1)), end="", file=res, flush=True)
                         break
         if (res.tell() == 0): 
             if (self.inn is not None): 
@@ -393,9 +400,6 @@ class OrganizationReferent(Referent):
         return Utils.toStringStringIO(tmp)
     
     def addName(self, name : str, remove_long_gov_names : bool=True, t : 'Token'=None) -> None:
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.Morphology import Morphology
         wrapnum2250 = RefOutArgWrapper(0)
         s = self.__correctName(name, wrapnum2250)
         num = wrapnum2250.value
@@ -424,7 +428,7 @@ class OrganizationReferent(Referent):
         cou = 1
         if (t is not None and not t.chars.is_letter and BracketHelper.isBracket(t, False)): 
             t = t.next0_
-        if (((isinstance(t, TextToken)) and (s.find(' ') < 0) and len(s) > 3) and s == (Utils.asObjectOrNull(t, TextToken)).term): 
+        if (((isinstance(t, TextToken)) and (s.find(' ') < 0) and len(s) > 3) and s == (t).term): 
             mt = Morphology.process(s, t.morph.language, None)
             if (mt is not None and len(mt) == 1): 
                 snorm = mt[0].lemma
@@ -535,12 +539,11 @@ class OrganizationReferent(Referent):
     def _typesContains(self, substr : str) -> bool:
         for s in self.slots: 
             if (s.type_name == OrganizationReferent.ATTR_TYPE): 
-                if (substr in (Utils.asObjectOrNull(s.value, str))): 
+                if (substr in (s.value)): 
                     return True
         return False
     
     def addType(self, typ : 'OrgItemTypeToken', final_add : bool=False) -> None:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         if (typ is None): 
             return
         for p in typ.profiles: 
@@ -590,7 +593,7 @@ class OrganizationReferent(Referent):
             if (typ.root.canonic_text is not None and typ.root.canonic_text != "СБЕРЕГАТЕЛЬНЫЙ БАНК" and typ.root.canonic_text != typ.root.acronym): 
                 self.addTypeStr(typ.root.canonic_text.lower())
         if (typ.geo is not None): 
-            if (((isinstance(typ.geo.referent, GeoReferent))) and (Utils.asObjectOrNull(typ.geo.referent, GeoReferent)).is_region and self.kind == OrganizationKind.STUDY): 
+            if (((isinstance(typ.geo.referent, GeoReferent))) and (typ.geo.referent).is_region and self.kind == OrganizationKind.STUDY): 
                 pass
             else: 
                 self._addGeoObject(typ.geo)
@@ -729,7 +732,6 @@ class OrganizationReferent(Referent):
         return Utils.ifNotNull(res, OrganizationReferent.__m_empry_eponyms)
     
     def addEponym(self, rod_padez_surname : str) -> None:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (rod_padez_surname is None): 
             return
         rod_padez_surname = MiscHelper.convertFirstCharUpperAndOtherLower(rod_padez_surname)
@@ -740,7 +742,6 @@ class OrganizationReferent(Referent):
     
     @property
     def _geo_objects(self) -> typing.List['GeoReferent']:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         res = None
         for s in self.slots: 
             if (s.type_name == OrganizationReferent.ATTR_GEO and (isinstance(s.value, GeoReferent))): 
@@ -750,9 +751,6 @@ class OrganizationReferent(Referent):
         return Utils.ifNotNull(res, OrganizationReferent.__m_empty_geos)
     
     def _addGeoObject(self, r : object) -> bool:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.address.AddressReferent import AddressReferent
         if (isinstance(r, GeoReferent)): 
             geo_ = Utils.asObjectOrNull(r, GeoReferent)
             for s in self.slots: 
@@ -779,18 +777,17 @@ class OrganizationReferent(Referent):
             self.addSlot(OrganizationReferent.ATTR_GEO, r, False, 0)
             return True
         elif (isinstance(r, ReferentToken)): 
-            if (isinstance((Utils.asObjectOrNull(r, ReferentToken)).getReferent(), GeoReferent)): 
-                if (not self._addGeoObject((Utils.asObjectOrNull(r, ReferentToken)).getReferent())): 
+            if (isinstance((r).getReferent(), GeoReferent)): 
+                if (not self._addGeoObject((r).getReferent())): 
                     return False
                 self.addExtReferent(Utils.asObjectOrNull(r, ReferentToken))
                 return True
-            if (isinstance((Utils.asObjectOrNull(r, ReferentToken)).getReferent(), AddressReferent)): 
-                return self._addGeoObject((Utils.asObjectOrNull(r, ReferentToken)).begin_token.getReferent())
+            if (isinstance((r).getReferent(), AddressReferent)): 
+                return self._addGeoObject((r).begin_token.getReferent())
         return False
     
     @property
     def _name_vars(self) -> typing.List[tuple]:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (self.__m_name_vars is not None): 
             return self.__m_name_vars
         self.__m_name_vars = dict()
@@ -862,7 +859,7 @@ class OrganizationReferent(Referent):
         if (not self.canBeEqualsEx(obj, True, Referent.EqualType.DIFFERENTTEXTS)): 
             return False
         geos1 = self._geo_objects
-        geos2 = (Utils.asObjectOrNull(obj, OrganizationReferent))._geo_objects
+        geos2 = (obj)._geo_objects
         if (len(geos1) == 0 and len(geos2) > 0): 
             if (self.__checkEqEponyms(Utils.asObjectOrNull(obj, OrganizationReferent))): 
                 return False
@@ -870,8 +867,8 @@ class OrganizationReferent(Referent):
         elif (len(geos1) == len(geos2)): 
             if (self.__checkEqEponyms(Utils.asObjectOrNull(obj, OrganizationReferent))): 
                 return False
-            if (self.higher is not None and (Utils.asObjectOrNull(obj, OrganizationReferent)).higher is not None): 
-                if (self.higher.canBeGeneralFor((Utils.asObjectOrNull(obj, OrganizationReferent)).higher)): 
+            if (self.higher is not None and (obj).higher is not None): 
+                if (self.higher.canBeGeneralFor((obj).higher)): 
                     return True
         return False
     
@@ -997,7 +994,7 @@ class OrganizationReferent(Referent):
                 empty = False
                 for a in self.slots: 
                     if (a.type_name == OrganizationReferent.ATTR_TYPE): 
-                        if (obj.findSlot(a.type_name, a.value, True) is not None or obj.findSlot(OrganizationReferent.ATTR_NAME, (Utils.asObjectOrNull(a.value, str)).upper(), True) is not None): 
+                        if (obj.findSlot(a.type_name, a.value, True) is not None or obj.findSlot(OrganizationReferent.ATTR_NAME, (a.value).upper(), True) is not None): 
                             eq_number = True
                             break
         if (typ == Referent.EqualType.DIFFERENTTEXTS): 
@@ -1196,7 +1193,7 @@ class OrganizationReferent(Referent):
     
     def mergeSlots(self, obj : 'Referent', merge_statistic : bool) -> None:
         own_this = self.higher
-        own_obj = (Utils.asObjectOrNull(obj, OrganizationReferent)).higher
+        own_obj = (obj).higher
         super().mergeSlots(obj, merge_statistic)
         for i in range(len(self.slots) - 1, -1, -1):
             if (self.slots[i].type_name == OrganizationReferent.ATTR_HIGHER): 
@@ -1205,7 +1202,7 @@ class OrganizationReferent(Referent):
             own_this = own_obj
         if (own_this is not None): 
             self.higher = own_this
-        if ((Utils.asObjectOrNull(obj, OrganizationReferent))._is_from_global_ontos): 
+        if ((obj)._is_from_global_ontos): 
             self._is_from_global_ontos = True
         self._correctData(True)
     
@@ -1264,7 +1261,6 @@ class OrganizationReferent(Referent):
         self._ext_ontology_attached = False
     
     def _finalCorrection(self) -> None:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         typs = self.types
         if (self.containsProfile(OrgProfile.EDUCATION) and self.containsProfile(OrgProfile.SCIENCE)): 
             if ("академия" in typs or "академія" in typs or "academy" in typs): 
@@ -1334,7 +1330,6 @@ class OrganizationReferent(Referent):
         return self.createOntologyItemEx(2, False, False)
     
     def createOntologyItemEx(self, min_len : int, only_names : bool=False, pure_names : bool=False) -> 'IntOntologyItem':
-        from pullenti.ner.core.Termin import Termin
         oi = IntOntologyItem(self)
         vars0_ = list()
         typs = self.types
@@ -1380,7 +1375,7 @@ class OrganizationReferent(Referent):
             if (len(v) >= min_len): 
                 if (pure_names): 
                     term = Termin()
-                    term.initByNormalText(v, MorphLang())
+                    term.initByNormalText(v, None)
                 else: 
                     term = Termin(v)
                 oi.termins.append(term)
@@ -1454,7 +1449,6 @@ class OrganizationReferent(Referent):
     
     @staticmethod
     def __checkLatinAccords(rus_name : str, lat_name : str) -> bool:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (not LanguageHelper.isCyrillicChar(rus_name[0]) or not LanguageHelper.isLatinChar(lat_name[0])): 
             return False
         ru = Utils.splitString(rus_name, ' ', False)
@@ -1500,6 +1494,7 @@ class OrganizationReferent(Referent):
             lower(OrganizationReferent): 
         
         """
+        from pullenti.ner.org.internal.OrgOwnershipHelper import OrgOwnershipHelper
         return OrgOwnershipHelper.canBeHigher(higher_, lower, False)
     
     # static constructor for class OrganizationReferent

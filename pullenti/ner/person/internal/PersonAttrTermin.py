@@ -2,15 +2,14 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
-from pullenti.ner.core.Termin import Termin
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.person.internal.PersonAttrTerminType import PersonAttrTerminType
-from pullenti.ner.person.internal.PersonAttrTerminType2 import PersonAttrTerminType2
 
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.person.internal.PersonAttrTerminType2 import PersonAttrTerminType2
+from pullenti.ner.person.internal.PersonAttrTerminType import PersonAttrTerminType
 
 class PersonAttrTermin(Termin):
     
-    def __init__(self, v : str, lang_ : 'MorphLang'=MorphLang()) -> None:
+    def __init__(self, v : str, lang_ : 'MorphLang'=None) -> None:
         super().__init__(None, lang_, False)
         self.typ = PersonAttrTerminType.OTHER
         self.typ2 = PersonAttrTerminType2.UNDEFINED

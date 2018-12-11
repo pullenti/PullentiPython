@@ -4,6 +4,8 @@
 
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.NumberExToken import NumberExToken
 
 class MeasureHelper:
     
@@ -22,12 +24,10 @@ class MeasureHelper:
     
     @staticmethod
     def doubleToString(d : float) -> str:
-        from pullenti.ner.core.NumberExToken import NumberExToken
         return NumberExToken.convertToString(d)
     
     @staticmethod
     def isMultChar(t : 'Token') -> bool:
-        from pullenti.ner.TextToken import TextToken
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             return False
@@ -38,7 +38,6 @@ class MeasureHelper:
     
     @staticmethod
     def isMultCharEnd(t : 'Token') -> bool:
-        from pullenti.ner.TextToken import TextToken
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             return False
@@ -46,9 +45,3 @@ class MeasureHelper:
         if (term.endswith("X") or term.endswith("Х")): 
             return True
         return False
-    
-    # static constructor for class MeasureHelper
-    @staticmethod
-    def _static_ctor(): pass
-
-MeasureHelper._static_ctor()

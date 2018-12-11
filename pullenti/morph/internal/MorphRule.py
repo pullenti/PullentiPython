@@ -6,8 +6,9 @@ import io
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.morph.LanguageHelper import LanguageHelper
 
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphWordForm import MorphWordForm
 
 class MorphRule:
     
@@ -16,7 +17,7 @@ class MorphRule:
         self.variants = dict()
         self.variants_list = list()
         self.variants_key = list()
-        self._lazy = None;
+        self.lazy_pos = 0
     
     def refreshVariants(self) -> None:
         vars0_ = list()
@@ -64,7 +65,6 @@ class MorphRule:
         var.rule = self
     
     def processResult(self, res : typing.List['MorphWordForm'], word_begin : str, mvs : typing.List['MorphRuleVariant']) -> None:
-        from pullenti.morph.MorphWordForm import MorphWordForm
         for mv in mvs: 
             r = MorphWordForm(mv, None)
             if (mv.normal_tail is not None and len(mv.normal_tail) > 0 and mv.normal_tail[0] != '-'): 

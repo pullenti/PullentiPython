@@ -5,19 +5,21 @@
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.ner.address.AddressHouseType import AddressHouseType
-from pullenti.ner.address.AddressBuildingType import AddressBuildingType
-from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
-from pullenti.ner.address.AddressDetailType import AddressDetailType
-from pullenti.morph.MorphLang import MorphLang
 
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.address.AddressDetailType import AddressDetailType
+from pullenti.ner.address.StreetReferent import StreetReferent
+from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.address.AddressBuildingType import AddressBuildingType
+from pullenti.ner.address.AddressHouseType import AddressHouseType
+from pullenti.ner.address.internal.MetaAddress import MetaAddress
+from pullenti.ner.Referent import Referent
 
 class AddressReferent(Referent):
     """ Сущность, представляющая адрес """
     
     def __init__(self) -> None:
-        from pullenti.ner.address.internal.MetaAddress import MetaAddress
         super().__init__(AddressReferent.OBJ_TYPENAME)
         self.instance_of = MetaAddress._global_meta
     
@@ -258,13 +260,12 @@ class AddressReferent(Referent):
     @property
     def geos(self) -> typing.List['GeoReferent']:
         """ Ссылки на географические объекты (самого нижнего уровня) """
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         res = list()
         for a in self.slots: 
             if (a.type_name == AddressReferent.ATTR_GEO and (isinstance(a.value, GeoReferent))): 
                 res.append(Utils.asObjectOrNull(a.value, GeoReferent))
             elif (a.type_name == AddressReferent.ATTR_STREET and (isinstance(a.value, Referent))): 
-                for s in (Utils.asObjectOrNull(a.value, Referent)).slots: 
+                for s in (a.value).slots: 
                     if (isinstance(s.value, GeoReferent)): 
                         res.append(Utils.asObjectOrNull(s.value, GeoReferent))
         i = len(res) - 1
@@ -305,8 +306,6 @@ class AddressReferent(Referent):
         return None
     
     def addReferent(self, r : 'Referent') -> None:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.address.StreetReferent import StreetReferent
         if (r is None): 
             return
         geo = Utils.asObjectOrNull(r, GeoReferent)
@@ -345,8 +344,7 @@ class AddressReferent(Referent):
             self.addSlot(AddressReferent.ATTR_DETAIL, Utils.enumToString(value).upper(), True, 0)
         return value
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        from pullenti.ner.address.internal.MetaAddress import MetaAddress
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         str0_ = self.getStringValue(AddressReferent.ATTR_DETAIL)
         if (str0_ is not None): 
@@ -416,10 +414,10 @@ class AddressReferent(Referent):
             print(" ГСП-{0}".format(self.csp), end="", file=res, flush=True)
         kladr = self.getSlotValue(AddressReferent.ATTR_FIAS)
         if (isinstance(kladr, Referent)): 
-            print(" (ФИАС: {0}".format(Utils.ifNotNull((Utils.asObjectOrNull(kladr, Referent)).getStringValue("GUID"), "?")), end="", file=res, flush=True)
+            print(" (ФИАС: {0}".format(Utils.ifNotNull((kladr).getStringValue("GUID"), "?")), end="", file=res, flush=True)
             for s in self.slots: 
                 if (s.type_name == AddressReferent.ATTR_FIAS and (isinstance(s.value, Referent)) and s.value != kladr): 
-                    print(", {0}".format(Utils.ifNotNull((Utils.asObjectOrNull(s.value, Referent)).getStringValue("GUID"), "?")), end="", file=res, flush=True)
+                    print(", {0}".format(Utils.ifNotNull((s.value).getStringValue("GUID"), "?")), end="", file=res, flush=True)
             print(')', end="", file=res)
         bti = self.getStringValue(AddressReferent.ATTR_BTI)
         if (bti is not None): 
@@ -530,13 +528,12 @@ class AddressReferent(Referent):
         self._correct()
     
     def _correct(self) -> None:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         geos_ = list()
         for a in self.slots: 
             if (a.type_name == AddressReferent.ATTR_GEO and (isinstance(a.value, GeoReferent))): 
                 geos_.append(Utils.asObjectOrNull(a.value, GeoReferent))
             elif (a.type_name == AddressReferent.ATTR_STREET and (isinstance(a.value, Referent))): 
-                for s in (Utils.asObjectOrNull(a.value, Referent)).slots: 
+                for s in (a.value).slots: 
                     if (isinstance(s.value, GeoReferent)): 
                         geos_.append(Utils.asObjectOrNull(s.value, GeoReferent))
         i = len(geos_) - 1

@@ -3,10 +3,12 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.measure.internal.UnitsFactors import UnitsFactors
-from pullenti.ner.measure.internal.Unit import Unit
-from pullenti.ner.measure.MeasureKind import MeasureKind
 
+from pullenti.ner.measure.MeasureKind import MeasureKind
+from pullenti.ner.measure.internal.Unit import Unit
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.measure.internal.UnitsFactors import UnitsFactors
+from pullenti.ner.core.TerminCollection import TerminCollection
 
 class UnitsHelper:
     
@@ -46,8 +48,6 @@ class UnitsHelper:
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
         if (UnitsHelper.__m_inited): 
             return
         UnitsHelper.__m_inited = True
@@ -579,7 +579,6 @@ class UnitsHelper:
     
     @staticmethod
     def __addFactor(f : 'UnitsFactors', u0 : 'Unit', abbr_cyr : str, abbr_lat : str, names_ru : str, names_ua : str, names_en : str) -> 'Unit':
-        from pullenti.ner.core.Termin import Termin
         pref_cyr = None
         pref_lat = None
         pref_ru = None
@@ -686,7 +685,6 @@ class UnitsHelper:
     # static constructor for class UnitsHelper
     @staticmethod
     def _static_ctor():
-        from pullenti.ner.core.TerminCollection import TerminCollection
         UnitsHelper.UNITS = list()
         UnitsHelper.TERMINS = TerminCollection()
 

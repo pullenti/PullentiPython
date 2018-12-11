@@ -5,8 +5,13 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.MorphGender import MorphGender
 
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
 
 class PersonMorphCollection:
     
@@ -18,6 +23,7 @@ class PersonMorphCollection:
             self.gender = MorphGender.UNDEFINED
         
         def __str__(self) -> str:
+            from pullenti.morph.MorphGender import MorphGender
             res = io.StringIO()
             print(self.value, end="", file=res)
             if (self.short_value is not None): 
@@ -54,7 +60,6 @@ class PersonMorphCollection:
         self.number = 0
     
     def checkLatinVariant(self, latin : str) -> bool:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         for it in self.items: 
             if (MiscHelper.canBeEqualCyrAndLatSS(latin, it.value)): 
                 return True
@@ -79,16 +84,12 @@ class PersonMorphCollection:
     
     @property
     def has_lastname_standard_tail(self) -> bool:
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         for it in self.items: 
             if (PersonItemToken.MorphPersonItem.endsWithStdSurname(it.value)): 
                 return True
         return False
     
     def add(self, val : str, shortval : str, gen : 'MorphGender', add_other_gender_var : bool=False) -> None:
-        from pullenti.morph.Morphology import Morphology
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.morph.MorphClass import MorphClass
         if (val is None): 
             return
         if (self.head is None): 

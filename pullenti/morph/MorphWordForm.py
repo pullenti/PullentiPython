@@ -5,12 +5,13 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-from pullenti.morph.LanguageHelper import LanguageHelper
+
 from pullenti.morph.MorphPerson import MorphPerson
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphNumber import MorphNumber
-
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.morph.LanguageHelper import LanguageHelper
 
 class MorphWordForm(MorphBaseInfo):
     """ Словоформа (вариант морфанализа лексемы) """
@@ -75,6 +76,11 @@ class MorphWordForm(MorphBaseInfo):
         if (self.undef_coef > (0)): 
             print(" (? {0})".format(self.undef_coef), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
+    
+    def containsAttr(self, attr_value : str, cla : 'MorphClass'=None) -> bool:
+        if (self.misc is not None and self.misc.attrs is not None): 
+            return attr_value in self.misc.attrs
+        return False
     
     @staticmethod
     def _hasMorphEquals(list0_ : typing.List['MorphWordForm'], mv : 'MorphWordForm') -> bool:

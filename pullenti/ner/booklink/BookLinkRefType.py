@@ -4,11 +4,10 @@
 
 from enum import IntEnum
 
-
 class BookLinkRefType(IntEnum):
     """ Тип ссылки """
     UNDEFINED = 0
-    INLINE = 0 + 1
+    INLINE = 1
     
     @classmethod
     def has_value(cls, value):

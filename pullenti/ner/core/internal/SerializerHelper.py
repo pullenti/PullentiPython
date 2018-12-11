@@ -4,8 +4,10 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.NumberSpellingType import NumberSpellingType
 
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.Token import Token
+from pullenti.ner.TextToken import TextToken
 
 class SerializerHelper:
     
@@ -107,7 +109,6 @@ class SerializerHelper:
     
     @staticmethod
     def serializeToken(stream : io.IOBase, t : 'Token') -> None:
-        from pullenti.ner.TextToken import TextToken
         from pullenti.ner.MetaToken import MetaToken
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.ReferentToken import ReferentToken
@@ -125,11 +126,10 @@ class SerializerHelper:
             return
         t._serialize(stream)
         if (isinstance(t, MetaToken)): 
-            SerializerHelper.serializeTokens(stream, (Utils.asObjectOrNull(t, MetaToken)).begin_token, t.end_char)
+            SerializerHelper.serializeTokens(stream, (t).begin_token, t.end_char)
     
     @staticmethod
     def __deserializeToken(stream : io.IOBase, kit : 'AnalysisKit') -> 'Token':
-        from pullenti.ner.TextToken import TextToken
         from pullenti.ner.MetaToken import MetaToken
         from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.ReferentToken import ReferentToken
@@ -149,8 +149,8 @@ class SerializerHelper:
         if (isinstance(t, MetaToken)): 
             tt = SerializerHelper.deserializeTokens(stream, kit)
             if (tt is not None): 
-                (Utils.asObjectOrNull(t, MetaToken))._m_begin_token = tt
+                (t)._m_begin_token = tt
                 while tt is not None: 
-                    (Utils.asObjectOrNull(t, MetaToken))._m_end_token = tt
+                    (t)._m_end_token = tt
                     tt = tt.next0_
         return t

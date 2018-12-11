@@ -5,6 +5,7 @@
 import io
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.morph.MorphClass import MorphClass
 
 class CharsInfo:
     """ Информация о символах токена """
@@ -111,7 +112,6 @@ class CharsInfo:
         return Utils.toStringStringIO(tmp_str)
     
     def equals(self, obj : object) -> bool:
-        from pullenti.morph.MorphClass import MorphClass
         if (not ((isinstance(obj, MorphClass)))): 
             return False
         return self.value == (obj).value

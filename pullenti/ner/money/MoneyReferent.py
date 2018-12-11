@@ -6,15 +6,15 @@ import io
 import math
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.money.internal.MoneyMeta import MoneyMeta
 
 class MoneyReferent(Referent):
     """ Представление денежных сумм """
     
     def __init__(self) -> None:
-        from pullenti.ner.money.internal.MoneyMeta import MoneyMeta
         super().__init__(MoneyReferent.OBJ_TYPENAME)
         self.instance_of = MoneyMeta.GLOBAL_META
     
@@ -30,7 +30,7 @@ class MoneyReferent(Referent):
     
     ATTR_ALTREST = "ALTREST"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         v = self.value
         r = self.rest

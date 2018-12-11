@@ -4,12 +4,11 @@
 
 from enum import IntEnum
 
-
 class FundsKind(IntEnum):
     """ Типы ценных бумаг """
     UNDEFINED = 0
-    STOCK = 0 + 1
-    CAPITAL = (0 + 1) + 1
+    STOCK = 1
+    CAPITAL = 2
     
     @classmethod
     def has_value(cls, value):

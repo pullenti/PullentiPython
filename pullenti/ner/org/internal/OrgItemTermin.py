@@ -6,10 +6,10 @@ import xml.etree
 import typing
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.core.Termin import Termin
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.org.OrgProfile import OrgProfile
 
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.org.OrgProfile import OrgProfile
 
 class OrgItemTermin(Termin):
     
@@ -24,7 +24,7 @@ class OrgItemTermin(Termin):
         def has_value(cls, value):
             return any(value == item.value for item in cls)
     
-    def __init__(self, s : str, lang_ : 'MorphLang'=MorphLang(), p1 : 'OrgProfile'=OrgProfile.UNDEFINED, p2 : 'OrgProfile'=OrgProfile.UNDEFINED) -> None:
+    def __init__(self, s : str, lang_ : 'MorphLang'=None, p1 : 'OrgProfile'=OrgProfile.UNDEFINED, p2 : 'OrgProfile'=OrgProfile.UNDEFINED) -> None:
         super().__init__(s, lang_, False)
         self.__m_typ = OrgItemTermin.Types.UNDEFINED
         self.must_be_partof_name = False

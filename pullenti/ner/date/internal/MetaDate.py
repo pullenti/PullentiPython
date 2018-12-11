@@ -3,24 +3,25 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
+
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.date.DatePointerType import DatePointerType
 
-
 class MetaDate(ReferentClass):
     
-    def __init__(self) -> None:
+    @staticmethod
+    def initialize() -> None:
         from pullenti.ner.date.DateReferent import DateReferent
-        super().__init__()
-        self.addFeature(DateReferent.ATTR_CENTURY, "Век", 0, 1)
-        self.addFeature(DateReferent.ATTR_YEAR, "Год", 0, 1)
-        self.addFeature(DateReferent.ATTR_MONTH, "Месяц", 0, 1)
-        self.addFeature(DateReferent.ATTR_DAY, "День", 0, 1)
-        self.addFeature(DateReferent.ATTR_HOUR, "Час", 0, 1)
-        self.addFeature(DateReferent.ATTR_MINUTE, "Минут", 0, 1)
-        self.addFeature(DateReferent.ATTR_SECOND, "Секунд", 0, 1)
-        self.addFeature(DateReferent.ATTR_DAYOFWEEK, "День недели", 0, 1)
-        MetaDate.POINTER = self.addFeature(DateReferent.ATTR_POINTER, "Указатель", 0, 1)
+        MetaDate.GLOBAL_META = MetaDate()
+        MetaDate.GLOBAL_META.addFeature(DateReferent.ATTR_CENTURY, "Век", 0, 1)
+        MetaDate.GLOBAL_META.addFeature(DateReferent.ATTR_YEAR, "Год", 0, 1)
+        MetaDate.GLOBAL_META.addFeature(DateReferent.ATTR_MONTH, "Месяц", 0, 1)
+        MetaDate.GLOBAL_META.addFeature(DateReferent.ATTR_DAY, "День", 0, 1)
+        MetaDate.GLOBAL_META.addFeature(DateReferent.ATTR_HOUR, "Час", 0, 1)
+        MetaDate.GLOBAL_META.addFeature(DateReferent.ATTR_MINUTE, "Минут", 0, 1)
+        MetaDate.GLOBAL_META.addFeature(DateReferent.ATTR_SECOND, "Секунд", 0, 1)
+        MetaDate.GLOBAL_META.addFeature(DateReferent.ATTR_DAYOFWEEK, "День недели", 0, 1)
+        MetaDate.POINTER = MetaDate.GLOBAL_META.addFeature(DateReferent.ATTR_POINTER, "Указатель", 0, 1)
         MetaDate.POINTER.addValue(Utils.enumToString(DatePointerType.BEGIN), "В начале", "На початку", "In the beginning")
         MetaDate.POINTER.addValue(Utils.enumToString(DatePointerType.CENTER), "В середине", "В середині", "In the middle")
         MetaDate.POINTER.addValue(Utils.enumToString(DatePointerType.END), "В конце", "В кінці", "In the end")
@@ -30,7 +31,7 @@ class MetaDate(ReferentClass):
         MetaDate.POINTER.addValue(Utils.enumToString(DatePointerType.SUMMER), "Летом", "Влітку", "Summer")
         MetaDate.POINTER.addValue(Utils.enumToString(DatePointerType.AUTUMN), "Осенью", "Восени", "Autumn")
         MetaDate.POINTER.addValue(Utils.enumToString(DatePointerType.UNDEFINED), "Не определена", None, None)
-        self.addFeature(DateReferent.ATTR_HIGHER, "Вышестоящая дата", 0, 1)
+        MetaDate.GLOBAL_META.addFeature(DateReferent.ATTR_HIGHER, "Вышестоящая дата", 0, 1)
     
     POINTER = None
     
@@ -56,10 +57,3 @@ class MetaDate(ReferentClass):
             return MetaDate.DATE_FULL_IMAGE_ID
     
     GLOBAL_META = None
-    
-    # static constructor for class MetaDate
-    @staticmethod
-    def _static_ctor():
-        MetaDate.GLOBAL_META = MetaDate()
-
-MetaDate._static_ctor()

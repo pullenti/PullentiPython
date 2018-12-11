@@ -3,16 +3,16 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.ner.definition.DefinitionKind import DefinitionKind
-from pullenti.morph.MorphLang import MorphLang
 
+from pullenti.ner.definition.DefinitionKind import DefinitionKind
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.definition.internal.MetaDefin import MetaDefin
 
 class DefinitionReferent(Referent):
     """ Сущность, моделирующая определение (утверждение, тезис) """
     
     def __init__(self) -> None:
-        from pullenti.ner.definition.internal.MetaDefin import MetaDefin
         super().__init__(DefinitionReferent.OBJ_TYPENAME)
         self.instance_of = MetaDefin._global_meta
     
@@ -63,7 +63,7 @@ class DefinitionReferent(Referent):
         self.addSlot(DefinitionReferent.ATTR_KIND, Utils.enumToString(value_), True, 0)
         return value_
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         misc = self.getStringValue(DefinitionReferent.ATTR_TERMIN_ADD)
         if (misc is None): 
             misc = self.getStringValue(DefinitionReferent.ATTR_MISC)

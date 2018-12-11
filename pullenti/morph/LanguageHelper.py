@@ -5,17 +5,18 @@
 import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
+
+from pullenti.morph.MorphMood import MorphMood
+from pullenti.morph.MorphVoice import MorphVoice
+from pullenti.morph.MorphAspect import MorphAspect
+from pullenti.morph.MorphForm import MorphForm
+from pullenti.morph.MorphFinite import MorphFinite
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphCase import MorphCase
 from pullenti.morph.internal.UnicodeInfo import UnicodeInfo
 from pullenti.morph.MorphTense import MorphTense
-from pullenti.morph.MorphPerson import MorphPerson
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphVoice import MorphVoice
-from pullenti.morph.MorphMood import MorphMood
-from pullenti.morph.MorphAspect import MorphAspect
-from pullenti.morph.MorphFinite import MorphFinite
-from pullenti.morph.MorphForm import MorphForm
-
+from pullenti.morph.MorphPerson import MorphPerson
 
 class LanguageHelper:
     """ Служба подержки языков. 
@@ -295,7 +296,6 @@ class LanguageHelper:
             prep(str): предлог
         
         """
-        from pullenti.morph.MorphCase import MorphCase
         wrapmc44 = RefOutArgWrapper(None)
         inoutres45 = Utils.tryGetValue(LanguageHelper.__m_prep_cases, prep, wrapmc44)
         mc = wrapmc44.value
@@ -525,7 +525,6 @@ class LanguageHelper:
     # static constructor for class LanguageHelper
     @staticmethod
     def _static_ctor():
-        from pullenti.morph.MorphCase import MorphCase
         LanguageHelper.__m_preps = [("БЕЗ;ДО;ИЗ;ИЗЗА;ОТ;У;ДЛЯ;РАДИ;ВОЗЛЕ;ПОЗАДИ;ВПЕРЕДИ;БЛИЗ;ВБЛИЗИ;ВГЛУБЬ;ВВИДУ;ВДОЛЬ;ВЗАМЕН;ВКРУГ;ВМЕСТО;" + "ВНЕ;ВНИЗУ;ВНУТРИ;ВНУТРЬ;ВОКРУГ;ВРОДЕ;ВСЛЕД;ВСЛЕДСТВИЕ;ЗАМЕСТО;ИЗНУТРИ;КАСАТЕЛЬНО;КРОМЕ;" + "МИМО;НАВРОДЕ;НАЗАД;НАКАНУНЕ;НАПОДОБИЕ;НАПРОТИВ;НАСЧЕТ;ОКОЛО;ОТНОСИТЕЛЬНО;") + "ПОВЕРХ;ПОДЛЕ;ПОМИМО;ПОПЕРЕК;ПОРЯДКА;ПОСЕРЕДИНЕ;ПОСРЕДИ;ПОСЛЕ;ПРЕВЫШЕ;ПРЕЖДЕ;ПРОТИВ;СВЕРХ;" + "СВЫШЕ;СНАРУЖИ;СРЕДИ;СУПРОТИВ", "К;БЛАГОДАРЯ;ВОПРЕКИ;НАВСТРЕЧУ;СОГЛАСНО;СООБРАЗНО;ПАРАЛЛЕЛЬНО;ПОДОБНО;СООТВЕТСТВЕННО;СОРАЗМЕРНО", "ПРО;ЧЕРЕЗ;СКВОЗЬ;СПУСТЯ", "НАД;ПЕРЕД;ПРЕД", "ПРИ", "В;НА;О;ВКЛЮЧАЯ", "МЕЖДУ", "ЗА;ПОД", "ПО", "С"]
         LanguageHelper.__m_cases = [MorphCase.GENITIVE, MorphCase.DATIVE, MorphCase.ACCUSATIVE, MorphCase.INSTRUMENTAL, MorphCase.PREPOSITIONAL, (MorphCase.ACCUSATIVE) | MorphCase.PREPOSITIONAL, (MorphCase.GENITIVE) | MorphCase.ACCUSATIVE, (MorphCase.ACCUSATIVE) | MorphCase.INSTRUMENTAL, (MorphCase.DATIVE) | MorphCase.ACCUSATIVE | MorphCase.PREPOSITIONAL, (MorphCase.GENITIVE) | MorphCase.ACCUSATIVE | MorphCase.INSTRUMENTAL]
         LanguageHelper.__m_prep_norms_src = ["БЕЗ;БЕЗО", "В;ВО", "ВОКРУГ;ВКРУГ", "ВПЕРЕДИ;ВПЕРЕД", "ВСЛЕД;ВОСЛЕД", "ИЗ;ИЗО", "К;КО", "МЕЖДУ;МЕЖ", "НАД;НАДО", "О;ОБ;ОБО", "ОТ;ОТО", "ПЕРЕД;ПРЕД;ПРЕДО;ПЕРЕДО", "ПОД;ПОДО", "ПОСЕРЕДИНЕ;ПОСРЕДИ", "ПРОМЕЖДУ;ПРОМЕЖ", "С;СО", "СРЕДИ;СРЕДЬ", "ЧЕРЕЗ;ЧРЕЗ"]

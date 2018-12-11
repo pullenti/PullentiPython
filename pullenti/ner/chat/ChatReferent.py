@@ -5,15 +5,16 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
+
+from pullenti.ner.chat.VerbType import VerbType
 from pullenti.ner.Referent import Referent
 from pullenti.ner.chat.ChatType import ChatType
-from pullenti.ner.chat.VerbType import VerbType
-
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.chat.internal.MetaChat import MetaChat
 
 class ChatReferent(Referent):
     
     def __init__(self) -> None:
-        from pullenti.ner.chat.internal.MetaChat import MetaChat
         super().__init__(ChatReferent.OBJ_TYPENAME)
         self.instance_of = MetaChat._global_meta
     

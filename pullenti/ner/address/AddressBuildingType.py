@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class AddressBuildingType(IntEnum):
     """ Тип строения """
     UNDEFINED = 0

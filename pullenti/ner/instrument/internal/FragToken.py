@@ -7,36 +7,67 @@ import io
 import datetime
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.instrument.InstrumentKind import InstrumentKind
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.internal.TableHelper import TableHelper
-from pullenti.ner.instrument.internal.ContentAnalyzeWhapper import ContentAnalyzeWhapper
-from pullenti.ner.org.OrganizationKind import OrganizationKind
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.instrument.internal.NumberTypes import NumberTypes
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.instrument.internal.ILTypes import ILTypes
-from pullenti.ner.decree.DecreeKind import DecreeKind
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
-from pullenti.ner.core.internal.BlkTyps import BlkTyps
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.instrument.internal.NumberingHelper import NumberingHelper
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.decree.DecreeChangeValueKind import DecreeChangeValueKind
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.uri.UriReferent import UriReferent
+from pullenti.ner.instrument.InstrumentArtefact import InstrumentArtefact
+from pullenti.ner.phone.PhoneReferent import PhoneReferent
+from pullenti.ner.instrument.internal.ILTypes import ILTypes
+from pullenti.ner.address.AddressReferent import AddressReferent
+from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.money.MoneyReferent import MoneyReferent
+from pullenti.ner.decree.DecreeKind import DecreeKind
+from pullenti.ner.Token import Token
+from pullenti.ner.decree.DecreeChangeValueKind import DecreeChangeValueKind
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.address.StreetReferent import StreetReferent
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
+from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
+from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.bank.BankDataReferent import BankDataReferent
+from pullenti.ner.core.internal.BlkTyps import BlkTyps
+from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.decree.internal.PartToken import PartToken
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.internal.BlockTitleToken import BlockTitleToken
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.mail.internal.MailLine import MailLine
+from pullenti.ner.instrument.InstrumentKind import InstrumentKind
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
+from pullenti.ner.instrument.InstrumentAnalyzer import InstrumentAnalyzer
+from pullenti.ner.org.OrganizationKind import OrganizationKind
+from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
+from pullenti.ner.instrument.internal.NumberTypes import NumberTypes
+from pullenti.ner.instrument.internal.NumberingHelper import NumberingHelper
+from pullenti.ner.decree.internal.DecreeToken import DecreeToken
+from pullenti.ner.core.internal.TableHelper import TableHelper
+from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
+from pullenti.ner.instrument.internal.InstrToken import InstrToken
 
 class FragToken(MetaToken):
     
     @staticmethod
     def __createTZTitle(t0 : 'Token', doc : 'InstrumentReferent') -> 'FragToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         tz = None
         cou = 0
         t = t0
@@ -256,6 +287,7 @@ class FragToken(MetaToken):
         return tabs
     
     def _analizeContent(self, top_doc : 'FragToken', is_citat : bool, root_kind : 'InstrumentKind'=InstrumentKind.UNDEFINED) -> None:
+        from pullenti.ner.instrument.internal.ContentAnalyzeWhapper import ContentAnalyzeWhapper
         self.kind = InstrumentKind.CONTENT
         if (self.begin_token.previous is not None and self.begin_token.previous.isChar(chr(0x1E))): 
             self.begin_token = self.begin_token.previous
@@ -274,7 +306,6 @@ class FragToken(MetaToken):
     @staticmethod
     def __createZapiskaTitle(t0 : 'Token', doc : 'InstrumentReferent') -> 'FragToken':
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         cou = 0
         t = t0
         while t is not None and (cou < 30): 
@@ -310,26 +341,8 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __createContractTitle(t0 : 'Token', doc : 'InstrumentReferent') -> 'FragToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.instrument.internal.ParticipantToken import ParticipantToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-        from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.Morphology import Morphology
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.instrument.InstrumentAnalyzer import InstrumentAnalyzer
-        from pullenti.ner.NumberToken import NumberToken
+        from pullenti.ner.instrument.internal.ParticipantToken import ParticipantToken
         if (t0 is None): 
             return None
         is_contract = False
@@ -386,7 +399,7 @@ class FragToken(MetaToken):
                         return None
                     types += 1
                 if (isinstance(t.getReferent(), OrganizationReferent)): 
-                    ki = (Utils.asObjectOrNull(t.getReferent(), OrganizationReferent)).kind
+                    ki = (t.getReferent()).kind
                     if (ki == OrganizationKind.JUSTICE): 
                         return None
             if (t.isValue("ДАЛЕЕ", None)): 
@@ -438,7 +451,7 @@ class FragToken(MetaToken):
                 if (not (tt is not None)): break
                 ttt = tt
                 if (isinstance(tt, MetaToken)): 
-                    ttt = (Utils.asObjectOrNull(tt, MetaToken)).begin_token
+                    ttt = (tt).begin_token
                 tok = ParticipantToken.M_ONTOLOGY.tryParse(ttt, TerminParseAttr.NO)
                 if (tok is None or tok.termin.tag is None): 
                     continue
@@ -646,7 +659,7 @@ class FragToken(MetaToken):
                             npt = NounPhraseHelper.tryParse(ch.begin_token.next0_, NounPhraseParseAttr.NO, 0)
                             if (npt is not None): 
                                 addi = npt.noun.getSourceText().upper()
-                                vvv = Morphology.getAllWordforms(addi, MorphLang())
+                                vvv = Morphology.getAllWordforms(addi, None)
                                 for fi in vvv: 
                                     if (fi.case_.is_genitive): 
                                         addi = fi.normal_case
@@ -765,7 +778,7 @@ class FragToken(MetaToken):
             if (t.begin_char >= 712 and (t.begin_char < 740)): 
                 pass
             if (t.is_newline_before): 
-                if ((isinstance(t, NumberToken)) and (Utils.asObjectOrNull(t, NumberToken)).value == (6)): 
+                if ((isinstance(t, NumberToken)) and (t).value == (6)): 
                     pass
                 if (t.isValue("ПРАВА", None)): 
                     pass
@@ -899,15 +912,6 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __createProjectTitle(t0 : 'Token', doc : 'InstrumentReferent') -> 'FragToken':
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
-        from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.morph.MorphClass import MorphClass
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         if (t0 is None): 
             return None
@@ -927,7 +931,7 @@ class FragToken(MetaToken):
                 continue
             if (isinstance(t.getReferent(), DecreeReferent)): 
                 t = t.kit.debedToken(t)
-            if ((isinstance(t, TextToken)) and (((Utils.asObjectOrNull(t, TextToken)).term == "ПРОЕКТ" or (Utils.asObjectOrNull(t, TextToken)).term == "ЗАКОНОПРОЕКТ"))): 
+            if ((isinstance(t, TextToken)) and (((t).term == "ПРОЕКТ" or (t).term == "ЗАКОНОПРОЕКТ"))): 
                 if ((t.isValue("ПРОЕКТ", None) and t == t0 and (isinstance(t.next0_, ReferentToken))) and (isinstance(t.next0_.getReferent(), OrganizationReferent))): 
                     return None
                 is_project = True
@@ -1008,7 +1012,6 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __attachProjectMisc(t : 'Token') -> 'Token':
-        from pullenti.ner.NumberToken import NumberToken
         if (t is None): 
             return None
         br = False
@@ -1026,9 +1029,6 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __attachProjectEnter(t : 'Token') -> 'Token':
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
         if (t is None): 
             return None
         if (t.isValue("ВНОСИТЬ", "ВНОСИТИ") or t.isValue("ВНЕСТИ", None)): 
@@ -1061,25 +1061,11 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __createJusticeParticipants(title : 'FragToken', doc : 'InstrumentReferent') -> None:
-        from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.instrument.InstrumentAnalyzer import InstrumentAnalyzer
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.instrument.InstrumentArtefact import InstrumentArtefact
-        from pullenti.ner.ReferentToken import ReferentToken
         typ = doc.typ
         ok = ((((typ == "ПОСТАНОВЛЕНИЕ" or typ == "РЕШЕНИЕ" or typ == "ОПРЕДЕЛЕНИЕ") or typ == "ПРИГОВОР" or (Utils.ifNotNull(typ, "")).endswith("ЗАЯВЛЕНИЕ")) or typ == "ПОСТАНОВА" or typ == "РІШЕННЯ") or typ == "ВИЗНАЧЕННЯ" or typ == "ВИРОК") or (Utils.ifNotNull(typ, "")).endswith("ЗАЯВА")
         for s in doc.slots: 
             if (s.type_name == InstrumentReferent.ATTR_SOURCE and (isinstance(s.value, OrganizationReferent))): 
-                ki = (Utils.asObjectOrNull(s.value, OrganizationReferent)).kind
+                ki = (s.value).kind
                 if (ki == OrganizationKind.JUSTICE): 
                     ok = True
             elif (s.type_name == InstrumentReferent.ATTR_CASENUMBER): 
@@ -1106,17 +1092,17 @@ class FragToken(MetaToken):
                     pzayav = FragToken.__createJustParticipant(t.next0_, None)
                     if (pzayav is not None): 
                         pzayav.begin_token = t
-                        (Utils.asObjectOrNull(pzayav.referent, InstrumentParticipant)).typ = "ЗАЯВИТЕЛЬ"
+                        (pzayav.referent).typ = "ЗАЯВИТЕЛЬ"
                 elif (t.isValue("ИСТЕЦ", "ПОЗИВАЧ")): 
                     pist = FragToken.__createJustParticipant(t.next0_, None)
                     if (pist is not None): 
                         pist.begin_token = t
-                        (Utils.asObjectOrNull(pist.referent, InstrumentParticipant)).typ = "ИСТЕЦ"
+                        (pist.referent).typ = "ИСТЕЦ"
                 elif (t.isValue("ОТВЕТЧИК", "ВІДПОВІДАЧ") or t.isValue("ДОЛЖНИК", "БОРЖНИК")): 
                     potv = FragToken.__createJustParticipant(t.next0_, None)
                     if (potv is not None): 
                         potv.begin_token = t
-                        (Utils.asObjectOrNull(potv.referent, InstrumentParticipant)).typ = "ОТВЕТЧИК"
+                        (potv.referent).typ = "ОТВЕТЧИК"
         t = title.end_token.next0_
         first_pass2968 = True
         while True:
@@ -1289,7 +1275,7 @@ class FragToken(MetaToken):
                 if (t.isCharOf(",.") or t.is_hiphen): 
                     break
                 if (isinstance(t, TextToken)): 
-                    term = (Utils.asObjectOrNull(t, TextToken)).term
+                    term = (t).term
                     if (term == "ИП"): 
                         continue
                 if (t.is_and): 
@@ -1395,21 +1381,6 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __createJustParticipant(t : 'Token', typ : str) -> 'ReferentToken':
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.phone.PhoneReferent import PhoneReferent
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         r0 = None
@@ -1507,11 +1478,6 @@ class FragToken(MetaToken):
         return ReferentToken(pat, t0, t1)
     
     def __createJusticeResolution(self) -> None:
-        from pullenti.ner.instrument.InstrumentAnalyzer import InstrumentAnalyzer
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
-        from pullenti.ner.instrument.InstrumentArtefact import InstrumentArtefact
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
         ad = self.kit.getAnalyzerDataByAnalyzerName(InstrumentAnalyzer.ANALYZER_NAME)
         if (ad is None): 
             return
@@ -1673,9 +1639,7 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __createActionQuestion(t : 'Token', max_char : int) -> 'FragToken':
-        from pullenti.ner.instrument.internal.InstrToken import InstrToken
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         li = list()
         ok = False
         tt = t
@@ -1742,12 +1706,6 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __createGostTitle(t0 : 'Token', doc : 'InstrumentReferent') -> 'FragToken':
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
         if (t0 is None): 
             return None
         ok = False
@@ -1801,9 +1759,9 @@ class FragToken(MetaToken):
                         tmp = io.StringIO()
                         while t is not None: 
                             if (isinstance(t, NumberToken)): 
-                                print((Utils.asObjectOrNull(t, NumberToken)).value, end="", file=tmp)
+                                print((t).value, end="", file=tmp)
                             elif (((t.is_hiphen or t.isChar('.'))) and not t.is_whitespace_after and (isinstance(t.next0_, NumberToken))): 
-                                print((Utils.asObjectOrNull(t, TextToken)).term, end="", file=tmp)
+                                print((t).term, end="", file=tmp)
                             else: 
                                 break
                             if (t.is_whitespace_after): 
@@ -1870,31 +1828,7 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __createDocTitle_(t0 : 'Token', doc : 'InstrumentReferent') -> 'FragToken':
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.instrument.internal.InstrToken import InstrToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
-        from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.phone.PhoneReferent import PhoneReferent
-        from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
-        from pullenti.ner.bank.BankDataReferent import BankDataReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         while t0 is not None: 
             if (not t0.is_table_control_char): 
                 break
@@ -1955,7 +1889,7 @@ class FragToken(MetaToken):
             if (t.is_table_control_char): 
                 continue
             if (t.is_newline_before or ((t.previous is not None and t.previous.is_table_control_char))): 
-                if ((isinstance(t.getReferent(), DecreeReferent)) and (Utils.asObjectOrNull(t.getReferent(), DecreeReferent)).kind != DecreeKind.PUBLISHER): 
+                if ((isinstance(t.getReferent(), DecreeReferent)) and (t.getReferent()).kind != DecreeKind.PUBLISHER): 
                     t = t.kit.debedToken(t)
                 if (t.isValue("О", "ПРО") or t.isValue("ОБ", None) or t.isValue("ПО", None)): 
                     break
@@ -2071,12 +2005,12 @@ class FragToken(MetaToken):
                 if (dpr is not None): 
                     if (((dpr.part is None and dpr.doc_part is None)) or len(dpr.slots) != 2): 
                         break
-                    if ((isinstance(t.next0_, TextToken)) and (Utils.asObjectOrNull(t.next0_, TextToken)).is_pure_verb): 
+                    if ((isinstance(t.next0_, TextToken)) and (t.next0_).is_pure_verb): 
                         break
                     dr0 = dpr.owner
             if (dr0 is not None): 
                 if (doc.typ is None or doc.typ == dr0.typ): 
-                    tt1 = (Utils.asObjectOrNull(t, ReferentToken)).begin_token
+                    tt1 = (t).begin_token
                     li = DecreeToken.tryAttachList(tt1, None, 10, False)
                     if (li is not None and len(li) > 0 and li[len(li) - 1].is_newline_after): 
                         for dd in li: 
@@ -2084,7 +2018,7 @@ class FragToken(MetaToken):
                         ttt = li[len(li) - 1].end_token
                         if (ttt.end_char < t.end_char): 
                             nt0 = ttt.next0_
-                            name_ = FragToken._getRestoredName(ttt.next0_, (Utils.asObjectOrNull(t, ReferentToken)).end_token, False)
+                            name_ = FragToken._getRestoredName(ttt.next0_, (t).end_token, False)
                         t1 = t
                         if (name_ is not None and t1.is_newline_after): 
                             t = t.next0_
@@ -2169,12 +2103,12 @@ class FragToken(MetaToken):
                         dt = (None)
             if (dt is None and dt0 is not None and ((dt0.typ == DecreeToken.ItemType.OWNER or dt0.typ == DecreeToken.ItemType.ORG))): 
                 if ((isinstance(t, NumberToken)) and t.is_newline_after and t.is_newline_before): 
-                    dt = DecreeToken._new845(t, t, DecreeToken.ItemType.NUMBER, str((Utils.asObjectOrNull(t, NumberToken)).value))
+                    dt = DecreeToken._new845(t, t, DecreeToken.ItemType.NUMBER, str((t).value))
             if (dt is not None and dt.typ == DecreeToken.ItemType.UNKNOWN): 
                 dt = (None)
             if ((dt is None and (isinstance(t, NumberToken)) and t.is_newline_before) and t.is_newline_after): 
-                if (dt0 is not None and dt0.typ == DecreeToken.ItemType.ORG and (((Utils.asObjectOrNull(t, NumberToken)).typ == NumberSpellingType.DIGIT))): 
-                    dt = DecreeToken._new845(t, t, DecreeToken.ItemType.NUMBER, str((Utils.asObjectOrNull(t, NumberToken)).value))
+                if (dt0 is not None and dt0.typ == DecreeToken.ItemType.ORG and (((t).typ == NumberSpellingType.DIGIT))): 
+                    dt = DecreeToken._new845(t, t, DecreeToken.ItemType.NUMBER, str((t).value))
             if (dt is not None and ((dt.typ == DecreeToken.ItemType.TYP or dt.typ == DecreeToken.ItemType.OWNER or dt.typ == DecreeToken.ItemType.ORG))): 
                 if (not t.is_newline_before): 
                     dt = (None)
@@ -2183,7 +2117,7 @@ class FragToken(MetaToken):
                     while ttt is not None: 
                         if (ttt.is_newline_before): 
                             break
-                        elif ((isinstance(ttt, TextToken)) and (Utils.asObjectOrNull(ttt, TextToken)).is_pure_verb): 
+                        elif ((isinstance(ttt, TextToken)) and (ttt).is_pure_verb): 
                             dt = (None)
                             break
                         ttt = ttt.next0_
@@ -2584,7 +2518,7 @@ class FragToken(MetaToken):
                 t1 = eds.end_token
                 title.end_token = t1
                 continue
-            if ((isinstance(t1.getReferent(), DecreeReferent)) and (Utils.asObjectOrNull(t1.getReferent(), DecreeReferent)).kind == DecreeKind.PUBLISHER and t1.is_newline_after): 
+            if ((isinstance(t1.getReferent(), DecreeReferent)) and (t1.getReferent()).kind == DecreeKind.PUBLISHER and t1.is_newline_after): 
                 pub = FragToken._new1257(t1, t1, InstrumentKind.APPROVED)
                 pub.referents = list()
                 pub.referents.append(t1.getReferent())
@@ -2663,27 +2597,12 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __createAppendixTitle(t0 : 'Token', app : 'FragToken', doc : 'InstrumentReferent', is_app : bool, start : bool) -> 'FragToken':
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.instrument.internal.InstrToken import InstrToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         if (t0 is None): 
             return None
         if (t0 != t0.kit.first_token): 
             if (isinstance(t0.getReferent(), DecreePartReferent)): 
-                if ((Utils.asObjectOrNull(t0.getReferent(), DecreePartReferent)).appendix is not None): 
+                if ((t0.getReferent()).appendix is not None): 
                     t0 = t0.kit.debedToken(t0)
         t = t0
         t1 = None
@@ -2740,7 +2659,7 @@ class FragToken(MetaToken):
                 if (is_app): 
                     doc.addSlot(InstrumentReferent.ATTR_APPENDIX, Utils.ifNotNull(num.value, "1"), False, 0)
             elif (isinstance(t.getReferent(), DecreeReferent)): 
-                if ((Utils.asObjectOrNull(t.getReferent(), DecreeReferent)).kind == DecreeKind.PUBLISHER): 
+                if ((t.getReferent()).kind == DecreeKind.PUBLISHER): 
                     ff = FragToken._new1257(t, t, InstrumentKind.APPROVED)
                     ff.referents = list()
                     ff.referents.append(t.getReferent())
@@ -2830,10 +2749,10 @@ class FragToken(MetaToken):
                 elif (tok.typ == ILTypes.REGNUMBER and (((tok.value == doc.reg_number or tok.value == "?" or tok.is_newline_before) or tok.is_newline_after or tok.has_table_chars))): 
                     max_ind = ii
                 elif (tok.typ == ILTypes.DATE and doc.date is not None): 
-                    if ((isinstance(tok.ref, DateReferent)) and (Utils.asObjectOrNull(tok.ref, DateReferent)).dt == doc.date): 
+                    if ((isinstance(tok.ref, DateReferent)) and (tok.ref).dt == doc.date): 
                         max_ind = ii
                     elif (isinstance(tok.ref, ReferentToken)): 
-                        dre = Utils.asObjectOrNull((Utils.asObjectOrNull(tok.ref, ReferentToken)).referent, DateReferent)
+                        dre = Utils.asObjectOrNull((tok.ref).referent, DateReferent)
                         if (dre is not None and dre.dt is not None and doc.date is not None): 
                             if (dre.dt == doc.date): 
                                 max_ind = ii
@@ -2951,7 +2870,7 @@ class FragToken(MetaToken):
                 if (dd is not None and ((dd.typ == DecreeToken.ItemType.DATE or dd.typ == DecreeToken.ItemType.TERR)) and dd.is_newline_after): 
                     npt0 = None
                     if (dd.typ == DecreeToken.ItemType.TERR and (isinstance(t, ReferentToken))): 
-                        npt0 = NounPhraseHelper.tryParse((Utils.asObjectOrNull(t, ReferentToken)).begin_token, NounPhraseParseAttr.NO, 0)
+                        npt0 = NounPhraseHelper.tryParse((t).begin_token, NounPhraseParseAttr.NO, 0)
                     if (npt0 is not None and not npt0.morph.case_.is_undefined and not npt0.morph.case_.is_nominative): 
                         pass
                     else: 
@@ -3084,10 +3003,7 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __isStartOfBody(t : 'Token', is_app_title : bool=False) -> bool:
-        from pullenti.ner.core.internal.BlockTitleToken import BlockTitleToken
-        from pullenti.ner.mail.internal.MailLine import MailLine
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         if (t is None or not t.is_newline_before): 
             return False
         if (not is_app_title): 
@@ -3137,12 +3053,6 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __addTitleAttr(doc : 'InstrumentReferent', title : 'FragToken', dt : 'DecreeToken') -> bool:
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
-        from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (dt.typ == DecreeToken.ItemType.TYP): 
             if (doc is not None): 
                 if (doc.typ is not None and dt.value != doc.typ): 
@@ -3331,8 +3241,6 @@ class FragToken(MetaToken):
     
     @staticmethod
     def _getRestoredName(b : 'Token', e0_ : 'Token', index_item : bool=False) -> str:
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         e0 = e0_
         while e0_ is not None and e0_.begin_char > b.end_char: 
             if (e0_.isCharOf("*<") or e0_.is_table_control_char): 
@@ -3397,11 +3305,6 @@ class FragToken(MetaToken):
         return self._CreateReferent(ad, self)
     
     def _CreateReferent(self, ad : 'AnalyzerData', bas : 'FragToken') -> 'InstrumentBlockReferent':
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
         res = None
         if (self._m_doc is not None): 
             res = (self._m_doc)
@@ -3430,23 +3333,23 @@ class FragToken(MetaToken):
                 elif (isinstance(self.value, Referent)): 
                     res.addSlot(InstrumentBlockReferent.ATTR_REF, self.value, False, 0)
                 elif (isinstance(self.value, ReferentToken)): 
-                    r = (Utils.asObjectOrNull(self.value, ReferentToken)).referent
-                    (Utils.asObjectOrNull(self.value, ReferentToken)).saveToLocalOntology()
-                    res.addSlot(InstrumentBlockReferent.ATTR_REF, (Utils.asObjectOrNull(self.value, ReferentToken)).referent, False, 0)
+                    r = (self.value).referent
+                    (self.value).saveToLocalOntology()
+                    res.addSlot(InstrumentBlockReferent.ATTR_REF, (self.value).referent, False, 0)
                     res.addExtReferent(Utils.asObjectOrNull(self.value, ReferentToken))
                     s = bas._m_doc.findSlot(None, r, True)
                     if (s is not None): 
-                        s.value = (Utils.asObjectOrNull(self.value, ReferentToken)).referent
+                        s.value = (self.value).referent
                 elif (isinstance(self.value, DecreeToken)): 
                     dt = Utils.asObjectOrNull(self.value, DecreeToken)
                     if (isinstance(dt.ref, ReferentToken)): 
-                        r = (Utils.asObjectOrNull(dt.ref, ReferentToken)).referent
-                        (Utils.asObjectOrNull(dt.ref, ReferentToken)).saveToLocalOntology()
-                        res.addSlot(InstrumentBlockReferent.ATTR_REF, (Utils.asObjectOrNull(dt.ref, ReferentToken)).referent, False, 0)
+                        r = (dt.ref).referent
+                        (dt.ref).saveToLocalOntology()
+                        res.addSlot(InstrumentBlockReferent.ATTR_REF, (dt.ref).referent, False, 0)
                         res.addExtReferent(Utils.asObjectOrNull(dt.ref, ReferentToken))
                         s = bas._m_doc.findSlot(None, r, True)
                         if (s is not None): 
-                            s.value = (Utils.asObjectOrNull(dt.ref, ReferentToken)).referent
+                            s.value = (dt.ref).referent
                     elif (dt.value is not None): 
                         res.addSlot(InstrumentBlockReferent.ATTR_VALUE, dt.value, False, 0)
             if (self.referents is not None): 
@@ -3488,16 +3391,7 @@ class FragToken(MetaToken):
     
     @staticmethod
     def createDocument(t : 'Token', max_char : int, root_kind : 'InstrumentKind'=InstrumentKind.UNDEFINED) -> 'FragToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
-        from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
-        from pullenti.ner.instrument.internal.InstrToken import InstrToken
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         if (t is None): 
             return None
         while (isinstance(t, TextToken)) and t.next0_ is not None:
@@ -3542,7 +3436,7 @@ class FragToken(MetaToken):
                 res._m_doc = app_doc
                 res.children.append(head1)
                 res.children.append(Utils.asObjectOrNull(head1.tag, FragToken))
-                res.end_token = (Utils.asObjectOrNull(head1.tag, FragToken)).end_token
+                res.end_token = (head1.tag).end_token
                 return res
             ee = False
             if (head is None): 
@@ -3714,7 +3608,7 @@ class FragToken(MetaToken):
                         else: 
                             break
                 if (lii.typ == ILTypes.PERSON and (isinstance(lii.ref, ReferentToken))): 
-                    if ((Utils.asObjectOrNull(lii.ref, ReferentToken)).referent in pers_list): 
+                    if ((lii.ref).referent in pers_list): 
                         if (not lii.is_newline_before): 
                             break
                 if (not lii.is_newline_before and not lii.begin_token.is_table_control_char and ((lii.typ == ILTypes.GEO or li[i].typ == ILTypes.PERSON))): 
@@ -3736,10 +3630,10 @@ class FragToken(MetaToken):
                 if (li[i].typ == ILTypes.PERSON): 
                     fr.kind = InstrumentKind.SIGNER
                     if (isinstance(li[i].ref, ReferentToken)): 
-                        res._m_doc.addSlot(InstrumentReferent.ATTR_SIGNER, (Utils.asObjectOrNull(li[i].ref, ReferentToken)).referent, False, 0)
+                        res._m_doc.addSlot(InstrumentReferent.ATTR_SIGNER, (li[i].ref).referent, False, 0)
                         res._m_doc.addExtReferent(Utils.asObjectOrNull(li[i].ref, ReferentToken))
                         fr.value = li[i].ref
-                        pers_list.append((Utils.asObjectOrNull(li[i].ref, ReferentToken)).referent)
+                        pers_list.append((li[i].ref).referent)
                 elif (li[i].typ == ILTypes.REGNUMBER): 
                     if (li[i].is_newline_before): 
                         if (res._m_doc.reg_number is None or res._m_doc.reg_number == li[i].value): 
@@ -3793,7 +3687,7 @@ class FragToken(MetaToken):
         if (tail is not None): 
             res.children.append(tail)
             while i1 < len(li): 
-                if (li[i1].begin_token == li[i1].end_token and (isinstance(li[i1].begin_token.getReferent(), DecreeReferent)) and (Utils.asObjectOrNull(li[i1].begin_token.getReferent(), DecreeReferent)).kind == DecreeKind.PUBLISHER): 
+                if (li[i1].begin_token == li[i1].end_token and (isinstance(li[i1].begin_token.getReferent(), DecreeReferent)) and (li[i1].begin_token.getReferent()).kind == DecreeKind.PUBLISHER): 
                     ap = FragToken._new1257(li[i1].begin_token, li[i1].end_token, InstrumentKind.APPROVED)
                     ap.referents = list()
                     ap.referents.append(Utils.asObjectOrNull(li[i1].begin_token.getReferent(), DecreeReferent))
@@ -3951,12 +3845,6 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __createCaseInfo(t : 'Token') -> 'FragToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.date.DateReferent import DateReferent
         if (t is None): 
             return None
         if (not t.is_newline_before): 
@@ -4007,15 +3895,6 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __createApproved(t : 'Token') -> 'FragToken':
-        from pullenti.ner.instrument.internal.InstrToken import InstrToken
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.date.DateReferent import DateReferent
         if (t is None): 
             return None
         res = None
@@ -4023,21 +3902,21 @@ class FragToken(MetaToken):
         if (tt is not None): 
             res = FragToken._new1257(t, tt, InstrumentKind.APPROVED)
         elif ((t.isValue("ОДОБРИТЬ", "СХВАЛИТИ") or t.isValue("ПРИНЯТЬ", "ПРИЙНЯТИ") or t.isValue("УТВЕРДИТЬ", "ЗАТВЕРДИТИ")) or t.isValue("СОГЛАСОВАТЬ", None)): 
-            if (t.morph.containsAttr("инф.", MorphClass()) and t.morph.containsAttr("сов.в.", MorphClass())): 
+            if (t.morph.containsAttr("инф.", None) and t.morph.containsAttr("сов.в.", None)): 
                 pass
             else: 
                 res = FragToken._new1257(t, t, InstrumentKind.APPROVED)
-        elif ((isinstance(t, TextToken)) and (((Utils.asObjectOrNull(t, TextToken)).term == "ИМЕНЕМ" or (Utils.asObjectOrNull(t, TextToken)).term == "ІМЕНЕМ"))): 
+        elif ((isinstance(t, TextToken)) and (((t).term == "ИМЕНЕМ" or (t).term == "ІМЕНЕМ"))): 
             res = FragToken._new1257(t, t, InstrumentKind.APPROVED)
         if (res is None): 
             return None
         t = res.end_token
         if (t.next0_ is None): 
             return res
-        if (not t.is_newline_after and t.next0_.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False) == res.begin_token.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)): 
+        if (not t.is_newline_after and t.next0_.getNormalCaseText(None, False, MorphGender.UNDEFINED, False) == res.begin_token.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)): 
             t = t.next0_
             while t is not None: 
-                if (t.is_newline_before or t.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False) != res.begin_token.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)): 
+                if (t.is_newline_before or t.getNormalCaseText(None, False, MorphGender.UNDEFINED, False) != res.begin_token.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)): 
                     break
                 else: 
                     res.end_token = t
@@ -4161,10 +4040,6 @@ class FragToken(MetaToken):
     
     @staticmethod
     def _createMisc(t : 'Token') -> 'FragToken':
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.TextToken import TextToken
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         if (t is None or t.next0_ is None): 
             return None
@@ -4192,14 +4067,6 @@ class FragToken(MetaToken):
     
     @staticmethod
     def _createEditions(t : 'Token') -> 'FragToken':
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
         if (t is None or t.next0_ is None): 
             return None
         t0 = t
@@ -4265,7 +4132,7 @@ class FragToken(MetaToken):
                 t = t.previous
                 break
         elif (isinstance(t.getReferent(), DecreeReferent)): 
-            tt = (Utils.asObjectOrNull(t, MetaToken)).begin_token
+            tt = (t).begin_token
             if (tt.isValue("В", "У") and tt.next0_ is not None): 
                 tt = tt.next0_
             if (tt.isValue("РЕДАКЦИЯ", "РЕДАКЦІЯ")): 
@@ -4323,19 +4190,6 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __createOwner(t : 'Token') -> 'FragToken':
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.address.StreetReferent import StreetReferent
-        from pullenti.ner.phone.PhoneReferent import PhoneReferent
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
-        from pullenti.ner.bank.BankDataReferent import BankDataReferent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         if (t is None or not t.is_newline_before): 
             return None
         if (not t.chars.is_cyrillic_letter or t.chars.is_all_lower): 
@@ -4390,10 +4244,6 @@ class FragToken(MetaToken):
         return fr
     
     def __calcOwnerCoef(self, owner : 'FragToken') -> int:
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         own_typs = list()
         own_name = None
         for ch in owner.children: 
@@ -4402,7 +4252,7 @@ class FragToken(MetaToken):
                     if (chh.kind == InstrumentKind.TYP or chh.kind == InstrumentKind.NAME or chh.kind == InstrumentKind.KEYWORD): 
                         t = DecreeToken.isKeyword(chh.begin_token, False)
                         if (isinstance(t, TextToken)): 
-                            own_typs.append((Utils.asObjectOrNull(t, TextToken)).getLemma())
+                            own_typs.append((t).getLemma())
                         if (chh.kind == InstrumentKind.NAME and own_name is None): 
                             own_name = chh
         for ch in self.children: 
@@ -4414,7 +4264,7 @@ class FragToken(MetaToken):
                             t = t.next0_
                         tt = DecreeToken.isKeyword(t, False)
                         if (isinstance(tt, TextToken)): 
-                            ty = (Utils.asObjectOrNull(tt, TextToken)).getLemma()
+                            ty = (tt).getLemma()
                             if (ty in own_typs): 
                                 return 1
                             continue
@@ -4438,7 +4288,6 @@ class FragToken(MetaToken):
     
     @property
     def has_changes(self) -> bool:
-        from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
         if (isinstance(self.begin_token.getReferent(), DecreeChangeReferent)): 
             return True
         t = self.begin_token
@@ -4450,14 +4299,11 @@ class FragToken(MetaToken):
     
     @property
     def multiline_changes_value(self) -> 'MetaToken':
-        from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
-        from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
         t = self.begin_token
         while t is not None and (t.begin_char < self.end_char): 
             if (isinstance(t.getReferent(), DecreeChangeReferent)): 
                 dcr = Utils.asObjectOrNull(t.getReferent(), DecreeChangeReferent)
-                tt = (Utils.asObjectOrNull(t, MetaToken)).begin_token
+                tt = (t).begin_token
                 first_pass2999 = True
                 while True:
                     if first_pass2999: first_pass2999 = False
@@ -4472,7 +4318,7 @@ class FragToken(MetaToken):
                     if ((val.find('\r') < 0) and (val.find('\n') < 0) and not tt.is_newline_before): 
                         continue
                     t0 = None
-                    t = (Utils.asObjectOrNull(tt, MetaToken)).begin_token
+                    t = (tt).begin_token
                     while t is not None and t.end_char <= tt.end_char: 
                         if (BracketHelper.isBracket(t, True) and ((t.is_whitespace_before or t.previous.isChar(':')))): 
                             t0 = t.next0_
@@ -4481,7 +4327,7 @@ class FragToken(MetaToken):
                             t0 = t
                             break
                         t = t.next0_
-                    t1 = (Utils.asObjectOrNull(tt, MetaToken)).end_token
+                    t1 = (tt).end_token
                     if (BracketHelper.isBracket(t1, True)): 
                         t1 = t1.previous
                     if (t0 is not None and ((t0.end_char + 50) < t1.end_char)): 

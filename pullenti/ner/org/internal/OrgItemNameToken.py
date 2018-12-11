@@ -4,16 +4,35 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.org.OrgProfile import OrgProfile
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.Explanatory import Explanatory
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.Token import Token
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.org.internal.EpNerOrgInternalResourceHelper import EpNerOrgInternalResourceHelper
-
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.org.OrgProfile import OrgProfile
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.ner.org.internal.OrgItemEponymToken import OrgItemEponymToken
+from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
+from pullenti.ner.org.internal.OrgItemEngItem import OrgItemEngItem
 
 class OrgItemNameToken(MetaToken):
     
@@ -55,13 +74,6 @@ class OrgItemNameToken(MetaToken):
     
     @staticmethod
     def tryAttach(t : 'Token', prev : 'OrgItemNameToken', ext_onto : bool, first : bool) -> 'OrgItemNameToken':
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
-        from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
-        from pullenti.morph.MorphClass import MorphClass
         if (t is None): 
             return None
         if (t.isValue("ОРДЕНА", None) and t.next0_ is not None): 
@@ -186,12 +198,11 @@ class OrgItemNameToken(MetaToken):
     
     @staticmethod
     def __isNotTermNoun(t : 'Token') -> bool:
-        from pullenti.ner.TextToken import TextToken
         if (not ((isinstance(t, TextToken)))): 
             return False
         if (not ((isinstance(t.previous, TextToken)))): 
             return False
-        if ((Utils.asObjectOrNull(t.previous, TextToken)).term != "ПО"): 
+        if ((t.previous).term != "ПО"): 
             return False
         for v in OrgItemNameToken.__m_not_terminate_nouns: 
             if (t.isValue(v, None)): 
@@ -200,19 +211,6 @@ class OrgItemNameToken(MetaToken):
     
     @staticmethod
     def __TryAttach(t : 'Token', prev : 'OrgItemNameToken', ext_onto : bool) -> 'OrgItemNameToken':
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.org.internal.OrgItemEngItem import OrgItemEngItem
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.morph.Explanatory import Explanatory
-        from pullenti.ner.org.internal.OrgItemEponymToken import OrgItemEponymToken
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.morph.MorphWordForm import MorphWordForm
         if (t is None): 
             return None
         r = t.getReferent()
@@ -263,7 +261,7 @@ class OrgItemNameToken(MetaToken):
             ty = OrgItemTypeToken.tryAttach(t1.next0_, False, None)
             if (ty is not None): 
                 return None
-            res = OrgItemNameToken._new1705(npt1.begin_token, npt1.end_token, npt1.morph, npt1.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False))
+            res = OrgItemNameToken._new1705(npt1.begin_token, npt1.end_token, npt1.morph, npt1.getNormalCaseText(None, False, MorphGender.UNDEFINED, False))
             res.is_noun_phrase = True
             res.is_after_conjunction = True
             if (prev.preposition is not None): 
@@ -273,7 +271,7 @@ class OrgItemNameToken(MetaToken):
             if ((isinstance(tt.next0_, TextToken)) and tt.length_char == 1 and tt.next0_.chars.is_latin_letter): 
                 res = OrgItemNameToken._new1706(tt, tt.next0_, tt.next0_.chars)
                 res.is_after_conjunction = True
-                res.value = ("& " + (Utils.asObjectOrNull(tt.next0_, TextToken)).term)
+                res.value = ("& " + (tt.next0_).term)
                 return res
             res = OrgItemNameToken.tryAttach(tt.next0_, None, ext_onto, False)
             if (res is None or res.chars != prev.chars): 
@@ -313,7 +311,7 @@ class OrgItemNameToken(MetaToken):
                 ca = npt.morph.case_
                 if ((not ca.is_dative and not ca.is_genitive and not ca.is_instrumental) and not ca.is_prepositional): 
                     return None
-            res = OrgItemNameToken._new1705(npt.begin_token, npt.end_token, npt.morph, npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False))
+            res = OrgItemNameToken._new1705(npt.begin_token, npt.end_token, npt.morph, npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False))
             res.is_noun_phrase = True
             if ((npt.end_token.whitespaces_after_count < 2) and (isinstance(npt.end_token.next0_, TextToken))): 
                 npt2 = NounPhraseHelper.tryParse(npt.end_token.next0_, NounPhraseParseAttr.NO, 0)
@@ -337,7 +335,7 @@ class OrgItemNameToken(MetaToken):
             if (expl_ok): 
                 res.is_after_conjunction = True
         elif (npt is not None and ((((prev is not None and prev.is_noun_phrase and npt.morph.case_.is_instrumental)) or ext_onto))): 
-            res = OrgItemNameToken._new1705(npt.begin_token, npt.end_token, npt.morph, npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False))
+            res = OrgItemNameToken._new1705(npt.begin_token, npt.end_token, npt.morph, npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False))
             res.is_noun_phrase = True
         elif (tt.is_and): 
             res = OrgItemNameToken.tryAttach(tt.next0_, prev, ext_onto, False)
@@ -385,13 +383,13 @@ class OrgItemNameToken(MetaToken):
                             rt = tt.kit.processReferent(OrganizationAnalyzer.ANALYZER_NAME, tt.next0_)
                             if (rt is not None): 
                                 ok = False
-                    s = npt.noun.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                    s = npt.noun.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                     if (s == "ПОДДЕРЖКА" or s == "УЧАСТИЕ"): 
                         ok = False
                 else: 
                     ok = npt.morph.case_.is_prepositional
                 if (ok): 
-                    res = OrgItemNameToken._new1710(t, npt.end_token, npt.morph, npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False), npt.chars)
+                    res = OrgItemNameToken._new1710(t, npt.end_token, npt.morph, npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False), npt.chars)
                     res.is_noun_phrase = True
                     res.preposition = tt.term
                     if (((res.value == "ДЕЛО" or res.value == "ВОПРОС")) and not res.is_newline_after): 
@@ -460,12 +458,12 @@ class OrgItemNameToken(MetaToken):
                 if ((((t.is_hiphen or t.isCharOf("\\/"))) and t.next0_ is not None and (isinstance(t.next0_, TextToken))) and not t.is_whitespace_before and not t.is_whitespace_after): 
                     t = t.next0_
                     res.end_token = t
-                    res.value = "{0}{1}{2}".format(res.value, ('.' if t.previous.isChar('.') else '-'), (Utils.asObjectOrNull(t, TextToken)).term)
+                    res.value = "{0}{1}{2}".format(res.value, ('.' if t.previous.isChar('.') else '-'), (t).term)
                 elif (t.isChar('.')): 
                     if (not t.is_whitespace_after and not t.is_whitespace_before and (isinstance(t.next0_, TextToken))): 
                         res.end_token = t.next0_
                         t = t.next0_
-                        res.value = "{0}.{1}".format(res.value, (Utils.asObjectOrNull(t, TextToken)).term)
+                        res.value = "{0}.{1}".format(res.value, (t).term)
                     elif ((t.next0_ is not None and not t.is_newline_after and t.next0_.chars.is_latin_letter) and tt.chars.is_latin_letter): 
                         res.end_token = t
                     else: 
@@ -479,7 +477,7 @@ class OrgItemNameToken(MetaToken):
             if ((tt) is not None and tt.is_letters): 
                 if (not tt.morph.class0_.is_conjunction and not tt.morph.class0_.is_preposition): 
                     for mf in tt.morph.items: 
-                        if ((Utils.asObjectOrNull(mf, MorphWordForm)).is_in_dictionary): 
+                        if ((mf).is_in_dictionary): 
                             res.is_in_dictionary = True
             if (t0 == res.end_token): 
                 break
@@ -490,7 +488,7 @@ class OrgItemNameToken(MetaToken):
                 if (t1.next0_ is not None and not t1.is_whitespace_after and t1.is_hiphen): 
                     t1 = t1.next0_
                 if (isinstance(t1, NumberToken)): 
-                    res.value += str((Utils.asObjectOrNull(t1, NumberToken)).value)
+                    res.value += str((t1).value)
                     res.end_token = t1
         if (res.begin_token == res.end_token and res.begin_token.chars.is_last_lower): 
             src = res.begin_token.getSourceText()
@@ -512,10 +510,6 @@ class OrgItemNameToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
         OrgItemNameToken.__m_std_tails = TerminCollection()
         OrgItemNameToken.__m_std_names = TerminCollection()
         OrgItemNameToken.__m_vervot_words = TerminCollection()

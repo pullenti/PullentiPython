@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class MorphPerson(IntEnum):
     """ Лицо (1, 2, 3) """
     UNDEFINED = 0

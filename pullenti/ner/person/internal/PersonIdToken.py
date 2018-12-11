@@ -5,22 +5,34 @@
 import io
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.NumberHelper import NumberHelper
 
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.address.AddressReferent import AddressReferent
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.NumberHelper import NumberHelper
 
 class PersonIdToken(MetaToken):
     
     class Typs(IntEnum):
         KEYWORD = 0
-        SERIA = 0 + 1
-        NUMBER = (0 + 1) + 1
-        DATE = ((0 + 1) + 1) + 1
-        ORG = (((0 + 1) + 1) + 1) + 1
-        VIDAN = ((((0 + 1) + 1) + 1) + 1) + 1
-        CODE = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
-        ADDRESS = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        SERIA = 1
+        NUMBER = 2
+        DATE = 3
+        ORG = 4
+        VIDAN = 5
+        CODE = 6
+        ADDRESS = 7
         
         @classmethod
         def has_value(cls, value):
@@ -35,9 +47,6 @@ class PersonIdToken(MetaToken):
     
     @staticmethod
     def tryAttach(t : 'Token') -> 'ReferentToken':
-        from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None or not t.chars.is_letter): 
             return None
         noun = PersonIdToken.__tryParse(t, None)
@@ -109,15 +118,6 @@ class PersonIdToken(MetaToken):
     
     @staticmethod
     def __tryParse(t : 'Token', prev : 'PersonIdToken') -> 'PersonIdToken':
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.address.AddressReferent import AddressReferent
         if (t.isValue("СВИДЕТЕЛЬСТВО", None)): 
             tt1 = t
             ip = False
@@ -178,7 +178,7 @@ class PersonIdToken(MetaToken):
                         res.end_token = ait.end_token
                         break
                     break
-                if ((isinstance(res.referent, GeoReferent)) and not (Utils.asObjectOrNull(res.referent, GeoReferent)).is_state): 
+                if ((isinstance(res.referent, GeoReferent)) and not (res.referent).is_state): 
                     res.referent = (None)
                 return res
             if (ty == PersonIdToken.Typs.NUMBER): 
@@ -227,7 +227,7 @@ class PersonIdToken(MetaToken):
                         elif (tt.length_char != 2): 
                             break
                         else: 
-                            print((Utils.asObjectOrNull(tt, TextToken)).term, end="", file=tmp)
+                            print((tt).term, end="", file=tmp)
                             res.end_token = tt
                         if (tt.next0_ is not None and tt.next0_.is_hiphen): 
                             tt = tt.next0_
@@ -317,7 +317,7 @@ class PersonIdToken(MetaToken):
         if ((prev is not None and prev.typ == PersonIdToken.Typs.KEYWORD and (isinstance(t, TextToken))) and not t.chars.is_all_lower and t.chars.is_letter): 
             rr = PersonIdToken.__tryParse(t.next0_, prev)
             if (rr is not None and rr.typ == PersonIdToken.Typs.NUMBER): 
-                return PersonIdToken._new2362(t, t, PersonIdToken.Typs.SERIA, (Utils.asObjectOrNull(t, TextToken)).term)
+                return PersonIdToken._new2362(t, t, PersonIdToken.Typs.SERIA, (t).term)
         if ((t is not None and t.isValue("ОТ", "ВІД") and (isinstance(t.next0_, ReferentToken))) and t.next0_.getReferent().type_name == "DATE"): 
             return PersonIdToken._new2365(t, t.next0_, PersonIdToken.Typs.DATE, t.next0_.getReferent())
         return None
@@ -326,8 +326,6 @@ class PersonIdToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
         if (PersonIdToken.M_ONTOLOGY is not None): 
             return
         PersonIdToken.M_ONTOLOGY = TerminCollection()

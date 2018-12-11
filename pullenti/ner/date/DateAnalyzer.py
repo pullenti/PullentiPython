@@ -7,12 +7,29 @@ import datetime
 import math
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.AnalyzerData import AnalyzerData
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+
+from pullenti.ner.Token import Token
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.TextAnnotation import TextAnnotation
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.Referent import Referent
 from pullenti.ner.date.DatePointerType import DatePointerType
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-
+from pullenti.ner.core.NumberExToken import NumberExToken
+from pullenti.ner.date.internal.MetaDate import MetaDate
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.date.internal.MetaDateRange import MetaDateRange
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.date.DateRangeReferent import DateRangeReferent
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.core.AnalyzerData import AnalyzerData
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.date.internal.DateItemToken import DateItemToken
+from pullenti.ner.ReferentToken import ReferentToken
 
 class DateAnalyzer(Analyzer):
     """ Семантический анализатор для дат и диапазонов дат """
@@ -56,8 +73,6 @@ class DateAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.date.internal.MetaDate import MetaDate
-        from pullenti.ner.date.internal.MetaDateRange import MetaDateRange
         return [MetaDate.GLOBAL_META, MetaDateRange.GLOBAL_META]
     
     @property
@@ -66,8 +81,6 @@ class DateAnalyzer(Analyzer):
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.date.internal.MetaDate import MetaDate
-        from pullenti.ner.date.internal.MetaDateRange import MetaDateRange
         res = dict()
         res[MetaDate.DATE_FULL_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("datefull.png")
         res[MetaDate.DATE_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("date.png")
@@ -75,8 +88,6 @@ class DateAnalyzer(Analyzer):
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
         if (type0_ == DateReferent.OBJ_TYPENAME): 
             return DateReferent()
         if (type0_ == DateRangeReferent.OBJ_TYPENAME): 
@@ -98,13 +109,6 @@ class DateAnalyzer(Analyzer):
             stage: 
         
         """
-        from pullenti.ner.date.internal.DateItemToken import DateItemToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
-        from pullenti.ner.TextAnnotation import TextAnnotation
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.NumberToken import NumberToken
         ad = Utils.asObjectOrNull(kit.getAnalyzerData(self), DateAnalyzer.DateAnalizerData)
         t = kit.first_token
         first_pass2831 = True
@@ -182,7 +186,7 @@ class DateAnalyzer(Analyzer):
                 if ((dat is not None and t.previous is not None and ((t.previous.is_hiphen or t.previous.isValue("ПО", None) or t.previous.isValue("И", None)))) and (isinstance(t.previous.previous, NumberToken))): 
                     t0 = t.previous.previous
                     dat0 = None
-                    num = (Utils.asObjectOrNull(t0, NumberToken)).value
+                    num = (t0).value
                     if (dat.day > 0 and (num < dat.day) and num > 0): 
                         if (dat.higher is not None): 
                             dat0 = DateReferent._new729(dat.higher, num)
@@ -208,10 +212,6 @@ class DateAnalyzer(Analyzer):
         self.__applyDateRange0(kit, ad)
     
     def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
-        from pullenti.ner.date.internal.DateItemToken import DateItemToken
         if (begin is None): 
             return None
         if (begin.isValue("ДО", None) and (isinstance(begin.next0_, ReferentToken)) and (isinstance(begin.next0_.getReferent(), DateReferent))): 
@@ -246,11 +246,6 @@ class DateAnalyzer(Analyzer):
         return res
     
     def __tryAttach(self, dts : typing.List['DateItemToken'], high : bool) -> typing.List['ReferentToken']:
-        from pullenti.ner.date.internal.DateItemToken import DateItemToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
         if (dts is None or len(dts) == 0): 
             return None
         if ((dts[0].can_be_hour and len(dts) > 2 and dts[1].typ == DateItemToken.DateItemType.DELIM) and dts[2].int_value >= 0 and (dts[2].int_value < 60)): 
@@ -261,7 +256,7 @@ class DateAnalyzer(Analyzer):
                     dts1 = list(dts)
                     del dts1[0:0+3]
                     res1 = self.__tryAttach(dts1, False)
-                    if (res1 is not None and (isinstance(res1[len(res1) - 1].referent, DateReferent)) and (Utils.asObjectOrNull(res1[len(res1) - 1].referent, DateReferent)).day > 0): 
+                    if (res1 is not None and (isinstance(res1[len(res1) - 1].referent, DateReferent)) and (res1[len(res1) - 1].referent).day > 0): 
                         time = DateReferent._new734(dts[0].int_value, dts[2].int_value)
                         time.higher = Utils.asObjectOrNull(res1[len(res1) - 1].referent, DateReferent)
                         res1.append(ReferentToken(time, dts[0].begin_token, res1[len(res1) - 1].end_token))
@@ -503,7 +498,7 @@ class DateAnalyzer(Analyzer):
                         dtsli = DateItemToken.tryAttachList(tt1.next0_, 20)
                         if (dtsli is not None): 
                             res1 = self.__tryAttach(dtsli, True)
-                            if (res1 is not None and (Utils.asObjectOrNull(res1[len(res1) - 1].referent, DateReferent)).day > 0): 
+                            if (res1 is not None and (res1[len(res1) - 1].referent).day > 0): 
                                 time.higher = Utils.asObjectOrNull(res1[len(res1) - 1].referent, DateReferent)
                                 res1.append(ReferentToken(time, dts[0].begin_token, tt1))
                                 return res1
@@ -602,7 +597,7 @@ class DateAnalyzer(Analyzer):
         if (dr_day is not None and not year_is_dif): 
             rt = self.__tryAttachTime(t1.next0_, True)
             if (rt is not None): 
-                (Utils.asObjectOrNull(rt.referent, DateReferent)).higher = dr_day
+                (rt.referent).higher = dr_day
                 rt.begin_token = t0
                 res.append(rt)
             else: 
@@ -613,7 +608,7 @@ class DateAnalyzer(Analyzer):
                             del dts[i:i+len(dts) - i]
                             rt = self.__tryAttachTimeLi(dts, True)
                             if (rt is not None): 
-                                (Utils.asObjectOrNull(rt.referent, DateReferent)).higher = dr_day
+                                (rt.referent).higher = dr_day
                                 rt.end_token = t1
                                 res.append(rt)
                             break
@@ -663,8 +658,6 @@ class DateAnalyzer(Analyzer):
     
     @staticmethod
     def __findYear_(r : 'Referent') -> 'DateReferent':
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
         dr = Utils.asObjectOrNull(r, DateReferent)
         if (dr is not None): 
             while dr is not None: 
@@ -683,7 +676,6 @@ class DateAnalyzer(Analyzer):
         return None
     
     def __tryAttachTime(self, t : 'Token', after_date : bool) -> 'ReferentToken':
-        from pullenti.ner.date.internal.DateItemToken import DateItemToken
         if (t is None): 
             return None
         if (t.isValue("ГОРОД", None) and t.next0_ is not None): 
@@ -702,8 +694,6 @@ class DateAnalyzer(Analyzer):
         return self.__tryAttachTimeLi(dts, after_date)
     
     def __corrTime(self, t0 : 'Token', time : 'DateReferent') -> 'Token':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.date.internal.DateItemToken import DateItemToken
         t1 = None
         t = t0
         first_pass2833 = True
@@ -713,7 +703,7 @@ class DateAnalyzer(Analyzer):
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
                 break
-            term = (Utils.asObjectOrNull(t, TextToken)).term
+            term = (t).term
             if (term == "МСК"): 
                 t1 = t
                 continue
@@ -740,9 +730,6 @@ class DateAnalyzer(Analyzer):
         return t1
     
     def __tryAttachTimeLi(self, dts : typing.List['DateItemToken'], after_date : bool) -> 'ReferentToken':
-        from pullenti.ner.date.internal.DateItemToken import DateItemToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (dts is None or (len(dts) < 1)): 
             return None
         t0 = dts[0].begin_token
@@ -788,8 +775,6 @@ class DateAnalyzer(Analyzer):
         return ReferentToken(time, t0, t1)
     
     def __applyRuleFormal(self, its : typing.List['DateItemToken'], high : bool, year : 'DateItemToken', mon : 'DateItemToken', day : 'DateItemToken') -> bool:
-        from pullenti.ner.date.internal.DateItemToken import DateItemToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
         year.value = (None)
         mon.value = (None)
         day.value = (None)
@@ -913,8 +898,6 @@ class DateAnalyzer(Analyzer):
         return False
     
     def __applyRuleWithMonth(self, its : typing.List['DateItemToken'], high : bool, year : 'DateItemToken', mon : 'DateItemToken', day : 'DateItemToken', year_is_diff : bool) -> bool:
-        from pullenti.ner.date.internal.DateItemToken import DateItemToken
-        from pullenti.morph.MorphLang import MorphLang
         year.value = (None)
         mon.value = (None)
         day.value = (None)
@@ -1034,8 +1017,6 @@ class DateAnalyzer(Analyzer):
         return False
     
     def __findYear(self, t : 'Token') -> int:
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.date.DateReferent import DateReferent
         year = 0
         prevdist = 0
         tt = t
@@ -1044,8 +1025,8 @@ class DateAnalyzer(Analyzer):
                 prevdist += 10
             prevdist += 1
             if (isinstance(tt, ReferentToken)): 
-                if (isinstance((Utils.asObjectOrNull(tt, ReferentToken)).referent, DateReferent)): 
-                    year = (Utils.asObjectOrNull((Utils.asObjectOrNull(tt, ReferentToken)).referent, DateReferent)).year
+                if (isinstance((tt).referent, DateReferent)): 
+                    year = ((tt).referent).year
                     break
             tt = tt.previous
         dist = 0
@@ -1055,18 +1036,15 @@ class DateAnalyzer(Analyzer):
                 dist += 10
             dist += 1
             if (isinstance(tt, ReferentToken)): 
-                if (isinstance((Utils.asObjectOrNull(tt, ReferentToken)).referent, DateReferent)): 
+                if (isinstance((tt).referent, DateReferent)): 
                     if (year > 0 and (prevdist < dist)): 
                         return year
                     else: 
-                        return (Utils.asObjectOrNull((Utils.asObjectOrNull(tt, ReferentToken)).referent, DateReferent)).year
+                        return ((tt).referent).year
             tt = tt.next0_
         return year
     
     def __applyRuleYearOnly(self, its : typing.List['DateItemToken'], year : 'DateItemToken', mon : 'DateItemToken', day : 'DateItemToken') -> bool:
-        from pullenti.ner.date.internal.DateItemToken import DateItemToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.date.DateReferent import DateReferent
         year.value = (None)
         mon.value = (None)
         day.value = (None)
@@ -1118,11 +1096,6 @@ class DateAnalyzer(Analyzer):
         return False
     
     def __applyDateRange(self, ad : 'AnalyzerData', its : typing.List['DateItemToken'], lang : 'MorphLang') -> 'DateRangeReferent':
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.date.internal.DateItemToken import DateItemToken
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         lang.value = MorphLang()
         if (its is None or (len(its) < 3)): 
             return None
@@ -1137,14 +1110,6 @@ class DateAnalyzer(Analyzer):
         return None
     
     def __applyDateRange0(self, kit : 'AnalysisKit', ad : 'AnalyzerData') -> None:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.date.internal.DateItemToken import DateItemToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.NumberExToken import NumberExToken
         t = kit.first_token
         first_pass2836 = True
         while True:
@@ -1159,7 +1124,7 @@ class DateAnalyzer(Analyzer):
             date2 = None
             lang = MorphLang()
             t0 = t.next0_
-            str0_ = (Utils.asObjectOrNull(t, TextToken)).term
+            str0_ = (t).term
             if (str0_ == "ON" and (isinstance(t0, TextToken))): 
                 tok = DateItemToken.DAYS_OF_WEEK.tryParse(t0, TerminParseAttr.NO)
                 if (tok is not None): 
@@ -1190,10 +1155,10 @@ class DateAnalyzer(Analyzer):
             if (t0 is None): 
                 continue
             if (isinstance(t0, ReferentToken)): 
-                date1 = (Utils.asObjectOrNull((Utils.asObjectOrNull(t0, ReferentToken)).referent, DateReferent))
+                date1 = (Utils.asObjectOrNull((t0).referent, DateReferent))
             if (date1 is None): 
                 if (isinstance(t0, NumberToken)): 
-                    v = (Utils.asObjectOrNull(t0, NumberToken)).value
+                    v = (t0).value
                     if ((v < 1000) or v >= 2100): 
                         continue
                     year_val1 = v
@@ -1218,13 +1183,13 @@ class DateAnalyzer(Analyzer):
             if (t1 is None): 
                 continue
             if (isinstance(t1, ReferentToken)): 
-                date2 = (Utils.asObjectOrNull((Utils.asObjectOrNull(t1, ReferentToken)).referent, DateReferent))
+                date2 = (Utils.asObjectOrNull((t1).referent, DateReferent))
             if (date2 is None): 
                 if (isinstance(t1, NumberToken)): 
                     nt1 = NumberExToken.tryParseNumberWithPostfix(t1)
                     if (nt1 is not None): 
                         continue
-                    v = (Utils.asObjectOrNull(t1, NumberToken)).value
+                    v = (t1).value
                     if (v > 0 and (v < year_val1)): 
                         yy = year_val1 % 100
                         if (yy < v): 
@@ -1257,11 +1222,15 @@ class DateAnalyzer(Analyzer):
             t = (ReferentToken(ad.registerReferent(DateRangeReferent._new728(date1, date2)), t, t1))
             kit.embedToken(Utils.asObjectOrNull(t, ReferentToken))
     
+    M_INITED = None
+    
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.date.internal.DateItemToken import DateItemToken
-        from pullenti.ner.ProcessorService import ProcessorService
+        if (DateAnalyzer.M_INITED): 
+            return
+        DateAnalyzer.M_INITED = True
+        MetaDate.initialize()
+        MetaDateRange.initialize()
         try: 
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             DateItemToken.initialize()

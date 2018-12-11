@@ -4,15 +4,14 @@
 
 from enum import IntEnum
 
-
 class FundsItemTyp(IntEnum):
     UNDEFINED = 0
-    NOUN = 0 + 1
-    COUNT = (0 + 1) + 1
-    ORG = ((0 + 1) + 1) + 1
-    SUM = (((0 + 1) + 1) + 1) + 1
-    PERCENT = ((((0 + 1) + 1) + 1) + 1) + 1
-    PRICE = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
+    NOUN = 1
+    COUNT = 2
+    ORG = 3
+    SUM = 4
+    PERCENT = 5
+    PRICE = 6
     
     @classmethod
     def has_value(cls, value):

@@ -4,9 +4,12 @@
 
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.core.Termin import Termin
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.IntOntologyToken import IntOntologyToken
+from pullenti.ner.core.TerminCollection import TerminCollection
 
 class IntOntologyCollection:
     """ Онтологический словарь """
@@ -14,8 +17,7 @@ class IntOntologyCollection:
     class OntologyTermin(Termin):
         
         def __init__(self) -> None:
-            from pullenti.morph.MorphLang import MorphLang
-            super().__init__(None, MorphLang(), False)
+            super().__init__(None, None, False)
             self.owner = None;
         
         @staticmethod
@@ -26,7 +28,6 @@ class IntOntologyCollection:
             return res
     
     def __init__(self) -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
         self.is_ext_ontology = False
         self.__m_items = list()
         self.__m_termins = TerminCollection()
@@ -47,7 +48,7 @@ class IntOntologyCollection:
         i = 0
         while i < len(di.termins): 
             if (isinstance(di.termins[i], IntOntologyCollection.OntologyTermin)): 
-                (Utils.asObjectOrNull(di.termins[i], IntOntologyCollection.OntologyTermin)).owner = di
+                (di.termins[i]).owner = di
                 self.__m_termins.add(di.termins[i])
             else: 
                 nt = IntOntologyCollection.OntologyTermin._new511(di, di.termins[i].tag)
@@ -115,7 +116,6 @@ class IntOntologyCollection:
             can_be_geo_object(bool): при True внутри может быть географический объект (Министерство РФ по делам ...)
         
         """
-        from pullenti.ner.core.IntOntologyToken import IntOntologyToken
         tts = self.__m_termins.tryParseAll(t, (TerminParseAttr.CANBEGEOOBJECT if can_be_geo_object else TerminParseAttr.NO))
         if (tts is None): 
             return None
@@ -124,7 +124,7 @@ class IntOntologyCollection:
         for tt in tts: 
             di = None
             if (isinstance(tt.termin, IntOntologyCollection.OntologyTermin)): 
-                di = (Utils.asObjectOrNull(tt.termin, IntOntologyCollection.OntologyTermin)).owner
+                di = (tt.termin).owner
             if (di is not None): 
                 if (di.referent is not None and referent_type_name is not None): 
                     if (di.referent.type_name != referent_type_name): 
@@ -150,7 +150,7 @@ class IntOntologyCollection:
             if (li is not None): 
                 for tt in li: 
                     if (isinstance(tt, IntOntologyCollection.OntologyTermin)): 
-                        oi = (Utils.asObjectOrNull(tt, IntOntologyCollection.OntologyTermin)).owner
+                        oi = (tt).owner
                         if (res is None): 
                             res = list()
                         if (not oi in res): 
@@ -165,7 +165,6 @@ class IntOntologyCollection:
             referent(Referent): 
         
         """
-        from pullenti.ner.Referent import Referent
         if (referent is None): 
             return None
         if (item is None): 

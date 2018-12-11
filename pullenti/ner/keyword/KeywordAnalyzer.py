@@ -6,13 +6,33 @@ import typing
 import io
 import operator
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.keyword.KeywordType import KeywordType
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.GetTextAttr import GetTextAttr
 
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.Referent import Referent
+from pullenti.ner.Token import Token
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.money.MoneyReferent import MoneyReferent
+from pullenti.ner.denomination.DenominationReferent import DenominationReferent
+from pullenti.ner.uri.UriReferent import UriReferent
+from pullenti.ner.phone.PhoneReferent import PhoneReferent
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.bank.BankDataReferent import BankDataReferent
+from pullenti.morph.Explanatory import Explanatory
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.keyword.internal.KeywordMeta import KeywordMeta
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
+from pullenti.ner.keyword.KeywordReferent import KeywordReferent
+from pullenti.ner.keyword.KeywordType import KeywordType
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.denomination.DenominationAnalyzer import DenominationAnalyzer
 
 class KeywordAnalyzer(Analyzer):
     """ Анализатор ключевых комбинаций """
@@ -21,8 +41,8 @@ class KeywordAnalyzer(Analyzer):
         
         def compare(self, x : 'Referent', y : 'Referent') -> int:
             from pullenti.ner.keyword.KeywordReferent import KeywordReferent
-            d1 = (Utils.asObjectOrNull(x, KeywordReferent)).rank
-            d2 = (Utils.asObjectOrNull(y, KeywordReferent)).rank
+            d1 = (x).rank
+            d2 = (y).rank
             if (d1 > d2): 
                 return -1
             if (d1 < d2): 
@@ -55,17 +75,14 @@ class KeywordAnalyzer(Analyzer):
         return True
     
     def createAnalyzerData(self) -> 'AnalyzerData':
-        from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
         return AnalyzerDataWithOntology()
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.keyword.internal.KeywordMeta import KeywordMeta
         return [KeywordMeta.GLOBAL_META]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.keyword.internal.KeywordMeta import KeywordMeta
         res = dict()
         res[KeywordMeta.IMAGE_OBJ] = EpNerCoreInternalResourceHelper.getBytes("kwobject.png")
         res[KeywordMeta.IMAGE_PRED] = EpNerCoreInternalResourceHelper.getBytes("kwpredicate.png")
@@ -73,7 +90,6 @@ class KeywordAnalyzer(Analyzer):
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.keyword.KeywordReferent import KeywordReferent
         if (type0_ == KeywordReferent.OBJ_TYPENAME): 
             return KeywordReferent()
         return None
@@ -90,14 +106,6 @@ class KeywordAnalyzer(Analyzer):
             stage: 
         
         """
-        from pullenti.ner.denomination.DenominationAnalyzer import DenominationAnalyzer
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.keyword.KeywordReferent import KeywordReferent
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.morph.Explanatory import Explanatory
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         ad = kit.getAnalyzerData(self)
         has_denoms = False
         for a in kit.processor.analyzers: 
@@ -129,7 +137,7 @@ class KeywordAnalyzer(Analyzer):
                 continue
             if (not t.chars.is_letter or (t.length_char < 3)): 
                 continue
-            term = (Utils.asObjectOrNull(t, TextToken)).term
+            term = (t).term
             if (term == "ЕСТЬ"): 
                 if ((isinstance(t.previous, TextToken)) and t.previous.morph.class0_.is_verb): 
                     pass
@@ -140,14 +148,14 @@ class KeywordAnalyzer(Analyzer):
             if (npt is None): 
                 mc = t.getMorphClassInDictionary()
                 if (mc.is_verb and not mc.is_preposition): 
-                    if ((Utils.asObjectOrNull(t, TextToken)).is_verb_be): 
+                    if ((t).is_verb_be): 
                         continue
                     if (t.isValue("МОЧЬ", None) or t.isValue("WOULD", None)): 
                         continue
                     kref = KeywordReferent._new1502(KeywordType.PREDICATE)
                     norm = t.getNormalCaseText(MorphClass.VERB, True, MorphGender.UNDEFINED, False)
                     if (norm is None): 
-                        norm = (Utils.asObjectOrNull(t, TextToken)).getLemma()
+                        norm = (t).getLemma()
                     if (norm.endswith("ЬСЯ")): 
                         norm = norm[0:0+len(norm) - 2]
                     kref.addSlot(KeywordReferent.ATTR_VALUE, norm, False, 0)
@@ -202,7 +210,7 @@ class KeywordAnalyzer(Analyzer):
                     if (MiscHelper.isEngArticle(tt)): 
                         continue
                 kref = KeywordReferent._new1502(KeywordType.OBJECT)
-                norm = (Utils.asObjectOrNull(tt, TextToken)).getLemma()
+                norm = (tt).getLemma()
                 kref.addSlot(KeywordReferent.ATTR_VALUE, norm, False, 0)
                 if (norm != "ЕСТЬ"): 
                     drv = Explanatory.findDerivates(norm, True, tt.morph.language)
@@ -232,7 +240,7 @@ class KeywordAnalyzer(Analyzer):
                     else: 
                         tmp2.append(s)
                     kref.addSlot(KeywordReferent.ATTR_REF, kw, False, 0)
-                val = npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False)
+                val = npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False)
                 kref.addSlot(KeywordReferent.ATTR_VALUE, val, False, 0)
                 Utils.setLengthStringIO(tmp, 0)
                 tmp2.sort()
@@ -301,7 +309,6 @@ class KeywordAnalyzer(Analyzer):
     
     @staticmethod
     def __addNormals(kref : 'KeywordReferent', grs : typing.List['DerivateGroup'], norm : str) -> None:
-        from pullenti.ner.keyword.KeywordReferent import KeywordReferent
         if (grs is None or len(grs) == 0): 
             return
         k = 0
@@ -326,15 +333,6 @@ class KeywordAnalyzer(Analyzer):
             i += 1
     
     def __addReferents(self, ad : 'AnalyzerData', t : 'Token', cur : int, max0_ : int) -> 'Token':
-        from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.denomination.DenominationReferent import DenominationReferent
-        from pullenti.ner.keyword.KeywordReferent import KeywordReferent
-        from pullenti.ner.phone.PhoneReferent import PhoneReferent
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.bank.BankDataReferent import BankDataReferent
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
-        from pullenti.morph.MorphLang import MorphLang
         if (not ((isinstance(t, ReferentToken)))): 
             return t
         r = t.getReferent()
@@ -361,7 +359,7 @@ class KeywordAnalyzer(Analyzer):
             return rt0
         if (r.type_name == "DATE" or r.type_name == "DATERANGE" or r.type_name == "BOOKLINKREF"): 
             return t
-        tt = (Utils.asObjectOrNull(t, MetaToken)).begin_token
+        tt = (t).begin_token
         while tt is not None and tt.end_char <= t.end_char: 
             if (isinstance(tt, ReferentToken)): 
                 self.__addReferents(ad, tt, cur, max0_)
@@ -371,7 +369,7 @@ class KeywordAnalyzer(Analyzer):
         if (r.type_name == "GEO"): 
             norm = r.getStringValue("ALPHA2")
         if (norm is None): 
-            norm = r.toString(True, MorphLang(), 0)
+            norm = r.toString(True, None, 0)
         if (norm is not None): 
             kref.addSlot(KeywordReferent.ATTR_NORMAL, norm.upper(), False, 0)
         kref.addSlot(KeywordReferent.ATTR_REF, t.getReferent(), False, 0)
@@ -382,8 +380,6 @@ class KeywordAnalyzer(Analyzer):
     
     @staticmethod
     def __setRank(kr : 'KeywordReferent', cur : int, max0_ : int) -> None:
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.keyword.KeywordReferent import KeywordReferent
         rank = 1
         ty = kr.typ
         if (ty == KeywordType.PREDICATE): 
@@ -412,12 +408,10 @@ class KeywordAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.denomination.DenominationAnalyzer import DenominationAnalyzer
-        from pullenti.ner.ProcessorService import ProcessorService
         if (KeywordAnalyzer.M_INITIALIZED): 
             return
         KeywordAnalyzer.M_INITIALIZED = True
+        KeywordMeta.initialize()
         Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
         DenominationAnalyzer.initialize()
         Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False

@@ -5,16 +5,23 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
 
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.titlepage.internal.MetaTitleInfo import MetaTitleInfo
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.Termin import Termin
 
 class TitlePageReferent(Referent):
     """ Сущность, описывающая информацию из заголовков статей, книг, диссертация и пр. """
     
     def __init__(self, name : str=None) -> None:
-        from pullenti.ner.titlepage.internal.MetaTitleInfo import MetaTitleInfo
         super().__init__(Utils.ifNotNull(name, TitlePageReferent.OBJ_TYPENAME))
         self.instance_of = MetaTitleInfo._global_meta
     
@@ -63,7 +70,7 @@ class TitlePageReferent(Referent):
                     break
             for r in self.slots: 
                 if (r.type_name == TitlePageReferent.ATTR_AUTHOR and (isinstance(r.value, Referent))): 
-                    print(", {0}".format((Utils.asObjectOrNull(r.value, Referent)).toString(True, lang, 0)), end="", file=res, flush=True)
+                    print(", {0}".format((r.value).toString(True, lang, 0)), end="", file=res, flush=True)
         if (self.city is not None and not short_variant): 
             print(", {0}".format(self.city.toString(True, lang, 0)), end="", file=res, flush=True)
         if (self.date is not None): 
@@ -97,9 +104,6 @@ class TitlePageReferent(Referent):
         return res
     
     def _addName(self, begin : 'Token', end : 'Token') -> 'Termin':
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.Termin import Termin
         if (BracketHelper.canBeStartOfSequence(begin, True, False)): 
             br = BracketHelper.tryParse(begin, BracketParseAttr.NO, 100)
             if (br is not None and br.end_token == end): 
@@ -119,7 +123,6 @@ class TitlePageReferent(Referent):
     @property
     def date(self) -> 'DateReferent':
         """ Дата """
-        from pullenti.ner.date.DateReferent import DateReferent
         return Utils.asObjectOrNull(self.getSlotValue(TitlePageReferent.ATTR_DATE), DateReferent)
     @date.setter
     def date(self, value) -> 'DateReferent':
@@ -147,7 +150,6 @@ class TitlePageReferent(Referent):
     @property
     def org0_(self) -> 'OrganizationReferent':
         """ Организация """
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         return Utils.asObjectOrNull(self.getSlotValue(TitlePageReferent.ATTR_ORG), OrganizationReferent)
     @org0_.setter
     def org0_(self, value) -> 'OrganizationReferent':
@@ -157,7 +159,6 @@ class TitlePageReferent(Referent):
     @property
     def city(self) -> 'GeoReferent':
         """ Город """
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         return Utils.asObjectOrNull(self.getSlotValue(TitlePageReferent.ATTR_CITY), GeoReferent)
     @city.setter
     def city(self, value) -> 'GeoReferent':

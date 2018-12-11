@@ -5,14 +5,23 @@
 import typing
 import math
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.decree.DecreeKind import DecreeKind
-from pullenti.ner.instrument.InstrumentKind import InstrumentKind
+
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.instrument.internal.NumberTypes import NumberTypes
-from pullenti.ner.instrument.internal.EditionHelper import EditionHelper
+from pullenti.ner.decree.DecreeKind import DecreeKind
+from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.ner.instrument.InstrumentKind import InstrumentKind
 from pullenti.ner.instrument.internal.ContractHelper import ContractHelper
 from pullenti.ner.instrument.internal.NumberingHelper import NumberingHelper
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-
+from pullenti.ner.instrument.internal.FragToken import FragToken
+from pullenti.ner.instrument.internal.EditionHelper import EditionHelper
 
 class ContentAnalyzeWhapper:
     
@@ -23,9 +32,7 @@ class ContentAnalyzeWhapper:
         self.cit_kind = InstrumentKind.UNDEFINED
     
     def analyze(self, root : 'FragToken', top_doc_ : 'FragToken', is_citat : bool, root_kind : 'InstrumentKind') -> None:
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.TextToken import TextToken
         from pullenti.ner.instrument.internal.ListHelper import ListHelper
         self.top_doc = top_doc_
         self.cit_kind = root_kind
@@ -144,7 +151,6 @@ class ContentAnalyzeWhapper:
             proc: 
         """
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.instrument.internal.FragToken import FragToken
         nums = list()
         k = 0
         lev = 100
@@ -359,10 +365,7 @@ class ContentAnalyzeWhapper:
     
     @staticmethod
     def __correctName(fr : 'FragToken', fr_name : 'FragToken', lines_ : typing.List['InstrToken1'], i : int) -> int:
-        from pullenti.ner.MetaToken import MetaToken
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.instrument.internal.FragToken import FragToken
         if ((i + 1) >= len(lines_)): 
             return i
         li = lines_[i]
@@ -401,7 +404,7 @@ class ContentAnalyzeWhapper:
                     break
                 tt = lii.begin_token
                 while isinstance(tt, MetaToken):
-                    tt = (Utils.asObjectOrNull(tt, MetaToken)).begin_token
+                    tt = (tt).begin_token
                 if (tt.chars.is_capital_upper or not tt.chars.is_letter or mc.is_preposition): 
                     if (not li.end_token.isChar(',') and not li.end_token.is_hiphen and not li.end_token.morph.class0_.is_conjunction): 
                         break
@@ -421,7 +424,6 @@ class ContentAnalyzeWhapper:
         
         """
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.instrument.internal.FragToken import FragToken
         nums = NumberingHelper.extractMainSequence(lines_, True, False)
         is_contract_struct = False
         if (nums is None or len(nums[0].numbers) != 1 or nums[0].numbers[0] != "1"): 
@@ -576,8 +578,6 @@ class ContentAnalyzeWhapper:
     
     def __addCommentOrEdition(self, fr : 'FragToken', li : 'InstrToken1') -> None:
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.instrument.internal.FragToken import FragToken
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
         if (li.typ == InstrToken1.Types.COMMENT): 
             fr.children.append(FragToken._new1267(li.begin_token, li.end_token, InstrumentKind.COMMENT, li))
         elif (li.typ == InstrToken1.Types.EDITIONS): 
@@ -596,10 +596,6 @@ class ContentAnalyzeWhapper:
     
     def __analizeContentWithoutContainers(self, root : 'FragToken', lines_ : typing.List['InstrToken1'], is_subitem : bool, is_preamble : bool=False, is_kodex : bool=False) -> None:
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.instrument.internal.FragToken import FragToken
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.TextToken import TextToken
         if (root.kind == InstrumentKind.CHAPTER): 
             pass
         if (root.kind == InstrumentKind.CLAUSE or ((root.kind == InstrumentKind.CHAPTER and self.doc_typ == DecreeKind.CONTRACT))): 
@@ -876,7 +872,6 @@ class ContentAnalyzeWhapper:
             lines_(typing.List[InstrToken1]): 
             proc: 
         """
-        from pullenti.ner.instrument.internal.FragToken import FragToken
         dir_seq = ContentAnalyzeWhapper.__extractDirectiveSequence(lines_)
         if (dir_seq is None): 
             self.__analizeContentWithoutContainers(root, lines_, False, False, False)
@@ -942,7 +937,6 @@ class ContentAnalyzeWhapper:
                 root.children.append(p)
     
     def __createDirectivePart(self, lines_ : typing.List['InstrToken1']) -> 'FragToken':
-        from pullenti.ner.instrument.internal.FragToken import FragToken
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         res = FragToken._new1257(lines_[0].begin_token, lines_[len(lines_) - 1].end_token, InstrumentKind.DOCPART)
         head = list()
@@ -974,7 +968,6 @@ class ContentAnalyzeWhapper:
         return res
     
     def __analizeSections(self, root : 'FragToken') -> None:
-        from pullenti.ner.instrument.internal.FragToken import FragToken
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         for k in range(2):
             secs = list()
@@ -1093,7 +1086,6 @@ class ContentAnalyzeWhapper:
     
     def __correctNames(self, root : 'FragToken', parent : 'FragToken') -> None:
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         fr_nams = None
         i = 0
         first_pass2940 = True
@@ -1324,21 +1316,18 @@ class ContentAnalyzeWhapper:
     
     @staticmethod
     def __splitContentByIndents(fr : 'FragToken', num : int) -> typing.List['FragToken']:
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.instrument.internal.FragToken import FragToken
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (fr.kind != InstrumentKind.CONTENT and fr.kind != InstrumentKind.LISTITEM and fr.kind != InstrumentKind.PREAMBLE): 
             if (fr.kind != InstrumentKind.EDITIONS): 
                 return None
             if (fr.begin_token.isValue("АБЗАЦ", None)): 
                 t = fr.begin_token.next0_
-                if (not ((isinstance(t, NumberToken))) or (Utils.asObjectOrNull(t, NumberToken)).value != num): 
+                if (not ((isinstance(t, NumberToken))) or (t).value != num): 
                     return None
                 next0_ = num
                 t = t.next0_
                 if (t is not None and t.is_hiphen and (isinstance(t.next0_, NumberToken))): 
-                    next0_ = ((Utils.asObjectOrNull(t.next0_, NumberToken)).value)
+                    next0_ = ((t.next0_).value)
                     t = t.next0_.next0_
                     if (next0_ <= num): 
                         return None
@@ -1385,7 +1374,6 @@ class ContentAnalyzeWhapper:
     
     def __analizePreamble(self, root : 'FragToken') -> None:
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.ner.instrument.internal.FragToken import FragToken
         cnt_cou = 0
         ch = None
         ok = False

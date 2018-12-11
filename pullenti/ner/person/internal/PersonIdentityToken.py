@@ -6,16 +6,32 @@ import io
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
+
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.person.internal.PersonHelper import PersonHelper
+from pullenti.ner.Token import Token
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.MorphCollection import MorphCollection
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.ner.person.internal.PersonMorphCollection import PersonMorphCollection
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.person.internal.PersonHelper import PersonHelper
-from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.morph.MorphNumber import MorphNumber
-
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
+from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
 
 class PersonIdentityToken(MetaToken):
     
@@ -72,7 +88,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def tryAttachLatinSurname(pit : 'PersonItemToken', ontos : 'IntOntologyCollection') -> 'PersonReferent':
-        from pullenti.ner.person.PersonReferent import PersonReferent
         if (pit is None): 
             return None
         if (pit.lastname is not None and ((pit.lastname.is_in_dictionary or pit.lastname.is_lastname_has_std_tail))): 
@@ -83,8 +98,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def tryAttachOntoForSingle(pit : 'PersonItemToken', ontos : 'IntOntologyCollection') -> 'PersonReferent':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
         if ((pit is None or ontos is None or pit.value is None) or pit.typ == PersonItemToken.ItemType.INITIAL): 
             return None
         if (len(ontos.items) > 30): 
@@ -130,7 +143,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def tryAttachOntoForDuble(pit0 : 'PersonItemToken', pit1 : 'PersonItemToken', ontos : 'IntOntologyCollection') -> 'PersonReferent':
-        from pullenti.ner.person.PersonReferent import PersonReferent
         if ((pit0 is None or pit0.firstname is None or pit1 is None) or pit1.middlename is None or ontos is None): 
             return None
         if (len(ontos.items) > 100): 
@@ -153,8 +165,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def tryAttachOntoExt(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo', ontos : 'ExtOntology') -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
         if (ind >= len(pits) or pits[ind].typ == PersonItemToken.ItemType.INITIAL or ontos is None): 
             return None
         if (len(ontos.items) > 1000): 
@@ -164,7 +174,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def tryAttachOntoInt(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo', ontos : 'IntOntologyCollection') -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         if (ind >= len(pits) or pits[ind].typ == PersonItemToken.ItemType.INITIAL): 
             return None
         if (len(ontos.items) > 1000): 
@@ -177,10 +186,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __TryAttachOnto(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo', otl : typing.List['IntOntologyToken'], is_local : bool, is_attr_before : bool) -> 'PersonIdentityToken':
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.morph.MorphCase import MorphCase
         if (otl is None or len(otl) == 0): 
             return None
         res = list()
@@ -319,7 +324,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def tryAttachForExtOnto(pits : typing.List['PersonItemToken']) -> typing.List['PersonIdentityToken']:
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         pit = None
         if (len(pits) == 3): 
             if (pits[0].typ == PersonItemToken.ItemType.VALUE and pits[1].typ == PersonItemToken.ItemType.INITIAL and pits[2].typ == PersonItemToken.ItemType.VALUE): 
@@ -361,8 +365,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def tryAttach(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo', first_tok : 'Token', king : bool, is_attr_before : bool) -> typing.List['PersonIdentityToken']:
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.morph.MorphClass import MorphClass
         res = list()
         ty = FioTemplateType.UNDEFINED
         if (first_tok is not None): 
@@ -451,9 +453,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def manageLastname(res : 'PersonIdentityToken', pit : 'PersonItemToken', inf : 'MorphBaseInfo') -> None:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.ner.ReferentToken import ReferentToken
         if (pit.lastname is None): 
             res.lastname = PersonMorphCollection()
             PersonIdentityToken.__setValue(res.lastname, pit.begin_token, inf)
@@ -463,7 +462,7 @@ class PersonIdentityToken(MetaToken):
             if ((tt is not None and not tt.chars.is_latin_letter and tt.chars.is_capital_upper) and tt.length_char > 2 and not tt.chars.is_latin_letter): 
                 ok = True
                 for wf in tt.morph.items: 
-                    if ((Utils.asObjectOrNull(wf, MorphWordForm)).is_in_dictionary): 
+                    if ((wf).is_in_dictionary): 
                         ok = False
                         break
                 if (ok): 
@@ -497,7 +496,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def manageFirstname(res : 'PersonIdentityToken', pit : 'PersonItemToken', inf : 'MorphBaseInfo') -> None:
-        from pullenti.ner.ReferentToken import ReferentToken
         if (pit.firstname is None): 
             if (pit.lastname is not None): 
                 res.coef -= 1
@@ -534,7 +532,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __tryAttachSingleSurname(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo') -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         if (ind >= len(pits) or pits[ind].lastname is None): 
             return None
         res = PersonIdentityToken(pits[ind].begin_token, pits[ind].end_token)
@@ -551,12 +548,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __tryAttachNameSurname(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo', prev_has_this_typ : bool=False, is_attr_before : bool=False) -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
         if ((ind + 1) >= len(pits) or pits[ind + 1].typ != PersonItemToken.ItemType.VALUE or pits[ind].typ != PersonItemToken.ItemType.VALUE): 
             return None
         if (pits[ind + 1].lastname is None): 
@@ -637,7 +628,7 @@ class PersonIdentityToken(MetaToken):
                 else: 
                     for mi in pits[ind].begin_token.morph.items: 
                         if (not ((mi.case_) & inf.case_).is_undefined): 
-                            if ((isinstance(mi, MorphWordForm)) and (Utils.asObjectOrNull(mi, MorphWordForm)).is_in_dictionary): 
+                            if ((isinstance(mi, MorphWordForm)) and (mi).is_in_dictionary): 
                                 res.coef -= (1)
                                 break
         if (not pits[ind].chars.is_latin_letter): 
@@ -679,8 +670,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __tryAttachNameSecnameSurname(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo', prev_has_this_typ : bool=False) -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         if ((ind + 2) >= len(pits) or pits[ind].typ != PersonItemToken.ItemType.VALUE or pits[ind + 2].typ != PersonItemToken.ItemType.VALUE): 
             return None
         if (pits[ind].is_newline_after): 
@@ -798,7 +787,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __tryAttachNameSecname(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo', prev_has_this_typ : bool=False) -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         if ((ind != 0 or (ind + 2) != len(pits) or pits[ind].typ != PersonItemToken.ItemType.VALUE) or pits[ind + 1].typ != PersonItemToken.ItemType.VALUE): 
             return None
         if (pits[ind].is_newline_after): 
@@ -818,8 +806,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __correctCoefAfterLastname(res : 'PersonIdentityToken', pits : typing.List['PersonItemToken'], ind : int) -> None:
-        from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         if (not pits[ind - 1].is_newline_after): 
             pat = PersonAttrToken.tryAttach(pits[ind - 1].begin_token, None, PersonAttrToken.PersonAttrAttachAttrs.ONLYKEYWORD)
             if (pat is not None): 
@@ -876,8 +862,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __correctCoefForLastname(pit : 'PersonIdentityToken', it : 'PersonItemToken') -> None:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphWordForm import MorphWordForm
         if (it.begin_token != it.end_token): 
             return
         tt = Utils.asObjectOrNull(it.begin_token, TextToken)
@@ -888,7 +872,7 @@ class PersonIdentityToken(MetaToken):
         for wf in tt.morph.items: 
             if (wf.class0_.is_proper_surname): 
                 pass
-            elif ((Utils.asObjectOrNull(wf, MorphWordForm)).is_in_dictionary): 
+            elif ((wf).is_in_dictionary): 
                 in_dic = True
         if (it.lastname is not None): 
             has_std = it.lastname.is_lastname_has_std_tail
@@ -897,9 +881,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __tryAttachSurnameName(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo', prev_has_this_typ : bool=False) -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.core.BracketHelper import BracketHelper
         if ((ind + 1) >= len(pits) or pits[ind + 1].typ != PersonItemToken.ItemType.VALUE or pits[ind].typ != PersonItemToken.ItemType.VALUE): 
             return None
         if (pits[ind].lastname is None and not prev_has_this_typ): 
@@ -946,7 +927,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __correctCoefSNS(res : 'PersonIdentityToken', pits : typing.List['PersonItemToken'], ind_after : int) -> None:
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
         if (ind_after >= len(pits)): 
             return
         if (pits[0].lastname is None or not pits[0].lastname.is_lastname_has_std_tail): 
@@ -983,9 +963,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __tryAttachSurnameNameSecname(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo', prev_has_this_typ : bool=False, always : bool=False) -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
-        from pullenti.ner.TextToken import TextToken
         if ((ind + 2) >= len(pits) or pits[ind + 1].typ != PersonItemToken.ItemType.VALUE or pits[ind].typ != PersonItemToken.ItemType.VALUE): 
             return None
         if (pits[ind].lastname is None and not prev_has_this_typ): 
@@ -1057,7 +1034,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __correctCoefAfterName(res : 'PersonIdentityToken', pits : typing.List['PersonItemToken'], ind : int) -> None:
-        from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
         if (ind >= len(pits)): 
             return
         if (ind == 0): 
@@ -1076,7 +1052,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __calcCoefAfter(tt : 'Token') -> float:
-        from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
         if (tt is not None and tt.is_comma): 
             tt = tt.next0_
         attr = PersonAttrToken.tryAttach(tt, None, PersonAttrToken.PersonAttrAttachAttrs.ONLYKEYWORD)
@@ -1091,9 +1066,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __tryAttachSurnameII(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo') -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.TextToken import TextToken
         if ((ind + 1) >= len(pits) or pits[ind + 1].typ != PersonItemToken.ItemType.INITIAL or pits[ind].typ == PersonItemToken.ItemType.INITIAL): 
             return None
         if (pits[ind].is_newline_after): 
@@ -1156,8 +1128,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __tryAttachIISurname(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo') -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
         if ((ind + 1) >= len(pits) or pits[ind].typ != PersonItemToken.ItemType.INITIAL): 
             return None
         if (ind > 0): 
@@ -1228,8 +1198,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __tryAttachKing(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo', prev_has_this_typ : bool=False) -> 'PersonIdentityToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         if (ind > 0 or ind >= len(pits)): 
             return None
         if (pits[0].firstname is None or pits[0].is_newline_after): 
@@ -1250,7 +1218,7 @@ class PersonIdentityToken(MetaToken):
         if (isinstance(t, NumberToken)): 
             if (t.chars.is_all_lower): 
                 return None
-            num = ((Utils.asObjectOrNull(t, NumberToken)).value)
+            num = ((t).value)
             if (not t.morph.class0_.is_adjective): 
                 return None
         else: 
@@ -1288,10 +1256,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __tryAttachAsian(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo', cou : int, prev_has_this_typ : bool=False) -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.BracketHelper import BracketHelper
         if (ind > 0 or ind >= len(pits) or ((len(pits) != cou and len(pits) != (cou * 2)))): 
             return None
         if (pits[0].lastname is not None and pits[0].lastname.is_china_surname and pits[0].chars.is_capital_upper): 
@@ -1399,10 +1363,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def tryAttachIdentity(pits : typing.List['PersonItemToken'], inf : 'MorphBaseInfo') -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.morph.MorphWordForm import MorphWordForm
         if (len(pits) == 1): 
             if (pits[0].typ != PersonItemToken.ItemType.REFERENT): 
                 return None
@@ -1483,8 +1443,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __tryAttachGlobal(pits : typing.List['PersonItemToken'], ind : int, inf : 'MorphBaseInfo') -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
         if (ind > 0 or pits[0].typ != PersonItemToken.ItemType.VALUE): 
             return None
         if ((len(pits) == 4 and pits[0].value == "АУН" and pits[1].value == "САН") and pits[2].value == "СУ" and pits[3].value == "ЧЖИ"): 
@@ -1614,12 +1572,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __accordMorph(inf : 'MorphBaseInfo', p1 : 'MorphPersonItem', p2 : 'MorphPersonItem', p3 : 'MorphPersonItem', next0__ : 'Token') -> 'MorphCollection':
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.ner.MorphCollection import MorphCollection
-        from pullenti.morph.MorphCase import MorphCase
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         res = MorphCollection()
         pp = list()
         if (p1 is not None): 
@@ -1697,7 +1649,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __isBothSurnames(p1 : 'PersonItemToken', p2 : 'PersonItemToken') -> bool:
-        from pullenti.ner.TextToken import TextToken
         if (p1 is None or p2 is None): 
             return False
         if (p1.lastname is None or p2.lastname is None): 
@@ -1712,8 +1663,8 @@ class PersonIdentityToken(MetaToken):
             return False
         if (not ((isinstance(p1.end_token, TextToken))) or not ((isinstance(p2.end_token, TextToken)))): 
             return False
-        v1 = (Utils.asObjectOrNull(p1.end_token, TextToken)).term
-        v2 = (Utils.asObjectOrNull(p2.end_token, TextToken)).term
+        v1 = (p1.end_token).term
+        v2 = (p2.end_token).term
         if (v1[len(v1) - 1] == v2[len(v2) - 1]): 
             return False
         return True
@@ -1752,16 +1703,13 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def __setValue(res : 'PersonMorphCollection', t : 'Token', inf : 'MorphBaseInfo') -> None:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.morph.MorphWordForm import MorphWordForm
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             return
         for wf in tt.morph.items: 
             if (wf.class0_.is_verb): 
                 continue
-            if (wf.containsAttr("к.ф.", MorphClass())): 
+            if (wf.containsAttr("к.ф.", None)): 
                 continue
             if (inf is not None and inf.gender != MorphGender.UNDEFINED and wf.gender != MorphGender.UNDEFINED): 
                 if ((((wf.gender) & (inf.gender))) == (MorphGender.UNDEFINED)): 
@@ -1769,14 +1717,12 @@ class PersonIdentityToken(MetaToken):
             if (inf is not None and not inf.case_.is_undefined and not wf.case_.is_undefined): 
                 if (((wf.case_) & inf.case_).is_undefined): 
                     continue
-            str0_ = (tt.term if t.chars.is_latin_letter else (Utils.asObjectOrNull(wf, MorphWordForm)).normal_case)
+            str0_ = (tt.term if t.chars.is_latin_letter else (wf).normal_case)
             res.add(str0_, None, wf.gender, False)
         res.add(tt.term, None, (MorphGender.UNDEFINED if inf is None else inf.gender), False)
     
     @staticmethod
     def correctXFML(pli0 : typing.List['PersonIdentityToken'], pli1 : typing.List['PersonIdentityToken'], attrs : typing.List['PersonAttrToken']) -> bool:
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         p0 = None
         p1 = None
         for p in pli0: 
@@ -1832,7 +1778,6 @@ class PersonIdentityToken(MetaToken):
     
     @staticmethod
     def checkLatinAfter(pit : 'PersonIdentityToken') -> 'PersonIdentityToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         if (pit is None): 
             return None
         t = pit.end_token.next0_
@@ -1886,7 +1831,7 @@ class PersonIdentityToken(MetaToken):
                 if (p2.typ == PersonItemToken.ItemType.VALUE): 
                     sec = p2
                     if (isinstance(pit.middlename, PersonMorphCollection)): 
-                        if ((Utils.asObjectOrNull(pit.middlename, PersonMorphCollection)).checkLatinVariant(p2.value)): 
+                        if ((pit.middlename).checkLatinVariant(p2.value)): 
                             eq += 1
                 if (p3.typ == PersonItemToken.ItemType.VALUE): 
                     sur = p3
@@ -1903,7 +1848,7 @@ class PersonIdentityToken(MetaToken):
         res.firstname.add(nam.value, None, MorphGender.UNDEFINED, False)
         if (sec is not None): 
             res.middlename = (PersonMorphCollection())
-            (Utils.asObjectOrNull(res.middlename, PersonMorphCollection)).add(sec.value, None, MorphGender.UNDEFINED, False)
+            (res.middlename).add(sec.value, None, MorphGender.UNDEFINED, False)
         return res
     
     @staticmethod

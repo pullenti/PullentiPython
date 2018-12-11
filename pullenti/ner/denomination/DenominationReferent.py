@@ -6,16 +6,19 @@ import io
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.denomination.internal.MetaDenom import MetaDenom
 
 class DenominationReferent(Referent):
     """ Сущность, моделирующая непонятные комбинации (например, Си++, СС-300) """
     
     def __init__(self) -> None:
-        from pullenti.ner.denomination.internal.MetaDenom import MetaDenom
         super().__init__(DenominationReferent.OBJ_TYPENAME)
         self.__m_names = None;
         self.instance_of = MetaDenom._global_meta
@@ -29,12 +32,10 @@ class DenominationReferent(Referent):
         """ Значение (одно или несколько) """
         return self.getStringValue(DenominationReferent.ATTR_VALUE)
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         return Utils.ifNotNull(self.value, "?")
     
     def _addValue(self, begin : 'Token', end : 'Token') -> None:
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
         tmp = io.StringIO()
         t = begin
         first_pass2902 = True
@@ -46,7 +47,7 @@ class DenominationReferent(Referent):
                 print(t.getSourceText(), end="", file=tmp)
                 continue
             if (isinstance(t, TextToken)): 
-                s = (Utils.asObjectOrNull(t, TextToken)).term
+                s = (t).term
                 if (t.isCharOf("-\\/")): 
                     s = "-"
                 print(s, end="", file=tmp)
@@ -163,7 +164,6 @@ class DenominationReferent(Referent):
     __m_var_chars = None
     
     def createOntologyItem(self) -> 'IntOntologyItem':
-        from pullenti.ner.core.Termin import Termin
         oi = IntOntologyItem(self)
         for v in self.__name_vars: 
             oi.termins.append(Termin(v))

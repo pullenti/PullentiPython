@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class MorphGender(IntEnum):
     """ Род (мужской-средний-женский) """
     UNDEFINED = 0

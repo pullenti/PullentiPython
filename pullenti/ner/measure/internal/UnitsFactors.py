@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class UnitsFactors(IntEnum):
     """ Степени десяток """
     NO = 0

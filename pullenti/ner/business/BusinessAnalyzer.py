@@ -4,14 +4,35 @@
 
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.business.internal.BusinessFactItemTyp import BusinessFactItemTyp
-from pullenti.ner.business.BusinessFactKind import BusinessFactKind
+
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.date.DateRangeReferent import DateRangeReferent
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.business.BusinessFactKind import BusinessFactKind
+from pullenti.ner.Token import Token
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.business.internal.FundsItemTyp import FundsItemTyp
-
+from pullenti.ner.money.MoneyReferent import MoneyReferent
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.business.internal.BusinessFactItemTyp import BusinessFactItemTyp
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.business.internal.FundsMeta import FundsMeta
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.business.internal.MetaBusinessFact import MetaBusinessFact
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.business.internal.FundsItemToken import FundsItemToken
+from pullenti.ner.business.internal.BusinessFactItem import BusinessFactItem
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.business.FundsReferent import FundsReferent
 
 class BusinessAnalyzer(Analyzer):
     """ Семантический анализатор для бизнес-фактов
@@ -40,22 +61,16 @@ class BusinessAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.business.internal.MetaBusinessFact import MetaBusinessFact
-        from pullenti.ner.business.internal.FundsMeta import FundsMeta
         return [MetaBusinessFact.GLOBAL_META, FundsMeta.GLOBAL_META]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.business.internal.MetaBusinessFact import MetaBusinessFact
-        from pullenti.ner.business.internal.FundsMeta import FundsMeta
         res = dict()
         res[MetaBusinessFact.IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("businessfact.png")
         res[FundsMeta.IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("creditcards.png")
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
-        from pullenti.ner.business.FundsReferent import FundsReferent
         if (type0_ == BusinessFactReferent.OBJ_TYPENAME): 
             return BusinessFactReferent()
         if (type0_ == FundsReferent.OBJ_TYPENAME): 
@@ -67,10 +82,6 @@ class BusinessAnalyzer(Analyzer):
         return 1
     
     def process(self, kit : 'AnalysisKit') -> None:
-        from pullenti.ner.business.internal.FundsItemToken import FundsItemToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
-        from pullenti.ner.business.FundsReferent import FundsReferent
         ad = kit.getAnalyzerData(self)
         t = kit.first_token
         while t is not None: 
@@ -103,7 +114,6 @@ class BusinessAnalyzer(Analyzer):
                 continue
     
     def __analizeFact(self, t : 'Token') -> 'ReferentToken':
-        from pullenti.ner.business.internal.BusinessFactItem import BusinessFactItem
         if (t is None): 
             return None
         bfi = BusinessFactItem.tryParse(t)
@@ -129,13 +139,6 @@ class BusinessAnalyzer(Analyzer):
         return None
     
     def __FindRefBefore(self, t : 'Token') -> 'ReferentToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.business.FundsReferent import FundsReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         points = 0
@@ -203,9 +206,6 @@ class BusinessAnalyzer(Analyzer):
         return None
     
     def __FindSecRefBefore(self, rt : 'ReferentToken') -> 'ReferentToken':
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         t = (None if rt is None else rt.begin_token.previous)
         if (t is None or t.whitespaces_after_count > 2): 
             return None
@@ -214,8 +214,6 @@ class BusinessAnalyzer(Analyzer):
         return None
     
     def __findDate(self, bfr : 'BusinessFactReferent', t : 'Token') -> bool:
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
         tt = t
         while tt is not None: 
             r = tt.getReferent()
@@ -241,9 +239,6 @@ class BusinessAnalyzer(Analyzer):
         return False
     
     def __findSum(self, bfr : 'BusinessFactReferent', t : 'Token') -> bool:
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
-        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
-        from pullenti.ner.business.FundsReferent import FundsReferent
         while t is not None: 
             if (t.isChar('.') or t.is_newline_before): 
                 break
@@ -260,11 +255,6 @@ class BusinessAnalyzer(Analyzer):
         return False
     
     def __analizeGet(self, bfi : 'BusinessFactItem') -> 'ReferentToken':
-        from pullenti.ner.business.FundsReferent import FundsReferent
-        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
         bef = self.__FindRefBefore(bfi.begin_token.previous)
         if (bef is None): 
             return None
@@ -375,8 +365,6 @@ class BusinessAnalyzer(Analyzer):
     
     @staticmethod
     def __addWhosList(t1 : 'Token', bfr : 'BusinessFactReferent') -> 'Token':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
         if (t1 is None): 
             return None
         if ((t1.next0_ is not None and t1.next0_.is_comma_and and (isinstance(t1.next0_.next0_, ReferentToken))) and t1.next0_.next0_.getReferent().type_name == t1.getReferent().type_name): 
@@ -408,11 +396,6 @@ class BusinessAnalyzer(Analyzer):
         return t1
     
     def __analizeGet2(self, t : 'Token') -> 'ReferentToken':
-        from pullenti.ner.business.FundsReferent import FundsReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         tt = t.previous
@@ -453,11 +436,6 @@ class BusinessAnalyzer(Analyzer):
         return None
     
     def __analizeHave(self, bfi : 'BusinessFactItem') -> 'ReferentToken':
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.business.FundsReferent import FundsReferent
-        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         t = bfi.end_token.next0_
         t1 = None
         if (t is not None and ((t.isValue("КОТОРЫЙ", None) or t.isValue("ЯКИЙ", None)))): 
@@ -516,20 +494,11 @@ class BusinessAnalyzer(Analyzer):
         return None
     
     def __analizeProfit(self, bfi : 'BusinessFactItem') -> 'ReferentToken':
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (bfi.end_token.next0_ is None): 
             return None
         t0 = bfi.begin_token
         t1 = bfi.end_token
-        typ = t1.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False).lower()
+        typ = t1.getNormalCaseText(None, True, MorphGender.UNDEFINED, False).lower()
         org0_ = None
         org0_ = (Utils.asObjectOrNull(t1.next0_.getReferent(), OrganizationReferent))
         t = t1
@@ -598,9 +567,6 @@ class BusinessAnalyzer(Analyzer):
         return ReferentToken(bfr, t0, t1)
     
     def __analizeAgreement(self, bfi : 'BusinessFactItem') -> 'ReferentToken':
-        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         first = None
         second = None
         t0 = bfi.begin_token
@@ -676,10 +642,6 @@ class BusinessAnalyzer(Analyzer):
         return ReferentToken(bf, t0, t1)
     
     def __analizeSubsidiary(self, bfi : 'BusinessFactItem') -> 'ReferentToken':
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         t1 = bfi.end_token.next0_
         if (t1 is None or not ((isinstance(t1.getReferent(), OrganizationReferent)))): 
             return None
@@ -707,12 +669,6 @@ class BusinessAnalyzer(Analyzer):
         return ReferentToken(bfr, t, t1)
     
     def __analizeFinance(self, bfi : 'BusinessFactItem') -> 'ReferentToken':
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
-        from pullenti.ner.business.FundsReferent import FundsReferent
-        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
         bef = self.__FindRefBefore(bfi.begin_token.previous)
         if (bef is None): 
             return None
@@ -754,13 +710,6 @@ class BusinessAnalyzer(Analyzer):
         return ReferentToken(bfr, bef.begin_token, whom.end_token)
     
     def __analizeLikelihoods(self, rt : 'ReferentToken') -> typing.List['ReferentToken']:
-        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
-        from pullenti.ner.business.FundsReferent import FundsReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.business.internal.FundsItemToken import FundsItemToken
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
         bfr0 = Utils.asObjectOrNull(rt.referent, BusinessFactReferent)
         if (bfr0 is None or len(bfr0.whats) != 1 or not ((isinstance(bfr0.whats[0], FundsReferent)))): 
             return None
@@ -820,11 +769,15 @@ class BusinessAnalyzer(Analyzer):
             i += 1
         return res
     
+    __m_inited = None
+    
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.business.internal.BusinessFactItem import BusinessFactItem
-        from pullenti.ner.ProcessorService import ProcessorService
+        if (BusinessAnalyzer.__m_inited): 
+            return
+        BusinessAnalyzer.__m_inited = True
+        MetaBusinessFact.initialize()
+        FundsMeta.initialize()
         Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
         BusinessFactItem.initialize()
         Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False

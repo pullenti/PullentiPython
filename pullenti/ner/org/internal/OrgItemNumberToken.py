@@ -3,9 +3,13 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.NumberHelper import NumberHelper
 
+from pullenti.ner.Token import Token
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.core.MiscHelper import MiscHelper
 
 class OrgItemNumberToken(MetaToken):
     
@@ -18,35 +22,32 @@ class OrgItemNumberToken(MetaToken):
     
     @staticmethod
     def tryAttach(t : 'Token', can_be_pure_number : bool=False, typ : 'OrgItemTypeToken'=None) -> 'OrgItemNumberToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.NumberToken import NumberToken
         if (t is None): 
             return None
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is not None): 
             t1 = MiscHelper.checkNumberPrefix(tt)
             if ((isinstance(t1, NumberToken)) and not t1.is_newline_before): 
-                return OrgItemNumberToken._new1716(tt, t1, str((Utils.asObjectOrNull(t1, NumberToken)).value))
+                return OrgItemNumberToken._new1716(tt, t1, str((t1).value))
         if ((t.is_hiphen and (isinstance(t.next0_, NumberToken)) and not t.is_whitespace_before) and not t.is_whitespace_after): 
             if (NumberHelper.tryParseAge(t.next0_) is None): 
-                return OrgItemNumberToken._new1716(t, t.next0_, str((Utils.asObjectOrNull(t.next0_, NumberToken)).value))
+                return OrgItemNumberToken._new1716(t, t.next0_, str((t.next0_).value))
         if (isinstance(t, NumberToken)): 
             if ((not t.is_whitespace_before and t.previous is not None and t.previous.is_hiphen)): 
-                return OrgItemNumberToken._new1716(t, t, str((Utils.asObjectOrNull(t, NumberToken)).value))
+                return OrgItemNumberToken._new1716(t, t, str((t).value))
             if (typ is not None and typ.typ is not None and (((typ.typ == "войсковая часть" or typ.typ == "військова частина" or "колония" in typ.typ) or "колонія" in typ.typ))): 
                 if (t.length_char >= 4 or t.length_char <= 6): 
-                    res = OrgItemNumberToken._new1716(t, t, str((Utils.asObjectOrNull(t, NumberToken)).value))
+                    res = OrgItemNumberToken._new1716(t, t, str((t).value))
                     if (t.next0_ is not None and ((t.next0_.is_hiphen or t.next0_.isCharOf("\\/"))) and not t.next0_.is_whitespace_after): 
                         if ((isinstance(t.next0_.next0_, NumberToken)) and ((t.length_char + t.next0_.next0_.length_char) < 9)): 
                             res.end_token = t.next0_.next0_
-                            res.number = "{0}-{1}".format(res.number, (Utils.asObjectOrNull(res.end_token, NumberToken)).value)
+                            res.number = "{0}-{1}".format(res.number, (res.end_token).value)
                         elif ((isinstance(t.next0_.next0_, TextToken)) and t.next0_.next0_.length_char == 1 and t.next0_.next0_.chars.is_letter): 
                             res.end_token = t.next0_.next0_
-                            res.number = "{0}{1}".format(res.number, (Utils.asObjectOrNull(res.end_token, TextToken)).term)
+                            res.number = "{0}{1}".format(res.number, (res.end_token).term)
                     elif ((isinstance(t.next0_, TextToken)) and t.next0_.length_char == 1 and t.next0_.chars.is_letter): 
                         res.end_token = t.next0_
-                        res.number = "{0}{1}".format(res.number, (Utils.asObjectOrNull(res.end_token, TextToken)).term)
+                        res.number = "{0}{1}".format(res.number, (res.end_token).term)
                     return res
         if (((isinstance(t, TextToken)) and t.length_char == 1 and t.chars.is_letter) and not t.is_whitespace_after): 
             if (typ is not None and typ.typ is not None and (((typ.typ == "войсковая часть" or typ.typ == "військова частина" or "колония" in typ.typ) or "колонія" in typ.typ))): 
@@ -55,7 +56,7 @@ class OrgItemNumberToken(MetaToken):
                     tt1 = tt1.next0_
                 if ((isinstance(tt1, NumberToken)) and not tt1.is_whitespace_before): 
                     res = OrgItemNumberToken(t, tt1)
-                    res.number = "{0}{1}".format((Utils.asObjectOrNull(t, TextToken)).term, (Utils.asObjectOrNull(tt1, NumberToken)).value)
+                    res.number = "{0}{1}".format((t).term, (tt1).value)
                     return res
         return None
     

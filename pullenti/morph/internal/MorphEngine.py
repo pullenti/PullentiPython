@@ -7,18 +7,22 @@ import io
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.morph.internal.MorphTreeNode import MorphTreeNode
-from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
 
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.morph.internal.MorphTreeNode import MorphTreeNode
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
 
 class MorphEngine:
     
     def __init__(self) -> None:
-        from pullenti.morph.MorphLang import MorphLang
         self._m_lock = threading.Lock()
+        self.__m_lazy_buf = None;
         self.language = MorphLang()
         self.m_root = MorphTreeNode()
         self.m_root_reverce = MorphTreeNode()
@@ -43,9 +47,15 @@ class MorphEngine:
                         continue
                     with Utils.getResourceStream('pullenti.morph.internal.properties', n) as stream: 
                         stream.seek(0, io.SEEK_SET)
-                        MorphSerializeHelper.deserializeAll(stream, self, False, True)
+                        self.__m_lazy_buf = MorphSerializeHelper.deserializeAll(stream, self, False, True)
                     return True
             return False
+    
+    def __loadTreeNode(self, tn : 'MorphTreeNode') -> None:
+        with self._m_lock: 
+            self.__m_lazy_buf.seek(tn.lazy_pos)
+            MorphSerializeHelper._deserializeMorphTreeNodeLazy(self.__m_lazy_buf, tn, self)
+            tn.lazy_pos = 0
     
     def process(self, word : str) -> typing.List['MorphWordForm']:
         """ Обработка одного слова
@@ -54,8 +64,6 @@ class MorphEngine:
             word(str): слово должно быть в верхнем регистре
         
         """
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.morph.MorphClass import MorphClass
         if (Utils.isNullOrEmpty(word)): 
             return None
         res = None
@@ -72,8 +80,8 @@ class MorphEngine:
         tn = self.m_root
         i = 0
         while i <= len(word): 
-            if (tn._lazy is not None): 
-                tn._load()
+            if (tn.lazy_pos > 0): 
+                self.__loadTreeNode(tn)
             if (tn.rules is not None): 
                 word_begin = None
                 word_end = None
@@ -153,8 +161,8 @@ class MorphEngine:
             tn = self.m_root_reverce
             tn0 = None
             for i in range(len(word) - 1, -1, -1):
-                if (tn._lazy is not None): 
-                    tn._load()
+                if (tn.lazy_pos > 0): 
+                    self.__loadTreeNode(tn)
                 ch = ord(word[i])
                 if (tn.nodes is None): 
                     break
@@ -164,8 +172,8 @@ class MorphEngine:
                 if (not inoutres20): 
                     break
                 tn = next0_
-                if (tn._lazy is not None): 
-                    tn._load()
+                if (tn.lazy_pos > 0): 
+                    self.__loadTreeNode(tn)
                 if (tn.reverce_variants is not None): 
                     tn0 = tn
                     break
@@ -235,14 +243,12 @@ class MorphEngine:
         return res
     
     def getAllWordforms(self, word : str) -> typing.List['MorphWordForm']:
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.morph.MorphClass import MorphClass
         res = list()
         tn = self.m_root
         i = 0
         while i <= len(word): 
-            if (tn._lazy is not None): 
-                tn._load()
+            if (tn.lazy_pos > 0): 
+                self.__loadTreeNode(tn)
             if (tn.rules is not None): 
                 word_begin = ""
                 word_end = ""
@@ -279,7 +285,7 @@ class MorphEngine:
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
-            if (wf.containsAttr("инф.", MorphClass())): 
+            if (wf.containsAttr("инф.", None)): 
                 continue
             j = i + 1
             first_pass2723 = True
@@ -288,7 +294,7 @@ class MorphEngine:
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
-                if (wf1.containsAttr("инф.", MorphClass())): 
+                if (wf1.containsAttr("инф.", None)): 
                     continue
                 if ((wf.class0_ == wf1.class0_ and wf.gender == wf1.gender and wf.number == wf1.number) and wf.normal_case == wf1.normal_case): 
                     wf.case_ = (wf.case_) | wf1.case_
@@ -301,7 +307,7 @@ class MorphEngine:
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
-            if (wf.containsAttr("инф.", MorphClass())): 
+            if (wf.containsAttr("инф.", None)): 
                 continue
             j = i + 1
             first_pass2725 = True
@@ -310,7 +316,7 @@ class MorphEngine:
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
-                if (wf1.containsAttr("инф.", MorphClass())): 
+                if (wf1.containsAttr("инф.", None)): 
                     continue
                 if ((wf.class0_ == wf1.class0_ and wf.case_ == wf1.case_ and wf.number == wf1.number) and wf.normal_case == wf1.normal_case): 
                     wf.gender = Utils.valToEnum((wf.gender) | (wf1.gender), MorphGender)
@@ -325,8 +331,8 @@ class MorphEngine:
         max_coef = -10
         i = 0
         while i <= len(word): 
-            if (tn._lazy is not None): 
-                tn._load()
+            if (tn.lazy_pos > 0): 
+                self.__loadTreeNode(tn)
             if (tn.rules is not None): 
                 word_begin = ""
                 word_end = ""
@@ -386,8 +392,8 @@ class MorphEngine:
         tn = self.m_root_reverce
         tn0 = None
         for i in range(len(word) - 1, -1, -1):
-            if (tn._lazy is not None): 
-                tn._load()
+            if (tn.lazy_pos > 0): 
+                self.__loadTreeNode(tn)
             ch = ord(word[i])
             if (tn.nodes is None): 
                 break
@@ -397,8 +403,8 @@ class MorphEngine:
             if (not inoutres26): 
                 break
             tn = next0_
-            if (tn._lazy is not None): 
-                tn._load()
+            if (tn.lazy_pos > 0): 
+                self.__loadTreeNode(tn)
             if (tn.reverce_variants is not None): 
                 tn0 = tn
                 break
@@ -496,8 +502,8 @@ class MorphEngine:
             if first_pass2726: first_pass2726 = False
             else: i += 1
             if (not (i <= len(word))): break
-            if (tn._lazy is not None): 
-                tn._load()
+            if (tn.lazy_pos > 0): 
+                self.__loadTreeNode(tn)
             if (tn.rules is not None): 
                 word_begin = ""
                 word_end = ""
@@ -550,13 +556,12 @@ class MorphEngine:
         self.__processProperVariants(word, res, True)
     
     def __processProperVariants(self, word : str, res : typing.List['MorphWordForm'], geo : bool) -> None:
-        from pullenti.morph.MorphWordForm import MorphWordForm
         tn = self.m_root_reverce
         tn0 = None
         nodes_with_vars = None
         for i in range(len(word) - 1, -1, -1):
-            if (tn._lazy is not None): 
-                tn._load()
+            if (tn.lazy_pos > 0): 
+                self.__loadTreeNode(tn)
             ch = ord(word[i])
             if (tn.nodes is None): 
                 break
@@ -566,8 +571,8 @@ class MorphEngine:
             if (not inoutres30): 
                 break
             tn = next0_
-            if (tn._lazy is not None): 
-                tn._load()
+            if (tn.lazy_pos > 0): 
+                self.__loadTreeNode(tn)
             if (tn.reverce_variants is not None): 
                 if (nodes_with_vars is None): 
                     nodes_with_vars = list()
@@ -578,8 +583,8 @@ class MorphEngine:
             return
         for j in range(len(nodes_with_vars) - 1, -1, -1):
             tn = nodes_with_vars[j]
-            if (tn._lazy is not None): 
-                tn._load()
+            if (tn.lazy_pos > 0): 
+                self.__loadTreeNode(tn)
             ok = False
             for v in tn.reverce_variants: 
                 if (geo and v.class0_.is_proper_geo): 
@@ -736,7 +741,6 @@ class MorphEngine:
         return var
     
     def _reset(self) -> None:
-        from pullenti.morph.MorphLang import MorphLang
         self.m_root = MorphTreeNode()
         self.m_root_reverce = MorphTreeNode()
         self._m_vars = list()

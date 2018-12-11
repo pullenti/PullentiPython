@@ -5,14 +5,37 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.instrument.internal.ILTypes import ILTypes
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.decree.DecreeKind import DecreeKind
-from pullenti.morph.MorphGender import MorphGender
 
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.bank.BankDataReferent import BankDataReferent
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.uri.UriReferent import UriReferent
+from pullenti.ner.decree.DecreeKind import DecreeKind
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.person.PersonAnalyzer import PersonAnalyzer
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
+from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
+from pullenti.ner.decree.internal.DecreeToken import DecreeToken
+from pullenti.ner.instrument.internal.ILTypes import ILTypes
 
 class InstrToken(MetaToken):
     
@@ -28,9 +51,6 @@ class InstrToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (InstrToken.__m_ontology is not None): 
             return
         InstrToken.__m_ontology = TerminCollection()
@@ -62,11 +82,6 @@ class InstrToken(MetaToken):
     
     @property
     def is_pure_person(self) -> bool:
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-        from pullenti.ner.TextToken import TextToken
         if (isinstance(self.ref, ReferentToken)): 
             rt = Utils.asObjectOrNull(self.ref, ReferentToken)
             if ((isinstance(rt.referent, PersonReferent)) or (isinstance(rt.referent, PersonPropertyReferent))): 
@@ -132,8 +147,6 @@ class InstrToken(MetaToken):
     
     @staticmethod
     def parseList(t0 : 'Token', max_char : int=0) -> typing.List['InstrToken']:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         res = list()
         t = t0
         while t is not None: 
@@ -168,12 +181,6 @@ class InstrToken(MetaToken):
     
     @staticmethod
     def __correctPerson(res : 'InstrToken') -> 'InstrToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
         spec_chars = 0
         if (not res.is_pure_person): 
             res.typ = ILTypes.UNDEFINED
@@ -186,13 +193,13 @@ class InstrToken(MetaToken):
             if (not (t is not None)): break
             if ((isinstance(t, ReferentToken)) and (isinstance(res.ref, ReferentToken))): 
                 ok = False
-                if (t.getReferent() == (Utils.asObjectOrNull(res.ref, ReferentToken)).referent): 
+                if (t.getReferent() == (res.ref).referent): 
                     ok = True
-                ip = Utils.asObjectOrNull((Utils.asObjectOrNull(res.ref, ReferentToken)).referent, InstrumentParticipant)
+                ip = Utils.asObjectOrNull((res.ref).referent, InstrumentParticipant)
                 if (ip is not None and ip._containsRef(t.getReferent())): 
                     ok = True
                 if (not ok and t.previous is not None and t.previous.is_table_control_char): 
-                    if ((isinstance((Utils.asObjectOrNull(res.ref, ReferentToken)).referent, PersonPropertyReferent)) and (isinstance(t.getReferent(), PersonReferent))): 
+                    if ((isinstance((res.ref).referent, PersonPropertyReferent)) and (isinstance(t.getReferent(), PersonReferent))): 
                         ok = True
                         res.ref = (t)
                 if (ok): 
@@ -232,7 +239,7 @@ class InstrToken(MetaToken):
                 elif ((isinstance(tt, TextToken)) and tt.isCharOf("_/\\")): 
                     spec_chars += 1
                 elif (isinstance(tt, MetaToken)): 
-                    ttt = (Utils.asObjectOrNull(tt, MetaToken)).begin_token
+                    ttt = (tt).begin_token
                     while ttt is not None and ttt.end_char <= tt.end_char: 
                         if ((isinstance(ttt.getReferent(), PersonReferent)) or (isinstance(ttt.getReferent(), PersonPropertyReferent))): 
                             res.ref = (ttt)
@@ -247,26 +254,6 @@ class InstrToken(MetaToken):
     
     @staticmethod
     def parse(t : 'Token', max_char : int=0, prev : 'InstrToken'=None) -> 'InstrToken':
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-        from pullenti.ner.person.PersonAnalyzer import PersonAnalyzer
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.bank.BankDataReferent import BankDataReferent
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        from pullenti.morph.MorphClass import MorphClass
         is_start_of_line = False
         t00 = t
         if (t is not None): 
@@ -343,7 +330,7 @@ class InstrToken(MetaToken):
                     while tt is not None: 
                         if (tt.is_newline_before): 
                             break
-                        elif ((isinstance(tt, TextToken)) and (Utils.asObjectOrNull(tt, TextToken)).is_pure_verb): 
+                        elif ((isinstance(tt, TextToken)) and (tt).is_pure_verb): 
                             has_verb_ = True
                             break
                         tt = tt.next0_
@@ -411,7 +398,7 @@ class InstrToken(MetaToken):
                     break
             has_word = True
             if (isinstance(r, InstrumentParticipant)): 
-                tt = (Utils.asObjectOrNull(t, ReferentToken)).begin_token
+                tt = (t).begin_token
                 first_pass3003 = True
                 while True:
                     if first_pass3003: first_pass3003 = False
@@ -457,7 +444,7 @@ class InstrToken(MetaToken):
                             break
                         if (ok): 
                             return InstrToken._new1424(t, t, ILTypes.APPENDIX, "ПРИЛОЖЕНИЕ")
-            if ((isinstance(r, DecreeReferent)) and (Utils.asObjectOrNull(r, DecreeReferent)).kind == DecreeKind.PUBLISHER and t == t0): 
+            if ((isinstance(r, DecreeReferent)) and (r).kind == DecreeKind.PUBLISHER and t == t0): 
                 res1 = InstrToken._new1421(t, t, ILTypes.APPROVED)
                 tt = t.next0_
                 first_pass3005 = True
@@ -467,7 +454,7 @@ class InstrToken(MetaToken):
                     if (not (tt is not None)): break
                     if (tt.isCharOf(",;")): 
                         continue
-                    if ((isinstance(tt.getReferent(), DecreeReferent)) and (Utils.asObjectOrNull(tt.getReferent(), DecreeReferent)).kind == DecreeKind.PUBLISHER): 
+                    if ((isinstance(tt.getReferent(), DecreeReferent)) and (tt.getReferent()).kind == DecreeKind.PUBLISHER): 
                         res1.end_token = t
                     else: 
                         break
@@ -515,14 +502,14 @@ class InstrToken(MetaToken):
                         if (t11.next0_ is not None and t11.next0_.isChar(':')): 
                             t11 = t11.next0_
                         return InstrToken._new1421(t, t11, ILTypes.DIRECTIVE)
-            tte = ((Utils.asObjectOrNull(t, MetaToken)).begin_token if (isinstance(t, MetaToken)) else t)
-            term = ((Utils.asObjectOrNull(tte, TextToken)).term if isinstance(tte, TextToken) else None)
+            tte = ((t).begin_token if (isinstance(t, MetaToken)) else t)
+            term = ((tte).term if isinstance(tte, TextToken) else None)
             if (is_start_of_line and not tte.chars.is_all_lower and t == t0): 
                 npt = NounPhraseHelper.tryParse(tte, NounPhraseParseAttr.NO, 0)
                 if (npt is not None and ((term == "ПРИЛОЖЕНИЯ" or term == "ДОДАТКИ"))): 
                     npt = (None)
                 if (npt is not None and npt.morph.case_.is_nominative and (isinstance(npt.end_token, TextToken))): 
-                    term1 = (Utils.asObjectOrNull(npt.end_token, TextToken)).term
+                    term1 = (npt.end_token).term
                     if (((term1 == "ПРИЛОЖЕНИЕ" or term1 == "ДОДАТОК" or term1 == "МНЕНИЕ") or term1 == "ДУМКА" or term1 == "АКТ") or term1 == "ФОРМА" or term == "ЗАЯВКА"): 
                         tt1 = npt.end_token.next0_
                         dt1 = DecreeToken.tryAttach(tt1, None, False)
@@ -653,7 +640,7 @@ class InstrToken(MetaToken):
             if (not t.chars.is_letter): 
                 continue
             res.no_words = False
-            if ((Utils.asObjectOrNull(t, TextToken)).is_pure_verb): 
+            if ((t).is_pure_verb): 
                 res.has_verb = True
         if (t0.isValue("ВОПРОС", "ПИТАННЯ") and t0.next0_ is not None and t0.next0_.isCharOf(":.")): 
             res.typ = ILTypes.QUESTION
@@ -661,14 +648,13 @@ class InstrToken(MetaToken):
     
     @staticmethod
     def _checkApproved(t : 'Token') -> 'Token':
-        from pullenti.morph.MorphClass import MorphClass
         if (t is None): 
             return None
         if (((not t.isValue("УТВЕРЖДЕН", "ЗАТВЕРДЖЕНИЙ") and not t.isValue("УТВЕРЖДАТЬ", "СТВЕРДЖУВАТИ") and not t.isValue("УТВЕРДИТЬ", "ЗАТВЕРДИТИ")) and not t.isValue("ВВЕСТИ", None) and not t.isValue("СОГЛАСОВАНО", "ПОГОДЖЕНО")) and not t.isValue("СОГЛАСОВАТЬ", "ПОГОДИТИ")): 
             return None
-        if (t.morph.containsAttr("инф.", MorphClass()) and t.morph.containsAttr("сов.в.", MorphClass())): 
+        if (t.morph.containsAttr("инф.", None) and t.morph.containsAttr("сов.в.", None)): 
             return None
-        if (t.morph.containsAttr("возвр.", MorphClass())): 
+        if (t.morph.containsAttr("возвр.", None)): 
             return None
         t0 = t
         t1 = t
@@ -687,7 +673,7 @@ class InstrToken(MetaToken):
                 continue
             tt = InstrToken._checkApproved(t)
             if (tt is not None): 
-                if (not tt.is_newline_before and tt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False) != t0.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)): 
+                if (not tt.is_newline_before and tt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False) != t0.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)): 
                     tt = t
                     t1 = tt
                     continue

@@ -9,10 +9,14 @@ import math
 import operator
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.date.DatePointerType import DatePointerType
 
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.date.DateRangeReferent import DateRangeReferent
+from pullenti.ner.date.DatePointerType import DatePointerType
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 
 class DateExToken(MetaToken):
     """ Используется для нахождения в тексте абсолютных и относительных дат и диапазонов,
@@ -216,8 +220,9 @@ class DateExToken(MetaToken):
         
         @staticmethod
         def tryParse(t : 'Token', prev : typing.List['DateExItemToken']) -> 'DateExItemToken':
-            from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
             from pullenti.ner.NumberToken import NumberToken
+            from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+            from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
             if (t is None): 
                 return None
             if (t.isValue("ЗАВТРА", None)): 
@@ -236,7 +241,7 @@ class DateExToken(MetaToken):
                     res0 = DateExToken.DateExItemToken.tryParse(t.next0_, prev)
                     if (res0 is not None and res0.value == 1): 
                         res0.begin_token = t
-                        res0.value = ((Utils.asObjectOrNull(t, NumberToken)).value)
+                        res0.value = ((t).value)
                         if (t.previous is not None and t.previous.isValue("ЧЕРЕЗ", None)): 
                             res0.is_value_relate = True
                         return res0
@@ -291,7 +296,7 @@ class DateExToken(MetaToken):
                     heg = True
                 elif (a.begin_token == a.end_token and (isinstance(a.begin_token, NumberToken))): 
                     if (res.typ != DateExToken.DateExItemTokenType.DAYOFWEEK): 
-                        res.value = ((Utils.asObjectOrNull(a.begin_token, NumberToken)).value)
+                        res.value = ((a.begin_token).value)
                 elif (a.isValue("ЭТОТ", None) or a.isValue("ТЕКУЩИЙ", None)): 
                     pass
                 elif (a.isValue("БЛИЖАЙШИЙ", None) and res.typ == DateExToken.DateExItemTokenType.DAYOFWEEK): 
@@ -760,8 +765,6 @@ class DateExToken(MetaToken):
             t(Token): 
         
         """
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
-        from pullenti.ner.date.DateReferent import DateReferent
         if (t is None): 
             return None
         res = None

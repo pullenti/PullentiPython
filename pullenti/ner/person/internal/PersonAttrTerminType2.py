@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class PersonAttrTerminType2(IntEnum):
     UNDEFINED = 0
     IO = 1

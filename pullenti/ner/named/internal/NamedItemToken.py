@@ -5,15 +5,24 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.named.NamedEntityKind import NamedEntityKind
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.morph.MorphGender import MorphGender
 
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.named.NamedEntityKind import NamedEntityKind
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
 class NamedItemToken(MetaToken):
     
@@ -65,13 +74,6 @@ class NamedItemToken(MetaToken):
     
     @staticmethod
     def tryParse(t : 'Token', loc_onto : 'IntOntologyCollection') -> 'NamedItemToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.core.BracketHelper import BracketHelper
         if (t is None): 
             return None
         if (isinstance(t, ReferentToken)): 
@@ -174,79 +176,76 @@ class NamedItemToken(MetaToken):
                 return res
         if (((isinstance(t, TextToken)) and t.chars.is_letter and not t.chars.is_all_lower) and t.length_char > 2): 
             res = NamedItemToken._new1650(t, t, t.morph)
-            str0_ = (Utils.asObjectOrNull(t, TextToken)).term
+            str0_ = (t).term
             if (str0_.endswith("О") or str0_.endswith("И") or str0_.endswith("Ы")): 
                 res.name_value = str0_
             else: 
-                res.name_value = t.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                res.name_value = t.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
             res.chars = t.chars
             if (((not t.is_whitespace_after and t.next0_ is not None and t.next0_.is_hiphen) and (isinstance(t.next0_.next0_, TextToken)) and not t.next0_.next0_.is_whitespace_after) and t.chars.is_cyrillic_letter == t.next0_.next0_.chars.is_cyrillic_letter): 
                 res.end_token = t.next0_.next0_
                 t = res.end_token
-                res.name_value = "{0}-{1}".format(res.name_value, t.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False))
+                res.name_value = "{0}-{1}".format(res.name_value, t.getNormalCaseText(None, False, MorphGender.UNDEFINED, False))
             return res
         return None
     
     @staticmethod
     def _initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (NamedItemToken.__m_types is not None): 
             return
         NamedItemToken.__m_types = TerminCollection()
         NamedItemToken.__m_names = TerminCollection()
         for s in ["ПЛАНЕТА", "ЗВЕЗДА", "КОМЕТА", "МЕТЕОРИТ", "СОЗВЕЗДИЕ", "ГАЛАКТИКА"]: 
             t = Termin()
-            t.initByNormalText(s, MorphLang())
+            t.initByNormalText(s, None)
             t.tag = NamedEntityKind.PLANET
             NamedItemToken.__m_types.add(t)
         for s in ["СОЛНЦЕ", "МЕРКУРИЙ", "ВЕНЕРА", "ЗЕМЛЯ", "МАРС", "ЮПИТЕР", "САТУРН", "УРАН", "НЕПТУН", "ПЛУТОН", "ЛУНА", "ДЕЙМОС", "ФОБОС", "Ио", "Ганимед", "Каллисто"]: 
             t = Termin()
-            t.initByNormalText(s.upper(), MorphLang())
+            t.initByNormalText(s.upper(), None)
             t.tag = NamedEntityKind.PLANET
             NamedItemToken.__m_names.add(t)
         for s in ["РЕКА", "ОЗЕРО", "МОРЕ", "ОКЕАН", "ЗАЛИВ", "ПРОЛИВ", "ПОБЕРЕЖЬЕ", "КОНТИНЕНТ", "ОСТРОВ", "ПОЛУОСТРОВ", "МЫС", "ГОРА", "ГОРНЫЙ ХРЕБЕТ", "ПЕРЕВАЛ", "ЛЕС", "САД", "ЗАПОВЕДНИК", "ЗАКАЗНИК", "ДОЛИНА", "УЩЕЛЬЕ", "РАВНИНА", "БЕРЕГ"]: 
             t = Termin()
-            t.initByNormalText(s, MorphLang())
+            t.initByNormalText(s, None)
             t.tag = NamedEntityKind.LOCATION
             NamedItemToken.__m_types.add(t)
         for s in ["ТИХИЙ", "АТЛАНТИЧЕСКИЙ", "ИНДИЙСКИЙ", "СЕВЕРО-ЛЕДОВИТЫЙ"]: 
             t = Termin()
-            t.initByNormalText(s, MorphLang())
+            t.initByNormalText(s, None)
             t.tag = NamedEntityKind.LOCATION
             t.tag2 = ("океан")
             NamedItemToken.__m_names.add(t)
         for s in ["ЕВРАЗИЯ", "АФРИКА", "АМЕРИКА", "АВСТРАЛИЯ", "АНТАРКТИДА"]: 
             t = Termin()
-            t.initByNormalText(s, MorphLang())
+            t.initByNormalText(s, None)
             t.tag = NamedEntityKind.LOCATION
             t.tag2 = ("континент")
             NamedItemToken.__m_names.add(t)
         for s in ["ВОЛГА", "НЕВА", "АМУР", "ОБЪ", "АНГАРА", "ЛЕНА", "ИРТЫШ", "ДНЕПР", "ДОН", "ДНЕСТР", "РЕЙН", "АМУДАРЬЯ", "СЫРДАРЬЯ", "ТИГР", "ЕВФРАТ", "ИОРДАН", "МИССИСИПИ", "АМАЗОНКА", "ТЕМЗА", "СЕНА", "НИЛ", "ЯНЦЗЫ", "ХУАНХЭ", "ПАРАНА", "МЕКОНГ", "МАККЕНЗИ", "НИГЕР", "ЕНИСЕЙ", "МУРРЕЙ", "САЛУИН", "ИНД", "РИО-ГРАНДЕ", "БРАХМАПУТРА", "ДАРЛИНГ", "ДУНАЙ", "ЮКОН", "ГАНГ", "МАРРАМБИДЖИ", "ЗАМБЕЗИ", "ТОКАНТИС", "ОРИНОКО", "СИЦЗЯН", "КОЛЫМА", "КАМА", "ОКА", "ЭЛЬЮА", "ВИСЛА", "ДАУГАВА", "ЗАПАДНАЯ ДВИНА", "НЕМАН", "МЕЗЕНЬ", "КУБАНЬ", "ЮЖНЫЙ БУГ"]: 
             t = Termin()
-            t.initByNormalText(s, MorphLang())
+            t.initByNormalText(s, None)
             t.tag = NamedEntityKind.LOCATION
             t.tag2 = ("река")
             NamedItemToken.__m_names.add(t)
         for s in ["ЕВРОПА", "АЗИЯ", "АРКТИКА", "КАВКАЗ", "ПРИБАЛТИКА", "СИБИРЬ", "ЗАПОЛЯРЬЕ", "ЧУКОТКА", "ПРИБАЛТИКА", "БАЛКАНЫ", "СКАНДИНАВИЯ", "ОКЕАНИЯ", "АЛЯСКА", "УРАЛ", "ПОВОЛЖЬЕ", "ПРИМОРЬЕ", "КУРИЛЫ", "ТИБЕТ", "ГИМАЛАИ", "АЛЬПЫ", "САХАРА", "ГОБИ", "СИНАЙ", "БАЙКОНУР", "ЧЕРНОБЫЛЬ", "САДОВОЕ КОЛЬЦО", "СТАРЫЙ ГОРОД"]: 
             t = Termin()
-            t.initByNormalText(s, MorphLang())
+            t.initByNormalText(s, None)
             t.tag = NamedEntityKind.LOCATION
             NamedItemToken.__m_names.add(t)
         for s in ["ПАМЯТНИК", "МОНУМЕНТ", "МЕМОРИАЛ", "БЮСТ", "ОБЕЛИСК"]: 
             t = Termin()
-            t.initByNormalText(s, MorphLang())
+            t.initByNormalText(s, None)
             t.tag = NamedEntityKind.MONUMENT
             NamedItemToken.__m_types.add(t)
         for s in ["ДВОРЕЦ", "КРЕМЛЬ", "ЗАМОК", "УСАДЬБА", "ДОМ", "ЗДАНИЕ", "ШТАБ-КВАРТИРА", "ЖЕЛЕЗНОДОРОЖНЫЙ ВОКЗАЛ", "ВОКЗАЛ", "АВТОВОКЗАЛ", "АЭРОПОРТ", "АЭРОДРОМ"]: 
             t = Termin()
-            t.initByNormalText(s, MorphLang())
+            t.initByNormalText(s, None)
             t.tag = NamedEntityKind.BUILDING
             NamedItemToken.__m_types.add(t)
         for s in ["КРЕМЛЬ", "КАПИТОЛИЙ", "БЕЛЫЙ ДОМ"]: 
             t = Termin()
-            t.initByNormalText(s, MorphLang())
+            t.initByNormalText(s, None)
             t.tag = NamedEntityKind.BUILDING
             NamedItemToken.__m_names.add(t)
         t = Termin._new118("МЕЖДУНАРОДНАЯ КОСМИЧЕСКАЯ СТАНЦИЯ", NamedEntityKind.BUILDING)

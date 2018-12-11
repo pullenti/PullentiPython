@@ -3,8 +3,11 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 import typing
-from pullenti.ner.titlepage.internal.PersonRelation import PersonRelation
 
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
+from pullenti.ner.titlepage.TitlePageReferent import TitlePageReferent
+from pullenti.ner.titlepage.internal.PersonRelation import PersonRelation
 
 class PersonRelations:
     
@@ -34,7 +37,6 @@ class PersonRelations:
     
     @property
     def rel_types(self) -> typing.List['Types']:
-        from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
         res = list()
         res.append(TitleItemToken.Types.WORKER)
         res.append(TitleItemToken.Types.BOSS)
@@ -46,8 +48,6 @@ class PersonRelations:
         return res
     
     def getAttrNameForType(self, typ : 'Types') -> str:
-        from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
-        from pullenti.ner.titlepage.TitlePageReferent import TitlePageReferent
         if (typ == TitleItemToken.Types.WORKER): 
             return TitlePageReferent.ATTR_AUTHOR
         if (typ == TitleItemToken.Types.BOSS): 
@@ -65,8 +65,6 @@ class PersonRelations:
         return None
     
     def calcTypFromAttrs(self, pers : 'PersonReferent') -> 'Types':
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
         for a in pers.slots: 
             if (a.type_name == PersonReferent.ATTR_ATTR): 
                 s = str(a.value)

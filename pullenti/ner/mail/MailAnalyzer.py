@@ -4,11 +4,21 @@
 
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.person.internal.EpNerPersonInternalResourceHelper import EpNerPersonInternalResourceHelper
-from pullenti.ner.mail.MailKind import MailKind
-from pullenti.ner.core.GetTextAttr import GetTextAttr
 
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.Referent import Referent
+from pullenti.ner.person.internal.EpNerPersonInternalResourceHelper import EpNerPersonInternalResourceHelper
+from pullenti.ner.mail.internal.MetaLetter import MetaLetter
+from pullenti.ner.mail.MailKind import MailKind
+from pullenti.ner.mail.MailReferent import MailReferent
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.mail.internal.MailLine import MailLine
+from pullenti.ner.core.MiscHelper import MiscHelper
 
 class MailAnalyzer(Analyzer):
     """ Семантический анализатор анализа писем (блоков писем) """
@@ -32,18 +42,15 @@ class MailAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.mail.internal.MetaLetter import MetaLetter
         return [MetaLetter._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.mail.internal.MetaLetter import MetaLetter
         res = dict()
         res[MetaLetter.IMAGE_ID] = EpNerPersonInternalResourceHelper.getBytes("mail.png")
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.mail.MailReferent import MailReferent
         if (type0_ == MailReferent.OBJ_TYPENAME): 
             return MailReferent()
         return None
@@ -62,11 +69,6 @@ class MailAnalyzer(Analyzer):
         return 1
     
     def process(self, kit : 'AnalysisKit') -> None:
-        from pullenti.ner.mail.internal.MailLine import MailLine
-        from pullenti.ner.mail.MailReferent import MailReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.person.PersonReferent import PersonReferent
         lines = list()
         t = kit.first_token
         first_pass3043 = True
@@ -263,12 +265,15 @@ class MailAnalyzer(Analyzer):
                                 mail_._addRef(r, 0)
                         i += 1
     
+    __m_inited = None
+    
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.mail.internal.MailLine import MailLine
-        from pullenti.ner.ProcessorService import ProcessorService
+        if (MailAnalyzer.__m_inited): 
+            return
+        MailAnalyzer.__m_inited = True
         try: 
+            MetaLetter.initialize()
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             MailLine.initialize()
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False

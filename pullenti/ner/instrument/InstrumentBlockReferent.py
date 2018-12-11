@@ -6,15 +6,17 @@ import io
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Referent import Referent
-from pullenti.ner.instrument.InstrumentKind import InstrumentKind
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.instrument.InstrumentKind import InstrumentKind
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.instrument.internal.MetaInstrumentBlock import MetaInstrumentBlock
 
 class InstrumentBlockReferent(Referent):
     """ Представление нормативно-правового документа или его части """
     
     def __init__(self, typename : str=None) -> None:
-        from pullenti.ner.instrument.internal.MetaInstrumentBlock import MetaInstrumentBlock
         super().__init__(Utils.ifNotNull(typename, InstrumentBlockReferent.OBJ_TYPENAME))
         self.__m_children = None;
         self.instance_of = MetaInstrumentBlock.GLOBAL_META
@@ -46,8 +48,6 @@ class InstrumentBlockReferent(Referent):
     ATTR_SUB3NUMBER = "ADDTHIRDNUMBER"
     
     def toString(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
-        from pullenti.ner.instrument.internal.MetaInstrumentBlock import MetaInstrumentBlock
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
         res = io.StringIO()
         ki = self.kind
         str0_ = (Utils.asObjectOrNull(MetaInstrumentBlock.GLOBAL_META.kind_feature.convertInnerValueToOuterValue(Utils.enumToString(ki), lang), str))

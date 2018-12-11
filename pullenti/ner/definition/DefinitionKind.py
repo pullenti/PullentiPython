@@ -4,13 +4,12 @@
 
 from enum import IntEnum
 
-
 class DefinitionKind(IntEnum):
     """ Тип определения """
     UNDEFINED = 0
-    ASSERTATION = 0 + 1
-    DEFINITION = (0 + 1) + 1
-    NEGATION = ((0 + 1) + 1) + 1
+    ASSERTATION = 1
+    DEFINITION = 2
+    NEGATION = 3
     
     @classmethod
     def has_value(cls, value):

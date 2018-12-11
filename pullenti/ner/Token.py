@@ -5,11 +5,11 @@
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.CharsInfo import CharsInfo
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.MorphCollection import MorphCollection
 
 class Token:
     """ Базовый класс для всех токенов """
@@ -60,7 +60,6 @@ class Token:
     @property
     def morph(self) -> 'MorphCollection':
         """ Морфологическая информация """
-        from pullenti.ner.MorphCollection import MorphCollection
         if (self.__m_morph is None): 
             self.__m_morph = MorphCollection()
         return self.__m_morph
@@ -260,37 +259,11 @@ class Token:
     @property
     def is_and(self) -> bool:
         """ Это соединительный союз И (на всех языках) """
-        from pullenti.ner.TextToken import TextToken
-        if (not self.morph.class0_.is_conjunction): 
-            if (self.length_char == 1 and self.isChar('&')): 
-                return True
-            return False
-        tt = Utils.asObjectOrNull(self, TextToken)
-        if (tt is None): 
-            return False
-        val = tt.term
-        if (val == "И" or val == "AND" or val == "UND"): 
-            return True
-        if (tt.morph.language.is_ua): 
-            if (val == "І" or val == "ТА"): 
-                return True
         return False
     
     @property
     def is_or(self) -> bool:
         """ Это соединительный союз ИЛИ (на всех языках) """
-        from pullenti.ner.TextToken import TextToken
-        if (not self.morph.class0_.is_conjunction): 
-            return False
-        tt = Utils.asObjectOrNull(self, TextToken)
-        if (tt is None): 
-            return False
-        val = tt.term
-        if (val == "ИЛИ" or val == "OR"): 
-            return True
-        if (tt.morph.language.is_ua): 
-            if (val == "АБО"): 
-                return True
         return False
     
     @property
@@ -310,6 +283,8 @@ class Token:
             ch('char'): проверяемый символ
         
         """
+        if (self.begin_char != self.end_char): 
+            return False
         return self.kit.sofa.text[self.begin_char] == ch
     
     def isCharOf(self, chars_ : str) -> bool:
@@ -319,25 +294,17 @@ class Token:
             chars_(str): строка возможных символов
         
         """
-        from pullenti.ner.ReferentToken import ReferentToken
-        if (isinstance(self, ReferentToken)): 
+        if (self.begin_char != self.end_char): 
             return False
         return chars_.find(self.kit.sofa.text[self.begin_char]) >= 0
     
     def isValue(self, term : str, termua : str=None) -> bool:
-        from pullenti.ner.MetaToken import MetaToken
-        if (isinstance(self, MetaToken)): 
-            return (Utils.asObjectOrNull(self, MetaToken)).begin_token.isValue(term, termua)
         return False
     
     @property
     def is_letters(self) -> bool:
         """ Признак того, что это буквенный текстовой токен (TextToken) """
-        from pullenti.ner.TextToken import TextToken
-        tt = Utils.asObjectOrNull(self, TextToken)
-        if (tt is None): 
-            return False
-        return str.isalpha(tt.term[0])
+        return False
     
     @property
     def is_number(self) -> bool:
@@ -351,39 +318,16 @@ class Token:
     
     def getReferent(self) -> 'Referent':
         """ Ссылка на сущность (для ReferentToken) """
-        from pullenti.ner.ReferentToken import ReferentToken
-        if (not ((isinstance(self, ReferentToken)))): 
-            return None
-        return (Utils.asObjectOrNull(self, ReferentToken)).referent
+        return None
     
     def getReferents(self) -> typing.List['Referent']:
         """ Получить список ссылок на все сущности, скрывающиеся под элементом
          (дело в том, что одни сущности могут поглощать дркгие, например, адрес поглотит город)
         
         """
-        from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        rt = Utils.asObjectOrNull(self, MetaToken)
-        if (rt is None): 
-            return None
-        res = list()
-        if ((isinstance(rt, ReferentToken)) and (Utils.asObjectOrNull(rt, ReferentToken)).referent is not None): 
-            res.append((Utils.asObjectOrNull(rt, ReferentToken)).referent)
-        t = rt.begin_token
-        first_pass3178 = True
-        while True:
-            if first_pass3178: first_pass3178 = False
-            else: t = t.next0_
-            if (not (t is not None and t.end_char <= self.end_char)): break
-            li = t.getReferents()
-            if (li is None): 
-                continue
-            for r in li: 
-                if (not r in res): 
-                    res.append(r)
-        return res
+        return None
     
-    def getNormalCaseText(self, mc : 'MorphClass'=MorphClass(), single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def getNormalCaseText(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         """ Получить связанный с токеном текст в именительном падеже
         
         Args:
@@ -411,19 +355,10 @@ class Token:
             cla: 
         
         """
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        tt = Utils.asObjectOrNull(self, TextToken)
-        if (tt is None): 
-            return self.morph.class0_
-        res = MorphClass()
-        for wf in tt.morph.items: 
-            if ((isinstance(wf, MorphWordForm)) and (Utils.asObjectOrNull(wf, MorphWordForm)).is_in_dictionary): 
-                res |= wf.class0_
-        return res
+        return self.morph.class0_
     
     def _serialize(self, stream : io.IOBase) -> None:
-        from pullenti.ner.MorphCollection import MorphCollection
+        from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         SerializerHelper.serializeInt(stream, self.begin_char)
         SerializerHelper.serializeInt(stream, self.end_char)
         SerializerHelper.serializeInt(stream, self.__m_attrs)
@@ -433,8 +368,7 @@ class Token:
         self.__m_morph._serialize(stream)
     
     def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit') -> None:
-        from pullenti.morph.CharsInfo import CharsInfo
-        from pullenti.ner.MorphCollection import MorphCollection
+        from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         self.kit = kit_
         self.begin_char = SerializerHelper.deserializeInt(stream)
         self.end_char = SerializerHelper.deserializeInt(stream)

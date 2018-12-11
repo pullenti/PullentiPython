@@ -8,38 +8,65 @@ import typing
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.decree.DecreeKind import DecreeKind
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.org.OrgProfile import OrgProfile
-from pullenti.ner.person.PersonPropertyKind import PersonPropertyKind
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphGender import MorphGender
 
+from pullenti.ner.decree.internal.PartToken import PartToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.person.PersonPropertyKind import PersonPropertyKind
+from pullenti.ner.denomination.DenominationReferent import DenominationReferent
+from pullenti.ner.date.DateRangeReferent import DateRangeReferent
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.Explanatory import Explanatory
+from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.ner.core.NumberExToken import NumberExToken
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.mail.internal.MailLine import MailLine
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.org.OrgProfile import OrgProfile
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.decree.DecreeKind import DecreeKind
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.decree.DecreeAnalyzer import DecreeAnalyzer
+from pullenti.ner.decree.internal.DecreeChangeToken import DecreeChangeToken
 
 class DecreeToken(MetaToken):
     """ Примитив, из которых состоит декрет """
     
     class ItemType(IntEnum):
         TYP = 0
-        OWNER = 0 + 1
-        DATE = (0 + 1) + 1
-        EDITION = ((0 + 1) + 1) + 1
-        NUMBER = (((0 + 1) + 1) + 1) + 1
-        NAME = ((((0 + 1) + 1) + 1) + 1) + 1
-        STDNAME = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
-        TERR = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        ORG = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        UNKNOWN = ((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        MISC = (((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        DECREEREF = ((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        DATERANGE = (((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        BETWEEN = ((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        READING = (((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        OWNER = 1
+        DATE = 2
+        EDITION = 3
+        NUMBER = 4
+        NAME = 5
+        STDNAME = 6
+        TERR = 7
+        ORG = 8
+        UNKNOWN = 9
+        MISC = 10
+        DECREEREF = 11
+        DATERANGE = 12
+        BETWEEN = 13
+        READING = 14
         
         @classmethod
         def has_value(cls, value):
@@ -80,15 +107,6 @@ class DecreeToken(MetaToken):
             indFrom: 
         
         """
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.decree.internal.DecreeChangeToken import DecreeChangeToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         if (t is None): 
             return None
         if (t.isValue("НАЗВАННЫЙ", None)): 
@@ -110,14 +128,14 @@ class DecreeToken(MetaToken):
                     if ("ЗАКОН" in res.value or not ((isinstance(res.end_token, TextToken)))): 
                         res.value = "ПРОЕКТ ЗАКОНА"
                     else: 
-                        res.value = ("ПРОЕКТ " + (Utils.asObjectOrNull(res.end_token, TextToken)).term)
+                        res.value = ("ПРОЕКТ " + (res.end_token).term)
                     res.begin_token = t
                     return res
                 elif (res is not None and res.typ == DecreeToken.ItemType.NUMBER): 
                     res1 = DecreeToken.__TryAttach(res.end_token.next0_, prev, 0, False)
                     if (res1 is not None and res1.typ == DecreeToken.ItemType.TYP and (isinstance(res1.end_token, TextToken))): 
                         res = DecreeToken._new842(t, t, DecreeToken.ItemType.TYP)
-                        res.value = ("ПРОЕКТ " + (Utils.asObjectOrNull(res1.end_token, TextToken)).term)
+                        res.value = ("ПРОЕКТ " + (res1.end_token).term)
                         return res
             if (t.isValue("ИНФОРМАЦИЯ", "ІНФОРМАЦІЯ") and (t.whitespaces_after_count < 3)): 
                 dts = DecreeToken.tryAttachList(t.next0_, None, 10, False)
@@ -181,7 +199,7 @@ class DecreeToken(MetaToken):
                     res.children.append(ddd)
                     res.end_token = ddd.end_token
                     continue
-                if ((Utils.asObjectOrNull(tt, NumberToken)).value > (1970)): 
+                if ((tt).value > (1970)): 
                     break
                 if (tt.is_whitespace_after): 
                     pass
@@ -296,22 +314,6 @@ class DecreeToken(MetaToken):
     
     @staticmethod
     def __TryAttach(t : 'Token', prev : 'DecreeToken', lev : int, must_by_typ : bool=False) -> 'DecreeToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.denomination.DenominationReferent import DenominationReferent
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
         if (t is None or lev > 4): 
             return None
         if (prev is not None and prev.typ == DecreeToken.ItemType.TYP): 
@@ -371,7 +373,7 @@ class DecreeToken(MetaToken):
                 if (isinstance(t11.getReferent(), GeoReferent)): 
                     res1.ref = (Utils.asObjectOrNull(t11, ReferentToken))
                 elif (isinstance(t11, MetaToken)): 
-                    t11 = (Utils.asObjectOrNull(t11, MetaToken)).end_token
+                    t11 = (t11).end_token
                 if (isinstance(t11.getReferent(), GeoReferent)): 
                     res1.ref = (Utils.asObjectOrNull(t11, ReferentToken))
                 elif (BracketHelper.isBracket(t11, False) and (isinstance(t11.previous.getReferent(), GeoReferent))): 
@@ -382,8 +384,8 @@ class DecreeToken(MetaToken):
                 return DecreeToken._new851(t, t, DecreeToken.ItemType.TERR, Utils.asObjectOrNull(t, ReferentToken), r.toString(True, t.kit.base_language, 0))
             if (isinstance(r, DateReferent)): 
                 if (prev is not None and prev.typ == DecreeToken.ItemType.TYP and prev.typ_kind == DecreeKind.STANDARD): 
-                    ree = DecreeToken.tryAttach((Utils.asObjectOrNull(t, ReferentToken)).begin_token, prev, False)
-                    if ((ree is not None and ree.typ == DecreeToken.ItemType.NUMBER and ree.num_year > 0) and ((ree.end_token == (Utils.asObjectOrNull(t, ReferentToken)).end_token or ree.end_token.isChar('*')))): 
+                    ree = DecreeToken.tryAttach((t).begin_token, prev, False)
+                    if ((ree is not None and ree.typ == DecreeToken.ItemType.NUMBER and ree.num_year > 0) and ((ree.end_token == (t).end_token or ree.end_token.isChar('*')))): 
                         if ((isinstance(t.next0_, TextToken)) and t.next0_.isChar('*')): 
                             t = t.next0_
                         ree.begin_token = ree.end_token = t
@@ -503,7 +505,7 @@ class DecreeToken(MetaToken):
                                 if (year < 1): 
                                     if (t11.next0_ is not None and t11.next0_.is_hiphen): 
                                         if (isinstance(t11.next0_.next0_, NumberToken)): 
-                                            nn = (Utils.asObjectOrNull(t11.next0_.next0_, NumberToken)).value
+                                            nn = (t11.next0_.next0_).value
                                             if (nn > 50 and nn <= 99): 
                                                 nn += 1900
                                             if (nn >= 1950 and nn <= datetime.datetime.now().year): 
@@ -513,7 +515,7 @@ class DecreeToken(MetaToken):
                                 ok = True
                             if (ok): 
                                 return DecreeToken._new867(t, t11, DecreeToken.ItemType.NUMBER, valnum, year)
-                    val = (Utils.asObjectOrNull(t, NumberToken)).value
+                    val = (t).value
                     if (val > 1910 and (val < 2030)): 
                         return DecreeToken._new845(t, t, DecreeToken.ItemType.DATE, str(val))
                 rt = t.kit.processReferent("PERSON", t)
@@ -676,7 +678,7 @@ class DecreeToken(MetaToken):
             if (npt is not None and npt.internal_noun is not None): 
                 npt = (None)
             if ((npt is not None and dt is not None and dt.typ == DecreeToken.ItemType.TYP) and dt.value == "КОДЕКС"): 
-                dt.value = npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False)
+                dt.value = npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False)
                 dt.begin_token = t
                 dt.is_doubtful = True
                 return dt
@@ -684,7 +686,7 @@ class DecreeToken(MetaToken):
                 dt = DecreeToken._new842(t, npt.end_token, DecreeToken.ItemType.TYP)
                 dt.value = npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False)
                 if (t.getMorphClassInDictionary().is_verb): 
-                    dt.value = npt.end_token.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                    dt.value = npt.end_token.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                 return dt
             try_npt = False
             if (not t.chars.is_all_lower): 
@@ -697,16 +699,16 @@ class DecreeToken(MetaToken):
             if (try_npt): 
                 if (npt is not None): 
                     if (npt.end_token.isValue("ГАЗЕТА", None) or npt.end_token.isValue("БЮЛЛЕТЕНЬ", "БЮЛЕТЕНЬ")): 
-                        return DecreeToken._new870(t, npt.end_token, DecreeToken.ItemType.TYP, npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False), npt.morph)
+                        return DecreeToken._new870(t, npt.end_token, DecreeToken.ItemType.TYP, npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False), npt.morph)
                     if (len(npt.adjectives) > 0 and npt.end_token.getMorphClassInDictionary().is_noun): 
                         tok = DecreeToken.M_TERMINS.tryParse(npt.end_token, TerminParseAttr.NO)
                         if ((tok) is not None): 
                             if (npt.begin_token.isValue("ОБЩИЙ", "ЗАГАЛЬНИЙ")): 
                                 return None
-                            return DecreeToken._new876(npt.begin_token, tok.end_token, npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False), npt.morph)
+                            return DecreeToken._new876(npt.begin_token, tok.end_token, npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False), npt.morph)
                     if (prev is not None and prev.typ == DecreeToken.ItemType.TYP): 
                         if (npt.end_token.isValue("КОЛЛЕГИЯ", "КОЛЕГІЯ")): 
-                            res1 = DecreeToken._new870(t, npt.end_token, DecreeToken.ItemType.OWNER, npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False), npt.morph)
+                            res1 = DecreeToken._new870(t, npt.end_token, DecreeToken.ItemType.OWNER, npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False), npt.morph)
                             t = npt.end_token.next0_
                             first_pass2854 = True
                             while True:
@@ -830,7 +832,7 @@ class DecreeToken(MetaToken):
             return None
         if (prev is not None and prev.typ == DecreeToken.ItemType.TYP): 
             if (t.isValue("ПРАВИТЕЛЬСТВО", "УРЯД") or t.isValue("ПРЕЗИДЕНТ", None)): 
-                return DecreeToken._new887(t, t, DecreeToken.ItemType.OWNER, t.morph, t.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False))
+                return DecreeToken._new887(t, t, DecreeToken.ItemType.OWNER, t.morph, t.getNormalCaseText(None, False, MorphGender.UNDEFINED, False))
         npt2 = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.PARSEPREPOSITION, 0)
         if (npt2 is not None): 
             if (npt2.end_token.isValue("ПОЗИЦИЯ", None)): 
@@ -881,7 +883,7 @@ class DecreeToken(MetaToken):
                         if (tmp.tell() > 0): 
                             print(" {0}".format(npt.getSourceText()), end="", file=tmp, flush=True)
                         else: 
-                            print(npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False), end="", file=tmp)
+                            print(npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False), end="", file=tmp)
                         tt = npt.end_token
                         t1 = tt
                     elif (tmp.tell() > 0): 
@@ -892,7 +894,7 @@ class DecreeToken(MetaToken):
                         if (tt == t): 
                             s = tt.getNormalCaseText(MorphClass.NOUN, False, MorphGender.UNDEFINED, False)
                         if (s is None): 
-                            s = (Utils.asObjectOrNull(tt, TextToken)).term
+                            s = (tt).term
                         print(s, end="", file=tmp)
                         t1 = tt
                     tt = tt.next0_
@@ -942,28 +944,25 @@ class DecreeToken(MetaToken):
                 nn.value = MiscHelper.getTextValue(t, t1, GetTextAttr.NO)
                 return nn
         if ((isinstance(t, TextToken)) and t.length_char == 1 and t.next0_ is not None): 
-            if (((Utils.asObjectOrNull(t, TextToken)).term == "Б" and t.next0_.isCharOf("\\/") and (isinstance(t.next0_.next0_, TextToken))) and (Utils.asObjectOrNull(t.next0_.next0_, TextToken)).term == "Н"): 
+            if (((t).term == "Б" and t.next0_.isCharOf("\\/") and (isinstance(t.next0_.next0_, TextToken))) and (t.next0_.next0_).term == "Н"): 
                 return DecreeToken._new845(t, t.next0_.next0_, DecreeToken.ItemType.NUMBER, "Б/Н")
         return None
     
     @staticmethod
     def __isJusNumber(t : 'Token') -> bool:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             return False
         if (tt.term != "A" and tt.term != "А"): 
             return False
         if ((isinstance(t.next0_, NumberToken)) and (t.whitespaces_after_count < 2)): 
-            if ((Utils.asObjectOrNull(t.next0_, NumberToken)).value > (20)): 
+            if ((t.next0_).value > (20)): 
                 return True
             return False
         return False
     
     @staticmethod
     def __isEdition(t : 'Token') -> 'Token':
-        from pullenti.ner.NumberToken import NumberToken
         if (t is None): 
             return None
         if (t.morph.class0_.is_preposition and t.next0_ is not None): 
@@ -983,9 +982,6 @@ class DecreeToken(MetaToken):
     
     @staticmethod
     def _findBackTyp(t : 'Token', type_name : str) -> 'ReferentToken':
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         if (t.isValue("НАСТОЯЩИЙ", "СПРАВЖНІЙ")): 
@@ -1004,7 +1000,7 @@ class DecreeToken(MetaToken):
                 break
             d = Utils.asObjectOrNull(tt.getReferent(), DecreeReferent)
             if (d is None and (isinstance(tt.getReferent(), DecreePartReferent))): 
-                d = (Utils.asObjectOrNull(tt.getReferent(), DecreePartReferent)).owner
+                d = (tt.getReferent()).owner
             if (d is None): 
                 continue
             if (d.typ0 == type_name or d.typ == type_name): 
@@ -1013,12 +1009,6 @@ class DecreeToken(MetaToken):
     
     @staticmethod
     def __tryAttachNumber(t : 'Token', tmp : io.StringIO, after_num : bool) -> 'Token':
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.denomination.DenominationReferent import DenominationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         t2 = t
         res = None
         digs = False
@@ -1127,9 +1117,9 @@ class DecreeToken(MetaToken):
             inoutres894 = Utils.tryParseInt(Utils.toStringStringIO(tmp), wrapmin893)
             min0_ = wrapmin893.value
             if (inoutres894): 
-                if (min0_ < (Utils.asObjectOrNull(res.next0_.next0_, NumberToken)).value): 
+                if (min0_ < (res.next0_.next0_).value): 
                     res = res.next0_.next0_
-                    print("-{0}".format((Utils.asObjectOrNull(res, NumberToken)).value), end="", file=tmp, flush=True)
+                    print("-{0}".format((res).value), end="", file=tmp, flush=True)
         if (res.next0_ is not None and not res.is_whitespace_after and res.next0_.isChar('(')): 
             cou = 0
             tmp2 = io.StringIO()
@@ -1154,7 +1144,7 @@ class DecreeToken(MetaToken):
                     Utils.setCharAtStringIO(tmp, tmp.tell() - 1, 'З')
         if ((isinstance(res.next0_, TextToken)) and (res.whitespaces_after_count < 2) and res.next0_.chars.is_all_upper): 
             if (res.next0_.isValue("РД", None) or res.next0_.isValue("ПД", None)): 
-                print(" {0}".format((Utils.asObjectOrNull(res.next0_, TextToken)).term), end="", file=tmp, flush=True)
+                print(" {0}".format((res.next0_).term), end="", file=tmp, flush=True)
                 res = res.next0_
         if ((isinstance(res.next0_, TextToken)) and res.next0_.isChar('*')): 
             res = res.next0_
@@ -1171,10 +1161,6 @@ class DecreeToken(MetaToken):
         Returns:
             typing.List[DecreeToken]: Список примитивов
         """
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.NumberExToken import NumberExToken
         p = DecreeToken.tryAttach(t, prev, must_start_by_typ)
         if (p is None): 
             return None
@@ -1478,20 +1464,6 @@ class DecreeToken(MetaToken):
     
     @staticmethod
     def tryAttachName(t : 'Token', typ_ : str, very_probable : bool=False, in_title_doc_ref : bool=False) -> 'DecreeToken':
-        from pullenti.ner.mail.internal.MailLine import MailLine
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.morph.Explanatory import Explanatory
         if (t is None): 
             return None
         if (t.isChar(';')): 
@@ -1525,7 +1497,7 @@ class DecreeToken(MetaToken):
                     if (re is not None and re.type_name == "URI"): 
                         return None
                     if (t.next0_.chars.is_letter): 
-                        if (t.next0_.chars.is_all_lower or (((isinstance(t.next0_, TextToken)) and (Utils.asObjectOrNull(t.next0_, TextToken)).is_pure_verb))): 
+                        if (t.next0_.chars.is_all_lower or (((isinstance(t.next0_, TextToken)) and (t.next0_).is_pure_verb))): 
                             return None
                     t1 = br.end_token
                     tt1 = DecreeToken._tryAttachStdChangeName(t.next0_)
@@ -1659,7 +1631,7 @@ class DecreeToken(MetaToken):
             tt = t1
             if (npt.noun.isValue("НАЛОГОПЛАТЕЛЬЩИК", None)): 
                 ttn = MiscHelper.checkNumberPrefix(tt.next0_)
-                if ((isinstance(ttn, NumberToken)) and (Utils.asObjectOrNull(ttn, NumberToken)).value == (1)): 
+                if ((isinstance(ttn, NumberToken)) and (ttn).value == (1)): 
                     t1 = ttn
                     tt = t1
         if (tt == t): 
@@ -1675,21 +1647,10 @@ class DecreeToken(MetaToken):
     
     @staticmethod
     def _tryAttachStdChangeName(t : 'Token') -> 'Token':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.decree.DecreeAnalyzer import DecreeAnalyzer
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
         if (not ((isinstance(t, TextToken))) or t.next0_ is None): 
             return None
         t0 = t
-        term = (Utils.asObjectOrNull(t, TextToken)).term
+        term = (t).term
         if ((term != "О" and term != "O" and term != "ОБ") and term != "ПРО"): 
             return None
         t = t.next0_
@@ -1776,9 +1737,6 @@ class DecreeToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (DecreeToken.M_TERMINS is not None): 
             return
         DecreeToken.M_TERMINS = TerminCollection()
@@ -2071,8 +2029,6 @@ class DecreeToken(MetaToken):
     
     @staticmethod
     def isKeyword(t : 'Token', is_misc_type_only : bool=False) -> 'Token':
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.decree.internal.PartToken import PartToken
         if (t is None): 
             return None
         tok = DecreeToken.M_KEYWORDS.tryParse(t, TerminParseAttr.NO)
@@ -2119,7 +2075,6 @@ class DecreeToken(MetaToken):
             typ_(str): 
             acronym(str): 
         """
-        from pullenti.ner.core.Termin import Termin
         t = Termin._new144(typ_, DecreeToken.ItemType.TYP, acronym)
         DecreeToken.M_TERMINS.add(t)
         DecreeToken.M_KEYWORDS.add(Termin._new118(typ_, DecreeToken.ItemType.TYP))

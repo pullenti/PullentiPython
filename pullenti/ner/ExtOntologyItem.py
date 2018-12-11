@@ -4,7 +4,6 @@
 
 from pullenti.unisharp.Utils import Utils
 
-
 class ExtOntologyItem:
     """ Элемент внешней онтологии """
     

@@ -4,11 +4,24 @@
 
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 
+from pullenti.ner.uri.UriReferent import UriReferent
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.Token import Token
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.Referent import Referent
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.bank.internal.MetaBank import MetaBank
+from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
+from pullenti.ner.bank.BankDataReferent import BankDataReferent
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
 class BankAnalyzer(Analyzer):
     
@@ -35,18 +48,15 @@ class BankAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.bank.internal.MetaBank import MetaBank
         return [MetaBank._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.bank.internal.MetaBank import MetaBank
         res = dict()
         res[MetaBank.IMAGE_ID] = EpNerBankInternalResourceHelper.getBytes("dollar.png")
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.bank.BankDataReferent import BankDataReferent
         if (type0_ == BankDataReferent.OBJ_TYPENAME): 
             return BankDataReferent()
         return None
@@ -56,7 +66,6 @@ class BankAnalyzer(Analyzer):
         return ["URI", "ORGANIZATION"]
     
     def process(self, kit : 'AnalysisKit') -> None:
-        from pullenti.ner.ReferentToken import ReferentToken
         ad = kit.getAnalyzerData(self)
         t = kit.first_token
         while t is not None: 
@@ -86,12 +95,6 @@ class BankAnalyzer(Analyzer):
             return False
     
     def __tryAttach(self, t : 'Token', key_word : bool) -> 'ReferentToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.bank.BankDataReferent import BankDataReferent
         if (t is None): 
             return None
         t0 = t
@@ -236,11 +239,9 @@ class BankAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.ProcessorService import ProcessorService
         if (BankAnalyzer.__m_ontology is not None): 
             return
+        MetaBank.initialize()
         BankAnalyzer.__m_ontology = TerminCollection()
         t = Termin("БАНКОВСКИЕ РЕКВИЗИТЫ", None, True)
         t.addVariant("ПЛАТЕЖНЫЕ РЕКВИЗИТЫ", False)

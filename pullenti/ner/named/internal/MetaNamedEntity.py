@@ -3,18 +3,19 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.ReferentClass import ReferentClass
 
+from pullenti.ner.ReferentClass import ReferentClass
 
 class MetaNamedEntity(ReferentClass):
     
-    def __init__(self) -> None:
+    @staticmethod
+    def initialize() -> None:
         from pullenti.ner.named.NamedEntityReferent import NamedEntityReferent
-        super().__init__()
-        self.addFeature(NamedEntityReferent.ATTR_KIND, "Класс", 1, 1)
-        self.addFeature(NamedEntityReferent.ATTR_TYPE, "Тип", 0, 0)
-        self.addFeature(NamedEntityReferent.ATTR_NAME, "Наименование", 0, 0)
-        self.addFeature(NamedEntityReferent.ATTR_REF, "Ссылка", 0, 1)
+        MetaNamedEntity.GLOBAL_META = MetaNamedEntity()
+        MetaNamedEntity.GLOBAL_META.addFeature(NamedEntityReferent.ATTR_KIND, "Класс", 1, 1)
+        MetaNamedEntity.GLOBAL_META.addFeature(NamedEntityReferent.ATTR_TYPE, "Тип", 0, 0)
+        MetaNamedEntity.GLOBAL_META.addFeature(NamedEntityReferent.ATTR_NAME, "Наименование", 0, 0)
+        MetaNamedEntity.GLOBAL_META.addFeature(NamedEntityReferent.ATTR_REF, "Ссылка", 0, 1)
     
     @property
     def name(self) -> str:
@@ -30,14 +31,7 @@ class MetaNamedEntity(ReferentClass):
     def getImageId(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.named.NamedEntityReferent import NamedEntityReferent
         if (isinstance(obj, NamedEntityReferent)): 
-            return Utils.enumToString((Utils.asObjectOrNull(obj, NamedEntityReferent)).kind)
+            return Utils.enumToString((obj).kind)
         return MetaNamedEntity.IMAGE_ID
     
     GLOBAL_META = None
-    
-    # static constructor for class MetaNamedEntity
-    @staticmethod
-    def _static_ctor():
-        MetaNamedEntity.GLOBAL_META = MetaNamedEntity()
-
-MetaNamedEntity._static_ctor()

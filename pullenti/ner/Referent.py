@@ -7,11 +7,12 @@ import io
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.Slot import Slot
+
 from pullenti.ner.core.internal.TextsCompareType import TextsCompareType
 from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
-
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.TextAnnotation import TextAnnotation
+from pullenti.ner.ProcessorService import ProcessorService
 
 class Referent:
     """ Базовый класс для всех сущностей """
@@ -45,7 +46,7 @@ class Referent:
     def __str__(self) -> str:
         return self.toString(False, MorphLang.UNKNOWN, 0)
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         """ Специализированное строковое представление сущности
         
         Args:
@@ -84,6 +85,7 @@ class Referent:
             clear_old_value(bool): если true и слот существует, то значение перезапишется
         
         """
+        from pullenti.ner.Slot import Slot
         if (clear_old_value): 
             for i in range(len(self.slots) - 1, -1, -1):
                 if (self.slots[i].type_name == attr_name): 
@@ -140,7 +142,7 @@ class Referent:
             return True
         if ((isinstance(val1, Referent)) and (isinstance(val2, Referent))): 
             if (use_can_be_equals_for_referents): 
-                return (Utils.asObjectOrNull(val1, Referent)).canBeEquals(Utils.asObjectOrNull(val2, Referent), Referent.EqualType.DIFFERENTTEXTS)
+                return (val1).canBeEquals(Utils.asObjectOrNull(val2, Referent), Referent.EqualType.DIFFERENTTEXTS)
             else: 
                 return False
         if (isinstance(val1, str)): 
@@ -233,7 +235,6 @@ class Referent:
         return res
     
     def addOccurenceOfRefTok(self, rt : 'ReferentToken') -> None:
-        from pullenti.ner.TextAnnotation import TextAnnotation
         self.addOccurence(TextAnnotation._new727(rt.kit.sofa, rt.begin_char, rt.end_char, rt.referent))
     
     def addOccurence(self, anno : 'TextAnnotation') -> None:
@@ -242,7 +243,6 @@ class Referent:
         Args:
             anno(TextAnnotation): 
         """
-        from pullenti.ner.TextAnnotation import TextAnnotation
         for l_ in self.occurrence: 
             typ = l_._compareWith(anno)
             if (typ == TextsCompareType.NONCOMPARABLE): 
@@ -299,7 +299,7 @@ class Referent:
         return self.__tag
     
     def clone(self) -> 'Referent':
-        from pullenti.ner.ProcessorService import ProcessorService
+        from pullenti.ner.Slot import Slot
         res = ProcessorService.createReferent(self.type_name)
         if (res is None): 
             res = Referent(self.type_name)
@@ -427,8 +427,8 @@ class Referent:
         for s in self.__m_slots: 
             SerializerHelper.serializeString(stream, s.type_name)
             SerializerHelper.serializeInt(stream, s.count)
-            if ((isinstance(s.value, Referent)) and (isinstance((Utils.asObjectOrNull(s.value, Referent)).tag, int))): 
-                SerializerHelper.serializeInt(stream, - ((Utils.asObjectOrNull(s.value, Referent)).tag))
+            if ((isinstance(s.value, Referent)) and (isinstance((s.value).tag, int))): 
+                SerializerHelper.serializeInt(stream, - ((s.value).tag))
             elif (isinstance(s.value, str)): 
                 SerializerHelper.serializeString(stream, Utils.asObjectOrNull(s.value, str))
             elif (s.value is None): 
@@ -448,7 +448,6 @@ class Referent:
                 SerializerHelper.serializeInt(stream, attr)
     
     def deserialize(self, stream : io.IOBase, all0_ : typing.List['Referent'], sofa : 'SourceOfAnalysis') -> None:
-        from pullenti.ner.TextAnnotation import TextAnnotation
         typ = SerializerHelper.deserializeString(stream)
         cou = SerializerHelper.deserializeInt(stream)
         i = 0

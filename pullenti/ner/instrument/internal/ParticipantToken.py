@@ -6,24 +6,47 @@ import io
 import typing
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.instrument.internal.ILTypes import ILTypes
-from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-from pullenti.morph.LanguageHelper import LanguageHelper
 
+from pullenti.ner.instrument.internal.ILTypes import ILTypes
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.decree.internal.DecreeToken import DecreeToken
+from pullenti.ner.instrument.internal.InstrToken import InstrToken
+from pullenti.ner.uri.UriReferent import UriReferent
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.instrument.InstrumentAnalyzer import InstrumentAnalyzer
+from pullenti.ner.phone.PhoneReferent import PhoneReferent
+from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
+from pullenti.ner.bank.BankDataReferent import BankDataReferent
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
+from pullenti.ner.address.AddressReferent import AddressReferent
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.BracketHelper import BracketHelper
 
 class ParticipantToken(MetaToken):
     
     class Kinds(IntEnum):
         UNDEFINED = 0
-        PURE = 0 + 1
-        NAMEDAS = (0 + 1) + 1
-        NAMEDASPARTS = ((0 + 1) + 1) + 1
+        PURE = 1
+        NAMEDAS = 2
+        NAMEDASPARTS = 3
         
         @classmethod
         def has_value(cls, value):
@@ -36,30 +59,15 @@ class ParticipantToken(MetaToken):
         self.parts = None
     
     def __str__(self) -> str:
-        from pullenti.morph.MorphLang import MorphLang
         res = io.StringIO()
         print("{0}: {1}".format(Utils.enumToString(self.kind), Utils.ifNotNull(self.typ, "?")), end="", file=res, flush=True)
         if (self.parts is not None): 
             for p in self.parts: 
-                print("; {0}".format(p.toString(True, MorphLang(), 0)), end="", file=res, flush=True)
+                print("; {0}".format(p.toString(True, None, 0)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
     @staticmethod
     def tryAttach(t : 'Token', p1 : 'InstrumentParticipant'=None, p2 : 'InstrumentParticipant'=None, is_contract : bool=False) -> 'ParticipantToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         if (t is None): 
             return None
         tt = t
@@ -109,7 +117,7 @@ class ParticipantToken(MetaToken):
                         return None
                 elif (t.previous is not None and ((t.previous.isValue("ВЫДАВАТЬ", None) or t.previous.isValue("ВЫДАТЬ", None)))): 
                     return None
-                ttt = (Utils.asObjectOrNull(t, ReferentToken)).begin_token
+                ttt = (t).begin_token
                 while ttt is not None and (ttt.end_char < t.end_char): 
                     if (ttt.isChar('(')): 
                         has_br = True
@@ -130,7 +138,7 @@ class ParticipantToken(MetaToken):
                             if (ParticipantToken.M_ONTOLOGY.tryParse(ttt, TerminParseAttr.NO) is None): 
                                 break
                         re = ParticipantToken._new1481(t, t, ParticipantToken.Kinds.NAMEDAS)
-                        re.typ = npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False)
+                        re.typ = npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False)
                         re.parts = list()
                         re.parts.append(r1)
                         return re
@@ -146,7 +154,7 @@ class ParticipantToken(MetaToken):
                     if first_pass3029: first_pass3029 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
-                    if ((isinstance(ttt, NumberToken)) and (isinstance(ttt.next0_, TextToken)) and (Utils.asObjectOrNull(ttt.next0_, TextToken)).term == "СТОРОНЫ"): 
+                    if ((isinstance(ttt, NumberToken)) and (isinstance(ttt.next0_, TextToken)) and (ttt.next0_).term == "СТОРОНЫ"): 
                         ttt = ttt.next0_
                         end_side = ttt
                         if (ttt.next0_ is not None and ttt.next0_.is_comma): 
@@ -177,7 +185,7 @@ class ParticipantToken(MetaToken):
                         else: 
                             ttok = None
                             if (isinstance(ttt, MetaToken)): 
-                                ttok = ParticipantToken.M_ONTOLOGY.tryParse((Utils.asObjectOrNull(ttt, MetaToken)).begin_token, TerminParseAttr.NO)
+                                ttok = ParticipantToken.M_ONTOLOGY.tryParse((ttt).begin_token, TerminParseAttr.NO)
                             if (ttok is not None): 
                                 typ22 = ttok.termin.canonic_text
                             elif (has_named and ttt.morph.class0_.is_adjective): 
@@ -197,7 +205,7 @@ class ParticipantToken(MetaToken):
                             if (ParticipantToken.M_ONTOLOGY.tryParse(npt.begin_token, TerminParseAttr.NO) is None): 
                                 break
                         re = ParticipantToken._new1481(t, ttt, ParticipantToken.Kinds.NAMEDAS)
-                        re.typ = (Utils.ifNotNull(typ22, npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False)))
+                        re.typ = (Utils.ifNotNull(typ22, npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False)))
                         re.parts = list()
                         re.parts.append(r1)
                         return re
@@ -286,7 +294,7 @@ class ParticipantToken(MetaToken):
                 if (isinstance(tt, NumberToken)): 
                     break
                 if ((isinstance(tt, TextToken)) and (isinstance(tt.previous, TextToken))): 
-                    if (tt.previous.isValue((Utils.asObjectOrNull(tt, TextToken)).term, None)): 
+                    if (tt.previous.isValue((tt).term, None)): 
                         break
             if (BracketHelper.isBracket(tt, False)): 
                 continue
@@ -295,14 +303,14 @@ class ParticipantToken(MetaToken):
                 if (tt.previous.isValue("ЛИЦО", None)): 
                     return None
             if (tok is None): 
-                if (add_typ1 is not None and ((MiscHelper.isNotMoreThanOneError(add_typ1, tt) or ((((isinstance(tt, MetaToken))) and (Utils.asObjectOrNull(tt, MetaToken)).begin_token.isValue(add_typ1, None)))))): 
+                if (add_typ1 is not None and ((MiscHelper.isNotMoreThanOneError(add_typ1, tt) or ((((isinstance(tt, MetaToken))) and (tt).begin_token.isValue(add_typ1, None)))))): 
                     if (typ_ is not None): 
                         if (not ParticipantToken.__isTypesEqual(add_typ1, typ_)): 
                             break
                     typ_ = add_typ1
                     t1 = tt
                     continue
-                if (add_typ2 is not None and ((MiscHelper.isNotMoreThanOneError(add_typ2, tt) or ((((isinstance(tt, MetaToken))) and (Utils.asObjectOrNull(tt, MetaToken)).begin_token.isValue(add_typ2, None)))))): 
+                if (add_typ2 is not None and ((MiscHelper.isNotMoreThanOneError(add_typ2, tt) or ((((isinstance(tt, MetaToken))) and (tt).begin_token.isValue(add_typ2, None)))))): 
                     if (typ_ is not None): 
                         if (not ParticipantToken.__isTypesEqual(add_typ2, typ_)): 
                             break
@@ -351,13 +359,13 @@ class ParticipantToken(MetaToken):
                             elif (tt.isValue("СТОРОНА", None)): 
                                 ok = False
                             if (ok): 
-                                typ_ = (Utils.asObjectOrNull(tt, TextToken)).getLemma()
+                                typ_ = (tt).getLemma()
                                 t1 = tt
                                 continue
                         if (dc.is_adjective): 
                             npt = NounPhraseHelper.tryParse(tt, NounPhraseParseAttr.NO, 0)
                             if (npt is not None and len(npt.adjectives) > 0 and npt.noun.getMorphClassInDictionary().is_noun): 
-                                typ_ = npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False)
+                                typ_ = npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False)
                                 t1 = npt.end_token
                                 continue
                 if (tt == t): 
@@ -381,7 +389,7 @@ class ParticipantToken(MetaToken):
                         break
                     if (tt1.is_newline_before): 
                         break
-                    typ_ = "{0} {1}".format(tok.termin.canonic_text, (Utils.asObjectOrNull(tt1, NumberToken)).value)
+                    typ_ = "{0} {1}".format(tok.termin.canonic_text, (tt1).value)
                     t1 = tt1
                 else: 
                     typ_ = tok.termin.canonic_text
@@ -426,10 +434,6 @@ class ParticipantToken(MetaToken):
     
     @staticmethod
     def tryAttachToExist(t : 'Token', p1 : 'InstrumentParticipant', p2 : 'InstrumentParticipant') -> 'ReferentToken':
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         if (t.begin_char >= 7674 and (t.begin_char < 7680)): 
@@ -473,18 +477,6 @@ class ParticipantToken(MetaToken):
     
     @staticmethod
     def tryAttachRequisites(t : 'Token', cur : 'InstrumentParticipant', other : 'InstrumentParticipant', cant_be_empty : bool=False) -> 'ReferentToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.instrument.internal.InstrToken import InstrToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.phone.PhoneReferent import PhoneReferent
-        from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
-        from pullenti.ner.bank.BankDataReferent import BankDataReferent
         if (t is None or cur is None): 
             return None
         err = 0
@@ -586,18 +578,6 @@ class ParticipantToken(MetaToken):
         return rt
     
     def attachFirst(self, p : 'InstrumentParticipant', min_char : int, max_char : int) -> 'ReferentToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.phone.PhoneReferent import PhoneReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
-        from pullenti.ner.bank.BankDataReferent import BankDataReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.morph.MorphClass import MorphClass
         tt0 = self.begin_token
         refs = list()
         t = tt0.previous
@@ -701,15 +681,6 @@ class ParticipantToken(MetaToken):
     
     @staticmethod
     def __tryAttachContractGround(t : 'Token', ip : 'InstrumentParticipant', can_be_passport : bool=False) -> 'Token':
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.instrument.InstrumentAnalyzer import InstrumentAnalyzer
-        from pullenti.ner.ReferentToken import ReferentToken
         ok = False
         first_pass3034 = True
         while True:
@@ -833,8 +804,6 @@ class ParticipantToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
         if (ParticipantToken.M_ONTOLOGY is not None): 
             return
         ParticipantToken.M_ONTOLOGY = TerminCollection()

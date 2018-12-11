@@ -4,8 +4,11 @@
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.morph.MorphGender import MorphGender
 
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.MiscHelper import MiscHelper
 
 class StatisticCollection:
     """ Поддержка анализа биграммной зависимости токенов в тексте """
@@ -74,7 +77,6 @@ class StatisticCollection:
         self.__m_initials_rev = dict()
     
     def prepare(self, first : 'Token') -> None:
-        from pullenti.ner.TextToken import TextToken
         prev = None
         prevt = None
         t = first
@@ -88,7 +90,7 @@ class StatisticCollection:
             it = None
             if (((isinstance(t, TextToken)) and t.chars.is_letter and t.length_char > 1) and not t.chars.is_all_lower): 
                 it = self.__addToken(Utils.asObjectOrNull(t, TextToken))
-            elif ((((isinstance(t, TextToken)) and (Utils.asObjectOrNull(t, TextToken)).length_char == 1 and t.chars.is_all_upper) and t.next0_ is not None and t.next0_.isChar('.')) and not t.is_whitespace_after): 
+            elif ((((isinstance(t, TextToken)) and (t).length_char == 1 and t.chars.is_all_upper) and t.next0_ is not None and t.next0_.isChar('.')) and not t.is_whitespace_after): 
                 it = self.__addToken(Utils.asObjectOrNull(t, TextToken))
                 t = t.next0_
             if (prev is not None and it is not None): 
@@ -112,9 +114,6 @@ class StatisticCollection:
             t = t.next0_
     
     def __addToken(self, tt : 'TextToken') -> 'WordInfo':
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.ner.TextToken import TextToken
         vars0_ = list()
         vars0_.append(tt.term)
         s = MiscHelper.getAbsoluteNormalValue(tt.term, False)
@@ -156,8 +155,6 @@ class StatisticCollection:
         return res
     
     def __findItem(self, tt : 'TextToken', do_absolute : bool=True) -> 'WordInfo':
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.morph.MorphWordForm import MorphWordForm
         if (tt is None): 
             return None
         wrapres616 = RefOutArgWrapper(None)
@@ -212,7 +209,6 @@ class StatisticCollection:
             di[b1.normal] = 1
     
     def getBigrammInfo(self, t1 : 'Token', t2 : 'Token') -> 'BigrammInfo':
-        from pullenti.ner.TextToken import TextToken
         si1 = self.__findItem(Utils.asObjectOrNull(t1, TextToken), True)
         si2 = self.__findItem(Utils.asObjectOrNull(t2, TextToken), True)
         if (si1 is None or si2 is None): 
@@ -246,7 +242,6 @@ class StatisticCollection:
         return res
     
     def getInitialInfo(self, ini : str, sur : 'Token') -> 'BigrammInfo':
-        from pullenti.ner.TextToken import TextToken
         if (Utils.isNullOrEmpty(ini)): 
             return None
         si2 = self.__findItem(Utils.asObjectOrNull(sur, TextToken), True)
@@ -263,7 +258,6 @@ class StatisticCollection:
         return self.__getBigramsInfo(si1, si2)
     
     def getWordInfo(self, t : 'Token') -> 'WordInfo':
-        from pullenti.ner.TextToken import TextToken
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             return None

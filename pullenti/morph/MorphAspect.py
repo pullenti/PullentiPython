@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class MorphAspect(IntEnum):
     """ Аспект (для глаголов) """
     UNDEFINED = 0

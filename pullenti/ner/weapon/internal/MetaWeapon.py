@@ -2,20 +2,21 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
-from pullenti.ner.ReferentClass import ReferentClass
 
+from pullenti.ner.ReferentClass import ReferentClass
 
 class MetaWeapon(ReferentClass):
     
-    def __init__(self) -> None:
+    @staticmethod
+    def initialize() -> None:
         from pullenti.ner.weapon.WeaponReferent import WeaponReferent
-        super().__init__()
-        self.addFeature(WeaponReferent.ATTR_TYPE, "Тип", 0, 0)
-        self.addFeature(WeaponReferent.ATTR_NAME, "Название", 0, 0)
-        self.addFeature(WeaponReferent.ATTR_NUMBER, "Номер", 0, 1)
-        self.addFeature(WeaponReferent.ATTR_BRAND, "Марка", 0, 0)
-        self.addFeature(WeaponReferent.ATTR_MODEL, "Модель", 0, 0)
-        self.addFeature(WeaponReferent.ATTR_DATE, "Дата создания", 0, 1)
+        MetaWeapon._global_meta = MetaWeapon()
+        MetaWeapon._global_meta.addFeature(WeaponReferent.ATTR_TYPE, "Тип", 0, 0)
+        MetaWeapon._global_meta.addFeature(WeaponReferent.ATTR_NAME, "Название", 0, 0)
+        MetaWeapon._global_meta.addFeature(WeaponReferent.ATTR_NUMBER, "Номер", 0, 1)
+        MetaWeapon._global_meta.addFeature(WeaponReferent.ATTR_BRAND, "Марка", 0, 0)
+        MetaWeapon._global_meta.addFeature(WeaponReferent.ATTR_MODEL, "Модель", 0, 0)
+        MetaWeapon._global_meta.addFeature(WeaponReferent.ATTR_DATE, "Дата создания", 0, 1)
     
     @property
     def name(self) -> str:
@@ -32,10 +33,3 @@ class MetaWeapon(ReferentClass):
         return MetaWeapon.IMAGE_ID
     
     _global_meta = None
-    
-    # static constructor for class MetaWeapon
-    @staticmethod
-    def _static_ctor():
-        MetaWeapon._global_meta = MetaWeapon()
-
-MetaWeapon._static_ctor()

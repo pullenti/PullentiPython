@@ -4,7 +4,6 @@
 
 from pullenti.unisharp.Utils import Utils
 
-
 class UnicodeInfo:
     """ Ввели для оптимизации на Питоне. """
     

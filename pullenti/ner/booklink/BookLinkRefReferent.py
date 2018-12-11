@@ -5,10 +5,11 @@
 import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.booklink.BookLinkRefType import BookLinkRefType
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.booklink.BookLinkRefType import BookLinkRefType
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.booklink.internal.MetaBookLinkRef import MetaBookLinkRef
 
 class BookLinkRefReferent(Referent):
     """ Ссылка на внешний литературный источник (статью, книгу и пр.) """
@@ -26,11 +27,10 @@ class BookLinkRefReferent(Referent):
     ATTR_MISC = "MISC"
     
     def __init__(self) -> None:
-        from pullenti.ner.booklink.internal.MetaBookLinkRef import MetaBookLinkRef
         super().__init__(BookLinkRefReferent.OBJ_TYPENAME)
         self.instance_of = MetaBookLinkRef._global_meta
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         if (self.number is not None): 
             print("[{0}] ".format(self.number), end="", file=res, flush=True)

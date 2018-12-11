@@ -5,16 +5,20 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.ner.named.NamedEntityKind import NamedEntityKind
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.named.NamedEntityKind import NamedEntityKind
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.ner.named.internal.MetaNamedEntity import MetaNamedEntity
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.core.MiscHelper import MiscHelper
 
 class NamedEntityReferent(Referent):
     """ Текоторые мелкие именованные сущности сущность """
     
     def __init__(self) -> None:
-        from pullenti.ner.named.internal.MetaNamedEntity import MetaNamedEntity
         super().__init__(NamedEntityReferent.OBJ_TYPENAME)
         self.instance_of = MetaNamedEntity.GLOBAL_META
     
@@ -31,7 +35,6 @@ class NamedEntityReferent(Referent):
     ATTR_MISC = "MISC"
     
     def toString(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         res = io.StringIO()
         typ = self.getStringValue(NamedEntityReferent.ATTR_TYPE)
         if (typ is not None): 
@@ -65,7 +68,6 @@ class NamedEntityReferent(Referent):
         return value
     
     def toSortString(self) -> str:
-        from pullenti.morph.MorphLang import MorphLang
         return Utils.enumToString(self.kind) + self.toString(True, MorphLang.UNKNOWN, 0)
     
     def getCompareStrings(self) -> typing.List[str]:
@@ -130,7 +132,6 @@ class NamedEntityReferent(Referent):
         return self._CreateOntologyItem(2, False, False)
     
     def _CreateOntologyItem(self, min_len : int, only_names : bool=False, pure_names : bool=False) -> 'IntOntologyItem':
-        from pullenti.ner.core.Termin import Termin
         oi = IntOntologyItem(self)
         vars0_ = list()
         typs = Utils.ifNotNull(self.getStringValues(NamedEntityReferent.ATTR_TYPE), list())

@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class AddressHouseType(IntEnum):
     """ Тип дома """
     UNDEFINED = 0

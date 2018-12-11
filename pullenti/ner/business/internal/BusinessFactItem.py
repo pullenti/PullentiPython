@@ -3,12 +3,17 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.business.internal.BusinessFactItemTyp import BusinessFactItemTyp
-from pullenti.ner.business.BusinessFactKind import BusinessFactKind
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
+from pullenti.ner.business.internal.BusinessFactItemTyp import BusinessFactItemTyp
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.business.BusinessFactKind import BusinessFactKind
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.TerminCollection import TerminCollection
 
 class BusinessFactItem(MetaToken):
     
@@ -20,8 +25,6 @@ class BusinessFactItem(MetaToken):
     
     @staticmethod
     def tryParse(t : 'Token') -> 'BusinessFactItem':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         if (t is None): 
             return None
         res = BusinessFactItem.__tryParse(t)
@@ -59,7 +62,6 @@ class BusinessFactItem(MetaToken):
     
     @staticmethod
     def __tryParse(t : 'Token') -> 'BusinessFactItem':
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         tok = BusinessFactItem.__m_base_onto.tryParse(t, TerminParseAttr.NO)
         if (tok is None and t.morph.class0_.is_verb and t.next0_ is not None): 
             tok = BusinessFactItem.__m_base_onto.tryParse(t.next0_, TerminParseAttr.NO)
@@ -93,9 +95,6 @@ class BusinessFactItem(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (BusinessFactItem.__m_base_onto is not None): 
             return
         BusinessFactItem.__m_base_onto = TerminCollection()

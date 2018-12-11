@@ -3,15 +3,15 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.uri.internal.MetaUri import MetaUri
 
 class UriReferent(Referent):
     """ URI, а также ISBN, УДК, ББК, ICQ и пр. """
     
     def __init__(self) -> None:
-        from pullenti.ner.uri.internal.MetaUri import MetaUri
         super().__init__(UriReferent.OBJ_TYPENAME)
         self.instance_of = MetaUri._global_meta
     
@@ -23,7 +23,7 @@ class UriReferent(Referent):
     
     ATTR_SCHEME = "SCHEME"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         if (self.scheme is not None): 
             split = ":"
             if (self.scheme == "ISBN" or self.scheme == "ББК" or self.scheme == "УДК"): 

@@ -4,17 +4,24 @@
 
 import typing
 from pullenti.unisharp.Utils import Utils
+
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.Token import Token
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.measure.MeasureReferent import MeasureReferent
+from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.measure.internal.UnitsFactors import UnitsFactors
 from pullenti.ner.measure.MeasureKind import MeasureKind
+from pullenti.ner.measure.UnitReferent import UnitReferent
 from pullenti.ner.measure.internal.Unit import Unit
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.Referent import Referent
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.measure.internal.MeasureHelper import MeasureHelper
 from pullenti.ner.measure.internal.UnitsHelper import UnitsHelper
-from pullenti.ner.measure.internal.UnitsFactors import UnitsFactors
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-
 
 class UnitToken(MetaToken):
     
@@ -27,14 +34,13 @@ class UnitToken(MetaToken):
         self.ext_onto = None;
     
     def __str__(self) -> str:
-        from pullenti.morph.MorphClass import MorphClass
         res = (str(self.unit) if self.ext_onto is None else str(self.ext_onto))
         if (self.pow0_ != 1): 
             res = "{0}<{1}>".format(res, self.pow0_)
         if (self.is_doubt): 
             res += "?"
         if (self.keyword is not None): 
-            res = "{0} (<-{1})".format(res, self.keyword.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False))
+            res = "{0} (<-{1})".format(res, self.keyword.getNormalCaseText(None, False, MorphGender.UNDEFINED, False))
         return res
     
     @staticmethod
@@ -76,7 +82,6 @@ class UnitToken(MetaToken):
     
     @staticmethod
     def __createReferent(u : 'Unit') -> 'UnitReferent':
-        from pullenti.ner.measure.UnitReferent import UnitReferent
         ur = UnitReferent()
         ur.addSlot(UnitReferent.ATTR_NAME, u.name_cyr, False, 0)
         ur.addSlot(UnitReferent.ATTR_NAME, u.name_lat, False, 0)
@@ -87,7 +92,6 @@ class UnitToken(MetaToken):
         return ur
     
     def createReferentWithRegister(self, ad : 'AnalyzerData') -> 'UnitReferent':
-        from pullenti.ner.measure.UnitReferent import UnitReferent
         ur = self.ext_onto
         if (self.unit is not None): 
             ur = UnitToken.__createReferent(self.unit)
@@ -106,8 +110,8 @@ class UnitToken(MetaToken):
                 owns[i] = (Utils.asObjectOrNull(ad.registerReferent(owns[i]), UnitReferent))
             if (i > 0): 
                 owns[i - 1].addSlot(UnitReferent.ATTR_BASEUNIT, owns[i], False, 0)
-                if ((Utils.asObjectOrNull(owns[i - 1].tag, Unit)).base_multiplier != 0): 
-                    owns[i - 1].addSlot(UnitReferent.ATTR_BASEFACTOR, MeasureHelper.doubleToString((Utils.asObjectOrNull(owns[i - 1].tag, Unit)).base_multiplier), False, 0)
+                if ((owns[i - 1].tag).base_multiplier != 0): 
+                    owns[i - 1].addSlot(UnitReferent.ATTR_BASEFACTOR, MeasureHelper.doubleToString((owns[i - 1].tag).base_multiplier), False, 0)
         return owns[0]
     
     @staticmethod
@@ -142,10 +146,6 @@ class UnitToken(MetaToken):
     
     @staticmethod
     def tryParse(t : 'Token', add_units : 'TerminCollection', prev : 'UnitToken') -> 'UnitToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.measure.UnitReferent import UnitReferent
         if (t is None): 
             return None
         t0 = t
@@ -195,7 +195,7 @@ class UnitToken(MetaToken):
                 if (NounPhraseHelper.tryParse(tt, NounPhraseParseAttr.PARSEPREPOSITION, 0) is not None): 
                     return None
                 if (isinstance(tt.next0_, NumberToken)): 
-                    if ((Utils.asObjectOrNull(tt.next0_, NumberToken)).typ != NumberSpellingType.DIGIT): 
+                    if ((tt.next0_).typ != NumberSpellingType.DIGIT): 
                         return None
             uts = list()
             for tok in toks: 
@@ -203,7 +203,7 @@ class UnitToken(MetaToken):
                 res.pow0_ = pow0__
                 if (is_neg): 
                     res.pow0_ = (- pow0__)
-                if (res.unit.base_multiplier == 1000000 and (isinstance(t0, TextToken)) and str.islower((Utils.asObjectOrNull(t0, TextToken)).getSourceText()[0])): 
+                if (res.unit.base_multiplier == 1000000 and (isinstance(t0, TextToken)) and str.islower((t0).getSourceText()[0])): 
                     for u in UnitsHelper.UNITS: 
                         if (u.factor == UnitsFactors.MILLI and Utils.compareStrings(u.name_cyr, res.unit.name_cyr, True) == 0): 
                             res.unit = u
@@ -227,7 +227,7 @@ class UnitToken(MetaToken):
         t1 = None
         if (t.isCharOf("º°")): 
             t1 = t
-        elif ((t.isChar('<') and t.next0_ is not None and t.next0_.next0_ is not None) and t.next0_.next0_.isChar('>') and ((t.next0_.isValue("О", None) or t.next0_.isValue("O", None) or (((isinstance(t.next0_, NumberToken)) and (Utils.asObjectOrNull(t.next0_, NumberToken)).value == (0)))))): 
+        elif ((t.isChar('<') and t.next0_ is not None and t.next0_.next0_ is not None) and t.next0_.next0_.isChar('>') and ((t.next0_.isValue("О", None) or t.next0_.isValue("O", None) or (((isinstance(t.next0_, NumberToken)) and (t.next0_).value == (0)))))): 
             t1 = t.next0_.next0_
         if (t1 is not None): 
             res = UnitToken._new1530(t0, t1, UnitsHelper.UGRADUS)
@@ -238,7 +238,7 @@ class UnitToken(MetaToken):
             if (t is not None and t.isValue("ПО", None)): 
                 t = t.next0_
             if (isinstance(t, TextToken)): 
-                vv = (Utils.asObjectOrNull(t, TextToken)).term
+                vv = (t).term
                 if (vv == "C" or vv == "С" or vv.startswith("ЦЕЛЬС")): 
                     res.unit = UnitsHelper.UGRADUSC
                     res.is_doubt = False
@@ -252,7 +252,7 @@ class UnitToken(MetaToken):
             tt1 = t.next0_
             if (tt1 is not None and tt1.isChar('(')): 
                 tt1 = tt1.next0_
-            if ((isinstance(tt1, TextToken)) and (Utils.asObjectOrNull(tt1, TextToken)).term.startswith("ОБ")): 
+            if ((isinstance(tt1, TextToken)) and (tt1).term.startswith("ОБ")): 
                 re = UnitToken._new1530(t, tt1, UnitsHelper.UALCO)
                 if (re.end_token.next0_ is not None and re.end_token.next0_.isChar('.')): 
                     re.end_token = re.end_token.next0_
@@ -274,7 +274,6 @@ class UnitToken(MetaToken):
         return None
     
     def __correct(self) -> None:
-        from pullenti.ner.NumberToken import NumberToken
         t = self.end_token.next0_
         if (t is None): 
             return
@@ -284,10 +283,10 @@ class UnitToken(MetaToken):
             num = 3
         elif (t.isChar('²')): 
             num = 2
-        elif (not t.is_whitespace_before and (isinstance(t, NumberToken)) and (((Utils.asObjectOrNull(t, NumberToken)).value == (3) or (Utils.asObjectOrNull(t, NumberToken)).value == (2)))): 
-            num = ((Utils.asObjectOrNull(t, NumberToken)).value)
+        elif (not t.is_whitespace_before and (isinstance(t, NumberToken)) and (((t).value == (3) or (t).value == (2)))): 
+            num = ((t).value)
         elif ((t.isChar('<') and (isinstance(t.next0_, NumberToken)) and t.next0_.next0_ is not None) and t.next0_.next0_.isChar('>')): 
-            num = ((Utils.asObjectOrNull(t.next0_, NumberToken)).value)
+            num = ((t.next0_).value)
             t = t.next0_.next0_
         else: 
             if (t.isValue("B", None) and t.next0_ is not None): 
@@ -307,9 +306,6 @@ class UnitToken(MetaToken):
             self.end_token = t
     
     def __checkDoubt(self) -> None:
-        from pullenti.ner.measure.MeasureReferent import MeasureReferent
-        from pullenti.ner.measure.UnitReferent import UnitReferent
-        from pullenti.ner.TextToken import TextToken
         self.is_doubt = False
         if (self.pow0_ != 1): 
             return

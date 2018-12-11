@@ -5,23 +5,37 @@
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.geo.internal.CityAttachHelper import CityAttachHelper
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.address.internal.StreetItemType import StreetItemType
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.address.internal.StreetItemType import StreetItemType
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.Token import Token
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
+from pullenti.ner.MorphCollection import MorphCollection
+from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
+from pullenti.ner.geo.internal.CityItemToken import CityItemToken
+from pullenti.ner.core.ProperNameHelper import ProperNameHelper
+from pullenti.ner.geo.internal.CityAttachHelper import CityAttachHelper
 
 class TerrAttachHelper:
     
     @staticmethod
     def __tryAttachMoscowAO(li : typing.List['TerrItemToken'], ad : 'AnalyzerData') -> 'ReferentToken':
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (li[0].termin_item is None or not li[0].termin_item.is_moscow_region): 
             return None
         if (li[0].is_doubt): 
@@ -45,9 +59,6 @@ class TerrAttachHelper:
     
     @staticmethod
     def __tryAttachPureTerr(li : typing.List['TerrItemToken'], ad : 'AnalyzerData') -> 'ReferentToken':
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
         aid = None
         t = li[0].end_token.next0_
         if (t is None): 
@@ -64,7 +75,7 @@ class TerrAttachHelper:
                     if (aid is None): 
                         rt0 = TerrAttachHelper.tryAttachTerritory(tmp, ad, True, None, None)
             if (rt0 is not None): 
-                if ((Utils.asObjectOrNull(rt0.referent, GeoReferent)).is_state): 
+                if ((rt0.referent).is_state): 
                     return None
                 rt0.begin_token = li[0].begin_token
                 return rt0
@@ -84,20 +95,6 @@ class TerrAttachHelper:
     
     @staticmethod
     def tryAttachTerritory(li : typing.List['TerrItemToken'], ad : 'AnalyzerData', attach_always : bool=False, cits : typing.List['CityItemToken']=None, exists : typing.List['GeoReferent']=None) -> 'ReferentToken':
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.ProperNameHelper import ProperNameHelper
-        from pullenti.morph.MorphCase import MorphCase
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.ner.MorphCollection import MorphCollection
-        from pullenti.ner.TextToken import TextToken
         if (li is None or len(li) == 0): 
             return None
         ex_obj = None
@@ -142,7 +139,7 @@ class TerrAttachHelper:
                     if (k == 1): 
                         if (noun.termin_item.canonic_text == "РАЙОН" or noun.termin_item.canonic_text == "ОБЛАСТЬ" or noun.termin_item.canonic_text == "СОЮЗ"): 
                             if (isinstance(li[k].onto_item.referent, GeoReferent)): 
-                                if ((Utils.asObjectOrNull(li[k].onto_item.referent, GeoReferent)).is_state): 
+                                if ((li[k].onto_item.referent).is_state): 
                                     break
                             ok = False
                             tt = li[k].end_token.next0_
@@ -381,7 +378,7 @@ class TerrAttachHelper:
                 if (len(adj_list) > 0): 
                     npt = NounPhraseHelper.tryParse(adj_list[0].begin_token, NounPhraseParseAttr.NO, 0)
                     if (npt is not None and npt.end_token == noun.end_token): 
-                        alt_name = "{0} {1}".format(npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False), name)
+                        alt_name = "{0} {1}".format(npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False), name)
         else: 
             if ((len(li) == 1 and noun is not None and noun.end_token.next0_ is not None) and (isinstance(noun.end_token.next0_.getReferent(), GeoReferent))): 
                 g = Utils.asObjectOrNull(noun.end_token.next0_.getReferent(), GeoReferent)
@@ -510,9 +507,6 @@ class TerrAttachHelper:
     
     @staticmethod
     def __canBeGeoAfter(tt : 'Token') -> bool:
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         while tt is not None and ((tt.is_comma or BracketHelper.isBracket(tt, True))):
             tt = tt.next0_
         if (tt is None): 
@@ -539,9 +533,6 @@ class TerrAttachHelper:
             t(Token): 
         
         """
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None or not t.chars.is_latin_letter): 
             return None
         tok = TerrItemToken._m_geo_abbrs.tryParse(t, TerminParseAttr.NO)

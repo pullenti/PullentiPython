@@ -5,22 +5,37 @@
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.address.internal.StreetItemType import StreetItemType
+
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.address.StreetKind import StreetKind
+from pullenti.morph.MorphCase import MorphCase
 from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.address.internal.StreetItemType import StreetItemType
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.address.StreetKind import StreetKind
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.address.StreetReferent import StreetReferent
+from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
+from pullenti.ner.core.NumberExToken import NumberExToken
+from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
+from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
 
 class StreetDefineHelper:
     
     @staticmethod
     def checkStreetAfter(t : 'Token') -> bool:
-        from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
         if (t is None): 
             return False
         while t is not None and ((t.isCharOf(",;") or t.morph.class0_.is_preposition)):
@@ -36,7 +51,6 @@ class StreetDefineHelper:
     
     @staticmethod
     def tryParseExtStreet(sli : typing.List['StreetItemToken']) -> 'ReferentToken':
-        from pullenti.ner.ReferentToken import ReferentToken
         a = StreetDefineHelper._tryParseStreet(sli, True, False)
         if (a is not None): 
             return ReferentToken(a.referent, a.begin_token, a.end_token)
@@ -44,19 +58,6 @@ class StreetDefineHelper:
     
     @staticmethod
     def _tryParseStreet(sli : typing.List['StreetItemToken'], ext_onto_regim : bool=False, for_metro : bool=False) -> 'AddressItemToken':
-        from pullenti.ner.address.StreetReferent import StreetReferent
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.NumberExToken import NumberExToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.morph.Morphology import Morphology
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
         if (sli is None or len(sli) == 0): 
             return None
         i = 0
@@ -374,7 +375,7 @@ class StreetDefineHelper:
             is_adj = False
             if (isinstance(name.end_token, TextToken)): 
                 for wf in name.end_token.morph.items: 
-                    if ((isinstance(wf, MorphWordForm)) and (Utils.asObjectOrNull(wf, MorphWordForm)).is_in_dictionary): 
+                    if ((isinstance(wf, MorphWordForm)) and (wf).is_in_dictionary): 
                         is_adj = (wf.class0_.is_adjective | wf.class0_.is_proper_geo)
                         adj_gen = wf.gender
                         break
@@ -444,9 +445,9 @@ class StreetDefineHelper:
                             nits.append(name.termin.canonic_text)
                             break
                         elif (not t.chars.is_letter and len(nits) > 0): 
-                            nits[len(nits) - 1] += (Utils.asObjectOrNull(t, TextToken)).term
+                            nits[len(nits) - 1] += (t).term
                         else: 
-                            nits.append((Utils.asObjectOrNull(t, TextToken)).term)
+                            nits.append((t).term)
                             if (t == name.begin_token and t.getMorphClassInDictionary().is_proper_name): 
                                 has_proper_name = True
                     elif ((isinstance(t, ReferentToken)) and name.termin is None): 
@@ -590,17 +591,6 @@ class StreetDefineHelper:
     
     @staticmethod
     def __tryDetectNonNoun(sli : typing.List['StreetItemToken'], onto_regim : bool, for_metro : bool) -> 'AddressItemToken':
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.address.StreetReferent import StreetReferent
-        from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.NumberExToken import NumberExToken
         if (len(sli) > 1 and sli[len(sli) - 1].typ == StreetItemType.NUMBER and not sli[len(sli) - 1].number_has_prefix): 
             del sli[len(sli) - 1]
         if (len(sli) == 1 and sli[0].typ == StreetItemType.NAME and ((onto_regim or for_metro))): 
@@ -688,7 +678,7 @@ class StreetDefineHelper:
                 if (te is not None): 
                     for wf in te.morph.items: 
                         if (wf.class0_.is_adjective and wf.gender == MorphGender.FEMINIE): 
-                            val = (Utils.asObjectOrNull(wf, MorphWordForm)).normal_case
+                            val = (wf).normal_case
                             break
                 if (i1 > 0 and sli[0].typ == StreetItemType.AGE): 
                     val = MiscHelper.getTextValueOfMetaToken(sli[i1], GetTextAttr.NO)
@@ -802,8 +792,6 @@ class StreetDefineHelper:
     
     @staticmethod
     def __tryParseFix(sits : typing.List['StreetItemToken']) -> 'AddressItemToken':
-        from pullenti.ner.address.StreetReferent import StreetReferent
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
         if ((len(sits) < 1) or sits[0].termin is None): 
             return None
         if (sits[0].termin.acronym == "МКАД"): 
@@ -831,7 +819,6 @@ class StreetDefineHelper:
     
     @staticmethod
     def _tryParseSecondStreet(t1 : 'Token', t2 : 'Token', loc_streets : 'IntOntologyCollection') -> 'AddressItemToken':
-        from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
         sli = StreetItemToken.tryParseList(t1, loc_streets, 10)
         if (sli is None or (len(sli) < 1) or sli[0].typ != StreetItemType.NOUN): 
             return None

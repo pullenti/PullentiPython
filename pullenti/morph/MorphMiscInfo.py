@@ -5,13 +5,13 @@
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.MorphPerson import MorphPerson
-from pullenti.morph.MorphTense import MorphTense
-from pullenti.morph.MorphAspect import MorphAspect
+
 from pullenti.morph.MorphMood import MorphMood
 from pullenti.morph.MorphVoice import MorphVoice
 from pullenti.morph.MorphForm import MorphForm
-
+from pullenti.morph.MorphPerson import MorphPerson
+from pullenti.morph.MorphTense import MorphTense
+from pullenti.morph.MorphAspect import MorphAspect
 
 class MorphMiscInfo:
     """ Дополнительная морфологическая информация """

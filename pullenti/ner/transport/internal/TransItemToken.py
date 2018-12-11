@@ -6,31 +6,42 @@ import typing
 import io
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.Termin import Termin
-from pullenti.ner.transport.TransportKind import TransportKind
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.Token import Token
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.transport.TransportKind import TransportKind
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.TerminCollection import TerminCollection
 
 class TransItemToken(MetaToken):
     
     class Typs(IntEnum):
         NOUN = 0
-        BRAND = 0 + 1
-        MODEL = (0 + 1) + 1
-        NUMBER = ((0 + 1) + 1) + 1
-        NAME = (((0 + 1) + 1) + 1) + 1
-        ORG = ((((0 + 1) + 1) + 1) + 1) + 1
-        ROUTE = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
-        CLASS = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        DATE = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        BRAND = 1
+        MODEL = 2
+        NUMBER = 3
+        NAME = 4
+        ORG = 5
+        ROUTE = 6
+        CLASS = 7
+        DATE = 8
         
         @classmethod
         def has_value(cls, value):
@@ -39,12 +50,11 @@ class TransItemToken(MetaToken):
     class TransTermin(Termin):
         
         def __init__(self, source : str, add_lemma_variant : bool=False) -> None:
-            from pullenti.morph.MorphLang import MorphLang
-            super().__init__(None, MorphLang(), False)
+            super().__init__(None, None, False)
             self.kind = TransportKind.UNDEFINED
             self.typ = TransItemToken.Typs.NOUN
             self.is_doubt = False
-            self.initByNormalText(source, MorphLang())
+            self.initByNormalText(source, None)
         
         @staticmethod
         def _new2546(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : 'TransportKind') -> 'TransTermin':
@@ -91,10 +101,6 @@ class TransItemToken(MetaToken):
     
     @staticmethod
     def tryParseList(t : 'Token', max_count : int=10) -> typing.List['TransItemToken']:
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
         tr = TransItemToken.tryParse(t, None, False, False)
         if (tr is None): 
             return None
@@ -202,14 +208,12 @@ class TransItemToken(MetaToken):
     
     @staticmethod
     def tryParse(t : 'Token', prev : 'TransItemToken', after_conj : bool, attach_high : bool=False) -> 'TransItemToken':
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
         res = TransItemToken.__TryParse(t, prev, after_conj, attach_high)
         if (res is None): 
             return None
         if (res.typ == TransItemToken.Typs.NAME): 
             br = BracketHelper.tryParse(res.end_token.next0_, BracketParseAttr.NO, 100)
-            if (br is not None and br.isChar('(')): 
+            if (br is not None and br.begin_token.isChar('(')): 
                 alt = MiscHelper.getTextValueOfMetaToken(br, GetTextAttr.NO)
                 if (MiscHelper.canBeEqualCyrAndLatSS(res.value, alt)): 
                     res.alt_value = alt
@@ -218,15 +222,6 @@ class TransItemToken(MetaToken):
     
     @staticmethod
     def __TryParse(t : 'Token', prev : 'TransItemToken', after_conj : bool, attach_high : bool=False) -> 'TransItemToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.NumberToken import NumberToken
         if (t is None): 
             return None
         t1 = t
@@ -354,15 +349,15 @@ class TransItemToken(MetaToken):
                         if (tok is None and state_ is None): 
                             state_ = tt.kit.processReferent("GEO", tt)
                         if (tok is not None and tok.end_token == npt.end_token): 
-                            if ((Utils.asObjectOrNull(tok.termin, TransItemToken.TransTermin)).typ == TransItemToken.Typs.NOUN): 
-                                tit = TransItemToken._new2536(t, tok.end_token, (Utils.asObjectOrNull(tok.termin, TransItemToken.TransTermin)).kind, TransItemToken.Typs.NOUN, (Utils.asObjectOrNull(tok.termin, TransItemToken.TransTermin)).is_doubt, tok.chars, npt.morph)
-                                tit.value = (Utils.asObjectOrNull(tok.termin, TransItemToken.TransTermin)).canonic_text.lower()
-                                tit.alt_value = npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False).lower()
+                            if ((tok.termin).typ == TransItemToken.Typs.NOUN): 
+                                tit = TransItemToken._new2536(t, tok.end_token, (tok.termin).kind, TransItemToken.Typs.NOUN, (tok.termin).is_doubt, tok.chars, npt.morph)
+                                tit.value = (tok.termin).canonic_text.lower()
+                                tit.alt_value = npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False).lower()
                                 if (LanguageHelper.endsWithEx(tit.alt_value, "суд", "суда", None, None)): 
                                     if (not BracketHelper.canBeStartOfSequence(tok.end_token.next0_, False, False)): 
                                         continue
                                 if (state_ is not None): 
-                                    if ((Utils.asObjectOrNull(state_.referent, GeoReferent)).is_state): 
+                                    if ((state_.referent).is_state): 
                                         tit.state = state_
                                 return tit
         if (t is not None and t.isValue("КЛАСС", None) and t.next0_ is not None): 
@@ -427,7 +422,7 @@ class TransItemToken(MetaToken):
             pt = t.kit.processReferent("PERSON", t)
             if (pt is None): 
                 tit = TransItemToken._new2541(t, t, TransItemToken.Typs.BRAND)
-                tit.value = (Utils.asObjectOrNull(t, TextToken)).term
+                tit.value = (t).term
                 return tit
         if (((prev is not None and prev.typ == TransItemToken.Typs.NOUN and ((prev.kind == TransportKind.SHIP or prev.kind == TransportKind.SPACE)))) or after_conj): 
             if (t.chars.is_capital_upper): 
@@ -469,8 +464,6 @@ class TransItemToken(MetaToken):
     
     @staticmethod
     def __attachModel(t : 'Token', can_be_first_word : bool, prev : 'TransItemToken') -> 'TransItemToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         res = TransItemToken._new2541(t, t, TransItemToken.Typs.MODEL)
         cyr = io.StringIO()
         lat = io.StringIO()
@@ -558,10 +551,6 @@ class TransItemToken(MetaToken):
     
     @staticmethod
     def _attachNumber(t : 'Token', ignore_region : bool=False) -> 'TransItemToken':
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (t is None): 
             return None
         t0 = t
@@ -627,8 +616,6 @@ class TransItemToken(MetaToken):
     
     @staticmethod
     def __attachRusAutoNumber(t : 'Token') -> 'TransItemToken':
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.NumberToken import NumberToken
         v1 = MiscHelper.getCyrLatWord(t, 1)
         if (v1 is None or v1.cyr_word is None): 
             return None
@@ -666,8 +653,6 @@ class TransItemToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.morph.MorphLang import MorphLang
         if (TransItemToken.M_ONTOLOGY is not None): 
             return
         TransItemToken.M_ONTOLOGY = TerminCollection()

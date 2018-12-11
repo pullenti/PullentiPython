@@ -4,15 +4,19 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.ner.transport.TransportKind import TransportKind
-from pullenti.morph.LanguageHelper import LanguageHelper
 
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.Referent import Referent
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.transport.TransportKind import TransportKind
+from pullenti.ner.transport.internal.MetaTransport import MetaTransport
 
 class TransportReferent(Referent):
     
     def __init__(self) -> None:
-        from pullenti.ner.transport.internal.MetaTransport import MetaTransport
         super().__init__(TransportReferent.OBJ_TYPENAME)
         self.instance_of = MetaTransport._global_meta
     
@@ -43,7 +47,6 @@ class TransportReferent(Referent):
     ATTR_ROUTEPOINT = "ROUTEPOINT"
     
     def toString(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         res = io.StringIO()
         str0_ = None
         for s in self.slots: 
@@ -96,7 +99,7 @@ class TransportReferent(Referent):
                     else: 
                         print(" - ", end="", file=res)
                     if (isinstance(s.value, Referent)): 
-                        print((Utils.asObjectOrNull(s.value, Referent)).toString(True, lang, 0), end="", file=res)
+                        print((s.value).toString(True, lang, 0), end="", file=res)
                     else: 
                         print(s.value, end="", file=res)
             print(")", end="", file=res)
@@ -131,13 +134,11 @@ class TransportReferent(Referent):
         return TransportKind.UNDEFINED
     
     def _addGeo(self, r : object) -> None:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (isinstance(r, GeoReferent)): 
             self.addSlot(TransportReferent.ATTR_STATE, r, False, 0)
         elif (isinstance(r, ReferentToken)): 
-            if (isinstance((Utils.asObjectOrNull(r, ReferentToken)).getReferent(), GeoReferent)): 
-                self.addSlot(TransportReferent.ATTR_STATE, (Utils.asObjectOrNull(r, ReferentToken)).getReferent(), True, 0)
+            if (isinstance((r).getReferent(), GeoReferent)): 
+                self.addSlot(TransportReferent.ATTR_STATE, (r).getReferent(), True, 0)
                 self.addExtReferent(Utils.asObjectOrNull(r, ReferentToken))
     
     def canBeEquals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:

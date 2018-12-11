@@ -5,17 +5,19 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-from pullenti.morph.LanguageHelper import LanguageHelper
 
+from pullenti.ner.Referent import Referent
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.person.internal.MetaPersonProperty import MetaPersonProperty
+from pullenti.ner.geo.GeoReferent import GeoReferent
 
 class PersonPropertyReferent(Referent):
     """ Сущность, описывающая некоторое свойство физического лица """
     
     def __init__(self) -> None:
-        from pullenti.ner.person.internal.MetaPersonProperty import MetaPersonProperty
         super().__init__(PersonPropertyReferent.OBJ_TYPENAME)
         self.instance_of = MetaPersonProperty._global_meta
     
@@ -29,7 +31,7 @@ class PersonPropertyReferent(Referent):
     
     ATTR_HIGHER = "HIGHER"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         if (self.name is not None): 
             print(self.name, end="", file=res)
@@ -38,7 +40,7 @@ class PersonPropertyReferent(Referent):
                 print(", {0}".format(str(r.value)), end="", file=res, flush=True)
         for r in self.slots: 
             if (r.type_name == PersonPropertyReferent.ATTR_REF and (isinstance(r.value, Referent)) and (lev < 10)): 
-                print("; {0}".format((Utils.asObjectOrNull(r.value, Referent)).toString(short_variant, lang, lev + 1)), end="", file=res, flush=True)
+                print("; {0}".format((r.value).toString(short_variant, lang, lev + 1)), end="", file=res, flush=True)
         hi = self.higher
         if (hi is not None and hi != self and self.__checkCorrectHigher(hi, 0)): 
             print("; {0}".format(hi.toString(short_variant, lang, lev + 1)), end="", file=res, flush=True)
@@ -188,7 +190,7 @@ class PersonPropertyReferent(Referent):
                 if (isinstance(refs1[i], Referent)): 
                     for rr in refs2: 
                         if (isinstance(rr, Referent)): 
-                            if ((Utils.asObjectOrNull(rr, Referent)).canBeEquals(Utils.asObjectOrNull(refs1[i], Referent), typ)): 
+                            if ((rr).canBeEquals(Utils.asObjectOrNull(refs1[i], Referent), typ)): 
                                 noeq = False
                                 eq = True
                                 break
@@ -205,7 +207,7 @@ class PersonPropertyReferent(Referent):
                 if (isinstance(refs2[i], Referent)): 
                     for rr in refs1: 
                         if (isinstance(rr, Referent)): 
-                            if ((Utils.asObjectOrNull(rr, Referent)).canBeEquals(Utils.asObjectOrNull(refs2[i], Referent), typ)): 
+                            if ((rr).canBeEquals(Utils.asObjectOrNull(refs2[i], Referent), typ)): 
                                 noeq = False
                                 eq = True
                                 break
@@ -249,7 +251,6 @@ class PersonPropertyReferent(Referent):
         return PersonAttrToken.checkKind(self)
     
     def createOntologyItem(self) -> 'IntOntologyItem':
-        from pullenti.ner.core.Termin import Termin
         oi = IntOntologyItem(self)
         for a in self.slots: 
             if (a.type_name == PersonPropertyReferent.ATTR_NAME): 
@@ -258,7 +259,7 @@ class PersonPropertyReferent(Referent):
     
     def mergeSlots(self, obj : 'Referent', merge_statistic : bool=True) -> None:
         nam = self.name
-        nam1 = (Utils.asObjectOrNull(obj, PersonPropertyReferent)).name
+        nam1 = (obj).name
         super().mergeSlots(obj, merge_statistic)
         if (nam != nam1 and nam1 is not None and nam is not None): 
             s = None
@@ -280,7 +281,6 @@ class PersonPropertyReferent(Referent):
             r(Referent): 
         
         """
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         nam = self.name
         if (nam is None or r is None): 
             return False

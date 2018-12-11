@@ -6,20 +6,38 @@ import typing
 import io
 import math
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
-from pullenti.ner.core.AnalyzerData import AnalyzerData
-from pullenti.ner.definition.internal.DefinitionAnalyzerEn import DefinitionAnalyzerEn
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
+
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.definition.DefinitionKind import DefinitionKind
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.definition.internal.ParenthesisToken import ParenthesisToken
+from pullenti.morph.MorphCase import MorphCase
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
-
+from pullenti.morph.Explanatory import Explanatory
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.core.AnalyzerData import AnalyzerData
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.definition.internal.MetaDefin import MetaDefin
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.definition.internal.DefinitionAnalyzerEn import DefinitionAnalyzerEn
+from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.Termin import Termin
 
 class DefinitionAnalyzer(Analyzer):
     """ Анализатор определений """
@@ -47,19 +65,16 @@ class DefinitionAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.definition.internal.MetaDefin import MetaDefin
         return [MetaDefin._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.definition.internal.MetaDefin import MetaDefin
         res = dict()
         res[MetaDefin.IMAGE_DEF_ID] = EpNerBankInternalResourceHelper.getBytes("defin.png")
         res[MetaDefin.IMAGE_ASS_ID] = EpNerBankInternalResourceHelper.getBytes("assert.png")
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
         if (type0_ == DefinitionReferent.OBJ_TYPENAME): 
             return DefinitionReferent()
         return None
@@ -83,13 +98,6 @@ class DefinitionAnalyzer(Analyzer):
             lastStage: 
         
         """
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.BracketHelper import BracketHelper
         ad = kit.getAnalyzerData(self)
         if (kit.base_language == MorphLang.EN): 
             DefinitionAnalyzerEn.process(kit, ad)
@@ -173,8 +181,6 @@ class DefinitionAnalyzer(Analyzer):
     
     @staticmethod
     def __tryAttachGlossary(t : 'Token') -> 'Token':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (t is None or not t.is_newline_before): 
             return None
         while t is not None: 
@@ -220,9 +226,6 @@ class DefinitionAnalyzer(Analyzer):
         return li[0]
     
     def processOntologyItem(self, begin : 'Token') -> 'ReferentToken':
-        from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.ReferentToken import ReferentToken
         if (begin is None): 
             return None
         t1 = None
@@ -241,10 +244,6 @@ class DefinitionAnalyzer(Analyzer):
     
     @staticmethod
     def __ignoreListPrefix(t : 'Token') -> 'Token':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
         first_pass2888 = True
         while True:
             if first_pass2888: first_pass2888 = False
@@ -269,15 +268,6 @@ class DefinitionAnalyzer(Analyzer):
         return t
     
     def tryAttach(self, t : 'Token', glos_regime : bool, onto : 'TerminCollection', max_char : int) -> typing.List['ReferentToken']:
-        from pullenti.ner.definition.internal.ParenthesisToken import ParenthesisToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
         if (t is None): 
             return None
         t0 = t
@@ -508,7 +498,7 @@ class DefinitionAnalyzer(Analyzer):
         normal_right = False
         ok = 0
         if (t.is_hiphen or t.isCharOf(":") or ((can_next_sent and t.isChar('.')))): 
-            if ((isinstance(t.next0_, TextToken)) and (Utils.asObjectOrNull(t.next0_, TextToken)).term == "ЭТО"): 
+            if ((isinstance(t.next0_, TextToken)) and (t.next0_).term == "ЭТО"): 
                 ok = 2
                 t = t.next0_.next0_
             elif (glos_regime): 
@@ -533,10 +523,10 @@ class DefinitionAnalyzer(Analyzer):
                 rt0 = self.tryAttach(t.next0_, False, None, max_char)
                 if (rt0 is not None): 
                     for rt in rt0: 
-                        if (coef == DefinitionKind.DEFINITION and (Utils.asObjectOrNull(rt.referent, DefinitionReferent)).kind == DefinitionKind.ASSERTATION): 
-                            (Utils.asObjectOrNull(rt.referent, DefinitionReferent)).kind = coef
+                        if (coef == DefinitionKind.DEFINITION and (rt.referent).kind == DefinitionKind.ASSERTATION): 
+                            (rt.referent).kind = coef
                     return rt0
-        elif ((Utils.asObjectOrNull(t, TextToken)).term == "ЭТО"): 
+        elif ((t).term == "ЭТО"): 
             npt = NounPhraseHelper.tryParse(t.next0_, NounPhraseParseAttr.NO, 0)
             if (npt is not None): 
                 ok = 1
@@ -639,7 +629,7 @@ class DefinitionAnalyzer(Analyzer):
                     str0_ = l0.getNormalCaseText(MorphClass.ADJECTIVE, npt.morph.number == MorphNumber.PLURAL, npt.morph.gender, False)
                     if (str0_ is None): 
                         str0_ = l0.getNormalCaseText(MorphClass.ADJECTIVE, True, MorphGender.UNDEFINED, False)
-                    nam = "{0} {1}".format(str0_, npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False))
+                    nam = "{0} {1}".format(str0_, npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False))
         if (decree_ is not None): 
             tt = l0
             while tt is not None and tt.end_char <= l1.end_char: 
@@ -818,11 +808,6 @@ class DefinitionAnalyzer(Analyzer):
             max_char(int): 
         
         """
-        from pullenti.ner.definition.internal.ParenthesisToken import ParenthesisToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         t0 = t
@@ -918,11 +903,6 @@ class DefinitionAnalyzer(Analyzer):
     
     @staticmethod
     def __tryAttachMiscToken(t : 'Token') -> 'MetaToken':
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.morph.MorphCase import MorphCase
         if (t is None): 
             return None
         if (t.isChar('(')): 
@@ -958,7 +938,7 @@ class DefinitionAnalyzer(Analyzer):
         npt = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.PARSENUMERICASADJECTIVE, 0)
         if (npt is not None): 
             if (DefinitionAnalyzer.__m_misc_first_words.tryParse(npt.noun.begin_token, TerminParseAttr.NO) is not None): 
-                res = MetaToken._new836(t, npt.end_token, npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False))
+                res = MetaToken._new836(t, npt.end_token, npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False))
                 res.morph.case_ = MorphCase.NOMINATIVE
                 return res
         if (t.isValue("В", None)): 
@@ -972,9 +952,6 @@ class DefinitionAnalyzer(Analyzer):
     
     @staticmethod
     def __tryParseListItem(t : 'Token') -> 'MetaToken':
-        from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
         if (t is None or not t.is_whitespace_before): 
             return None
         tt = None
@@ -1030,13 +1007,9 @@ class DefinitionAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.ProcessorService import ProcessorService
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.definition.internal.ParenthesisToken import ParenthesisToken
         if (DefinitionAnalyzer.__m_proc0 is not None): 
             return
+        MetaDefin.initialize()
         try: 
             DefinitionAnalyzer.__m_proc0 = ProcessorService.createEmptyProcessor()
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
@@ -1067,13 +1040,10 @@ class DefinitionAnalyzer(Analyzer):
         Returns:
             int: 0 - ничего общего, 100 - полное соответствие (тождество)
         """
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        ar1 = DefinitionAnalyzer.__m_proc0.process(SourceOfAnalysis(text1), None, MorphLang())
+        ar1 = DefinitionAnalyzer.__m_proc0.process(SourceOfAnalysis(text1), None, None)
         if (ar1 is None or ar1.first_token is None): 
             return 0
-        ar2 = DefinitionAnalyzer.__m_proc0.process(SourceOfAnalysis(text2), None, MorphLang())
+        ar2 = DefinitionAnalyzer.__m_proc0.process(SourceOfAnalysis(text2), None, None)
         if (ar2 is None or ar2.first_token is None): 
             return 0
         terms1 = list()
@@ -1088,7 +1058,7 @@ class DefinitionAnalyzer(Analyzer):
                 if (not (t is not None)): break
                 npt = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.NO, 0)
                 if (npt is not None): 
-                    term = npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False)
+                    term = npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False)
                     if (term is None): 
                         continue
                     if (not term in terms): 
@@ -1103,22 +1073,19 @@ class DefinitionAnalyzer(Analyzer):
         return math.floor((coef * 100) / ((len(terms1) + len(terms2))))
     
     @staticmethod
-    def getConcepts(txt : str) -> typing.List[str]:
+    def getConcepts(txt : str, do_normalize_for_english : bool=False) -> typing.List[str]:
         """ Выделить ключевые концепты из текста.
          Концепт - это нормализованная комбинация ключевых слов, причём дериватная нормализация
          (СЛУЖИТЬ -> СЛУЖБА).
         
         Args:
             txt(str): текст
+            do_normalize_for_english(bool): делать ли для английского языка нормализацию по дериватам
         
         Returns:
             typing.List[str]: список концептов
         """
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.Explanatory import Explanatory
-        ar = DefinitionAnalyzer.__m_proc0.process(SourceOfAnalysis(txt), None, MorphLang())
+        ar = DefinitionAnalyzer.__m_proc0.process(SourceOfAnalysis(txt), None, None)
         res = list()
         tmp = list()
         tmp2 = io.StringIO()
@@ -1133,7 +1100,7 @@ class DefinitionAnalyzer(Analyzer):
                 npt = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.PARSENUMERICASADJECTIVE, 0)
                 if (npt is not None): 
                     t1 = npt.end_token
-                elif ((isinstance(t, TextToken)) and (Utils.asObjectOrNull(t, TextToken)).is_pure_verb): 
+                elif ((isinstance(t, TextToken)) and (t).is_pure_verb): 
                     t1 = t
                 if (t1 is None): 
                     continue
@@ -1172,13 +1139,16 @@ class DefinitionAnalyzer(Analyzer):
                         continue
                     if (tt.is_comma_and or t.morph.class0_.is_preposition): 
                         continue
-                    w = (Utils.asObjectOrNull(tt, TextToken)).getLemma()
+                    w = (tt).getLemma()
                     if (len(w) < 3): 
                         continue
-                    dg = Explanatory.findDerivates(w, True, MorphLang())
-                    if (dg is not None and len(dg) == 1): 
-                        if (len(dg[0].words) > 0): 
-                            w = dg[0].words[0].spelling.upper()
+                    if (tt.chars.is_latin_letter and not do_normalize_for_english): 
+                        pass
+                    else: 
+                        dg = Explanatory.findDerivates(w, True, None)
+                        if (dg is not None and len(dg) == 1): 
+                            if (len(dg[0].words) > 0): 
+                                w = dg[0].words[0].spelling.upper()
                     if (tt.previous is not None and tt.previous.is_comma_and and len(vars0_) > 0): 
                         vars0_[len(vars0_) - 1].append(w)
                     else: 

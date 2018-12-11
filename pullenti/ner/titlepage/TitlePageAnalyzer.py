@@ -5,12 +5,33 @@
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.booklink.internal.EpNerBooklinkInternalResourceHelper import EpNerBooklinkInternalResourceHelper
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.titlepage.internal.PersonRelations import PersonRelations
-from pullenti.ner.org.OrganizationKind import OrganizationKind
 
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.Token import Token
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.org.OrganizationKind import OrganizationKind
+from pullenti.ner.uri.UriReferent import UriReferent
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.titlepage.internal.PersonRelations import PersonRelations
+from pullenti.ner.Referent import Referent
+from pullenti.ner.titlepage.TitlePageReferent import TitlePageReferent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.booklink.internal.EpNerBooklinkInternalResourceHelper import EpNerBooklinkInternalResourceHelper
+from pullenti.ner.TextAnnotation import TextAnnotation
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.titlepage.internal.MetaTitleInfo import MetaTitleInfo
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.date.DateAnalyzer import DateAnalyzer
+from pullenti.ner.titlepage.internal.Line import Line
+from pullenti.ner.titlepage.internal.TitleNameToken import TitleNameToken
 
 class TitlePageAnalyzer(Analyzer):
     """ Семантический анализатор заголовочной информации """
@@ -43,24 +64,20 @@ class TitlePageAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.titlepage.internal.MetaTitleInfo import MetaTitleInfo
         return [MetaTitleInfo._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.titlepage.internal.MetaTitleInfo import MetaTitleInfo
         res = dict()
         res[MetaTitleInfo.TITLE_INFO_IMAGE_ID] = EpNerBooklinkInternalResourceHelper.getBytes("titleinfo.png")
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.titlepage.TitlePageReferent import TitlePageReferent
         if (type0_ == TitlePageReferent.OBJ_TYPENAME): 
             return TitlePageReferent()
         return None
     
     def processReferent1(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        from pullenti.ner.ReferentToken import ReferentToken
         wrapet2529 = RefOutArgWrapper(None)
         tpr = TitlePageAnalyzer._process(begin, (0 if end is None else end.end_char), begin.kit, wrapet2529)
         et = wrapet2529.value
@@ -78,21 +95,6 @@ class TitlePageAnalyzer(Analyzer):
     
     @staticmethod
     def _process(begin : 'Token', max_char_pos : int, kit : 'AnalysisKit', end_token : 'Token') -> 'TitlePageReferent':
-        from pullenti.ner.titlepage.TitlePageReferent import TitlePageReferent
-        from pullenti.ner.titlepage.internal.Line import Line
-        from pullenti.ner.titlepage.internal.TitleNameToken import TitleNameToken
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.TextAnnotation import TextAnnotation
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.date.DateAnalyzer import DateAnalyzer
         end_token.value = begin
         res = TitlePageReferent()
         term = None
@@ -250,7 +252,7 @@ class TitlePageAnalyzer(Analyzer):
             if (rli is None): 
                 continue
             if (not t.is_newline_before and (isinstance(t.previous, TextToken))): 
-                s = (Utils.asObjectOrNull(t.previous, TextToken)).term
+                s = (t.previous).term
                 if (s == "ИМЕНИ" or s == "ИМ"): 
                     continue
                 if (s == "." and t.previous.previous is not None and t.previous.previous.isValue("ИМ", None)): 
@@ -329,7 +331,7 @@ class TitlePageAnalyzer(Analyzer):
                         if (t.end_char > end_token.value.end_char): 
                             end_token.value = t
                 elif (isinstance(r, GeoReferent)): 
-                    if (res.city is None and (Utils.asObjectOrNull(r, GeoReferent)).is_city): 
+                    if (res.city is None and (r).is_city): 
                         res.city = Utils.asObjectOrNull(r, GeoReferent)
                         if (t.end_char > end_token.value.end_char): 
                             end_token.value = t
@@ -367,7 +369,7 @@ class TitlePageAnalyzer(Analyzer):
         if (res.city is None and res.org0_ is not None): 
             s = res.org0_.findSlot(OrganizationReferent.ATTR_GEO, None, True)
             if (s is not None and (isinstance(s.value, GeoReferent))): 
-                if ((Utils.asObjectOrNull(s.value, GeoReferent)).is_city): 
+                if ((s.value).is_city): 
                     res.city = Utils.asObjectOrNull(s.value, GeoReferent)
         if (res.date is None): 
             t = begin
@@ -396,9 +398,7 @@ class TitlePageAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
-        from pullenti.ner.ProcessorService import ProcessorService
+        MetaTitleInfo.initialize()
         try: 
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             TitleItemToken.initialize()

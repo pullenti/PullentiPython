@@ -4,6 +4,7 @@
 
 import typing
 
+from pullenti.ner.Referent import Referent
 
 class AnalyzerData:
     """ Данные, полученные в ходе обработки анализатором """
@@ -32,7 +33,6 @@ class AnalyzerData:
             referent(Referent): 
         
         """
-        from pullenti.ner.Referent import Referent
         if (referent is None): 
             return None
         if (referent._m_ext_referents is not None): 

@@ -3,8 +3,15 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.MorphGender import MorphGender
 
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.VerbPhraseItemToken import VerbPhraseItemToken
+from pullenti.ner.MorphCollection import MorphCollection
+from pullenti.ner.Token import Token
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.VerbPhraseToken import VerbPhraseToken
 
 class VerbPhraseHelper:
     """ Работа с глагольными группами (последовательность из глаголов и наречий) """
@@ -19,7 +26,6 @@ class VerbPhraseHelper:
         Returns:
             VerbPhraseToken: группа или null
         """
-        from pullenti.ner.TextToken import TextToken
         if (not ((isinstance(t, TextToken)))): 
             return None
         if (not t.chars.is_letter): 
@@ -30,12 +36,6 @@ class VerbPhraseHelper:
     
     @staticmethod
     def __tryParseRu(t : 'Token') -> 'VerbPhraseToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.VerbPhraseToken import VerbPhraseToken
-        from pullenti.ner.core.VerbPhraseItemToken import VerbPhraseItemToken
-        from pullenti.ner.MorphCollection import MorphCollection
-        from pullenti.morph.MorphClass import MorphClass
         res = None
         t0 = t
         not0_ = None

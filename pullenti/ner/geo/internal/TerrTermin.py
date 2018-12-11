@@ -2,13 +2,12 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
-from pullenti.ner.core.Termin import Termin
-from pullenti.morph.MorphLang import MorphLang
 
+from pullenti.ner.core.Termin import Termin
 
 class TerrTermin(Termin):
     
-    def __init__(self, source : str, lang_ : 'MorphLang'=MorphLang()) -> None:
+    def __init__(self, source : str, lang_ : 'MorphLang'=None) -> None:
         super().__init__(None, lang_, False)
         self.is_state = False
         self.is_region = False

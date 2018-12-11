@@ -3,16 +3,18 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 import io
+import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 
+from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.MorphCollection import MorphCollection
+from pullenti.ner.TextAnnotation import TextAnnotation
 
 class ReferentToken(MetaToken):
     """ Токен, соответствующий сущности """
     
     def __init__(self, entity : 'Referent', begin : 'Token', end : 'Token', kit_ : 'AnalysisKit'=None) -> None:
-        from pullenti.ner.MorphCollection import MorphCollection
         super().__init__(begin, end, kit_)
         self.referent = None;
         self.data = None;
@@ -31,8 +33,19 @@ class ReferentToken(MetaToken):
     def is_referent(self) -> bool:
         return True
     
+    def getReferent(self) -> 'Referent':
+        return self.referent
+    
+    def getReferents(self) -> typing.List['Referent']:
+        res = list()
+        if (self.referent is not None): 
+            res.append(self.referent)
+        ri = super().getReferents()
+        if (ri is not None): 
+            res.extend(ri)
+        return res
+    
     def saveToLocalOntology(self) -> None:
-        from pullenti.ner.TextAnnotation import TextAnnotation
         if (self.data is None): 
             return
         r = self.data.registerReferent(self.referent)
@@ -64,7 +77,7 @@ class ReferentToken(MetaToken):
             if (t.end_char > self.end_char): 
                 break
             if (isinstance(t, ReferentToken)): 
-                (Utils.asObjectOrNull(t, ReferentToken))._replaceReferent(old_referent, new_referent)
+                (t)._replaceReferent(old_referent, new_referent)
             if (t == self.end_token): 
                 break
             t = t.next0_

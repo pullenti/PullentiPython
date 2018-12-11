@@ -5,12 +5,24 @@
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
+
+from pullenti.ner.Token import Token
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.named.NamedEntityKind import NamedEntityKind
 from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-
+from pullenti.ner.named.internal.MetaNamedEntity import MetaNamedEntity
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.named.internal.NamedItemToken import NamedItemToken
+from pullenti.ner.named.NamedEntityReferent import NamedEntityReferent
+from pullenti.ner.geo.GeoReferent import GeoReferent
 
 class NamedEntityAnalyzer(Analyzer):
     
@@ -33,7 +45,6 @@ class NamedEntityAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.named.internal.MetaNamedEntity import MetaNamedEntity
         return [MetaNamedEntity.GLOBAL_META]
     
     @property
@@ -46,14 +57,12 @@ class NamedEntityAnalyzer(Analyzer):
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.named.NamedEntityReferent import NamedEntityReferent
         if (type0_ == NamedEntityReferent.OBJ_TYPENAME): 
             return NamedEntityReferent()
         return None
     
     @property
     def used_extern_object_types(self) -> typing.List[str]:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         return [GeoReferent.OBJ_TYPENAME, "ORGANIZATION", "PERSON"]
     
     @property
@@ -61,12 +70,9 @@ class NamedEntityAnalyzer(Analyzer):
         return 3
     
     def createAnalyzerData(self) -> 'AnalyzerData':
-        from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
         return AnalyzerDataWithOntology()
     
     def process(self, kit : 'AnalysisKit') -> None:
-        from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
-        from pullenti.ner.named.internal.NamedItemToken import NamedItemToken
         ad = Utils.asObjectOrNull(kit.getAnalyzerData(self), AnalyzerDataWithOntology)
         t = kit.first_token
         first_pass3054 = True
@@ -85,7 +91,6 @@ class NamedEntityAnalyzer(Analyzer):
                 continue
     
     def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        from pullenti.ner.named.internal.NamedItemToken import NamedItemToken
         li = NamedItemToken.tryParseList(begin, None)
         if (li is None or len(li) == 0): 
             return None
@@ -97,7 +102,6 @@ class NamedEntityAnalyzer(Analyzer):
     
     @staticmethod
     def __canBeRef(ki : 'NamedEntityKind', re : 'Referent') -> bool:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         if (re is None): 
             return False
         if (ki == NamedEntityKind.MONUMENT): 
@@ -115,9 +119,6 @@ class NamedEntityAnalyzer(Analyzer):
     
     @staticmethod
     def __tryAttach(toks : typing.List['NamedItemToken']) -> 'ReferentToken':
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.named.NamedEntityReferent import NamedEntityReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         typ = None
         re = None
         nams = None
@@ -191,12 +192,15 @@ class NamedEntityAnalyzer(Analyzer):
             nam.addSlot(NamedEntityReferent.ATTR_REF, re.ref, False, 0)
         return ReferentToken(nam, toks[0].begin_token, toks[i - 1].end_token)
     
+    __m_inited = None
+    
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.named.internal.NamedItemToken import NamedItemToken
-        from pullenti.ner.ProcessorService import ProcessorService
+        if (NamedEntityAnalyzer.__m_inited): 
+            return
+        NamedEntityAnalyzer.__m_inited = True
         try: 
+            MetaNamedEntity.initialize()
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             NamedItemToken._initialize()
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False

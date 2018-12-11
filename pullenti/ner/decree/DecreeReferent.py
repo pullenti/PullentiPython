@@ -7,18 +7,22 @@ import typing
 import datetime
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.decree.DecreeKind import DecreeKind
-from pullenti.ner.decree.internal.DecreeHelper import DecreeHelper
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.decree.DecreeKind import DecreeKind
+from pullenti.ner.decree.internal.MetaDecree import MetaDecree
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.date.DateRangeReferent import DateRangeReferent
 
 class DecreeReferent(Referent):
     """ Сущность, представляющая ссылку на НПА """
     
     def __init__(self) -> None:
-        from pullenti.ner.decree.internal.MetaDecree import MetaDecree
         super().__init__(DecreeReferent.OBJ_TYPENAME)
         self.instance_of = MetaDecree.GLOBAL_META
     
@@ -42,8 +46,7 @@ class DecreeReferent(Referent):
     
     ATTR_EDITION = "EDITION"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         ki = self.kind
         out_part = False
@@ -113,7 +116,6 @@ class DecreeReferent(Referent):
         return nam
     
     def __getShortName(self) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         nam = self.name
         if (nam is None): 
             return None
@@ -146,14 +148,13 @@ class DecreeReferent(Referent):
     @property
     def date(self) -> datetime.datetime:
         """ Дата подписания (для законов дат может быть много - по редакциям) """
+        from pullenti.ner.decree.internal.DecreeHelper import DecreeHelper
         s = self.getStringValue(DecreeReferent.ATTR_DATE)
         if (s is None): 
             return None
         return DecreeHelper.parseDateTime(s)
     
     def _addDate(self, dt : 'DecreeToken') -> bool:
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
         if (dt is None): 
             return False
         if (dt.ref is not None and (isinstance(dt.ref.referent, DateReferent))): 
@@ -242,10 +243,10 @@ class DecreeReferent(Referent):
     def addSlot(self, attr_name : str, attr_value : object, clear_old_value : bool, stat_count : int=0) -> 'Slot':
         from pullenti.ner.decree.internal.PartToken import PartToken
         if (isinstance(attr_value, PartToken.PartValue)): 
-            attr_value = ((Utils.asObjectOrNull(attr_value, PartToken.PartValue)).value)
+            attr_value = ((attr_value).value)
         s = super().addSlot(attr_name, attr_value, clear_old_value, stat_count)
         if (isinstance(attr_value, PartToken.PartValue)): 
-            s.tag = (Utils.asObjectOrNull(attr_value, PartToken.PartValue)).source_value
+            s.tag = (attr_value).source_value
         return s
     
     def _addNumber(self, dt : 'DecreeToken') -> None:
@@ -306,6 +307,7 @@ class DecreeReferent(Referent):
         return res
     
     def __allDates(self) -> typing.List[datetime.datetime]:
+        from pullenti.ner.decree.internal.DecreeHelper import DecreeHelper
         res = list()
         for s in self.slots: 
             if (s.type_name == DecreeReferent.ATTR_DATE): 
@@ -436,7 +438,6 @@ class DecreeReferent(Referent):
         return False
     
     def canBeGeneralFor(self, obj : 'Referent') -> bool:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         if (not self.__CanBeEquals(obj, Referent.EqualType.WITHINONETEXT, True)): 
             return False
         g1 = Utils.asObjectOrNull(self.getSlotValue(DecreeReferent.ATTR_GEO), GeoReferent)
@@ -528,7 +529,6 @@ class DecreeReferent(Referent):
                 i += 1
     
     def createOntologyItem(self) -> 'IntOntologyItem':
-        from pullenti.ner.core.Termin import Termin
         oi = IntOntologyItem(self)
         vars0_ = list()
         for a in self.slots: 

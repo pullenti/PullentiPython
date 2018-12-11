@@ -2,9 +2,9 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
+
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.resume.internal.ResumeTokenType import ResumeTokenType
-
 
 class ResumeToken(MetaToken):
     """ Это для поддержки резюме """

@@ -2,14 +2,14 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
-from pullenti.ner.core.AnalyzerData import AnalyzerData
 
+from pullenti.ner.core.AnalyzerData import AnalyzerData
+from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
 
 class AnalyzerDataWithOntology(AnalyzerData):
     """ Данные, полученные в ходе обработки, причём с поддержкой механизма онтологий """
     
     def __init__(self) -> None:
-        from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
         super().__init__()
         self.local_ontology = IntOntologyCollection()
     

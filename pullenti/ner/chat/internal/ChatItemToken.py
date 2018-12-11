@@ -5,14 +5,21 @@
 import io
 import datetime
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.chat.ChatType import ChatType
-from pullenti.ner.chat.VerbType import VerbType
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphGender import MorphGender
 
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.chat.VerbType import VerbType
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.chat.ChatType import ChatType
+from pullenti.ner.chat.ChatAnalyzer import ChatAnalyzer
+from pullenti.ner.date.internal.DateExToken import DateExToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.MiscHelper import MiscHelper
 
 class ChatItemToken(MetaToken):
     
@@ -36,7 +43,6 @@ class ChatItemToken(MetaToken):
     
     @staticmethod
     def __isEmptyToken(t : 'Token') -> bool:
-        from pullenti.ner.TextToken import TextToken
         if (not ((isinstance(t, TextToken)))): 
             return False
         if (t.length_char == 1): 
@@ -48,12 +54,6 @@ class ChatItemToken(MetaToken):
     
     @staticmethod
     def tryParse(t : 'Token') -> 'ChatItemToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.date.internal.DateExToken import DateExToken
-        from pullenti.ner.chat.ChatAnalyzer import ChatAnalyzer
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
         tok = None
         not0__ = False
         t0 = None
@@ -86,7 +86,7 @@ class ChatItemToken(MetaToken):
                         res.value = "{0} {1}:{2}".format(res.value, "{:02d}".format(dt.hour), "{:02d}".format(dt.minute))
                     return res
             mc = tt.getMorphClassInDictionary()
-            term = (Utils.asObjectOrNull(tt, TextToken)).term
+            term = (tt).term
             if (term == "НЕ"): 
                 not0__ = True
                 if (t0 is None): 
@@ -105,7 +105,7 @@ class ChatItemToken(MetaToken):
             if (mc.is_verb): 
                 res = ChatItemToken(tt, tt)
                 res.typ = ChatType.VERB
-                res.value = (Utils.asObjectOrNull(tt, TextToken)).getLemma()
+                res.value = (tt).getLemma()
                 if (not0__): 
                     res.not0_ = True
                 if (t0 is not None): 
@@ -117,7 +117,7 @@ class ChatItemToken(MetaToken):
             if (isinstance(tok.termin.tag2, VerbType)): 
                 res.vtyp = (Utils.valToEnum(tok.termin.tag2, VerbType))
             if (res.typ == ChatType.VERB and tok.begin_token == tok.end_token and (isinstance(tok.begin_token, TextToken))): 
-                res.value = (Utils.asObjectOrNull(tok.begin_token, TextToken)).getLemma()
+                res.value = (tok.begin_token).getLemma()
             else: 
                 res.value = MiscHelper.getTextValueOfMetaToken(res, GetTextAttr.NO)
             if (not0__): 
@@ -150,7 +150,7 @@ class ChatItemToken(MetaToken):
                         if (npt.end_token.isValue("ВОПРОС", None) or npt.end_token.isValue("ФРАЗА", None) or npt.end_token.isValue("ПРЕДЛОЖЕНИЕ", None)): 
                             res.end_token = npt.end_token
                             tt = res.end_token
-                            res.value = npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                            res.value = npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                             continue
                     break
             return res
@@ -164,8 +164,6 @@ class ChatItemToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
         if (ChatItemToken.__m_ontology is not None): 
             return
         ChatItemToken.__m_ontology = TerminCollection()

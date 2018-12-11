@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class TerminParseAttr(IntEnum):
     """ Патаметры выделения термина словаря (TryParse) """
     NO = 0

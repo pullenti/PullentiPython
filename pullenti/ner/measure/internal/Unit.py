@@ -2,9 +2,9 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
-from pullenti.ner.measure.MeasureKind import MeasureKind
-from pullenti.ner.measure.internal.UnitsFactors import UnitsFactors
 
+from pullenti.ner.measure.internal.UnitsFactors import UnitsFactors
+from pullenti.ner.measure.MeasureKind import MeasureKind
 
 class Unit:
     """ Единица измерения (задаётся в "базе") """

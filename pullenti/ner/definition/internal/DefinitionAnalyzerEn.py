@@ -3,17 +3,26 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.definition.DefinitionKind import DefinitionKind
 
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.definition.DefinitionKind import DefinitionKind
+from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.Token import Token
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.NounPhraseToken import NounPhraseToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 
 class DefinitionAnalyzerEn:
     
     @staticmethod
     def process(kit : 'AnalysisKit', ad : 'AnalyzerData') -> None:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         t = kit.first_token
         first_pass2883 = True
         while True:
@@ -31,14 +40,6 @@ class DefinitionAnalyzerEn:
     
     @staticmethod
     def __tryParseThesis(t : 'Token') -> 'ReferentToken':
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.NounPhraseToken import NounPhraseToken
-        from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         t0 = t

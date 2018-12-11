@@ -3,9 +3,12 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
+
+from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphPerson import MorphPerson
-
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.TextToken import TextToken
 
 class VerbPhraseItemToken(MetaToken):
     """ Элемент глагольной группы """
@@ -20,19 +23,15 @@ class VerbPhraseItemToken(MetaToken):
     @property
     def is_verb_adjective(self) -> bool:
         """ Причастие """
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.Morphology import Morphology
-        from pullenti.morph.MorphLang import MorphLang
         if (self.__m_is_verb_adjective >= 0): 
             return self.__m_is_verb_adjective > 0
         for f in self.morph.items: 
-            if (f.class0_.is_adjective and (isinstance(f, MorphWordForm)) and not "к.ф." in (Utils.asObjectOrNull(f, MorphWordForm)).misc.attrs): 
+            if (f.class0_.is_adjective and (isinstance(f, MorphWordForm)) and not "к.ф." in (f).misc.attrs): 
                 return True
         self.__m_is_verb_adjective = 0
         tt = Utils.asObjectOrNull(self.end_token, TextToken)
         if (tt is not None and tt.term.endswith("СЯ")): 
-            mb = Morphology.getWordBaseInfo(tt.term[0:0+len(tt.term) - 2], MorphLang(), False, False)
+            mb = Morphology.getWordBaseInfo(tt.term[0:0+len(tt.term) - 2], None, False, False)
             if (mb is not None): 
                 if (mb.class0_.is_adjective): 
                     self.__m_is_verb_adjective = 1
@@ -45,18 +44,16 @@ class VerbPhraseItemToken(MetaToken):
     @property
     def is_verb_infinitive(self) -> bool:
         """ Глагол-инфиниитив """
-        from pullenti.morph.MorphWordForm import MorphWordForm
         for f in self.morph.items: 
-            if (f.class0_.is_verb and (isinstance(f, MorphWordForm)) and "инф." in (Utils.asObjectOrNull(f, MorphWordForm)).misc.attrs): 
+            if (f.class0_.is_verb and (isinstance(f, MorphWordForm)) and "инф." in (f).misc.attrs): 
                 return True
         return False
     
     @property
     def verb_morph(self) -> 'MorphWordForm':
         """ Полное морф.информация о глаголе глагола """
-        from pullenti.morph.MorphWordForm import MorphWordForm
         for f in self.morph.items: 
-            if (f.class0_.is_verb and (isinstance(f, MorphWordForm)) and ((((Utils.asObjectOrNull(f, MorphWordForm)).misc.person) & (MorphPerson.THIRD))) != (MorphPerson.UNDEFINED)): 
+            if (f.class0_.is_verb and (isinstance(f, MorphWordForm)) and ((((f).misc.person) & (MorphPerson.THIRD))) != (MorphPerson.UNDEFINED)): 
                 return (Utils.asObjectOrNull(f, MorphWordForm))
         for f in self.morph.items: 
             if (f.class0_.is_verb and (isinstance(f, MorphWordForm))): 

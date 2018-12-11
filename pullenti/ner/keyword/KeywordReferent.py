@@ -4,17 +4,18 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
+
 from pullenti.ner.keyword.KeywordType import KeywordType
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.keyword.internal.KeywordMeta import KeywordMeta
+from pullenti.ner.Referent import Referent
 
 class KeywordReferent(Referent):
     """ Оформление ключевых слов и комбинаций """
     
     def __init__(self) -> None:
-        from pullenti.ner.keyword.internal.KeywordMeta import KeywordMeta
         super().__init__(KeywordReferent.OBJ_TYPENAME)
         self.rank = 0
         self.instance_of = KeywordMeta.GLOBAL_META
@@ -29,7 +30,7 @@ class KeywordReferent(Referent):
     
     ATTR_REF = "REF"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         rank_ = self.rank
         val = self.getStringValue(KeywordReferent.ATTR_VALUE)
         if (val is None): 
@@ -72,7 +73,7 @@ class KeywordReferent(Referent):
             if (s.type_name == KeywordReferent.ATTR_REF and (isinstance(s.value, KeywordReferent))): 
                 if (s.value == root): 
                     return 0
-                res += (Utils.asObjectOrNull(s.value, KeywordReferent)).__getChildWords(root, lev + 1)
+                res += (s.value).__getChildWords(root, lev + 1)
         if (res == 0): 
             res = 1
         return res
@@ -102,7 +103,7 @@ class KeywordReferent(Referent):
         return False
     
     def mergeSlots(self, obj : 'Referent', merge_statistic : bool=True) -> None:
-        r1 = self.rank + (Utils.asObjectOrNull(obj, KeywordReferent)).rank
+        r1 = self.rank + (obj).rank
         super().mergeSlots(obj, merge_statistic)
         if (len(self.slots) > 50): 
             pass
@@ -140,7 +141,6 @@ class KeywordReferent(Referent):
         self.addSlot(KeywordReferent.ATTR_REF, kw2, False, 0)
     
     def createOntologyItem(self) -> 'IntOntologyItem':
-        from pullenti.ner.core.Termin import Termin
         res = IntOntologyItem(self)
         for s in self.slots: 
             if (s.type_name == KeywordReferent.ATTR_NORMAL or s.type_name == KeywordReferent.ATTR_VALUE): 

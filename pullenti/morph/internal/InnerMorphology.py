@@ -10,12 +10,16 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.unisharp.Misc import EventHandler
 from pullenti.unisharp.Misc import ProgressEventArgs
+
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.morph.internal.UnicodeInfo import UnicodeInfo
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.internal.MorphEngine import MorphEngine
+from pullenti.morph.CharsInfo import CharsInfo
 from pullenti.morph.internal.TextWrapper import TextWrapper
+from pullenti.morph.MorphLang import MorphLang
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.morph.MorphToken import MorphToken
-from pullenti.morph.internal.UnicodeInfo import UnicodeInfo
-from pullenti.morph.internal.MorphEngine import MorphEngine
-
 
 class InnerMorphology:
     
@@ -60,7 +64,6 @@ class InnerMorphology:
     
     @staticmethod
     def _loadLanguages(langs : 'MorphLang') -> None:
-        from pullenti.morph.MorphLang import MorphLang
         if (langs.is_ru and not InnerMorphology.M_ENGINE_RU.language.is_ru): 
             with InnerMorphology.M_LOCK: 
                 if (not InnerMorphology.M_ENGINE_RU.language.is_ru): 
@@ -108,7 +111,7 @@ class InnerMorphology:
         if (max0_ > 0xFFFF): 
             p = (math.floor(p / ((math.floor(max0_ / 100)))))
         else: 
-            p = (math.floor((p * (100)) / (max0_)))
+            p = (math.floor((p * 100) / max0_))
         if (p != self.__last_percent and progress is not None): 
             progress.call(None, ProgressEventArgs(p, None))
         self.__last_percent = p
@@ -123,10 +126,6 @@ class InnerMorphology:
         Returns:
             typing.List[MorphToken]: последовательность результирующих морфем
         """
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.morph.CharsInfo import CharsInfo
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.morph.MorphClass import MorphClass
         if (Utils.isNullOrEmpty(text)): 
             return None
         twr = TextWrapper(text, good_text)
@@ -601,7 +600,6 @@ class InnerMorphology:
             word(str): слово (в верхнем регистре)
         
         """
-        from pullenti.morph.MorphLang import MorphLang
         cyr = 0
         lat = 0
         undef = 0
@@ -711,7 +709,6 @@ class InnerMorphology:
             return InnerMorphology.M_ENGINE_EN.correctWordByMorph(word)
     
     def __processOneWord0(self, wstr : str) -> typing.List['MorphWordForm']:
-        from pullenti.morph.MorphLang import MorphLang
         dl = MorphLang()
         wrapdl13 = RefOutArgWrapper(dl)
         inoutres14 = self.__processOneWord(wstr, wrapdl13)
@@ -719,7 +716,6 @@ class InnerMorphology:
         return inoutres14
     
     def __processOneWord(self, wstr : str, def_lang : 'MorphLang') -> typing.List['MorphWordForm']:
-        from pullenti.morph.MorphLang import MorphLang
         lang = InnerMorphology.__detectLang(None, 0, 0, wstr)
         if (lang == MorphLang.UNKNOWN): 
             def_lang.value = MorphLang()

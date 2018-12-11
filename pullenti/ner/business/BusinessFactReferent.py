@@ -5,15 +5,17 @@
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.ner.business.BusinessFactKind import BusinessFactKind
 
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.business.BusinessFactKind import BusinessFactKind
+from pullenti.ner.Referent import Referent
+from pullenti.ner.business.internal.MetaBusinessFact import MetaBusinessFact
 
 class BusinessFactReferent(Referent):
     """ Представление бизнес-факта """
     
     def __init__(self) -> None:
-        from pullenti.ner.business.internal.MetaBusinessFact import MetaBusinessFact
         super().__init__(BusinessFactReferent.OBJ_TYPENAME)
         self.instance_of = MetaBusinessFact.GLOBAL_META
     
@@ -55,14 +57,12 @@ class BusinessFactReferent(Referent):
     @property
     def typ(self) -> str:
         """ Краткое описание факта """
-        from pullenti.ner.business.internal.MetaBusinessFact import MetaBusinessFact
-        from pullenti.morph.MorphLang import MorphLang
         typ_ = self.getStringValue(BusinessFactReferent.ATTR_TYPE)
         if (typ_ is not None): 
             return typ_
         kind_ = self.getStringValue(BusinessFactReferent.ATTR_KIND)
         if (kind_ is not None): 
-            typ_ = (Utils.asObjectOrNull(MetaBusinessFact.GLOBAL_META.kind_feature.convertInnerValueToOuterValue(kind_, MorphLang()), str))
+            typ_ = (Utils.asObjectOrNull(MetaBusinessFact.GLOBAL_META.kind_feature.convertInnerValueToOuterValue(kind_, None), str))
         if (typ_ is not None): 
             return typ_.lower()
         return None
@@ -127,25 +127,24 @@ class BusinessFactReferent(Referent):
             self.addSlot(BusinessFactReferent.ATTR_WHAT, w, False, 0)
     
     def toString(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         res = io.StringIO()
         typ_ = Utils.ifNotNull(self.typ, "Бизнес-факт")
         print(MiscHelper.convertFirstCharUpperAndOtherLower(typ_), end="", file=res)
         v = self.getSlotValue(BusinessFactReferent.ATTR_WHO)
         if (isinstance((v), Referent)): 
-            print("; Кто: {0}".format((Utils.asObjectOrNull(v, Referent)).toString(True, lang, 0)), end="", file=res, flush=True)
+            print("; Кто: {0}".format((v).toString(True, lang, 0)), end="", file=res, flush=True)
             if (self.who2 is not None): 
                 print(" и {0}".format(self.who2.toString(True, lang, 0)), end="", file=res, flush=True)
         v = self.getSlotValue(BusinessFactReferent.ATTR_WHOM)
         if (isinstance((v), Referent)): 
-            print("; Кого: {0}".format((Utils.asObjectOrNull(v, Referent)).toString(True, lang, 0)), end="", file=res, flush=True)
+            print("; Кого: {0}".format((v).toString(True, lang, 0)), end="", file=res, flush=True)
         if (not short_variant): 
             v = self.getSlotValue(BusinessFactReferent.ATTR_WHAT)
             if ((v) is not None): 
                 print("; Что: {0}".format(v), end="", file=res, flush=True)
             v = self.getSlotValue(BusinessFactReferent.ATTR_WHEN)
             if (isinstance((v), Referent)): 
-                print("; Когда: {0}".format((Utils.asObjectOrNull(v, Referent)).toString(short_variant, lang, 0)), end="", file=res, flush=True)
+                print("; Когда: {0}".format((v).toString(short_variant, lang, 0)), end="", file=res, flush=True)
             for s in self.slots: 
                 if (s.type_name == BusinessFactReferent.ATTR_MISC): 
                     print("; {0}".format(s.value), end="", file=res, flush=True)

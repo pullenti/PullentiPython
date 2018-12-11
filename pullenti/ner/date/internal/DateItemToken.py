@@ -6,30 +6,41 @@ import datetime
 import typing
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
+
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.date.DateRangeReferent import DateRangeReferent
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.NumberExType import NumberExType
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.NumberExToken import NumberExToken
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.Token import Token
 from pullenti.ner.date.DatePointerType import DatePointerType
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.NumberExType import NumberExType
-
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.NumberHelper import NumberHelper
 
 class DateItemToken(MetaToken):
     """ Примитив, из которых состоит дата """
     
     class DateItemType(IntEnum):
         NUMBER = 0
-        YEAR = 0 + 1
-        MONTH = (0 + 1) + 1
-        DELIM = ((0 + 1) + 1) + 1
-        HOUR = (((0 + 1) + 1) + 1) + 1
-        MINUTE = ((((0 + 1) + 1) + 1) + 1) + 1
-        SECOND = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
-        HALFYEAR = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        QUARTAL = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        POINTER = ((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        CENTURY = (((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        YEAR = 1
+        MONTH = 2
+        DELIM = 3
+        HOUR = 4
+        MINUTE = 5
+        SECOND = 6
+        HALFYEAR = 7
+        QUARTAL = 8
+        POINTER = 9
+        CENTURY = 10
         
         @classmethod
         def has_value(cls, value):
@@ -136,8 +147,6 @@ class DateItemToken(MetaToken):
             indFrom: 
         
         """
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
         if (t is None): 
             return None
         t0 = t
@@ -216,12 +225,6 @@ class DateItemToken(MetaToken):
     
     @staticmethod
     def __TryAttach(t : 'Token', prev : typing.List['DateItemToken']) -> 'DateItemToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
         if (t is None): 
             return None
         nt = Utils.asObjectOrNull(t, NumberToken)
@@ -247,7 +250,7 @@ class DateItemToken(MetaToken):
                 return None
             res = DateItemToken._new680(begin, end, DateItemToken.DateItemType.NUMBER, nt.value, nt.morph)
             if ((res.int_value == 20 and (isinstance(nt.next0_, NumberToken)) and nt.next0_.length_char == 2) and prev is not None): 
-                num = 2000 + ((Utils.asObjectOrNull(nt.next0_, NumberToken)).value)
+                num = 2000 + ((nt.next0_).value)
                 if ((num < 2030) and len(prev) > 0 and prev[len(prev) - 1].typ == DateItemToken.DateItemType.MONTH): 
                     ok = False
                     if (nt.whitespaces_after_count == 1): 
@@ -348,7 +351,7 @@ class DateItemToken(MetaToken):
                 if (nt.previous.isValue("В", "У") or nt.previous.isValue("К", None) or nt.previous.isValue("ДО", None)): 
                     tt = DateItemToken.__testYearRusWord(nt.next0_, False)
                     if ((tt) is not None): 
-                        if ((res.int_value < 100) and (isinstance(tt, TextToken)) and (((Utils.asObjectOrNull(tt, TextToken)).term == "ГОДА" or (Utils.asObjectOrNull(tt, TextToken)).term == "РОКИ"))): 
+                        if ((res.int_value < 100) and (isinstance(tt, TextToken)) and (((tt).term == "ГОДА" or (tt).term == "РОКИ"))): 
                             pass
                         else: 
                             res.end_token = tt
@@ -428,7 +431,7 @@ class DateItemToken(MetaToken):
             return DateItemToken._new687(t, t, DateItemToken.DateItemType.POINTER, "сегодня")
         tok = DateItemToken.M_SEASONS.tryParse(t, TerminParseAttr.NO)
         if ((tok is not None and (Utils.valToEnum(tok.termin.tag, DatePointerType)) == DatePointerType.SUMMER and t.morph.language.is_ru) and (isinstance(t, TextToken))): 
-            str0_ = (Utils.asObjectOrNull(t, TextToken)).term
+            str0_ = (t).term
             if (str0_ != "ЛЕТОМ" and str0_ != "ЛЕТА" and str0_ != "ЛЕТО"): 
                 tok = (None)
         if (tok is not None): 
@@ -437,7 +440,7 @@ class DateItemToken(MetaToken):
         if (npt is not None): 
             tok = DateItemToken.M_SEASONS.tryParse(npt.end_token, TerminParseAttr.NO)
             if ((tok is not None and (Utils.valToEnum(tok.termin.tag, DatePointerType)) == DatePointerType.SUMMER and t.morph.language.is_ru) and (isinstance(t, TextToken))): 
-                str0_ = (Utils.asObjectOrNull(t, TextToken)).term
+                str0_ = (t).term
                 if (str0_ != "ЛЕТОМ" and str0_ != "ЛЕТА" and str0_ != "ЛЕТО"): 
                     tok = (None)
             if (tok is not None): 
@@ -505,8 +508,8 @@ class DateItemToken(MetaToken):
             else: 
                 return None
         if (term == "O" or term == "О"): 
-            if ((isinstance(t.next0_, NumberToken)) and not t.is_whitespace_after and ((Utils.asObjectOrNull(t.next0_, NumberToken)).value < (10))): 
-                return DateItemToken._new681(t, t.next0_, DateItemToken.DateItemType.NUMBER, (Utils.asObjectOrNull(t.next0_, NumberToken)).value)
+            if ((isinstance(t.next0_, NumberToken)) and not t.is_whitespace_after and ((t.next0_).value < (10))): 
+                return DateItemToken._new681(t, t.next0_, DateItemToken.DateItemType.NUMBER, (t.next0_).value)
         if (str.isalpha(term[0])): 
             inf = DateItemToken.M_MONTHES.tryParse(t, TerminParseAttr.NO)
             if (inf is not None and inf.termin.tag is None): 
@@ -525,9 +528,6 @@ class DateItemToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (DateItemToken.M_NEW_AGE is not None): 
             return
         DateItemToken.M_NEW_AGE = TerminCollection()
@@ -681,10 +681,6 @@ class DateItemToken(MetaToken):
         Returns:
             typing.List[DateItemToken]: Список примитивов
         """
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.NumberExToken import NumberExToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         p = DateItemToken.tryAttach(t, None)
         if (p is None): 
             return None
@@ -695,7 +691,7 @@ class DateItemToken(MetaToken):
         tt = p.end_token.next0_
         while tt is not None:
             if (isinstance(tt, TextToken)): 
-                if ((Utils.asObjectOrNull(tt, TextToken)).checkValue(DateItemToken.M_EMPTY_WORDS) is not None): 
+                if ((tt).checkValue(DateItemToken.M_EMPTY_WORDS) is not None): 
                     tt = tt.next0_
                     continue
             p0 = DateItemToken.tryAttach(tt, res)

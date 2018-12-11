@@ -6,14 +6,16 @@ import io
 import gzip
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.morph.internal.ByteArrayWrapper import ByteArrayWrapper
-from pullenti.morph.internal.MorphTreeNode import MorphTreeNode
-from pullenti.morph.MorphMiscInfo import MorphMiscInfo
-from pullenti.morph.internal.MorphRule import MorphRule
-from pullenti.morph.internal.LazyInfo import LazyInfo
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
 
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.internal.MorphRuleVariant import MorphRuleVariant
+from pullenti.morph.internal.MorphTreeNode import MorphTreeNode
+from pullenti.morph.internal.ByteArrayWrapper import ByteArrayWrapper
+from pullenti.morph.internal.MorphRule import MorphRule
+from pullenti.morph.MorphMiscInfo import MorphMiscInfo
 
 class MorphSerializeHelper:
     
@@ -41,7 +43,7 @@ class MorphSerializeHelper:
                 Utils.writeIO(res, buf, 0, i)
     
     @staticmethod
-    def deserializeAll(str0 : io.IOBase, me : 'MorphEngine', ignore_rev_tree : bool, lazy_load : bool) -> None:
+    def deserializeAll(str0 : io.IOBase, me : 'MorphEngine', ignore_rev_tree : bool, lazy_load : bool) -> 'ByteArrayWrapper':
         tmp = io.BytesIO()
         MorphSerializeHelper.deflateGzip(str0, tmp)
         buf = ByteArrayWrapper(bytearray(tmp.getvalue()))
@@ -60,10 +62,7 @@ class MorphSerializeHelper:
             p1 = buf.deserializeInt()
             r = MorphRule()
             if (lazy_load): 
-                r._lazy = LazyInfo()
-                r._lazy.begin = buf.position
-                r._lazy.engine = me
-                r._lazy.data = buf
+                r.lazy_pos = buf.position
                 buf.seek(p1)
             else: 
                 MorphSerializeHelper.__deserializeMorphRule(buf, r, me)
@@ -79,6 +78,7 @@ class MorphSerializeHelper:
             else: 
                 MorphSerializeHelper.__deserializeMorphTreeNode(buf, me.m_root_reverce, me)
         tmp.close()
+        return buf
     
     @staticmethod
     def __serializeMorphMiscInfo(res : io.IOBase, mi : 'MorphMiscInfo') -> None:
@@ -166,9 +166,6 @@ class MorphSerializeHelper:
     
     @staticmethod
     def __deserializeMorphRuleVariant(str0_ : 'ByteArrayWrapper', me : 'MorphEngine') -> 'MorphRuleVariant':
-        from pullenti.morph.internal.MorphRuleVariant import MorphRuleVariant
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.morph.MorphCase import MorphCase
         id0_ = str0_.deserializeShort() - 1
         if ((id0_ < 0) or id0_ >= len(me._m_vars)): 
             return None
@@ -253,10 +250,7 @@ class MorphSerializeHelper:
                 break
             pos = str0_.deserializeInt()
             child = MorphTreeNode()
-            child._lazy = LazyInfo()
-            child._lazy.begin = str0_.position
-            child._lazy.engine = me
-            child._lazy.data = str0_
+            child.lazy_pos = str0_.position
             if (tn.nodes is None): 
                 tn.nodes = dict()
             tn.nodes[i] = child
@@ -264,10 +258,10 @@ class MorphSerializeHelper:
         p = str0_.position
         if (tn.rules is not None): 
             for r in tn.rules: 
-                if (r._lazy is not None): 
-                    str0_.seek(r._lazy.begin)
+                if (r.lazy_pos > 0): 
+                    str0_.seek(r.lazy_pos)
                     MorphSerializeHelper.__deserializeMorphRule(str0_, r, me)
-                    r._lazy = (None)
+                    r.lazy_pos = 0
             str0_.seek(p)
     
     @staticmethod
@@ -291,7 +285,6 @@ class MorphSerializeHelper:
     
     @staticmethod
     def __manageReverceNodes(root : 'MorphTreeNode', tn : 'MorphTreeNode', term : str) -> None:
-        from pullenti.morph.internal.MorphRuleVariant import MorphRuleVariant
         if (tn.rules is not None): 
             for r in tn.rules: 
                 for v in r.variants.items(): 

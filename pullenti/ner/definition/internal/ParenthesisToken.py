@@ -2,10 +2,17 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.BracketHelper import BracketHelper
 
 class ParenthesisToken(MetaToken):
     """ Анализ вводных слов и словосочетаний """
@@ -16,10 +23,6 @@ class ParenthesisToken(MetaToken):
     
     @staticmethod
     def tryAttach(t : 'Token') -> 'ParenthesisToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.core.BracketHelper import BracketHelper
         if (t is None): 
             return None
         tok = ParenthesisToken.__m_termins.tryParse(t, TerminParseAttr.NO)
@@ -33,14 +36,14 @@ class ParenthesisToken(MetaToken):
         if (mc.is_adverb): 
             ok = True
         elif (mc.is_adjective): 
-            if (t.morph.containsAttr("сравн.", MorphClass()) and t.morph.containsAttr("кач.прил.", MorphClass())): 
+            if (t.morph.containsAttr("сравн.", None) and t.morph.containsAttr("кач.прил.", None)): 
                 ok = True
         if (ok and t.next0_ is not None): 
             if (t.next0_.isChar(',')): 
                 return ParenthesisToken(t, t)
             t1 = t.next0_
             if (t1.getMorphClassInDictionary() == MorphClass.VERB): 
-                if (t1.morph.containsAttr("н.вр.", MorphClass()) and t1.morph.containsAttr("нес.в.", MorphClass()) and t1.morph.containsAttr("дейст.з.", MorphClass())): 
+                if (t1.morph.containsAttr("н.вр.", None) and t1.morph.containsAttr("нес.в.", None) and t1.morph.containsAttr("дейст.з.", None)): 
                     return ParenthesisToken(t, t1)
         t1 = (None)
         if ((t.isValue("В", None) and t.next0_ is not None and t.next0_.isValue("СООТВЕТСТВИЕ", None)) and t.next0_.next0_ is not None and t.next0_.next0_.morph.class0_.is_preposition): 
@@ -103,9 +106,6 @@ class ParenthesisToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (ParenthesisToken.__m_termins is not None): 
             return
         ParenthesisToken.__m_termins = TerminCollection()

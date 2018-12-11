@@ -5,22 +5,42 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
+
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.morph.MorphCase import MorphCase
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.address.internal.StreetItemType import StreetItemType
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.address.internal.EpNerAddressInternalResourceHelper import EpNerAddressInternalResourceHelper
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.address.AddressDetailType import AddressDetailType
+from pullenti.ner.address.StreetReferent import StreetReferent
 from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.core.NumberExType import NumberExType
-from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.address.internal.StreetItemType import StreetItemType
+from pullenti.ner.Token import Token
+from pullenti.ner.TextToken import TextToken
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.address.AddressReferent import AddressReferent
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
-from pullenti.ner.address.AddressDetailType import AddressDetailType
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.address.internal.EpNerAddressInternalResourceHelper import EpNerAddressInternalResourceHelper
-
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
 
 class StreetItemToken(MetaToken):
     """ Токен для поддержки выделения улиц """
@@ -73,12 +93,11 @@ class StreetItemToken(MetaToken):
         return Utils.toStringStringIO(res)
     
     def __isSurname(self) -> bool:
-        from pullenti.ner.TextToken import TextToken
         if (self.typ != StreetItemType.NAME): 
             return False
         if (not ((isinstance(self.end_token, TextToken)))): 
             return False
-        nam = (Utils.asObjectOrNull(self.end_token, TextToken)).term
+        nam = (self.end_token).term
         if (len(nam) > 4): 
             if (LanguageHelper.endsWithEx(nam, "А", "Я", "КО", "ЧУКА")): 
                 if (not LanguageHelper.endsWithEx(nam, "АЯ", "ЯЯ", None, None)): 
@@ -98,20 +117,6 @@ class StreetItemToken(MetaToken):
     
     @staticmethod
     def _tryParse(t : 'Token', loc_streets : 'IntOntologyCollection', recurse : bool, prev : 'StreetItemToken', ignore_onto : bool) -> 'StreetItemToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.address.StreetReferent import StreetReferent
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.morph.Morphology import Morphology
-        from pullenti.morph.MorphCase import MorphCase
         if (t is None): 
             return None
         tn = None
@@ -130,7 +135,7 @@ class StreetItemToken(MetaToken):
             return StreetItemToken._new218(nt.begin_token, nt.end_token, StreetItemType.AGE, nt)
         nt = Utils.asObjectOrNull(t, NumberToken)
         if ((nt) is not None): 
-            if ((Utils.asObjectOrNull(nt, NumberToken)).value == (0)): 
+            if ((nt).value == (0)): 
                 return None
             res = StreetItemToken._new219(nt, nt, StreetItemType.NUMBER, nt, nt.morph)
             if ((t.next0_ is not None and t.next0_.is_hiphen and t.next0_.next0_ is not None) and t.next0_.next0_.isValue("Я", None)): 
@@ -177,7 +182,7 @@ class StreetItemToken(MetaToken):
                         if (npt is None or len(npt.adjectives) == 0): 
                             sit.value = MiscHelper.getTextValue(tt, tte, GetTextAttr.NO)
                         else: 
-                            sit.value = npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                            sit.value = npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                         tok2 = StreetItemToken.__m_ontology.tryParse(tt, TerminParseAttr.NO)
                         if (tok2 is not None and tok2.termin is not None and tok2.end_token == tte): 
                             sit.termin = tok2.termin
@@ -207,18 +212,18 @@ class StreetItemToken(MetaToken):
                         sit = StreetItemToken(tt, npt.end_token)
                         sit.typ = StreetItemType.NAME
                         sit.value = MiscHelper.getTextValue(tt, npt.end_token, GetTextAttr.NO)
-                        sit.alt_value = npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                        sit.alt_value = npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                         return sit
         if ((tt is not None and (isinstance(tt.next0_, TextToken)) and tt.next0_.chars.is_capital_upper) and not recurse): 
             if ((tt.isValue("ВАЛ", None) or tt.isValue("ТРАКТ", None) or tt.isValue("ПОЛЕ", None)) or tt.isValue("КОЛЬЦО", None) or tt.isValue("КІЛЬЦЕ", None)): 
                 sit = StreetItemToken.tryParse(tt.next0_, loc_streets, True, None, False)
                 if (sit is not None and sit.typ == StreetItemType.NAME): 
                     if (sit.value is not None): 
-                        sit.value = "{0} {1}".format(sit.value, tt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False))
+                        sit.value = "{0} {1}".format(sit.value, tt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False))
                     else: 
-                        sit.value = "{0} {1}".format(sit.getSourceText().upper(), tt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False))
+                        sit.value = "{0} {1}".format(sit.getSourceText().upper(), tt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False))
                     if (sit.alt_value is not None): 
-                        sit.alt_value = "{0} {1}".format(sit.alt_value, tt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False))
+                        sit.alt_value = "{0} {1}".format(sit.alt_value, tt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False))
                     sit.begin_token = tt
                     return sit
         if (((tt is not None and tt.length_char == 1 and tt.chars.is_all_lower) and tt.next0_ is not None and tt.next0_.isChar('.')) and tt.kit.base_language.is_ru): 
@@ -294,12 +299,12 @@ class StreetItemToken(MetaToken):
                                 break
                             if (tt2.chars.is_capital_upper): 
                                 is_sur = False
-                                txt = (Utils.asObjectOrNull(tt2, TextToken)).term
+                                txt = (tt2).term
                                 if (txt.endswith("ОГО")): 
                                     is_sur = True
                                 else: 
                                     for wf in tt2.morph.items: 
-                                        if (wf.class0_.is_proper_surname and (Utils.asObjectOrNull(wf, MorphWordForm)).is_in_dictionary): 
+                                        if (wf.class0_.is_proper_surname and (wf).is_in_dictionary): 
                                             if (wf.case_.is_genitive): 
                                                 is_sur = True
                                                 break
@@ -394,8 +399,8 @@ class StreetItemToken(MetaToken):
                     else: 
                         sit.value = "{0} {1}".format(tok.termin.canonic_text, sit.value)
                 elif (sit.exist_street is None): 
-                    sit.alt_value = (Utils.asObjectOrNull(sit.begin_token, TextToken)).term
-                    sit.value = "{0} {1}".format(tok.termin.canonic_text, (Utils.asObjectOrNull(sit.begin_token, TextToken)).term)
+                    sit.alt_value = (sit.begin_token).term
+                    sit.value = "{0} {1}".format(tok.termin.canonic_text, (sit.begin_token).term)
                 sit.begin_token = tok.begin_token
                 return sit
             elif (swichVal == StreetItemType.NAME): 
@@ -434,13 +439,13 @@ class StreetItemToken(MetaToken):
                 return StreetItemToken._new233(tok.begin_token, tok.end_token, StreetItemType.FIX, tok.morph, True, tok.termin)
         if (tt is not None): 
             if ((prev is not None and prev.typ == StreetItemType.NUMBER and prev.number is not None) and prev.number.value == (26)): 
-                if (tt.isValue("БАКИНСКИЙ", None) or "БАКИНСК".startswith((Utils.asObjectOrNull(tt, TextToken)).term)): 
+                if (tt.isValue("БАКИНСКИЙ", None) or "БАКИНСК".startswith((tt).term)): 
                     tt2 = tt
                     if (tt2.next0_ is not None and tt2.next0_.isChar('.')): 
                         tt2 = tt2.next0_
                     if (isinstance(tt2.next0_, TextToken)): 
                         tt2 = tt2.next0_
-                        if (tt2.isValue("КОМИССАР", None) or tt2.isValue("КОММИССАР", None) or "КОМИС".startswith((Utils.asObjectOrNull(tt2, TextToken)).term)): 
+                        if (tt2.isValue("КОМИССАР", None) or tt2.isValue("КОММИССАР", None) or "КОМИС".startswith((tt2).term)): 
                             if (tt2.next0_ is not None and tt2.next0_.isChar('.')): 
                                 tt2 = tt2.next0_
                             sit = StreetItemToken._new234(tt, tt2, StreetItemType.STDNAME, True, "БАКИНСКИХ КОМИССАРОВ", tt2.morph)
@@ -456,7 +461,7 @@ class StreetItemToken(MetaToken):
                         tt1 = tt1.next0_.next0_
                 sit = StreetItemToken.tryParse(tt1, loc_streets, False, None, False)
                 if (sit is not None and (isinstance(tt1, TextToken))): 
-                    str0_ = (Utils.asObjectOrNull(tt1, TextToken)).term
+                    str0_ = (tt1).term
                     ok = False
                     cla = tt.next0_.next0_.getMorphClassInDictionary()
                     if (sit.is_in_dictionary): 
@@ -575,9 +580,9 @@ class StreetItemToken(MetaToken):
                                     res.end_token = npt.end_token
                                     if (npt.morph.case_.is_genitive): 
                                         res.value = MiscHelper.getTextValueOfMetaToken(npt, GetTextAttr.NO)
-                                        res.alt_value = npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                                        res.alt_value = npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                                     else: 
-                                        res.value = npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                                        res.value = npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                                         res.alt_value = MiscHelper.getTextValueOfMetaToken(npt, GetTextAttr.NO)
                                 elif (AddressItemToken.checkHouseAfter(tt1.next0_, False, False) and tt1.chars.is_cyrillic_letter == tt.chars.is_cyrillic_letter and (t.whitespaces_after_count < 2)): 
                                     if (tt1.morph.class0_.is_verb and not tt1.isValue("ДАЛИ", None)): 
@@ -622,22 +627,17 @@ class StreetItemToken(MetaToken):
                 tt2 = tt2.next0_.next0_
             tok1 = StreetItemToken.__m_ontology.tryParse(tt2, TerminParseAttr.NO)
             if (tok1 is not None): 
-                return StreetItemToken._new228(tt, tt2.previous, StreetItemType.NAME, tt.morph, (Utils.asObjectOrNull(tt, TextToken)).term)
+                return StreetItemToken._new228(tt, tt2.previous, StreetItemType.NAME, tt.morph, (tt).term)
         return None
     
     @staticmethod
     def _tryParseSpec(t : 'Token', prev : 'StreetItemToken') -> typing.List['StreetItemToken']:
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.TextToken import TextToken
         if (t is None): 
             return None
         res = None
         if (isinstance(t.getReferent(), DateReferent)): 
             dr = Utils.asObjectOrNull(t.getReferent(), DateReferent)
-            if (not ((isinstance((Utils.asObjectOrNull(t, ReferentToken)).begin_token, NumberToken)))): 
+            if (not ((isinstance((t).begin_token, NumberToken)))): 
                 return None
             if (dr.year == 0 and dr.day > 0 and dr.month > 0): 
                 res = list()
@@ -676,20 +676,13 @@ class StreetItemToken(MetaToken):
                 t = num.end_token.next0_
                 if ((num.typ == NumberSpellingType.DIGIT and (isinstance(t, TextToken)) and not t.is_whitespace_before) and t.length_char == 1): 
                     sit.end_token = t
-                    sit.value = "{0}{1}".format(num.value, (Utils.asObjectOrNull(t, TextToken)).term)
+                    sit.value = "{0}{1}".format(num.value, (t).term)
                     sit.number = (None)
                 return res
         return None
     
     @staticmethod
     def tryParseList(t : 'Token', loc_streets : 'IntOntologyCollection', max_count : int=10) -> typing.List['StreetItemToken']:
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         from pullenti.ner.geo.internal.CityItemToken import CityItemToken
         res = None
         sit = StreetItemToken.tryParse(t, loc_streets, False, None, False)
@@ -817,8 +810,8 @@ class StreetItemToken(MetaToken):
                         res.extend(spli)
                         t = spli[len(spli) - 1].end_token
                         continue
-                    if (((isinstance(t, TextToken)) and ((len(res) == 2 or len(res) == 3)) and res[0].typ == StreetItemType.NOUN) and res[1].typ == StreetItemType.NUMBER and ((((Utils.asObjectOrNull(t, TextToken)).term == "ГОДА" or (Utils.asObjectOrNull(t, TextToken)).term == "МАЯ" or (Utils.asObjectOrNull(t, TextToken)).term == "МАРТА") or (Utils.asObjectOrNull(t, TextToken)).term == "СЪЕЗДА"))): 
-                        sit = StreetItemToken._new235(t, t, StreetItemType.STDNAME, (Utils.asObjectOrNull(t, TextToken)).term)
+                    if (((isinstance(t, TextToken)) and ((len(res) == 2 or len(res) == 3)) and res[0].typ == StreetItemType.NOUN) and res[1].typ == StreetItemType.NUMBER and ((((t).term == "ГОДА" or (t).term == "МАЯ" or (t).term == "МАРТА") or (t).term == "СЪЕЗДА"))): 
+                        sit = StreetItemToken._new235(t, t, StreetItemType.STDNAME, (t).term)
                         res.append(sit)
                         continue
                     sit = res[len(res) - 1]
@@ -836,7 +829,7 @@ class StreetItemToken(MetaToken):
                             tt2 = tt2.next0_
                             br = True
                         if (((isinstance(tt1, TextToken)) and tt1.length_char == 1 and tt1.chars.is_letter) and ((AddressItemToken.checkHouseAfter(tt2, False, True) or tt2 is None))): 
-                            sit = StreetItemToken._new235(t, (tt1.next0_ if br else tt1), StreetItemType.NAME, (Utils.asObjectOrNull(tt1, TextToken)).term)
+                            sit = StreetItemToken._new235(t, (tt1.next0_ if br else tt1), StreetItemType.NAME, (tt1).term)
                             ch1 = AddressItemToken.correctChar(sit.value[0])
                             if ((ord(ch1)) != 0 and ch1 != sit.value[0]): 
                                 sit.alt_value = "{0}".format(ch1)
@@ -944,7 +937,7 @@ class StreetItemToken(MetaToken):
         i = 0
         while i < (len(res) - 1): 
             if (res[i].typ == StreetItemType.STDADJECTIVE and res[i].end_token.isChar('.') and res[i + 1].__isSurname()): 
-                res[i + 1].value = (Utils.asObjectOrNull(res[i + 1].begin_token, TextToken)).term
+                res[i + 1].value = (res[i + 1].begin_token).term
                 res[i + 1].alt_value = MiscHelper.getTextValue(res[i].begin_token, res[i + 1].end_token, GetTextAttr.NO)
                 res[i + 1].begin_token = res[i].begin_token
                 del res[i]
@@ -1115,7 +1108,6 @@ class StreetItemToken(MetaToken):
     
     @staticmethod
     def __tryAttachRoadNum(t : 'Token') -> 'StreetItemToken':
-        from pullenti.ner.NumberToken import NumberToken
         if (t is None): 
             return None
         if (not t.chars.is_letter or t.length_char != 1): 
@@ -1126,14 +1118,11 @@ class StreetItemToken(MetaToken):
         if (not ((isinstance(tt, NumberToken)))): 
             return None
         res = StreetItemToken._new236(t, tt, StreetItemType.NAME)
-        res.value = "{0}{1}".format(t.getSourceText().upper(), (Utils.asObjectOrNull(tt, NumberToken)).value)
+        res.value = "{0}{1}".format(t.getSourceText().upper(), (tt).value)
         return res
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (StreetItemToken.__m_ontology is not None): 
             return
         StreetItemToken.__m_ontology = TerminCollection()
@@ -1438,14 +1427,14 @@ class StreetItemToken(MetaToken):
             if (line.find(';') >= 0): 
                 parts = Utils.splitString(line, ';', False)
                 t = Termin._new331(StreetItemType.NAME, True)
-                t.initByNormalText(parts[0], MorphLang())
+                t.initByNormalText(parts[0], None)
                 j = 1
                 while j < len(parts): 
                     t.addVariant(parts[j], True)
                     j += 1
             else: 
                 t = Termin._new331(StreetItemType.NAME, True)
-                t.initByNormalText(line, MorphLang())
+                t.initByNormalText(line, None)
             if (len(t.terms) > 1): 
                 t.tag = StreetItemType.STDNAME
             StreetItemToken.__m_ontology.add(t)

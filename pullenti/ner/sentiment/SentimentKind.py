@@ -4,11 +4,10 @@
 
 from enum import IntEnum
 
-
 class SentimentKind(IntEnum):
     UNDEFINED = 0
-    POSITIVE = 0 + 1
-    NEGATIVE = (0 + 1) + 1
+    POSITIVE = 1
+    NEGATIVE = 2
     
     @classmethod
     def has_value(cls, value):

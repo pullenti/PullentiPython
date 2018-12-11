@@ -5,14 +5,29 @@
 import typing
 import math
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.booklink.internal.BookLinkTyp import BookLinkTyp
-from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.morph.MorphNumber import MorphNumber
 
+from pullenti.ner.denomination.DenominationReferent import DenominationReferent
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
+from pullenti.ner.uri.UriReferent import UriReferent
+from pullenti.ner.phone.PhoneReferent import PhoneReferent
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.booklink.internal.BookLinkTyp import BookLinkTyp
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
+from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
+from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.booklink.internal.BookLinkToken import BookLinkToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 
 class TitleNameToken(MetaToken):
     """ Название статьи """
@@ -53,7 +68,6 @@ class TitleNameToken(MetaToken):
     
     @staticmethod
     def canBeStartOfTextOrContent(begin : 'Token', end : 'Token') -> bool:
-        from pullenti.ner.TextToken import TextToken
         if (begin.isValue("СОДЕРЖАНИЕ", "ЗМІСТ") or begin.isValue("ОГЛАВЛЕНИЕ", None) or begin.isValue("СОДЕРЖИМОЕ", None)): 
             t = begin
             if (t.next0_ is not None and t.next0_.isCharOf(":.")): 
@@ -70,7 +84,7 @@ class TitleNameToken(MetaToken):
             if (isinstance(t, TextToken)): 
                 if (t.chars.is_letter): 
                     words += 1
-                if (t.chars.is_all_lower and (Utils.asObjectOrNull(t, TextToken)).is_pure_verb): 
+                if (t.chars.is_all_lower and (t).is_pure_verb): 
                     verbs += 1
             t = t.next0_
         if (words > 10 and verbs > 1): 
@@ -87,21 +101,6 @@ class TitleNameToken(MetaToken):
         return res
     
     def __calcRankAndValue(self, min_newlines_count : int) -> bool:
-        from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
-        from pullenti.ner.booklink.internal.BookLinkToken import BookLinkToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.denomination.DenominationReferent import DenominationReferent
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.phone.PhoneReferent import PhoneReferent
-        from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
-        from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
-        from pullenti.ner.TextToken import TextToken
         self.rank = 0
         if (self.begin_token.chars.is_all_lower): 
             self.rank -= 30
@@ -240,7 +239,7 @@ class TitleNameToken(MetaToken):
                         self.rank -= 10
                 continue
             if (isinstance(t, NumberToken)): 
-                if ((Utils.asObjectOrNull(t, NumberToken)).typ == NumberSpellingType.WORDS): 
+                if ((t).typ == NumberSpellingType.WORDS): 
                     words += 1
                     if (t.chars.is_all_upper): 
                         up_words += 1

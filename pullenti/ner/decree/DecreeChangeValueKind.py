@@ -4,17 +4,16 @@
 
 from enum import IntEnum
 
-
 class DecreeChangeValueKind(IntEnum):
     """ Типы изменяющих СЭ значений """
     UNDEFINED = 0
-    TEXT = 0 + 1
-    WORDS = (0 + 1) + 1
-    ROBUSTWORDS = ((0 + 1) + 1) + 1
-    NUMBERS = (((0 + 1) + 1) + 1) + 1
-    SEQUENCE = ((((0 + 1) + 1) + 1) + 1) + 1
-    FOOTNOTE = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
-    BLOCK = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
+    TEXT = 1
+    WORDS = 2
+    ROBUSTWORDS = 3
+    NUMBERS = 4
+    SEQUENCE = 5
+    FOOTNOTE = 6
+    BLOCK = 7
     
     @classmethod
     def has_value(cls, value):

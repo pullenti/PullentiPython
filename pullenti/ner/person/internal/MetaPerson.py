@@ -3,9 +3,9 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
+
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.Referent import Referent
-
 
 class MetaPerson(ReferentClass):
     
@@ -13,24 +13,25 @@ class MetaPerson(ReferentClass):
     
     ATTR_SEXFEMALE = "FEMALE"
     
-    def __init__(self) -> None:
+    @staticmethod
+    def initialize() -> None:
         from pullenti.ner.person.PersonReferent import PersonReferent
-        super().__init__()
-        self.addFeature(PersonReferent.ATTR_IDENTITY, "Идентификация", 0, 0)
-        sex = self.addFeature(PersonReferent.ATTR_SEX, "Пол", 0, 0)
+        MetaPerson._global_meta = MetaPerson()
+        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_IDENTITY, "Идентификация", 0, 0)
+        sex = MetaPerson._global_meta.addFeature(PersonReferent.ATTR_SEX, "Пол", 0, 0)
         sex.addValue(MetaPerson.ATTR_SEXMALE, "мужской", None, None)
         sex.addValue(MetaPerson.ATTR_SEXFEMALE, "женский", None, None)
-        self.addFeature(PersonReferent.ATTR_LASTNAME, "Фамилия", 0, 0)
-        self.addFeature(PersonReferent.ATTR_FIRSTNAME, "Имя", 0, 0)
-        self.addFeature(PersonReferent.ATTR_MIDDLENAME, "Отчество", 0, 0)
-        self.addFeature(PersonReferent.ATTR_NICKNAME, "Псевдоним", 0, 0)
-        self.addFeature(PersonReferent.ATTR_ATTR, "Свойство", 0, 0)
-        self.addFeature(PersonReferent.ATTR_AGE, "Возраст", 0, 1)
-        self.addFeature(PersonReferent.ATTR_BORN, "Родился", 0, 1)
-        self.addFeature(PersonReferent.ATTR_DIE, "Умер", 0, 1)
-        self.addFeature(PersonReferent.ATTR_CONTACT, "Контактные данные", 0, 0)
-        self.addFeature(PersonReferent.ATTR_IDDOC, "Удостоверение личности", 0, 0).show_as_parent = True
-        self.addFeature(Referent.ATTR_GENERAL, "Обобщающая персона", 0, 1)
+        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_LASTNAME, "Фамилия", 0, 0)
+        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_FIRSTNAME, "Имя", 0, 0)
+        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_MIDDLENAME, "Отчество", 0, 0)
+        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_NICKNAME, "Псевдоним", 0, 0)
+        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_ATTR, "Свойство", 0, 0)
+        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_AGE, "Возраст", 0, 1)
+        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_BORN, "Родился", 0, 1)
+        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_DIE, "Умер", 0, 1)
+        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_CONTACT, "Контактные данные", 0, 0)
+        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_IDDOC, "Удостоверение личности", 0, 0).show_as_parent = True
+        MetaPerson._global_meta.addFeature(Referent.ATTR_GENERAL, "Обобщающая персона", 0, 1)
     
     @property
     def name(self) -> str:
@@ -62,10 +63,3 @@ class MetaPerson(ReferentClass):
         return MetaPerson.PERSON_IMAGE_ID
     
     _global_meta = None
-    
-    # static constructor for class MetaPerson
-    @staticmethod
-    def _static_ctor():
-        MetaPerson._global_meta = MetaPerson()
-
-MetaPerson._static_ctor()

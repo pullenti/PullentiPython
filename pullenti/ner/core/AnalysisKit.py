@@ -9,20 +9,27 @@ import math
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.unisharp.Misc import EventHandler
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
-from pullenti.ner.core.StatisticCollection import StatisticCollection
-from pullenti.ner.core.internal.GeneralRelationHelper import GeneralRelationHelper
-from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 
+from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
+from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
+from pullenti.ner.TextAnnotation import TextAnnotation
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.internal.GeneralRelationHelper import GeneralRelationHelper
+from pullenti.ner.Token import Token
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.ProcessorService import ProcessorService
 
 class AnalysisKit:
     """ Внутренний аналитический контейнер данных """
     
-    def __init__(self, sofa_ : 'SourceOfAnalysis'=None, only_tokenizing : bool=False, lang : 'MorphLang'=MorphLang(), progress : EventHandler=None) -> None:
-        from pullenti.morph.Morphology import Morphology
-        from pullenti.ner.TextToken import TextToken
+    def __init__(self, sofa_ : 'SourceOfAnalysis'=None, only_tokenizing : bool=False, lang : 'MorphLang'=None, progress : EventHandler=None) -> None:
         self._start_date = datetime.datetime(1, 1, 1, 0, 0, 0)
         self.corrected_tokens = None
         self.first_token = None;
@@ -178,9 +185,6 @@ class AnalysisKit:
     
     @staticmethod
     def __calcAbnormalCoef(t : 'Token') -> int:
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphWordForm import MorphWordForm
         if (isinstance(t, NumberToken)): 
             return 0
         tt = Utils.asObjectOrNull(t, TextToken)
@@ -193,16 +197,13 @@ class AnalysisKit:
         if (tt.length_char < 4): 
             return 0
         for wf in tt.morph.items: 
-            if ((Utils.asObjectOrNull(wf, MorphWordForm)).is_in_dictionary): 
+            if ((wf).is_in_dictionary): 
                 return -1
         if (tt.length_char > 15): 
             return 2
         return 1
     
     def __correctWordsByMerging(self, lang : 'MorphLang') -> None:
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.Morphology import Morphology
         t = self.first_token
         first_pass2811 = True
         while True:
@@ -212,7 +213,7 @@ class AnalysisKit:
             if (not t.chars.is_letter or (t.length_char < 2)): 
                 continue
             mc0 = t.getMorphClassInDictionary()
-            if (t.morph.containsAttr("прдктв.", MorphClass())): 
+            if (t.morph.containsAttr("прдктв.", None)): 
                 continue
             t1 = t.next0_
             if (t1.is_hiphen and t1.next0_ is not None and not t1.is_newline_after): 
@@ -227,14 +228,14 @@ class AnalysisKit:
                 continue
             elif (t.chars.is_all_upper): 
                 continue
-            if (t1.morph.containsAttr("прдктв.", MorphClass())): 
+            if (t1.morph.containsAttr("прдктв.", None)): 
                 continue
             mc1 = t1.getMorphClassInDictionary()
             if (not mc1.is_undefined and not mc0.is_undefined): 
                 continue
-            if ((len((Utils.asObjectOrNull(t, TextToken)).term) + len((Utils.asObjectOrNull(t1, TextToken)).term)) < 6): 
+            if ((len((t).term) + len((t1).term)) < 6): 
                 continue
-            corw = (Utils.asObjectOrNull(t, TextToken)).term + (Utils.asObjectOrNull(t1, TextToken)).term
+            corw = (t).term + (t1).term
             ccc = Morphology.process(corw, lang, None)
             if (ccc is None or len(ccc) != 1): 
                 continue
@@ -255,9 +256,6 @@ class AnalysisKit:
             t = (tt)
     
     def __correctWordsByMorph(self, lang : 'MorphLang') -> None:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.morph.Morphology import Morphology
         tt = self.first_token
         first_pass2812 = True
         while True:
@@ -266,7 +264,7 @@ class AnalysisKit:
             if (not (tt is not None)): break
             if (not ((isinstance(tt, TextToken)))): 
                 continue
-            if (tt.morph.containsAttr("прдктв.", MorphClass())): 
+            if (tt.morph.containsAttr("прдктв.", None)): 
                 continue
             dd = tt.getMorphClassInDictionary()
             if (not dd.is_undefined or (tt.length_char < 4)): 
@@ -275,13 +273,13 @@ class AnalysisKit:
                 continue
             if (tt.chars.is_all_upper): 
                 continue
-            corw = Morphology.correctWord((Utils.asObjectOrNull(tt, TextToken)).term, (lang if tt.morph.language.is_undefined else tt.morph.language))
+            corw = Morphology.correctWord((tt).term, (lang if tt.morph.language.is_undefined else tt.morph.language))
             if (corw is None): 
                 continue
             ccc = Morphology.process(corw, lang, None)
             if (ccc is None or len(ccc) != 1): 
                 continue
-            tt1 = TextToken._new506(ccc[0], self, tt.chars, tt.begin_char, tt.end_char, (Utils.asObjectOrNull(tt, TextToken)).term)
+            tt1 = TextToken._new506(ccc[0], self, tt.chars, tt.begin_char, tt.end_char, (tt).term)
             mc = tt1.getMorphClassInDictionary()
             if (mc.is_proper_surname): 
                 continue
@@ -296,8 +294,6 @@ class AnalysisKit:
             self.corrected_tokens[tt] = tt.getSourceText()
     
     def __mergeLetters(self) -> None:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.Morphology import Morphology
         before_word = False
         tmp = io.StringIO()
         t = self.first_token
@@ -360,8 +356,6 @@ class AnalysisKit:
         Args:
             mt(MetaToken): 
         """
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.TextAnnotation import TextAnnotation
         if (mt is None): 
             return
         if (mt.begin_char > mt.end_char): 
@@ -378,8 +372,8 @@ class AnalysisKit:
         tn = mt.end_token.next0_
         mt.next0_ = tn
         if (isinstance(mt, ReferentToken)): 
-            if ((Utils.asObjectOrNull(mt, ReferentToken)).referent is not None): 
-                (Utils.asObjectOrNull(mt, ReferentToken)).referent.addOccurence(TextAnnotation._new507(self.sofa, mt.begin_char, mt.end_char))
+            if ((mt).referent is not None): 
+                (mt).referent.addOccurence(TextAnnotation._new507(self.sofa, mt.begin_char, mt.end_char))
     
     def debedToken(self, t : 'Token') -> 'Token':
         """ Убрать метатокен из цепочки, восстановив исходное
@@ -390,7 +384,6 @@ class AnalysisKit:
         Returns:
             Token: первый токен удалённого метатокена
         """
-        from pullenti.ner.MetaToken import MetaToken
         r = t.getReferent()
         if (r is not None): 
             for o in r.occurrence: 
@@ -472,11 +465,11 @@ class AnalysisKit:
         return default_data
     
     def __createStatistics(self) -> None:
+        from pullenti.ner.core.StatisticCollection import StatisticCollection
         self.statistics = StatisticCollection()
         self.statistics.prepare(self.first_token)
     
     def __defineBaseLanguage(self) -> None:
-        from pullenti.ner.TextToken import TextToken
         stat = dict()
         total = 0
         t = self.first_token
@@ -508,11 +501,10 @@ class AnalysisKit:
             old_referent(Referent): 
             new_referent(Referent): 
         """
-        from pullenti.ner.ReferentToken import ReferentToken
         t = self.first_token
         while t is not None: 
             if (isinstance(t, ReferentToken)): 
-                (Utils.asObjectOrNull(t, ReferentToken))._replaceReferent(old_referent, new_referent)
+                (t)._replaceReferent(old_referent, new_referent)
             t = t.next0_
         for d in self.__m_datas.values(): 
             for r in d.referents: 
@@ -573,8 +565,6 @@ class AnalysisKit:
         SerializerHelper.serializeTokens(stream, self.first_token, 0)
     
     def deserialize(self, stream : io.IOBase) -> None:
-        from pullenti.ner.ProcessorService import ProcessorService
-        from pullenti.ner.Referent import Referent
         self.__m_sofa = SourceOfAnalysis(None)
         self.__m_sofa.deserialize(stream)
         self.base_language = MorphLang._new6(SerializerHelper.deserializeInt(stream))

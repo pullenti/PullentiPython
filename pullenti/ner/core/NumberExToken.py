@@ -5,14 +5,20 @@
 import math
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.core.NumberExType import NumberExType
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
 
+from pullenti.ner.Token import Token
+from pullenti.ner.TextToken import TextToken
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.core.NumberExType import NumberExType
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.BracketHelper import BracketHelper
 
 class NumberExToken(NumberToken):
     """ Число с стандартный постфиксом (мерой длины, вес, деньги и т.п.) """
@@ -32,7 +38,6 @@ class NumberExToken(NumberToken):
     
     @staticmethod
     def __tryParseFloat(t : 'NumberToken', d : float) -> 'Token':
-        from pullenti.ner.TextToken import TextToken
         d.value = (0)
         if (t is None or t.next0_ is None or t.typ != NumberSpellingType.DIGIT): 
             return None
@@ -47,7 +52,7 @@ class NumberExToken(NumberToken):
             if (not (t1 is not None)): break
             if (t1.next0_ is None): 
                 break
-            if (((isinstance(t1.next0_, NumberToken)) and (t1.whitespaces_after_count < 3) and (Utils.asObjectOrNull(t1.next0_, NumberToken)).typ == NumberSpellingType.DIGIT) and t1.next0_.length_char == 3): 
+            if (((isinstance(t1.next0_, NumberToken)) and (t1.whitespaces_after_count < 3) and (t1.next0_).typ == NumberSpellingType.DIGIT) and t1.next0_.length_char == 3): 
                 if (ns is None): 
                     ns = list()
                     ns.append(t)
@@ -57,7 +62,7 @@ class NumberExToken(NumberToken):
                 ns.append(Utils.asObjectOrNull(t1.next0_, NumberToken))
                 sps.append(' ')
                 continue
-            if ((t1.next0_.isCharOf(",.") and (isinstance(t1.next0_.next0_, NumberToken)) and (Utils.asObjectOrNull(t1.next0_.next0_, NumberToken)).typ == NumberSpellingType.DIGIT) and (t1.whitespaces_after_count < 2) and (t1.next0_.whitespaces_after_count < 2)): 
+            if ((t1.next0_.isCharOf(",.") and (isinstance(t1.next0_.next0_, NumberToken)) and (t1.next0_.next0_).typ == NumberSpellingType.DIGIT) and (t1.whitespaces_after_count < 2) and (t1.next0_.whitespaces_after_count < 2)): 
                 if (ns is None): 
                     ns = list()
                     ns.append(t)
@@ -86,7 +91,7 @@ class NumberExToken(NumberToken):
                     elif (ns[1].end_token.isChar('.') and ns[1].end_token.previous is not None and ns[1].end_token.previous.chars.is_letter): 
                         merge = True
                     if (ns[1].is_whitespace_before): 
-                        if ((isinstance(ns[1].end_token, TextToken)) and (Utils.asObjectOrNull(ns[1].end_token, TextToken)).term.endswith("000")): 
+                        if ((isinstance(ns[1].end_token, TextToken)) and (ns[1].end_token).term.endswith("000")): 
                             return None
             elif (ns[0].length_char > 3 or ns[0].value == (0)): 
                 is_last_drob = True
@@ -175,7 +180,6 @@ class NumberExToken(NumberToken):
     def tryParseFloatNumber(t : 'Token', can_be_integer : bool=False) -> 'NumberExToken':
         """ Это разделитель дроби по-умолчанию, используется для случаев, когда невозможно принять однозначного решения.
          Устанавливается на основе последнего успешного анализа. """
-        from pullenti.ner.TextToken import TextToken
         is_not = False
         t0 = t
         if (t is not None): 
@@ -190,7 +194,7 @@ class NumberExToken(NumberToken):
             res0 = NumberExToken(t, t.next0_, 0, NumberSpellingType.WORDS, NumberExType.UNDEFINED)
             t = t.next0_
             if (isinstance(t, NumberToken)): 
-                val = (Utils.asObjectOrNull(t, NumberToken)).value
+                val = (t).value
                 if (t.next0_ is not None and val > (0)): 
                     if (t.next0_.isValue("ДЕСЯТЫЙ", None)): 
                         res0.end_token = t.next0_
@@ -229,7 +233,7 @@ class NumberExToken(NumberToken):
         if (not ((isinstance(t, NumberToken)))): 
             return None
         if (t.next0_ is not None and t.next0_.isValue("ЦЕЛЫЙ", None) and (((isinstance(t.next0_.next0_, NumberToken)) or (((isinstance(t.next0_.next0_, TextToken)) and t.next0_.next0_.isValue("НОЛЬ", None)))))): 
-            res0 = NumberExToken(t, t.next0_, (Utils.asObjectOrNull(t, NumberToken)).value, NumberSpellingType.WORDS, NumberExType.UNDEFINED)
+            res0 = NumberExToken(t, t.next0_, (t).value, NumberSpellingType.WORDS, NumberExType.UNDEFINED)
             t = t.next0_.next0_
             val = 0
             if (isinstance(t, TextToken)): 
@@ -237,7 +241,7 @@ class NumberExToken(NumberToken):
                 t = t.next0_
             if (isinstance(t, NumberToken)): 
                 res0.end_token = t
-                val = (Utils.asObjectOrNull(t, NumberToken)).value
+                val = (t).value
                 t = t.next0_
             if (t is not None): 
                 if (t.isValue("ДЕСЯТЫЙ", None)): 
@@ -273,7 +277,7 @@ class NumberExToken(NumberToken):
         if (tt is None): 
             if ((t.next0_ is None or t.is_whitespace_after or t.next0_.chars.is_letter) or can_be_integer): 
                 tt = t
-                d = ((Utils.asObjectOrNull(t, NumberToken)).value)
+                d = ((t).value)
             else: 
                 return None
         if (is_not): 
@@ -283,8 +287,6 @@ class NumberExToken(NumberToken):
     @staticmethod
     def tryParseNumberWithPostfix(t : 'Token') -> 'NumberExToken':
         """ Выделение стандартных мер, типа: 10 кв.м. """
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
         if (t is None): 
             return None
         t0 = t
@@ -346,7 +348,7 @@ class NumberExToken(NumberToken):
             t1 = t1.next0_
         det = False
         altf = f
-        if (((isinstance(t1, NumberToken)) and t1.previous is not None and t1.previous.is_hiphen) and (Utils.asObjectOrNull(t1, NumberToken)).value == (0) and t1.length_char == 2): 
+        if (((isinstance(t1, NumberToken)) and t1.previous is not None and t1.previous.is_hiphen) and (t1).value == (0) and t1.length_char == 2): 
             t1 = t1.next0_
         if ((t1 is not None and t1.next0_ is not None and t1.isChar('(')) and (((isinstance(t1.next0_, NumberToken)) or t1.next0_.isValue("НОЛЬ", None))) and t1.next0_.next0_ is not None): 
             nt1 = Utils.asObjectOrNull(t1.next0_, NumberToken)
@@ -358,9 +360,9 @@ class NumberExToken(NumberToken):
                 if (ttt.isChar(')')): 
                     t1 = ttt.next0_
                     det = True
-                elif (((((isinstance(ttt, NumberToken)) and ((Utils.asObjectOrNull(ttt, NumberToken)).value < (100)) and ttt.next0_ is not None) and ttt.next0_.isChar('/') and ttt.next0_.next0_ is not None) and ttt.next0_.next0_.getSourceText() == "100" and ttt.next0_.next0_.next0_ is not None) and ttt.next0_.next0_.next0_.isChar(')')): 
+                elif (((((isinstance(ttt, NumberToken)) and ((ttt).value < (100)) and ttt.next0_ is not None) and ttt.next0_.isChar('/') and ttt.next0_.next0_ is not None) and ttt.next0_.next0_.getSourceText() == "100" and ttt.next0_.next0_.next0_ is not None) and ttt.next0_.next0_.next0_.isChar(')')): 
                     rest = NumberExToken.__getDecimalRest100(f)
-                    if (rest == (Utils.asObjectOrNull(ttt, NumberToken)).value): 
+                    if (rest == (ttt).value): 
                         t1 = ttt.next0_.next0_.next0_.next0_
                         det = True
                 elif ((ttt.isValue("ЦЕЛЫХ", None) and (isinstance(ttt.next0_, NumberToken)) and ttt.next0_.next0_ is not None) and ttt.next0_.next0_.next0_ is not None and ttt.next0_.next0_.next0_.isChar(')')): 
@@ -454,7 +456,7 @@ class NumberExToken(NumberToken):
         if (t1 is None or ((t1.is_newline_before and not det))): 
             return None
         toks = NumberExToken.__m_postfixes.tryParse(t1, TerminParseAttr.NO)
-        if ((toks is None and det and (isinstance(t1, NumberToken))) and (Utils.asObjectOrNull(t1, NumberToken)).value == (0)): 
+        if ((toks is None and det and (isinstance(t1, NumberToken))) and (t1).value == (0)): 
             toks = NumberExToken.__m_postfixes.tryParse(t1.next0_, TerminParseAttr.NO)
         if (toks is not None): 
             t1 = toks.end_token
@@ -493,7 +495,7 @@ class NumberExToken(NumberToken):
                 if (nn is not None): 
                     return NumberExToken._new533(t, t, nt.value, nt.typ, nn.ex_typ, f, altf, nn.ex_typ2, nn.ex_typ_param)
         if (not t1.is_whitespace_after and (isinstance(t1.next0_, NumberToken)) and (isinstance(t1, TextToken))): 
-            term = (Utils.asObjectOrNull(t1, TextToken)).term
+            term = (t1).term
             ty = NumberExType.UNDEFINED
             if (term == "СМХ" or term == "CMX"): 
                 ty = NumberExType.SANTIMETER
@@ -583,10 +585,10 @@ class NumberExToken(NumberToken):
             num = 3
         elif (t.isChar('²')): 
             num = 2
-        elif (not t.is_whitespace_before and (isinstance(t, NumberToken)) and (((Utils.asObjectOrNull(t, NumberToken)).value == (3) or (Utils.asObjectOrNull(t, NumberToken)).value == (2)))): 
-            num = ((Utils.asObjectOrNull(t, NumberToken)).value)
+        elif (not t.is_whitespace_before and (isinstance(t, NumberToken)) and (((t).value == (3) or (t).value == (2)))): 
+            num = ((t).value)
         elif ((t.isChar('<') and (isinstance(t.next0_, NumberToken)) and t.next0_.next0_ is not None) and t.next0_.next0_.isChar('>')): 
-            num = ((Utils.asObjectOrNull(t.next0_, NumberToken)).value)
+            num = ((t.next0_).value)
             tt = t.next0_.next0_
         if (num == 3): 
             if (typ_.value == NumberExType.METER): 
@@ -606,7 +608,6 @@ class NumberExToken(NumberToken):
     
     @staticmethod
     def __correctMoney(res : 'NumberExToken', t1 : 'Token') -> 'NumberExToken':
-        from pullenti.ner.TextToken import TextToken
         if (t1 is None): 
             return None
         toks = NumberExToken.__m_postfixes.tryParseAll(t1, TerminParseAttr.NO)
@@ -648,14 +649,14 @@ class NumberExToken(NumberToken):
         if ((isinstance(tt, NumberToken)) and tt.next0_ is not None and (tt.whitespaces_after_count < 4)): 
             tt1 = tt.next0_
             if ((tt1 is not None and tt1.isChar('(') and (isinstance(tt1.next0_, NumberToken))) and tt1.next0_.next0_ is not None and tt1.next0_.next0_.isChar(')')): 
-                if ((Utils.asObjectOrNull(tt, NumberToken)).value == (Utils.asObjectOrNull(tt1.next0_, NumberToken)).value): 
+                if ((tt).value == (tt1.next0_).value): 
                     tt1 = tt1.next0_.next0_.next0_
             tok = NumberExToken.__m_small_money.tryParse(tt1, TerminParseAttr.NO)
             if (tok is None and tt1 is not None and tt1.isChar(')')): 
                 tok = NumberExToken.__m_small_money.tryParse(tt1.next0_, TerminParseAttr.NO)
             if (tok is not None): 
                 max0_ = tok.termin.tag
-                val = (Utils.asObjectOrNull(tt, NumberToken)).value
+                val = (tt).value
                 if (val < max0_): 
                     f = val
                     f /= (max0_)
@@ -835,9 +836,6 @@ class NumberExToken(NumberToken):
     
     @staticmethod
     def _initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (NumberExToken.__m_postfixes is not None): 
             return
         NumberExToken.__m_after_points = TerminCollection()
@@ -1070,7 +1068,7 @@ class NumberExToken(NumberToken):
                 for p in Utils.splitString(parts[0], ',', False): 
                     if (p != parts[1]): 
                         t0 = Termin()
-                        t0.initByNormalText(p, MorphLang())
+                        t0.initByNormalText(p, None)
                         t.addVariantTerm(t0)
                 if (parts[1] == "РУБЛЬ"): 
                     t.addAbridge("РУБ.")
@@ -1099,7 +1097,7 @@ class NumberExToken(NumberToken):
                 t.tag = (num)
                 if (vv != parts[4]): 
                     t0 = Termin()
-                    t0.initByNormalText(vv, MorphLang())
+                    t0.initByNormalText(vv, None)
                     t.addVariantTerm(t0)
                 if (parts[4] == "КОПЕЙКА" or parts[4] == "КОПІЙКА"): 
                     t.addAbridge("КОП.")

@@ -5,16 +5,17 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.decree.DecreeChangeValueKind import DecreeChangeValueKind
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.decree.DecreeChangeValueKind import DecreeChangeValueKind
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.ner.decree.internal.MetaDecreeChangeValue import MetaDecreeChangeValue
 
 class DecreeChangeValueReferent(Referent):
     """ Значение изменения СЭ НПА """
     
     def __init__(self) -> None:
-        from pullenti.ner.decree.internal.MetaDecreeChangeValue import MetaDecreeChangeValue
         super().__init__(DecreeChangeValueReferent.OBJ_TYPENAME)
         self.instance_of = MetaDecreeChangeValue.GLOBAL_META
     
@@ -28,9 +29,7 @@ class DecreeChangeValueReferent(Referent):
     
     ATTR_NEWITEM = "NEWITEM"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.decree.internal.MetaDecreeChangeValue import MetaDecreeChangeValue
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         nws = self.new_items
         if (len(nws) > 0): 
@@ -41,7 +40,7 @@ class DecreeChangeValueReferent(Referent):
                     dpr.addSlot(p, "", False, 0)
                 else: 
                     dpr.addSlot(p[0:0+ii], p[ii + 1:], False, 0)
-                print(" новый '{0}'".format(dpr.toString(True, MorphLang(), 0)), end="", file=res, flush=True)
+                print(" новый '{0}'".format(dpr.toString(True, None, 0)), end="", file=res, flush=True)
         if (self.kind != DecreeChangeValueKind.UNDEFINED): 
             print(" {0}".format(str(MetaDecreeChangeValue.KIND_FEATURE.convertInnerValueToOuterValue(self.kind, lang)).lower()), end="", file=res, flush=True)
         if (self.number is not None): 

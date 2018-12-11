@@ -3,26 +3,30 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
+
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.business.FundsKind import FundsKind
-
 
 class FundsMeta(ReferentClass):
     
     def __init__(self) -> None:
-        from pullenti.ner.business.FundsReferent import FundsReferent
         super().__init__()
         self.kind_feature = None;
-        f = self.addFeature(FundsReferent.ATTR_KIND, "Класс", 0, 1)
-        self.kind_feature = f
+    
+    @staticmethod
+    def initialize() -> None:
+        from pullenti.ner.business.FundsReferent import FundsReferent
+        FundsMeta.GLOBAL_META = FundsMeta()
+        f = FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_KIND, "Класс", 0, 1)
+        FundsMeta.GLOBAL_META.kind_feature = f
         f.addValue(Utils.enumToString(FundsKind.STOCK), "Акция", None, None)
         f.addValue(Utils.enumToString(FundsKind.CAPITAL), "Уставной капитал", None, None)
-        self.addFeature(FundsReferent.ATTR_TYPE, "Тип", 0, 1)
-        self.addFeature(FundsReferent.ATTR_SOURCE, "Эмитент", 0, 1)
-        self.addFeature(FundsReferent.ATTR_PERCENT, "Процент", 0, 1)
-        self.addFeature(FundsReferent.ATTR_COUNT, "Количество", 0, 1)
-        self.addFeature(FundsReferent.ATTR_PRICE, "Номинал", 0, 1)
-        self.addFeature(FundsReferent.ATTR_SUM, "Денежная сумма", 0, 1)
+        FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_TYPE, "Тип", 0, 1)
+        FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_SOURCE, "Эмитент", 0, 1)
+        FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_PERCENT, "Процент", 0, 1)
+        FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_COUNT, "Количество", 0, 1)
+        FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_PRICE, "Номинал", 0, 1)
+        FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_SUM, "Денежная сумма", 0, 1)
     
     @property
     def name(self) -> str:
@@ -39,10 +43,3 @@ class FundsMeta(ReferentClass):
         return FundsMeta.IMAGE_ID
     
     GLOBAL_META = None
-    
-    # static constructor for class FundsMeta
-    @staticmethod
-    def _static_ctor():
-        FundsMeta.GLOBAL_META = FundsMeta()
-
-FundsMeta._static_ctor()

@@ -4,15 +4,15 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.person.internal.MetaPersonIdentity import MetaPersonIdentity
 
 class PersonIdentityReferent(Referent):
     """ Удостоверение личности (паспорт и пр.) """
     
     def __init__(self) -> None:
-        from pullenti.ner.person.internal.MetaPersonIdentity import MetaPersonIdentity
         super().__init__(PersonIdentityReferent.OBJ_TYPENAME)
         self.instance_of = MetaPersonIdentity._global_meta
     
@@ -30,7 +30,7 @@ class PersonIdentityReferent(Referent):
     
     ATTR_ADDRESS = "ADDRESS"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         print(Utils.ifNotNull(self.typ, "?"), end="", file=res)
         if (self.number is not None): 

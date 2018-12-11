@@ -5,11 +5,24 @@
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.Token import Token
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.weapon.internal.WeaponItemToken import WeaponItemToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.weapon.internal.MetaWeapon import MetaWeapon
+from pullenti.ner.weapon.WeaponReferent import WeaponReferent
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.geo.GeoReferent import GeoReferent
 
 class WeaponAnalyzer(Analyzer):
     
@@ -32,25 +45,21 @@ class WeaponAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.weapon.internal.MetaWeapon import MetaWeapon
         return [MetaWeapon._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.weapon.internal.MetaWeapon import MetaWeapon
         res = dict()
         res[MetaWeapon.IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("weapon.jpg")
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.weapon.WeaponReferent import WeaponReferent
         if (type0_ == WeaponReferent.OBJ_TYPENAME): 
             return WeaponReferent()
         return None
     
     @property
     def used_extern_object_types(self) -> typing.List[str]:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         return [GeoReferent.OBJ_TYPENAME, "ORGANIZATION"]
     
     @property
@@ -58,15 +67,6 @@ class WeaponAnalyzer(Analyzer):
         return 5
     
     def process(self, kit : 'AnalysisKit') -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.weapon.internal.WeaponItemToken import WeaponItemToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.weapon.WeaponReferent import WeaponReferent
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.TextToken import TextToken
         ad = kit.getAnalyzerData(self)
         models = TerminCollection()
         objs_by_model = dict()
@@ -100,7 +100,7 @@ class WeaponAnalyzer(Analyzer):
                                         objs_by_model[mod] = li
                                     if (not rt.referent in li): 
                                         li.append(rt.referent)
-                                    models.addStr(mod, li, MorphLang(), False)
+                                    models.addStr(mod, li, None, False)
                                 if (k > 0): 
                                     break
                                 brand = rt.referent.getStringValue(WeaponReferent.ATTR_BRAND)
@@ -156,7 +156,6 @@ class WeaponAnalyzer(Analyzer):
                 continue
     
     def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        from pullenti.ner.weapon.internal.WeaponItemToken import WeaponItemToken
         its = WeaponItemToken.tryParseList(begin, 10)
         if (its is None): 
             return None
@@ -166,10 +165,6 @@ class WeaponAnalyzer(Analyzer):
         return None
     
     def __tryAttach(self, its : typing.List['WeaponItemToken'], attach : bool) -> typing.List['ReferentToken']:
-        from pullenti.ner.weapon.WeaponReferent import WeaponReferent
-        from pullenti.ner.weapon.internal.WeaponItemToken import WeaponItemToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
         tr = WeaponReferent()
         t1 = None
         noun = None
@@ -311,12 +306,10 @@ class WeaponAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.weapon.internal.WeaponItemToken import WeaponItemToken
-        from pullenti.ner.ProcessorService import ProcessorService
         if (WeaponAnalyzer.__m_inited): 
             return
         WeaponAnalyzer.__m_inited = True
+        MetaWeapon.initialize()
         try: 
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             WeaponItemToken.initialize()

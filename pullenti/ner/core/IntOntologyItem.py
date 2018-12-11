@@ -4,8 +4,8 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.LanguageHelper import LanguageHelper
 
+from pullenti.morph.LanguageHelper import LanguageHelper
 
 class IntOntologyItem:
     """ Элемент онтологического словаря """

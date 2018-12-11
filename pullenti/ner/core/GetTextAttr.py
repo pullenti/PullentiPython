@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class GetTextAttr(IntEnum):
     """ Атрибуты получения текста """
     NO = 0

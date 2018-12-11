@@ -5,22 +5,24 @@
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.person.PersonPropertyKind import PersonPropertyKind
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.person.internal.PersonMorphCollection import PersonMorphCollection
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 
+from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.person.internal.MetaPerson import MetaPerson
+from pullenti.ner.person.PersonPropertyKind import PersonPropertyKind
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
 
 class PersonReferent(Referent):
     """ Сущность, описывающее физическое лицо """
     
     def __init__(self) -> None:
-        from pullenti.ner.person.internal.MetaPerson import MetaPerson
         super().__init__(PersonReferent.OBJ_TYPENAME)
         self._m_person_identity_typ = FioTemplateType.UNDEFINED
         self.__m_surname_occurs = list()
@@ -58,22 +60,18 @@ class PersonReferent(Referent):
     @property
     def is_male(self) -> bool:
         """ Это мужчина """
-        from pullenti.ner.person.internal.MetaPerson import MetaPerson
         return self.getStringValue(PersonReferent.ATTR_SEX) == MetaPerson.ATTR_SEXMALE
     @is_male.setter
     def is_male(self, value) -> bool:
-        from pullenti.ner.person.internal.MetaPerson import MetaPerson
         self.addSlot(PersonReferent.ATTR_SEX, MetaPerson.ATTR_SEXMALE, True, 0)
         return value
     
     @property
     def is_female(self) -> bool:
         """ Это женщина """
-        from pullenti.ner.person.internal.MetaPerson import MetaPerson
         return self.getStringValue(PersonReferent.ATTR_SEX) == MetaPerson.ATTR_SEXFEMALE
     @is_female.setter
     def is_female(self, value) -> bool:
-        from pullenti.ner.person.internal.MetaPerson import MetaPerson
         self.addSlot(PersonReferent.ATTR_SEX, MetaPerson.ATTR_SEXFEMALE, True, 0)
         return value
     
@@ -132,7 +130,6 @@ class PersonReferent(Referent):
         return res
     
     def __findShortestKingTitul(self, do_name : bool=False) -> str:
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
         res = None
         for s in self.slots: 
             if (isinstance(s.value, PersonPropertyReferent)): 
@@ -189,8 +186,7 @@ class PersonReferent(Referent):
     
     SHOW_LASTNAME_ON_FIRST_POSITION = False
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         if (short_variant): 
             return self.__toShortString(lang)
         else: 
@@ -211,7 +207,6 @@ class PersonReferent(Referent):
             return Utils.toStringStringIO(tmp)
     
     def __toShortString(self, lang : 'MorphLang') -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         id0_ = None
         for a in self.slots: 
             if (a.type_name == PersonReferent.ATTR_IDENTITY): 
@@ -239,7 +234,6 @@ class PersonReferent(Referent):
         return self.__toFullString(False, lang)
     
     def __toFullString(self, last_name_first : bool, lang : 'MorphLang') -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         id0_ = None
         for a in self.slots: 
             if (a.type_name == PersonReferent.ATTR_IDENTITY): 
@@ -308,6 +302,7 @@ class PersonReferent(Referent):
         return "?"
     
     def _addFioIdentity(self, last_name : 'PersonMorphCollection', first_name : 'PersonMorphCollection', middle_name : object) -> None:
+        from pullenti.ner.person.internal.PersonMorphCollection import PersonMorphCollection
         if (last_name is not None): 
             if (last_name.number > 0): 
                 num = NumberHelper.getNumberRoman(last_name.number)
@@ -509,7 +504,6 @@ class PersonReferent(Referent):
             s2(str): 
         
         """
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (s1.startswith(s2) or s2.startswith(s1)): 
             return True
         if (PersonReferent._DelSurnameEnd(s1) == PersonReferent._DelSurnameEnd(s2)): 
@@ -537,7 +531,6 @@ class PersonReferent(Referent):
         return s
     
     def __checkNames(self, attr_name : str, p : 'PersonReferent') -> bool:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         names1 = list()
         inits1 = list()
         normn1 = list()
@@ -600,6 +593,7 @@ class PersonReferent(Referent):
         self._correctData()
     
     def _correctData(self) -> None:
+        from pullenti.ner.person.internal.PersonMorphCollection import PersonMorphCollection
         g = MorphGender.UNDEFINED
         while True:
             ch = False
@@ -728,7 +722,6 @@ class PersonReferent(Referent):
                                 return
     
     def __correctAttrs(self) -> None:
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
         attrs = list()
         for s in self.slots: 
             if (s.type_name == PersonReferent.ATTR_ATTR and (isinstance(s.value, PersonPropertyReferent))): 
@@ -749,14 +742,13 @@ class PersonReferent(Referent):
             i += 1
         for i in range(len(self.slots) - 1, -1, -1):
             if (self.slots[i].type_name == PersonReferent.ATTR_ATTR and (isinstance(self.slots[i].value, PersonPropertyReferent))): 
-                if ((Utils.asObjectOrNull(self.slots[i].value, PersonPropertyReferent)).tag is not None): 
-                    pr = Utils.asObjectOrNull((Utils.asObjectOrNull(self.slots[i].value, PersonPropertyReferent)).tag, PersonPropertyReferent)
+                if ((self.slots[i].value).tag is not None): 
+                    pr = Utils.asObjectOrNull((self.slots[i].value).tag, PersonPropertyReferent)
                     if (pr is not None and pr.general_referent is None): 
                         pr.general_referent = Utils.asObjectOrNull(self.slots[i].value, PersonPropertyReferent)
                     del self.slots[i]
     
     def createOntologyItem(self) -> 'IntOntologyItem':
-        from pullenti.ner.core.Termin import Termin
         oi = IntOntologyItem(self)
         tit = self.__findShortestKingTitul(False)
         for a in self.slots: 

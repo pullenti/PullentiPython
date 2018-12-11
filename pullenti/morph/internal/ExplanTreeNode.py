@@ -3,8 +3,8 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.DerivateGroup import DerivateGroup
 
+from pullenti.morph.DerivateGroup import DerivateGroup
 
 class ExplanTreeNode:
     

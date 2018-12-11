@@ -5,17 +5,16 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Token import Token
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.GetTextAttr import GetTextAttr
 
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.Token import Token
+from pullenti.morph.CharsInfo import CharsInfo
+from pullenti.ner.core.GetTextAttr import GetTextAttr
 
 class MetaToken(Token):
     """ Токен - надстройка над диапазоном других токенов """
     
     def __init__(self, begin : 'Token', end : 'Token', kit_ : 'AnalysisKit'=None) -> None:
-        from pullenti.morph.CharsInfo import CharsInfo
         super().__init__((kit_ if kit_ is not None else ((begin.kit if begin is not None else None))), (0 if begin is None else begin.begin_char), (0 if end is None else end.end_char))
         self._m_begin_token = None;
         self._m_end_token = None;
@@ -39,7 +38,6 @@ class MetaToken(Token):
                 t = t.next0_
     
     def __RefreshCharsInfo(self) -> None:
-        from pullenti.morph.CharsInfo import CharsInfo
         if (self._m_begin_token is None): 
             return
         self.chars = self._m_begin_token.chars
@@ -138,6 +136,28 @@ class MetaToken(Token):
             t = t.next0_
         return Utils.toStringStringIO(res)
     
+    def isValue(self, term : str, termua : str=None) -> bool:
+        return self.begin_token.isValue(term, termua)
+    
+    def getReferents(self) -> typing.List['Referent']:
+        res = None
+        t = self.begin_token
+        first_pass3175 = True
+        while True:
+            if first_pass3175: first_pass3175 = False
+            else: t = t.next0_
+            if (not (t is not None and t.end_char <= self.end_char)): break
+            li = t.getReferents()
+            if (li is None): 
+                continue
+            if (res is None): 
+                res = li
+            else: 
+                for r in li: 
+                    if (not r in res): 
+                        res.append(r)
+        return res
+    
     @staticmethod
     def check(li : typing.List['ReferentToken']) -> bool:
         if (li is None or (len(li) < 1)): 
@@ -153,7 +173,7 @@ class MetaToken(Token):
             return False
         return True
     
-    def getNormalCaseText(self, mc : 'MorphClass'=MorphClass(), single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def getNormalCaseText(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         attr = GetTextAttr.NO
         if (single_number): 

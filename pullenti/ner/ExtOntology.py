@@ -5,9 +5,12 @@
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
+
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
 from pullenti.ner.ExtOntologyItem import ExtOntologyItem
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
-
 
 class ExtOntology:
     """ Внешняя онтология """
@@ -49,7 +52,6 @@ class ExtOntology:
         return res
     
     def __createReferent(self, type_name : str, definition_ : str) -> 'Referent':
-        from pullenti.morph.MorphLang import MorphLang
         analyzer = None
         wrapanalyzer2655 = RefOutArgWrapper(None)
         inoutres2656 = Utils.tryGetValue(self.__m_anal_by_type, type_name, wrapanalyzer2655)
@@ -57,7 +59,7 @@ class ExtOntology:
         if (not inoutres2656): 
             return None
         sf = SourceOfAnalysis(definition_)
-        ar = self.__m_processor._process(sf, True, True, None, MorphLang())
+        ar = self.__m_processor._process(sf, True, True, None, None)
         if (ar is None or ar.first_token is None): 
             return None
         r0 = ar.first_token.getReferent()
@@ -101,7 +103,6 @@ class ExtOntology:
             definition_(object): новое определение
         
         """
-        from pullenti.ner.Referent import Referent
         if (item is None): 
             return False
         new_referent = Utils.asObjectOrNull(definition_, Referent)
@@ -134,7 +135,6 @@ class ExtOntology:
         return True
     
     def __init__(self, spec_names : str=None) -> None:
-        from pullenti.ner.ProcessorService import ProcessorService
         self.items = list()
         self.__m_processor = None;
         self.__m_anal_by_type = None;
@@ -165,7 +165,6 @@ class ExtOntology:
         return a._persist_analizer_data
     
     def __initHash(self) -> None:
-        from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
         self.__m_hash = dict()
         for it in self.items: 
             if (it.referent is not None): 

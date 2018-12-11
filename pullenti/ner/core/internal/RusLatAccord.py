@@ -5,8 +5,8 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.LanguageHelper import LanguageHelper
 
+from pullenti.morph.LanguageHelper import LanguageHelper
 
 class RusLatAccord:
     

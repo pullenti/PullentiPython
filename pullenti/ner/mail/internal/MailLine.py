@@ -4,11 +4,22 @@
 
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.address.AddressReferent import AddressReferent
 
 class MailLine(MetaToken):
     
@@ -42,7 +53,6 @@ class MailLine(MetaToken):
     
     @property
     def words(self) -> int:
-        from pullenti.ner.TextToken import TextToken
         cou = 0
         t = self.begin_token
         while t is not None and t.end_char <= self.end_char: 
@@ -54,7 +64,6 @@ class MailLine(MetaToken):
     
     @property
     def is_pure_en(self) -> bool:
-        from pullenti.ner.TextToken import TextToken
         en = 0
         ru = 0
         t = self.begin_token
@@ -71,7 +80,6 @@ class MailLine(MetaToken):
     
     @property
     def is_pure_ru(self) -> bool:
-        from pullenti.ner.TextToken import TextToken
         en = 0
         ru = 0
         t = self.begin_token
@@ -98,7 +106,6 @@ class MailLine(MetaToken):
     
     @property
     def is_real_from(self) -> bool:
-        from pullenti.ner.TextToken import TextToken
         tt = Utils.asObjectOrNull(self.begin_token, TextToken)
         if (tt is None): 
             return False
@@ -109,15 +116,6 @@ class MailLine(MetaToken):
     
     @staticmethod
     def parse(t0 : 'Token', lev_ : int) -> 'MailLine':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         if (t0 is None): 
             return None
         res = MailLine(t0, t0)
@@ -248,7 +246,7 @@ class MailLine(MetaToken):
                     break
                 tok = MailLine.M_REGARD_WORDS.tryParse(npt.end_token, TerminParseAttr.NO)
                 if (tok is not None and (isinstance(npt.end_token, TextToken))): 
-                    term = (Utils.asObjectOrNull(npt.end_token, TextToken)).term
+                    term = (npt.end_token).term
                     if (term == "ДЕЛ"): 
                         tok = (None)
                 if (tok is None): 
@@ -371,8 +369,6 @@ class MailLine(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
         if (MailLine.M_REGARD_WORDS is not None): 
             return
         MailLine.M_REGARD_WORDS = TerminCollection()

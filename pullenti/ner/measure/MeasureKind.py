@@ -4,16 +4,15 @@
 
 from enum import IntEnum
 
-
 class MeasureKind(IntEnum):
     """ Что измеряется этой величиной """
     UNDEFINED = 0
-    TIME = 0 + 1
-    LENGTH = (0 + 1) + 1
-    AREA = ((0 + 1) + 1) + 1
-    VOLUME = (((0 + 1) + 1) + 1) + 1
-    WEIGHT = ((((0 + 1) + 1) + 1) + 1) + 1
-    SPEED = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
+    TIME = 1
+    LENGTH = 2
+    AREA = 3
+    VOLUME = 4
+    WEIGHT = 5
+    SPEED = 6
     
     @classmethod
     def has_value(cls, value):

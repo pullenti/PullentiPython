@@ -13,12 +13,12 @@ from pullenti.unisharp.Misc import EventHandler
 from pullenti.unisharp.Misc import ProgressEventArgs
 from pullenti.unisharp.Misc import CancelEventArgs
 from pullenti.unisharp.Misc import Stopwatch
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.AnalysisResult import AnalysisResult
-from pullenti.ner.core.internal.GeneralRelationHelper import GeneralRelationHelper
+
 from pullenti.ner.core.internal.ProgressPeace import ProgressPeace
 from pullenti.ner.ProxyReferent import ProxyReferent
-
+from pullenti.ner.core.internal.GeneralRelationHelper import GeneralRelationHelper
+from pullenti.ner.AnalysisResult import AnalysisResult
+from pullenti.ner.core.AnalysisKit import AnalysisKit
 
 class Processor(object):
     """ Семантический процессор """
@@ -110,7 +110,7 @@ class Processor(object):
         else: 
             return a
     
-    def process(self, text : 'SourceOfAnalysis', ext_ontology : 'ExtOntology'=None, lang : 'MorphLang'=MorphLang()) -> 'AnalysisResult':
+    def process(self, text : 'SourceOfAnalysis', ext_ontology : 'ExtOntology'=None, lang : 'MorphLang'=None) -> 'AnalysisResult':
         """ Обработать текст
         
         Args:
@@ -129,7 +129,6 @@ class Processor(object):
         Args:
             ar(AnalysisResult): то, что было сделано другим процессором
         """
-        from pullenti.ner.core.AnalysisKit import AnalysisKit
         if (ar is None): 
             return
         kit = AnalysisKit._new2678(self, ar.ontology)
@@ -138,8 +137,7 @@ class Processor(object):
         self.__createRes(kit, ar, ar.ontology, False)
         ar.first_token = kit.first_token
     
-    def _process(self, text : 'SourceOfAnalysis', no_entities_regine : bool, no_log : bool, ext_ontology : 'ExtOntology'=None, lang : 'MorphLang'=MorphLang()) -> 'AnalysisResult':
-        from pullenti.ner.core.AnalysisKit import AnalysisKit
+    def _process(self, text : 'SourceOfAnalysis', no_entities_regine : bool, no_log : bool, ext_ontology : 'ExtOntology'=None, lang : 'MorphLang'=None) -> 'AnalysisResult':
         self.__m_breaked = False
         self.__prepareProgress()
         sw0 = Stopwatch()
@@ -196,9 +194,9 @@ class Processor(object):
         stop_by_timeout = False
         anals = list(self.__m_analyzers)
         ii = 0
-        first_pass3175 = True
+        first_pass3176 = True
         while True:
-            if first_pass3175: first_pass3175 = False
+            if first_pass3176: first_pass3176 = False
             else: ii += 1
             if (not (ii < len(anals))): break
             c = anals[ii]
@@ -329,10 +327,9 @@ class Processor(object):
         for iiid in range(len(self.progress)): self.progress[iiid].call(self, e0_)
     
     def _onCancel(self, sender : object, e0_ : CancelEventArgs) -> None:
-        from pullenti.ner.core.AnalysisKit import AnalysisKit
         if (self.timeout_seconds > 0): 
             if (isinstance(sender, AnalysisKit)): 
-                if (int((datetime.datetime.now() - (Utils.asObjectOrNull(sender, AnalysisKit))._start_date).total_seconds()) > self.timeout_seconds): 
+                if (int((datetime.datetime.now() - (sender)._start_date).total_seconds()) > self.timeout_seconds): 
                     self.__m_breaked = True
         e0_.cancel = self.__m_breaked
     

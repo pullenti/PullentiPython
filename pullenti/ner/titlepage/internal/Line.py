@@ -3,9 +3,14 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 import typing
+
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.internal.BlkTyps import BlkTyps
-
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
+from pullenti.ner.core.internal.BlockTitleToken import BlockTitleToken
 
 class Line(MetaToken):
     
@@ -25,7 +30,6 @@ class Line(MetaToken):
     
     @property
     def is_pure_en(self) -> bool:
-        from pullenti.ner.TextToken import TextToken
         en = 0
         ru = 0
         t = self.begin_token
@@ -42,7 +46,6 @@ class Line(MetaToken):
     
     @property
     def is_pure_ru(self) -> bool:
-        from pullenti.ner.TextToken import TextToken
         en = 0
         ru = 0
         t = self.begin_token
@@ -59,11 +62,6 @@ class Line(MetaToken):
     
     @staticmethod
     def parse(t0 : 'Token', max_lines : int, max_chars : int, max_end_char : int) -> typing.List['Line']:
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
-        from pullenti.ner.core.internal.BlockTitleToken import BlockTitleToken
         res = list()
         total_chars = 0
         t = t0

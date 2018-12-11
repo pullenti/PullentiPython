@@ -5,10 +5,25 @@
 import typing
 import threading
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
-from pullenti.ner.measure.internal.UnitsHelper import UnitsHelper
 
+from pullenti.ner.Token import Token
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.measure.internal.UnitToken import UnitToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.measure.internal.UnitsHelper import UnitsHelper
+from pullenti.ner.measure.UnitReferent import UnitReferent
+from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.measure.MeasureReferent import MeasureReferent
+from pullenti.ner.measure.internal.UnitMeta import UnitMeta
+from pullenti.ner.measure.internal.MeasureMeta import MeasureMeta
+from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
+from pullenti.ner.measure.internal.MeasureToken import MeasureToken
+from pullenti.ner.Analyzer import Analyzer
 
 class MeasureAnalyzer(Analyzer):
     """ Аналозатор для измеряемых величин """
@@ -36,22 +51,16 @@ class MeasureAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.measure.internal.MeasureMeta import MeasureMeta
-        from pullenti.ner.measure.internal.UnitMeta import UnitMeta
         return [MeasureMeta.GLOBAL_META, UnitMeta.GLOBAL_META]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.measure.internal.MeasureMeta import MeasureMeta
-        from pullenti.ner.measure.internal.UnitMeta import UnitMeta
         res = dict()
         res[MeasureMeta.IMAGE_ID] = EpNerBankInternalResourceHelper.getBytes("measure.png")
         res[UnitMeta.IMAGE_ID] = EpNerBankInternalResourceHelper.getBytes("munit.png")
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.measure.MeasureReferent import MeasureReferent
-        from pullenti.ner.measure.UnitReferent import UnitReferent
         if (type0_ == MeasureReferent.OBJ_TYPENAME): 
             return MeasureReferent()
         if (type0_ == UnitReferent.OBJ_TYPENAME): 
@@ -70,10 +79,6 @@ class MeasureAnalyzer(Analyzer):
             stage: 
         
         """
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.measure.UnitReferent import UnitReferent
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.measure.internal.MeasureToken import MeasureToken
         ad = kit.getAnalyzerData(self)
         addunits = None
         if (kit.ontology is not None): 
@@ -135,7 +140,6 @@ class MeasureAnalyzer(Analyzer):
                         break
     
     def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        from pullenti.ner.measure.internal.MeasureToken import MeasureToken
         mt = MeasureToken.tryParseMinimal(begin, None, True)
         if (mt is not None): 
             rts = mt.createRefenetsTokensWithRegister(None, True)
@@ -144,10 +148,6 @@ class MeasureAnalyzer(Analyzer):
         return None
     
     def processOntologyItem(self, begin : 'Token') -> 'ReferentToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.measure.internal.UnitToken import UnitToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.measure.UnitReferent import UnitReferent
         if (not ((isinstance(begin, TextToken)))): 
             return None
         ut = UnitToken.tryParse(begin, None, None)
@@ -163,13 +163,12 @@ class MeasureAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
-        from pullenti.ner.ProcessorService import ProcessorService
         with MeasureAnalyzer.__m_lock: 
             if (MeasureAnalyzer.__m_initialized): 
                 return
             MeasureAnalyzer.__m_initialized = True
+            MeasureMeta.initialize()
+            UnitMeta.initialize()
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             UnitsHelper.initialize()
             NumbersWithUnitToken._initialize()

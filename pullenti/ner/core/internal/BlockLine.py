@@ -4,12 +4,18 @@
 
 import math
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.internal.BlkTyps import BlkTyps
-from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.internal.BlkTyps import BlkTyps
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.NumberHelper import NumberHelper
 
 class BlockLine(MetaToken):
     
@@ -26,9 +32,6 @@ class BlockLine(MetaToken):
     
     @staticmethod
     def create(t : 'Token', names : 'TerminCollection') -> 'BlockLine':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         if (t is None): 
             return None
         res = BlockLine(t, t)
@@ -147,8 +150,8 @@ class BlockLine(MetaToken):
                     res.words += 1
                 if (not t.chars.is_all_upper): 
                     res.is_all_upper = False
-                if ((Utils.asObjectOrNull(t, TextToken)).is_pure_verb): 
-                    if (not (Utils.asObjectOrNull(t, TextToken)).term.endswith("ING")): 
+                if ((t).is_pure_verb): 
+                    if (not (t).term.endswith("ING")): 
                         res.has_verb = True
             t = t.next0_
         if (res.typ == BlkTyps.UNDEFINED): 
@@ -272,9 +275,6 @@ class BlockLine(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (BlockLine.__m_ontology is not None): 
             return
         BlockLine.__m_ontology = TerminCollection()

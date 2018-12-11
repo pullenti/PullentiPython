@@ -5,11 +5,14 @@
 import typing
 import math
 from pullenti.unisharp.Utils import Utils
+
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.internal.BlkTyps import BlkTyps
 from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-
+from pullenti.ner.core.internal.BlockLine import BlockLine
 
 class BlockTitleToken(MetaToken):
     
@@ -23,8 +26,6 @@ class BlockTitleToken(MetaToken):
     
     @staticmethod
     def tryAttachList(t : 'Token') -> typing.List['BlockTitleToken']:
-        from pullenti.ner.core.internal.BlockLine import BlockLine
-        from pullenti.morph.MorphLang import MorphLang
         content = None
         intro = None
         lits = None
@@ -100,7 +101,7 @@ class BlockTitleToken(MetaToken):
                 content.end_token = btt.end_token
                 tt = content.end_token
                 if (btt.value is not None): 
-                    chapter_names.addStr(btt.value, None, MorphLang(), False)
+                    chapter_names.addStr(btt.value, None, None, False)
             content.typ = BlkTyps.INDEX
             t0 = content.end_token.next0_
         elif (intro is not None): 
@@ -153,9 +154,6 @@ class BlockTitleToken(MetaToken):
     
     @staticmethod
     def tryAttach(t : 'Token', is_content_item : bool=False, names : 'TerminCollection'=None) -> 'BlockTitleToken':
-        from pullenti.ner.core.internal.BlockLine import BlockLine
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (t is None): 
             return None
         if (not t.is_newline_before): 

@@ -6,11 +6,14 @@ import datetime
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.ImageWrapper import ImageWrapper
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
 
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.ImageWrapper import ImageWrapper
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.morph.Explanatory import Explanatory
+from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.core.internal.BlockLine import BlockLine
 
 class ProcessorService:
     """ Глобальная служба семантического процессора """
@@ -18,24 +21,20 @@ class ProcessorService:
     @staticmethod
     def getVersion() -> str:
         """ Версия системы """
-        return "3.13"
+        return "3.14"
     
     @staticmethod
     def getVersionDate() -> datetime.datetime:
         """ Дата-время текущей версии """
-        return datetime.datetime(2018, 11, 25, 0, 0, 0)
+        return datetime.datetime(2018, 12, 2, 0, 0, 0)
     
     @staticmethod
-    def initialize(lang : 'MorphLang'=MorphLang()) -> None:
+    def initialize(lang : 'MorphLang'=None) -> None:
         """ Инициализация сервиса.  
          Внимание! После этого нужно инициализровать анализаторы (см. документацию)
          <param name="lang">необходимые языки (по умолчанию, русский и английский)</param> """
-        from pullenti.morph.Morphology import Morphology
-        from pullenti.morph.Explanatory import Explanatory
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.core.internal.NounPhraseItem import NounPhraseItem
         from pullenti.ner.core.NumberExToken import NumberExToken
-        from pullenti.ner.core.internal.BlockLine import BlockLine
+        from pullenti.ner.core.internal.NounPhraseItem import NounPhraseItem
         if (ProcessorService.__m_inited): 
             return
         ProcessorService.__m_inited = True
@@ -130,9 +129,9 @@ class ProcessorService:
         k = 0
         while k < len(ProcessorService.__m_analizer_instances): 
             i = 0
-            first_pass3176 = True
+            first_pass3177 = True
             while True:
-                if first_pass3176: first_pass3176 = False
+                if first_pass3177: first_pass3177 = False
                 else: i += 1
                 if (not (i < (len(ProcessorService.__m_analizer_instances) - 1))): break
                 max_ind = -1

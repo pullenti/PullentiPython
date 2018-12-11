@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class BracketParseAttr(IntEnum):
     """ Параметры выделения последовательности """
     NO = 0

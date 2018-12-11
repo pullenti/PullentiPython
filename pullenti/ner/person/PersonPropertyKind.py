@@ -4,15 +4,14 @@
 
 from enum import IntEnum
 
-
 class PersonPropertyKind(IntEnum):
     """ Типы свойств """
     UNDEFINED = 0
-    BOSS = 0 + 1
-    KING = (0 + 1) + 1
-    KIN = ((0 + 1) + 1) + 1
-    MILITARYRANK = (((0 + 1) + 1) + 1) + 1
-    NATIONALITY = ((((0 + 1) + 1) + 1) + 1) + 1
+    BOSS = 1
+    KING = 2
+    KIN = 3
+    MILITARYRANK = 4
+    NATIONALITY = 5
     
     @classmethod
     def has_value(cls, value):

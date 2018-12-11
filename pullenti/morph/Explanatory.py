@@ -6,16 +6,16 @@ import gc
 import typing
 import threading
 from pullenti.unisharp.Utils import Utils
+
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.morph.internal.DerivateDictionary import DerivateDictionary
-
 
 class Explanatory:
     """ Сервис для получение толковой информации о словах.
      В настоящий момент поддержаны русский и украинский языки. """
     
     @staticmethod
-    def initialize(langs : 'MorphLang'=MorphLang()) -> None:
+    def initialize(langs : 'MorphLang'=None) -> None:
         """ Инициализация внутренних словарей.
          Можно не вызывать, но тогда будет автоматически вызвано при первом обращении,
          и соответственно первое обращение отработает на несколько секунд дольше.
@@ -62,7 +62,7 @@ class Explanatory:
         gc.collect()
     
     @staticmethod
-    def findDerivates(word : str, try_variants : bool=True, lang : 'MorphLang'=MorphLang()) -> typing.List['DerivateGroup']:
+    def findDerivates(word : str, try_variants : bool=True, lang : 'MorphLang'=None) -> typing.List['DerivateGroup']:
         """ Найти для слова дериативные группы, в которые входит это слово
          (групп может быть несколько, но в большинстве случаев - одна)
         
@@ -75,7 +75,7 @@ class Explanatory:
         return Explanatory.__m_der_ru.find(word, try_variants, lang)
     
     @staticmethod
-    def findWords(word : str, lang : 'MorphLang'=MorphLang()) -> typing.List['DerivateWord']:
+    def findWords(word : str, lang : 'MorphLang'=None) -> typing.List['DerivateWord']:
         """ Найти для слова его толковую информацию (среди деривативных групп)
         
         Args:
@@ -96,7 +96,7 @@ class Explanatory:
         return res
     
     @staticmethod
-    def getWordClassVar(word : str, cla : 'MorphClass', lang : 'MorphLang'=MorphLang()) -> str:
+    def getWordClassVar(word : str, cla : 'MorphClass', lang : 'MorphLang'=None) -> str:
         """ Получить вариант для слова аналог нужного типа.
          Например, для "ГЛАГОЛ" вариант прилагательного: "ГЛАГОЛЬНЫЙ"
         
@@ -118,7 +118,7 @@ class Explanatory:
         return None
     
     @staticmethod
-    def isAnimated(word : str, lang : 'MorphLang'=MorphLang()) -> bool:
+    def isAnimated(word : str, lang : 'MorphLang'=None) -> bool:
         """ Может ли быть одушевлённым
         
         Args:
@@ -137,7 +137,7 @@ class Explanatory:
         return False
     
     @staticmethod
-    def isNamed(word : str, lang : 'MorphLang'=MorphLang()) -> bool:
+    def isNamed(word : str, lang : 'MorphLang'=None) -> bool:
         """ Может ли иметь собственное имя
         
         Args:

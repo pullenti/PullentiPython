@@ -5,16 +5,22 @@
 import io
 import datetime
 from pullenti.unisharp.Utils import Utils
+
+from pullenti.ner.date.DatePointerType import DatePointerType
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.decree.internal.DecreeToken import DecreeToken
+from pullenti.ner.instrument.internal.MetaInstrument import MetaInstrument
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
 from pullenti.ner.decree.internal.DecreeHelper import DecreeHelper
-from pullenti.ner.date.DatePointerType import DatePointerType
-
 
 class InstrumentReferent(InstrumentBlockReferent):
     """ Представление нормативно-правового документа или его части """
     
     def __init__(self) -> None:
-        from pullenti.ner.instrument.internal.MetaInstrument import MetaInstrument
         super().__init__(InstrumentReferent.OBJ_TYPENAME)
         self.instance_of = MetaInstrument.GLOBAL_META
     
@@ -43,7 +49,6 @@ class InstrumentReferent(InstrumentBlockReferent):
     ATTR_ARTEFACT = "ARTEFACT"
     
     def toString(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         res = io.StringIO()
         str0_ = self.getStringValue(InstrumentReferent.ATTR_APPENDIX)
         if ((str0_) is not None): 
@@ -131,21 +136,17 @@ class InstrumentReferent(InstrumentBlockReferent):
         return DecreeHelper.parseDateTime(s)
     
     def _addDate(self, dt : object) -> bool:
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
         if (dt is None): 
             return False
         if (isinstance(dt, DecreeToken)): 
-            if (isinstance((Utils.asObjectOrNull(dt, DecreeToken)).ref, ReferentToken)): 
-                return self._addDate((Utils.asObjectOrNull((Utils.asObjectOrNull(dt, DecreeToken)).ref, ReferentToken)).referent)
-            if ((Utils.asObjectOrNull(dt, DecreeToken)).value is not None): 
-                self.addSlot(InstrumentReferent.ATTR_DATE, (Utils.asObjectOrNull(dt, DecreeToken)).value, True, 0)
+            if (isinstance((dt).ref, ReferentToken)): 
+                return self._addDate(((dt).ref).referent)
+            if ((dt).value is not None): 
+                self.addSlot(InstrumentReferent.ATTR_DATE, (dt).value, True, 0)
                 return True
             return False
         if (isinstance(dt, ReferentToken)): 
-            return self._addDate((Utils.asObjectOrNull(dt, ReferentToken)).referent)
+            return self._addDate((dt).referent)
         if (isinstance(dt, DateReferent)): 
             dr = Utils.asObjectOrNull(dt, DateReferent)
             year = dr.year

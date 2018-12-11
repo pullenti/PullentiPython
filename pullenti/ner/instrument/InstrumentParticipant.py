@@ -4,14 +4,16 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.instrument.internal.InstrumentParticipantMeta import InstrumentParticipantMeta
 
 class InstrumentParticipant(Referent):
     """ Участник НПА (для договора: продавец, агент, исполнитель и т.п.) """
     
     def __init__(self) -> None:
-        from pullenti.ner.instrument.internal.InstrumentParticipantMeta import InstrumentParticipantMeta
         super().__init__(InstrumentParticipant.OBJ_TYPENAME)
         self.instance_of = InstrumentParticipantMeta.GLOBAL_META
     
@@ -44,7 +46,6 @@ class InstrumentParticipant(Referent):
         return value
     
     def toString(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         res = io.StringIO()
         print(MiscHelper.convertFirstCharUpperAndOtherLower(Utils.ifNotNull(self.typ, "?")), end="", file=res)
         org0_ = Utils.asObjectOrNull(self.getSlotValue(InstrumentParticipant.ATTR_REF), Referent)

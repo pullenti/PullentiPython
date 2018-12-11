@@ -3,17 +3,18 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.ReferentClass import ReferentClass
 
+from pullenti.ner.ReferentClass import ReferentClass
 
 class MetaUri(ReferentClass):
     
-    def __init__(self) -> None:
+    @staticmethod
+    def initialize() -> None:
         from pullenti.ner.uri.UriReferent import UriReferent
-        super().__init__()
-        self.addFeature(UriReferent.ATTR_VALUE, "Значение", 0, 1)
-        self.addFeature(UriReferent.ATTR_SCHEME, "Схема", 0, 1)
-        self.addFeature(UriReferent.ATTR_DETAIL, "Детализация", 0, 1)
+        MetaUri._global_meta = MetaUri()
+        MetaUri._global_meta.addFeature(UriReferent.ATTR_VALUE, "Значение", 0, 1)
+        MetaUri._global_meta.addFeature(UriReferent.ATTR_SCHEME, "Схема", 0, 1)
+        MetaUri._global_meta.addFeature(UriReferent.ATTR_DETAIL, "Детализация", 0, 1)
     
     @property
     def name(self) -> str:
@@ -37,10 +38,3 @@ class MetaUri(ReferentClass):
             return MetaUri.URI_IMAGE_ID
     
     _global_meta = None
-    
-    # static constructor for class MetaUri
-    @staticmethod
-    def _static_ctor():
-        MetaUri._global_meta = MetaUri()
-
-MetaUri._static_ctor()

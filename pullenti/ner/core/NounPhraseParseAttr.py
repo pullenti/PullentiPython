@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class NounPhraseParseAttr(IntEnum):
     """ Параметры выделения """
     NO = 0

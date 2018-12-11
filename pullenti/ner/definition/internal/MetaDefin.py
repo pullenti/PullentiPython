@@ -3,21 +3,22 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
+
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.definition.DefinitionKind import DefinitionKind
 
-
 class MetaDefin(ReferentClass):
     
-    def __init__(self) -> None:
+    @staticmethod
+    def initialize() -> None:
         from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
-        super().__init__()
-        self.addFeature(DefinitionReferent.ATTR_TERMIN, "Термин", 1, 0)
-        self.addFeature(DefinitionReferent.ATTR_TERMIN_ADD, "Дополнение термина", 0, 0)
-        self.addFeature(DefinitionReferent.ATTR_VALUE, "Значение", 1, 0)
-        self.addFeature(DefinitionReferent.ATTR_MISC, "Мелочь", 0, 0)
-        self.addFeature(DefinitionReferent.ATTR_DECREE, "Ссылка на НПА", 0, 0)
-        fi = self.addFeature(DefinitionReferent.ATTR_KIND, "Тип", 1, 1)
+        MetaDefin._global_meta = MetaDefin()
+        MetaDefin._global_meta.addFeature(DefinitionReferent.ATTR_TERMIN, "Термин", 1, 0)
+        MetaDefin._global_meta.addFeature(DefinitionReferent.ATTR_TERMIN_ADD, "Дополнение термина", 0, 0)
+        MetaDefin._global_meta.addFeature(DefinitionReferent.ATTR_VALUE, "Значение", 1, 0)
+        MetaDefin._global_meta.addFeature(DefinitionReferent.ATTR_MISC, "Мелочь", 0, 0)
+        MetaDefin._global_meta.addFeature(DefinitionReferent.ATTR_DECREE, "Ссылка на НПА", 0, 0)
+        fi = MetaDefin._global_meta.addFeature(DefinitionReferent.ATTR_KIND, "Тип", 1, 1)
         fi.addValue(Utils.enumToString(DefinitionKind.ASSERTATION), "Утверждение", None, None)
         fi.addValue(Utils.enumToString(DefinitionKind.DEFINITION), "Определение", None, None)
         fi.addValue(Utils.enumToString(DefinitionKind.NEGATION), "Отрицание", None, None)
@@ -38,16 +39,9 @@ class MetaDefin(ReferentClass):
     def getImageId(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
         if (isinstance(obj, DefinitionReferent)): 
-            ki = (Utils.asObjectOrNull(obj, DefinitionReferent)).kind
+            ki = (obj).kind
             if (ki == DefinitionKind.DEFINITION): 
                 return MetaDefin.IMAGE_DEF_ID
         return MetaDefin.IMAGE_ASS_ID
     
     _global_meta = None
-    
-    # static constructor for class MetaDefin
-    @staticmethod
-    def _static_ctor():
-        MetaDefin._global_meta = MetaDefin()
-
-MetaDefin._static_ctor()

@@ -8,28 +8,47 @@ import math
 import xml.etree
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
-from pullenti.ner.address.internal.StreetItemType import StreetItemType
-from pullenti.morph.MorphNumber import MorphNumber
+
 from pullenti.ner.core.NumberExType import NumberExType
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.Referent import Referent
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.MorphCollection import MorphCollection
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.address.internal.EpNerAddressInternalResourceHelper import EpNerAddressInternalResourceHelper
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.address.internal.StreetItemType import StreetItemType
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.NumberExToken import NumberExToken
+from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
+from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
+from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
+from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
 
 class CityItemToken(MetaToken):
     
     class ItemType(IntEnum):
         PROPERNAME = 0
-        CITY = 0 + 1
-        NOUN = (0 + 1) + 1
-        MISC = ((0 + 1) + 1) + 1
+        CITY = 1
+        NOUN = 2
+        MISC = 3
         
         @classmethod
         def has_value(cls, value):
@@ -78,11 +97,6 @@ class CityItemToken(MetaToken):
     
     @staticmethod
     def tryParseList(t : 'Token', loc : 'IntOntologyCollection', max_count : int) -> typing.List['CityItemToken']:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         ci = CityItemToken.tryParse(t, loc, False, None)
         if (ci is None): 
             if (t is None): 
@@ -127,7 +141,7 @@ class CityItemToken(MetaToken):
                         tt = br.end_token.previous
                         num = None
                         if (isinstance(tt, NumberToken)): 
-                            num = str((Utils.asObjectOrNull(tt, NumberToken)).value)
+                            num = str((tt).value)
                             tt = tt.previous
                             if (tt is not None and tt.is_hiphen): 
                                 tt = tt.previous
@@ -187,9 +201,6 @@ class CityItemToken(MetaToken):
     
     @staticmethod
     def __checkDoubtful(tt : 'TextToken') -> bool:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         if (tt is None): 
             return True
         if (tt.chars.is_all_lower): 
@@ -248,9 +259,6 @@ class CityItemToken(MetaToken):
     
     @staticmethod
     def tryParse(t : 'Token', loc : 'IntOntologyCollection', can_be_low_char : bool=False, prev : 'CityItemToken'=None) -> 'CityItemToken':
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
-        from pullenti.ner.TextToken import TextToken
         if (t is None): 
             return None
         if (t.kit.is_recurce_overflow): 
@@ -280,7 +288,7 @@ class CityItemToken(MetaToken):
             elif (res.value.endswith("АНЬ") or res.value.endswith("TOWN") or res.value.startswith("SAN")): 
                 res.typ = CityItemToken.ItemType.CITY
             elif (isinstance(res.end_token, TextToken)): 
-                lem = (Utils.asObjectOrNull(res.end_token, TextToken)).lemma
+                lem = (res.end_token).lemma
                 if ((lem.endswith("ГРАД") or lem.endswith("ГОРОД") or lem.endswith("СК")) or lem.endswith("АНЬ") or lem.endswith("ПОЛЬ")): 
                     res.alt_value = res.value
                     res.value = lem
@@ -293,20 +301,6 @@ class CityItemToken(MetaToken):
     
     @staticmethod
     def __tryParseInt(t : 'Token', loc : 'IntOntologyCollection', can_be_low_char : bool, prev : 'CityItemToken') -> 'CityItemToken':
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.MorphCollection import MorphCollection
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
-        from pullenti.ner.core.NumberExToken import NumberExToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
-        from pullenti.morph.MorphClass import MorphClass
         if (t is None): 
             return None
         res = CityItemToken.__TryParse(t, loc, can_be_low_char, prev)
@@ -374,7 +368,7 @@ class CityItemToken(MetaToken):
                             res.alt_value = (None)
                         return res
             if (isinstance(t, TextToken)): 
-                txt = (Utils.asObjectOrNull(t, TextToken)).term
+                txt = (t).term
                 if (txt == "ИМ" or txt == "ИМЕНИ"): 
                     t1 = t.next0_
                     if (t1 is not None and t1.isChar('.')): 
@@ -458,7 +452,7 @@ class CityItemToken(MetaToken):
                 if (isinstance(tt, TextToken)): 
                     if (tt0.is_comma and tt0.next0_ is not None): 
                         tt0 = tt0.next0_
-                    txt = (Utils.asObjectOrNull(tt, TextToken)).term
+                    txt = (tt).term
                     if (tt.chars.is_all_lower and (((txt == "Д" or txt == "С" or txt == "C") or txt == "П" or txt == "Х"))): 
                         tt1 = tt
                         if (tt1.next0_ is not None and tt1.next0_.isChar('.')): 
@@ -505,13 +499,13 @@ class CityItemToken(MetaToken):
                         res.begin_token = tt0
                         return res
                     if (tt.chars.is_all_upper and tt.length_char > 2 and tt.chars.is_cyrillic_letter): 
-                        return CityItemToken._new1125(tt, tt, CityItemToken.ItemType.PROPERNAME, (Utils.asObjectOrNull(tt, TextToken)).term)
+                        return CityItemToken._new1125(tt, tt, CityItemToken.ItemType.PROPERNAME, (tt).term)
             if ((isinstance(t, NumberToken)) and t.next0_ is not None): 
                 net = NumberExToken.tryParseNumberWithPostfix(t)
                 if (net is not None and net.ex_typ == NumberExType.KILOMETER): 
                     return CityItemToken._new1125(t, net.end_token, CityItemToken.ItemType.PROPERNAME, "{0}КМ".format(math.floor(net.real_value)))
             rt = Utils.asObjectOrNull(t, ReferentToken)
-            if ((rt is not None and (isinstance(rt.referent, GeoReferent)) and rt.begin_token == rt.end_token) and (Utils.asObjectOrNull(rt.referent, GeoReferent)).is_state): 
+            if ((rt is not None and (isinstance(rt.referent, GeoReferent)) and rt.begin_token == rt.end_token) and (rt.referent).is_state): 
                 if (t.previous is None): 
                     return None
                 if (t.previous.morph.number == MorphNumber.SINGULAR and t.morph.case_.is_nominative and not t.morph.case_.is_genitive): 
@@ -557,11 +551,11 @@ class CityItemToken(MetaToken):
         if (res.typ == CityItemToken.ItemType.PROPERNAME or res.typ == CityItemToken.ItemType.CITY): 
             val = Utils.ifNotNull(res.value, ((None if res.onto_item is None else res.onto_item.canonic_text)))
             t1 = res.end_token
-            if (((not t1.is_whitespace_after and t1.next0_ is not None and t1.next0_.is_hiphen) and not t1.next0_.is_whitespace_after and (isinstance(t1.next0_.next0_, NumberToken))) and ((Utils.asObjectOrNull(t1.next0_.next0_, NumberToken)).value < (30))): 
+            if (((not t1.is_whitespace_after and t1.next0_ is not None and t1.next0_.is_hiphen) and not t1.next0_.is_whitespace_after and (isinstance(t1.next0_.next0_, NumberToken))) and ((t1.next0_.next0_).value < (30))): 
                 res.end_token = t1.next0_.next0_
-                res.value = "{0}-{1}".format(val, (Utils.asObjectOrNull(t1.next0_.next0_, NumberToken)).value)
+                res.value = "{0}-{1}".format(val, (t1.next0_.next0_).value)
                 if (res.alt_value is not None): 
-                    res.alt_value = "{0}-{1}".format(res.alt_value, (Utils.asObjectOrNull(t1.next0_.next0_, NumberToken)).value)
+                    res.alt_value = "{0}-{1}".format(res.alt_value, (t1.next0_.next0_).value)
                 res.typ = CityItemToken.ItemType.PROPERNAME
             elif (t1.whitespaces_after_count == 1 and (isinstance(t1.next0_, NumberToken)) and t1.next0_.morph.class0_.is_adjective): 
                 ok = False
@@ -571,7 +565,7 @@ class CityItemToken(MetaToken):
                     ok = True
                 if (ok): 
                     res.end_token = t1.next0_
-                    res.value = "{0}-{1}".format(val, (Utils.asObjectOrNull(t1.next0_, NumberToken)).value)
+                    res.value = "{0}-{1}".format(val, (t1.next0_).value)
                     res.typ = CityItemToken.ItemType.PROPERNAME
         if (res.typ == CityItemToken.ItemType.CITY and res.begin_token == res.end_token): 
             if (res.begin_token.getMorphClassInDictionary().is_adjective and res.end_token.next0_ is not None): 
@@ -597,7 +591,7 @@ class CityItemToken(MetaToken):
                     res.onto_item = (None)
                     res.end_token = t1
                     if (npt is not None): 
-                        res.value = npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                        res.value = npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                         res.morph = npt.morph
                     else: 
                         res.value = MiscHelper.getTextValue(res.begin_token, res.end_token, GetTextAttr.NO)
@@ -612,11 +606,11 @@ class CityItemToken(MetaToken):
                         res.onto_item = (None)
                         res.end_token = res1.end_token
                         res.doubtful = False
-                elif ((isinstance(res.end_token.next0_.next0_, NumberToken)) and ((Utils.asObjectOrNull(res.end_token.next0_.next0_, NumberToken)).value < (30))): 
+                elif ((isinstance(res.end_token.next0_.next0_, NumberToken)) and ((res.end_token.next0_.next0_).value < (30))): 
                     res.typ = CityItemToken.ItemType.PROPERNAME
-                    res.value = "{0}-{1}".format((res.value if res.onto_item is None else res.onto_item.canonic_text), (Utils.asObjectOrNull(res.end_token.next0_.next0_, NumberToken)).value)
+                    res.value = "{0}-{1}".format((res.value if res.onto_item is None else res.onto_item.canonic_text), (res.end_token.next0_.next0_).value)
                     if (res.alt_value is not None): 
-                        res.alt_value = "{0}-{1}".format(res.alt_value, (Utils.asObjectOrNull(res.end_token.next0_.next0_, NumberToken)).value)
+                        res.alt_value = "{0}-{1}".format(res.alt_value, (res.end_token.next0_.next0_).value)
                     res.onto_item = (None)
                     res.end_token = res.end_token.next0_.next0_
             elif (res.begin_token.getMorphClassInDictionary().is_proper_name): 
@@ -670,16 +664,6 @@ class CityItemToken(MetaToken):
     
     @staticmethod
     def __TryParse(t : 'Token', loc : 'IntOntologyCollection', can_be_low_char : bool=False, prev : 'CityItemToken'=None) -> 'CityItemToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
         if (not ((isinstance(t, TextToken)))): 
             if ((isinstance(t, ReferentToken)) and (isinstance(t.getReferent(), DateReferent))): 
                 aii = StreetItemToken._tryParseSpec(t, None)
@@ -734,7 +718,7 @@ class CityItemToken(MetaToken):
                                 ci = CityItemToken._new1129(nt.begin_token, nt.end_token, CityItemToken.ItemType.CITY, nt.item, nt.morph)
                                 if (nt.begin_token == nt.end_token and (isinstance(nt.begin_token, TextToken))): 
                                     ci.doubtful = CityItemToken.__checkDoubtful(Utils.asObjectOrNull(nt.begin_token, TextToken))
-                                    str0_ = (Utils.asObjectOrNull(nt.begin_token, TextToken)).term
+                                    str0_ = (nt.begin_token).term
                                     if (str0_ != nt.item.canonic_text): 
                                         if (LanguageHelper.endsWithEx(str0_, "О", "А", None, None)): 
                                             ci.alt_value = str0_
@@ -759,7 +743,7 @@ class CityItemToken(MetaToken):
                                     return None
                                 ci.doubtful = True
                             elif (nt.begin_token.isValue("МІС", None)): 
-                                if ((Utils.asObjectOrNull(t, TextToken)).term != "МІС"): 
+                                if ((t).term != "МІС"): 
                                     return None
                                 ci.doubtful = True
                         if (nt.begin_token.kit.base_language.is_ru): 
@@ -773,25 +757,25 @@ class CityItemToken(MetaToken):
                                         return None
                                 ci.doubtful = True
                             elif (nt.begin_token.isValue("ГОР", None)): 
-                                if ((Utils.asObjectOrNull(t, TextToken)).term != "ГОР"): 
+                                if ((t).term != "ГОР"): 
                                     if (t.chars.is_capital_upper): 
                                         ci = (None)
                                         break
                                     return None
                                 ci.doubtful = True
                             elif (nt.begin_token.isValue("ПОС", None)): 
-                                if ((Utils.asObjectOrNull(t, TextToken)).term != "ПОС"): 
+                                if ((t).term != "ПОС"): 
                                     return None
                                 ci.doubtful = True
                         npt1 = NounPhraseHelper.tryParse(t.previous, NounPhraseParseAttr.NO, 0)
                         if (npt1 is not None and len(npt1.adjectives) > 0): 
-                            s = npt1.adjectives[0].getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                            s = npt1.adjectives[0].getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                             if ((s == "РОДНОЙ" or s == "ЛЮБИМЫЙ" or s == "РІДНИЙ") or s == "КОХАНИЙ"): 
                                 return None
                         return ci
         if (not ((isinstance(t, TextToken)))): 
             return None
-        if ((Utils.asObjectOrNull(t, TextToken)).term == "СПБ" and not t.chars.is_all_lower and CityItemToken.M_ST_PETERBURG is not None): 
+        if ((t).term == "СПБ" and not t.chars.is_all_lower and CityItemToken.M_ST_PETERBURG is not None): 
             return CityItemToken._new1132(t, t, CityItemToken.ItemType.CITY, CityItemToken.M_ST_PETERBURG, CityItemToken.M_ST_PETERBURG.canonic_text)
         if (t.chars.is_all_lower): 
             return None
@@ -807,7 +791,7 @@ class CityItemToken(MetaToken):
                 npt0 = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.NO, 0)
                 if (npt0 is not None and npt0.end_token == cit.end_token): 
                     cit.morph = npt0.morph
-                    cit.value = npt0.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                    cit.value = npt0.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                 cit.typ = CityItemToken.ItemType.PROPERNAME
                 cit.doubtful = False
                 return cit
@@ -840,16 +824,16 @@ class CityItemToken(MetaToken):
                 if (altname is not None): 
                     print('-', end="", file=altname)
             if ((isinstance(tt, TextToken)) and ((is_prep or ((k > 0 and not tt.getMorphClassInDictionary().is_proper_geo))))): 
-                print((Utils.asObjectOrNull(tt, TextToken)).term, end="", file=name)
+                print((tt).term, end="", file=name)
                 if (altname is not None): 
-                    print((Utils.asObjectOrNull(tt, TextToken)).term, end="", file=altname)
+                    print((tt).term, end="", file=altname)
             else: 
                 ss = CityItemToken.__getNormalGeo(tt)
-                if (ss != (Utils.asObjectOrNull(tt, TextToken)).term): 
+                if (ss != (tt).term): 
                     if (altname is None): 
                         altname = io.StringIO()
                     print(Utils.toStringStringIO(name), end="", file=altname)
-                    print((Utils.asObjectOrNull(tt, TextToken)).term, end="", file=altname)
+                    print((tt).term, end="", file=altname)
                 print(ss, end="", file=name)
             t1 = tt
             is_prep = tt.morph.class0_.is_preposition
@@ -882,7 +866,7 @@ class CityItemToken(MetaToken):
         if ((npt is not None and npt.end_token != t and len(npt.adjectives) > 0) and not npt.adjectives[0].end_token.next0_.is_comma): 
             cit = CityItemToken.__TryParse(t.next0_, loc, False, None)
             if (cit is not None and cit.typ == CityItemToken.ItemType.NOUN and ((LanguageHelper.endsWithEx(cit.value, "ПУНКТ", "ПОСЕЛЕНИЕ", "ПОСЕЛЕННЯ", "ПОСЕЛОК") or t.next0_.isValue("ГОРОДОК", None)))): 
-                return CityItemToken._new1134(t, t, CityItemToken.ItemType.CITY, t.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False), npt.morph)
+                return CityItemToken._new1134(t, t, CityItemToken.ItemType.CITY, t.getNormalCaseText(None, False, MorphGender.UNDEFINED, False), npt.morph)
             else: 
                 if (npt.end_token.chars != t.chars): 
                     if (npt.end_token.chars.is_all_lower and ((npt.end_token.next0_ is None or npt.end_token.next0_.is_comma))): 
@@ -897,7 +881,7 @@ class CityItemToken(MetaToken):
                     if (si is None or si.typ != StreetItemType.NOUN): 
                         t1 = npt.end_token
                         doubt = CityItemToken.__checkDoubtful(Utils.asObjectOrNull(t1, TextToken))
-                        return CityItemToken._new1135(t, t1, CityItemToken.ItemType.PROPERNAME, npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False), doubt, npt.morph)
+                        return CityItemToken._new1135(t, t1, CityItemToken.ItemType.PROPERNAME, npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False), doubt, npt.morph)
         if (t.next0_ is not None and t.next0_.chars == t.chars and not t.is_newline_after): 
             ok = False
             if (t.next0_.next0_ is None or t.next0_.next0_.chars != t.chars): 
@@ -928,9 +912,9 @@ class CityItemToken(MetaToken):
                     if (tne is not None and tne.typ == CityItemToken.ItemType.NOUN): 
                         pass
                     else: 
-                        print(" {0}".format((Utils.asObjectOrNull(t.next0_, TextToken)).term), end="", file=name, flush=True)
+                        print(" {0}".format((t.next0_).term), end="", file=name, flush=True)
                         if (altname is not None): 
-                            print(" {0}".format((Utils.asObjectOrNull(t.next0_, TextToken)).term), end="", file=altname, flush=True)
+                            print(" {0}".format((t.next0_).term), end="", file=altname, flush=True)
                         t1 = t.next0_
                         return CityItemToken._new1136(t, t1, CityItemToken.ItemType.PROPERNAME, Utils.toStringStringIO(name), (None if altname is None else Utils.toStringStringIO(altname)), doubt, t.next0_.morph)
         if (t.length_char < 2): 
@@ -948,8 +932,8 @@ class CityItemToken(MetaToken):
         if (MiscHelper.isEngArticle(t)): 
             return None
         res = CityItemToken._new1136(t, t1, CityItemToken.ItemType.PROPERNAME, Utils.toStringStringIO(name), (None if altname is None else Utils.toStringStringIO(altname)), doubt, t.morph)
-        if (t1 == t and (isinstance(t1, TextToken)) and (Utils.asObjectOrNull(t1, TextToken)).term0 is not None): 
-            res.alt_value = (Utils.asObjectOrNull(t1, TextToken)).term0
+        if (t1 == t and (isinstance(t1, TextToken)) and (t1).term0 is not None): 
+            res.alt_value = (t1).term0
         sog = False
         glas = False
         for ch in res.value: 
@@ -960,13 +944,12 @@ class CityItemToken(MetaToken):
         if (not glas or not sog): 
             return None
         if (t == t1 and (isinstance(t, TextToken))): 
-            if ((Utils.asObjectOrNull(t, TextToken)).term != res.value): 
-                res.alt_value = (Utils.asObjectOrNull(t, TextToken)).term
+            if ((t).term != res.value): 
+                res.alt_value = (t).term
         return res
     
     @staticmethod
     def tryParseBack(t : 'Token') -> 'CityItemToken':
-        from pullenti.ner.TextToken import TextToken
         while t is not None and ((t.isCharOf("(,") or t.is_and)):
             t = t.previous
         if (not ((isinstance(t, TextToken)))): 
@@ -992,8 +975,6 @@ class CityItemToken(MetaToken):
     
     @staticmethod
     def __getNormalGeo(t : 'Token') -> str:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphWordForm import MorphWordForm
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             return None
@@ -1002,12 +983,12 @@ class CityItemToken(MetaToken):
         if (tt.term[len(tt.term) - 1] == 'Ы'): 
             return tt.term
         for wf in tt.morph.items: 
-            if (wf.class0_.is_proper_geo and (Utils.asObjectOrNull(wf, MorphWordForm)).is_in_dictionary): 
-                return (Utils.asObjectOrNull(wf, MorphWordForm)).normal_case
+            if (wf.class0_.is_proper_geo and (wf).is_in_dictionary): 
+                return (wf).normal_case
         geo_eq_term = False
         for wf in tt.morph.items: 
             if (wf.class0_.is_proper_geo): 
-                ggg = (Utils.asObjectOrNull(wf, MorphWordForm)).normal_case
+                ggg = (wf).normal_case
                 if (ggg == tt.term): 
                     geo_eq_term = True
                 elif (not wf.case_.is_nominative): 
@@ -1015,16 +996,12 @@ class CityItemToken(MetaToken):
         if (geo_eq_term): 
             return tt.term
         if (tt.morph.items_count > 0): 
-            return (Utils.asObjectOrNull(tt.morph.getIndexerItem(0), MorphWordForm)).normal_case
+            return (tt.morph.getIndexerItem(0)).normal_case
         else: 
             return tt.term
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (CityItemToken.M_ONTOLOGY is not None): 
             return
         CityItemToken.M_ONTOLOGY = IntOntologyCollection()
@@ -1336,8 +1313,6 @@ class CityItemToken(MetaToken):
     
     @staticmethod
     def __loadCity(xml0_ : xml.etree.ElementTree.Element) -> None:
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.core.Termin import Termin
         ci = IntOntologyItem(None)
         onto = CityItemToken.M_ONTOLOGY
         lang = MorphLang.RU
@@ -1358,8 +1333,6 @@ class CityItemToken(MetaToken):
     
     @staticmethod
     def __loadBigCity(xml0_ : xml.etree.ElementTree.Element) -> None:
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.core.Termin import Termin
         ci = IntOntologyItem(None)
         ci.misc_attr = (ci)
         adj = None

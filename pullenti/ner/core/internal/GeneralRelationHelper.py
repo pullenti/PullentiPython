@@ -5,6 +5,8 @@
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.Referent import Referent
 
 class GeneralRelationHelper:
     
@@ -61,7 +63,6 @@ class GeneralRelationHelper:
     
     @staticmethod
     def refreshGenerals(proc : 'Processor', kit : 'AnalysisKit') -> None:
-        from pullenti.ner.Referent import Referent
         all0_ = dict()
         all_refs = list()
         for a in proc.analyzers: 
@@ -168,8 +169,6 @@ class GeneralRelationHelper:
     
     @staticmethod
     def __correctReferents(t : 'Token') -> None:
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.Referent import Referent
         rt = Utils.asObjectOrNull(t, ReferentToken)
         if (rt is None): 
             return

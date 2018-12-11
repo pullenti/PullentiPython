@@ -5,10 +5,12 @@
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
+
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.AnalysisKit import AnalysisKit
 from pullenti.ner.person.internal.EpNerPersonInternalResourceHelper import EpNerPersonInternalResourceHelper
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
-
 
 class ShortNameHelper:
     
@@ -55,8 +57,6 @@ class ShortNameHelper:
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.AnalysisKit import AnalysisKit
-        from pullenti.ner.TextToken import TextToken
         if (ShortNameHelper.M_INITED): 
             return
         ShortNameHelper.M_INITED = True
@@ -68,14 +68,14 @@ class ShortNameHelper:
                 if (t.is_newline_before): 
                     g = (MorphGender.FEMINIE if t.isValue("F", None) else MorphGender.MASCULINE)
                     t = t.next0_
-                    nam = (Utils.asObjectOrNull(t, TextToken)).term
+                    nam = (t).term
                     shos = list()
                     t = t.next0_
                     while t is not None: 
                         if (t.is_newline_before): 
                             break
                         else: 
-                            shos.append((Utils.asObjectOrNull(t, TextToken)).term)
+                            shos.append((t).term)
                         t = t.next0_
                     for s in shos: 
                         li = None

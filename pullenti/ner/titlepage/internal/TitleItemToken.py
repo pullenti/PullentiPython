@@ -5,32 +5,42 @@
 import io
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.NumberSpellingType import NumberSpellingType
 
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.Token import Token
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.Termin import Termin
 
 class TitleItemToken(MetaToken):
     
     class Types(IntEnum):
         UNDEFINED = 0
-        TYP = 0 + 1
-        THEME = (0 + 1) + 1
-        TYPANDTHEME = ((0 + 1) + 1) + 1
-        BOSS = (((0 + 1) + 1) + 1) + 1
-        WORKER = ((((0 + 1) + 1) + 1) + 1) + 1
-        EDITOR = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
-        CONSULTANT = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        OPPONENT = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        OTHERROLE = ((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        TRANSLATE = (((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        ADOPT = ((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        DUST = (((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        SPECIALITY = ((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        KEYWORDS = (((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        TYP = 1
+        THEME = 2
+        TYPANDTHEME = 3
+        BOSS = 4
+        WORKER = 5
+        EDITOR = 6
+        CONSULTANT = 7
+        OPPONENT = 8
+        OTHERROLE = 9
+        TRANSLATE = 10
+        ADOPT = 11
+        DUST = 12
+        SPECIALITY = 13
+        KEYWORDS = 14
         
         @classmethod
         def has_value(cls, value):
@@ -47,12 +57,6 @@ class TitleItemToken(MetaToken):
     
     @staticmethod
     def tryAttach(t : 'Token') -> 'TitleItemToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is not None): 
             t1 = tt
@@ -77,7 +81,7 @@ class TitleItemToken(MetaToken):
                 if (tt2 is not None and tt2.isChar('.')): 
                     tt2 = tt2.next0_
                 if (isinstance(tt2, TextToken)): 
-                    if ((Utils.asObjectOrNull(tt2, TextToken)).term == "C" or (Utils.asObjectOrNull(tt2, TextToken)).term == "С"): 
+                    if ((tt2).term == "C" or (tt2).term == "С"): 
                         tt2 = tt2.next0_
                         if (isinstance(tt2, TextToken)): 
                             return TitleItemToken(t, tt2, TitleItemToken.Types.TRANSLATE)
@@ -118,7 +122,7 @@ class TitleItemToken(MetaToken):
             return None
         npt = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.NO, 0)
         if (npt is not None): 
-            s = npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+            s = npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
             tok = TitleItemToken.M_TERMINS.tryParse(npt.end_token, TerminParseAttr.NO)
             if (tok is not None): 
                 ty = Utils.valToEnum(tok.termin.tag, TitleItemToken.Types)
@@ -192,8 +196,6 @@ class TitleItemToken(MetaToken):
     
     @staticmethod
     def __tryAttachSpeciality(t : 'Token', key_word_before : bool) -> 'TitleItemToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
         if (t is None): 
             return None
         susp = False
@@ -253,9 +255,6 @@ class TitleItemToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (TitleItemToken.M_TERMINS is not None): 
             return
         TitleItemToken.M_TERMINS = TerminCollection()

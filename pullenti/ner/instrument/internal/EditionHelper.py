@@ -3,15 +3,17 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.instrument.InstrumentKind import InstrumentKind
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.instrument.InstrumentKind import InstrumentKind
+from pullenti.ner.decree.internal.PartToken import PartToken
 
 class EditionHelper:
     """ Поддержка анализа редакций для фрагментов НПА """
     
     @staticmethod
     def analizeEditions(root : 'FragToken') -> None:
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
         if (root.number == 6 and root.kind == InstrumentKind.SUBITEM): 
             pass
         if (root.sub_number == 67): 
@@ -117,7 +119,6 @@ class EditionHelper:
     
     @staticmethod
     def __canBeEditionFor(fr : 'FragToken', edt : 'FragToken') -> int:
-        from pullenti.ner.decree.internal.PartToken import PartToken
         if (edt is None or edt.kind != InstrumentKind.EDITIONS or edt.referents is None): 
             return -1
         if (fr.sub_number3 == 67): 

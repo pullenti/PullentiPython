@@ -2,8 +2,8 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
-from pullenti.ner.core.internal.TextsCompareType import TextsCompareType
 
+from pullenti.ner.core.internal.TextsCompareType import TextsCompareType
 
 class TextAnnotation:
     """ Аннотация слитного фрагмента текста """

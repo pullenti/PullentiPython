@@ -3,18 +3,22 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
+
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.business.BusinessFactKind import BusinessFactKind
-
 
 class MetaBusinessFact(ReferentClass):
     
     def __init__(self) -> None:
-        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
         super().__init__()
         self.kind_feature = None;
-        f = self.addFeature(BusinessFactReferent.ATTR_KIND, "Класс", 0, 1)
-        self.kind_feature = f
+    
+    @staticmethod
+    def initialize() -> None:
+        from pullenti.ner.business.BusinessFactReferent import BusinessFactReferent
+        MetaBusinessFact.GLOBAL_META = MetaBusinessFact()
+        f = MetaBusinessFact.GLOBAL_META.addFeature(BusinessFactReferent.ATTR_KIND, "Класс", 0, 1)
+        MetaBusinessFact.GLOBAL_META.kind_feature = f
         f.addValue(Utils.enumToString(BusinessFactKind.CREATE), "Создавать", None, None)
         f.addValue(Utils.enumToString(BusinessFactKind.DELETE), "Удалять", None, None)
         f.addValue(Utils.enumToString(BusinessFactKind.HAVE), "Иметь", None, None)
@@ -26,12 +30,12 @@ class MetaBusinessFact(ReferentClass):
         f.addValue(Utils.enumToString(BusinessFactKind.SUBSIDIARY), "Дочернее предприятие", None, None)
         f.addValue(Utils.enumToString(BusinessFactKind.FINANCE), "Финансировать", None, None)
         f.addValue(Utils.enumToString(BusinessFactKind.LAWSUIT), "Судебный иск", None, None)
-        self.addFeature(BusinessFactReferent.ATTR_TYPE, "Тип", 0, 1)
-        self.addFeature(BusinessFactReferent.ATTR_WHO, "Кто", 0, 1).show_as_parent = True
-        self.addFeature(BusinessFactReferent.ATTR_WHOM, "Кого\\Кому", 0, 1).show_as_parent = True
-        self.addFeature(BusinessFactReferent.ATTR_WHEN, "Когда", 0, 1).show_as_parent = True
-        self.addFeature(BusinessFactReferent.ATTR_WHAT, "Что", 0, 0).show_as_parent = True
-        self.addFeature(BusinessFactReferent.ATTR_MISC, "Дополнительная информация", 0, 0).show_as_parent = True
+        MetaBusinessFact.GLOBAL_META.addFeature(BusinessFactReferent.ATTR_TYPE, "Тип", 0, 1)
+        MetaBusinessFact.GLOBAL_META.addFeature(BusinessFactReferent.ATTR_WHO, "Кто", 0, 1).show_as_parent = True
+        MetaBusinessFact.GLOBAL_META.addFeature(BusinessFactReferent.ATTR_WHOM, "Кого\\Кому", 0, 1).show_as_parent = True
+        MetaBusinessFact.GLOBAL_META.addFeature(BusinessFactReferent.ATTR_WHEN, "Когда", 0, 1).show_as_parent = True
+        MetaBusinessFact.GLOBAL_META.addFeature(BusinessFactReferent.ATTR_WHAT, "Что", 0, 0).show_as_parent = True
+        MetaBusinessFact.GLOBAL_META.addFeature(BusinessFactReferent.ATTR_MISC, "Дополнительная информация", 0, 0).show_as_parent = True
     
     @property
     def name(self) -> str:
@@ -48,10 +52,3 @@ class MetaBusinessFact(ReferentClass):
         return MetaBusinessFact.IMAGE_ID
     
     GLOBAL_META = None
-    
-    # static constructor for class MetaBusinessFact
-    @staticmethod
-    def _static_ctor():
-        MetaBusinessFact.GLOBAL_META = MetaBusinessFact()
-
-MetaBusinessFact._static_ctor()

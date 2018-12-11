@@ -5,15 +5,19 @@
 import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Referent import Referent
-from pullenti.ner.business.FundsKind import FundsKind
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.money.MoneyReferent import MoneyReferent
+from pullenti.ner.business.FundsKind import FundsKind
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.business.internal.FundsMeta import FundsMeta
 
 class FundsReferent(Referent):
     """ Ценные бумаги (акции, доли в уставном капитале и пр.) """
     
     def __init__(self) -> None:
-        from pullenti.ner.business.internal.FundsMeta import FundsMeta
         super().__init__(FundsReferent.OBJ_TYPENAME)
         self.instance_of = FundsMeta.GLOBAL_META
     
@@ -34,16 +38,13 @@ class FundsReferent(Referent):
     ATTR_PRICE = "PRICE"
     
     def toString(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.business.internal.FundsMeta import FundsMeta
-        from pullenti.morph.MorphLang import MorphLang
         res = io.StringIO()
         if (self.typ is not None): 
             print(MiscHelper.convertFirstCharUpperAndOtherLower(self.typ), end="", file=res)
         else: 
             kind_ = self.getStringValue(FundsReferent.ATTR_KIND)
             if (kind_ is not None): 
-                kind_ = (Utils.asObjectOrNull(FundsMeta.GLOBAL_META.kind_feature.convertInnerValueToOuterValue(kind_, MorphLang()), str))
+                kind_ = (Utils.asObjectOrNull(FundsMeta.GLOBAL_META.kind_feature.convertInnerValueToOuterValue(kind_, None), str))
             if (kind_ is not None): 
                 print(MiscHelper.convertFirstCharUpperAndOtherLower(kind_), end="", file=res)
             else: 
@@ -89,7 +90,6 @@ class FundsReferent(Referent):
     @property
     def source(self) -> 'OrganizationReferent':
         """ Эмитент """
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         return Utils.asObjectOrNull(self.getSlotValue(FundsReferent.ATTR_SOURCE), OrganizationReferent)
     @source.setter
     def source(self, value) -> 'OrganizationReferent':
@@ -149,7 +149,6 @@ class FundsReferent(Referent):
     @property
     def sum0_(self) -> 'MoneyReferent':
         """ Сумма за все акции """
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
         return Utils.asObjectOrNull(self.getSlotValue(FundsReferent.ATTR_SUM), MoneyReferent)
     @sum0_.setter
     def sum0_(self, value) -> 'MoneyReferent':
@@ -159,7 +158,6 @@ class FundsReferent(Referent):
     @property
     def price(self) -> 'MoneyReferent':
         """ Сумма за одну акцию """
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
         return Utils.asObjectOrNull(self.getSlotValue(FundsReferent.ATTR_PRICE), MoneyReferent)
     @price.setter
     def price(self, value) -> 'MoneyReferent':

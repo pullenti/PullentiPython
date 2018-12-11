@@ -7,45 +7,59 @@ import math
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.instrument.internal.NumberTypes import NumberTypes
-from pullenti.ner.instrument.internal.FragToken import FragToken
-from pullenti.ner.core.internal.TableHelper import TableHelper
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.instrument.internal.NumberingHelper import NumberingHelper
-from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.decree.DecreeKind import DecreeKind
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+
 from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.instrument.InstrumentKind import InstrumentKind
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.decree.DecreeKind import DecreeKind
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.morph.LanguageHelper import LanguageHelper
-
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.Token import Token
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.core.internal.TableHelper import TableHelper
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.instrument.internal.NumberTypes import NumberTypes
+from pullenti.ner.decree.internal.PartToken import PartToken
+from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
+from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.decree.internal.DecreeToken import DecreeToken
 
 class InstrToken1(MetaToken):
     
     class Types(IntEnum):
         LINE = 0
-        FIRSTLINE = 0 + 1
-        SIGNS = (0 + 1) + 1
-        APPENDIX = ((0 + 1) + 1) + 1
-        APPROVED = (((0 + 1) + 1) + 1) + 1
-        BASE = ((((0 + 1) + 1) + 1) + 1) + 1
-        INDEX = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
-        TITLE = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        DIRECTIVE = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        CHAPTER = ((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        CLAUSE = (((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        DOCPART = ((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        SECTION = (((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        SUBSECTION = ((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        PARAGRAPH = (((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        SUBPARAGRAPH = ((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        CLAUSEPART = (((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        EDITIONS = ((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        COMMENT = (((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        NOTICE = ((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        FIRSTLINE = 1
+        SIGNS = 2
+        APPENDIX = 3
+        APPROVED = 4
+        BASE = 5
+        INDEX = 6
+        TITLE = 7
+        DIRECTIVE = 8
+        CHAPTER = 9
+        CLAUSE = 10
+        DOCPART = 11
+        SECTION = 12
+        SUBSECTION = 13
+        PARAGRAPH = 14
+        SUBPARAGRAPH = 15
+        CLAUSEPART = 16
+        EDITIONS = 17
+        COMMENT = 18
+        NOTICE = 19
         
         @classmethod
         def has_value(cls, value):
@@ -53,9 +67,9 @@ class InstrToken1(MetaToken):
     
     class StdTitleType(IntEnum):
         UNDEFINED = 0
-        SUBJECT = 0 + 1
-        REQUISITES = (0 + 1) + 1
-        OTHERS = ((0 + 1) + 1) + 1
+        SUBJECT = 1
+        REQUISITES = 2
+        OTHERS = 3
         
         @classmethod
         def has_value(cls, value):
@@ -83,35 +97,30 @@ class InstrToken1(MetaToken):
     
     @property
     def last_number(self) -> int:
-        from pullenti.ner.decree.internal.PartToken import PartToken
         if (len(self.numbers) < 1): 
             return 0
         return PartToken.getNumber(self.numbers[len(self.numbers) - 1])
     
     @property
     def first_number(self) -> int:
-        from pullenti.ner.decree.internal.PartToken import PartToken
         if (len(self.numbers) < 1): 
             return 0
         return PartToken.getNumber(self.numbers[0])
     
     @property
     def middle_number(self) -> int:
-        from pullenti.ner.decree.internal.PartToken import PartToken
         if (len(self.numbers) < 2): 
             return 0
         return PartToken.getNumber(self.numbers[1])
     
     @property
     def last_min_number(self) -> int:
-        from pullenti.ner.decree.internal.PartToken import PartToken
         if (self.min_number is None): 
             return 0
         return PartToken.getNumber(self.min_number)
     
     @property
     def has_changes(self) -> bool:
-        from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
         t = Utils.ifNotNull(self.num_end_token, self.begin_token)
         while t is not None: 
             if (isinstance(t.getReferent(), DecreeChangeReferent)): 
@@ -154,21 +163,10 @@ class InstrToken1(MetaToken):
     
     @staticmethod
     def parse(t : 'Token', ignore_directives : bool, cur : 'FragToken'=None, lev : int=0, prev : 'InstrToken1'=None, is_citat : bool=False, max_char : int=0, can_be_table_cell : bool=False) -> 'InstrToken1':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
         from pullenti.ner.instrument.internal.InstrToken import InstrToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
         from pullenti.ner.instrument.internal.ParticipantToken import ParticipantToken
+        from pullenti.ner.instrument.internal.NumberingHelper import NumberingHelper
+        from pullenti.ner.instrument.internal.FragToken import FragToken
         if (t is None): 
             return None
         if (t.isChar('(')): 
@@ -272,7 +270,7 @@ class InstrToken1(MetaToken):
                         continue
                     if ((isinstance(t, NumberToken)) and ((t.is_newline_after or ((t.next0_ is not None and t.next0_.isChar('.') and t.next0_.is_newline_after))))): 
                         res.num_begin_token = t
-                        res.numbers.append(str((Utils.asObjectOrNull(t, NumberToken)).value))
+                        res.numbers.append(str((t).value))
                         if (t.next0_ is not None and t.next0_.isChar('.')): 
                             t = t.next0_
                         res.num_end_token = t
@@ -280,8 +278,8 @@ class InstrToken1(MetaToken):
                         continue
                     if (((isinstance(t, NumberToken)) and (isinstance(t.next0_, TextToken)) and t.next0_.length_char == 1) and ((t.next0_.is_newline_after or ((t.next0_.next0_ is not None and t.next0_.next0_.isChar('.')))))): 
                         res.num_begin_token = t
-                        res.numbers.append(str((Utils.asObjectOrNull(t, NumberToken)).value))
-                        res.numbers.append((Utils.asObjectOrNull(t.next0_, TextToken)).term)
+                        res.numbers.append(str((t).value))
+                        res.numbers.append((t.next0_).term)
                         res.num_typ = NumberTypes.COMBO
                         t = t.next0_
                         if (t.next0_ is not None and t.next0_.isChar('.')): 
@@ -311,7 +309,7 @@ class InstrToken1(MetaToken):
                             continue
                         if (t.length_char == 1 and t.chars.is_all_upper): 
                             res.num_begin_token = t
-                            res.numbers.append((Utils.asObjectOrNull(t, TextToken)).term)
+                            res.numbers.append((t).term)
                             res.num_typ = NumberTypes.LETTER
                             if (t.next0_ is not None and ((t.next0_.isChar('.') or t.next0_.isChar(')')))): 
                                 t = t.next0_
@@ -321,7 +319,7 @@ class InstrToken1(MetaToken):
                     if (InstrToken._checkEntered(t) is not None): 
                         break
                     if (isinstance(t, TextToken)): 
-                        if ((Utils.asObjectOrNull(t, TextToken)).is_pure_verb): 
+                        if ((t).is_pure_verb): 
                             res.typ = InstrToken1.Types.LINE
                             break
                     break
@@ -340,7 +338,7 @@ class InstrToken1(MetaToken):
                     res.typ = InstrToken1.Types.APPENDIX
                     res.end_token = t1.previous
                     return res
-            if ((isinstance(t.getReferent(), DecreeReferent)) and (Utils.asObjectOrNull(t.getReferent(), DecreeReferent)).kind == DecreeKind.PUBLISHER): 
+            if ((isinstance(t.getReferent(), DecreeReferent)) and (t.getReferent()).kind == DecreeKind.PUBLISHER): 
                 res.typ = InstrToken1.Types.APPROVED
         if (t.isValue("КОНСУЛЬТАНТПЛЮС", None) or t.isValue("ГАРАНТ", None)): 
             t1 = t.next0_
@@ -542,7 +540,7 @@ class InstrToken1(MetaToken):
                         ok = False
             if (ok and (isinstance(t, TextToken))): 
                 ok = False
-                s = (Utils.asObjectOrNull(t, TextToken)).term
+                s = (t).term
                 if (s == "ГЛАВА" or s == "ГОЛОВА"): 
                     res.typ = InstrToken1.Types.CHAPTER
                     t = t.next0_
@@ -551,7 +549,7 @@ class InstrToken1(MetaToken):
                     res.typ = InstrToken1.Types.CLAUSE
                     t = t.next0_
                     ok = True
-                    if ((isinstance(t.next0_, NumberToken)) and (Utils.asObjectOrNull(t.next0_, NumberToken)).value == (19)): 
+                    if ((isinstance(t.next0_, NumberToken)) and (t.next0_).value == (19)): 
                         pass
                 elif (s == "РАЗДЕЛ" or s == "РОЗДІЛ"): 
                     res.typ = InstrToken1.Types.SECTION
@@ -652,7 +650,7 @@ class InstrToken1(MetaToken):
                     break
             if ((t.isChar('[') and t == t0 and (isinstance(t.next0_, NumberToken))) and t.next0_.next0_ is not None and t.next0_.next0_.isChar(']')): 
                 num = False
-                res.numbers.append(str((Utils.asObjectOrNull(t.next0_, NumberToken)).value))
+                res.numbers.append(str((t.next0_).value))
                 res.num_typ = NumberTypes.DIGIT
                 res.num_suffix = "]"
                 res.num_begin_token = t
@@ -678,7 +676,7 @@ class InstrToken1(MetaToken):
                         elif (((t == t0 and t.is_newline_before and br.length_char == 3) and br.end_token == t.next0_.next0_ and (isinstance(t.next0_, TextToken))) and t.next0_.chars.is_latin_letter): 
                             res.num_begin_token = t
                             res.num_typ = NumberTypes.LETTER
-                            res.numbers.append((Utils.asObjectOrNull(t.next0_, TextToken)).term)
+                            res.numbers.append((t.next0_).term)
                             res.num_end_token = t.next0_.next0_
                             res.end_token = res.num_end_token
                     res.end_token = br.end_token
@@ -710,7 +708,7 @@ class InstrToken1(MetaToken):
                                 break
                 if (not t.chars.is_all_upper): 
                     res.all_upper = False
-                if ((Utils.asObjectOrNull(t, TextToken)).is_pure_verb): 
+                if ((t).is_pure_verb): 
                     if (t.chars.is_cyrillic_letter): 
                         npt = NounPhraseHelper.tryParse((t.next0_ if t.morph.class0_.is_preposition else t), NounPhraseParseAttr.NO, 0)
                         if (npt is not None): 
@@ -962,7 +960,7 @@ class InstrToken1(MetaToken):
                     res.title_typ = InstrToken1.StdTitleType.SUBJECT
                     continue
                 if (isinstance(npt.end_token, TextToken)): 
-                    term = (Utils.asObjectOrNull(npt.end_token, TextToken)).term
+                    term = (npt.end_token).term
                     if (term == "ПРИЛОЖЕНИЯ" or term == "ПРИЛОЖЕНИЙ"): 
                         tt = npt.end_token
                         res.title_typ = InstrToken1.StdTitleType.OTHERS
@@ -997,7 +995,6 @@ class InstrToken1(MetaToken):
     
     @staticmethod
     def __isFirstLine(t : 'Token') -> bool:
-        from pullenti.ner.TextToken import TextToken
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             return False
@@ -1016,7 +1013,6 @@ class InstrToken1(MetaToken):
     
     @staticmethod
     def _createEdition(t : 'Token') -> 'Token':
-        from pullenti.ner.decree.internal.PartToken import PartToken
         from pullenti.ner.instrument.internal.InstrToken import InstrToken
         if (t is None or t.next0_ is None): 
             return None
@@ -1056,8 +1052,6 @@ class InstrToken1(MetaToken):
     @staticmethod
     def _checkDirective(t : 'Token', val : str) -> 'Token':
         from pullenti.ner.instrument.internal.InstrToken import InstrToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
         val.value = (None)
         if (t is None or t.morph.class0_.is_adjective): 
             return None

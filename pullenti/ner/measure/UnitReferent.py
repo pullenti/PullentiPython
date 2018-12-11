@@ -3,16 +3,16 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.morph.LanguageHelper import LanguageHelper
 
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.Referent import Referent
+from pullenti.ner.measure.internal.UnitMeta import UnitMeta
 
 class UnitReferent(Referent):
     """ Ежиница измерения """
     
     def __init__(self) -> None:
-        from pullenti.ner.measure.internal.UnitMeta import UnitMeta
         super().__init__(UnitReferent.OBJ_TYPENAME)
         self._m_unit = None;
         self.instance_of = UnitMeta.GLOBAL_META
@@ -33,7 +33,7 @@ class UnitReferent(Referent):
     def parent_referent(self) -> 'Referent':
         return Utils.asObjectOrNull(self.getSlotValue(UnitReferent.ATTR_BASEUNIT), Referent)
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         nam = None
         for l_ in range(2):
             for s in self.slots: 

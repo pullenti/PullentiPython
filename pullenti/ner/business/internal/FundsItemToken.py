@@ -4,14 +4,23 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.business.internal.FundsItemTyp import FundsItemTyp
-from pullenti.ner.business.FundsKind import FundsKind
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.NumberExType import NumberExType
-from pullenti.ner.org.OrganizationKind import OrganizationKind
 
+from pullenti.ner.business.FundsReferent import FundsReferent
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.org.OrganizationKind import OrganizationKind
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.NumberExType import NumberExType
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.business.internal.FundsItemTyp import FundsItemTyp
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
+from pullenti.ner.business.FundsKind import FundsKind
+from pullenti.ner.money.MoneyReferent import MoneyReferent
+from pullenti.ner.core.NumberExToken import NumberExToken
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
 
 class FundsItemToken(MetaToken):
     
@@ -43,14 +52,6 @@ class FundsItemToken(MetaToken):
     
     @staticmethod
     def tryParse(t : 'Token', prev : 'FundsItemToken'=None) -> 'FundsItemToken':
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
-        from pullenti.ner.business.FundsReferent import FundsReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.NumberExToken import NumberExToken
         if (t is None): 
             return None
         typ0 = FundsItemTyp.UNDEFINED
@@ -93,7 +94,7 @@ class FundsItemToken(MetaToken):
                     if (len(npt.adjectives) > 0): 
                         for v in FundsItemToken.__m_act_types: 
                             if (npt.adjectives[0].isValue(v, None)): 
-                                res.string_val = npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False).lower()
+                                res.string_val = npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False).lower()
                                 if (res.string_val == "голосовавшая акция"): 
                                     res.string_val = "голосующая акция"
                                 break
@@ -170,17 +171,12 @@ class FundsItemToken(MetaToken):
                 t1 = tt
                 if (t1.next0_ is not None and t1.next0_.isValue("ШТУКА", None)): 
                     t1 = t1.next0_
-                return FundsItemToken._new436(t, t1, FundsItemTyp.COUNT, (Utils.asObjectOrNull(tt, NumberToken)).value)
+                return FundsItemToken._new436(t, t1, FundsItemTyp.COUNT, (tt).value)
             break
         return None
     
     @staticmethod
     def tryAttach(t : 'Token') -> 'ReferentToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.business.FundsReferent import FundsReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
         if (t is None): 
             return None
         f = FundsItemToken.tryParse(t, None)
@@ -297,7 +293,7 @@ class FundsItemToken(MetaToken):
                 if (refs is not None): 
                     for r in refs: 
                         if (isinstance(r, OrganizationReferent)): 
-                            ki = (Utils.asObjectOrNull(r, OrganizationReferent)).kind
+                            ki = (r).kind
                             if (ki == OrganizationKind.JUSTICE or ki == OrganizationKind.GOVENMENT): 
                                 continue
                             funds.source = Utils.asObjectOrNull(r, OrganizationReferent)

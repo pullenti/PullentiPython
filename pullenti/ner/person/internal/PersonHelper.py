@@ -4,32 +4,35 @@
 
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.person.internal.PersonAttrTerminType import PersonAttrTerminType
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.core.NumberHelper import NumberHelper
 
+from pullenti.ner.Token import Token
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.Referent import Referent
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.ner.MorphCollection import MorphCollection
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.person.internal.PersonAttrTerminType import PersonAttrTerminType
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
+from pullenti.ner.mail.internal.MailLine import MailLine
+from pullenti.ner.person.PersonAnalyzer import PersonAnalyzer
+from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
 
 class PersonHelper:
     
     @staticmethod
     def _createReferentToken(p : 'PersonReferent', begin : 'Token', end : 'Token', morph_ : 'MorphCollection', attrs : typing.List['PersonAttrToken'], ad : 'PersonAnalyzerData', for_attribute : bool, after_be_predicate : bool) -> 'ReferentToken':
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.ner.MorphCollection import MorphCollection
-        from pullenti.ner.mail.internal.MailLine import MailLine
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.morph.MorphCase import MorphCase
         from pullenti.ner.person.internal.PersonIdentityToken import PersonIdentityToken
-        from pullenti.ner.person.PersonAnalyzer import PersonAnalyzer
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
         if (p is None): 
             return None
         has_prefix = False
@@ -52,7 +55,7 @@ class PersonHelper:
                     elif (a.gender == MorphGender.MASCULINE and not p.is_male): 
                         p.is_male = True
         elif ((isinstance(begin.previous, TextToken)) and (begin.whitespaces_before_count < 3)): 
-            if ((Utils.asObjectOrNull(begin.previous, TextToken)).term == "ИП"): 
+            if ((begin.previous).term == "ИП"): 
                 a = PersonAttrToken(begin.previous, begin.previous)
                 a.prop_ref = PersonPropertyReferent()
                 a.prop_ref.name = "индивидуальный предприниматель"
@@ -101,7 +104,7 @@ class PersonHelper:
                 ttt = (rt00)
             if (isinstance(rt00.begin_token.getReferent(), PersonPropertyReferent)): 
                 ok = False
-                if ((Utils.asObjectOrNull(rt00.begin_token, ReferentToken)).end_token.next0_ is not None and (Utils.asObjectOrNull(rt00.begin_token, ReferentToken)).end_token.next0_.isChar(':')): 
+                if ((rt00.begin_token).end_token.next0_ is not None and (rt00.begin_token).end_token.next0_.isChar(':')): 
                     ok = True
                 elif (rt00.begin_token.morph.number == MorphNumber.PLURAL): 
                     ok = True
@@ -181,9 +184,9 @@ class PersonHelper:
                             continue
             elif (t.is_comma): 
                 t = t.next0_
-                if ((isinstance(t, TextToken)) and (Utils.asObjectOrNull(t, TextToken)).isValue("WHO", None)): 
+                if ((isinstance(t, TextToken)) and (t).isValue("WHO", None)): 
                     continue
-            elif ((isinstance(t, TextToken)) and (Utils.asObjectOrNull(t, TextToken)).is_verb_be): 
+            elif ((isinstance(t, TextToken)) and (t).is_verb_be): 
                 t = t.next0_
             elif (t.is_and and t.is_whitespace_after and not t.is_newline_after): 
                 if (t == end.next0_): 
@@ -392,10 +395,6 @@ class PersonHelper:
         Returns:
             Token: если не null, то последний токен клички, а в pr запишет саму кличку
         """
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         has_keyw = False
         is_br = False
         first_pass3109 = True
@@ -458,8 +457,6 @@ class PersonHelper:
     
     @staticmethod
     def isPersonSayOrAttrAfter(t : 'Token') -> bool:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
         if (t is None): 
             return False
         tt = PersonHelper.__correctTailAttributes(None, t)
@@ -481,10 +478,6 @@ class PersonHelper:
     
     @staticmethod
     def __correctTailAttributes(p : 'PersonReferent', t0 : 'Token') -> 'Token':
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.ReferentToken import ReferentToken
         res = t0
         t = t0
         if (t is not None and t.isChar(',')): 

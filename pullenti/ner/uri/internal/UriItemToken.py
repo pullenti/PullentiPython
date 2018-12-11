@@ -5,10 +5,16 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
+
 from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.Termin import Termin
 
 class UriItemToken(MetaToken):
     
@@ -32,8 +38,6 @@ class UriItemToken(MetaToken):
     
     @staticmethod
     def attachISOContent(t0 : 'Token', spec_chars : str) -> 'UriItemToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
         t = t0
         while True:
             if (t is None): 
@@ -72,9 +76,6 @@ class UriItemToken(MetaToken):
     
     @staticmethod
     def __AttachUriContent(t0 : 'Token', chars_ : str, can_be_whitespaces : bool=False) -> 'UriItemToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
         txt = io.StringIO()
         t1 = t0
         dom = UriItemToken.attachDomainName(t0, True, can_be_whitespaces)
@@ -118,7 +119,7 @@ class UriItemToken(MetaToken):
                             continue
                         if (not ((isinstance(tt1, TextToken)))): 
                             break
-                        term1 = (Utils.asObjectOrNull(tt1, TextToken)).term
+                        term1 = (tt1).term
                         if (((term1 == "HTM" or term1 == "HTML" or term1 == "SHTML") or term1 == "ASP" or term1 == "ASPX") or term1 == "JSP"): 
                             ok = True
                             break
@@ -194,8 +195,6 @@ class UriItemToken(MetaToken):
     
     @staticmethod
     def attachDomainName(t0 : 'Token', check_ : bool, can_be_whitspaces : bool) -> 'UriItemToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
         txt = io.StringIO()
         t1 = t0
         ip_count = 0
@@ -245,7 +244,7 @@ class UriItemToken(MetaToken):
             tt = Utils.asObjectOrNull(t, TextToken)
             if (tt is None): 
                 break
-            src = (Utils.asObjectOrNull(tt, TextToken)).term
+            src = (tt).term
             ch = src[0]
             if (not str.isalpha(ch)): 
                 if (".-_".find(ch) < 0): 
@@ -290,8 +289,6 @@ class UriItemToken(MetaToken):
     
     @staticmethod
     def attachMailUsers(t1 : 'Token') -> typing.List['UriItemToken']:
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
         if (t1 is None): 
             return None
         if (t1.isChar('}')): 
@@ -348,7 +345,6 @@ class UriItemToken(MetaToken):
     
     @staticmethod
     def attachUrl(t0 : 'Token') -> 'UriItemToken':
-        from pullenti.ner.NumberToken import NumberToken
         srv = UriItemToken.attachDomainName(t0, True, False)
         if (srv is None): 
             return None
@@ -356,7 +352,7 @@ class UriItemToken(MetaToken):
         t1 = srv.end_token
         if (t1.next0_ is not None and t1.next0_.isChar(':') and (isinstance(t1.next0_.next0_, NumberToken))): 
             t1 = t1.next0_.next0_
-            print(":{0}".format((Utils.asObjectOrNull(t1, NumberToken)).value), end="", file=txt, flush=True)
+            print(":{0}".format((t1).value), end="", file=txt, flush=True)
         t = t1.next0_
         while t is not None: 
             if (t.is_whitespace_before): 
@@ -395,8 +391,6 @@ class UriItemToken(MetaToken):
     
     @staticmethod
     def attachISBN(t0 : 'Token') -> 'UriItemToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
         txt = io.StringIO()
         t1 = t0
         digs = 0
@@ -448,8 +442,6 @@ class UriItemToken(MetaToken):
     
     @staticmethod
     def attachBBK(t0 : 'Token') -> 'UriItemToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
         txt = io.StringIO()
         t1 = t0
         digs = 0
@@ -506,7 +498,6 @@ class UriItemToken(MetaToken):
     
     @staticmethod
     def attachIcqContent(t0 : 'Token') -> 'UriItemToken':
-        from pullenti.ner.NumberToken import NumberToken
         if (not ((isinstance(t0, NumberToken)))): 
             return None
         res = UriItemToken.attachISBN(t0)
@@ -525,9 +516,6 @@ class UriItemToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (UriItemToken.__m_std_groups is not None): 
             return
         UriItemToken.__m_std_groups = TerminCollection()

@@ -6,25 +6,43 @@ import typing
 import io
 import xml.etree
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.org.OrgProfile import OrgProfile
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-from pullenti.ner.org.OrganizationKind import OrganizationKind
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.org.internal.EpNerOrgInternalResourceHelper import EpNerOrgInternalResourceHelper
-from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
 
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.org.internal.EpNerOrgInternalResourceHelper import EpNerOrgInternalResourceHelper
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.Token import Token
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.TextToken import TextToken
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.Referent import Referent
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.org.OrgProfile import OrgProfile
+from pullenti.ner.org.internal.OrgItemTermin import OrgItemTermin
+from pullenti.morph.CharsInfo import CharsInfo
+from pullenti.ner.org.OrganizationKind import OrganizationKind
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.org.internal.OrgItemNumberToken import OrgItemNumberToken
 
 class OrgItemTypeToken(MetaToken):
     
     def __init__(self, begin : 'Token', end : 'Token') -> None:
-        from pullenti.morph.CharsInfo import CharsInfo
         super().__init__(begin, end, None)
         self.typ = None;
         self.name = None;
@@ -118,19 +136,6 @@ class OrgItemTypeToken(MetaToken):
     
     @staticmethod
     def tryAttach(t : 'Token', can_be_first_letter_lower : bool=False, ad : 'AnalyzerDataWithOntology'=None) -> 'OrgItemTypeToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.org.internal.OrgItemTermin import OrgItemTermin
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.org.internal.OrgItemNumberToken import OrgItemNumberToken
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.morph.Morphology import Morphology
         if (t is None or (((isinstance(t, ReferentToken)) and not t.chars.is_latin_letter))): 
             return None
         res = OrgItemTypeToken.__TryAttach(t, can_be_first_letter_lower)
@@ -245,7 +250,7 @@ class OrgItemTypeToken(MetaToken):
         if (res is not None and res.geo is None): 
             tt2 = res.end_token.next0_
             if (tt2 is not None and not tt2.is_newline_before and tt2.morph.class0_.is_preposition): 
-                if (((isinstance(tt2.next0_, TextToken)) and (Utils.asObjectOrNull(tt2.next0_, TextToken)).term == "ВАШ" and res.root is not None) and OrgProfile.JUSTICE in res.root.profiles): 
+                if (((isinstance(tt2.next0_, TextToken)) and (tt2.next0_).term == "ВАШ" and res.root is not None) and OrgProfile.JUSTICE in res.root.profiles): 
                     res.coef = 5
                     res.end_token = tt2.next0_
                     tt2 = tt2.next0_.next0_
@@ -263,7 +268,7 @@ class OrgItemTypeToken(MetaToken):
             elif (((tt2 is not None and not tt2.is_newline_before and tt2.is_hiphen) and (isinstance(tt2.next0_, TextToken)) and tt2.next0_.getMorphClassInDictionary().is_noun) and not tt2.next0_.isValue("БАНК", None)): 
                 npt1 = NounPhraseHelper.tryParse(res.end_token, NounPhraseParseAttr.NO, 0)
                 if (npt1 is not None and npt1.end_token == tt2.next0_): 
-                    res.alt_typ = npt1.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False).lower()
+                    res.alt_typ = npt1.getNormalCaseText(None, True, MorphGender.UNDEFINED, False).lower()
                     res.end_token = npt1.end_token
             elif (tt2 is not None and (tt2.whitespaces_before_count < 3)): 
                 npt = NounPhraseHelper.tryParse(tt2, NounPhraseParseAttr.NO, 0)
@@ -374,7 +379,7 @@ class OrgItemTypeToken(MetaToken):
                     res.alt_typ = s
         if (res is not None and OrgProfile.EDUCATION in res.profiles and (isinstance(res.end_token.next0_, TextToken))): 
             tt1 = res.end_token.next0_
-            if ((Utils.asObjectOrNull(tt1, TextToken)).term == "ВПО" or (Utils.asObjectOrNull(tt1, TextToken)).term == "СПО"): 
+            if ((tt1).term == "ВПО" or (tt1).term == "СПО"): 
                 res.end_token = res.end_token.next0_
             else: 
                 nnt = NounPhraseHelper.tryParse(tt1, NounPhraseParseAttr.NO, 0)
@@ -468,7 +473,7 @@ class OrgItemTypeToken(MetaToken):
                         res = OrgItemTypeToken._new1721(t, t, ("территориальный пункт" if term == "ТП" else "миграционный пункт"), 4, True)
                         return res
         if (tt.chars.is_all_upper and term == "МГТУ"): 
-            if (tt.next0_.isValue("БАНК", None) or (((isinstance(tt.next0_.getReferent(), OrganizationReferent)) and (Utils.asObjectOrNull(tt.next0_.getReferent(), OrganizationReferent)).kind == OrganizationKind.BANK)) or ((tt.previous is not None and tt.previous.isValue("ОПЕРУ", None)))): 
+            if (tt.next0_.isValue("БАНК", None) or (((isinstance(tt.next0_.getReferent(), OrganizationReferent)) and (tt.next0_.getReferent()).kind == OrganizationKind.BANK)) or ((tt.previous is not None and tt.previous.isValue("ОПЕРУ", None)))): 
                 res = OrgItemTypeToken._new1722(tt, tt, "главное территориальное управление")
                 res.alt_typ = "ГТУ"
                 res.name = "МОСКОВСКОЕ"
@@ -521,7 +526,7 @@ class OrgItemTypeToken(MetaToken):
             npt = NounPhraseHelper.tryParse(t1, NounPhraseParseAttr.NO, 0)
             if (npt is not None and npt.end_token.next0_ is not None): 
                 t1 = npt.end_token.next0_
-                root_ = npt.noun.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                root_ = npt.noun.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                 ok = t1.chars.is_latin_letter and not t1.chars.is_all_lower
                 if (not ok and BracketHelper.canBeStartOfSequence(t1, True, False)): 
                     ok = True
@@ -538,7 +543,7 @@ class OrgItemTypeToken(MetaToken):
                                         res.geo = rt1
                                     else: 
                                         res.geo2 = rt1
-                            res.alt_typ = npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False).lower()
+                            res.alt_typ = npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False).lower()
                         res.root = OrgItemTermin._new1728(root_, True, 4)
                         return res
             rt = t1.kit.processReferent("GEO", t1)
@@ -567,15 +572,15 @@ class OrgItemTypeToken(MetaToken):
                 if (ot_ex_li is None and t.kit.ontology is not None): 
                     ot_ex_li = t.kit.ontology.attachToken(OrganizationReferent.OBJ_TYPENAME, t.next0_)
                 if ((ot_ex_li is not None and len(ot_ex_li) > 0 and ot_ex_li[0].item is not None) and (isinstance(ot_ex_li[0].item.referent, OrganizationReferent))): 
-                    if ((Utils.asObjectOrNull(ot_ex_li[0].item.referent, OrganizationReferent)).kind == OrganizationKind.PRESS): 
+                    if ((ot_ex_li[0].item.referent).kind == OrganizationKind.PRESS): 
                         ok = True
             if (t.next0_ is not None and t.next0_.chars.is_latin_letter and not t.next0_.chars.is_all_lower): 
                 ok = True
             if (ok): 
-                res = OrgItemTypeToken._new1722(t, t, t.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False).lower())
+                res = OrgItemTypeToken._new1722(t, t, t.getNormalCaseText(None, False, MorphGender.UNDEFINED, False).lower())
                 res.profiles.append(OrgProfile.MEDIA)
                 res.profiles.append(OrgProfile.PRESS)
-                res.root = OrgItemTermin._new1732(t.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False), OrgItemTermin.Types.ORG, 3, True)
+                res.root = OrgItemTermin._new1732(t.getNormalCaseText(None, False, MorphGender.UNDEFINED, False), OrgItemTermin.Types.ORG, 3, True)
                 res.morph = t.morph
                 res.chars = t.chars
                 if (t.previous is not None and t.previous.morph.class0_.is_adjective): 
@@ -624,13 +629,13 @@ class OrgItemTypeToken(MetaToken):
                     gen = MorphGender.UNDEFINED
                     for ii in range(len(res1.root.canonic_text) - 1, -1, -1):
                         if (ii == 0 or res1.root.canonic_text[ii - 1] == ' '): 
-                            mm = Morphology.getWordBaseInfo(res1.root.canonic_text[ii:], MorphLang(), False, False)
+                            mm = Morphology.getWordBaseInfo(res1.root.canonic_text[ii:], None, False, False)
                             gen = mm.gender
                             break
                     nam = t.getNormalCaseText(MorphClass.ADJECTIVE, True, gen, False)
                     if (((t.previous is not None and t.previous.is_hiphen and (isinstance(t.previous.previous, TextToken))) and t.previous.previous.chars.is_capital_upper and not t.is_whitespace_before) and not t.previous.is_whitespace_before): 
                         res1.begin_token = t.previous.previous
-                        nam = "{0}-{1}".format((Utils.asObjectOrNull(res1.begin_token, TextToken)).term, nam)
+                        nam = "{0}-{1}".format((res1.begin_token).term, nam)
                     res1.name = nam
                     return res1
         if (t.morph.class0_.is_adjective and not t.chars.is_all_lower and (t.whitespaces_after_count < 2)): 
@@ -640,7 +645,7 @@ class OrgItemTypeToken(MetaToken):
                 if (nam is not None): 
                     if (((t.previous is not None and t.previous.is_hiphen and (isinstance(t.previous.previous, TextToken))) and t.previous.previous.chars.is_capital_upper and not t.is_whitespace_before) and not t.previous.is_whitespace_before): 
                         t = t.previous.previous
-                        nam = "{0}-{1}".format((Utils.asObjectOrNull(t, TextToken)).term, nam)
+                        nam = "{0}-{1}".format((t).term, nam)
                     res1.begin_token = t
                     res1.coef = 5
                     res1.name = "{0} {1}".format(nam, res1.root.canonic_text)
@@ -658,13 +663,6 @@ class OrgItemTypeToken(MetaToken):
     
     @staticmethod
     def __TryAttach(t : 'Token', can_be_first_letter_lower : bool) -> 'OrgItemTypeToken':
-        from pullenti.ner.org.internal.OrgItemTermin import OrgItemTermin
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (t is None): 
             return None
         li = OrgItemTypeToken.__m_global.tryAttach(t, None, False)
@@ -690,7 +688,7 @@ class OrgItemTypeToken(MetaToken):
             if (res.begin_token != res.end_token and not res.root.is_pure_prefix): 
                 npt0 = NounPhraseHelper.tryParse(res.begin_token, NounPhraseParseAttr.NO, 0)
                 if (npt0 is not None and npt0.end_token == res.end_token and len(npt0.adjectives) >= res.name_words_count): 
-                    s = npt0.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False)
+                    s = npt0.getNormalCaseText(None, True, MorphGender.UNDEFINED, False)
                     if (Utils.compareStrings(s, res.typ, True) != 0): 
                         res.name = s
                         res.can_be_organization = True
@@ -725,7 +723,7 @@ class OrgItemTypeToken(MetaToken):
         npt = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.IGNOREADJBEST, 0)
         if (npt is None or npt.internal_noun is not None): 
             if (((not t.chars.is_all_lower and t.next0_ is not None and t.next0_.is_hiphen) and not t.is_whitespace_after and not t.next0_.is_whitespace_after) and t.next0_.next0_ is not None and t.next0_.next0_.isValue("БАНК", None)): 
-                s = t.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                s = t.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                 res = OrgItemTypeToken._new1740(t, t.next0_.next0_, s, t.next0_.next0_.morph, t.chars, t.next0_.next0_.chars)
                 res.root = OrgItemTypeToken.__m_bank
                 res.typ = "банк"
@@ -734,14 +732,14 @@ class OrgItemTypeToken(MetaToken):
                 res11 = OrgItemTypeToken.__TryAttach(t.next0_, False)
                 if (res11 is not None and res11.root is not None and res11.root.can_has_number): 
                     res11.begin_token = t
-                    res11.number = str((Utils.asObjectOrNull(t, NumberToken)).value)
+                    res11.number = str((t).value)
                     res11.coef = res11.coef + (1)
                     return res11
             return None
-        if (npt.morph.gender == MorphGender.FEMINIE and npt.noun.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False) == "БАНКА"): 
+        if (npt.morph.gender == MorphGender.FEMINIE and npt.noun.getNormalCaseText(None, False, MorphGender.UNDEFINED, False) == "БАНКА"): 
             return None
         if (npt.begin_token == npt.end_token): 
-            s = npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+            s = npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
             if (LanguageHelper.endsWithEx(s, "БАНК", "БАНКА", "БАНОК", None)): 
                 if (LanguageHelper.endsWith(s, "БАНКА")): 
                     s = s[0:0+len(s) - 1]
@@ -784,12 +782,12 @@ class OrgItemTypeToken(MetaToken):
             if (npt.adjectives[0].begin_token.getMorphClassInDictionary().is_verb): 
                 del npt.adjectives[0]
             elif (isinstance(npt.adjectives[0].begin_token, NumberToken)): 
-                res.number = str((Utils.asObjectOrNull(npt.adjectives[0].begin_token, NumberToken)).value)
+                res.number = str((npt.adjectives[0].begin_token).value)
                 del npt.adjectives[0]
             else: 
                 break
         if (len(npt.adjectives) > 0): 
-            res.alt_typ = npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False)
+            res.alt_typ = npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False)
             if (li[0].end_char > npt.end_char): 
                 res.alt_typ = "{0} {1}".format(res.alt_typ, MiscHelper.getTextValue(npt.end_token.next0_, li[0].end_token, GetTextAttr.NO))
         if (res.number is None): 
@@ -832,7 +830,7 @@ class OrgItemTypeToken(MetaToken):
                 elif (res.geo2 is None): 
                     res.geo2 = r
         if (res.end_token == npt.end_token): 
-            res.name = npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False)
+            res.name = npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False)
         if (res.name == res.alt_typ): 
             res.alt_typ = (None)
         if (res.alt_typ is not None): 
@@ -928,8 +926,6 @@ class OrgItemTypeToken(MetaToken):
             t(Token): 
         
         """
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
         if (t is None): 
             return False
         if (t.is_comma_and and t.previous is not None): 
@@ -990,8 +986,6 @@ class OrgItemTypeToken(MetaToken):
     
     @staticmethod
     def tryAttachReferenceToExistOrg(t : 'Token') -> 'ReferentToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
         if (not ((isinstance(t, TextToken)))): 
             return None
         tok = OrgItemTypeToken._m_key_words_for_refs.tryParse(t, TerminParseAttr.NO)
@@ -1000,7 +994,7 @@ class OrgItemTypeToken(MetaToken):
         abbr = None
         if (tok is None): 
             if (t.length_char > 1 and ((t.chars.is_capital_upper or t.chars.is_last_lower))): 
-                abbr = (Utils.asObjectOrNull(t, TextToken)).getLemma()
+                abbr = (t).getLemma()
             else: 
                 ty1 = OrgItemTypeToken.__TryAttach(t, True)
                 if (ty1 is not None): 
@@ -1039,7 +1033,7 @@ class OrgItemTypeToken(MetaToken):
                         return rt
                     if (tok.termin.tag is not None): 
                         ok = False
-                        for ty in (Utils.asObjectOrNull(r, OrganizationReferent)).types: 
+                        for ty in (r).types: 
                             if (Utils.endsWithString(ty, tok.termin.canonic_text, True)): 
                                 ok = True
                                 break
@@ -1270,8 +1264,8 @@ class OrgItemTypeToken(MetaToken):
         if ("центр;" in t): 
             if (("диагностический" in tn or "медицинский" in tn or "діагностичний" in tn) or "медичний" in tn): 
                 return OrganizationKind.MEDICAL
-            if ((isinstance(r, OrganizationReferent)) and (Utils.asObjectOrNull(r, OrganizationReferent)).higher is not None): 
-                if ((Utils.asObjectOrNull(r, OrganizationReferent)).higher.kind == OrganizationKind.DEPARTMENT): 
+            if ((isinstance(r, OrganizationReferent)) and (r).higher is not None): 
+                if ((r).higher.kind == OrganizationKind.DEPARTMENT): 
                     return OrganizationKind.DEPARTMENT
         if ("часть;" in t or "частина;" in t): 
             return OrganizationKind.DEPARTMENT
@@ -1302,14 +1296,6 @@ class OrgItemTypeToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.org.internal.OrgItemTermin import OrgItemTermin
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.morph.Morphology import Morphology
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.TerminCollection import TerminCollection
         if (OrgItemTypeToken.__m_global is not None): 
             return
         OrgItemTypeToken.__m_global = IntOntologyCollection()

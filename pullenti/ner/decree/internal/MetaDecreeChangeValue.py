@@ -3,16 +3,17 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
+
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.decree.DecreeChangeValueKind import DecreeChangeValueKind
 
-
 class MetaDecreeChangeValue(ReferentClass):
     
-    def __init__(self) -> None:
+    @staticmethod
+    def initialize() -> None:
         from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
-        super().__init__()
-        fi = self.addFeature(DecreeChangeValueReferent.ATTR_KIND, "Тип", 1, 1)
+        MetaDecreeChangeValue.GLOBAL_META = MetaDecreeChangeValue()
+        fi = MetaDecreeChangeValue.GLOBAL_META.addFeature(DecreeChangeValueReferent.ATTR_KIND, "Тип", 1, 1)
         fi.addValue(Utils.enumToString(DecreeChangeValueKind.TEXT), "Текст", None, None)
         fi.addValue(Utils.enumToString(DecreeChangeValueKind.WORDS), "Слова", None, None)
         fi.addValue(Utils.enumToString(DecreeChangeValueKind.ROBUSTWORDS), "Слова (неточно)", None, None)
@@ -21,9 +22,9 @@ class MetaDecreeChangeValue(ReferentClass):
         fi.addValue(Utils.enumToString(DecreeChangeValueKind.FOOTNOTE), "Сноска", None, None)
         fi.addValue(Utils.enumToString(DecreeChangeValueKind.BLOCK), "Блок", None, None)
         MetaDecreeChangeValue.KIND_FEATURE = fi
-        self.addFeature(DecreeChangeValueReferent.ATTR_VALUE, "Значение", 1, 1)
-        self.addFeature(DecreeChangeValueReferent.ATTR_NUMBER, "Номер", 0, 1)
-        self.addFeature(DecreeChangeValueReferent.ATTR_NEWITEM, "Новый структурный элемент", 0, 0)
+        MetaDecreeChangeValue.GLOBAL_META.addFeature(DecreeChangeValueReferent.ATTR_VALUE, "Значение", 1, 1)
+        MetaDecreeChangeValue.GLOBAL_META.addFeature(DecreeChangeValueReferent.ATTR_NUMBER, "Номер", 0, 1)
+        MetaDecreeChangeValue.GLOBAL_META.addFeature(DecreeChangeValueReferent.ATTR_NEWITEM, "Новый структурный элемент", 0, 0)
     
     KIND_FEATURE = None
     
@@ -42,10 +43,3 @@ class MetaDecreeChangeValue(ReferentClass):
         return MetaDecreeChangeValue.IMAGE_ID
     
     GLOBAL_META = None
-    
-    # static constructor for class MetaDecreeChangeValue
-    @staticmethod
-    def _static_ctor():
-        MetaDecreeChangeValue.GLOBAL_META = MetaDecreeChangeValue()
-
-MetaDecreeChangeValue._static_ctor()

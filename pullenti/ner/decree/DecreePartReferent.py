@@ -4,15 +4,17 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.decree.internal.MetaDecreePart import MetaDecreePart
 
 class DecreePartReferent(Referent):
     """ Сущность, представляющая ссылку на структурную часть НПА """
     
     def __init__(self) -> None:
-        from pullenti.ner.decree.internal.MetaDecreePart import MetaDecreePart
         super().__init__(DecreePartReferent.OBJ_TYPENAME)
         self.instance_of = MetaDecreePart.GLOBAL_META
     
@@ -60,8 +62,7 @@ class DecreePartReferent(Referent):
     
     ATTR_PAGE = "PAGE"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         if (self.sub_indention is not None): 
             print(" подабз.{0}".format(self.sub_indention), end="", file=res, flush=True)
@@ -130,7 +131,6 @@ class DecreePartReferent(Referent):
         return nam
     
     def __getShortName(self) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         nam = self.name
         if (nam is None): 
             return None
@@ -157,8 +157,8 @@ class DecreePartReferent(Referent):
         from pullenti.ner.decree.internal.PartToken import PartToken
         tag_ = None
         if (isinstance(attr_value, PartToken.PartValue)): 
-            tag_ = (Utils.asObjectOrNull(attr_value, PartToken.PartValue)).source_value
-            attr_value = ((Utils.asObjectOrNull(attr_value, PartToken.PartValue)).value)
+            tag_ = (attr_value).source_value
+            attr_value = ((attr_value).value)
         s = super().addSlot(attr_name, attr_value, clear_old_value, stat_count)
         if (tag_ is not None): 
             s.tag = tag_
@@ -315,7 +315,6 @@ class DecreePartReferent(Referent):
     
     @property
     def owner(self) -> 'DecreeReferent':
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
         res = Utils.asObjectOrNull(self.getSlotValue(DecreePartReferent.ATTR_OWNER), DecreeReferent)
         if (res is None): 
             return None
@@ -458,7 +457,6 @@ class DecreePartReferent(Referent):
             upper_parts(Referent): 
         
         """
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
         if (isinstance(upper_parts, DecreeReferent)): 
             return True
         for s in self.slots: 

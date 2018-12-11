@@ -4,21 +4,42 @@
 
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.geo.internal.TerrAttachHelper import TerrAttachHelper
-from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.geo.internal.CityAttachHelper import CityAttachHelper
-from pullenti.ner.address.internal.StreetItemType import StreetItemType
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
 
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.address.internal.StreetItemType import StreetItemType
+from pullenti.ner.address.AddressAnalyzer import AddressAnalyzer
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.address.internal.MetaStreet import MetaStreet
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
+from pullenti.ner.address.internal.MetaAddress import MetaAddress
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.ner.core.AnalyzerData import AnalyzerData
+from pullenti.ner.Token import Token
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
+from pullenti.ner.geo.internal.MetaGeo import MetaGeo
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
+from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
+from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
+from pullenti.ner.geo.internal.CityItemToken import CityItemToken
+from pullenti.ner.geo.internal.CityAttachHelper import CityAttachHelper
+from pullenti.ner.geo.internal.TerrAttachHelper import TerrAttachHelper
 
 class GeoAnalyzer(Analyzer):
     """ Семантический анализатор стран """
@@ -28,8 +49,10 @@ class GeoAnalyzer(Analyzer):
         __ends = None
         
         def registerReferent(self, referent : 'Referent') -> 'Referent':
-            from pullenti.ner.Referent import Referent
             from pullenti.ner.geo.GeoReferent import GeoReferent
+            from pullenti.morph.MorphGender import MorphGender
+            from pullenti.ner.Referent import Referent
+            from pullenti.morph.LanguageHelper import LanguageHelper
             g = Utils.asObjectOrNull(referent, GeoReferent)
             if (g is not None): 
                 if (g.is_state): 
@@ -112,7 +135,6 @@ class GeoAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.geo.internal.MetaGeo import MetaGeo
         return [MetaGeo._global_meta]
     
     @property
@@ -121,7 +143,6 @@ class GeoAnalyzer(Analyzer):
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.geo.internal.MetaGeo import MetaGeo
         res = dict()
         res[MetaGeo.COUNTRY_CITY_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("countrycity.png")
         res[MetaGeo.COUNTRY_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("country.png")
@@ -133,7 +154,6 @@ class GeoAnalyzer(Analyzer):
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         if (type0_ == GeoReferent.OBJ_TYPENAME): 
             return GeoReferent()
         return None
@@ -146,17 +166,6 @@ class GeoAnalyzer(Analyzer):
         return GeoAnalyzer.GeoAnalyzerDataWithOntology()
     
     def process(self, kit : 'AnalysisKit') -> None:
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.BracketHelper import BracketHelper
         ad = Utils.asObjectOrNull(kit.getAnalyzerData(self), AnalyzerDataWithOntology)
         t = kit.first_token
         while t is not None: 
@@ -212,7 +221,7 @@ class GeoAnalyzer(Analyzer):
                             if ((g0 is not None and g1 is not None and g0.is_region) and g1.is_region): 
                                 if (g0.is_city == g1.is_city or g0.is_region == g1.is_region or g0.is_state == g1.is_state): 
                                     rt = TerrAttachHelper.tryAttachTerritory(cli, ad, True, None, None)
-                        if (rt is None and (Utils.asObjectOrNull(cli[0].onto_item.referent, GeoReferent)).is_state): 
+                        if (rt is None and (cli[0].onto_item.referent).is_state): 
                             if ((rt is None and tt is not None and (isinstance(tt.getReferent(), GeoReferent))) and tt.whitespaces_before_count == 1): 
                                 geo2 = Utils.asObjectOrNull(tt.getReferent(), GeoReferent)
                                 if (GeoOwnerHelper.canBeHigher(Utils.asObjectOrNull(cli[0].onto_item.referent, GeoReferent), geo2)): 
@@ -438,7 +447,7 @@ class GeoAnalyzer(Analyzer):
                 if (geo_ is not None): 
                     rt = ReferentToken._new746(geo_, li[0].begin_token, li[0].end_token, t.morph)
                     if (rt.begin_token == rt.end_token): 
-                        geo_._addName((Utils.asObjectOrNull(t, TextToken)).term)
+                        geo_._addName((t).term)
                     if (rt.begin_token.previous is not None and rt.begin_token.previous.isValue("СЕЛО", None) and geo_.is_city): 
                         rt.begin_token = rt.begin_token.previous
                         rt.morph = rt.begin_token.morph
@@ -613,8 +622,8 @@ class GeoAnalyzer(Analyzer):
         for ng in non_registered: 
             for s in ng.slots: 
                 if (isinstance(s.value, GeoReferent)): 
-                    if (isinstance((Utils.asObjectOrNull(s.value, GeoReferent)).tag, GeoReferent)): 
-                        ng.uploadSlot(s, Utils.asObjectOrNull((Utils.asObjectOrNull(s.value, GeoReferent)).tag, GeoReferent))
+                    if (isinstance((s.value).tag, GeoReferent)): 
+                        ng.uploadSlot(s, Utils.asObjectOrNull((s.value).tag, GeoReferent))
             rg = Utils.asObjectOrNull(ad.registerReferent(ng), GeoReferent)
             if (rg == ng): 
                 continue
@@ -635,8 +644,6 @@ class GeoAnalyzer(Analyzer):
     
     @staticmethod
     def __replaceTerrs(mt : 'ReferentToken') -> None:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (mt is None): 
             return
         geo_ = Utils.asObjectOrNull(mt.referent, GeoReferent)
@@ -661,7 +668,6 @@ class GeoAnalyzer(Analyzer):
     
     @staticmethod
     def __geoComp(x : 'GeoReferent', y : 'GeoReferent') -> int:
-        from pullenti.morph.MorphLang import MorphLang
         xcou = 0
         g = x.higher
         while g is not None: 
@@ -679,8 +685,6 @@ class GeoAnalyzer(Analyzer):
         return Utils.compareStrings(x.toString(True, MorphLang.UNKNOWN, 0), y.toString(True, MorphLang.UNKNOWN, 0), False)
     
     def __tryParseCityListBack(self, t : 'Token') -> typing.List['CityItemToken']:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
         if (t is None): 
             return None
         while t is not None and ((t.morph.class0_.is_preposition or t.isCharOf(",.") or t.morph.class0_.is_conjunction)):
@@ -708,8 +712,6 @@ class GeoAnalyzer(Analyzer):
         return res
     
     def __tryAttachTerritoryBeforeCity(self, t : 'Token', ad : 'AnalyzerDataWithOntology') -> 'ReferentToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         if (isinstance(t, ReferentToken)): 
             t = t.previous
         while t is not None: 
@@ -745,13 +747,6 @@ class GeoAnalyzer(Analyzer):
         return res
     
     def __tryAttachTerritoryAfterCity(self, t : 'Token', ad : 'AnalyzerDataWithOntology') -> 'ReferentToken':
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
-        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         city = Utils.asObjectOrNull(t.getReferent(), GeoReferent)
@@ -818,11 +813,6 @@ class GeoAnalyzer(Analyzer):
             end(Token): 
         
         """
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         if (not ((isinstance(begin, TextToken)))): 
             return None
         if (begin.kit.recurse_level > 3): 
@@ -920,7 +910,7 @@ class GeoAnalyzer(Analyzer):
         begin.kit.recurse_level -= 1
         if (tt is None or tt.onto_item is None): 
             tok = TerrItemToken._m_terr_ontology.tryAttach(begin, None, False)
-            if ((tok is not None and tok[0].item is not None and (isinstance(tok[0].item.referent, GeoReferent))) and (Utils.asObjectOrNull(tok[0].item.referent, GeoReferent)).is_state): 
+            if ((tok is not None and tok[0].item is not None and (isinstance(tok[0].item.referent, GeoReferent))) and (tok[0].item.referent).is_state): 
                 tt = TerrItemToken._new1163(tok[0].begin_token, tok[0].end_token, tok[0].item)
         if (tt is None): 
             return None
@@ -969,10 +959,6 @@ class GeoAnalyzer(Analyzer):
         return None
     
     def processCitizen(self, begin : 'Token') -> 'ReferentToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (not ((isinstance(begin, TextToken)))): 
             return None
         tok = TerrItemToken._m_mans_by_state.tryParse(begin, TerminParseAttr.FULLWORDSONLY)
@@ -992,11 +978,6 @@ class GeoAnalyzer(Analyzer):
         return res
     
     def processOntologyItem(self, begin : 'Token') -> 'ReferentToken':
-        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
-        from pullenti.ner.ReferentToken import ReferentToken
         li = CityItemToken.tryParseList(begin, None, 4)
         if (li is not None and len(li) > 1 and li[0].typ == CityItemToken.ItemType.NOUN): 
             rt = CityAttachHelper.tryAttachCity(li, None, True)
@@ -1094,21 +1075,18 @@ class GeoAnalyzer(Analyzer):
         """ Получить список всех стран из внутреннего словаря
         
         """
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         return TerrItemToken._m_all_states
     
     M_INITIALIZED = False
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
-        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        from pullenti.ner.address.AddressAnalyzer import AddressAnalyzer
-        from pullenti.ner.ProcessorService import ProcessorService
         if (GeoAnalyzer.M_INITIALIZED): 
             return
         GeoAnalyzer.M_INITIALIZED = True
+        MetaGeo.initialize()
+        MetaAddress.initialize()
+        MetaStreet.initialize()
         try: 
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             MiscLocationHelper._initialize()

@@ -6,20 +6,41 @@ import typing
 import math
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.person.internal.PersonAttrTerminType import PersonAttrTerminType
+
+from pullenti.ner.Token import Token
+from pullenti.morph.MorphCase import MorphCase
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.person.internal.PersonHelper import PersonHelper
-from pullenti.ner.person.PersonPropertyKind import PersonPropertyKind
-from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
-from pullenti.ner.person.internal.PersonMorphCollection import PersonMorphCollection
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.Termin import Termin
 from pullenti.ner.person.internal.ShortNameHelper import ShortNameHelper
-
+from pullenti.ner.Referent import Referent
+from pullenti.ner.person.PersonPropertyKind import PersonPropertyKind
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
+from pullenti.ner.person.internal.MetaPersonProperty import MetaPersonProperty
+from pullenti.ner.person.internal.MetaPersonIdentity import MetaPersonIdentity
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
+from pullenti.ner.mail.internal.MailLine import MailLine
+from pullenti.ner.person.internal.MetaPerson import MetaPerson
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.core.AnalyzerData import AnalyzerData
+from pullenti.ner.person.internal.PersonAttrTerminType import PersonAttrTerminType
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.person.internal.PersonMorphCollection import PersonMorphCollection
+from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
+from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
 
 class PersonAnalyzer(Analyzer):
     """ Семантический анализатор выделения персон """
@@ -35,10 +56,11 @@ class PersonAnalyzer(Analyzer):
         
         def registerReferent(self, referent : 'Referent') -> 'Referent':
             from pullenti.ner.Referent import Referent
-            from pullenti.ner.person.PersonReferent import PersonReferent
-            from pullenti.ner.ReferentToken import ReferentToken
-            from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
             from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+            from pullenti.ner.core.AnalyzerData import AnalyzerData
+            from pullenti.ner.ReferentToken import ReferentToken
+            from pullenti.ner.person.PersonReferent import PersonReferent
+            from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
             if (isinstance(referent, PersonReferent)): 
                 exist_props = None
                 i = 0
@@ -60,7 +82,7 @@ class PersonAnalyzer(Analyzer):
                             for ss in pat.prop_ref.slots: 
                                 if (ss.type_name == PersonPropertyReferent.ATTR_REF): 
                                     if (isinstance(ss.value, ReferentToken)): 
-                                        if ((Utils.asObjectOrNull(ss.value, ReferentToken)).referent == referent): 
+                                        if ((ss.value).referent == referent): 
                                             pat.prop_ref.slots.remove(ss)
                                             break
                         if (exist_props is not None): 
@@ -126,16 +148,10 @@ class PersonAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.person.internal.MetaPerson import MetaPerson
-        from pullenti.ner.person.internal.MetaPersonProperty import MetaPersonProperty
-        from pullenti.ner.person.internal.MetaPersonIdentity import MetaPersonIdentity
         return [MetaPerson._global_meta, MetaPersonProperty._global_meta, MetaPersonIdentity._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.person.internal.MetaPerson import MetaPerson
-        from pullenti.ner.person.internal.MetaPersonProperty import MetaPersonProperty
-        from pullenti.ner.person.internal.MetaPersonIdentity import MetaPersonIdentity
         res = dict()
         res[MetaPerson.MAN_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("man.png")
         res[MetaPerson.WOMEN_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("women.png")
@@ -151,9 +167,6 @@ class PersonAnalyzer(Analyzer):
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
         if (type0_ == PersonReferent.OBJ_TYPENAME): 
             return PersonReferent()
         if (type0_ == PersonPropertyReferent.OBJ_TYPENAME): 
@@ -174,14 +187,8 @@ class PersonAnalyzer(Analyzer):
         return PersonAnalyzer.PersonAnalyzerData()
     
     def process(self, kit : 'AnalysisKit') -> None:
-        from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
         from pullenti.ner.person.internal.PersonIdToken import PersonIdToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
         ad = Utils.asObjectOrNull(kit.getAnalyzerData(self), PersonAnalyzer.PersonAnalyzerData)
         ad.nominative_case_always = self.nominative_case_always
         ad.text_starts_with_lastname_firstname_middlename = self.text_starts_with_lastname_firstname_middlename
@@ -368,7 +375,6 @@ class PersonAnalyzer(Analyzer):
                     continue
     
     def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
         if (begin is None or self.__m_level > 2): 
             return None
@@ -391,12 +397,6 @@ class PersonAnalyzer(Analyzer):
         return rt
     
     def __tryAttachPersons(self, t : 'Token', ad : 'PersonAnalyzerData', step : int) -> typing.List['ReferentToken']:
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.morph.Morphology import Morphology
-        from pullenti.ner.ReferentToken import ReferentToken
         rt = PersonAnalyzer._tryAttachPerson(t, ad, False, step, False)
         if (rt is None): 
             return None
@@ -450,19 +450,9 @@ class PersonAnalyzer(Analyzer):
     
     @staticmethod
     def _tryAttachPerson(t : 'Token', ad : 'PersonAnalyzerData', for_ext_ontos : bool, step : int, for_attribute : bool=False) -> 'ReferentToken':
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.morph.MorphCase import MorphCase
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.person.internal.PersonIdentityToken import PersonIdentityToken
-        from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.morph.Morphology import Morphology
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.TextToken import TextToken
+        from pullenti.ner.person.internal.PersonHelper import PersonHelper
+        from pullenti.ner.person.internal.PersonIdentityToken import PersonIdentityToken
         attrs = None
         mi = MorphBaseInfo()
         mi.case_ = (MorphCase.NOMINATIVE if (for_ext_ontos or ((ad is not None and ad.nominative_case_always))) else MorphCase.ALL_CASES)
@@ -818,7 +808,7 @@ class PersonAnalyzer(Analyzer):
                             tee1 = br.begin_token.next0_
                             tee = br.end_token.next0_
                     if (isinstance(tee, TextToken)): 
-                        if (tee.isCharOf(":,") or tee.is_hiphen or (Utils.asObjectOrNull(tee, TextToken)).is_verb_be): 
+                        if (tee.isCharOf(":,") or tee.is_hiphen or (tee).is_verb_be): 
                             tee = tee.next0_
                     att = PersonAttrToken.tryAttach(tee, (None if ad is None else ad.local_ontology), PersonAttrToken.PersonAttrAttachAttrs.NO)
                     if (att is None and tee1 is not None): 
@@ -913,7 +903,6 @@ class PersonAnalyzer(Analyzer):
         return None
     
     def processOntologyItem(self, begin : 'Token') -> 'ReferentToken':
-        from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
         if (begin is None): 
             return None
@@ -936,16 +925,20 @@ class PersonAnalyzer(Analyzer):
             t = t.next0_
         return rt
     
+    M_INITED = None
+    
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
-        from pullenti.ner.person.internal.PersonIdToken import PersonIdToken
-        from pullenti.ner.mail.internal.MailLine import MailLine
-        from pullenti.ner.ProcessorService import ProcessorService
         from pullenti.ner.person.internal.PersonPropAnalyzer import PersonPropAnalyzer
+        from pullenti.ner.person.internal.PersonIdToken import PersonIdToken
+        if (PersonAnalyzer.M_INITED): 
+            return
+        PersonAnalyzer.M_INITED = True
         try: 
+            MetaPerson.initialize()
+            MetaPersonIdentity.initialize()
+            MetaPersonProperty.initialize()
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             PersonItemToken._initialize()
             PersonAttrToken.initialize()

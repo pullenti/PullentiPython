@@ -4,12 +4,19 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.morph.MorphGender import MorphGender
+
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.core.GetTextAttr import GetTextAttr
-
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.core.internal.NounPhraseItemTextVar import NounPhraseItemTextVar
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.MiscHelper import MiscHelper
 
 class NounPhraseToken(MetaToken):
     """ Токен для представления именной группы """
@@ -23,8 +30,7 @@ class NounPhraseToken(MetaToken):
         self.anafor = None;
         self.preposition = None;
     
-    def getNormalCaseText(self, mc : 'MorphClass'=MorphClass(), single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
-        from pullenti.ner.ReferentToken import ReferentToken
+    def getNormalCaseText(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         res = io.StringIO()
         if (gender == MorphGender.UNDEFINED): 
             gender = self.morph.gender
@@ -51,11 +57,11 @@ class NounPhraseToken(MetaToken):
                 print("{0} ".format(Utils.ifNotNull(s, "?")), end="", file=res, flush=True)
         r = None
         if ((isinstance(self.noun.begin_token, ReferentToken)) and self.noun.begin_token == self.noun.end_token): 
-            r = self.noun.begin_token.getNormalCaseText(MorphClass(), single_number, gender, keep_chars)
+            r = self.noun.begin_token.getNormalCaseText(None, single_number, gender, keep_chars)
         else: 
             r = self.noun.getNormalCaseText((MorphClass.NOUN) | MorphClass.PRONOUN, single_number, gender, keep_chars)
         if (r is None or r == "?"): 
-            r = self.noun.getNormalCaseText(MorphClass(), single_number, MorphGender.UNDEFINED, False)
+            r = self.noun.getNormalCaseText(None, single_number, MorphGender.UNDEFINED, False)
         print(Utils.ifNotNull(r, str(self.noun)), end="", file=res)
         return Utils.toStringStringIO(res)
     
@@ -69,7 +75,7 @@ class NounPhraseToken(MetaToken):
             i += 1
         r = self.noun.getNormalCaseText((MorphClass.NOUN) | MorphClass.PRONOUN, False, MorphGender.UNDEFINED, False)
         if (r is None): 
-            r = self.noun.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+            r = self.noun.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
         print(Utils.ifNotNull(r, str(self.noun)), end="", file=res)
         return Utils.toStringStringIO(res)
     
@@ -81,11 +87,6 @@ class NounPhraseToken(MetaToken):
             plural(bool): 
         
         """
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.Morphology import Morphology
         mi = MorphBaseInfo._new516(cas, MorphLang.RU)
         if (plural): 
             mi.number = MorphNumber.PLURAL
@@ -120,12 +121,11 @@ class NounPhraseToken(MetaToken):
     
     def __str__(self) -> str:
         if (self.internal_noun is None): 
-            return "{0} {1}".format(Utils.ifNotNull(self.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False), "?"), str(self.morph))
+            return "{0} {1}".format(Utils.ifNotNull(self.getNormalCaseText(None, False, MorphGender.UNDEFINED, False), "?"), str(self.morph))
         else: 
-            return "{0} {1} / {2}".format(Utils.ifNotNull(self.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False), "?"), str(self.morph), str(self.internal_noun))
+            return "{0} {1} / {2}".format(Utils.ifNotNull(self.getNormalCaseText(None, False, MorphGender.UNDEFINED, False), "?"), str(self.morph), str(self.internal_noun))
     
     def removeLastNounWord(self) -> None:
-        from pullenti.ner.core.internal.NounPhraseItemTextVar import NounPhraseItemTextVar
         if (self.noun is not None): 
             for it in self.noun.morph.items: 
                 ii = Utils.asObjectOrNull(it, NounPhraseItemTextVar)

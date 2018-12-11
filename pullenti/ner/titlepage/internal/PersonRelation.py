@@ -5,6 +5,8 @@
 import io
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
 
 class PersonRelation:
     
@@ -14,7 +16,6 @@ class PersonRelation:
     
     @property
     def best(self) -> 'Types':
-        from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
         res = TitleItemToken.Types.UNDEFINED
         max0_ = 0
         for v in self.coefs.items(): 
@@ -26,7 +27,6 @@ class PersonRelation:
         return res
     
     def __str__(self) -> str:
-        from pullenti.morph.MorphLang import MorphLang
         res = io.StringIO()
         print("{0} {1}".format(self.person.toString(True, MorphLang.UNKNOWN, 0), Utils.enumToString(self.best)), end="", file=res, flush=True)
         for v in self.coefs.items(): 

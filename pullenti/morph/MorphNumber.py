@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class MorphNumber(IntEnum):
     """ Число (единственное-множественное) """
     UNDEFINED = 0

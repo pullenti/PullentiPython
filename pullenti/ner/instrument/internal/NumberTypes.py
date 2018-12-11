@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class NumberTypes(IntEnum):
     UNDEFINED = 0
     DIGIT = 1

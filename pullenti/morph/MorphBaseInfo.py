@@ -4,17 +4,17 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
 
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphCase import MorphCase
 
 class MorphBaseInfo:
     """ Базовая часть морфологической информации """
     
     def __init__(self, bi : 'MorphBaseInfo'=None) -> None:
-        from pullenti.morph.MorphCase import MorphCase
-        from pullenti.morph.MorphLang import MorphLang
         self.__m_cla = MorphClass()
         self.__gender = MorphGender.UNDEFINED
         self.__number = MorphNumber.UNDEFINED
@@ -69,7 +69,6 @@ class MorphBaseInfo:
         return value
     
     def __str__(self) -> str:
-        from pullenti.morph.MorphLang import MorphLang
         res = io.StringIO()
         if (not self.class0_.is_undefined): 
             print("{0} ".format(str(self.class0_)), end="", file=res, flush=True)
@@ -102,21 +101,13 @@ class MorphBaseInfo:
         return Utils.trimEndString(Utils.toStringStringIO(res))
     
     def copyTo(self, dst : 'MorphBaseInfo') -> None:
-        from pullenti.morph.MorphCase import MorphCase
-        from pullenti.morph.MorphLang import MorphLang
         dst.class0_ = MorphClass(self.class0_)
         dst.gender = self.gender
         dst.number = self.number
         dst.case_ = MorphCase(self.case_)
         dst.language = MorphLang(self.language)
     
-    def containsAttr(self, attr_value : str, cla : 'MorphClass'=MorphClass()) -> bool:
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        wf = Utils.asObjectOrNull(self, MorphWordForm)
-        if (wf is None): 
-            return False
-        if (wf.misc is not None and wf.misc.attrs is not None): 
-            return attr_value in wf.misc.attrs
+    def containsAttr(self, attr_value : str, cla : 'MorphClass'=None) -> bool:
         return False
     
     def clone(self) -> object:
@@ -125,7 +116,6 @@ class MorphBaseInfo:
         return res
     
     def checkAccord(self, v : 'MorphBaseInfo', ignore_gender : bool=False) -> bool:
-        from pullenti.morph.MorphLang import MorphLang
         if (v.language != self.language): 
             if (v.language == MorphLang.UNKNOWN and self.language == MorphLang.UNKNOWN): 
                 return False

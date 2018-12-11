@@ -4,16 +4,20 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.ner.mail.MailKind import MailKind
-from pullenti.morph.MorphLang import MorphLang
 
+from pullenti.ner.mail.MailKind import MailKind
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.address.AddressReferent import AddressReferent
+from pullenti.ner.mail.internal.MetaLetter import MetaLetter
+from pullenti.ner.person.PersonReferent import PersonReferent
 
 class MailReferent(Referent):
     """ Письмо (точнее, блок письма) """
     
     def __init__(self) -> None:
-        from pullenti.ner.mail.internal.MetaLetter import MetaLetter
         super().__init__(MailReferent.OBJ_TYPENAME)
         self.instance_of = MetaLetter._global_meta
     
@@ -48,12 +52,12 @@ class MailReferent(Referent):
         self.addSlot(MailReferent.ATTR_TEXT, value, True, 0)
         return value
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         print("{0}: ".format(Utils.enumToString(self.kind)), end="", file=res, flush=True)
         for s in self.slots: 
             if (s.type_name == MailReferent.ATTR_REF and (isinstance(s.value, Referent))): 
-                print("{0}, ".format((Utils.asObjectOrNull(s.value, Referent)).toString(True, lang, lev + 1)), end="", file=res, flush=True)
+                print("{0}, ".format((s.value).toString(True, lang, lev + 1)), end="", file=res, flush=True)
         if (res.tell() < 100): 
             str0_ = Utils.ifNotNull(self.text, "")
             str0_ = str0_.replace('\r', ' ').replace('\n', ' ')
@@ -66,10 +70,6 @@ class MailReferent(Referent):
         return obj == self
     
     def _addRef(self, r : 'Referent', lev : int=0) -> None:
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.address.AddressReferent import AddressReferent
         if (r is None or lev > 4): 
             return
         if ((((isinstance(r, PersonReferent)) or (isinstance(r, PersonPropertyReferent)) or r.type_name == "ORGANIZATION") or r.type_name == "PHONE" or r.type_name == "URI") or (isinstance(r, GeoReferent)) or (isinstance(r, AddressReferent))): 

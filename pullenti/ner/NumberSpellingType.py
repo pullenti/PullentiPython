@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class NumberSpellingType(IntEnum):
     """ Возможные типы написаний """
     DIGIT = 0

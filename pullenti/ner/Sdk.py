@@ -2,47 +2,45 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
-from pullenti.morph.MorphLang import MorphLang
 
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.transport.TransportAnalyzer import TransportAnalyzer
+from pullenti.ner.decree.DecreeAnalyzer import DecreeAnalyzer
+from pullenti.ner.mail.MailAnalyzer import MailAnalyzer
+from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
+from pullenti.ner.person.PersonAnalyzer import PersonAnalyzer
+from pullenti.ner.instrument.InstrumentAnalyzer import InstrumentAnalyzer
+from pullenti.ner.named.NamedEntityAnalyzer import NamedEntityAnalyzer
+from pullenti.ner.weapon.WeaponAnalyzer import WeaponAnalyzer
+from pullenti.ner.business.BusinessAnalyzer import BusinessAnalyzer
+from pullenti.ner.titlepage.TitlePageAnalyzer import TitlePageAnalyzer
+from pullenti.ner.booklink.BookLinkAnalyzer import BookLinkAnalyzer
+from pullenti.ner.date.DateAnalyzer import DateAnalyzer
+from pullenti.ner.keyword.KeywordAnalyzer import KeywordAnalyzer
+from pullenti.ner.phone.PhoneAnalyzer import PhoneAnalyzer
+from pullenti.ner.money.MoneyAnalyzer import MoneyAnalyzer
+from pullenti.ner.uri.UriAnalyzer import UriAnalyzer
+from pullenti.ner.definition.DefinitionAnalyzer import DefinitionAnalyzer
+from pullenti.ner.address.AddressAnalyzer import AddressAnalyzer
+from pullenti.ner.geo.GeoAnalyzer import GeoAnalyzer
+from pullenti.ner.bank.BankAnalyzer import BankAnalyzer
+from pullenti.ner.denomination.DenominationAnalyzer import DenominationAnalyzer
+from pullenti.ner.measure.MeasureAnalyzer import MeasureAnalyzer
 
 class Sdk:
     """ Инициализация SDK """
     
     @staticmethod
     def getVersion() -> str:
-        from pullenti.ner.ProcessorService import ProcessorService
         return ProcessorService.getVersion()
     
     @staticmethod
-    def initialize(lang : 'MorphLang'=MorphLang()) -> None:
+    def initialize(lang : 'MorphLang'=None) -> None:
         """ Вызывать инициализацию в самом начале
         
         Args:
             lang(MorphLang): по умолчанию, русский и английский
         """
-        from pullenti.ner.ProcessorService import ProcessorService
-        from pullenti.ner.money.MoneyAnalyzer import MoneyAnalyzer
-        from pullenti.ner.uri.UriAnalyzer import UriAnalyzer
-        from pullenti.ner.phone.PhoneAnalyzer import PhoneAnalyzer
-        from pullenti.ner.date.DateAnalyzer import DateAnalyzer
-        from pullenti.ner.keyword.KeywordAnalyzer import KeywordAnalyzer
-        from pullenti.ner.definition.DefinitionAnalyzer import DefinitionAnalyzer
-        from pullenti.ner.denomination.DenominationAnalyzer import DenominationAnalyzer
-        from pullenti.ner.measure.MeasureAnalyzer import MeasureAnalyzer
-        from pullenti.ner.bank.BankAnalyzer import BankAnalyzer
-        from pullenti.ner.geo.GeoAnalyzer import GeoAnalyzer
-        from pullenti.ner.address.AddressAnalyzer import AddressAnalyzer
-        from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
-        from pullenti.ner.person.PersonAnalyzer import PersonAnalyzer
-        from pullenti.ner.mail.MailAnalyzer import MailAnalyzer
-        from pullenti.ner.transport.TransportAnalyzer import TransportAnalyzer
-        from pullenti.ner.decree.DecreeAnalyzer import DecreeAnalyzer
-        from pullenti.ner.instrument.InstrumentAnalyzer import InstrumentAnalyzer
-        from pullenti.ner.titlepage.TitlePageAnalyzer import TitlePageAnalyzer
-        from pullenti.ner.booklink.BookLinkAnalyzer import BookLinkAnalyzer
-        from pullenti.ner.business.BusinessAnalyzer import BusinessAnalyzer
-        from pullenti.ner.named.NamedEntityAnalyzer import NamedEntityAnalyzer
-        from pullenti.ner.weapon.WeaponAnalyzer import WeaponAnalyzer
         ProcessorService.initialize(lang)
         MoneyAnalyzer.initialize()
         UriAnalyzer.initialize()

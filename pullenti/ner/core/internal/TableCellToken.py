@@ -3,8 +3,8 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 import typing
-from pullenti.ner.MetaToken import MetaToken
 
+from pullenti.ner.MetaToken import MetaToken
 
 class TableCellToken(MetaToken):
     """ Токен - ячейка таблицы """

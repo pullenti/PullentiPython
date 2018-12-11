@@ -5,15 +5,25 @@
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.instrument.InstrumentKind import InstrumentKind
-from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
-from pullenti.ner.instrument.internal.ContentAnalyzeWhapper import ContentAnalyzeWhapper
-from pullenti.ner.instrument.internal.NumberTypes import NumberTypes
-from pullenti.ner.core.CanBeEqualsAttrs import CanBeEqualsAttrs
 
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.CanBeEqualsAttrs import CanBeEqualsAttrs
+from pullenti.ner.instrument.internal.NumberTypes import NumberTypes
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
+from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
+from pullenti.ner.instrument.InstrumentKind import InstrumentKind
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.ner.decree.internal.PartToken import PartToken
+from pullenti.ner.instrument.internal.FragToken import FragToken
+from pullenti.ner.instrument.internal.ContentAnalyzeWhapper import ContentAnalyzeWhapper
 
 class ListHelper:
     
@@ -38,10 +48,12 @@ class ListHelper:
         
         @staticmethod
         def parse(t : 'Token', max_char : int, prev : 'LineToken') -> 'LineToken':
-            from pullenti.ner.decree.DecreeReferent import DecreeReferent
-            from pullenti.ner.core.BracketHelper import BracketHelper
+            from pullenti.morph.LanguageHelper import LanguageHelper
             from pullenti.ner.NumberToken import NumberToken
             from pullenti.ner.TextToken import TextToken
+            from pullenti.ner.core.BracketHelper import BracketHelper
+            from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+            from pullenti.ner.decree.DecreeReferent import DecreeReferent
             if (t is None or t.end_char > max_char): 
                 return None
             res = ListHelper.LineToken(t, t)
@@ -93,9 +105,9 @@ class ListHelper:
                 if (res.begin_token.length_char == 1 or (isinstance(res.begin_token, NumberToken))): 
                     res.is_list_item = True
                     if (isinstance(res.begin_token, NumberToken)): 
-                        res.number = ((Utils.asObjectOrNull(res.begin_token, NumberToken)).value)
+                        res.number = ((res.begin_token).value)
                     elif ((isinstance(res.begin_token, TextToken)) and res.begin_token.length_char == 1): 
-                        te = (Utils.asObjectOrNull(res.begin_token, TextToken)).term
+                        te = (res.begin_token).term
                         if (LanguageHelper.isCyrillicChar(te[0])): 
                             res.number = ((ord(te[0])) - (ord('А')))
                         elif (LanguageHelper.isLatinChar(te[0])): 
@@ -147,9 +159,6 @@ class ListHelper:
     
     @staticmethod
     def analyze(res : 'FragToken') -> None:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.instrument.internal.FragToken import FragToken
         if (res.number == 4): 
             pass
         if (len(res.children) == 0): 
@@ -255,12 +264,6 @@ class ListHelper:
     
     @staticmethod
     def __analizeListItems(chi : typing.List['FragToken'], ind : int) -> int:
-        from pullenti.ner.instrument.internal.FragToken import FragToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         if (ind >= len(chi)): 
             return -1
         res = chi[ind]
@@ -506,7 +509,6 @@ class ListHelper:
     
     @staticmethod
     def correctAppList(lines : typing.List['InstrToken1']) -> None:
-        from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         i = 0
         while i < (len(lines) - 1): 
             if ((lines[i].typ == InstrToken1.Types.LINE and len(lines[i].numbers) == 0 and lines[i].begin_token.isValue("ПРИЛОЖЕНИЯ", "ДОДАТОК")) and len(lines[i + 1].numbers) > 0 and lines[i].end_token.isChar(':')): 
@@ -536,7 +538,6 @@ class ListHelper:
     
     @staticmethod
     def correctIndex(lines : typing.List['InstrToken1']) -> None:
-        from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         if (len(lines) < 10): 
             return
         if (lines[0].typ == InstrToken1.Types.CLAUSE or lines[0].typ == InstrToken1.Types.CHAPTER): 
@@ -572,7 +573,6 @@ class ListHelper:
     
     @staticmethod
     def __canBeEquals(i1 : 'InstrToken1', i2 : 'InstrToken1') -> bool:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (i1.typ != i2.typ): 
             return False
         if (len(i1.numbers) > 0 and len(i2.numbers) > 0): 

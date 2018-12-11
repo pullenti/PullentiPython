@@ -2,21 +2,22 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
-from pullenti.ner.ReferentClass import ReferentClass
 
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
 
 class InstrumentArtefactMeta(ReferentClass):
     
-    def __init__(self) -> None:
+    @staticmethod
+    def initialize() -> None:
         from pullenti.ner.instrument.InstrumentArtefact import InstrumentArtefact
-        super().__init__()
-        self.addFeature(InstrumentArtefact.ATTR_TYPE, "Тип", 0, 1)
-        self.addFeature(InstrumentArtefact.ATTR_VALUE, "Значение", 0, 1)
-        self.addFeature(InstrumentArtefact.ATTR_REF, "Ссылка на объект", 0, 1).show_as_parent = True
+        InstrumentArtefactMeta.GLOBAL_META = InstrumentArtefactMeta()
+        InstrumentArtefactMeta.GLOBAL_META.addFeature(InstrumentArtefact.ATTR_TYPE, "Тип", 0, 1)
+        InstrumentArtefactMeta.GLOBAL_META.addFeature(InstrumentArtefact.ATTR_VALUE, "Значение", 0, 1)
+        InstrumentArtefactMeta.GLOBAL_META.addFeature(InstrumentArtefact.ATTR_REF, "Ссылка на объект", 0, 1).show_as_parent = True
     
     @property
     def name(self) -> str:
-        from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
         return InstrumentParticipant.OBJ_TYPENAME
     
     @property
@@ -29,10 +30,3 @@ class InstrumentArtefactMeta(ReferentClass):
         return InstrumentArtefactMeta.IMAGE_ID
     
     GLOBAL_META = None
-    
-    # static constructor for class InstrumentArtefactMeta
-    @staticmethod
-    def _static_ctor():
-        InstrumentArtefactMeta.GLOBAL_META = InstrumentArtefactMeta()
-
-InstrumentArtefactMeta._static_ctor()

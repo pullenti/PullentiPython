@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class BusinessFactItemTyp(IntEnum):
     BASE = 0
     

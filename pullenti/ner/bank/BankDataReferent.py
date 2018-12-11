@@ -4,15 +4,16 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.uri.UriReferent import UriReferent
+from pullenti.ner.bank.internal.MetaBank import MetaBank
 
 class BankDataReferent(Referent):
     """ Банковские данные (реквизиты) """
     
     def __init__(self) -> None:
-        from pullenti.ner.bank.internal.MetaBank import MetaBank
         super().__init__(BankDataReferent.OBJ_TYPENAME)
         self.instance_of = MetaBank._global_meta
     
@@ -26,12 +27,11 @@ class BankDataReferent(Referent):
     
     ATTR_MISC = "MISC"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        from pullenti.ner.uri.UriReferent import UriReferent
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         for s in self.slots: 
             if (isinstance(s.value, UriReferent)): 
-                if ((Utils.asObjectOrNull(s.value, UriReferent)).scheme == "Р/С"): 
+                if ((s.value).scheme == "Р/С"): 
                     print(str(s.value), end="", file=res)
                     break
         if (res.tell() == 0): 
@@ -45,7 +45,6 @@ class BankDataReferent(Referent):
         return Utils.asObjectOrNull(self.getSlotValue(BankDataReferent.ATTR_BANK), Referent)
     
     def findValue(self, schema : str) -> str:
-        from pullenti.ner.uri.UriReferent import UriReferent
         for s in self.slots: 
             if (isinstance(s.value, UriReferent)): 
                 ur = Utils.asObjectOrNull(s.value, UriReferent)
@@ -54,7 +53,6 @@ class BankDataReferent(Referent):
         return None
     
     def canBeEquals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
-        from pullenti.ner.uri.UriReferent import UriReferent
         bd = Utils.asObjectOrNull(obj, BankDataReferent)
         if (bd is None): 
             return False

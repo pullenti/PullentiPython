@@ -4,14 +4,13 @@
 
 from enum import IntEnum
 
-
 class NamedEntityKind(IntEnum):
     """ Разновидности организаций """
     UNDEFINED = 0
-    PLANET = 0 + 1
-    LOCATION = (0 + 1) + 1
-    MONUMENT = ((0 + 1) + 1) + 1
-    BUILDING = (((0 + 1) + 1) + 1) + 1
+    PLANET = 1
+    LOCATION = 2
+    MONUMENT = 3
+    BUILDING = 4
     
     @classmethod
     def has_value(cls, value):

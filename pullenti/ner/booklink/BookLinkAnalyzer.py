@@ -7,25 +7,48 @@ import math
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.booklink.BookLinkRefType import BookLinkRefType
-from pullenti.ner.booklink.internal.BookLinkTyp import BookLinkTyp
-from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
 
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.booklink.internal.BookLinkTyp import BookLinkTyp
+from pullenti.ner.booklink.BookLinkRefType import BookLinkRefType
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
+from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
+from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
+from pullenti.ner.uri.UriReferent import UriReferent
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.booklink.internal.MetaBookLinkRef import MetaBookLinkRef
+from pullenti.ner.booklink.internal.MetaBookLink import MetaBookLink
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.booklink.BookLinkReferent import BookLinkReferent
+from pullenti.ner.Token import Token
+from pullenti.ner.booklink.internal.BookLinkToken import BookLinkToken
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.booklink.BookLinkRefReferent import BookLinkRefReferent
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.Analyzer import Analyzer
 
 class BookLinkAnalyzer(Analyzer):
     """ Анализатор ссылок на внешнюю литературу """
     
     class RegionTyp(IntEnum):
         UNDEFINED = 0
-        AUTHORS = 0 + 1
-        NAME = (0 + 1) + 1
-        FIRST = ((0 + 1) + 1) + 1
-        SECOND = (((0 + 1) + 1) + 1) + 1
+        AUTHORS = 1
+        NAME = 2
+        FIRST = 3
+        SECOND = 4
         
         @classmethod
         def has_value(cls, value):
@@ -59,22 +82,14 @@ class BookLinkAnalyzer(Analyzer):
     
     @property
     def used_extern_object_types(self) -> typing.List[str]:
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
         return [DateReferent.OBJ_TYPENAME, GeoReferent.OBJ_TYPENAME, OrganizationReferent.OBJ_TYPENAME, PersonReferent.OBJ_TYPENAME]
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.booklink.internal.MetaBookLink import MetaBookLink
-        from pullenti.ner.booklink.internal.MetaBookLinkRef import MetaBookLinkRef
         return [MetaBookLink._global_meta, MetaBookLinkRef._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.booklink.internal.MetaBookLink import MetaBookLink
-        from pullenti.ner.booklink.internal.MetaBookLinkRef import MetaBookLinkRef
         res = dict()
         res[MetaBookLink.IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("booklink.png")
         res[MetaBookLinkRef.IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("booklinkref.png")
@@ -83,8 +98,6 @@ class BookLinkAnalyzer(Analyzer):
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.booklink.BookLinkReferent import BookLinkReferent
-        from pullenti.ner.booklink.BookLinkRefReferent import BookLinkRefReferent
         if (type0_ == BookLinkReferent.OBJ_TYPENAME): 
             return BookLinkReferent()
         if (type0_ == BookLinkRefReferent.OBJ_TYPENAME): 
@@ -92,11 +105,6 @@ class BookLinkAnalyzer(Analyzer):
         return None
     
     def process(self, kit : 'AnalysisKit') -> None:
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.booklink.BookLinkRefReferent import BookLinkRefReferent
-        from pullenti.ner.booklink.BookLinkReferent import BookLinkReferent
-        from pullenti.ner.booklink.internal.BookLinkToken import BookLinkToken
-        from pullenti.ner.TextToken import TextToken
         ad = kit.getAnalyzerData(self)
         is_lit_block = 0
         refs_by_num = dict()
@@ -116,14 +124,14 @@ class BookLinkAnalyzer(Analyzer):
                             if (len(rts) > 1): 
                                 rts[1].referent = ad.registerReferent(rts[1].referent)
                                 kit.embedToken(rts[1])
-                                (Utils.asObjectOrNull(rts[0].referent, BookLinkRefReferent)).book = Utils.asObjectOrNull(rts[1].referent, BookLinkReferent)
+                                (rts[0].referent).book = Utils.asObjectOrNull(rts[1].referent, BookLinkReferent)
                                 if (rts[0].begin_char == rts[1].begin_char): 
                                     rts[0].begin_token = rts[1]
                                 if (rts[0].end_char == rts[1].end_char): 
                                     rts[0].end_token = rts[1]
                             rts[0].begin_token = t
                             rts[0].end_token = br.end_token
-                            (Utils.asObjectOrNull(rts[0].referent, BookLinkRefReferent)).typ = BookLinkRefType.INLINE
+                            (rts[0].referent).typ = BookLinkRefType.INLINE
                             rts[0].referent = ad.registerReferent(rts[0].referent)
                             kit.embedToken(rts[0])
                             t = (rts[0])
@@ -148,7 +156,7 @@ class BookLinkAnalyzer(Analyzer):
             if (len(rts) > 1): 
                 rts[1].referent = ad.registerReferent(rts[1].referent)
                 kit.embedToken(rts[1])
-                (Utils.asObjectOrNull(rts[0].referent, BookLinkRefReferent)).book = Utils.asObjectOrNull(rts[1].referent, BookLinkReferent)
+                (rts[0].referent).book = Utils.asObjectOrNull(rts[1].referent, BookLinkReferent)
                 if (rts[0].begin_char == rts[1].begin_char): 
                     rts[0].begin_token = rts[1]
                 if (rts[0].end_char == rts[1].end_char): 
@@ -203,10 +211,6 @@ class BookLinkAnalyzer(Analyzer):
     
     @staticmethod
     def __tryParseShortInline(t : 'Token') -> 'ReferentToken':
-        from pullenti.ner.booklink.internal.BookLinkToken import BookLinkToken
-        from pullenti.ner.booklink.BookLinkRefReferent import BookLinkRefReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.NumberToken import NumberToken
         if (t is None): 
             return None
         if (t.isChar('[') and not t.is_newline_before): 
@@ -231,11 +235,11 @@ class BookLinkAnalyzer(Analyzer):
                     if (tt.isChar('[')): 
                         if (((isinstance(tt.next0_, NumberToken)) and tt.next0_.next0_ is not None and tt.next0_.next0_.isChar(']')) and tt.next0_.next0_ is not None and tt.next0_.next0_.next0_.isChar(')')): 
                             re = BookLinkRefReferent()
-                            re.number = str((Utils.asObjectOrNull(tt.next0_, NumberToken)).value)
+                            re.number = str((tt.next0_).value)
                             return ReferentToken(re, t, tt.next0_.next0_.next0_)
                     if ((isinstance(tt, NumberToken)) and tt.next0_ is not None and tt.next0_.isChar(')')): 
                         re = BookLinkRefReferent()
-                        re.number = str((Utils.asObjectOrNull(tt, NumberToken)).value)
+                        re.number = str((tt).value)
                         return ReferentToken(re, t, tt.next0_)
                     break
                 return None
@@ -253,20 +257,6 @@ class BookLinkAnalyzer(Analyzer):
     
     @staticmethod
     def __tryParse(t : 'Token', is_in_lit : bool, max_char : int=0) -> typing.List['ReferentToken']:
-        from pullenti.ner.booklink.internal.BookLinkToken import BookLinkToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.booklink.BookLinkRefReferent import BookLinkRefReferent
-        from pullenti.ner.booklink.BookLinkReferent import BookLinkReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
         if (t is None): 
             return None
         is_bracket_regime = False
@@ -298,7 +288,7 @@ class BookLinkAnalyzer(Analyzer):
                 return None
             if (not t.is_whitespace_before): 
                 if (isinstance(t, NumberToken)): 
-                    n = (Utils.asObjectOrNull(t, NumberToken)).value
+                    n = (t).value
                     if ((((n == (3) or n == (0))) and not t.is_whitespace_after and (isinstance(t.next0_, TextToken))) and t.next0_.chars.is_all_lower): 
                         pass
                     else: 
@@ -340,7 +330,7 @@ class BookLinkAnalyzer(Analyzer):
                 tt = t0
                 while tt is not None and max0_ > 0: 
                     if (isinstance(tt.getReferent(), BookLinkRefReferent)): 
-                        book_prev = (Utils.asObjectOrNull(tt.getReferent(), BookLinkRefReferent)).book
+                        book_prev = (tt.getReferent()).book
                         break
                     tt = tt.previous; max0_ -= 1
             blt1 = BookLinkToken.tryParseAuthor(t, FioTemplateType.UNDEFINED)
@@ -535,7 +525,7 @@ class BookLinkAnalyzer(Analyzer):
                     if (t.newlines_before_count > 1): 
                         break
                     if ((isinstance(t, NumberToken)) and num is not None): 
-                        if (num == str(((Utils.asObjectOrNull(t, NumberToken)).value - (1)))): 
+                        if (num == str(((t).value - (1)))): 
                             break
                     elif (num is not None): 
                         pass
@@ -640,7 +630,7 @@ class BookLinkAnalyzer(Analyzer):
                     if (t.is_newline_before): 
                         break
                     if (isinstance(t, TextToken)): 
-                        if ((Utils.asObjectOrNull(t, TextToken)).is_pure_verb): 
+                        if ((t).is_pure_verb): 
                             return None
                     rt01.end_token = t
                     t = t.next0_
@@ -927,7 +917,6 @@ class BookLinkAnalyzer(Analyzer):
     
     @staticmethod
     def __addAuthor(blr : 'BookLinkReferent', tok : 'BookLinkToken') -> None:
-        from pullenti.ner.booklink.BookLinkReferent import BookLinkReferent
         if (tok.ref is not None): 
             blr.addSlot(BookLinkReferent.ATTR_AUTHOR, tok.ref, False, 0)
         elif (tok.tok is not None): 
@@ -938,9 +927,8 @@ class BookLinkAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.booklink.internal.BookLinkToken import BookLinkToken
-        from pullenti.ner.ProcessorService import ProcessorService
+        MetaBookLink.initialize2()
+        MetaBookLinkRef.initialize()
         try: 
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             BookLinkToken.initialize()

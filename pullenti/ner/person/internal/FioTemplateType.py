@@ -4,22 +4,21 @@
 
 from enum import IntEnum
 
-
 class FioTemplateType(IntEnum):
     UNDEFINED = 0
-    SURNAMEII = 0 + 1
-    IISURNAME = (0 + 1) + 1
-    SURNAMEI = ((0 + 1) + 1) + 1
-    ISURNAME = (((0 + 1) + 1) + 1) + 1
-    SURNAMENAME = ((((0 + 1) + 1) + 1) + 1) + 1
-    SURNAMENAMESECNAME = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
-    NAMESURNAME = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
-    NAMESECNAMESURNAME = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-    NAMEISURNAME = ((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-    NAMESECNAME = (((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-    KING = ((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-    ASIANNAME = (((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-    ASIANSURNAMENAME = ((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+    SURNAMEII = 1
+    IISURNAME = 2
+    SURNAMEI = 3
+    ISURNAME = 4
+    SURNAMENAME = 5
+    SURNAMENAMESECNAME = 6
+    NAMESURNAME = 7
+    NAMESECNAMESURNAME = 8
+    NAMEISURNAME = 9
+    NAMESECNAME = 10
+    KING = 11
+    ASIANNAME = 12
+    ASIANSURNAMENAME = 13
     
     @classmethod
     def has_value(cls, value):

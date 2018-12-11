@@ -5,23 +5,24 @@
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import Stopwatch
-from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
+
+from pullenti.ner.keyword.KeywordReferent import KeywordReferent
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.GetTextAttr import GetTextAttr
-
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.keyword.KeywordAnalyzer import KeywordAnalyzer
+from pullenti.ner.Sdk import Sdk
 
 class Program:
     
     @staticmethod
     def main(args : typing.List[str]) -> None:
-        from pullenti.ner.Sdk import Sdk
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.ProcessorService import ProcessorService
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.keyword.KeywordAnalyzer import KeywordAnalyzer
-        from pullenti.ner.keyword.KeywordReferent import KeywordReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         sw = Stopwatch()
         print("Initializing ... ", end="", flush=True)
         Sdk.initialize((MorphLang.RU) | MorphLang.EN)
@@ -30,7 +31,7 @@ class Program:
         txt = "Единственным конкурентом «Трансмаша» на этом сомнительном тендере было ООО «Плассер Алека Рейл Сервис», основным владельцем которого является австрийская компания «СТЦ-Холдинг ГМБХ». До конца 2011 г. эта же фирма была совладельцем «Трансмаша» вместе с «Тако» Краснова. Зато совладельцем «Плассера», также до конца 2011 г., был тот самый Карл Контрус, который имеет четверть акций «Трансмаша». "
         print("Text: {0}".format(txt), flush=True)
         with ProcessorService.createProcessor() as proc: 
-            ar = proc.process(SourceOfAnalysis(txt), None, MorphLang())
+            ar = proc.process(SourceOfAnalysis(txt), None, None)
             print("\r\n==========================================\r\nEntities: ", flush=True)
             for e0_ in ar.entities: 
                 print("{0}: {1}".format(e0_.type_name, str(e0_)), flush=True)
@@ -51,7 +52,7 @@ class Program:
                 print(npt, flush=True)
                 t = npt.end_token
         with ProcessorService.createSpecificProcessor(KeywordAnalyzer.ANALYZER_NAME) as proc: 
-            ar = proc.process(SourceOfAnalysis(txt), None, MorphLang())
+            ar = proc.process(SourceOfAnalysis(txt), None, None)
             print("\r\n==========================================\r\nKeywords1: ", flush=True)
             for e0_ in ar.entities: 
                 if (isinstance(e0_, KeywordReferent)): 

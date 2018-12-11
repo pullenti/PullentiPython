@@ -7,17 +7,32 @@ import typing
 import xml.etree
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.address.internal.EpNerAddressInternalResourceHelper import EpNerAddressInternalResourceHelper
 
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.Token import Token
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.Referent import Referent
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.address.internal.EpNerAddressInternalResourceHelper import EpNerAddressInternalResourceHelper
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.geo.internal.TerrTermin import TerrTermin
+from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
+from pullenti.ner.geo.GeoReferent import GeoReferent
 
 class TerrItemToken(MetaToken):
     
@@ -58,10 +73,6 @@ class TerrItemToken(MetaToken):
     @staticmethod
     def tryParseList(t : 'Token', int_ont : 'IntOntologyCollection', max_count : int) -> typing.List['TerrItemToken']:
         from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         ci = TerrItemToken.tryParse(t, int_ont, False, False)
         if (ci is None): 
             return None
@@ -125,7 +136,7 @@ class TerrItemToken(MetaToken):
                     continue
                 alpha2 = None
                 if (isinstance(cc.onto_item.referent, GeoReferent)): 
-                    alpha2 = (Utils.asObjectOrNull(cc.onto_item.referent, GeoReferent)).alpha2
+                    alpha2 = (cc.onto_item.referent).alpha2
                 if (alpha2 == "TG"): 
                     if (isinstance(cc.begin_token, TextToken)): 
                         if (cc.begin_token.getSourceText() != "Того"): 
@@ -142,7 +153,7 @@ class TerrItemToken(MetaToken):
                         return None
                 if (alpha2 == "PE"): 
                     if (isinstance(cc.begin_token, TextToken)): 
-                        if ((Utils.asObjectOrNull(cc.begin_token, TextToken)).getSourceText() != "Перу"): 
+                        if ((cc.begin_token).getSourceText() != "Перу"): 
                             return None
                         if (len(li) == 1 and cc.begin_token.previous is not None and cc.begin_token.previous.isChar('.')): 
                             return None
@@ -160,7 +171,7 @@ class TerrItemToken(MetaToken):
             elif (cc.onto_item is not None and cc.is_adjective): 
                 alpha2 = None
                 if (isinstance(cc.onto_item.referent, GeoReferent)): 
-                    alpha2 = (Utils.asObjectOrNull(cc.onto_item.referent, GeoReferent)).alpha2
+                    alpha2 = (cc.onto_item.referent).alpha2
                 if (alpha2 == "SU"): 
                     if (cc.end_token.next0_ is None or not cc.end_token.next0_.isValue("СОЮЗ", None)): 
                         cc.onto_item = (None)
@@ -191,9 +202,6 @@ class TerrItemToken(MetaToken):
     
     @staticmethod
     def __tryParseRzdDir(t : 'Token') -> 'TerrItemToken':
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.TextToken import TextToken
         napr = None
         tt0 = None
         tt1 = None
@@ -220,7 +228,7 @@ class TerrItemToken(MetaToken):
             if (npt is not None and len(npt.adjectives) > 0 and npt.noun.isValue("КОЛЬЦО", None)): 
                 tt0 = tt
                 tt1 = npt.end_token
-                val = npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False)
+                val = npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False)
                 break
             if ((isinstance(tt, TextToken)) and ((not tt.chars.is_all_lower or napr is not None)) and (((tt.morph.gender) & (MorphGender.NEUTER))) != (MorphGender.UNDEFINED)): 
                 tt1 = tt
@@ -239,7 +247,7 @@ class TerrItemToken(MetaToken):
             else: 
                 ci.rzd_dir = tt1.getNormalCaseText(MorphClass.ADJECTIVE, True, MorphGender.NEUTER, False)
                 if (tt0 != tt1): 
-                    ci.rzd_dir = "{0} {1}".format((Utils.asObjectOrNull(tt0, TextToken)).term, ci.rzd_dir)
+                    ci.rzd_dir = "{0} {1}".format((tt0).term, ci.rzd_dir)
                 ci.rzd_dir += " НАПРАВЛЕНИЕ"
             if (napr is not None and napr.end_char > ci.end_char): 
                 ci.end_token = napr
@@ -248,10 +256,6 @@ class TerrItemToken(MetaToken):
     
     @staticmethod
     def tryParse(t : 'Token', int_ont : 'IntOntologyCollection', can_be_low_capital : bool=False, noun_can_be_adjective : bool=False) -> 'TerrItemToken':
-        from pullenti.ner.geo.internal.TerrTermin import TerrTermin
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.geo.internal.CityItemToken import CityItemToken
         if (t is None): 
             return None
@@ -266,11 +270,11 @@ class TerrItemToken(MetaToken):
                 if (tok is not None): 
                     return TerrItemToken._new1162(tok.begin_token, tok.end_token, Utils.asObjectOrNull(tok.termin.tag, TerrTermin), False)
             if ((t.chars.is_all_upper and t.length_char == 2 and (isinstance(t, TextToken))) and int_ont is not None): 
-                term = (Utils.asObjectOrNull(t, TextToken)).term
+                term = (t).term
                 if (((term == "РБ" or term == "РК" or term == "TC") or term == "ТС" or term == "РТ") or term == "УР" or term == "РД"): 
                     for it in int_ont.items: 
                         if (isinstance(it.referent, GeoReferent)): 
-                            alph2 = (Utils.asObjectOrNull(it.referent, GeoReferent)).alpha2
+                            alph2 = (it.referent).alpha2
                             if (((alph2 == "BY" and term == "РБ")) or ((alph2 == "KZ" and term == "РК"))): 
                                 return TerrItemToken._new1163(t, t, it)
                             if (term == "РТ"): 
@@ -281,7 +285,7 @@ class TerrItemToken(MetaToken):
                                     return TerrItemToken._new1163(t, t, it)
                     ok = False
                     if ((t.whitespaces_before_count < 2) and (isinstance(t.previous, TextToken))): 
-                        term2 = (Utils.asObjectOrNull(t.previous, TextToken)).term
+                        term2 = (t.previous).term
                         if ((t.previous.isValue("КОДЕКС", None) or t.previous.isValue("ЗАКОН", None) or term2 == "КОАП") or term2 == "ПДД" or term2 == "МЮ"): 
                             ok = True
                         elif ((t.previous.chars.is_all_upper and t.previous.length_char > 1 and (t.previous.length_char < 4)) and term2.endswith("К")): 
@@ -291,11 +295,11 @@ class TerrItemToken(MetaToken):
                             if (tt is not None and tt.is_comma): 
                                 tt = tt.previous
                             if (tt is not None): 
-                                if ((isinstance(tt.getReferent(), GeoReferent)) and (Utils.asObjectOrNull(tt.getReferent(), GeoReferent)).alpha2 == "RU"): 
+                                if ((isinstance(tt.getReferent(), GeoReferent)) and (tt.getReferent()).alpha2 == "RU"): 
                                     ok = True
-                                elif ((isinstance(tt, NumberToken)) and tt.length_char == 6 and (Utils.asObjectOrNull(tt, NumberToken)).typ == NumberSpellingType.DIGIT): 
+                                elif ((isinstance(tt, NumberToken)) and tt.length_char == 6 and (tt).typ == NumberSpellingType.DIGIT): 
                                     ok = True
-                    elif (((t.whitespaces_before_count < 2) and (isinstance(t.previous, NumberToken)) and t.previous.length_char == 6) and (Utils.asObjectOrNull(t.previous, NumberToken)).typ == NumberSpellingType.DIGIT): 
+                    elif (((t.whitespaces_before_count < 2) and (isinstance(t.previous, NumberToken)) and t.previous.length_char == 6) and (t.previous).typ == NumberSpellingType.DIGIT): 
                         ok = True
                     if (ok): 
                         if (term == "РК" and TerrItemToken.__m_kazahstan is not None): 
@@ -319,7 +323,7 @@ class TerrItemToken(MetaToken):
                         res.is_doubt = False
                         return res
             if ((isinstance(t, TextToken)) and t.length_char > 2 and not t.chars.is_all_lower): 
-                if (((t.morph.class0_.is_adjective or t.chars.is_all_upper or (Utils.asObjectOrNull(t, TextToken)).term.endswith("ЖД"))) or ((t.next0_ is not None and t.next0_.is_hiphen))): 
+                if (((t.morph.class0_.is_adjective or t.chars.is_all_upper or (t).term.endswith("ЖД"))) or ((t.next0_ is not None and t.next0_.is_hiphen))): 
                     rt0 = t.kit.processReferent("ORGANIZATION", t)
                     if (rt0 is not None): 
                         if ((Utils.ifNotNull(rt0.referent.getStringValue("TYPE"), "")).endswith("дорога")): 
@@ -410,7 +414,7 @@ class TerrItemToken(MetaToken):
                                 return None
         if (res is not None and res.begin_token == res.end_token and res.termin_item is None): 
             if (isinstance(t, TextToken)): 
-                str0_ = (Utils.asObjectOrNull(t, TextToken)).term
+                str0_ = (t).term
                 if (str0_ == "ЧАДОВ" or str0_ == "ТОГОВ"): 
                     return None
             if ((((isinstance(t.next0_, TextToken)) and (t.whitespaces_after_count < 2) and not t.next0_.chars.is_all_lower) and t.chars == t.next0_.chars and not t.chars.is_latin_letter) and ((not t.morph.case_.is_genitive and not t.morph.case_.is_accusative))): 
@@ -434,14 +438,8 @@ class TerrItemToken(MetaToken):
     
     @staticmethod
     def __TryParse(t : 'Token', int_ont : 'IntOntologyCollection', can_be_low_capital : bool) -> 'TerrItemToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.geo.internal.TerrTermin import TerrTermin
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.ReferentToken import ReferentToken
+        from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
         from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        from pullenti.morph.MorphWordForm import MorphWordForm
         if (not ((isinstance(t, TextToken)))): 
             return None
         li = None
@@ -480,7 +478,7 @@ class TerrItemToken(MetaToken):
                             else: 
                                 res0.is_adjective = True
                         if (nt.begin_token == nt.end_token and nt.chars.is_latin_letter): 
-                            if ((Utils.asObjectOrNull(nt.item.referent, GeoReferent)).is_state): 
+                            if ((nt.item.referent).is_state): 
                                 pass
                             elif (nt.item.referent.findSlot(GeoReferent.ATTR_TYPE, "state", True) is not None): 
                                 pass
@@ -498,8 +496,8 @@ class TerrItemToken(MetaToken):
                         return res1
             for nt in li: 
                 if (nt.termin is not None and nt.item is None): 
-                    if (nt.end_token.next0_ is None or not nt.end_token.next0_.is_hiphen or not (Utils.asObjectOrNull(nt.termin, TerrTermin)).is_adjective): 
-                        res1 = TerrItemToken._new1176(nt.begin_token, nt.end_token, Utils.asObjectOrNull(nt.termin, TerrTermin), (Utils.asObjectOrNull(nt.termin, TerrTermin)).is_adjective, nt.morph)
+                    if (nt.end_token.next0_ is None or not nt.end_token.next0_.is_hiphen or not (nt.termin).is_adjective): 
+                        res1 = TerrItemToken._new1176(nt.begin_token, nt.end_token, Utils.asObjectOrNull(nt.termin, TerrTermin), (nt.termin).is_adjective, nt.morph)
                         if (not res1.is_adjective): 
                             if (res1.termin_item.canonic_text == "РЕСПУБЛИКА" or res1.termin_item.canonic_text == "ШТАТ"): 
                                 npt1 = NounPhraseHelper.tryParse(res1.begin_token.previous, NounPhraseParseAttr.NO, 0)
@@ -579,7 +577,7 @@ class TerrItemToken(MetaToken):
                 else: 
                     tok = TerrItemToken._m_terr_ontology.tryAttach(tt.next0_, None, False)
                     if (tok is not None): 
-                        if ((((tok[0].termin.canonic_text == "РАЙОН" or tok[0].termin.canonic_text == "ОБЛАСТЬ" or tok[0].termin.canonic_text == "УЛУС") or tok[0].termin.canonic_text == "КРАЙ" or tok[0].termin.canonic_text == "ВОЛОСТЬ") or tok[0].termin.canonic_text == "ОКРУГ" or tok[0].termin.canonic_text == "АВТОНОМИЯ") or tok[0].termin.canonic_text == "АВТОНОМІЯ" or ((tok[0].chars.is_latin_letter and (isinstance(tok[0].termin, TerrTermin)) and (Utils.asObjectOrNull(tok[0].termin, TerrTermin)).is_region))): 
+                        if ((((tok[0].termin.canonic_text == "РАЙОН" or tok[0].termin.canonic_text == "ОБЛАСТЬ" or tok[0].termin.canonic_text == "УЛУС") or tok[0].termin.canonic_text == "КРАЙ" or tok[0].termin.canonic_text == "ВОЛОСТЬ") or tok[0].termin.canonic_text == "ОКРУГ" or tok[0].termin.canonic_text == "АВТОНОМИЯ") or tok[0].termin.canonic_text == "АВТОНОМІЯ" or ((tok[0].chars.is_latin_letter and (isinstance(tok[0].termin, TerrTermin)) and (tok[0].termin).is_region))): 
                             reg_after = True
             if (reg_after): 
                 adj = True
@@ -650,28 +648,26 @@ class TerrItemToken(MetaToken):
             proc: 
         
         """
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+        from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
         if (not ((isinstance(t, TextToken))) or not t.chars.is_capital_upper or not t.chars.is_cyrillic_letter): 
             return None
         if ((t.next0_ is not None and t.next0_.is_hiphen and (isinstance(t.next0_.next0_, TextToken))) and t.next0_.next0_.chars == t.chars): 
             tok = TerrItemToken._m_terr_ontology.tryAttach(t, None, False)
-            if ((tok is not None and tok[0].item is not None and (isinstance(tok[0].item.referent, GeoReferent))) and (Utils.asObjectOrNull(tok[0].item.referent, GeoReferent)).is_state): 
+            if ((tok is not None and tok[0].item is not None and (isinstance(tok[0].item.referent, GeoReferent))) and (tok[0].item.referent).is_state): 
                 return None
             tok = TerrItemToken._m_terr_ontology.tryAttach(t.next0_.next0_, None, False)
-            if ((tok is not None and tok[0].item is not None and (isinstance(tok[0].item.referent, GeoReferent))) and (Utils.asObjectOrNull(tok[0].item.referent, GeoReferent)).is_state): 
+            if ((tok is not None and tok[0].item is not None and (isinstance(tok[0].item.referent, GeoReferent))) and (tok[0].item.referent).is_state): 
                 return None
             return TerrItemToken(t, t.next0_.next0_)
         if ((isinstance(t.next0_, TextToken)) and t.next0_.chars == t.chars): 
             npt = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.NO, 0)
             if (npt is not None and npt.end_token == t.next0_ and len(npt.adjectives) == 1): 
-                if (not npt.end_token.morph.class0_.is_adjective or ((npt.end_token.morph.case_.is_nominative and (isinstance(npt.end_token, TextToken)) and LanguageHelper.endsWith((Utils.asObjectOrNull(npt.end_token, TextToken)).term, "О")))): 
+                if (not npt.end_token.morph.class0_.is_adjective or ((npt.end_token.morph.case_.is_nominative and (isinstance(npt.end_token, TextToken)) and LanguageHelper.endsWith((npt.end_token).term, "О")))): 
                     ty = TerrItemToken.__TryParse(t.next0_, int_ont, False)
                     if (ty is not None and ty.termin_item is not None): 
                         return None
                     return TerrItemToken(t, t.next0_)
-        str0_ = (Utils.asObjectOrNull(t, TextToken)).term
+        str0_ = (t).term
         res = TerrItemToken._new1179(t, t, True)
         if (not LanguageHelper.endsWith(str0_, "О")): 
             res.is_doubt = True
@@ -687,11 +683,7 @@ class TerrItemToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.geo.internal.TerrTermin import TerrTermin
-        from pullenti.morph.MorphLang import MorphLang
+        from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
         if (TerrItemToken._m_terr_ontology is not None): 
             return
         TerrItemToken._m_terr_ontology = IntOntologyCollection()
@@ -962,16 +954,14 @@ class TerrItemToken(MetaToken):
     
     @staticmethod
     def __loadState(xml0_ : xml.etree.ElementTree.Element, lang : 'MorphLang') -> None:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
+        from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
         state = GeoReferent()
         c = IntOntologyItem(state)
         acrs = None
         for x in xml0_: 
             if (x.tag == "n"): 
                 te = Termin()
-                te.initByNormalText(Utils.getXmlInnerText(x), MorphLang())
+                te.initByNormalText(Utils.getXmlInnerText(x), None)
                 c.termins.append(te)
                 state._addName(Utils.getXmlInnerText(x))
             elif (x.tag == "acr"): 
@@ -1050,8 +1040,6 @@ class TerrItemToken(MetaToken):
     
     @staticmethod
     def __loadRegion(xml0_ : xml.etree.ElementTree.Element, lang : 'MorphLang') -> None:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.Termin import Termin
         reg = GeoReferent()
         r = IntOntologyItem(reg)
         aterm = None

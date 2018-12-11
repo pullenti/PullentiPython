@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class MorphVoice(IntEnum):
     """ Залог (для глаголов) """
     UNDEFINED = 0

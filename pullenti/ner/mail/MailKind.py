@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class MailKind(IntEnum):
     UNDEFINED = 0
     HEAD = 1

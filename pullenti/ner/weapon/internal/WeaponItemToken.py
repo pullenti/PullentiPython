@@ -6,25 +6,35 @@ import typing
 import io
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.morph.LanguageHelper import LanguageHelper
 
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.transport.internal.TransItemToken import TransItemToken
 
 class WeaponItemToken(MetaToken):
     
     class Typs(IntEnum):
         NOUN = 0
-        BRAND = 0 + 1
-        MODEL = (0 + 1) + 1
-        NUMBER = ((0 + 1) + 1) + 1
-        NAME = (((0 + 1) + 1) + 1) + 1
-        CLASS = ((((0 + 1) + 1) + 1) + 1) + 1
-        DATE = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
+        BRAND = 1
+        MODEL = 2
+        NUMBER = 3
+        NAME = 4
+        CLASS = 5
+        DATE = 6
         
         @classmethod
         def has_value(cls, value):
@@ -46,9 +56,6 @@ class WeaponItemToken(MetaToken):
     
     @staticmethod
     def tryParseList(t : 'Token', max_count : int=10) -> typing.List['WeaponItemToken']:
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.TextToken import TextToken
         tr = WeaponItemToken.tryParse(t, None, False, False)
         if (tr is None): 
             return None
@@ -142,10 +149,6 @@ class WeaponItemToken(MetaToken):
     
     @staticmethod
     def tryParse(t : 'Token', prev : 'WeaponItemToken', after_conj : bool, attach_high : bool=False) -> 'WeaponItemToken':
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
         res = WeaponItemToken.__TryParse(t, prev, after_conj, attach_high)
         if (res is None): 
             npt = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.NO, 0)
@@ -153,7 +156,7 @@ class WeaponItemToken(MetaToken):
                 res = WeaponItemToken.__TryParse(npt.noun.begin_token, prev, after_conj, attach_high)
                 if (res is not None): 
                     if (res.typ == WeaponItemToken.Typs.NOUN): 
-                        str0_ = npt.getNormalCaseText(MorphClass(), True, MorphGender.UNDEFINED, False)
+                        str0_ = npt.getNormalCaseText(None, True, MorphGender.UNDEFINED, False)
                         if (str0_ == "РУЧНОЙ ГРАНАТ"): 
                             str0_ = "РУЧНАЯ ГРАНАТА"
                         if ((Utils.ifNotNull(str0_, "")).endswith(res.value)): 
@@ -176,12 +179,6 @@ class WeaponItemToken(MetaToken):
     
     @staticmethod
     def __TryParse(t : 'Token', prev : 'WeaponItemToken', after_conj : bool, attach_high : bool=False) -> 'WeaponItemToken':
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.transport.internal.TransItemToken import TransItemToken
-        from pullenti.ner.NumberToken import NumberToken
         if (t is None): 
             return None
         if (BracketHelper.isBracket(t, True)): 
@@ -226,7 +223,7 @@ class WeaponItemToken(MetaToken):
                             res.alt_value = res.value
                         if (res.alt_value.endswith(res.value)): 
                             res.alt_value = res.alt_value[0:0+len(res.alt_value) - len(res.value)]
-                        res.alt_value = "{0}{1} {2}".format(res.alt_value, (Utils.asObjectOrNull(tt, TextToken)).term, res.value)
+                        res.alt_value = "{0}{1} {2}".format(res.alt_value, (tt).term, res.value)
                         res.end_token = tt
                         continue
                     break
@@ -256,15 +253,15 @@ class WeaponItemToken(MetaToken):
         if (((isinstance(t, TextToken)) and t.chars.is_letter and t.chars.is_all_upper) and (t.length_char < 4)): 
             if ((t.next0_ is not None and ((t.next0_.is_hiphen or t.next0_.isChar('.'))) and (t.next0_.whitespaces_after_count < 2)) and (isinstance(t.next0_.next0_, NumberToken))): 
                 res = WeaponItemToken._new2614(t, t.next0_, WeaponItemToken.Typs.MODEL, True)
-                res.value = (Utils.asObjectOrNull(t, TextToken)).term
+                res.value = (t).term
                 res.__correctModel()
                 return res
             if ((isinstance(t.next0_, NumberToken)) and not t.is_whitespace_after): 
                 res = WeaponItemToken._new2614(t, t, WeaponItemToken.Typs.MODEL, True)
-                res.value = (Utils.asObjectOrNull(t, TextToken)).term
+                res.value = (t).term
                 res.__correctModel()
                 return res
-            if ((Utils.asObjectOrNull(t, TextToken)).term == "СП" and (t.whitespaces_after_count < 3) and (isinstance(t.next0_, TextToken))): 
+            if ((t).term == "СП" and (t.whitespaces_after_count < 3) and (isinstance(t.next0_, TextToken))): 
                 pp = WeaponItemToken.__TryParse(t.next0_, None, False, False)
                 if (pp is not None and ((pp.typ == WeaponItemToken.Typs.MODEL or pp.typ == WeaponItemToken.Typs.BRAND))): 
                     res = WeaponItemToken._new2613(t, t, WeaponItemToken.Typs.NOUN)
@@ -279,9 +276,9 @@ class WeaponItemToken(MetaToken):
                 ok = True
             if (ok): 
                 res = WeaponItemToken._new2614(t, t, WeaponItemToken.Typs.NAME, True)
-                res.value = (Utils.asObjectOrNull(t, TextToken)).term
+                res.value = (t).term
                 if ((t.next0_ is not None and t.next0_.is_hiphen and (isinstance(t.next0_.next0_, TextToken))) and t.next0_.next0_.chars == t.chars): 
-                    res.value = "{0}-{1}".format(res.value, (Utils.asObjectOrNull(t.next0_.next0_, TextToken)).term)
+                    res.value = "{0}-{1}".format(res.value, (t.next0_.next0_).term)
                     res.end_token = t.next0_.next0_
                 if (prev is not None and prev.typ == WeaponItemToken.Typs.NOUN): 
                     res.typ = WeaponItemToken.Typs.BRAND
@@ -295,9 +292,6 @@ class WeaponItemToken(MetaToken):
         return None
     
     def __correctModel(self) -> None:
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         tt = self.end_token.next0_
         if (tt is None or tt.whitespaces_before_count > 2): 
             return
@@ -305,7 +299,7 @@ class WeaponItemToken(MetaToken):
             tt = tt.next0_
         if (isinstance(tt, NumberToken)): 
             tmp = io.StringIO()
-            print((Utils.asObjectOrNull(tt, NumberToken)).value, end="", file=tmp)
+            print((tt).value, end="", file=tmp)
             is_lat = LanguageHelper.isLatinChar(self.value[0])
             self.end_token = tt
             tt = tt.next0_
@@ -316,7 +310,7 @@ class WeaponItemToken(MetaToken):
                 if (not (tt is not None)): break
                 if ((isinstance(tt, TextToken)) and tt.length_char == 1 and tt.chars.is_letter): 
                     if (not tt.is_whitespace_before or ((tt.previous is not None and tt.previous.is_hiphen))): 
-                        ch = (Utils.asObjectOrNull(tt, TextToken)).term[0]
+                        ch = (tt).term[0]
                         self.end_token = tt
                         ch2 = chr(0)
                         if (LanguageHelper.isLatinChar(ch) and not is_lat): 
@@ -335,16 +329,14 @@ class WeaponItemToken(MetaToken):
         if (not self.end_token.is_whitespace_after and self.end_token.next0_ is not None and ((self.end_token.next0_.is_hiphen or self.end_token.next0_.isCharOf("\\/")))): 
             if (not self.end_token.next0_.is_whitespace_after and (isinstance(self.end_token.next0_.next0_, NumberToken))): 
                 self.end_token = self.end_token.next0_.next0_
-                self.value = "{0}-{1}".format(self.value, (Utils.asObjectOrNull(self.end_token, NumberToken)).value)
+                self.value = "{0}-{1}".format(self.value, (self.end_token).value)
                 if (self.alt_value is not None): 
-                    self.alt_value = "{0}-{1}".format(self.alt_value, (Utils.asObjectOrNull(self.end_token, NumberToken)).value)
+                    self.alt_value = "{0}-{1}".format(self.alt_value, (self.end_token).value)
     
     M_ONTOLOGY = None
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
         if (WeaponItemToken.M_ONTOLOGY is not None): 
             return
         WeaponItemToken.M_ONTOLOGY = TerminCollection()

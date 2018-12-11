@@ -4,18 +4,32 @@
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.core.GetTextAttr import GetTextAttr
 
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.Explanatory import Explanatory
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.MorphCollection import MorphCollection
+from pullenti.ner.Token import Token
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.internal.NounPhraseItemTextVar import NounPhraseItemTextVar
+from pullenti.ner.core.internal.NounPhraseItem import NounPhraseItem
+from pullenti.ner.core.NounPhraseToken import NounPhraseToken
 
 class _NounPraseHelperInt:
     
     @staticmethod
     def tryParse(first : 'Token', typ : 'NounPhraseParseAttr', max_char_pos : int) -> 'NounPhraseToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.ReferentToken import ReferentToken
         if (first is None): 
             return None
         if (first.not_noun_phrase): 
@@ -45,18 +59,6 @@ class _NounPraseHelperInt:
     
     @staticmethod
     def __tryParseRu(first : 'Token', typ : 'NounPhraseParseAttr', max_char_pos : int) -> 'NounPhraseToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.internal.NounPhraseItem import NounPhraseItem
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.MorphCollection import MorphCollection
-        from pullenti.ner.core.NounPhraseToken import NounPhraseToken
-        from pullenti.morph.MorphCase import MorphCase
-        from pullenti.ner.core.internal.NounPhraseItemTextVar import NounPhraseItemTextVar
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.morph.Explanatory import Explanatory
         if (first is None): 
             return None
         items = None
@@ -169,7 +171,7 @@ class _NounPraseHelperInt:
                 if (npt1 is not None and len(npt1.adjectives) > 0): 
                     ok1 = False
                     for av in items[0].adj_morph: 
-                        for v in (Utils.asObjectOrNull(npt1.noun, NounPhraseItem)).noun_morph: 
+                        for v in (npt1.noun).noun_morph: 
                             if (v.checkAccord(av, False)): 
                                 items[0].morph.addItem(av)
                                 ok1 = True
@@ -350,17 +352,17 @@ class _NounPraseHelperInt:
                 err = False
                 for wf in tt.morph.items: 
                     if (wf.class0_.is_adjective): 
-                        if (wf.containsAttr("прев.", MorphClass())): 
+                        if (wf.containsAttr("прев.", None)): 
                             if ((((typ) & (NounPhraseParseAttr.IGNOREADJBEST))) != (NounPhraseParseAttr.NO)): 
                                 err = True
-                        if (wf.containsAttr("к.ф.", MorphClass()) and tt.morph.class0_.is_personal_pronoun): 
+                        if (wf.containsAttr("к.ф.", None) and tt.morph.class0_.is_personal_pronoun): 
                             return None
                 if (err): 
                     continue
             if (res.morph.case_.is_nominative): 
                 v = MiscHelper.getTextValueOfMetaToken(items[i], GetTextAttr.KEEPQUOTES)
                 if (not Utils.isNullOrEmpty(v)): 
-                    if (items[i].getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False) != v): 
+                    if (items[i].getNormalCaseText(None, False, MorphGender.UNDEFINED, False) != v): 
                         wf = NounPhraseItemTextVar(items[i].morph, None)
                         wf.normal_value = v
                         wf.class0_ = MorphClass.ADJECTIVE
@@ -484,7 +486,7 @@ class _NounPraseHelperInt:
                                 if (tt.morph.checkAccord(it, False)): 
                                     if (res.morph.case_.is_instrumental): 
                                         return None
-                                    ews = Explanatory.findWords((Utils.asObjectOrNull(it, MorphWordForm)).normal_case, tt.morph.language)
+                                    ews = Explanatory.findWords((it).normal_case, tt.morph.language)
                                     if (ews is not None): 
                                         for ew in ews: 
                                             if (ew.nexts is not None): 
@@ -510,14 +512,6 @@ class _NounPraseHelperInt:
     
     @staticmethod
     def __tryParseEn(first : 'Token', typ : 'NounPhraseParseAttr', max_char_pos : int) -> 'NounPhraseToken':
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.internal.NounPhraseItem import NounPhraseItem
-        from pullenti.ner.core.NounPhraseToken import NounPhraseToken
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.ner.MorphCollection import MorphCollection
-        from pullenti.morph.MorphClass import MorphClass
         if (first is None): 
             return None
         items = None

@@ -5,19 +5,22 @@
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import EventHandler
+
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphMiscInfo import MorphMiscInfo
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.morph.internal.UnicodeInfo import UnicodeInfo
+from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.morph.internal.InnerMorphology import InnerMorphology
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphMiscInfo import MorphMiscInfo
-
 
 class Morphology:
     """ Морфологический анализ текстов """
     
     @staticmethod
-    def initialize(langs : 'MorphLang'=MorphLang()) -> None:
+    def initialize(langs : 'MorphLang'=None) -> None:
         """ Инициализация внутренних словарей.
          Можно не вызывать, но тогда будет автоматически вызвано при первом обращении к морфологии,
          и соответственно первый разбор отработает на несколько секунд дольше.
@@ -106,7 +109,7 @@ class Morphology:
     __m_empty_misc = None
     
     @staticmethod
-    def getAllWordforms(word : str, lang : 'MorphLang'=MorphLang()) -> typing.List['MorphWordForm']:
+    def getAllWordforms(word : str, lang : 'MorphLang'=None) -> typing.List['MorphWordForm']:
         """ Получить все варианты словоформ для нормальной формы слова
         
         Args:
@@ -134,12 +137,11 @@ class Morphology:
         Returns:
             str: вариант написания
         """
-        from pullenti.morph.MorphWordForm import MorphWordForm
         if (morph_info is None or Utils.isNullOrEmpty(word)): 
             return word
         cla = morph_info.class0_
         if (cla.is_undefined): 
-            mi0 = Morphology.getWordBaseInfo(word, MorphLang(), False, False)
+            mi0 = Morphology.getWordBaseInfo(word, None, False, False)
             if (mi0 is not None): 
                 cla = mi0.class0_
         for ch in word: 
@@ -149,7 +151,7 @@ class Morphology:
         return Utils.ifNotNull(Morphology.__m_inner.getWordform(word, cla, morph_info.gender, morph_info.case_, morph_info.number, morph_info.language, Utils.asObjectOrNull(morph_info, MorphWordForm)), word)
     
     @staticmethod
-    def getWordBaseInfo(word : str, lang : 'MorphLang'=MorphLang(), is_case_nominative : bool=False, in_dict_only : bool=False) -> 'MorphBaseInfo':
+    def getWordBaseInfo(word : str, lang : 'MorphLang'=None, is_case_nominative : bool=False, in_dict_only : bool=False) -> 'MorphBaseInfo':
         """ Получить для словоформы род\число\падеж
         
         Args:
@@ -161,8 +163,6 @@ class Morphology:
         Returns:
             MorphBaseInfo: базовая морфологическая информация
         """
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.morph.MorphClass import MorphClass
         mt = Morphology.__m_inner.run(word, False, lang, None, False)
         bi = MorphWordForm()
         cla = MorphClass()
@@ -191,7 +191,7 @@ class Morphology:
         return bi
     
     @staticmethod
-    def correctWord(word : str, lang : 'MorphLang'=MorphLang()) -> str:
+    def correctWord(word : str, lang : 'MorphLang'=None) -> str:
         """ Попробовать откорретировать одну букву словоформы, чтобы получилось словарное слово
         
         Args:
@@ -214,7 +214,6 @@ class Morphology:
         Returns:
             str: прилагательное
         """
-        from pullenti.morph.MorphClass import MorphClass
         if (adverb is None or (len(adverb) < 4)): 
             return None
         last = adverb[len(adverb) - 1]
@@ -222,8 +221,8 @@ class Morphology:
             return adverb
         var1 = adverb[0:0+len(adverb) - 1] + "ИЙ"
         var2 = adverb[0:0+len(adverb) - 1] + "ЫЙ"
-        bi1 = Morphology.getWordBaseInfo(var1, MorphLang(), False, False)
-        bi2 = Morphology.getWordBaseInfo(var2, MorphLang(), False, False)
+        bi1 = Morphology.getWordBaseInfo(var1, None, False, False)
+        bi2 = Morphology.getWordBaseInfo(var2, None, False, False)
         var = var1
         if (not bi1.class0_.is_adjective and bi2.class0_.is_adjective): 
             var = var2

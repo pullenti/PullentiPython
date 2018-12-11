@@ -4,13 +4,12 @@
 
 from enum import IntEnum
 
-
 class PersonAttrTerminType(IntEnum):
     PREFIX = 0
-    BESTREGARDS = 0 + 1
-    POSITION = (0 + 1) + 1
-    KING = ((0 + 1) + 1) + 1
-    OTHER = (((0 + 1) + 1) + 1) + 1
+    BESTREGARDS = 1
+    POSITION = 2
+    KING = 3
+    OTHER = 4
     
     @classmethod
     def has_value(cls, value):

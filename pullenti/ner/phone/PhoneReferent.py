@@ -5,17 +5,17 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.phone.PhoneKind import PhoneKind
-from pullenti.morph.LanguageHelper import LanguageHelper
 
+from pullenti.ner.Referent import Referent
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.phone.PhoneKind import PhoneKind
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.phone.internal.MetaPhone import MetaPhone
 
 class PhoneReferent(Referent):
     """ Сущность, представляющая телефонные номера """
     
     def __init__(self) -> None:
-        from pullenti.ner.phone.internal.MetaPhone import MetaPhone
         super().__init__(PhoneReferent.OBJ_TYPENAME)
         self._m_template = None;
         self.instance_of = MetaPhone._global_meta
@@ -30,7 +30,7 @@ class PhoneReferent(Referent):
     
     ATTR_ADDNUMBER = "ADDNUMBER"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         if (self.country_code is not None): 
             print("+{0} ".format(self.country_code), end="", file=res, flush=True)

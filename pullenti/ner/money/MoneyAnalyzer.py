@@ -4,11 +4,20 @@
 
 import typing
 import math
-from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
-from pullenti.ner.core.NumberExType import NumberExType
 
+from pullenti.ner.Token import Token
+from pullenti.ner.core.NumberExType import NumberExType
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.money.internal.MoneyMeta import MoneyMeta
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.core.NumberExToken import NumberExToken
+from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.money.MoneyReferent import MoneyReferent
 
 class MoneyAnalyzer(Analyzer):
     """ Анализатор для денежных сумм """
@@ -36,12 +45,10 @@ class MoneyAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.money.internal.MoneyMeta import MoneyMeta
         return [MoneyMeta.GLOBAL_META]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.money.internal.MoneyMeta import MoneyMeta
         res = dict()
         res[MoneyMeta.IMAGE_ID] = EpNerBankInternalResourceHelper.getBytes("money2.png")
         res[MoneyMeta.IMAGE2ID] = EpNerBankInternalResourceHelper.getBytes("moneyerr.png")
@@ -52,7 +59,6 @@ class MoneyAnalyzer(Analyzer):
         return ["GEO"]
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
         if (type0_ == MoneyReferent.OBJ_TYPENAME): 
             return MoneyReferent()
         return None
@@ -81,12 +87,6 @@ class MoneyAnalyzer(Analyzer):
     
     @staticmethod
     def tryParse(t : 'Token') -> 'ReferentToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.NumberExToken import NumberExToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         if (not ((isinstance(t, NumberToken))) and t.length_char != 1): 
@@ -101,22 +101,22 @@ class MoneyAnalyzer(Analyzer):
                         if ((t.next0_.is_hiphen and res1.value == (0) and res1.end_token.next0_ is not None) and res1.end_token.next0_.isChar('(')): 
                             nex2 = NumberExToken.tryParseNumberWithPostfix(res1.end_token.next0_.next0_)
                             if ((nex2 is not None and nex2.ex_typ_param == res1.ex_typ_param and nex2.end_token.next0_ is not None) and nex2.end_token.next0_.isChar(')')): 
-                                if (nex2.value == (Utils.asObjectOrNull(t, NumberToken)).value): 
+                                if (nex2.value == (t).value): 
                                     res0.currency = nex2.ex_typ_param
                                     res0.value = nex2.value
                                     return ReferentToken(res0, t, nex2.end_token.next0_)
                                 if (isinstance(t.previous, NumberToken)): 
-                                    if (nex2.value == ((((Utils.asObjectOrNull(t.previous, NumberToken)).value * (1000)) + (Utils.asObjectOrNull(t, NumberToken)).value))): 
+                                    if (nex2.value == ((((t.previous).value * (1000)) + (t).value))): 
                                         res0.currency = nex2.ex_typ_param
                                         res0.value = nex2.value
                                         return ReferentToken(res0, t.previous, nex2.end_token.next0_)
                                     elif (isinstance(t.previous.previous, NumberToken)): 
-                                        if (nex2.value == ((((Utils.asObjectOrNull(t.previous.previous, NumberToken)).value * (1000000)) + ((Utils.asObjectOrNull(t.previous, NumberToken)).value * (1000)) + (Utils.asObjectOrNull(t, NumberToken)).value))): 
+                                        if (nex2.value == ((((t.previous.previous).value * (1000000)) + ((t.previous).value * (1000)) + (t).value))): 
                                             res0.currency = nex2.ex_typ_param
                                             res0.value = nex2.value
                                             return ReferentToken(res0, t.previous.previous, nex2.end_token.next0_)
                         res0.currency = res1.ex_typ_param
-                        res0.value = (Utils.asObjectOrNull(t, NumberToken)).value
+                        res0.value = (t).value
                         return ReferentToken(res0, t, t)
             return None
         res = MoneyReferent()
@@ -144,7 +144,7 @@ class MoneyAnalyzer(Analyzer):
         if (res.alt_value is not None and res.alt_value > res.value): 
             if (t.whitespaces_before_count == 1 and (isinstance(t.previous, NumberToken))): 
                 delt = res.alt_value - res.value
-                val = (Utils.asObjectOrNull(t.previous, NumberToken)).value
+                val = (t.previous).value
                 if ((((res.value < (1000)) and ((delt % (1000))) == (0))) or (((res.value < (1000000)) and ((delt % (1000000))) == (0)))): 
                     t = t.previous
                     res.value = res.alt_value
@@ -154,7 +154,12 @@ class MoneyAnalyzer(Analyzer):
     def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
         return MoneyAnalyzer.tryParse(begin)
     
+    __m_inited = None
+    
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.ProcessorService import ProcessorService
+        if (MoneyAnalyzer.__m_inited): 
+            return
+        MoneyAnalyzer.__m_inited = True
+        MoneyMeta.initialize()
         ProcessorService.registerAnalyzer(MoneyAnalyzer())

@@ -4,15 +4,16 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.morph.LanguageHelper import LanguageHelper
 
+from pullenti.ner.Referent import Referent
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.weapon.internal.MetaWeapon import MetaWeapon
 
 class WeaponReferent(Referent):
     
     def __init__(self) -> None:
-        from pullenti.ner.weapon.internal.MetaWeapon import MetaWeapon
         super().__init__(WeaponReferent.OBJ_TYPENAME)
         self.instance_of = MetaWeapon._global_meta
     
@@ -30,8 +31,7 @@ class WeaponReferent(Referent):
     
     ATTR_DATE = "DATE"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         str0_ = None
         for s in self.slots: 

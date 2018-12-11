@@ -4,9 +4,10 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphNumber import MorphNumber
 
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.LanguageHelper import LanguageHelper
 
 class MorphToken:
     """ Элементы, на которые разбивается исходный текст (токены) """
@@ -155,7 +156,6 @@ class MorphToken:
     @property
     def language(self) -> 'MorphLang':
         """ Язык(и) """
-        from pullenti.morph.MorphLang import MorphLang
         if (self.__m_language is not None and self.__m_language != MorphLang.UNKNOWN): 
             return self.__m_language
         lang = MorphLang()

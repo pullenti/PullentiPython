@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class MorphMood(IntEnum):
     """ Наклонение (для глаголов) """
     UNDEFINED = 0

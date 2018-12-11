@@ -7,6 +7,8 @@ from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
+from pullenti.ner.core.internal.TableCellToken import TableCellToken
+from pullenti.ner.core.internal.TableRowToken import TableRowToken
 
 class TableHelper:
     """ Поддержка работы с таблицами, расположенными в текстах.
@@ -17,10 +19,10 @@ class TableHelper:
     
     class TableTypes(IntEnum):
         UNDEFINED = 0
-        TABLESTART = 0 + 1
-        TABLEEND = (0 + 1) + 1
-        ROWEND = ((0 + 1) + 1) + 1
-        CELLEND = (((0 + 1) + 1) + 1) + 1
+        TABLESTART = 1
+        TABLEEND = 2
+        ROWEND = 3
+        CELLEND = 4
         
         @classmethod
         def has_value(cls, value):
@@ -78,7 +80,6 @@ class TableHelper:
         Returns:
             typing.List[TableRowToken]: список строк
         """
-        from pullenti.ner.core.internal.TableRowToken import TableRowToken
         if (t is None): 
             return None
         is_tab = False
@@ -130,8 +131,6 @@ class TableHelper:
     
     @staticmethod
     def __parse(t : 'Token', max_char : int, prev : 'TableRowToken', is_tab : bool) -> 'TableRowToken':
-        from pullenti.ner.core.internal.TableRowToken import TableRowToken
-        from pullenti.ner.core.internal.TableCellToken import TableCellToken
         if (t is None or ((t.end_char > max_char and max_char > 0))): 
             return None
         txt = t.kit.sofa.text

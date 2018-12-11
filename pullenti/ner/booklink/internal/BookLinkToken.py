@@ -5,16 +5,33 @@
 import datetime
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.booklink.internal.BookLinkTyp import BookLinkTyp
+
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.org.OrganizationKind import OrganizationKind
+from pullenti.ner.uri.UriReferent import UriReferent
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.internal.BlkTyps import BlkTyps
+from pullenti.ner.core.internal.BlockLine import BlockLine
+from pullenti.ner.booklink.BookLinkRefReferent import BookLinkRefReferent
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
 from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.booklink.internal.BookLinkTyp import BookLinkTyp
+from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.org.OrganizationKind import OrganizationKind
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.core.internal.BlkTyps import BlkTyps
-
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.BracketHelper import BracketHelper
 
 class BookLinkToken(MetaToken):
     
@@ -30,10 +47,6 @@ class BookLinkToken(MetaToken):
     
     @staticmethod
     def tryParseAuthor(t : 'Token', prev_pers_template : 'FioTemplateType'=FioTemplateType.UNDEFINED) -> 'BookLinkToken':
-        from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (t is None): 
             return None
         rtp = PersonItemToken.tryParsePerson(t, prev_pers_template)
@@ -94,16 +107,6 @@ class BookLinkToken(MetaToken):
     
     @staticmethod
     def __tryParse(t : 'Token', lev : int) -> 'BookLinkToken':
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.person.PersonReferent import PersonReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.TextToken import TextToken
         if (t is None or lev > 3): 
             return None
         if (t.isChar('[')): 
@@ -183,9 +186,9 @@ class BookLinkToken(MetaToken):
                 if (no): 
                     return None
             return res
-        if ((isinstance(t, NumberToken)) and (Utils.asObjectOrNull(t, NumberToken)).typ == NumberSpellingType.DIGIT): 
-            res = BookLinkToken._new347(t, t, BookLinkTyp.NUMBER, str((Utils.asObjectOrNull(t, NumberToken)).value))
-            val = (Utils.asObjectOrNull(t, NumberToken)).value
+        if ((isinstance(t, NumberToken)) and (t).typ == NumberSpellingType.DIGIT): 
+            res = BookLinkToken._new347(t, t, BookLinkTyp.NUMBER, str((t).value))
+            val = (t).value
             if (val >= 1930 and (val < 2030)): 
                 res.typ = BookLinkTyp.YEAR
             if (t.next0_ is not None and t.next0_.isChar('.')): 
@@ -193,14 +196,14 @@ class BookLinkToken(MetaToken):
             elif ((t.next0_ is not None and t.next0_.length_char == 1 and not t.next0_.chars.is_letter) and t.next0_.is_whitespace_after): 
                 res.end_token = t.next0_
             elif (isinstance(t.next0_, TextToken)): 
-                term = (Utils.asObjectOrNull(t.next0_, TextToken)).term
+                term = (t.next0_).term
                 if (((term == "СТР" or term == "C" or term == "С") or term == "P" or term == "S") or term == "PAGES"): 
                     res.end_token = t.next0_
                     res.typ = BookLinkTyp.PAGES
-                    res.value = str((Utils.asObjectOrNull(t, NumberToken)).value)
+                    res.value = str((t).value)
             return res
         if (isinstance(t, TextToken)): 
-            term = (Utils.asObjectOrNull(t, TextToken)).term
+            term = (t).term
             if (((((((term == "СТР" or term == "C" or term == "С") or term == "ТОМ" or term == "T") or term == "Т" or term == "P") or term == "PP" or term == "V") or term == "VOL" or term == "S") or term == "СТОР" or t.isValue("PAGE", None)) or t.isValue("СТРАНИЦА", "СТОРІНКА")): 
                 tt = t.next0_
                 while tt is not None:
@@ -286,29 +289,28 @@ class BookLinkToken(MetaToken):
             if (isinstance(no, NumberToken)): 
                 return BookLinkToken._new346(t, no, BookLinkTyp.N)
             if (((term == "B" or term == "В")) and (isinstance(t.next0_, NumberToken)) and (isinstance(t.next0_.next0_, TextToken))): 
-                term2 = (Utils.asObjectOrNull(t.next0_.next0_, TextToken)).term
+                term2 = (t.next0_.next0_).term
                 if (((term2 == "Т" or term2 == "T" or term2.startswith("ТОМ")) or term2 == "TT" or term2 == "ТТ") or term2 == "КН" or term2.startswith("КНИГ")): 
                     return BookLinkToken._new346(t, t.next0_.next0_, BookLinkTyp.VOLUME)
         if (t.isChar('(')): 
             if ((isinstance(t.next0_, NumberToken)) and t.next0_.next0_ is not None and t.next0_.next0_.isChar(')')): 
-                num = (Utils.asObjectOrNull(t.next0_, NumberToken)).value
+                num = (t.next0_).value
                 if (num > (1900) and num <= (2040)): 
                     if (num <= datetime.datetime.now().year): 
                         return BookLinkToken._new347(t, t.next0_.next0_, BookLinkTyp.YEAR, str(num))
             if (((isinstance(t.next0_, ReferentToken)) and (isinstance(t.next0_.getReferent(), DateReferent)) and t.next0_.next0_ is not None) and t.next0_.next0_.isChar(')')): 
-                num = (Utils.asObjectOrNull(t.next0_.getReferent(), DateReferent)).year
+                num = (t.next0_.getReferent()).year
                 if (num > 0): 
                     return BookLinkToken._new347(t, t.next0_.next0_, BookLinkTyp.YEAR, str(num))
         return None
     
     @staticmethod
     def checkLinkBefore(t0 : 'Token', num : str) -> bool:
-        from pullenti.ner.booklink.BookLinkRefReferent import BookLinkRefReferent
         if (num is None or t0 is None): 
             return False
         if (t0.previous is not None and (isinstance(t0.previous.getReferent(), BookLinkRefReferent))): 
             wrapnn367 = RefOutArgWrapper(0)
-            inoutres368 = Utils.tryParseInt(Utils.ifNotNull((Utils.asObjectOrNull(t0.previous.getReferent(), BookLinkRefReferent)).number, ""), wrapnn367)
+            inoutres368 = Utils.tryParseInt(Utils.ifNotNull((t0.previous.getReferent()).number, ""), wrapnn367)
             nn = wrapnn367.value
             if (inoutres368): 
                 if (str((nn + 1)) == num): 
@@ -332,9 +334,6 @@ class BookLinkToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (BookLinkToken.__m_termins is not None): 
             return
         BookLinkToken.__m_termins = TerminCollection()
@@ -422,7 +421,6 @@ class BookLinkToken(MetaToken):
     
     @staticmethod
     def parseStartOfLitBlock(t : 'Token') -> 'Token':
-        from pullenti.ner.core.internal.BlockLine import BlockLine
         if (t is None): 
             return None
         bl = BlockLine.create(t, None)

@@ -3,19 +3,20 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
+
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.keyword.KeywordType import KeywordType
 
-
 class KeywordMeta(ReferentClass):
     
-    def __init__(self) -> None:
+    @staticmethod
+    def initialize() -> None:
         from pullenti.ner.keyword.KeywordReferent import KeywordReferent
-        super().__init__()
-        self.addFeature(KeywordReferent.ATTR_TYPE, "Тип", 1, 1)
-        self.addFeature(KeywordReferent.ATTR_VALUE, "Значение", 1, 0)
-        self.addFeature(KeywordReferent.ATTR_NORMAL, "Нормализация", 1, 0)
-        self.addFeature(KeywordReferent.ATTR_REF, "Ссылка", 0, 0)
+        KeywordMeta.GLOBAL_META = KeywordMeta()
+        KeywordMeta.GLOBAL_META.addFeature(KeywordReferent.ATTR_TYPE, "Тип", 1, 1)
+        KeywordMeta.GLOBAL_META.addFeature(KeywordReferent.ATTR_VALUE, "Значение", 1, 0)
+        KeywordMeta.GLOBAL_META.addFeature(KeywordReferent.ATTR_NORMAL, "Нормализация", 1, 0)
+        KeywordMeta.GLOBAL_META.addFeature(KeywordReferent.ATTR_REF, "Ссылка", 0, 0)
     
     @property
     def name(self) -> str:
@@ -43,10 +44,3 @@ class KeywordMeta(ReferentClass):
         return KeywordMeta.IMAGE_OBJ
     
     GLOBAL_META = None
-    
-    # static constructor for class KeywordMeta
-    @staticmethod
-    def _static_ctor():
-        KeywordMeta.GLOBAL_META = KeywordMeta()
-
-KeywordMeta._static_ctor()

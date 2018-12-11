@@ -4,12 +4,24 @@
 
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.business.internal.EpNerBusinessInternalResourceHelper import EpNerBusinessInternalResourceHelper
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+
 from pullenti.ner.sentiment.SentimentKind import SentimentKind
 from pullenti.ner.core.GetTextAttr import GetTextAttr
-
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.Token import Token
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.business.internal.EpNerBusinessInternalResourceHelper import EpNerBusinessInternalResourceHelper
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.sentiment.internal.MetaSentiment import MetaSentiment
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.sentiment.SentimentReferent import SentimentReferent
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
+from pullenti.ner.core.MiscHelper import MiscHelper
 
 class SentimentAnalyzer(Analyzer):
     """ Семантический анализатор выделения персон """
@@ -33,12 +45,10 @@ class SentimentAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.sentiment.internal.MetaSentiment import MetaSentiment
         return [MetaSentiment._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.sentiment.internal.MetaSentiment import MetaSentiment
         res = dict()
         res[MetaSentiment.IMAGE_ID] = EpNerBusinessInternalResourceHelper.getBytes("neutral.png")
         res[MetaSentiment.IMAGE_ID_GOOD] = EpNerBusinessInternalResourceHelper.getBytes("good.png")
@@ -50,7 +60,6 @@ class SentimentAnalyzer(Analyzer):
         return ["ALL"]
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.sentiment.SentimentReferent import SentimentReferent
         if (type0_ == SentimentReferent.OBJ_TYPENAME): 
             return SentimentReferent()
         return None
@@ -64,14 +73,9 @@ class SentimentAnalyzer(Analyzer):
         return 1
     
     def createAnalyzerData(self) -> 'AnalyzerData':
-        from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
         return AnalyzerDataWithOntology()
     
     def process(self, kit : 'AnalysisKit') -> None:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.sentiment.SentimentReferent import SentimentReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.ReferentToken import ReferentToken
         ad = kit.getAnalyzerData(self)
         t = kit.first_token
         first_pass3133 = True
@@ -104,7 +108,7 @@ class SentimentAnalyzer(Analyzer):
                         t0 = tt
                         continue
                     break
-                if ((isinstance(tt, TextToken)) and (Utils.asObjectOrNull(tt, TextToken)).term == "НЕ"): 
+                if ((isinstance(tt, TextToken)) and (tt).term == "НЕ"): 
                     coef = (- coef)
                     t0 = tt
                     continue
@@ -142,11 +146,10 @@ class SentimentAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.ProcessorService import ProcessorService
         if (SentimentAnalyzer.__m_inited): 
             return
         SentimentAnalyzer.__m_inited = True
+        MetaSentiment.initialize()
         Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
         try: 
             for i in range(2):
@@ -169,7 +172,6 @@ class SentimentAnalyzer(Analyzer):
     # static constructor for class SentimentAnalyzer
     @staticmethod
     def _static_ctor():
-        from pullenti.ner.core.TerminCollection import TerminCollection
         SentimentAnalyzer.__m_termins = TerminCollection()
 
 SentimentAnalyzer._static_ctor()

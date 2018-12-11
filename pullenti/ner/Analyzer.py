@@ -6,8 +6,8 @@ import typing
 import math
 from pullenti.unisharp.Misc import ProgressEventArgs
 from pullenti.unisharp.Misc import CancelEventArgs
-from pullenti.ner.core.AnalyzerData import AnalyzerData
 
+from pullenti.ner.core.AnalyzerData import AnalyzerData
 
 class Analyzer:
     """ Базовый класс для всех семантических анализаторов """

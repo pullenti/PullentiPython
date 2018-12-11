@@ -5,6 +5,9 @@
 import io
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.Token import Token
+from pullenti.morph.MorphLang import MorphLang
 
 class Slot:
     """ Значение атрибута в конкретном экземпляре сущности """
@@ -41,8 +44,6 @@ class Slot:
         return self.__m_value
     @value.setter
     def value(self, value_) -> object:
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.Token import Token
         self.__m_value = value_
         if (self.__m_value is not None): 
             if (isinstance(self.__m_value, Referent)): 
@@ -78,12 +79,9 @@ class Slot:
         return self.owner.instance_of.findFeature(self.type_name)
     
     def __str__(self) -> str:
-        from pullenti.morph.MorphLang import MorphLang
         return self.toString(MorphLang.UNKNOWN)
     
     def toString(self, lang : 'MorphLang') -> str:
-        from pullenti.ner.Referent import Referent
-        from pullenti.morph.MorphLang import MorphLang
         res = io.StringIO()
         attr = self.defining_feature
         if (attr is not None): 
@@ -95,11 +93,11 @@ class Slot:
             print("{0}: ".format(self.type_name), end="", file=res, flush=True)
         if (self.value is not None): 
             if (isinstance(self.value, Referent)): 
-                print((Utils.asObjectOrNull(self.value, Referent)).toString(False, lang, 0), end="", file=res)
+                print((self.value).toString(False, lang, 0), end="", file=res)
             elif (attr is None): 
                 print(str(self.value), end="", file=res)
             else: 
-                print(attr.convertInnerValueToOuterValue(self.value, MorphLang()), end="", file=res)
+                print(attr.convertInnerValueToOuterValue(self.value, None), end="", file=res)
         return Utils.toStringStringIO(res)
     
     def convertValueToString(self, lang : 'MorphLang') -> str:

@@ -3,19 +3,20 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.ReferentClass import ReferentClass
 
+from pullenti.ner.ReferentClass import ReferentClass
 
 class MoneyMeta(ReferentClass):
     
-    def __init__(self) -> None:
+    @staticmethod
+    def initialize() -> None:
         from pullenti.ner.money.MoneyReferent import MoneyReferent
-        super().__init__()
-        self.addFeature(MoneyReferent.ATTR_CURRENCY, "Валюта", 1, 1)
-        self.addFeature(MoneyReferent.ATTR_VALUE, "Значение", 1, 1)
-        self.addFeature(MoneyReferent.ATTR_REST, "Остаток (100)", 0, 1)
-        self.addFeature(MoneyReferent.ATTR_ALTVALUE, "Другое значение", 1, 1)
-        self.addFeature(MoneyReferent.ATTR_ALTREST, "Другой остаток (100)", 0, 1)
+        MoneyMeta.GLOBAL_META = MoneyMeta()
+        MoneyMeta.GLOBAL_META.addFeature(MoneyReferent.ATTR_CURRENCY, "Валюта", 1, 1)
+        MoneyMeta.GLOBAL_META.addFeature(MoneyReferent.ATTR_VALUE, "Значение", 1, 1)
+        MoneyMeta.GLOBAL_META.addFeature(MoneyReferent.ATTR_REST, "Остаток (100)", 0, 1)
+        MoneyMeta.GLOBAL_META.addFeature(MoneyReferent.ATTR_ALTVALUE, "Другое значение", 1, 1)
+        MoneyMeta.GLOBAL_META.addFeature(MoneyReferent.ATTR_ALTREST, "Другой остаток (100)", 0, 1)
     
     @property
     def name(self) -> str:
@@ -39,10 +40,3 @@ class MoneyMeta(ReferentClass):
         return MoneyMeta.IMAGE_ID
     
     GLOBAL_META = None
-    
-    # static constructor for class MoneyMeta
-    @staticmethod
-    def _static_ctor():
-        MoneyMeta.GLOBAL_META = MoneyMeta()
-
-MoneyMeta._static_ctor()

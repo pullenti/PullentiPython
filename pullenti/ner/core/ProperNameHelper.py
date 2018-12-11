@@ -4,19 +4,31 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.NumberSpellingType import NumberSpellingType
 
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.ner.Token import Token
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
 
 class ProperNameHelper:
     """ Поддержка работы с собственными именами """
     
     @staticmethod
     def __corrChars(str0_ : str, ci : 'CharsInfo', keep_chars : bool) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (not keep_chars): 
             return str0_
         if (ci.is_all_lower): 
@@ -37,14 +49,6 @@ class ProperNameHelper:
             ignore_geo_referent(bool): игнорировать внутри географические сущности
         
         """
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.morph.Morphology import Morphology
-        from pullenti.morph.MorphCase import MorphCase
         res = None
         if (BracketHelper.canBeStartOfSequence(begin, False, False) and BracketHelper.canBeEndOfSequence(end, False, begin, False)): 
             begin = begin.next0_
@@ -57,16 +61,16 @@ class ProperNameHelper:
             if (npt is not None and npt.end_token.end_char > end.end_char): 
                 npt = (None)
             if (npt is not None): 
-                res = npt.getNormalCaseText(MorphClass(), normal_first_group_single, MorphGender.UNDEFINED, False)
+                res = npt.getNormalCaseText(None, normal_first_group_single, MorphGender.UNDEFINED, False)
                 te = npt.end_token.next0_
                 if (((te is not None and te.next0_ is not None and te.is_comma) and (isinstance(te.next0_, TextToken)) and te.next0_.end_char <= end.end_char) and te.next0_.morph.class0_.is_verb and te.next0_.morph.class0_.is_adjective): 
                     for it in te.next0_.morph.items: 
                         if (it.gender == npt.morph.gender or (((it.gender) & (npt.morph.gender))) != (MorphGender.UNDEFINED)): 
                             if (not ((it.case_) & npt.morph.case_).is_undefined): 
                                 if (it.number == npt.morph.number or (((it.number) & (npt.morph.number))) != (MorphNumber.UNDEFINED)): 
-                                    var = (Utils.asObjectOrNull(te.next0_, TextToken)).term
+                                    var = (te.next0_).term
                                     if (isinstance(it, MorphWordForm)): 
-                                        var = (Utils.asObjectOrNull(it, MorphWordForm)).normal_case
+                                        var = (it).normal_case
                                     bi = MorphBaseInfo._new514(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
                                     var = Morphology.getWordform(var, bi)
                                     if (var is not None): 
@@ -112,21 +116,11 @@ class ProperNameHelper:
             end(Token): 
         
         """
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.morph.MorphCase import MorphCase
         res = ProperNameHelper.getNameEx(begin, end, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, False, False)
         return res
     
     @staticmethod
     def getNameEx(begin : 'Token', end : 'Token', cla : 'MorphClass', mc : 'MorphCase', gender : 'MorphGender'=MorphGender.UNDEFINED, ignore_brackets_and_hiphens : bool=False, ignore_geo_referent : bool=False) -> str:
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.morph.MorphCase import MorphCase
-        from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.ner.NumberToken import NumberToken
         if (end is None or begin is None): 
             return None
         if (begin.end_char > end.begin_char and begin != end): 
@@ -238,13 +232,13 @@ class ProperNameHelper:
                         print(' ', end="", file=res)
                 nt = Utils.asObjectOrNull(t, NumberToken)
                 if ((t.morph.class0_.is_adjective and nt.typ == NumberSpellingType.WORDS and nt.begin_token == nt.end_token) and (isinstance(nt.begin_token, TextToken))): 
-                    print((Utils.asObjectOrNull(nt.begin_token, TextToken)).term, end="", file=res)
+                    print((nt.begin_token).term, end="", file=res)
                 else: 
                     print(nt.value, end="", file=res)
             elif (isinstance(t, MetaToken)): 
                 if ((ignore_geo_referent and t != begin and t.getReferent() is not None) and t.getReferent().type_name == "GEO"): 
                     continue
-                s = ProperNameHelper.getNameEx((Utils.asObjectOrNull(t, MetaToken)).begin_token, (Utils.asObjectOrNull(t, MetaToken)).end_token, cla, mc, gender, ignore_brackets_and_hiphens, ignore_geo_referent)
+                s = ProperNameHelper.getNameEx((t).begin_token, (t).end_token, cla, mc, gender, ignore_brackets_and_hiphens, ignore_geo_referent)
                 if (not Utils.isNullOrEmpty(s)): 
                     if (res.tell() > 0): 
                         if (not t.is_whitespace_before and Utils.getCharAtStringIO(res, res.tell() - 1) == '-'): 

@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class CanBeEqualsAttrs(IntEnum):
     """ Атрибуты функции CanBeEqualsEx """
     NO = 0

@@ -4,8 +4,8 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 
 class MorphRuleVariant(MorphBaseInfo):
     

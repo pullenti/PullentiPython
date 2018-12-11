@@ -6,12 +6,22 @@ import typing
 import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.MorphCollection import MorphCollection
+from pullenti.ner.core.TerminToken import TerminToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.Token import Token
+from pullenti.ner.TextToken import TextToken
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.NumberToken import NumberToken
 
 class Termin:
     """ Термин, понятие, система обозначений чего-либо и варианты его написания """
@@ -20,6 +30,7 @@ class Termin:
         """ Элемент термина (слово или число) """
         
         def __init__(self, src : 'TextToken', add_lemma_variant : bool=False, number : int=0) -> None:
+            from pullenti.morph.MorphGender import MorphGender
             from pullenti.morph.MorphWordForm import MorphWordForm
             self.__m_source = None;
             self.is_pattern_any = False
@@ -81,17 +92,19 @@ class Termin:
         @property
         def gender(self) -> 'MorphGender':
             """ Род """
+            from pullenti.morph.MorphGender import MorphGender
             from pullenti.morph.MorphWordForm import MorphWordForm
             if (self.__m_gender != MorphGender.UNDEFINED): 
                 return self.__m_gender
             res = MorphGender.UNDEFINED
             if (self.__m_source is not None): 
                 for wf in self.__m_source.morph.items: 
-                    if ((Utils.asObjectOrNull(wf, MorphWordForm)).is_in_dictionary): 
+                    if ((wf).is_in_dictionary): 
                         res = (Utils.valToEnum((res) | (wf.gender), MorphGender))
             return res
         @gender.setter
         def gender(self, value) -> 'MorphGender':
+            from pullenti.morph.MorphGender import MorphGender
             self.__m_gender = value
             if (self.__m_source is not None): 
                 for i in range(self.__m_source.morph.items_count - 1, -1, -1):
@@ -144,8 +157,8 @@ class Termin:
             return self.__check(t, 0)
         
         def __check(self, t : 'Token', lev : int) -> bool:
-            from pullenti.ner.TextToken import TextToken
             from pullenti.ner.MetaToken import MetaToken
+            from pullenti.ner.TextToken import TextToken
             from pullenti.ner.NumberToken import NumberToken
             if (lev > 10): 
                 return False
@@ -160,13 +173,13 @@ class Termin:
                 return False
             if (isinstance(t, NumberToken)): 
                 if (self.is_number): 
-                    return self.__m_number == (Utils.asObjectOrNull(t, NumberToken)).value
+                    return self.__m_number == (t).value
                 if (self.__m_source is not None): 
                     wrapval627 = RefOutArgWrapper(0)
                     inoutres628 = Utils.tryParseInt(self.__m_source.term, wrapval627)
                     val = wrapval627.value
                     if (inoutres628): 
-                        return val == (Utils.asObjectOrNull(t, NumberToken)).value
+                        return val == (t).value
                 return False
             if (isinstance(t, MetaToken)): 
                 mt = Utils.asObjectOrNull(t, MetaToken)
@@ -222,10 +235,11 @@ class Termin:
             return Utils.toStringStringIO(res)
         
         def tryAttach(self, t0 : 'Token') -> 'TerminToken':
+            from pullenti.ner.Token import Token
             from pullenti.ner.TextToken import TextToken
             from pullenti.ner.MetaToken import MetaToken
-            from pullenti.ner.core.TerminToken import TerminToken
             from pullenti.ner.MorphCollection import MorphCollection
+            from pullenti.ner.core.TerminToken import TerminToken
             t1 = Utils.asObjectOrNull(t0, TextToken)
             if (t1 is None): 
                 return None
@@ -319,7 +333,7 @@ class Termin:
             res.value = _arg1
             return res
     
-    def __init__(self, source : str=None, lang_ : 'MorphLang'=MorphLang(), source_is_normal : bool=False) -> None:
+    def __init__(self, source : str=None, lang_ : 'MorphLang'=None, source_is_normal : bool=False) -> None:
         """ Создать термин из строки с добавлением всех морфологических вариантов написания
         
         Args:
@@ -328,8 +342,6 @@ class Termin:
             source_is_normal(bool): при true морфварианты не добавляются 
          (эквивалентно вызову InitByNormalText)
         """
-        from pullenti.morph.Morphology import Morphology
-        from pullenti.ner.TextToken import TextToken
         self.terms = list()
         self.additional_vars = None
         self.__m_canonic_text = None;
@@ -357,7 +369,7 @@ class Termin:
     
     ASSIGN_ALL_TEXTS_AS_NORMAL = False
     
-    def initByNormalText(self, text : str, lang_ : 'MorphLang'=MorphLang()) -> None:
+    def initByNormalText(self, text : str, lang_ : 'MorphLang'=None) -> None:
         """ Быстрая инициализация без морф.вариантов, производится только
          токенизация текста. Используется для ускорения работы со словарём в случае,
          когда изначально известно, что на входе уже нормализованные строки
@@ -366,8 +378,6 @@ class Termin:
             text(str): исходно нормализованный текст
             lang_(MorphLang): возможный язык
         """
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.Morphology import Morphology
         if (Utils.isNullOrEmpty(text)): 
             return
         text = text.upper()
@@ -405,8 +415,6 @@ class Termin:
         self.lang = MorphLang(lang_)
     
     def initBy(self, begin : 'Token', end : 'Token', tag_ : object=None, add_lemma_variant : bool=False) -> None:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
         if (tag_ is not None): 
             self.tag = tag_
         t = begin
@@ -417,7 +425,7 @@ class Termin:
             if (tt is not None): 
                 self.terms.append(Termin.Term(tt, add_lemma_variant))
             elif (isinstance(t, NumberToken)): 
-                self.terms.append(Termin.Term(None, False, (Utils.asObjectOrNull(t, NumberToken)).value))
+                self.terms.append(Termin.Term(None, False, (t).value))
             if (t == end): 
                 break
             t = t.next0_
@@ -667,19 +675,13 @@ class Termin:
             fullWordsOnly: 
         
         """
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.TerminToken import TerminToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.MorphCollection import MorphCollection
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+        from pullenti.ner.core.BracketHelper import BracketHelper
         if (t0 is None): 
             return None
         term = None
         if (isinstance(t0, TextToken)): 
-            term = (Utils.asObjectOrNull(t0, TextToken)).term
+            term = (t0).term
         if (self.acronym_smart is not None and (((pars) & (TerminParseAttr.FULLWORDSONLY))) == (TerminParseAttr.NO) and term is not None): 
             if (self.acronym_smart == term): 
                 if (t0.next0_ is not None and t0.next0_.isChar('.') and not t0.is_whitespace_after): 
@@ -745,8 +747,8 @@ class Termin:
                     tt = tt.next0_
                 if ((isinstance(tt, ReferentToken)) and e0_ is None): 
                     eup = tt
-                    e0_ = (Utils.asObjectOrNull(tt, ReferentToken)).end_token
-                    tt = (Utils.asObjectOrNull(tt, ReferentToken)).begin_token
+                    e0_ = (tt).end_token
+                    tt = (tt).begin_token
                 if (tt is None): 
                     ok = False
                     break
@@ -760,8 +762,8 @@ class Termin:
                         if (((i + 2) < len(self.terms)) and self.terms[i + 1].is_hiphen and self.terms[i + 2].checkByPrefToken(self.terms[i], Utils.asObjectOrNull(tt, TextToken))): 
                             i += 2
                             ok = True
-                        elif (((not tt.is_whitespace_after and tt.next0_ is not None and (isinstance(tt, TextToken))) and (Utils.asObjectOrNull(tt, TextToken)).length_char == 1 and tt.next0_.isCharOf("\"'`’“”")) and not tt.next0_.is_whitespace_after and (isinstance(tt.next0_.next0_, TextToken))): 
-                            if (self.terms[i].checkByStrPrefToken((Utils.asObjectOrNull(tt, TextToken)).term, Utils.asObjectOrNull(tt.next0_.next0_, TextToken))): 
+                        elif (((not tt.is_whitespace_after and tt.next0_ is not None and (isinstance(tt, TextToken))) and (tt).length_char == 1 and tt.next0_.isCharOf("\"'`’“”")) and not tt.next0_.is_whitespace_after and (isinstance(tt.next0_.next0_, TextToken))): 
+                            if (self.terms[i].checkByStrPrefToken((tt).term, Utils.asObjectOrNull(tt.next0_.next0_, TextToken))): 
                                 ok = True
                                 tt = tt.next0_.next0_
                         if (not ok): 
@@ -853,7 +855,7 @@ class Termin:
                 if (r.abridge_without_point and len(self.terms) > 0): 
                     if (not ((isinstance(t0, TextToken)))): 
                         continue
-                    if (a.parts[0].value != (Utils.asObjectOrNull(t0, TextToken)).term): 
+                    if (a.parts[0].value != (t0).term): 
                         continue
                 if (res is None or (res.length_char < r.length_char)): 
                     res = r

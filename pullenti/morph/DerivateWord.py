@@ -4,16 +4,16 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.MorphAspect import MorphAspect
+
 from pullenti.morph.MorphVoice import MorphVoice
 from pullenti.morph.MorphTense import MorphTense
-
+from pullenti.morph.ExplanWordAttr import ExplanWordAttr
+from pullenti.morph.MorphAspect import MorphAspect
 
 class DerivateWord:
     """ Слово толкового словаря """
     
     def __init__(self, gr : 'DerivateGroup') -> None:
-        from pullenti.morph.ExplanWordAttr import ExplanWordAttr
         self.group = None;
         self.spelling = None;
         self.class0_ = None;

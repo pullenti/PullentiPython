@@ -6,17 +6,18 @@ import datetime
 import math
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.ner.date.DatePointerType import DatePointerType
+
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.core.NumberHelper import NumberHelper
-
+from pullenti.ner.date.DatePointerType import DatePointerType
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.date.internal.MetaDate import MetaDate
+from pullenti.ner.Referent import Referent
 
 class DateReferent(Referent):
     """ Сущность, представляющая дату """
     
     def __init__(self) -> None:
-        from pullenti.ner.date.internal.MetaDate import MetaDate
         super().__init__(DateReferent.OBJ_TYPENAME)
         self.instance_of = MetaDate.GLOBAL_META
     
@@ -220,11 +221,10 @@ class DateReferent(Referent):
             return True
         return False
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         return self._ToString(short_variant, lang, lev, 0)
     
     def _ToString(self, short_variant : bool, lang : 'MorphLang', lev : int, from_range : int) -> str:
-        from pullenti.ner.date.internal.MetaDate import MetaDate
         res = io.StringIO()
         p = self.pointer
         if (lang is None): 

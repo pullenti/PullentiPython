@@ -4,8 +4,9 @@
 
 import datetime
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.DerivateWord import DerivateWord
 
+from pullenti.morph.DerivateWord import DerivateWord
+from pullenti.morph.MorphLang import MorphLang
 
 class DerivateGroup:
     """ Дериватная группа """

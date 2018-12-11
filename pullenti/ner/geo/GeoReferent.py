@@ -5,18 +5,21 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
+
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.Referent import Referent
+from pullenti.ner.geo.internal.MetaGeo import MetaGeo
 
 class GeoReferent(Referent):
     """ Сущность, описывающая территорию как административную единицу.
      Это страны, автономные образования, области, административные районы и пр. """
     
     def __init__(self) -> None:
-        from pullenti.ner.geo.internal.MetaGeo import MetaGeo
         super().__init__(GeoReferent.OBJ_TYPENAME)
         self.__m_tmp_bits = 0
         self.__m_higher = None;
@@ -38,17 +41,16 @@ class GeoReferent(Referent):
     
     ATTR_BTI = "BTI"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         return self.__ToString(short_variant, lang, True, lev)
     
     def __ToString(self, short_variant : bool, lang : 'MorphLang', out_cladr : bool, lev : int) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (self.is_union and not self.is_state): 
             res = io.StringIO()
             print(self.getStringValue(GeoReferent.ATTR_TYPE), end="", file=res)
             for s in self.slots: 
                 if (s.type_name == GeoReferent.ATTR_REF and (isinstance(s.value, Referent))): 
-                    print("; {0}".format((Utils.asObjectOrNull(s.value, Referent)).toString(True, lang, 0)), end="", file=res, flush=True)
+                    print("; {0}".format((s.value).toString(True, lang, 0)), end="", file=res, flush=True)
             return Utils.toStringStringIO(res)
         name = MiscHelper.convertFirstCharUpperAndOtherLower(self.__getName(lang is not None and lang.is_en))
         if (not short_variant): 
@@ -66,7 +68,7 @@ class GeoReferent(Referent):
         if (not short_variant and out_cladr): 
             kladr = self.getSlotValue(GeoReferent.ATTR_FIAS)
             if (isinstance(kladr, Referent)): 
-                name = "{0} (ФИАС: {1})".format(name, Utils.ifNotNull((Utils.asObjectOrNull(kladr, Referent)).getStringValue("GUID"), "?"))
+                name = "{0} (ФИАС: {1})".format(name, Utils.ifNotNull((kladr).getStringValue("GUID"), "?"))
             bti = self.getStringValue(GeoReferent.ATTR_BTI)
             if (bti is not None): 
                 name = "{0} (БТИ {1})".format(name, bti)
@@ -514,14 +516,13 @@ class GeoReferent(Referent):
         self._mergeExtReferents(obj)
     
     def createOntologyItem(self) -> 'IntOntologyItem':
-        from pullenti.ner.core.Termin import Termin
         is_city_ = self.is_city
         oi = IntOntologyItem(self)
         for a in self.slots: 
             if (a.type_name == GeoReferent.ATTR_NAME): 
                 s = str(a.value)
                 t = Termin()
-                t.initByNormalText(s, MorphLang())
+                t.initByNormalText(s, None)
                 if (is_city_): 
                     t.addStdAbridges()
                 oi.termins.append(t)
@@ -598,14 +599,14 @@ class GeoReferent(Referent):
             for s in org0_.slots: 
                 if (s.type_name == "EPONYM"): 
                     if (num is None): 
-                        self._addName((Utils.asObjectOrNull(s.value, str)).upper())
+                        self._addName((s.value).upper())
                     else: 
-                        self._addName("{0}-{1}".format((Utils.asObjectOrNull(s.value, str)).upper(), num))
+                        self._addName("{0}-{1}".format((s.value).upper(), num))
                     nam = True
         if (not nam and num is not None): 
             for s in org0_.slots: 
                 if (s.type_name == "TYPE"): 
-                    self._addName("{0}-{1}".format((Utils.asObjectOrNull(s.value, str)).upper(), num))
+                    self._addName("{0}-{1}".format((s.value).upper(), num))
                     nam = True
         if (geo_ is not None and not nam): 
             for n in geo_.getStringValues(GeoReferent.ATTR_NAME): 

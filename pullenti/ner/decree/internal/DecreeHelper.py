@@ -6,12 +6,23 @@ import datetime
 import math
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.decree.DecreeKind import DecreeKind
-from pullenti.ner.decree.internal.CanonicDecreeRefUri import CanonicDecreeRefUri
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.NumberExType import NumberExType
 
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NumberExType import NumberExType
+from pullenti.ner.money.MoneyReferent import MoneyReferent
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.decree.internal.CanonicDecreeRefUri import CanonicDecreeRefUri
+from pullenti.ner.decree.DecreeKind import DecreeKind
+from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.NumberExToken import NumberExToken
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.decree.internal.PartToken import PartToken
+from pullenti.ner.decree.internal.DecreeToken import DecreeToken
 
 class DecreeHelper:
     """ Некоторые полезные функции для НПА """
@@ -58,15 +69,6 @@ class DecreeHelper:
             t(Token): 
         
         """
-        from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
         if (not ((isinstance(t, ReferentToken)))): 
             return None
         dr = Utils.asObjectOrNull(t.getReferent(), DecreeReferent)
@@ -76,7 +78,7 @@ class DecreeHelper:
             res = CanonicDecreeRefUri._new833(t.kit.sofa.text, dr, t.begin_char, t.end_char)
             if ((t.previous is not None and t.previous.isChar('(') and t.next0_ is not None) and t.next0_.isChar(')')): 
                 return res
-            if ((Utils.asObjectOrNull(t, ReferentToken)).misc_attrs != 0): 
+            if ((t).misc_attrs != 0): 
                 return res
             rt = Utils.asObjectOrNull(t, ReferentToken)
             if (rt.begin_token.isChar('(') and rt.end_token.isChar(')')): 
@@ -84,7 +86,7 @@ class DecreeHelper:
                 return res
             next_decree_items = None
             if ((t.next0_ is not None and t.next0_.is_comma_and and (isinstance(t.next0_.next0_, ReferentToken))) and (isinstance(t.next0_.next0_.getReferent(), DecreeReferent))): 
-                next_decree_items = DecreeToken.tryAttachList((Utils.asObjectOrNull(t.next0_.next0_, ReferentToken)).begin_token, None, 10, False)
+                next_decree_items = DecreeToken.tryAttachList((t.next0_.next0_).begin_token, None, 10, False)
                 if (next_decree_items is not None and len(next_decree_items) > 1): 
                     i = 0
                     while i < (len(next_decree_items) - 1): 
@@ -94,7 +96,7 @@ class DecreeHelper:
                         i += 1
             was_typ = False
             was_num = False
-            tt = (Utils.asObjectOrNull(t, MetaToken)).begin_token
+            tt = (t).begin_token
             first_pass2845 = True
             while True:
                 if first_pass2845: first_pass2845 = False
@@ -217,7 +219,7 @@ class DecreeHelper:
         res = CanonicDecreeRefUri._new835(t.kit.sofa.text, dpr, t.begin_char, t1.end_char, has_diap)
         if ((t.previous is not None and t.previous.isChar('(') and t1.next0_ is not None) and t1.next0_.isChar(')')): 
             return res
-        tt = (Utils.asObjectOrNull(t, MetaToken)).begin_token
+        tt = (t).begin_token
         while tt is not None and tt.end_char <= t.end_char: 
             if (isinstance(tt.getReferent(), DecreeReferent)): 
                 if (tt.begin_char > t.begin_char): 
@@ -253,7 +255,7 @@ class DecreeHelper:
                 max2 = co
                 ptmin2 = pt
         if (ptmin != PartToken.ItemType.PREFIX): 
-            tt = (Utils.asObjectOrNull(t, MetaToken)).begin_token
+            tt = (t).begin_token
             while tt is not None and tt.end_char <= res.end_char: 
                 if (tt.begin_char >= res.begin_char): 
                     pt = PartToken.tryAttach(tt, None, False, False)
@@ -264,7 +266,7 @@ class DecreeHelper:
                             res.end_char = pt.end_token.previous.end_char
                         if (pt.end_char == t.end_char): 
                             if ((t.next0_ is not None and t.next0_.is_comma_and and (isinstance(t.next0_.next0_, ReferentToken))) and (isinstance(t.next0_.next0_.getReferent(), DecreePartReferent))): 
-                                tt1 = (Utils.asObjectOrNull(t.next0_.next0_, ReferentToken)).begin_token
+                                tt1 = (t.next0_.next0_).begin_token
                                 ok = True
                                 if (tt1.chars.is_letter): 
                                     ok = False
@@ -288,7 +290,7 @@ class DecreeHelper:
                     tt = tt.next0_
                 return res
         if (((has_same_before or has_same_after)) and ptmin != PartToken.ItemType.PREFIX): 
-            tt = (Utils.asObjectOrNull(t, MetaToken)).begin_token
+            tt = (t).begin_token
             first_pass2847 = True
             while True:
                 if first_pass2847: first_pass2847 = False
@@ -325,7 +327,7 @@ class DecreeHelper:
                                     tt = tt.next0_.next0_
                                     res.end_char = tt.end_char
                             elif (tt.next0_.next0_ is not None and (isinstance(tt.next0_.next0_.getReferent(), DecreePartReferent)) and has_diap): 
-                                res.end_char = (Utils.asObjectOrNull(tt.next0_.next0_, MetaToken)).begin_token.end_char
+                                res.end_char = (tt.next0_.next0_).begin_token.end_char
                         return res
                     if (BracketHelper.canBeStartOfSequence(tt, True, False) and tt.begin_char == res.begin_char and has_same_before): 
                         br = BracketHelper.tryParse(tt, BracketParseAttr.NO, 100)
@@ -334,7 +336,7 @@ class DecreeHelper:
                             return res
             return res
         if (not has_same_before and not has_same_after and ptmin != PartToken.ItemType.PREFIX): 
-            tt = (Utils.asObjectOrNull(t, MetaToken)).begin_token
+            tt = (t).begin_token
             while tt is not None and tt.end_char <= res.end_char: 
                 if (tt.begin_char >= res.begin_char): 
                     pts = PartToken.tryAttachList(tt, False, 40)
@@ -350,7 +352,7 @@ class DecreeHelper:
                                 if (isinstance(tt.next0_.next0_, NumberToken)): 
                                     res.end_char = tt.next0_.next0_.end_char
                                 elif (tt.next0_.next0_ is not None and (isinstance(tt.next0_.next0_.getReferent(), DecreePartReferent)) and has_diap): 
-                                    res.end_char = (Utils.asObjectOrNull(tt.next0_.next0_, MetaToken)).begin_token.end_char
+                                    res.end_char = (tt.next0_.next0_).begin_token.end_char
                             return res
                         i += 1
                 tt = tt.next0_
@@ -358,8 +360,6 @@ class DecreeHelper:
     
     @staticmethod
     def __hasSameDecree(t : 'Token', dpr : 'DecreePartReferent', before : bool) -> bool:
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.decree.internal.PartToken import PartToken
         if (((t.previous if before else t.next0_)) is None): 
             return False
         t = (((t.previous if before else t.next0_)))
@@ -403,11 +403,6 @@ class DecreeHelper:
             nds(float): 
         
         """
-        from pullenti.ner.money.MoneyReferent import MoneyReferent
-        from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.NumberExToken import NumberExToken
         if (t is None or nds <= 0): 
             return None
         m = Utils.asObjectOrNull(t.getReferent(), MoneyReferent)

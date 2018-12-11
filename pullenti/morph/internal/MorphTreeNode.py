@@ -9,7 +9,7 @@ class MorphTreeNode:
         self.nodes = None;
         self.rules = None;
         self.reverce_variants = None;
-        self._lazy = None
+        self.lazy_pos = 0
     
     def calcTotalNodes(self) -> int:
         res = 0
@@ -20,9 +20,3 @@ class MorphTreeNode:
     
     def __str__(self) -> str:
         return "{0} ({1}, {2})".format("?", self.calcTotalNodes(), (0 if self.rules is None else len(self.rules)))
-    
-    def _load(self) -> None:
-        if (self._lazy is None): 
-            return
-        self._lazy.loadNode(self)
-        self._lazy = (None)

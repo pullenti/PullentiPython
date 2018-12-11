@@ -6,10 +6,21 @@ import typing
 import datetime
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
-from pullenti.ner.NumberSpellingType import NumberSpellingType
 
+from pullenti.ner.Token import Token
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.denomination.internal.MetaDenom import MetaDenom
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.denomination.DenominationReferent import DenominationReferent
+from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
 
 class DenominationAnalyzer(Analyzer):
     """ Анализатор деноминаций и обозначений """
@@ -41,24 +52,20 @@ class DenominationAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.denomination.internal.MetaDenom import MetaDenom
         return [MetaDenom._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.denomination.internal.MetaDenom import MetaDenom
         res = dict()
         res[MetaDenom.DENOM_IMAGE_ID] = EpNerBankInternalResourceHelper.getBytes("denom.png")
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.denomination.DenominationReferent import DenominationReferent
         if (type0_ == DenominationReferent.OBJ_TYPENAME): 
             return DenominationReferent()
         return None
     
     def createAnalyzerData(self) -> 'AnalyzerData':
-        from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
         return AnalyzerDataWithOntology()
     
     def process(self, kit : 'AnalysisKit') -> None:
@@ -69,10 +76,6 @@ class DenominationAnalyzer(Analyzer):
             lastStage: 
         
         """
-        from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.denomination.DenominationReferent import DenominationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         ad = Utils.asObjectOrNull(kit.getAnalyzerData(self), AnalyzerDataWithOntology)
         for k in range(2):
             detect_new_denoms = False
@@ -131,8 +134,6 @@ class DenominationAnalyzer(Analyzer):
                 break
     
     def __canBeStartOfDenom(self, t : 'Token') -> bool:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
         if ((t is None or not t.chars.is_letter or t.next0_ is None) or t.is_newline_after): 
             return False
         if (not ((isinstance(t, TextToken)))): 
@@ -154,11 +155,6 @@ class DenominationAnalyzer(Analyzer):
         return self.tryAttach(begin, False)
     
     def tryAttach(self, t : 'Token', for_ontology : bool=False) -> 'ReferentToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.denomination.DenominationReferent import DenominationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         rt0 = self.__tryAttachSpec(t)
@@ -237,10 +233,6 @@ class DenominationAnalyzer(Analyzer):
             t(Token): 
         
         """
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.denomination.DenominationReferent import DenominationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         t0 = t
@@ -256,12 +248,11 @@ class DenominationAnalyzer(Analyzer):
                     return ReferentToken(dr, t0, t.next0_)
         if (((nt is not None and nt.typ == NumberSpellingType.DIGIT and (isinstance(t.next0_, TextToken))) and not t.is_whitespace_after and not t.next0_.chars.is_all_lower) and t.next0_.chars.is_letter): 
             dr = DenominationReferent()
-            dr.addSlot(DenominationReferent.ATTR_VALUE, "{0}{1}".format(nt.getSourceText(), (Utils.asObjectOrNull(t.next0_, TextToken)).term), False, 0)
+            dr.addSlot(DenominationReferent.ATTR_VALUE, "{0}{1}".format(nt.getSourceText(), (t.next0_).term), False, 0)
             return ReferentToken(dr, t0, t.next0_)
         return None
     
     def __checkAttach(self, begin : 'Token', end : 'Token') -> bool:
-        from pullenti.ner.core.BracketHelper import BracketHelper
         t = begin
         while t is not None and t != end.next0_: 
             if (t != begin): 
@@ -283,8 +274,8 @@ class DenominationAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.ProcessorService import ProcessorService
         if (DenominationAnalyzer.__m_inites): 
             return
         DenominationAnalyzer.__m_inites = True
+        MetaDenom.initialize()
         ProcessorService.registerAnalyzer(DenominationAnalyzer())

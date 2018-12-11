@@ -6,21 +6,27 @@ import typing
 import io
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.NumberHelper import NumberHelper
+
+from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.Token import Token
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.MiscHelper import MiscHelper
 
 class OrgItemEponymToken(MetaToken):
     
     class PersonItemType(IntEnum):
         SURNAME = 0
-        NAME = 0 + 1
-        INITIAL = (0 + 1) + 1
-        AND = ((0 + 1) + 1) + 1
-        LOCASEWORD = (((0 + 1) + 1) + 1) + 1
+        NAME = 1
+        INITIAL = 2
+        AND = 3
+        LOCASEWORD = 4
         
         @classmethod
         def has_value(cls, value):
@@ -78,7 +84,7 @@ class OrgItemEponymToken(MetaToken):
                 if (tt.morph.class0_.is_proper_name): 
                     res.append(OrgItemEponymToken.PersonItemToken._new1690(t, t, OrgItemEponymToken.PersonItemType.NAME, s))
                 elif ((t.next0_ is not None and t.next0_.is_hiphen and (isinstance(t.next0_.next0_, TextToken))) and not t.next0_.is_whitespace_after): 
-                    res.append(OrgItemEponymToken.PersonItemToken._new1690(t, t.next0_.next0_, OrgItemEponymToken.PersonItemType.SURNAME, "{0}-{1}".format(s, (Utils.asObjectOrNull(t.next0_.next0_, TextToken)).term)))
+                    res.append(OrgItemEponymToken.PersonItemToken._new1690(t, t.next0_.next0_, OrgItemEponymToken.PersonItemType.SURNAME, "{0}-{1}".format(s, (t.next0_.next0_).term)))
                     t = t.next0_.next0_
                 else: 
                     res.append(OrgItemEponymToken.PersonItemToken._new1690(t, t, OrgItemEponymToken.PersonItemType.SURNAME, s))
@@ -110,12 +116,7 @@ class OrgItemEponymToken(MetaToken):
     
     @staticmethod
     def tryAttach(t : 'Token', must_has_prefix : bool=False) -> 'OrgItemEponymToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         from pullenti.ner.org.internal.OrgItemNameToken import OrgItemNameToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             if (t is None): 

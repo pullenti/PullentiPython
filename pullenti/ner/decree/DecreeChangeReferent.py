@@ -5,16 +5,18 @@
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
 
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
+from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
+from pullenti.ner.decree.internal.MetaDecreeChange import MetaDecreeChange
+from pullenti.ner.Referent import Referent
 
 class DecreeChangeReferent(Referent):
     """ Модель изменения структурной части НПА """
     
     def __init__(self) -> None:
-        from pullenti.ner.decree.internal.MetaDecreeChange import MetaDecreeChange
         super().__init__(DecreeChangeReferent.OBJ_TYPENAME)
         self.instance_of = MetaDecreeChange.GLOBAL_META
     
@@ -32,8 +34,7 @@ class DecreeChangeReferent(Referent):
     
     ATTR_MISC = "MISC"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        from pullenti.ner.decree.internal.MetaDecreeChange import MetaDecreeChange
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         if (self.kind != DecreeChangeKind.UNDEFINED): 
             print("{0} ".format(MetaDecreeChange.KIND_FEATURE.convertInnerValueToOuterValue(self.kind, lang)), end="", file=res, flush=True)
@@ -101,7 +102,6 @@ class DecreeChangeReferent(Referent):
     @property
     def value(self) -> 'DecreeChangeValueReferent':
         """ Значение """
-        from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
         return Utils.asObjectOrNull(self.getSlotValue(DecreeChangeReferent.ATTR_VALUE), DecreeChangeValueReferent)
     @value.setter
     def value(self, value_) -> 'DecreeChangeValueReferent':
@@ -111,7 +111,6 @@ class DecreeChangeReferent(Referent):
     @property
     def param(self) -> 'DecreeChangeValueReferent':
         """ Дополнительный параметр (для типа Exchange - что заменяется, для Append - после чего) """
-        from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
         return Utils.asObjectOrNull(self.getSlotValue(DecreeChangeReferent.ATTR_PARAM), DecreeChangeValueReferent)
     @param.setter
     def param(self, value_) -> 'DecreeChangeValueReferent':
@@ -152,7 +151,6 @@ class DecreeChangeReferent(Referent):
         return obj == self
     
     def _checkCorrect(self) -> bool:
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
         if (self.kind == DecreeChangeKind.UNDEFINED): 
             return False
         if (self.kind == DecreeChangeKind.EXPIRE or self.kind == DecreeChangeKind.REMOVE): 

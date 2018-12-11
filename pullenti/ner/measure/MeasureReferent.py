@@ -6,17 +6,18 @@ import typing
 import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Referent import Referent
-from pullenti.ner.measure.internal.MeasureHelper import MeasureHelper
-from pullenti.ner.measure.MeasureKind import MeasureKind
-from pullenti.morph.MorphLang import MorphLang
 
+from pullenti.ner.measure.UnitReferent import UnitReferent
+from pullenti.ner.measure.MeasureKind import MeasureKind
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.measure.internal.MeasureMeta import MeasureMeta
+from pullenti.ner.measure.internal.MeasureHelper import MeasureHelper
 
 class MeasureReferent(Referent):
     """ Величина или диапазон величин, измеряемая в некоторых единицах """
     
     def __init__(self) -> None:
-        from pullenti.ner.measure.internal.MeasureMeta import MeasureMeta
         super().__init__(MeasureReferent.OBJ_TYPENAME)
         self.instance_of = MeasureMeta.GLOBAL_META
     
@@ -60,7 +61,6 @@ class MeasureReferent(Referent):
     
     @property
     def units(self) -> typing.List['UnitReferent']:
-        from pullenti.ner.measure.UnitReferent import UnitReferent
         res = list()
         for s in self.slots: 
             if (s.type_name == MeasureReferent.ATTR_UNIT and (isinstance(s.value, UnitReferent))): 
@@ -83,8 +83,7 @@ class MeasureReferent(Referent):
             self.addSlot(MeasureReferent.ATTR_KIND, Utils.enumToString(value).upper(), True, 0)
         return value
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
-        from pullenti.ner.measure.UnitReferent import UnitReferent
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = Utils.newStringIO(self.template)
         vals = list()
         for s in self.slots: 
@@ -92,7 +91,7 @@ class MeasureReferent(Referent):
                 if (isinstance(s.value, str)): 
                     vals.append(Utils.asObjectOrNull(s.value, str))
                 elif (isinstance(s.value, Referent)): 
-                    vals.append((Utils.asObjectOrNull(s.value, Referent)).toString(True, lang, 0))
+                    vals.append((s.value).toString(True, lang, 0))
         for i in range(res.tell() - 1, -1, -1):
             ch = Utils.getCharAtStringIO(res, i)
             if (not str.isdigit(ch)): 
@@ -121,7 +120,7 @@ class MeasureReferent(Referent):
                 print(" - {0}".format(nam), end="", file=res, flush=True)
             for s in self.slots: 
                 if (s.type_name == MeasureReferent.ATTR_REF and (isinstance(s.value, MeasureReferent))): 
-                    print(" / {0}".format((Utils.asObjectOrNull(s.value, MeasureReferent)).toString(True, lang, 0)), end="", file=res, flush=True)
+                    print(" / {0}".format((s.value).toString(True, lang, 0)), end="", file=res, flush=True)
             ki = self.kind
             if (ki != MeasureKind.UNDEFINED): 
                 print(" ({0})".format(Utils.enumToString(ki).upper()), end="", file=res, flush=True)

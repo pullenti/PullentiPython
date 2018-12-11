@@ -6,23 +6,36 @@ import io
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.decree.internal.DecreeChangeTokenTyp import DecreeChangeTokenTyp
-from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.decree.DecreeChangeValueKind import DecreeChangeValueKind
-from pullenti.ner.instrument.internal.NumberingHelper import NumberingHelper
-from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
 
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.decree.DecreeChangeValueKind import DecreeChangeValueKind
+from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.decree.internal.PartToken import PartToken
+from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.decree.internal.DecreeChangeTokenTyp import DecreeChangeTokenTyp
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.Token import Token
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.BracketHelper import BracketHelper
 
 class DecreeChangeToken(MetaToken):
     
     def __init__(self, b : 'Token', e0_ : 'Token') -> None:
-        from pullenti.ner.decree.internal.PartToken import PartToken
         super().__init__(b, e0_, None)
         self.typ = DecreeChangeTokenTyp.UNDEFINED
         self.decree = None;
@@ -37,8 +50,6 @@ class DecreeChangeToken(MetaToken):
         self.part_typ = PartToken.ItemType.UNDEFINED
     
     def __str__(self) -> str:
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.morph.MorphLang import MorphLang
         tmp = io.StringIO()
         print(Utils.enumToString(self.typ), end="", file=tmp)
         if (self.act_kind != DecreeChangeKind.UNDEFINED): 
@@ -60,9 +71,9 @@ class DecreeChangeToken(MetaToken):
         if (self.decree_tok is not None): 
             print(" DecTok={0}".format(str(self.decree_tok)), end="", file=tmp, flush=True)
         if (self.decree is not None): 
-            print(" Ref={0}".format(self.decree.toString(True, MorphLang(), 0)), end="", file=tmp, flush=True)
+            print(" Ref={0}".format(self.decree.toString(True, None, 0)), end="", file=tmp, flush=True)
         if (self.change_val is not None): 
-            print(" ChangeVal={0}".format(self.change_val.toString(True, MorphLang(), 0)), end="", file=tmp, flush=True)
+            print(" ChangeVal={0}".format(self.change_val.toString(True, None, 0)), end="", file=tmp, flush=True)
         return Utils.toStringStringIO(tmp)
     
     @property
@@ -71,18 +82,9 @@ class DecreeChangeToken(MetaToken):
     
     @staticmethod
     def tryAttach(t : 'Token', main : 'DecreeChangeReferent'=None, ignore_newlines : bool=False, change_stack : typing.List['Referent']=None, is_in_edition : bool=False) -> 'DecreeChangeToken':
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
         from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
+        from pullenti.ner.instrument.internal.NumberingHelper import NumberingHelper
         if (t is None): 
             return None
         tt = t
@@ -95,7 +97,7 @@ class DecreeChangeToken(MetaToken):
                 if (not (tt is not None)): break
                 if (tt == t and BracketHelper.isBracket(tt, False) and not tt.isChar('(')): 
                     break
-                elif ((tt == t and (isinstance(tt, TextToken)) and (((Utils.asObjectOrNull(tt, TextToken)).term == "СТАТЬЯ" or (Utils.asObjectOrNull(tt, TextToken)).term == "СТАТТЯ"))) and (isinstance(tt.next0_, NumberToken))): 
+                elif ((tt == t and (isinstance(tt, TextToken)) and (((tt).term == "СТАТЬЯ" or (tt).term == "СТАТТЯ"))) and (isinstance(tt.next0_, NumberToken))): 
                     tt1 = tt.next0_.next0_
                     if (tt1 is not None and tt1.isChar('.')): 
                         tt1 = tt1.next0_
@@ -107,8 +109,8 @@ class DecreeChangeToken(MetaToken):
                     break
                 elif (tt == t and PartToken.tryAttach(tt, None, False, False) is not None): 
                     break
-                elif ((isinstance(tt, NumberToken)) and (Utils.asObjectOrNull(tt, NumberToken)).typ == NumberSpellingType.DIGIT): 
-                    if ((Utils.asObjectOrNull(tt, NumberToken)).value == (98)): 
+                elif ((isinstance(tt, NumberToken)) and (tt).typ == NumberSpellingType.DIGIT): 
+                    if ((tt).value == (98)): 
                         pass
                 elif (tt.is_hiphen): 
                     pass
@@ -121,7 +123,7 @@ class DecreeChangeToken(MetaToken):
         if (tt is None): 
             return None
         res = None
-        if (((isinstance(tt, TextToken)) and t.is_newline_before and not ignore_newlines) and tt.isValue("ВНЕСТИ", "УНЕСТИ") and ((((tt.next0_ is not None and tt.next0_.isValue("В", "ДО"))) or (Utils.asObjectOrNull(tt, TextToken)).term == "ВНЕСТИ" or (Utils.asObjectOrNull(tt, TextToken)).term == "УНЕСТИ"))): 
+        if (((isinstance(tt, TextToken)) and t.is_newline_before and not ignore_newlines) and tt.isValue("ВНЕСТИ", "УНЕСТИ") and ((((tt.next0_ is not None and tt.next0_.isValue("В", "ДО"))) or (tt).term == "ВНЕСТИ" or (tt).term == "УНЕСТИ"))): 
             res = DecreeChangeToken._new793(tt, tt, DecreeChangeTokenTyp.STARTMULTU)
             if (tt.next0_ is not None and tt.next0_.isValue("В", "ДО")): 
                 tt = tt.next0_
@@ -397,7 +399,7 @@ class DecreeChangeToken(MetaToken):
                                     dec = (Utils.asObjectOrNull(v, DecreeReferent))
                                     break
                                 elif (isinstance(v, DecreePartReferent)): 
-                                    dec = (Utils.asObjectOrNull(v, DecreePartReferent)).owner
+                                    dec = (v).owner
                                     if (dec is not None): 
                                         break
                             if (dec is not None and dec.typ0 == dts[0].value): 
@@ -410,7 +412,7 @@ class DecreeChangeToken(MetaToken):
                         tt1 = npt.end_token.next0_
                         if ((tt1 is not None and tt1.isValue("ИЗЛОЖИТЬ", "ВИКЛАСТИ") and tt1.next0_ is not None) and tt1.next0_.isValue("В", None)): 
                             pt = PartToken._new797(tt, npt.end_token, PartToken.ItemType.APPENDIX)
-                            pt.name = npt.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                            pt.name = npt.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                             res.parts = list()
                             res.parts.append(pt)
                             res.end_token = pt.end_token
@@ -502,15 +504,15 @@ class DecreeChangeToken(MetaToken):
                     return None
                 if (res.change_val.kind == DecreeChangeValueKind.SEQUENCE or res.change_val.kind == DecreeChangeValueKind.FOOTNOTE): 
                     if (isinstance(tt, NumberToken)): 
-                        res.change_val.number = str((Utils.asObjectOrNull(tt, NumberToken)).value)
+                        res.change_val.number = str((tt).value)
                         res.end_token = tt
                         tt = tt.next0_
                     elif (isinstance(res.begin_token, NumberToken)): 
-                        res.change_val.number = str((Utils.asObjectOrNull(res.begin_token, NumberToken)).value)
+                        res.change_val.number = str((res.begin_token).value)
                     elif (res.begin_token.morph.class0_.is_adjective): 
-                        res.change_val.number = res.begin_token.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                        res.change_val.number = res.begin_token.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                     elif (BracketHelper.canBeStartOfSequence(tt, False, False) and (isinstance(tt.next0_, NumberToken)) and BracketHelper.canBeEndOfSequence(tt.next0_.next0_, False, None, False)): 
-                        res.change_val.number = str((Utils.asObjectOrNull(tt.next0_, NumberToken)).value)
+                        res.change_val.number = str((tt.next0_).value)
                         tt = tt.next0_.next0_
                         res.end_token = tt
                         tt = tt.next0_
@@ -528,7 +530,7 @@ class DecreeChangeToken(MetaToken):
                 can_be_start = False
                 if (BracketHelper.canBeStartOfSequence(tt, True, False)): 
                     can_be_start = True
-                elif ((isinstance(tt, MetaToken)) and BracketHelper.canBeStartOfSequence((Utils.asObjectOrNull(tt, MetaToken)).begin_token, True, False)): 
+                elif ((isinstance(tt, MetaToken)) and BracketHelper.canBeStartOfSequence((tt).begin_token, True, False)): 
                     can_be_start = True
                 elif (tt is not None and tt.is_newline_before and tt.isValue("ПРИЛОЖЕНИЕ", "ДОДАТОК")): 
                     if ((tt.previous is not None and tt.previous.isChar(':') and tt.previous.previous is not None) and tt.previous.previous.isValue("РЕДАКЦИЯ", "РЕДАКЦІЯ")): 
@@ -546,7 +548,7 @@ class DecreeChangeToken(MetaToken):
                             break
                         if (BracketHelper.isBracket(ttt, True)): 
                             pass
-                        elif (((isinstance(ttt, MetaToken))) and BracketHelper.isBracket((Utils.asObjectOrNull(ttt, MetaToken)).end_token, True)): 
+                        elif (((isinstance(ttt, MetaToken))) and BracketHelper.isBracket((ttt).end_token, True)): 
                             pass
                         else: 
                             continue
@@ -642,7 +644,7 @@ class DecreeChangeToken(MetaToken):
                     tt1 = res.end_token
                 if (BracketHelper.isBracket(tt1, True)): 
                     tt1 = tt1.previous
-                elif ((isinstance(tt1, MetaToken)) and BracketHelper.isBracket((Utils.asObjectOrNull(tt1, MetaToken)).end_token, True)): 
+                elif ((isinstance(tt1, MetaToken)) and BracketHelper.isBracket((tt1).end_token, True)): 
                     pass
                 else: 
                     continue
@@ -671,8 +673,6 @@ class DecreeChangeToken(MetaToken):
     
     @staticmethod
     def __tryAttachList(t : 'Token') -> typing.List['DecreeChangeToken']:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.decree.internal.PartToken import PartToken
         if (t is None or t.is_newline_before): 
             return None
         d0 = DecreeChangeToken.tryAttach(t, None, False, None, False)
@@ -701,7 +701,7 @@ class DecreeChangeToken(MetaToken):
                     continue
                 if (t.isChar(':') and ((not t.is_newline_after or res[len(res) - 1].act_kind == DecreeChangeKind.NEW))): 
                     continue
-                if ((isinstance(t, TextToken)) and (Utils.asObjectOrNull(t, TextToken)).term == "ТЕКСТОМ"): 
+                if ((isinstance(t, TextToken)) and (t).term == "ТЕКСТОМ"): 
                     continue
                 pts = PartToken.tryAttachList(t, False, 40)
                 if (pts is not None): 
@@ -729,9 +729,6 @@ class DecreeChangeToken(MetaToken):
     
     @staticmethod
     def _initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (DecreeChangeToken.__m_terms is not None): 
             return
         DecreeChangeToken.__m_terms = TerminCollection()
@@ -806,10 +803,7 @@ class DecreeChangeToken(MetaToken):
     
     @staticmethod
     def attachReferents(dpr : 'Referent', tok0 : 'DecreeChangeToken') -> typing.List['ReferentToken']:
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
+        from pullenti.ner.instrument.internal.NumberingHelper import NumberingHelper
         if (dpr is None or tok0 is None): 
             return None
         tt0 = tok0.end_token.next0_
@@ -888,7 +882,7 @@ class DecreeChangeToken(MetaToken):
                             continue
                         eq_lev_val = None
                         if (isinstance(dpr, DecreePartReferent)): 
-                            if (not (Utils.asObjectOrNull(dpr, DecreePartReferent))._isAllItemsOverThisLevel(np.typ)): 
+                            if (not (dpr)._isAllItemsOverThisLevel(np.typ)): 
                                 eq_lev_val = dpr.getStringValue(PartToken._getAttrNameByTyp(np.typ))
                                 if (eq_lev_val is None): 
                                     continue

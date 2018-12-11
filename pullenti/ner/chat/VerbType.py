@@ -4,16 +4,15 @@
 
 from enum import IntEnum
 
-
 class VerbType(IntEnum):
     """ Тип глагольной формы """
     UNDEFINED = 0
-    BE = 0 + 1
-    HAVE = (0 + 1) + 1
-    CAN = ((0 + 1) + 1) + 1
-    MUST = (((0 + 1) + 1) + 1) + 1
-    SAY = ((((0 + 1) + 1) + 1) + 1) + 1
-    CALL = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
+    BE = 1
+    HAVE = 2
+    CAN = 3
+    MUST = 4
+    SAY = 5
+    CALL = 6
     
     @classmethod
     def has_value(cls, value):

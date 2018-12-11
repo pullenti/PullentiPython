@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class MorphForm(IntEnum):
     """ Форма """
     UNDEFINED = 0

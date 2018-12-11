@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class MorphFinite(IntEnum):
     """ Это для английских глаголов """
     UNDEFINED = 0

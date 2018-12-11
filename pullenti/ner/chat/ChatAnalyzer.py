@@ -5,11 +5,19 @@
 import typing
 import datetime
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.business.internal.EpNerBusinessInternalResourceHelper import EpNerBusinessInternalResourceHelper
-from pullenti.ner.chat.ChatType import ChatType
-from pullenti.ner.chat.VerbType import VerbType
 
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.Referent import Referent
+from pullenti.ner.chat.ChatReferent import ChatReferent
+from pullenti.ner.business.internal.EpNerBusinessInternalResourceHelper import EpNerBusinessInternalResourceHelper
+from pullenti.ner.chat.internal.MetaChat import MetaChat
+from pullenti.ner.chat.VerbType import VerbType
+from pullenti.ner.chat.ChatType import ChatType
+from pullenti.ner.Analyzer import Analyzer
 
 class ChatAnalyzer(Analyzer):
     
@@ -32,18 +40,15 @@ class ChatAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.chat.internal.MetaChat import MetaChat
         return [MetaChat._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.chat.internal.MetaChat import MetaChat
         res = dict()
         res[MetaChat.IMAGE_ID] = EpNerBusinessInternalResourceHelper.getBytes("chat.jpg")
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.chat.ChatReferent import ChatReferent
         if (type0_ == ChatReferent.OBJ_TYPENAME): 
             return ChatReferent()
         return None
@@ -64,8 +69,6 @@ class ChatAnalyzer(Analyzer):
     
     def process(self, kit : 'AnalysisKit') -> None:
         from pullenti.ner.chat.internal.ChatItemToken import ChatItemToken
-        from pullenti.ner.chat.ChatReferent import ChatReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         ad = kit.getAnalyzerData(self)
         toks = list()
         t = kit.first_token
@@ -110,7 +113,6 @@ class ChatAnalyzer(Analyzer):
     
     @staticmethod
     def __canMerge(t1 : 'ChatItemToken', t2 : 'ChatItemToken') -> bool:
-        from pullenti.ner.TextToken import TextToken
         t = t1.end_token.next0_
         first_pass2792 = True
         while True:
@@ -127,12 +129,16 @@ class ChatAnalyzer(Analyzer):
             return False
         return True
     
+    __m_inited = None
+    
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
         from pullenti.ner.chat.internal.ChatItemToken import ChatItemToken
-        from pullenti.ner.ProcessorService import ProcessorService
+        if (ChatAnalyzer.__m_inited): 
+            return
+        ChatAnalyzer.__m_inited = True
         try: 
+            MetaChat.initialize()
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             ChatItemToken.initialize()
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False

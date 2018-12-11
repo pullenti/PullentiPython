@@ -5,12 +5,12 @@
 import io
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.ner.geo.GeoReferent import GeoReferent
 
 class GeoOwnerHelper:
     
     @staticmethod
     def __getTypesString(g : 'GeoReferent') -> str:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         tmp = io.StringIO()
         for s in g.slots: 
             if (s.type_name == GeoReferent.ATTR_TYPE): 
@@ -19,7 +19,6 @@ class GeoOwnerHelper:
     
     @staticmethod
     def _canBeHigherToken(rhi : 'Token', rlo : 'Token') -> bool:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         if (rhi is None or rlo is None): 
             return False
         if (rhi.morph.case_.is_instrumental and not rhi.morph.case_.is_genitive): 
@@ -73,7 +72,6 @@ class GeoOwnerHelper:
     
     @staticmethod
     def canBeHigher(hi : 'GeoReferent', lo : 'GeoReferent') -> bool:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         if (hi is None or lo is None or hi == lo): 
             return False
         if (lo.higher is not None): 

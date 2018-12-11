@@ -4,10 +4,20 @@
 
 import typing
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.instrument.InstrumentKind import InstrumentKind
 
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.instrument.InstrumentKind import InstrumentKind
+from pullenti.ner.instrument.InstrumentArtefact import InstrumentArtefact
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.instrument.internal.MetaInstrumentBlock import MetaInstrumentBlock
+from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
+from pullenti.ner.instrument.internal.InstrumentParticipantMeta import InstrumentParticipantMeta
+from pullenti.ner.instrument.internal.InstrumentArtefactMeta import InstrumentArtefactMeta
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.instrument.internal.MetaInstrument import MetaInstrument
+from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
 
 class InstrumentAnalyzer(Analyzer):
     
@@ -39,18 +49,10 @@ class InstrumentAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.instrument.internal.MetaInstrument import MetaInstrument
-        from pullenti.ner.instrument.internal.MetaInstrumentBlock import MetaInstrumentBlock
-        from pullenti.ner.instrument.internal.InstrumentParticipantMeta import InstrumentParticipantMeta
-        from pullenti.ner.instrument.internal.InstrumentArtefactMeta import InstrumentArtefactMeta
         return [MetaInstrument.GLOBAL_META, MetaInstrumentBlock.GLOBAL_META, InstrumentParticipantMeta.GLOBAL_META, InstrumentArtefactMeta.GLOBAL_META]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.instrument.internal.MetaInstrument import MetaInstrument
-        from pullenti.ner.instrument.internal.MetaInstrumentBlock import MetaInstrumentBlock
-        from pullenti.ner.instrument.internal.InstrumentParticipantMeta import InstrumentParticipantMeta
-        from pullenti.ner.instrument.internal.InstrumentArtefactMeta import InstrumentArtefactMeta
         res = dict()
         res[MetaInstrument.DOC_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("decree.png")
         res[MetaInstrumentBlock.PART_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("part.png")
@@ -59,10 +61,6 @@ class InstrumentAnalyzer(Analyzer):
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
-        from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
-        from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-        from pullenti.ner.instrument.InstrumentArtefact import InstrumentArtefact
         if (type0_ == InstrumentReferent.OBJ_TYPENAME): 
             return InstrumentReferent()
         if (type0_ == InstrumentBlockReferent.OBJ_TYPENAME): 
@@ -85,12 +83,19 @@ class InstrumentAnalyzer(Analyzer):
         ad = kit.getAnalyzerData(self)
         res = dfr.createReferent(ad)
     
+    __m_inited = None
+    
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
         from pullenti.ner.instrument.internal.InstrToken import InstrToken
         from pullenti.ner.instrument.internal.ParticipantToken import ParticipantToken
-        from pullenti.ner.ProcessorService import ProcessorService
+        if (InstrumentAnalyzer.__m_inited): 
+            return
+        InstrumentAnalyzer.__m_inited = True
+        InstrumentArtefactMeta.initialize()
+        MetaInstrumentBlock.initialize()
+        MetaInstrument.initialize()
+        InstrumentParticipantMeta.initialize()
         try: 
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             InstrToken.initialize()

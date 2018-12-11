@@ -6,9 +6,18 @@ import io
 import xml.etree
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
+
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
 from pullenti.ner.org.internal.EpNerOrgInternalResourceHelper import EpNerOrgInternalResourceHelper
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
-
+from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.geo.GeoAnalyzer import GeoAnalyzer
+from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
 
 class OrgGlobal:
     
@@ -18,14 +27,6 @@ class OrgGlobal:
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
-        from pullenti.ner.ProcessorService import ProcessorService
-        from pullenti.ner.geo.GeoAnalyzer import GeoAnalyzer
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.Termin import Termin
         if (OrgGlobal.GLOBAL_ORGS is not None): 
             return
         OrgGlobal.GLOBAL_ORGS = IntOntologyCollection()
@@ -83,7 +84,6 @@ class OrgGlobal:
     # static constructor for class OrgGlobal
     @staticmethod
     def _static_ctor():
-        from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
         OrgGlobal.GLOBAL_ORGS_UA = IntOntologyCollection()
 
 OrgGlobal._static_ctor()

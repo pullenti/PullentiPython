@@ -6,16 +6,32 @@ import typing
 import math
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.AnalyzerData import AnalyzerData
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.address.AddressDetailType import AddressDetailType
-from pullenti.ner.address.AddressHouseType import AddressHouseType
-from pullenti.ner.address.AddressBuildingType import AddressBuildingType
-from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
-from pullenti.ner.address.internal.StreetDefineHelper import StreetDefineHelper
-from pullenti.ner.core.GetTextAttr import GetTextAttr
 
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.address.AddressDetailType import AddressDetailType
+from pullenti.ner.Token import Token
+from pullenti.ner.Referent import Referent
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.address.AddressHouseType import AddressHouseType
+from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
+from pullenti.ner.address.AddressBuildingType import AddressBuildingType
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
+from pullenti.ner.address.internal.StreetDefineHelper import StreetDefineHelper
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.address.internal.MetaStreet import MetaStreet
+from pullenti.ner.address.StreetReferent import StreetReferent
+from pullenti.ner.address.AddressReferent import AddressReferent
+from pullenti.ner.core.AnalyzerData import AnalyzerData
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.address.internal.MetaAddress import MetaAddress
+from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
+from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
+from pullenti.ner.Analyzer import Analyzer
 
 class AddressAnalyzer(Analyzer):
     """ Семантический анализатор адресов """
@@ -23,6 +39,7 @@ class AddressAnalyzer(Analyzer):
     class AddressAnalyzerData(AnalyzerData):
         
         def __init__(self) -> None:
+            from pullenti.ner.core.AnalyzerData import AnalyzerData
             from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
             super().__init__()
             self.__m_addresses = AnalyzerData()
@@ -31,7 +48,7 @@ class AddressAnalyzer(Analyzer):
         def registerReferent(self, referent : 'Referent') -> 'Referent':
             from pullenti.ner.address.StreetReferent import StreetReferent
             if (isinstance(referent, StreetReferent)): 
-                (Utils.asObjectOrNull(referent, StreetReferent))._correct()
+                (referent)._correct()
                 return self.streets.registerReferent(referent)
             else: 
                 return self.__m_addresses.registerReferent(referent)
@@ -65,14 +82,10 @@ class AddressAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.address.internal.MetaAddress import MetaAddress
-        from pullenti.ner.address.internal.MetaStreet import MetaStreet
         return [MetaAddress._global_meta, MetaStreet._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.address.internal.MetaAddress import MetaAddress
-        from pullenti.ner.address.internal.MetaStreet import MetaStreet
         res = dict()
         res[MetaAddress.ADDRESS_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("address.png")
         res[MetaStreet.IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("street.png")
@@ -83,8 +96,6 @@ class AddressAnalyzer(Analyzer):
         return 10
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.address.StreetReferent import StreetReferent
         if (type0_ == AddressReferent.OBJ_TYPENAME): 
             return AddressReferent()
         if (type0_ == StreetReferent.OBJ_TYPENAME): 
@@ -93,21 +104,12 @@ class AddressAnalyzer(Analyzer):
     
     @property
     def used_extern_object_types(self) -> typing.List[str]:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         return [GeoReferent.OBJ_TYPENAME, "PHONE", "URI"]
     
     def createAnalyzerData(self) -> 'AnalyzerData':
         return AddressAnalyzer.AddressAnalyzerData()
     
     def process(self, kit : 'AnalysisKit') -> None:
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.address.StreetReferent import StreetReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.NumberToken import NumberToken
         ad = Utils.asObjectOrNull(kit.getAnalyzerData(self), AddressAnalyzer.AddressAnalyzerData)
         steps = 1
         max0_ = steps
@@ -215,14 +217,14 @@ class AddressAnalyzer(Analyzer):
                             break
                         if (((i + 1) < len(li)) and li[i + 1].typ == AddressItemToken.ItemType.NUMBER): 
                             if (li[i].end_token.next0_.is_comma): 
-                                if ((isinstance(li[i].referent, GeoReferent)) and not (Utils.asObjectOrNull(li[i].referent, GeoReferent)).is_big_city and (Utils.asObjectOrNull(li[i].referent, GeoReferent)).is_city): 
+                                if ((isinstance(li[i].referent, GeoReferent)) and not (li[i].referent).is_big_city and (li[i].referent).is_city): 
                                     li[i + 1].typ = AddressItemToken.ItemType.HOUSE
                                     break
                         if (li[0].typ == AddressItemToken.ItemType.ZIP or li[0].typ == AddressItemToken.ItemType.PREFIX): 
                             break
                         continue
                     if (li[i].typ == AddressItemToken.ItemType.REGION): 
-                        if ((isinstance(li[i].referent, GeoReferent)) and (Utils.asObjectOrNull(li[i].referent, GeoReferent)).higher is not None and (Utils.asObjectOrNull(li[i].referent, GeoReferent)).higher.is_city): 
+                        if ((isinstance(li[i].referent, GeoReferent)) and (li[i].referent).higher is not None and (li[i].referent).higher.is_city): 
                             if (((i + 1) < len(li)) and li[i + 1].typ == AddressItemToken.ItemType.HOUSE): 
                                 break
                 if (i >= len(li)): 
@@ -469,7 +471,7 @@ class AddressAnalyzer(Analyzer):
                         if (r.type_name == "DATE" or r.type_name == "DATERANGE"): 
                             continue
                         if (isinstance(r, GeoReferent)): 
-                            if (not (Utils.asObjectOrNull(r, GeoReferent)).is_state): 
+                            if (not (r).is_state): 
                                 if (geos is None): 
                                     geos = list()
                                 geos.append(Utils.asObjectOrNull(r, GeoReferent))
@@ -573,17 +575,17 @@ class AddressAnalyzer(Analyzer):
                     if (tt.is_newline_after): 
                         cou += 10
                     r = tt.getReferent()
-                    if ((isinstance(r, GeoReferent)) and not (Utils.asObjectOrNull(r, GeoReferent)).is_state): 
+                    if ((isinstance(r, GeoReferent)) and not (r).is_state): 
                         geos = list()
                         geos.append(Utils.asObjectOrNull(r, GeoReferent))
                         break
                     if (isinstance(r, StreetReferent)): 
-                        ggg = (Utils.asObjectOrNull(r, StreetReferent)).geos
+                        ggg = (r).geos
                         if (len(ggg) > 0): 
                             geos = list(ggg)
                             break
                     if (isinstance(r, AddressReferent)): 
-                        ggg = (Utils.asObjectOrNull(r, AddressReferent)).geos
+                        ggg = (r).geos
                         if (len(ggg) > 0): 
                             geos = list(ggg)
                             break
@@ -610,7 +612,7 @@ class AddressAnalyzer(Analyzer):
                             continue
                         jj = Utils.indexOfList(li, s, 0)
                         geo0 = None
-                        if (jj > 0 and (isinstance(li[jj - 1].referent, GeoReferent)) and ((li[jj - 1] != near_city or (Utils.asObjectOrNull(li[jj - 1].referent, GeoReferent)).higher is not None))): 
+                        if (jj > 0 and (isinstance(li[jj - 1].referent, GeoReferent)) and ((li[jj - 1] != near_city or (li[jj - 1].referent).higher is not None))): 
                             geo0 = (Utils.asObjectOrNull(li[jj - 1].referent, GeoReferent))
                         elif (jj > 1 and (isinstance(li[jj - 2].referent, GeoReferent))): 
                             geo0 = (Utils.asObjectOrNull(li[jj - 2].referent, GeoReferent))
@@ -645,8 +647,8 @@ class AddressAnalyzer(Analyzer):
                                     rtt.end_token = near_city.end_token
                                 if (near_city.begin_char < rtt.begin_char): 
                                     rtt.begin_token = near_city.begin_token
-                                if ((Utils.asObjectOrNull(near_city.referent, GeoReferent)).higher is None and geo0 != near_city.referent): 
-                                    (Utils.asObjectOrNull(near_city.referent, GeoReferent)).higher = geo0
+                                if ((near_city.referent).higher is None and geo0 != near_city.referent): 
+                                    (near_city.referent).higher = geo0
                             addr.addExtReferent(rtt)
                             terr_ref = rtt
                             ii -= 1
@@ -800,7 +802,7 @@ class AddressAnalyzer(Analyzer):
                             break
                         addr1 = Utils.asObjectOrNull(addr.clone(), AddressReferent)
                         addr1.occurrence.clear()
-                        addr1.addSlot(attr_name, str((Utils.asObjectOrNull(t, NumberToken)).value), True, 0)
+                        addr1.addSlot(attr_name, str((t).value), True, 0)
                         rt = ReferentToken(ad.registerReferent(addr1), t, t)
                         kit.embedToken(rt)
                         t = (rt)
@@ -865,13 +867,9 @@ class AddressAnalyzer(Analyzer):
                         s.addSlot(StreetReferent.ATTR_GEO, hi, False, 0)
         for a in ad.referents: 
             if (isinstance(a, AddressReferent)): 
-                (Utils.asObjectOrNull(a, AddressReferent))._correct()
+                (a)._correct()
     
     def processOntologyItem(self, begin : 'Token') -> 'ReferentToken':
-        from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
-        from pullenti.ner.address.StreetReferent import StreetReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.ReferentToken import ReferentToken
         li = StreetItemToken.tryParseList(begin, None, 10)
         if (li is None or (len(li) < 2)): 
             return None
@@ -917,9 +915,6 @@ class AddressAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.ProcessorService import ProcessorService
         if (AddressAnalyzer.M_INITIALIZED): 
             return
         AddressAnalyzer.M_INITIALIZED = True

@@ -3,11 +3,11 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.morph.MorphClass import MorphClass
+
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.core.GetTextAttr import GetTextAttr
-
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.MiscHelper import MiscHelper
 
 class BracketSequenceToken(MetaToken):
     """ Представление последовательности, обрамлённой кавычками (скобками) """
@@ -34,8 +34,7 @@ class BracketSequenceToken(MetaToken):
     def __str__(self) -> str:
         return super().__str__()
     
-    def getNormalCaseText(self, mc : 'MorphClass'=MorphClass(), single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
-        from pullenti.ner.core.MiscHelper import MiscHelper
+    def getNormalCaseText(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         attr = GetTextAttr.NO
         if (single_number): 
             attr = (Utils.valToEnum((attr) | (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE), GetTextAttr))

@@ -7,25 +7,34 @@ import typing
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.measure.MeasureKind import MeasureKind
-from pullenti.ner.measure.internal.MeasureHelper import MeasureHelper
-from pullenti.ner.measure.internal.UnitsHelper import UnitsHelper
-from pullenti.ner.measure.internal.Unit import Unit
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
+from pullenti.ner.measure.internal.Unit import Unit
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.measure.internal.UnitsHelper import UnitsHelper
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.Referent import Referent
+from pullenti.ner.measure.internal.MeasureHelper import MeasureHelper
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.NumberExToken import NumberExToken
+from pullenti.ner.measure.MeasureKind import MeasureKind
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.measure.MeasureReferent import MeasureReferent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.measure.internal.UnitToken import UnitToken
 
 class NumbersWithUnitToken(MetaToken):
     """ Это для моделирования разных числовых диапазонов + единицы изменерия """
     
     class DiapTyp(IntEnum):
         UNDEFINED = 0
-        LS = 0 + 1
-        LE = (0 + 1) + 1
-        GT = ((0 + 1) + 1) + 1
-        GE = (((0 + 1) + 1) + 1) + 1
-        FROM = ((((0 + 1) + 1) + 1) + 1) + 1
-        TO = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
+        LS = 1
+        LE = 2
+        GT = 3
+        GE = 4
+        FROM = 5
+        TO = 6
         
         @classmethod
         def has_value(cls, value):
@@ -70,9 +79,6 @@ class NumbersWithUnitToken(MetaToken):
         return Utils.toStringStringIO(res)
     
     def createRefenetsTokensWithRegister(self, ad : 'AnalyzerData', name : str, regist : bool=True) -> typing.List['ReferentToken']:
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.measure.MeasureReferent import MeasureReferent
-        from pullenti.ner.measure.internal.UnitToken import UnitToken
         res = list()
         for u in self.units: 
             rt = ReferentToken(u.createReferentWithRegister(ad), u.begin_token, u.end_token)
@@ -125,11 +131,6 @@ class NumbersWithUnitToken(MetaToken):
     
     @staticmethod
     def tryParseMulti(t : 'Token', add_units : 'TerminCollection', can_omit_number : bool=False, not0__ : bool=False) -> typing.List['NumbersWithUnitToken']:
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.measure.internal.UnitToken import UnitToken
         if (t is None or (isinstance(t, ReferentToken))): 
             return None
         if (t.isChar('(')): 
@@ -164,9 +165,9 @@ class NumbersWithUnitToken(MetaToken):
                         res.append(mt3)
                 return res
         if ((not mt.is_whitespace_after and MeasureHelper.isMultCharEnd(mt.end_token.next0_) and (isinstance(mt.end_token.next0_.next0_, NumberToken))) and len(mt.units) == 0): 
-            utxt = (Utils.asObjectOrNull(mt.end_token.next0_, TextToken)).term
+            utxt = (mt.end_token.next0_).term
             utxt = utxt[0:0+len(utxt) - 1]
-            terms = UnitsHelper.TERMINS.tryAttachStr(utxt, MorphLang())
+            terms = UnitsHelper.TERMINS.tryAttachStr(utxt, None)
             if (terms is not None and len(terms) > 0): 
                 mt.units.append(UnitToken._new1530(mt.end_token.next0_, mt.end_token.next0_, Utils.asObjectOrNull(terms[0].tag, Unit)))
                 mt.end_token = mt.end_token.next0_
@@ -221,9 +222,6 @@ class NumbersWithUnitToken(MetaToken):
     
     @staticmethod
     def _tryParse(t : 'Token', add_units : 'TerminCollection', second : bool, can_omit_number : bool) -> 'NumbersWithUnitToken':
-        from pullenti.ner.measure.internal.UnitToken import UnitToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.NumberExToken import NumberExToken
         if (t is None): 
             return None
         while t is not None:
@@ -512,7 +510,6 @@ class NumbersWithUnitToken(MetaToken):
             t(Token): 
         
         """
-        from pullenti.ner.TextToken import TextToken
         if (not ((isinstance(t, TextToken)))): 
             return None
         if (t.isCharOf(":-")): 
@@ -526,7 +523,7 @@ class NumbersWithUnitToken(MetaToken):
                     re0.begin_token = t
                     re0.end_token = re0.end_token.next0_
                     return re0
-        txt = (Utils.asObjectOrNull(t, TextToken)).term
+        txt = (t).term
         nams = None
         if (len(txt) == 5 and txt[1] == 'Х' and txt[3] == 'Х'): 
             nams = list()
@@ -548,7 +545,7 @@ class NumbersWithUnitToken(MetaToken):
         while t is not None: 
             if (not ((isinstance(t, TextToken))) or ((t.whitespaces_before_count > 1 and t != t0))): 
                 break
-            term = (Utils.asObjectOrNull(t, TextToken)).term
+            term = (t).term
             nam = None
             if ((t.isValue("ДЛИНА", None) or t.isValue("ДЛИННА", None) or term == "Д") or term == "ДЛ" or term == "ДЛИН"): 
                 nam = "ДЛИНА"
@@ -582,8 +579,6 @@ class NumbersWithUnitToken(MetaToken):
     
     @staticmethod
     def _initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
         if (NumbersWithUnitToken.M_TERMINS is not None): 
             return
         NumbersWithUnitToken.M_TERMINS = TerminCollection()

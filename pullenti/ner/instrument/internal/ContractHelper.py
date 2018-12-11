@@ -2,9 +2,12 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
-from pullenti.ner.instrument.InstrumentKind import InstrumentKind
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.instrument.InstrumentKind import InstrumentKind
+from pullenti.ner.core.BracketHelper import BracketHelper
 
 class ContractHelper:
     
@@ -64,9 +67,6 @@ class ContractHelper:
     
     @staticmethod
     def __calcNewlineBetweenCoef(fr1 : 'FragToken', fr2 : 'FragToken') -> int:
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
         if (fr1.newlines_after_count > 1): 
             return 1
         tt = fr1.begin_token

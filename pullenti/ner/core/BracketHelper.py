@@ -4,11 +4,18 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.Token import Token
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketSequenceToken import BracketSequenceToken
 
 class BracketHelper:
     """ Поддержка анализа скобок и кавычек """
@@ -23,7 +30,7 @@ class BracketHelper:
             self.can_be_close = False
             self.source = t
             if (isinstance(t, TextToken)): 
-                self.char0_ = (Utils.asObjectOrNull(t, TextToken)).term[0]
+                self.char0_ = (t).term[0]
             self.can_be_open = BracketHelper.canBeStartOfSequence(t, False, False)
             self.can_be_close = BracketHelper.canBeEndOfSequence(t, False, None, False)
         
@@ -45,7 +52,6 @@ class BracketHelper:
             quotes_only(bool): должны быть именно кавычка, а не скобка
         
         """
-        from pullenti.ner.TextToken import TextToken
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None or tt.next0_ is None): 
             return False
@@ -84,7 +90,6 @@ class BracketHelper:
             opent(Token): это ссылка на токен, который мог быть открывающим
         
         """
-        from pullenti.ner.TextToken import TextToken
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             return False
@@ -113,7 +118,7 @@ class BracketHelper:
                 if (not t.is_whitespace_after): 
                     return False
         if (isinstance(opent, TextToken)): 
-            ch0 = (Utils.asObjectOrNull(opent, TextToken)).term[0]
+            ch0 = (opent).term[0]
             i = BracketHelper.M_OPEN_CHARS.find(ch0)
             if (i < 0): 
                 return BracketHelper.M_CLOSE_CHARS.find(ch) < 0
@@ -145,19 +150,18 @@ class BracketHelper:
             quots_only(bool): 
         
         """
-        from pullenti.ner.TextToken import TextToken
         if (t is None): 
             return False
         if (t.isCharOf(BracketHelper.M_OPEN_CHARS)): 
             if (quots_only): 
                 if (isinstance(t, TextToken)): 
-                    if (BracketHelper.M_QUOTES.find((Utils.asObjectOrNull(t, TextToken)).term[0]) < 0): 
+                    if (BracketHelper.M_QUOTES.find((t).term[0]) < 0): 
                         return False
             return True
         if (t.isCharOf(BracketHelper.M_CLOSE_CHARS)): 
             if (quots_only): 
                 if (isinstance(t, TextToken)): 
-                    if (BracketHelper.M_QUOTES.find((Utils.asObjectOrNull(t, TextToken)).term[0]) < 0): 
+                    if (BracketHelper.M_QUOTES.find((t).term[0]) < 0): 
                         return False
             return True
         return False
@@ -172,12 +176,6 @@ class BracketHelper:
             max_tokens(int): максимально токенов (вдруг забыли закрывающую ккавычку)
         
         """
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.core.BracketSequenceToken import BracketSequenceToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         t0 = t
         cou = 0
         if (not BracketHelper.canBeStartOfSequence(t0, False, False)): 
@@ -250,9 +248,9 @@ class BracketHelper:
                 if ((((typ) & (BracketParseAttr.CANCONTAINSVERBS))) == (BracketParseAttr.NO)): 
                     if (t.morph.language.is_cyrillic): 
                         if (t.getMorphClassInDictionary() == MorphClass.VERB): 
-                            if (not t.morph.class0_.is_adjective and not t.morph.containsAttr("страд.з.", MorphClass())): 
+                            if (not t.morph.class0_.is_adjective and not t.morph.containsAttr("страд.з.", None)): 
                                 if (t.chars.is_all_lower): 
-                                    norm = t.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                                    norm = t.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                                     if (not LanguageHelper.endsWith(norm, "СЯ")): 
                                         if (len(br_list) > 1): 
                                             break
@@ -278,7 +276,7 @@ class BracketHelper:
                 if (not t.chars.is_all_lower): 
                     if (t.previous is not None and t.previous.isChar('.')): 
                         break
-                if ((isinstance(t.previous, MetaToken)) and BracketHelper.canBeEndOfSequence((Utils.asObjectOrNull(t.previous, MetaToken)).end_token, False, None, False)): 
+                if ((isinstance(t.previous, MetaToken)) and BracketHelper.canBeEndOfSequence((t.previous).end_token, False, None, False)): 
                     break
             if (crlf > 1): 
                 if (len(br_list) > 1): 
@@ -288,7 +286,7 @@ class BracketHelper:
             if (t.isChar(';') and t.is_newline_after): 
                 break
         if ((len(br_list) == 1 and br_list[0].can_be_open and (isinstance(last, MetaToken))) and last.is_newline_after): 
-            if (BracketHelper.canBeEndOfSequence((Utils.asObjectOrNull(last, MetaToken)).end_token, False, None, False)): 
+            if (BracketHelper.canBeEndOfSequence((last).end_token, False, None, False)): 
                 return BracketSequenceToken(t0, last)
         if (len(br_list) < 1): 
             return None
@@ -372,7 +370,7 @@ class BracketHelper:
                         continue
                     if (tt.chars.is_letter or tt.length_char > 1): 
                         continue
-                    ch = (Utils.asObjectOrNull(tt, TextToken)).term[0]
+                    ch = (tt).term[0]
                     if (BracketHelper.__canBeCloseChar(ch, br_list[0].char0_)): 
                         lev1 += 1
                     elif (BracketHelper.__canBeCloseChar(br_list[1].char0_, ch)): 
@@ -418,7 +416,7 @@ class BracketHelper:
                 if (mt is None): 
                     continue
                 if (isinstance(mt.end_token, TextToken)): 
-                    if ((Utils.asObjectOrNull(mt.end_token, TextToken)).isCharOf(BracketHelper.M_CLOSE_CHARS)): 
+                    if ((mt.end_token).isCharOf(BracketHelper.M_CLOSE_CHARS)): 
                         bb = BracketHelper.Bracket(Utils.asObjectOrNull(mt.end_token, TextToken))
                         if (bb.can_be_close and BracketHelper.__canBeCloseChar(bb.char0_, br_list[0].char0_)): 
                             return BracketSequenceToken(t0, tt)

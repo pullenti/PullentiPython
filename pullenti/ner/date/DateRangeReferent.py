@@ -3,15 +3,16 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphLang import MorphLang
 
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.date.internal.MetaDateRange import MetaDateRange
 
 class DateRangeReferent(Referent):
     """ Сущность, представляющая диапазон дат """
     
     def __init__(self) -> None:
-        from pullenti.ner.date.internal.MetaDateRange import MetaDateRange
         super().__init__(DateRangeReferent.OBJ_TYPENAME)
         self.instance_of = MetaDateRange.GLOBAL_META
     
@@ -24,7 +25,6 @@ class DateRangeReferent(Referent):
     @property
     def date_from(self) -> 'DateReferent':
         """ Начало диапазона """
-        from pullenti.ner.date.DateReferent import DateReferent
         return Utils.asObjectOrNull(self.getSlotValue(DateRangeReferent.ATTR_FROM), DateReferent)
     @date_from.setter
     def date_from(self, value) -> 'DateReferent':
@@ -34,14 +34,13 @@ class DateRangeReferent(Referent):
     @property
     def date_to(self) -> 'DateReferent':
         """ Конец диапазона """
-        from pullenti.ner.date.DateReferent import DateReferent
         return Utils.asObjectOrNull(self.getSlotValue(DateRangeReferent.ATTR_TO), DateReferent)
     @date_to.setter
     def date_to(self, value) -> 'DateReferent':
         self.addSlot(DateRangeReferent.ATTR_TO, value, True, 0)
         return value
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=MorphLang(), lev : int=0) -> str:
+    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         fr = (None if self.date_from is None else self.date_from._ToString(short_variant, lang, lev, 1))
         to = (None if self.date_to is None else self.date_to._ToString(short_variant, lang, lev, 2))
         if (fr is not None and to is not None): 

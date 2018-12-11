@@ -5,8 +5,8 @@
 import math
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 
+from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 
 class SourceOfAnalysis:
     """ Анализируемый текст """
@@ -60,9 +60,9 @@ class SourceOfAnalysis:
         cou = 0
         total_len = 0
         i = 0
-        first_pass3177 = True
+        first_pass3178 = True
         while True:
-            if first_pass3177: first_pass3177 = False
+            if first_pass3178: first_pass3178 = False
             else: i += 1
             if (not (i < len(txt))): break
             ch = txt[i]

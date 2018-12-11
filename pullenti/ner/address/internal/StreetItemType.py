@@ -4,16 +4,15 @@
 
 from enum import IntEnum
 
-
 class StreetItemType(IntEnum):
     NOUN = 0
-    NAME = 0 + 1
-    NUMBER = (0 + 1) + 1
-    STDADJECTIVE = ((0 + 1) + 1) + 1
-    STDNAME = (((0 + 1) + 1) + 1) + 1
-    STDPARTOFNAME = ((((0 + 1) + 1) + 1) + 1) + 1
-    AGE = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
-    FIX = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
+    NAME = 1
+    NUMBER = 2
+    STDADJECTIVE = 3
+    STDNAME = 4
+    STDPARTOFNAME = 5
+    AGE = 6
+    FIX = 7
     
     @classmethod
     def has_value(cls, value):

@@ -6,11 +6,11 @@ import io
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.morph.internal.ExplanTreeNode import ExplanTreeNode
-from pullenti.morph.internal.ExplanSerializeHelper import ExplanSerializeHelper
+
 from pullenti.morph.DerivateGroup import DerivateGroup
 from pullenti.morph.LanguageHelper import LanguageHelper
-
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.internal.ExplanTreeNode import ExplanTreeNode
 
 class DerivateDictionary:
     
@@ -21,6 +21,7 @@ class DerivateDictionary:
         self._m_all_groups = list()
     
     def init(self, lang_ : 'MorphLang') -> bool:
+        from pullenti.morph.internal.ExplanSerializeHelper import ExplanSerializeHelper
         if (self.__m_inited): 
             return True
         # ignored: assembly = 
@@ -41,7 +42,6 @@ class DerivateDictionary:
         return False
     
     def unload(self) -> None:
-        from pullenti.morph.MorphLang import MorphLang
         self._m_root = ExplanTreeNode()
         self._m_all_groups.clear()
         self.lang = MorphLang()

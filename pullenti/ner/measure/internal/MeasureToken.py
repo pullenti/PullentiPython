@@ -5,13 +5,26 @@
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.measure.MeasureKind import MeasureKind
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
 
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.NounPhraseToken import NounPhraseToken
+from pullenti.ner.measure.MeasureKind import MeasureKind
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.NumberExToken import NumberExToken
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.measure.UnitReferent import UnitReferent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.measure.internal.UnitToken import UnitToken
+from pullenti.ner.measure.MeasureReferent import MeasureReferent
+from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
+from pullenti.ner.date.internal.DateItemToken import DateItemToken
 
 class MeasureToken(MetaToken):
     
@@ -27,9 +40,6 @@ class MeasureToken(MetaToken):
         return "{0}: {1}".format(self.name, str(self.nums))
     
     def createRefenetsTokensWithRegister(self, ad : 'AnalyzerData', register : bool=True) -> typing.List['ReferentToken']:
-        from pullenti.ner.measure.MeasureReferent import MeasureReferent
-        from pullenti.ner.measure.UnitReferent import UnitReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (len(self.internals) == 0 and not self.reliable): 
             if (len(self.nums.units) == 1 and self.nums.units[0].is_doubt and ((self.nums.from_val is None or self.nums.to_val is None))): 
                 return None
@@ -115,8 +125,6 @@ class MeasureToken(MetaToken):
     
     @staticmethod
     def tryParseMinimal(t : 'Token', add_units : 'TerminCollection', can_omit_number : bool=False) -> 'MeasureToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
         if (t is None or (isinstance(t, ReferentToken))): 
             return None
         mt = NumbersWithUnitToken.tryParseMulti(t, add_units, can_omit_number, False)
@@ -136,8 +144,6 @@ class MeasureToken(MetaToken):
         return res
     
     def __parseInternals(self, add_units : 'TerminCollection') -> None:
-        from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
-        from pullenti.ner.measure.internal.UnitToken import UnitToken
         if (self.end_token.next0_ is not None and ((self.end_token.next0_.isCharOf("\\/") or self.end_token.next0_.isValue("ПРИ", None)))): 
             mt1 = MeasureToken.tryParse(self.end_token.next0_.next0_, add_units, True)
             if (mt1 is not None): 
@@ -157,15 +163,6 @@ class MeasureToken(MetaToken):
             t(Token): 
         
         """
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.core.NounPhraseToken import NounPhraseToken
-        from pullenti.ner.core.NumberExToken import NumberExToken
-        from pullenti.ner.date.internal.DateItemToken import DateItemToken
-        from pullenti.ner.measure.internal.UnitToken import UnitToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (not ((isinstance(t, TextToken)))): 
             return None
         t0 = t

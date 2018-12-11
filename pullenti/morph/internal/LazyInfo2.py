@@ -3,6 +3,9 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 
+from pullenti.morph.internal.ExplanSerializeHelper import ExplanSerializeHelper
+from pullenti.morph.Explanatory import Explanatory
+
 class LazyInfo2:
     
     def __init__(self) -> None:
@@ -11,9 +14,7 @@ class LazyInfo2:
         self.begin = 0
     
     def loadNode(self, tn : 'ExplanTreeNode') -> None:
-        from pullenti.morph.Explanatory import Explanatory
         with Explanatory._m_lock: 
-            from pullenti.morph.internal.ExplanSerializeHelper import ExplanSerializeHelper
             self.data.seek(self.begin)
             ExplanSerializeHelper.deserializeTreeNode(self.data, self.dic, tn, True)
     

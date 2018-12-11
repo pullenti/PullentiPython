@@ -5,12 +5,25 @@
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.transport.TransportKind import TransportKind
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
+from pullenti.ner.Token import Token
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.transport.TransportKind import TransportKind
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.transport.internal.MetaTransport import MetaTransport
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.transport.internal.TransItemToken import TransItemToken
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.transport.TransportReferent import TransportReferent
 
 class TransportAnalyzer(Analyzer):
     
@@ -33,12 +46,10 @@ class TransportAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.transport.internal.MetaTransport import MetaTransport
         return [MetaTransport._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.transport.internal.MetaTransport import MetaTransport
         res = dict()
         res[Utils.enumToString(TransportKind.FLY)] = EpNerCoreInternalResourceHelper.getBytes("fly.png")
         res[Utils.enumToString(TransportKind.SHIP)] = EpNerCoreInternalResourceHelper.getBytes("ship.png")
@@ -49,14 +60,12 @@ class TransportAnalyzer(Analyzer):
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.transport.TransportReferent import TransportReferent
         if (type0_ == TransportReferent.OBJ_TYPENAME): 
             return TransportReferent()
         return None
     
     @property
     def used_extern_object_types(self) -> typing.List[str]:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         return [GeoReferent.OBJ_TYPENAME, "ORGANIZATION"]
     
     @property
@@ -64,15 +73,6 @@ class TransportAnalyzer(Analyzer):
         return 5
     
     def process(self, kit : 'AnalysisKit') -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.transport.internal.TransItemToken import TransItemToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.transport.TransportReferent import TransportReferent
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.TextToken import TextToken
         ad = kit.getAnalyzerData(self)
         models = TerminCollection()
         objs_by_model = dict()
@@ -124,7 +124,7 @@ class TransportAnalyzer(Analyzer):
                                         objs_by_model[mod] = li
                                     if (not rt.referent in li): 
                                         li.append(rt.referent)
-                                    models.addStr(mod, li, MorphLang(), False)
+                                    models.addStr(mod, li, None, False)
                                 if (k > 0): 
                                     break
                                 brand = rt.referent.getStringValue(TransportReferent.ATTR_BRAND)
@@ -180,7 +180,6 @@ class TransportAnalyzer(Analyzer):
                 continue
     
     def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        from pullenti.ner.transport.internal.TransItemToken import TransItemToken
         its = TransItemToken.tryParseList(begin, 10)
         if (its is None): 
             return None
@@ -190,9 +189,6 @@ class TransportAnalyzer(Analyzer):
         return None
     
     def __tryAttach(self, its : typing.List['TransItemToken'], attach : bool) -> typing.List['ReferentToken']:
-        from pullenti.ner.transport.TransportReferent import TransportReferent
-        from pullenti.ner.transport.internal.TransItemToken import TransItemToken
-        from pullenti.ner.ReferentToken import ReferentToken
         tr = TransportReferent()
         t1 = None
         i = 0
@@ -303,12 +299,10 @@ class TransportAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.transport.internal.TransItemToken import TransItemToken
-        from pullenti.ner.ProcessorService import ProcessorService
         if (TransportAnalyzer.__m_inited): 
             return
         TransportAnalyzer.__m_inited = True
+        MetaTransport.initialize()
         try: 
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             TransItemToken.initialize()

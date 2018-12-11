@@ -3,13 +3,24 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
+
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.Referent import Referent
+from pullenti.ner.org.OrgProfile import OrgProfile
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.org.OrgProfile import OrgProfile
-
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
 
 class OrgItemEngItem(MetaToken):
     
@@ -24,7 +35,6 @@ class OrgItemEngItem(MetaToken):
     
     @staticmethod
     def tryAttach(t : 'Token', can_be_cyr : bool=False) -> 'OrgItemEngItem':
-        from pullenti.ner.TextToken import TextToken
         if (t is None or not ((isinstance(t, TextToken)))): 
             return None
         tok = (OrgItemEngItem.__m_ontology.tryParse(t, TerminParseAttr.NO) if can_be_cyr else None)
@@ -51,14 +61,12 @@ class OrgItemEngItem(MetaToken):
     
     @staticmethod
     def __checkTok(tok : 'TerminToken') -> bool:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
         if (tok.termin.acronym == "SA"): 
             tt0 = tok.begin_token.previous
             if (tt0 is not None and tt0.isChar('.')): 
                 tt0 = tt0.previous
             if (isinstance(tt0, TextToken)): 
-                if ((Utils.asObjectOrNull(tt0, TextToken)).term == "U"): 
+                if ((tt0).term == "U"): 
                     return False
         elif (tok.begin_token.isValue("CO", None) and tok.begin_token == tok.end_token): 
             if (tok.end_token.next0_ is not None and tok.end_token.next0_.is_hiphen): 
@@ -70,14 +78,6 @@ class OrgItemEngItem(MetaToken):
     
     @staticmethod
     def tryAttachOrg(t : 'Token', can_be_cyr : bool=False) -> 'ReferentToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.org.internal.OrgItemNameToken import OrgItemNameToken
         if (t is None): 
             return None
@@ -86,7 +86,7 @@ class OrgItemEngItem(MetaToken):
             t = t.next0_
             br = True
         if (isinstance(t, NumberToken)): 
-            if ((Utils.asObjectOrNull(t, NumberToken)).typ == NumberSpellingType.WORDS and t.morph.class0_.is_adjective and t.chars.is_capital_upper): 
+            if ((t).typ == NumberSpellingType.WORDS and t.morph.class0_.is_adjective and t.chars.is_capital_upper): 
                 pass
             else: 
                 return None
@@ -260,8 +260,6 @@ class OrgItemEngItem(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
         if (OrgItemEngItem.__m_ontology is not None): 
             return
         OrgItemEngItem.__m_ontology = TerminCollection()

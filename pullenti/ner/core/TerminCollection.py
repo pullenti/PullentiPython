@@ -5,10 +5,16 @@
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.Token import Token
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.Termin import Termin
 
 class TerminCollection:
     """ Коллекций некоторых обозначений, терминов """
@@ -38,7 +44,7 @@ class TerminCollection:
         self.__m_hash_canonic = (None)
         self.reindex(term)
     
-    def addStr(self, termins_ : str, tag : object=None, lang : 'MorphLang'=MorphLang(), is_normal_text : bool=False) -> 'Termin':
+    def addStr(self, termins_ : str, tag : object=None, lang : 'MorphLang'=None, is_normal_text : bool=False) -> 'Termin':
         """ Добавить строку вместе с морфологическими вариантами
         
         Args:
@@ -47,7 +53,6 @@ class TerminCollection:
             lang(MorphLang): 
         
         """
-        from pullenti.ner.core.Termin import Termin
         t = Termin(termins_, lang, is_normal_text or self.all_add_strs_normalized)
         t.tag = tag
         if (tag is not None and len(t.terms) == 1): 
@@ -212,16 +217,12 @@ class TerminCollection:
         return re
     
     def __TryAttachAll_(self, token : 'Token', pars : 'TerminParseAttr'=TerminParseAttr.NO, main_root : bool=False) -> typing.List['TerminToken']:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.ner.NumberToken import NumberToken
         if (len(self.termins) == 0 or token is None): 
             return None
         s = None
         tt = Utils.asObjectOrNull(token, TextToken)
         if (tt is None and (isinstance(token, ReferentToken))): 
-            tt = (Utils.asObjectOrNull((Utils.asObjectOrNull(token, ReferentToken)).begin_token, TextToken))
+            tt = (Utils.asObjectOrNull((token).begin_token, TextToken))
         res = None
         was_vars = False
         root = (self.__m_root if main_root else self.__getRoot(token.morph.language, token.chars.is_latin_letter))
@@ -304,7 +305,7 @@ class TerminCollection:
                         was_vars = True
         elif (isinstance(token, NumberToken)): 
             wrapres655 = RefOutArgWrapper(res)
-            inoutres656 = self.__manageVar(token, pars, str((Utils.asObjectOrNull(token, NumberToken)).value), root, 0, wrapres655)
+            inoutres656 = self.__manageVar(token, pars, str((token).value), root, 0, wrapres655)
             res = wrapres655.value
             if (inoutres656): 
                 was_vars = True
@@ -424,7 +425,7 @@ class TerminCollection:
                         res.append(t)
         return res
     
-    def tryAttachStr(self, termin : str, lang : 'MorphLang'=MorphLang()) -> typing.List['Termin']:
+    def tryAttachStr(self, termin : str, lang : 'MorphLang'=None) -> typing.List['Termin']:
         return self.__FindInTree(termin, lang)
     
     def findTerminByCanonicText(self, text : str) -> typing.List['Termin']:

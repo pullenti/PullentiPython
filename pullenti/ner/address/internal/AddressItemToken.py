@@ -8,50 +8,66 @@ import math
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.address.AddressDetailType import AddressDetailType
-from pullenti.ner.address.AddressBuildingType import AddressBuildingType
-from pullenti.ner.address.AddressHouseType import AddressHouseType
-from pullenti.ner.address.StreetKind import StreetKind
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.address.internal.StreetDefineHelper import StreetDefineHelper
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.address.AddressReferent import AddressReferent
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.address.internal.StreetItemType import StreetItemType
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
-from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.Referent import Referent
+from pullenti.ner.Token import Token
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.NumberExType import NumberExType
 from pullenti.ner.core.GetTextAttr import GetTextAttr
-
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.address.AddressBuildingType import AddressBuildingType
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.address.AddressHouseType import AddressHouseType
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.address.AddressDetailType import AddressDetailType
+from pullenti.ner.core.NumberExToken import NumberExToken
+from pullenti.ner.address.StreetKind import StreetKind
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.address.StreetReferent import StreetReferent
+from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
 
 class AddressItemToken(MetaToken):
     
     class ItemType(IntEnum):
         PREFIX = 0
-        STREET = 0 + 1
-        HOUSE = (0 + 1) + 1
-        BUILDING = ((0 + 1) + 1) + 1
-        CORPUS = (((0 + 1) + 1) + 1) + 1
-        POTCH = ((((0 + 1) + 1) + 1) + 1) + 1
-        FLOOR = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
-        FLAT = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        CORPUSORFLAT = (((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        OFFICE = ((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        PLOT = (((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        BLOCK = ((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        BOX = (((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        CITY = ((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        REGION = (((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        COUNTRY = ((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        NUMBER = (((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        NONUMBER = ((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        KILOMETER = (((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        ZIP = ((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        POSTOFFICEBOX = (((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        CSP = ((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        DETAIL = (((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
-        BUSINESSCENTER = ((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1
+        STREET = 1
+        HOUSE = 2
+        BUILDING = 3
+        CORPUS = 4
+        POTCH = 5
+        FLOOR = 6
+        FLAT = 7
+        CORPUSORFLAT = 8
+        OFFICE = 9
+        PLOT = 10
+        BLOCK = 11
+        BOX = 12
+        CITY = 13
+        REGION = 14
+        COUNTRY = 15
+        NUMBER = 16
+        NONUMBER = 17
+        KILOMETER = 18
+        ZIP = 19
+        POSTOFFICEBOX = 20
+        CSP = 21
+        DETAIL = 22
+        BUSINESSCENTER = 23
         
         @classmethod
         def has_value(cls, value):
@@ -73,18 +89,16 @@ class AddressItemToken(MetaToken):
     
     @property
     def is_street_road(self) -> bool:
-        from pullenti.ner.address.StreetReferent import StreetReferent
         if (self.typ != AddressItemToken.ItemType.STREET): 
             return False
         if (not ((isinstance(self.referent, StreetReferent)))): 
             return False
-        return (Utils.asObjectOrNull(self.referent, StreetReferent)).kind == StreetKind.ROAD
+        return (self.referent).kind == StreetKind.ROAD
     
     @property
     def is_terr_or_rzd(self) -> bool:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         if (self.typ == AddressItemToken.ItemType.CITY and (isinstance(self.referent, GeoReferent))): 
-            if ((Utils.asObjectOrNull(self.referent, GeoReferent)).is_territory): 
+            if ((self.referent).is_territory): 
                 return True
         return False
     
@@ -116,15 +130,11 @@ class AddressItemToken(MetaToken):
     
     @staticmethod
     def tryParseList(t : 'Token', loc_streets : 'IntOntologyCollection', max_count : int=20) -> typing.List['AddressItemToken']:
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.address.StreetReferent import StreetReferent
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.geo.GeoReferent import GeoReferent
+        from pullenti.ner.address.internal.StreetDefineHelper import StreetDefineHelper
         if (isinstance(t, NumberToken)): 
-            v = (Utils.asObjectOrNull(t, NumberToken)).value
+            v = (t).value
             if ((v < (100000)) or v >= (10000000)): 
-                if ((Utils.asObjectOrNull(t, NumberToken)).typ == NumberSpellingType.DIGIT and not t.morph.class0_.is_adjective): 
+                if ((t).typ == NumberSpellingType.DIGIT and not t.morph.class0_.is_adjective): 
                     if (t.next0_ is None or (isinstance(t.next0_, NumberToken))): 
                         if (t.previous is None or not t.previous.morph.class0_.is_preposition): 
                             return None
@@ -135,7 +145,7 @@ class AddressItemToken(MetaToken):
             return None
         if (it.typ == AddressItemToken.ItemType.KILOMETER and not it.is_number and (isinstance(it.begin_token.previous, NumberToken))): 
             it.begin_token = it.begin_token.previous
-            it.value = str((Utils.asObjectOrNull(it.begin_token, NumberToken)).value)
+            it.value = str((it.begin_token).value)
             if (it.begin_token.previous is not None and it.begin_token.previous.morph.class0_.is_preposition): 
                 it.begin_token = it.begin_token.previous
         res = list()
@@ -254,7 +264,7 @@ class AddressItemToken(MetaToken):
                     if ((not t.is_whitespace_before and t.length_char == 1 and t.chars.is_letter) and not t.is_whitespace_after and (isinstance(t.next0_, NumberToken))): 
                         ch = AddressItemToken.__correctCharToken(t)
                         if (ch == "К" or ch == "С"): 
-                            it0 = AddressItemToken._new84((AddressItemToken.ItemType.CORPUS if ch == "К" else AddressItemToken.ItemType.BUILDING), t, t.next0_, str((Utils.asObjectOrNull(t.next0_, NumberToken)).value))
+                            it0 = AddressItemToken._new84((AddressItemToken.ItemType.CORPUS if ch == "К" else AddressItemToken.ItemType.BUILDING), t, t.next0_, str((t.next0_).value))
                             it = it0
                             res.append(it)
                             t = it.end_token
@@ -262,7 +272,7 @@ class AddressItemToken(MetaToken):
                             if (((tt is not None and not tt.is_whitespace_before and tt.length_char == 1) and tt.chars.is_letter and not tt.is_whitespace_after) and (isinstance(tt.next0_, NumberToken))): 
                                 ch = AddressItemToken.__correctCharToken(tt)
                                 if (ch == "К" or ch == "С"): 
-                                    it = AddressItemToken._new84((AddressItemToken.ItemType.CORPUS if ch == "К" else AddressItemToken.ItemType.BUILDING), tt, tt.next0_, str((Utils.asObjectOrNull(tt.next0_, NumberToken)).value))
+                                    it = AddressItemToken._new84((AddressItemToken.ItemType.CORPUS if ch == "К" else AddressItemToken.ItemType.BUILDING), tt, tt.next0_, str((tt.next0_).value))
                                     res.append(it)
                                     t = it.end_token
                             continue
@@ -437,15 +447,15 @@ class AddressItemToken(MetaToken):
             i += 1
         i = 0
         while i < (len(res) - 1): 
-            if ((res[i].typ == AddressItemToken.ItemType.STREET and res[i + 1].typ == AddressItemToken.ItemType.KILOMETER and (isinstance(res[i].referent, StreetReferent))) and (Utils.asObjectOrNull(res[i].referent, StreetReferent)).number is None): 
-                (Utils.asObjectOrNull(res[i].referent, StreetReferent)).number = res[i + 1].value + "км"
+            if ((res[i].typ == AddressItemToken.ItemType.STREET and res[i + 1].typ == AddressItemToken.ItemType.KILOMETER and (isinstance(res[i].referent, StreetReferent))) and (res[i].referent).number is None): 
+                (res[i].referent).number = res[i + 1].value + "км"
                 res[i].end_token = res[i + 1].end_token
                 del res[i + 1]
             i += 1
         i = 0
         while i < (len(res) - 1): 
-            if ((res[i + 1].typ == AddressItemToken.ItemType.STREET and res[i].typ == AddressItemToken.ItemType.KILOMETER and (isinstance(res[i + 1].referent, StreetReferent))) and (Utils.asObjectOrNull(res[i + 1].referent, StreetReferent)).number is None): 
-                (Utils.asObjectOrNull(res[i + 1].referent, StreetReferent)).number = res[i].value + "км"
+            if ((res[i + 1].typ == AddressItemToken.ItemType.STREET and res[i].typ == AddressItemToken.ItemType.KILOMETER and (isinstance(res[i + 1].referent, StreetReferent))) and (res[i + 1].referent).number is None): 
+                (res[i + 1].referent).number = res[i].value + "км"
                 res[i + 1].begin_token = res[i].begin_token
                 del res[i]
                 break
@@ -454,8 +464,6 @@ class AddressItemToken(MetaToken):
     
     @staticmethod
     def __findAddrTyp(t : 'Token', max_char : int, lev : int=0) -> 'AddressItemToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         if (t is None or t.end_char > max_char): 
             return None
         if (lev > 5): 
@@ -468,7 +476,7 @@ class AddressItemToken(MetaToken):
                         ty = s.value
                         if ("район" in ty): 
                             return None
-            tt = (Utils.asObjectOrNull(t, ReferentToken)).begin_token
+            tt = (t).begin_token
             while tt is not None: 
                 if (tt.end_char > max_char): 
                     break
@@ -485,8 +493,6 @@ class AddressItemToken(MetaToken):
     
     @staticmethod
     def tryParse(t : 'Token', loc_streets : 'IntOntologyCollection', prefix_before : bool, ignore_street : bool=False, prev : 'AddressItemToken'=None) -> 'AddressItemToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
         if (t is None): 
             return None
         if (t.kit.is_recurce_overflow): 
@@ -498,41 +504,33 @@ class AddressItemToken(MetaToken):
             if (res.typ == AddressItemToken.ItemType.HOUSE or res.typ == AddressItemToken.ItemType.BUILDING or res.typ == AddressItemToken.ItemType.CORPUS): 
                 tt = res.end_token.next0_.next0_
                 if (isinstance(tt, NumberToken)): 
-                    res.value = "{0}-{1}".format(res.value, (Utils.asObjectOrNull(tt, NumberToken)).value)
+                    res.value = "{0}-{1}".format(res.value, (tt).value)
                     res.end_token = tt
                     if ((not tt.is_whitespace_after and (isinstance(tt.next0_, TextToken)) and tt.next0_.length_char == 1) and tt.next0_.chars.is_all_upper): 
                         tt = tt.next0_
                         res.end_token = tt
-                        res.value += (Utils.asObjectOrNull(tt, TextToken)).term
+                        res.value += (tt).term
                     if ((not tt.is_whitespace_after and tt.next0_ is not None and tt.next0_.isCharOf("\\/")) and (isinstance(tt.next0_.next0_, NumberToken))): 
                         tt = tt.next0_.next0_
                         res.end_token = tt
-                        res.value = "{0}/{1}".format(res.value, (Utils.asObjectOrNull(tt, NumberToken)).value)
+                        res.value = "{0}/{1}".format(res.value, (tt).value)
                     if ((not tt.is_whitespace_after and tt.next0_ is not None and tt.next0_.is_hiphen) and (isinstance(tt.next0_.next0_, NumberToken))): 
                         tt = tt.next0_.next0_
                         res.end_token = tt
-                        res.value = "{0}-{1}".format(res.value, (Utils.asObjectOrNull(tt, NumberToken)).value)
+                        res.value = "{0}-{1}".format(res.value, (tt).value)
                         if ((not tt.is_whitespace_after and (isinstance(tt.next0_, TextToken)) and tt.next0_.length_char == 1) and tt.next0_.chars.is_all_upper): 
                             tt = tt.next0_
                             res.end_token = tt
-                            res.value += (Utils.asObjectOrNull(tt, TextToken)).term
+                            res.value += (tt).term
                 elif ((isinstance(tt, TextToken)) and tt.length_char == 1 and tt.chars.is_all_upper): 
-                    res.value = "{0}-{1}".format(res.value, (Utils.asObjectOrNull(tt, TextToken)).term)
+                    res.value = "{0}-{1}".format(res.value, (tt).term)
                     res.end_token = tt
         return res
     
     @staticmethod
     def __TryParse(t : 'Token', loc_streets : 'IntOntologyCollection', prefix_before : bool, ignore_street : bool, prev : 'AddressItemToken') -> 'AddressItemToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.date.DateReferent import DateReferent
+        from pullenti.ner.address.internal.StreetDefineHelper import StreetDefineHelper
         if (isinstance(t, ReferentToken)): 
             rt = Utils.asObjectOrNull(t, ReferentToken)
             geo = Utils.asObjectOrNull(rt.referent, GeoReferent)
@@ -749,12 +747,12 @@ class AddressItemToken(MetaToken):
                 if (typ_ != AddressItemToken.ItemType.NUMBER): 
                     if (t1 is None and t.length_char > 1): 
                         return AddressItemToken._new96(typ_, t, tok.end_token, house_typ, build_typ)
-                    if ((isinstance(t1, NumberToken)) and (Utils.asObjectOrNull(t1, NumberToken)).value == (0)): 
+                    if ((isinstance(t1, NumberToken)) and (t1).value == (0)): 
                         return AddressItemToken._new97(typ_, t, t1, "0", house_typ, build_typ)
         if (t1 is not None and t1.isChar('.') and t1.next0_ is not None): 
             if (not t1.is_whitespace_after): 
                 t1 = t1.next0_
-            elif ((isinstance(t1.next0_, NumberToken)) and (Utils.asObjectOrNull(t1.next0_, NumberToken)).typ == NumberSpellingType.DIGIT and (t1.whitespaces_after_count < 2)): 
+            elif ((isinstance(t1.next0_, NumberToken)) and (t1.next0_).typ == NumberSpellingType.DIGIT and (t1.whitespaces_after_count < 2)): 
                 t1 = t1.next0_
         if ((t1 is not None and not t1.is_whitespace_after and ((t1.is_hiphen or t1.isChar('_')))) and (isinstance(t1.next0_, NumberToken))): 
             t1 = t1.next0_
@@ -765,7 +763,7 @@ class AddressItemToken(MetaToken):
             re0 = AddressItemToken._new97(typ_, t, tok.end_token, "0", house_typ, build_typ)
             if (not re0.is_whitespace_after and (isinstance(re0.end_token.next0_, NumberToken))): 
                 re0.end_token = re0.end_token.next0_
-                re0.value = str((Utils.asObjectOrNull(re0.end_token, NumberToken)).value)
+                re0.value = str((re0.end_token).value)
             return re0
         elif (t1 is not None): 
             if (typ_ == AddressItemToken.ItemType.FLAT): 
@@ -788,7 +786,7 @@ class AddressItemToken(MetaToken):
                 return None
             print(nt.value, end="", file=num)
             if (nt.typ == NumberSpellingType.DIGIT or nt.typ == NumberSpellingType.WORDS): 
-                if (((isinstance(nt.end_token, TextToken)) and (Utils.asObjectOrNull(nt.end_token, TextToken)).term == "Е" and nt.end_token.previous == nt.begin_token) and not nt.end_token.is_whitespace_before): 
+                if (((isinstance(nt.end_token, TextToken)) and (nt.end_token).term == "Е" and nt.end_token.previous == nt.begin_token) and not nt.end_token.is_whitespace_before): 
                     print("Е", end="", file=num)
                 drob = False
                 hiph = False
@@ -807,13 +805,13 @@ class AddressItemToken(MetaToken):
                     return None
                 if (isinstance(et, NumberToken)): 
                     if (drob): 
-                        print("/{0}".format((Utils.asObjectOrNull(et, NumberToken)).value), end="", file=num, flush=True)
+                        print("/{0}".format((et).value), end="", file=num, flush=True)
                         drob = False
                         t1 = et
                         et = et.next0_
                         if (et is not None and et.isCharOf("\\/") and (isinstance(et.next0_, NumberToken))): 
                             t1 = et.next0_
-                            print("/{0}".format((Utils.asObjectOrNull(t1, NumberToken)).value), end="", file=num, flush=True)
+                            print("/{0}".format((t1).value), end="", file=num, flush=True)
                             et = t1.next0_
                     elif ((hiph and not t1.is_whitespace_after and (isinstance(et, NumberToken))) and not et.is_whitespace_before): 
                         numm = AddressItemToken.tryParse(et, None, False, True, None)
@@ -848,7 +846,7 @@ class AddressItemToken(MetaToken):
                         if (s is not None): 
                             print(s, end="", file=num)
                             t1 = br.end_token
-                elif ((isinstance(et, TextToken)) and (Utils.asObjectOrNull(et, TextToken)).length_char == 1): 
+                elif ((isinstance(et, TextToken)) and (et).length_char == 1): 
                     s = AddressItemToken.__correctCharToken(et)
                     if (s is not None): 
                         if (((s == "К" or s == "С")) and (isinstance(et.next0_, NumberToken)) and not et.is_whitespace_after): 
@@ -881,14 +879,14 @@ class AddressItemToken(MetaToken):
                                 t1 = et
                                 if (et.next0_ is not None and et.next0_.isCharOf("\\/") and et.next0_.next0_ is not None): 
                                     if (isinstance(et.next0_.next0_, NumberToken)): 
-                                        print("/{0}".format((Utils.asObjectOrNull(et.next0_.next0_, NumberToken)).value), end="", file=num, flush=True)
+                                        print("/{0}".format((et.next0_.next0_).value), end="", file=num, flush=True)
                                         et = et.next0_.next0_
                                         t1 = et
                                     elif (et.next0_.next0_.is_hiphen or et.next0_.next0_.isChar('_') or et.next0_.next0_.isValue("НЕТ", None)): 
                                         et = et.next0_.next0_
                                         t1 = et
                 elif ((isinstance(et, TextToken)) and not et.is_whitespace_before): 
-                    val = (Utils.asObjectOrNull(et, TextToken)).term
+                    val = (et).term
                     if (val == "КМ" and typ_ == AddressItemToken.ItemType.HOUSE): 
                         t1 = et
                         print("КМ", end="", file=num)
@@ -926,10 +924,10 @@ class AddressItemToken(MetaToken):
                         return None
                     print(ch, end="", file=num)
                     if ((t1.next0_ is not None and ((t1.next0_.is_hiphen or t1.next0_.isChar('_'))) and not t1.is_whitespace_after) and (isinstance(t1.next0_.next0_, NumberToken)) and not t1.next0_.is_whitespace_after): 
-                        print((Utils.asObjectOrNull(t1.next0_.next0_, NumberToken)).value, end="", file=num)
+                        print((t1.next0_.next0_).value, end="", file=num)
                         t1 = t1.next0_.next0_
                     elif ((isinstance(t1.next0_, NumberToken)) and not t1.is_whitespace_after and t1.chars.is_all_upper): 
-                        print((Utils.asObjectOrNull(t1.next0_, NumberToken)).value, end="", file=num)
+                        print((t1.next0_).value, end="", file=num)
                         t1 = t1.next0_
                 if (typ_ == AddressItemToken.ItemType.BOX and num.tell() == 0): 
                     rom = NumberHelper.tryParseRoman(t1)
@@ -947,7 +945,7 @@ class AddressItemToken(MetaToken):
                 val = None
                 if (not t1.is_whitespace_after and (isinstance(t1.next0_, NumberToken))): 
                     t1 = t1.next0_
-                    val = str((Utils.asObjectOrNull(t1, NumberToken)).value)
+                    val = str((t1).value)
                 if (t1.isValue("БН", None)): 
                     val = "0"
                 return AddressItemToken._new84(typ_, t, t1, val)
@@ -955,14 +953,14 @@ class AddressItemToken(MetaToken):
                 if (((typ_ == AddressItemToken.ItemType.FLOOR or typ_ == AddressItemToken.ItemType.KILOMETER or typ_ == AddressItemToken.ItemType.POTCH)) and (isinstance(t.previous, NumberToken))): 
                     return AddressItemToken(typ_, t, t1.previous)
                 if ((isinstance(t1, ReferentToken)) and (isinstance(t1.getReferent(), DateReferent))): 
-                    nn = AddressItemToken.__TryParse((Utils.asObjectOrNull(t1, ReferentToken)).begin_token, loc_streets, prefix_before, True, None)
+                    nn = AddressItemToken.__TryParse((t1).begin_token, loc_streets, prefix_before, True, None)
                     if (nn is not None and nn.end_char == t1.end_char and nn.typ == AddressItemToken.ItemType.NUMBER): 
                         nn.begin_token = t
                         nn.end_token = t1
                         nn.typ = typ_
                         return nn
                 if ((isinstance(t1, TextToken)) and ((typ_ == AddressItemToken.ItemType.HOUSE or typ_ == AddressItemToken.ItemType.BUILDING or typ_ == AddressItemToken.ItemType.CORPUS))): 
-                    ter = (Utils.asObjectOrNull(t1, TextToken)).term
+                    ter = (t1).term
                     if (ter == "АБ" or ter == "АБВ" or ter == "МГУ"): 
                         return AddressItemToken._new97(typ_, t, t1, ter, house_typ, build_typ)
                     if (prev is not None and ((prev.typ == AddressItemToken.ItemType.STREET or prev.typ == AddressItemToken.ItemType.CITY)) and t1.chars.is_all_upper): 
@@ -985,9 +983,6 @@ class AddressItemToken(MetaToken):
     
     @staticmethod
     def __tryAttachVCH(t : 'Token', ty : 'ItemType') -> 'AddressItemToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.NumberToken import NumberToken
         if (t is None): 
             return None
         tt = t
@@ -1015,7 +1010,7 @@ class AddressItemToken(MetaToken):
                     break
                 if (not ((isinstance(tt, TextToken)))): 
                     break
-                if ((Utils.asObjectOrNull(tt, TextToken)).term.startswith("ОБЩ")): 
+                if ((tt).term.startswith("ОБЩ")): 
                     if (tt.next0_ is not None and tt.next0_.isChar('.')): 
                         tt = tt.next0_
                     re = AddressItemToken.__tryAttachVCH(tt.next0_, ty)
@@ -1023,11 +1018,11 @@ class AddressItemToken(MetaToken):
                         return re
                     return AddressItemToken._new84(ty, t, tt, "ОБЩ")
                 if (tt.chars.is_all_upper and tt.length_char > 1): 
-                    re = AddressItemToken._new84(ty, t, tt, (Utils.asObjectOrNull(tt, TextToken)).term)
+                    re = AddressItemToken._new84(ty, t, tt, (tt).term)
                     if ((tt.whitespaces_after_count < 2) and (isinstance(tt.next0_, TextToken)) and tt.next0_.chars.is_all_upper): 
                         tt = tt.next0_
                         re.end_token = tt
-                        re.value += (Utils.asObjectOrNull(tt, TextToken)).term
+                        re.value += (tt).term
                     return re
                 break
             else: 
@@ -1037,9 +1032,6 @@ class AddressItemToken(MetaToken):
     
     @staticmethod
     def tryAttachDetail(t : 'Token') -> 'AddressItemToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.NumberExToken import NumberExToken
         if (t is None or ((isinstance(t, ReferentToken)))): 
             return None
         tt = t
@@ -1126,20 +1118,10 @@ class AddressItemToken(MetaToken):
     
     @staticmethod
     def tryAttachOrg(t : 'Token') -> 'AddressItemToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         if (not ((isinstance(t, TextToken)))): 
             return None
         if ((t.length_char > 5 and not t.chars.is_all_upper and not t.chars.is_all_lower) and not t.chars.is_capital_upper): 
-            namm = (Utils.asObjectOrNull(t, TextToken)).getSourceText()
+            namm = (t).getSourceText()
             if (str.isupper(namm[0]) and str.isupper(namm[1])): 
                 i = 0
                 while i < len(namm): 
@@ -1151,21 +1133,21 @@ class AddressItemToken(MetaToken):
                             org00 = t.kit.createReferent("ORGANIZATION")
                             org00.addSlot("TYPE", li[0].canonic_text.lower(), False, 0)
                             org00.addSlot("TYPE", abbr, False, 0)
-                            namm = (Utils.asObjectOrNull(t, TextToken)).term[i - 1:]
+                            namm = (t).term[i - 1:]
                             rt00 = ReferentToken(org00, t, t)
                             rt00.data = t.kit.getAnalyzerDataByAnalyzerName("ORGANIZATION")
                             if (t.next0_ is not None and t.next0_.is_hiphen): 
                                 if (isinstance(t.next0_.next0_, NumberToken)): 
-                                    org00.addSlot("NUMBER", str((Utils.asObjectOrNull(t.next0_.next0_, NumberToken)).value), False, 0)
+                                    org00.addSlot("NUMBER", str((t.next0_.next0_).value), False, 0)
                                     rt00.end_token = t.next0_.next0_
                                 elif ((isinstance(t.next0_.next0_, TextToken)) and not t.next0_.is_whitespace_after): 
-                                    namm = "{0}-{1}".format(namm, (Utils.asObjectOrNull(t.next0_.next0_, TextToken)).term)
+                                    namm = "{0}-{1}".format(namm, (t.next0_.next0_).term)
                                     rt00.end_token = t.next0_.next0_
                             org00.addSlot("NAME", namm, False, 0)
                             return AddressItemToken._new114(AddressItemToken.ItemType.STREET, t, rt00.end_token, rt00.referent, rt00, True)
                         break
                     i += 1
-        if (t.isValue("СНТ", None) and (isinstance(t.next0_, ReferentToken))): 
+        if (t.isValue("СТ", None)): 
             pass
         rt = None
         typ_ = None
@@ -1198,12 +1180,12 @@ class AddressItemToken(MetaToken):
             while tt is not None: 
                 if (tt.is_hiphen or tt.is_comma): 
                     pass
-                elif ((isinstance(tt, TextToken)) and (Utils.asObjectOrNull(tt, TextToken)).term == "ПМК"): 
+                elif ((isinstance(tt, TextToken)) and (tt).term == "ПМК"): 
                     tt2 = tt.next0_
                     if (tt2 is not None and ((tt2.is_hiphen or tt2.isCharOf(":")))): 
                         tt2 = tt2.next0_
                     if (isinstance(tt2, NumberToken)): 
-                        rt1.referent.addSlot("NUMBER", str((Utils.asObjectOrNull(tt2, NumberToken)).value), False, 0)
+                        rt1.referent.addSlot("NUMBER", str((tt2).value), False, 0)
                         rt1.end_token = tt2
                         break
                 else: 
@@ -1279,7 +1261,7 @@ class AddressItemToken(MetaToken):
                         typ2 = tok.termin.acronym
                         nam = MiscHelper.getTextValue(t, nt2, GetTextAttr.NO)
                         if (isinstance(num2, NumberToken)): 
-                            num = str((Utils.asObjectOrNull(num2, NumberToken)).value)
+                            num = str((num2).value)
                         t1 = nt2
                     break
                 if (tt2.is_hiphen): 
@@ -1293,7 +1275,7 @@ class AddressItemToken(MetaToken):
                     continue
                 nuuu = NumberHelper.tryParseAge(tt2)
                 if (nuuu is not None): 
-                    num = str((Utils.asObjectOrNull(nuuu, NumberToken)).value)
+                    num = str((nuuu).value)
                     num2 = (nuuu)
                     tt2 = nuuu.end_token
                     continue
@@ -1336,7 +1318,7 @@ class AddressItemToken(MetaToken):
                     typ2 = tok.termin.acronym
                 tt = br.end_token.previous
                 if (isinstance(tt, NumberToken)): 
-                    num = str((Utils.asObjectOrNull(tt, NumberToken)).value)
+                    num = str((tt).value)
                     tt = tt.previous
                     if (tt is not None and (((tt.is_hiphen or tt.isChar('_') or tt.isValue("N", None)) or tt.isValue("№", None)))): 
                         tt = tt.previous
@@ -1363,8 +1345,10 @@ class AddressItemToken(MetaToken):
             typ_ = tok.termin.canonic_text.lower()
             typ2 = tok.termin.acronym
             nam = MiscHelper.getTextValue(tt1, tt1, GetTextAttr.NO)
+            if (typ2 == "СТ" and nam == "СЭВ"): 
+                return None
             t1 = tt1
-        elif (((tok is not None and typ_ is None and tt1 is not None) and (isinstance(tt1.getReferent(), GeoReferent)) and (tt1.whitespaces_before_count < 3)) and (Utils.asObjectOrNull(tt1, ReferentToken)).begin_token == (Utils.asObjectOrNull(tt1, ReferentToken)).end_token): 
+        elif (((tok is not None and typ_ is None and tt1 is not None) and (isinstance(tt1.getReferent(), GeoReferent)) and (tt1.whitespaces_before_count < 3)) and (tt1).begin_token == (tt1).end_token): 
             typ_ = tok.termin.canonic_text.lower()
             typ2 = tok.termin.acronym
             nam = MiscHelper.getTextValue(tt1, tt1, GetTextAttr.NO)
@@ -1450,7 +1434,7 @@ class AddressItemToken(MetaToken):
                 else: 
                     rt.end_token = t1.next0_.next0_
                     t1 = rt.end_token
-                    org0_.addSlot("NUMBER", str((Utils.asObjectOrNull(t1, NumberToken)).value), False, 0)
+                    org0_.addSlot("NUMBER", str((t1).value), False, 0)
             if (tok is not None and (t1.end_char < tok.end_char)): 
                 rt.end_token = tok.end_token
                 t1 = rt.end_token
@@ -1478,8 +1462,6 @@ class AddressItemToken(MetaToken):
         return res
     
     def createGeoOrgTerr(self) -> 'ReferentToken':
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         geo = GeoReferent()
         t1 = self.end_token
         geo._addOrgReferent(self.referent)
@@ -1490,8 +1472,6 @@ class AddressItemToken(MetaToken):
     
     @staticmethod
     def checkHouseAfter(t : 'Token', leek : bool=False, pure_house : bool=False) -> bool:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
         if (t is None): 
             return False
         cou = 0
@@ -1529,7 +1509,6 @@ class AddressItemToken(MetaToken):
     
     @staticmethod
     def checkKmAfter(t : 'Token') -> bool:
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         cou = 0
         while t is not None and (cou < 4): 
             if (t.isCharOf(",.") or t.morph.class0_.is_preposition): 
@@ -1581,7 +1560,6 @@ class AddressItemToken(MetaToken):
     
     @staticmethod
     def __correctCharToken(t : 'Token') -> str:
-        from pullenti.ner.TextToken import TextToken
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             return None
@@ -1598,9 +1576,6 @@ class AddressItemToken(MetaToken):
     @staticmethod
     def initialize() -> None:
         from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (AddressItemToken.M_ONTOLOGY is not None): 
             return
         StreetItemToken.initialize()

@@ -5,16 +5,18 @@
 import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Referent import Referent
-from pullenti.ner.sentiment.SentimentKind import SentimentKind
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.ner.sentiment.SentimentKind import SentimentKind
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.sentiment.internal.MetaSentiment import MetaSentiment
+from pullenti.ner.Referent import Referent
 
 class SentimentReferent(Referent):
     """ Фрагмент, соответсвующий сентиментной оценке """
     
     def __init__(self) -> None:
-        from pullenti.ner.sentiment.internal.MetaSentiment import MetaSentiment
         super().__init__(SentimentReferent.OBJ_TYPENAME)
         self.instance_of = MetaSentiment._global_meta
     
@@ -29,7 +31,6 @@ class SentimentReferent(Referent):
     ATTR_SPELLING = "SPELLING"
     
     def toString(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
-        from pullenti.ner.sentiment.internal.MetaSentiment import MetaSentiment
         res = io.StringIO()
         print(MetaSentiment.FTYP.convertInnerValueToOuterValue(self.getStringValue(SentimentReferent.ATTR_KIND), lang), end="", file=res)
         print(" {0}".format(Utils.ifNotNull(self.spelling, "")), end="", file=res, flush=True)
@@ -96,7 +97,6 @@ class SentimentReferent(Referent):
         return False
     
     def createOntologyItem(self) -> 'IntOntologyItem':
-        from pullenti.ner.core.Termin import Termin
         oi = IntOntologyItem(self)
         oi.termins.append(Termin(self.spelling))
         return oi

@@ -3,20 +3,21 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
+
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.booklink.BookLinkRefType import BookLinkRefType
 
-
 class MetaBookLinkRef(ReferentClass):
     
-    def __init__(self) -> None:
+    @staticmethod
+    def initialize() -> None:
         from pullenti.ner.booklink.BookLinkRefReferent import BookLinkRefReferent
-        super().__init__()
-        self.addFeature(BookLinkRefReferent.ATTR_BOOK, "Источник", 1, 1)
-        self.addFeature(BookLinkRefReferent.ATTR_TYPE, "Тип", 0, 1)
-        self.addFeature(BookLinkRefReferent.ATTR_PAGES, "Страницы", 0, 1)
-        self.addFeature(BookLinkRefReferent.ATTR_NUMBER, "Номер", 0, 1)
-        self.addFeature(BookLinkRefReferent.ATTR_MISC, "Разное", 0, 0)
+        MetaBookLinkRef._global_meta = MetaBookLinkRef()
+        MetaBookLinkRef._global_meta.addFeature(BookLinkRefReferent.ATTR_BOOK, "Источник", 1, 1)
+        MetaBookLinkRef._global_meta.addFeature(BookLinkRefReferent.ATTR_TYPE, "Тип", 0, 1)
+        MetaBookLinkRef._global_meta.addFeature(BookLinkRefReferent.ATTR_PAGES, "Страницы", 0, 1)
+        MetaBookLinkRef._global_meta.addFeature(BookLinkRefReferent.ATTR_NUMBER, "Номер", 0, 1)
+        MetaBookLinkRef._global_meta.addFeature(BookLinkRefReferent.ATTR_MISC, "Разное", 0, 0)
     
     @property
     def name(self) -> str:
@@ -42,10 +43,3 @@ class MetaBookLinkRef(ReferentClass):
         return MetaBookLinkRef.IMAGE_ID
     
     _global_meta = None
-    
-    # static constructor for class MetaBookLinkRef
-    @staticmethod
-    def _static_ctor():
-        MetaBookLinkRef._global_meta = MetaBookLinkRef()
-
-MetaBookLinkRef._static_ctor()

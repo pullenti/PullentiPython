@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class KeywordType(IntEnum):
     UNDEFINED = 0
     OBJECT = 1

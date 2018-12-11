@@ -4,17 +4,16 @@
 
 from enum import IntEnum
 
-
 class DecreeChangeKind(IntEnum):
     """ Типы изменений структурных элементов (СЭ) """
     UNDEFINED = 0
-    CONTAINER = 0 + 1
-    APPEND = (0 + 1) + 1
-    EXPIRE = ((0 + 1) + 1) + 1
-    NEW = (((0 + 1) + 1) + 1) + 1
-    EXCHANGE = ((((0 + 1) + 1) + 1) + 1) + 1
-    REMOVE = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
-    CONSIDER = ((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1
+    CONTAINER = 1
+    APPEND = 2
+    EXPIRE = 3
+    NEW = 4
+    EXCHANGE = 5
+    REMOVE = 6
+    CONSIDER = 7
     
     @classmethod
     def has_value(cls, value):

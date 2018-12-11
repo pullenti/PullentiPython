@@ -5,13 +5,29 @@
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
 
+from pullenti.ner.Token import Token
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
+from pullenti.ner.uri.internal.MetaUri import MetaUri
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.uri.internal.UriItemToken import UriItemToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.uri.UriReferent import UriReferent
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.Analyzer import Analyzer
 
 class UriAnalyzer(Analyzer):
     """ Картридж для выделения интернетных объектов (URL, E-mail) """
@@ -39,12 +55,10 @@ class UriAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.uri.internal.MetaUri import MetaUri
         return [MetaUri._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.uri.internal.MetaUri import MetaUri
         res = dict()
         res[MetaUri.MAIL_IMAGE_ID] = EpNerBankInternalResourceHelper.getBytes("email.png")
         res[MetaUri.URI_IMAGE_ID] = EpNerBankInternalResourceHelper.getBytes("uri.png")
@@ -55,7 +69,6 @@ class UriAnalyzer(Analyzer):
         return ["PHONE"]
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.uri.UriReferent import UriReferent
         if (type0_ == UriReferent.OBJ_TYPENAME): 
             return UriReferent()
         return None
@@ -68,12 +81,6 @@ class UriAnalyzer(Analyzer):
             lastStage: 
         
         """
-        from pullenti.ner.uri.internal.UriItemToken import UriItemToken
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         ad = kit.getAnalyzerData(self)
         t = kit.first_token
         first_pass3161 = True
@@ -509,20 +516,16 @@ class UriAnalyzer(Analyzer):
     
     @staticmethod
     def __checkDetail(rt : 'ReferentToken') -> None:
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (rt.end_token.whitespaces_after_count > 2 or rt.end_token.next0_ is None): 
             return
         if (rt.end_token.next0_.isChar('(')): 
             br = BracketHelper.tryParse(rt.end_token.next0_, BracketParseAttr.NO, 100)
             if (br is not None): 
-                (Utils.asObjectOrNull(rt.referent, UriReferent)).detail = MiscHelper.getTextValue(br.begin_token.next0_, br.end_token.previous, GetTextAttr.NO)
+                (rt.referent).detail = MiscHelper.getTextValue(br.begin_token.next0_, br.end_token.previous, GetTextAttr.NO)
                 rt.end_token = br.end_token
     
     @staticmethod
     def __siteBefore(t : 'Token') -> 'Token':
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         if (t is not None and t.isChar(':')): 
             t = t.previous
         if (t is None): 
@@ -557,10 +560,6 @@ class UriAnalyzer(Analyzer):
     
     @staticmethod
     def __TryAttachLotus(t : 'TextToken') -> 'ReferentToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.uri.UriReferent import UriReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None or t.next0_ is None): 
             return None
         t1 = t.next0_.next0_
@@ -578,7 +577,7 @@ class UriAnalyzer(Analyzer):
                 return None
             if (tails is None): 
                 tails = list()
-            tails.append((Utils.asObjectOrNull(tt, TextToken)).term)
+            tails.append((tt).term)
             t1 = tt
             if (tt.is_whitespace_after or tt.next0_ is None): 
                 break
@@ -602,12 +601,12 @@ class UriAnalyzer(Analyzer):
                 break
             if (t0.previous.chars == t.chars): 
                 t0 = t0.previous
-                heads.insert(0, (Utils.asObjectOrNull(t0, TextToken)).term)
+                heads.insert(0, (t0).term)
                 ok = True
                 continue
             if ((t0.previous.chars.is_latin_letter and t0.previous.chars.is_all_upper and t0.previous.length_char == 1) and k == 0): 
                 t0 = t0.previous
-                heads.insert(0, (Utils.asObjectOrNull(t0, TextToken)).term)
+                heads.insert(0, (t0).term)
                 ok = False
                 continue
             break
@@ -631,14 +630,10 @@ class UriAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.ner.uri.internal.UriItemToken import UriItemToken
-        from pullenti.ner.ProcessorService import ProcessorService
         if (UriAnalyzer.__m_schemes is not None): 
             return
         Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
+        MetaUri.initialize()
         try: 
             UriAnalyzer.__m_schemes = TerminCollection()
             obj = EpNerBankInternalResourceHelper.getString("UriSchemes.csv")

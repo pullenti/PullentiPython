@@ -6,26 +6,33 @@ import io
 import typing
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.phone.PhoneKind import PhoneKind
-from pullenti.ner.phone.internal.PhoneHelper import PhoneHelper
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.morph.LanguageHelper import LanguageHelper
 
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.phone.internal.PhoneHelper import PhoneHelper
+from pullenti.ner.phone.PhoneKind import PhoneKind
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.NumberExToken import NumberExToken
 
 class PhoneItemToken(MetaToken):
     """ Примитив, из которых состоит телефонный номер """
     
     class PhoneItemType(IntEnum):
         NUMBER = 0
-        CITYCODE = 0 + 1
-        DELIM = (0 + 1) + 1
-        PREFIX = ((0 + 1) + 1) + 1
-        ADDNUMBER = (((0 + 1) + 1) + 1) + 1
-        COUNTRYCODE = ((((0 + 1) + 1) + 1) + 1) + 1
-        ALT = (((((0 + 1) + 1) + 1) + 1) + 1) + 1
+        CITYCODE = 1
+        DELIM = 2
+        PREFIX = 3
+        ADDNUMBER = 4
+        COUNTRYCODE = 5
+        ALT = 6
         
         @classmethod
         def has_value(cls, value):
@@ -57,8 +64,6 @@ class PhoneItemToken(MetaToken):
             indFrom: 
         
         """
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         res = PhoneItemToken.__TryAttach(t0)
         if (res is None): 
             return None
@@ -104,8 +109,6 @@ class PhoneItemToken(MetaToken):
     
     @staticmethod
     def __TryAttach(t0 : 'Token') -> 'PhoneItemToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.NumberExToken import NumberExToken
         if (t0 is None): 
             return None
         if (isinstance(t0, NumberToken)): 
@@ -113,7 +116,7 @@ class PhoneItemToken(MetaToken):
                 rt = t0.kit.processReferent("PHONE", t0.next0_)
                 if (rt is None): 
                     return None
-            if ((Utils.asObjectOrNull(t0, NumberToken)).typ == NumberSpellingType.DIGIT and not t0.morph.class0_.is_adjective): 
+            if ((t0).typ == NumberSpellingType.DIGIT and not t0.morph.class0_.is_adjective): 
                 return PhoneItemToken._new2478(t0, t0, PhoneItemToken.PhoneItemType.NUMBER, t0.getSourceText())
             return None
         if (t0.isChar('.')): 
@@ -121,7 +124,7 @@ class PhoneItemToken(MetaToken):
         if (t0.is_hiphen): 
             return PhoneItemToken._new2478(t0, t0, PhoneItemToken.PhoneItemType.DELIM, "-")
         if (t0.isChar('+')): 
-            if (not ((isinstance(t0.next0_, NumberToken))) or (Utils.asObjectOrNull(t0.next0_, NumberToken)).typ != NumberSpellingType.DIGIT): 
+            if (not ((isinstance(t0.next0_, NumberToken))) or (t0.next0_).typ != NumberSpellingType.DIGIT): 
                 return None
             else: 
                 val = t0.next0_.getSourceText()
@@ -144,7 +147,7 @@ class PhoneItemToken(MetaToken):
                 while et is not None: 
                     if (et.isChar(')')): 
                         break
-                    if (((isinstance(et, NumberToken))) and (Utils.asObjectOrNull(et, NumberToken)).typ == NumberSpellingType.DIGIT): 
+                    if (((isinstance(et, NumberToken))) and (et).typ == NumberSpellingType.DIGIT): 
                         print(et.getSourceText(), end="", file=val)
                     elif (not et.is_hiphen and not et.isChar('.')): 
                         return None
@@ -163,7 +166,7 @@ class PhoneItemToken(MetaToken):
                     return PhoneItemToken._new2484(t0, tt1.end_token.next0_, PhoneItemToken.PhoneItemType.PREFIX, True, "")
                 return None
         if ((t0.isChar('/') and (isinstance(t0.next0_, NumberToken)) and t0.next0_.next0_ is not None) and t0.next0_.next0_.isChar('/') and t0.next0_.length_char == 3): 
-            return PhoneItemToken._new2483(t0, t0.next0_.next0_, PhoneItemToken.PhoneItemType.CITYCODE, str((Utils.asObjectOrNull(t0.next0_, NumberToken)).value), True)
+            return PhoneItemToken._new2483(t0, t0.next0_.next0_, PhoneItemToken.PhoneItemType.CITYCODE, str((t0.next0_).value), True)
         t1 = None
         ki = PhoneKind.UNDEFINED
         if ((t0.isValue("Т", None) and t0.next0_ is not None and t0.next0_.isCharOf("\\/")) and t0.next0_.next0_ is not None and ((t0.next0_.next0_.isValue("Р", None) or t0.next0_.next0_.isValue("М", None)))): 
@@ -197,14 +200,13 @@ class PhoneItemToken(MetaToken):
     
     @staticmethod
     def tryAttachAdditional(t0 : 'Token') -> 'PhoneItemToken':
-        from pullenti.ner.NumberToken import NumberToken
         t = t0
         if (t is None): 
             return None
         if (t.isChar(',')): 
             t = t.next0_
         elif (t.isCharOf("*#") and (isinstance(t.next0_, NumberToken))): 
-            val0 = (Utils.asObjectOrNull(t.next0_, NumberToken)).getSourceText()
+            val0 = (t.next0_).getSourceText()
             t1 = t.next0_
             if ((t1.next0_ is not None and t1.next0_.is_hiphen and not t1.is_whitespace_after) and (isinstance(t1.next0_.next0_, NumberToken)) and not t1.next0_.is_whitespace_after): 
                 t1 = t1.next0_.next0_
@@ -239,7 +241,7 @@ class PhoneItemToken(MetaToken):
             t = t.next0_
         if (not ((isinstance(t, NumberToken)))): 
             return None
-        val = (Utils.asObjectOrNull(t, NumberToken)).getSourceText()
+        val = (t).getSourceText()
         if ((t.next0_ is not None and t.next0_.is_hiphen and not t.is_whitespace_after) and (isinstance(t.next0_.next0_, NumberToken))): 
             val += t.next0_.next0_.getSourceText()
             t = t.next0_.next0_
@@ -263,8 +265,6 @@ class PhoneItemToken(MetaToken):
         Returns:
             typing.List[PhoneItemToken]: Список примитивов
         """
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
         if (t0 is None): 
             return None
         p = PhoneItemToken.tryAttach(t0)
@@ -374,7 +374,6 @@ class PhoneItemToken(MetaToken):
     
     @staticmethod
     def tryAttachAlternate(t0 : 'Token', ph0 : 'PhoneReferent', pli : typing.List['PhoneItemToken']) -> 'PhoneItemToken':
-        from pullenti.ner.NumberToken import NumberToken
         if (t0 is None): 
             return None
         if (t0.isCharOf("\\/") and (isinstance(t0.next0_, NumberToken)) and (t0.next0_.end_char - t0.next0_.begin_char) <= 1): 
@@ -417,9 +416,6 @@ class PhoneItemToken(MetaToken):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         if (PhoneItemToken.M_PHONE_TERMINS is not None): 
             return
         PhoneItemToken.M_PHONE_TERMINS = TerminCollection()

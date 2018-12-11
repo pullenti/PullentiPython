@@ -4,11 +4,10 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
+
+from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphVoice import MorphVoice
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.morph.MorphGender import MorphGender
-
 
 class VerbPhraseToken(MetaToken):
     """ Глагольная группа """
@@ -52,5 +51,5 @@ class VerbPhraseToken(MetaToken):
         print(", {0}".format(str(self.morph)), end="", file=tmp, flush=True)
         return Utils.toStringStringIO(tmp)
     
-    def getNormalCaseText(self, mc : 'MorphClass'=MorphClass(), single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def getNormalCaseText(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         return super().getNormalCaseText(mc, single_number, gender, keep_chars)

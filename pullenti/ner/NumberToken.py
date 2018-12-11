@@ -4,12 +4,11 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.ner.MetaToken import MetaToken
+
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
-
 
 class NumberToken(MetaToken):
     """ Числовой токен (числительное) """
@@ -32,7 +31,7 @@ class NumberToken(MetaToken):
             print(" {0}".format(str(self.morph)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
-    def getNormalCaseText(self, mc : 'MorphClass'=MorphClass(), single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def getNormalCaseText(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         return str(self.value)
     
     def _serialize(self, stream : io.IOBase) -> None:

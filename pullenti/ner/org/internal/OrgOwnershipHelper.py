@@ -3,9 +3,11 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 import typing
+
 from pullenti.ner.org.OrganizationKind import OrganizationKind
 from pullenti.ner.org.OrgProfile import OrgProfile
-
+from pullenti.ner.Referent import Referent
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
 
 class OrgOwnershipHelper:
     
@@ -18,8 +20,6 @@ class OrgOwnershipHelper:
             lower(OrganizationReferent): 
         
         """
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         if (higher is None or lower is None or higher == lower): 
             return False
         if (lower.owner is not None): 

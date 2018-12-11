@@ -3,23 +3,24 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 from pullenti.unisharp.Utils import Utils
+
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.sentiment.SentimentKind import SentimentKind
 
-
 class MetaSentiment(ReferentClass):
     
-    def __init__(self) -> None:
+    @staticmethod
+    def initialize() -> None:
         from pullenti.ner.sentiment.SentimentReferent import SentimentReferent
-        super().__init__()
-        f = self.addFeature(SentimentReferent.ATTR_KIND, "Тип", 1, 1)
+        MetaSentiment._global_meta = MetaSentiment()
+        f = MetaSentiment._global_meta.addFeature(SentimentReferent.ATTR_KIND, "Тип", 1, 1)
         MetaSentiment.FTYP = f
         f.addValue(Utils.enumToString(SentimentKind.UNDEFINED), "Неизвестно", None, None)
         f.addValue(Utils.enumToString(SentimentKind.POSITIVE), "Положительно", None, None)
         f.addValue(Utils.enumToString(SentimentKind.NEGATIVE), "Отрицательно", None, None)
-        self.addFeature(SentimentReferent.ATTR_SPELLING, "Текст", 0, 0)
-        self.addFeature(SentimentReferent.ATTR_REF, "Ссылка", 0, 0)
-        self.addFeature(SentimentReferent.ATTR_COEF, "Коэффициент", 0, 0)
+        MetaSentiment._global_meta.addFeature(SentimentReferent.ATTR_SPELLING, "Текст", 0, 0)
+        MetaSentiment._global_meta.addFeature(SentimentReferent.ATTR_REF, "Ссылка", 0, 0)
+        MetaSentiment._global_meta.addFeature(SentimentReferent.ATTR_COEF, "Коэффициент", 0, 0)
     
     FTYP = None
     
@@ -49,10 +50,3 @@ class MetaSentiment(ReferentClass):
         return MetaSentiment.IMAGE_ID
     
     _global_meta = None
-    
-    # static constructor for class MetaSentiment
-    @staticmethod
-    def _static_ctor():
-        MetaSentiment._global_meta = MetaSentiment()
-
-MetaSentiment._static_ctor()

@@ -5,25 +5,38 @@
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.address.internal.StreetItemType import StreetItemType
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
-from pullenti.morph.MorphNumber import MorphNumber
+
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.address.internal.StreetDefineHelper import StreetDefineHelper
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.Token import Token
+from pullenti.ner.date.DateReferent import DateReferent
 from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.address.internal.StreetItemType import StreetItemType
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.geo.internal.CityItemToken import CityItemToken
+from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
+from pullenti.ner.core.ProperNameHelper import ProperNameHelper
 
 class CityAttachHelper:
     
     @staticmethod
     def tryAttachCity(li : typing.List['CityItemToken'], ad : 'AnalyzerDataWithOntology', always : bool=False) -> 'ReferentToken':
-        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
         if (li is None): 
             return None
         if (len(li) > 2 and li[0].typ == CityItemToken.ItemType.MISC and li[1].typ == CityItemToken.ItemType.NOUN): 
@@ -67,15 +80,6 @@ class CityAttachHelper:
     
     @staticmethod
     def __try1(li : typing.List['CityItemToken'], oi : 'IntOntologyItem', ad : 'AnalyzerDataWithOntology') -> 'ReferentToken':
-        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.ProperNameHelper import ProperNameHelper
         oi.value = (None)
         if (li is None or (len(li) < 1)): 
             return None
@@ -202,7 +206,7 @@ class CityAttachHelper:
             if (alttyp is not None): 
                 city._addTyp(alttyp)
             rt = ReferentToken._new746(city, li[0].begin_token, li[len(li) - 1].end_token, mc)
-        if ((isinstance(rt.referent, GeoReferent)) and len(li) == 1 and (Utils.asObjectOrNull(rt.referent, GeoReferent)).is_city): 
+        if ((isinstance(rt.referent, GeoReferent)) and len(li) == 1 and (rt.referent).is_city): 
             if (rt.begin_token.previous is not None and rt.begin_token.previous.isValue("Г", None)): 
                 rt.begin_token = rt.begin_token.previous
             elif ((rt.begin_token.previous is not None and rt.begin_token.previous.isChar('.') and rt.begin_token.previous.previous is not None) and rt.begin_token.previous.previous.isValue("Г", None)): 
@@ -215,16 +219,6 @@ class CityAttachHelper:
     
     @staticmethod
     def __tryNounName(li : typing.List['CityItemToken'], oi : 'IntOntologyItem', always : bool) -> 'ReferentToken':
-        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.ProperNameHelper import ProperNameHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.NumberToken import NumberToken
         oi.value = (None)
         if (li is None or (len(li) < 2) or ((li[0].typ != CityItemToken.ItemType.NOUN and li[0].typ != CityItemToken.ItemType.MISC))): 
             return None
@@ -403,13 +397,6 @@ class CityAttachHelper:
             oi(IntOntologyItem): 
         
         """
-        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-        from pullenti.ner.ReferentToken import ReferentToken
         oi.value = (None)
         if (li is None or li[0].typ != CityItemToken.ItemType.CITY): 
             return None
@@ -514,10 +501,6 @@ class CityAttachHelper:
     
     @staticmethod
     def __try4(li : typing.List['CityItemToken']) -> 'ReferentToken':
-        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
         if ((len(li) > 0 and li[0].typ == CityItemToken.ItemType.NOUN and ((li[0].value != "ГОРОД" and li[0].value != "МІСТО" and li[0].value != "CITY"))) and ((not li[0].doubtful or li[0].geo_object_before))): 
             if (len(li) > 1 and li[1].org_ref is not None): 
                 geo_ = GeoReferent()
@@ -537,12 +520,11 @@ class CityAttachHelper:
     
     @staticmethod
     def checkYearAfter(tt : 'Token') -> bool:
-        from pullenti.ner.NumberToken import NumberToken
         if (tt is not None and ((tt.is_comma or tt.is_hiphen))): 
             tt = tt.next0_
         if (tt is not None and tt.is_newline_after): 
             if (isinstance(tt, NumberToken)): 
-                year = (Utils.asObjectOrNull(tt, NumberToken)).value
+                year = (tt).value
                 if (year > (1990) and (year < (2100))): 
                     return True
             elif (tt.getReferent() is not None and tt.getReferent().type_name == "DATE"): 
@@ -551,7 +533,6 @@ class CityAttachHelper:
     
     @staticmethod
     def checkStreetAfter(tt : 'Token') -> bool:
-        from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
         if (tt is not None and ((tt.is_comma_and or tt.is_hiphen or tt.morph.class0_.is_preposition))): 
             tt = tt.next0_
         if (tt is None): 
@@ -563,7 +544,6 @@ class CityAttachHelper:
     
     @staticmethod
     def checkCityAfter(tt : 'Token') -> bool:
-        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
         while tt is not None and (((tt.is_comma_and or tt.is_hiphen or tt.morph.class0_.is_preposition) or tt.isChar('.'))):
             tt = tt.next0_
         if (tt is None): 

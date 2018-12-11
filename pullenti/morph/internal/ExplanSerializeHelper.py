@@ -6,13 +6,15 @@ import io
 import gzip
 import shutil
 from pullenti.unisharp.Utils import Utils
-from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
-from pullenti.morph.internal.ByteArrayWrapper import ByteArrayWrapper
-from pullenti.morph.DerivateGroup import DerivateGroup
-from pullenti.morph.internal.LazyInfo2 import LazyInfo2
-from pullenti.morph.internal.ExplanTreeNode import ExplanTreeNode
-from pullenti.morph.DerivateWord import DerivateWord
 
+from pullenti.morph.DerivateWord import DerivateWord
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.DerivateGroup import DerivateGroup
+from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.internal.ByteArrayWrapper import ByteArrayWrapper
+from pullenti.morph.internal.ExplanTreeNode import ExplanTreeNode
 
 class ExplanSerializeHelper:
     
@@ -38,6 +40,7 @@ class ExplanSerializeHelper:
     
     @staticmethod
     def deserializeDD(str0_ : io.IOBase, dic : 'DerivateDictionary', lazy_load : bool) -> None:
+        from pullenti.morph.internal.LazyInfo2 import LazyInfo2
         with io.BytesIO() as tmp: 
             MorphSerializeHelper.deflateGzip(str0_, tmp)
             wr = ByteArrayWrapper(bytearray(tmp.getvalue()))
@@ -85,9 +88,6 @@ class ExplanSerializeHelper:
     
     @staticmethod
     def deserializeDerivateGroup(str0_ : 'ByteArrayWrapper', dg : 'DerivateGroup') -> None:
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.morph.MorphLang import MorphLang
-        from pullenti.morph.MorphCase import MorphCase
         attr = str0_.deserializeShort()
         if (((attr & 1)) != 0): 
             dg.is_dummy = True
@@ -124,7 +124,7 @@ class ExplanSerializeHelper:
             ExplanSerializeHelper.__serializeShort(res, 0)
         elif (isinstance(tn.groups, DerivateGroup)): 
             ExplanSerializeHelper.__serializeShort(res, 1)
-            ExplanSerializeHelper.__serializeInt(res, (Utils.asObjectOrNull(tn.groups, DerivateGroup)).tag)
+            ExplanSerializeHelper.__serializeInt(res, (tn.groups).tag)
         else: 
             li = Utils.asObjectOrNull(tn.groups, list)
             if (li is not None): 
@@ -149,6 +149,7 @@ class ExplanSerializeHelper:
     
     @staticmethod
     def deserializeTreeNode(str0_ : 'ByteArrayWrapper', dic : 'DerivateDictionary', tn : 'ExplanTreeNode', lazy_load : bool) -> None:
+        from pullenti.morph.internal.LazyInfo2 import LazyInfo2
         cou = str0_.deserializeShort()
         li = (list() if cou > 1 else None)
         while cou > 0: 

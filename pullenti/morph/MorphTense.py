@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-
 class MorphTense(IntEnum):
     """ Время (для глаголов) """
     UNDEFINED = 0

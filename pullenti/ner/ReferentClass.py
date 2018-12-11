@@ -6,6 +6,7 @@ import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
+from pullenti.ner.Feature import Feature
 
 class ReferentClass:
     """ Описатель некоторого класса сущностей """
@@ -43,7 +44,6 @@ class ReferentClass:
             up_bound(int): 
         
         """
-        from pullenti.ner.Feature import Feature
         res = Feature._new2702(attr_name, attr_caption, low_bound, up_bound)
         self.__m_features.append(res)
         if (not attr_name in self.__m_attrs): 

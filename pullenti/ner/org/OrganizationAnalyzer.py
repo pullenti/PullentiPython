@@ -8,34 +8,63 @@ import io
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
-from pullenti.ner.org.OrgProfile import OrgProfile
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.org.OrganizationKind import OrganizationKind
-from pullenti.ner.org.internal.OrgOwnershipHelper import OrgOwnershipHelper
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.org.internal.OrgGlobal import OrgGlobal
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
 
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.org.internal.OrgItemNumberToken import OrgItemNumberToken
+from pullenti.ner.org.internal.OrgItemTermin import OrgItemTermin
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.TextAnnotation import TextAnnotation
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.CharsInfo import CharsInfo
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.AnalyzerData import AnalyzerData
+from pullenti.ner.org.internal.OrgGlobal import OrgGlobal
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.Morphology import Morphology
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
+from pullenti.ner.address.AddressReferent import AddressReferent
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.org.OrgProfile import OrgProfile
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.MorphCollection import MorphCollection
+from pullenti.ner.org.internal.MetaOrganization import MetaOrganization
+from pullenti.ner.org.OrganizationKind import OrganizationKind
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.Token import Token
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.org.internal.OrgOwnershipHelper import OrgOwnershipHelper
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
+from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
 
 class OrganizationAnalyzer(Analyzer):
     
     class AttachType(IntEnum):
         NORMAL = 0
-        NORMALAFTERDEP = 0 + 1
-        MULTIPLE = (0 + 1) + 1
-        HIGH = ((0 + 1) + 1) + 1
-        EXTONTOLOGY = (((0 + 1) + 1) + 1) + 1
+        NORMALAFTERDEP = 1
+        MULTIPLE = 2
+        HIGH = 3
+        EXTONTOLOGY = 4
         
         @classmethod
         def has_value(cls, value):
@@ -44,8 +73,8 @@ class OrganizationAnalyzer(Analyzer):
     class OrgAnalyzerData(AnalyzerDataWithOntology):
         
         def __init__(self) -> None:
-            from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
             from pullenti.ner.core.TerminCollection import TerminCollection
+            from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
             super().__init__()
             self.loc_orgs = IntOntologyCollection()
             self.org_pure_names = TerminCollection()
@@ -53,17 +82,17 @@ class OrganizationAnalyzer(Analyzer):
             self.large_text_regim = False
         
         def registerReferent(self, referent : 'Referent') -> 'Referent':
-            from pullenti.ner.org.OrganizationReferent import OrganizationReferent
             from pullenti.ner.core.Termin import Termin
+            from pullenti.ner.org.OrganizationReferent import OrganizationReferent
             if (isinstance(referent, OrganizationReferent)): 
-                (Utils.asObjectOrNull(referent, OrganizationReferent))._finalCorrection()
+                (referent)._finalCorrection()
             slots = len(referent.slots)
             res = super().registerReferent(referent)
             if (not self.large_text_regim and (isinstance(res, OrganizationReferent)) and ((res == referent or len(res.slots) != slots))): 
-                ioi = (Utils.asObjectOrNull(res, OrganizationReferent)).createOntologyItemEx(3, True, False)
+                ioi = (res).createOntologyItemEx(3, True, False)
                 if (ioi is not None): 
                     self.loc_orgs.addItem(ioi)
-                names = (Utils.asObjectOrNull(res, OrganizationReferent))._getPureNames()
+                names = (res)._getPureNames()
                 if (names is not None): 
                     for n in names: 
                         self.org_pure_names.add(Termin(n))
@@ -92,12 +121,10 @@ class OrganizationAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.org.internal.MetaOrganization import MetaOrganization
         return [MetaOrganization._global_meta]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.org.internal.MetaOrganization import MetaOrganization
         res = dict()
         res[Utils.enumToString(OrgProfile.UNIT)] = EpNerCoreInternalResourceHelper.getBytes("dep.png")
         res[Utils.enumToString(OrgProfile.UNION)] = EpNerCoreInternalResourceHelper.getBytes("party.png")
@@ -138,15 +165,12 @@ class OrganizationAnalyzer(Analyzer):
         return res
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         if (type0_ == OrganizationReferent.OBJ_TYPENAME): 
             return OrganizationReferent()
         return None
     
     @property
     def used_extern_object_types(self) -> typing.List[str]:
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.address.AddressReferent import AddressReferent
         return [GeoReferent.OBJ_TYPENAME, AddressReferent.OBJ_TYPENAME]
     
     @property
@@ -157,13 +181,6 @@ class OrganizationAnalyzer(Analyzer):
         return OrganizationAnalyzer.OrgAnalyzerData()
     
     def process(self, kit : 'AnalysisKit') -> None:
-        from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         ad = Utils.asObjectOrNull(kit.getAnalyzerData(self), OrganizationAnalyzer.OrgAnalyzerData)
         if (len(kit.sofa.text) > 400000): 
             ad.large_text_regim = True
@@ -209,7 +226,7 @@ class OrganizationAnalyzer(Analyzer):
                         break
                     emb = False
                     for rt in rts: 
-                        if (not (Utils.asObjectOrNull(rt.referent, OrganizationReferent))._checkCorrection()): 
+                        if (not (rt.referent)._checkCorrection()): 
                             continue
                         rt.referent = ad.registerReferent(rt.referent)
                         if (rt.begin_token.getReferent() == rt.referent or rt.end_token.getReferent() == rt.referent): 
@@ -315,7 +332,7 @@ class OrganizationAnalyzer(Analyzer):
             if (of_tok is not None and org0_.higher is None): 
                 t2 = t1.next0_
                 while t2 is not None: 
-                    if (((isinstance(t2, TextToken)) and (Utils.asObjectOrNull(t2, TextToken)).term == of_tok.term and t2.next0_ is not None) and (isinstance(t2.next0_.getReferent(), OrganizationReferent))): 
+                    if (((isinstance(t2, TextToken)) and (t2).term == of_tok.term and t2.next0_ is not None) and (isinstance(t2.next0_.getReferent(), OrganizationReferent))): 
                         t2 = t2.next0_
                         if (org1.higher is not None): 
                             if (not org1.higher.canBeEquals(t2.getReferent(), Referent.EqualType.WITHINONETEXT)): 
@@ -472,7 +489,6 @@ class OrganizationAnalyzer(Analyzer):
     
     @staticmethod
     def __isMvdOrg(org0_ : 'OrganizationReferent') -> 'OrganizationReferent':
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         if (org0_ is None): 
             return None
         for i in range(5):
@@ -485,9 +501,6 @@ class OrganizationAnalyzer(Analyzer):
     
     @staticmethod
     def _checkAliasAfter(rt : 'ReferentToken', t : 'Token') -> 'MetaToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if ((t is not None and t.isChar('<') and t.next0_ is not None) and t.next0_.next0_ is not None and t.next0_.next0_.isChar('>')): 
             t = t.next0_.next0_.next0_
         if (t is None or t.next0_ is None or not t.isChar('(')): 
@@ -556,22 +569,8 @@ class OrganizationAnalyzer(Analyzer):
         return rt
     
     def __tryAttachOrgs(self, t : 'Token', ad : 'OrgAnalyzerData', step : int) -> typing.List['ReferentToken']:
-        from pullenti.ner.core.MiscHelper import MiscHelper
         from pullenti.ner.org.internal.OrgItemEngItem import OrgItemEngItem
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.TextAnnotation import TextAnnotation
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.org.internal.OrgItemNumberToken import OrgItemNumberToken
         from pullenti.ner.org.internal.OrgItemNameToken import OrgItemNameToken
-        from pullenti.morph.Morphology import Morphology
-        from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.morph.MorphWordForm import MorphWordForm
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.org.internal.OrgItemTermin import OrgItemTermin
         if (t is None): 
             return None
         if (ad is not None and len(ad.local_ontology.items) > 1000): 
@@ -708,7 +707,7 @@ class OrganizationAnalyzer(Analyzer):
                         if (ad is not None): 
                             rt.referent = ad.registerReferent(rt.referent)
                         rt.referent.addOccurence(TextAnnotation(t, rt.end_token, rt.referent))
-                        (Utils.asObjectOrNull(rt0.referent, OrganizationReferent)).higher = Utils.asObjectOrNull(rt.referent, OrganizationReferent)
+                        (rt0.referent).higher = Utils.asObjectOrNull(rt.referent, OrganizationReferent)
                         li2 = list()
                         self.__doPostAnalyze(rt0, ad)
                         li2.append(rt0)
@@ -763,16 +762,16 @@ class OrganizationAnalyzer(Analyzer):
                         if (rt0.referent.findSlot(OrganizationReferent.ATTR_GEO, None, True) is None): 
                             geo_ = self.__isGeo(rt0.end_token.next0_, False)
                             if ((geo_) is not None): 
-                                if ((Utils.asObjectOrNull(rt0.referent, OrganizationReferent))._addGeoObject(geo_)): 
+                                if ((rt0.referent)._addGeoObject(geo_)): 
                                     rt0.end_token = self.__getGeoEndToken(geo_, rt0.end_token.next0_)
                             elif (rt0.end_token.whitespaces_after_count < 3): 
                                 nam = OrgItemNameToken.tryAttach(rt0.end_token.next0_, None, False, True)
                                 if (nam is not None and not nam.value.startswith("СУБЪЕКТ")): 
                                     geo_ = self.__isGeo(nam.end_token.next0_, False)
                                     if ((geo_) is not None): 
-                                        if ((Utils.asObjectOrNull(rt0.referent, OrganizationReferent))._addGeoObject(geo_)): 
+                                        if ((rt0.referent)._addGeoObject(geo_)): 
                                             rt0.end_token = self.__getGeoEndToken(geo_, nam.end_token.next0_)
-                                        (Utils.asObjectOrNull(rt0.referent, OrganizationReferent)).addName(nam.value, True, None)
+                                        (rt0.referent).addName(nam.value, True, None)
                         if (len(rt0.referent.slots) > 3): 
                             if (tt.previous is not None and ((tt.previous.morph.class0_.is_adjective and not tt.previous.morph.class0_.is_verb)) and tt.whitespaces_before_count == 1): 
                                 adj = Morphology.getWordform(tt.previous.getSourceText().upper(), MorphBaseInfo._new2211(MorphClass.ADJECTIVE, gen, tt.previous.morph.language))
@@ -782,8 +781,8 @@ class OrganizationAnalyzer(Analyzer):
                                     if (rt0.begin_token.previous is not None and rt0.begin_token.previous.is_hiphen and rt0.begin_token.previous.previous is not None): 
                                         tt0 = rt0.begin_token.previous.previous
                                         if (tt0.chars == rt0.begin_token.chars and (isinstance(tt0, TextToken))): 
-                                            adj = (Utils.asObjectOrNull(tt0, TextToken)).term
-                                            if (tt0.morph.class0_.is_adjective and not tt0.morph.containsAttr("неизм.", MorphClass())): 
+                                            adj = (tt0).term
+                                            if (tt0.morph.class0_.is_adjective and not tt0.morph.containsAttr("неизм.", None)): 
                                                 adj = Morphology.getWordform(adj, MorphBaseInfo._new2211(MorphClass.ADJECTIVE, gen, tt0.morph.language))
                                             tyy = "{0} {1}".format(adj.lower(), tyy)
                                             rt0.begin_token = tt0
@@ -802,7 +801,7 @@ class OrganizationAnalyzer(Analyzer):
                             if (ad is not None): 
                                 rt.referent = ad.registerReferent(rt.referent)
                             rt.referent.addOccurence(TextAnnotation(t, rt.end_token, rt.referent))
-                            (Utils.asObjectOrNull(rt0.referent, OrganizationReferent)).higher = Utils.asObjectOrNull(rt.referent, OrganizationReferent)
+                            (rt0.referent).higher = Utils.asObjectOrNull(rt.referent, OrganizationReferent)
                             self.__doPostAnalyze(rt0, ad)
                             li2 = list()
                             li2.append(rt0)
@@ -875,7 +874,7 @@ class OrganizationAnalyzer(Analyzer):
                             if (br.begin_token.next0_ == br.end_token.previous and br.begin_token.next0_.getMorphClassInDictionary().is_undefined): 
                                 for wf in br.begin_token.next0_.morph.items: 
                                     if (wf.case_.is_genitive and (isinstance(wf, MorphWordForm))): 
-                                        org0_.addName((Utils.asObjectOrNull(wf, MorphWordForm)).normal_case, True, None)
+                                        org0_.addName((wf).normal_case, True, None)
                             rt.end_token = br.end_token
                 if (len(org0_.slots) == 0): 
                     rt = (None)
@@ -994,7 +993,6 @@ class OrganizationAnalyzer(Analyzer):
     
     @staticmethod
     def __corrBrackets(rt : 'ReferentToken') -> bool:
-        from pullenti.ner.core.BracketHelper import BracketHelper
         if (not BracketHelper.canBeStartOfSequence(rt.begin_token.previous, True, False) or not BracketHelper.canBeEndOfSequence(rt.end_token.next0_, True, None, False)): 
             return False
         rt.begin_token = rt.begin_token.previous
@@ -1002,15 +1000,6 @@ class OrganizationAnalyzer(Analyzer):
         return True
     
     def __doPostAnalyze(self, rt : 'ReferentToken', ad : 'OrgAnalyzerData') -> None:
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
         if (rt.morph.case_.is_undefined): 
             if (not rt.begin_token.chars.is_all_upper): 
                 npt1 = NounPhraseHelper.tryParse(rt.begin_token, NounPhraseParseAttr.NO, 0)
@@ -1034,7 +1023,7 @@ class OrganizationAnalyzer(Analyzer):
                                 break
                         if (not ext): 
                             continue
-                        rr = (Utils.asObjectOrNull(sl.value, Referent)).clone()
+                        rr = (sl.value).clone()
                         rr.occurrence.clear()
                         o.uploadSlot(sl, rr)
                         rt_ex = ReferentToken(rr, rt.begin_token, rt.end_token)
@@ -1042,12 +1031,12 @@ class OrganizationAnalyzer(Analyzer):
                         o.addExtReferent(rt_ex)
                         for sss in rr.slots: 
                             if (isinstance(sss.value, Referent)): 
-                                rrr = (Utils.asObjectOrNull(sss.value, Referent)).clone()
+                                rrr = (sss.value).clone()
                                 rrr.occurrence.clear()
                                 rr.uploadSlot(sss, rrr)
                                 rt_ex2 = ReferentToken(rrr, rt.begin_token, rt.end_token)
                                 rt_ex2.setDefaultLocalOnto(rt.kit.processor)
-                                (Utils.asObjectOrNull(sl.value, Referent)).addExtReferent(rt_ex2)
+                                (sl.value).addExtReferent(rt_ex2)
         if (o.higher is None and o._m_temp_parent_org is None): 
             if ((isinstance(rt.begin_token.previous, ReferentToken)) and (isinstance(rt.begin_token.previous.getReferent(), OrganizationReferent))): 
                 oo = Utils.asObjectOrNull(rt.begin_token.previous.getReferent(), OrganizationReferent)
@@ -1066,10 +1055,10 @@ class OrganizationAnalyzer(Analyzer):
             return
         OrganizationAnalyzer.__corrBrackets(rt)
         if (rt.begin_token.previous is not None and rt.begin_token.previous.morph.class0_.is_adjective and (rt.whitespaces_before_count < 2)): 
-            if (len((Utils.asObjectOrNull(rt.referent, OrganizationReferent))._geo_objects) == 0): 
+            if (len((rt.referent)._geo_objects) == 0): 
                 geo_ = self.__isGeo(rt.begin_token.previous, True)
                 if (geo_ is not None): 
-                    if ((Utils.asObjectOrNull(rt.referent, OrganizationReferent))._addGeoObject(geo_)): 
+                    if ((rt.referent)._addGeoObject(geo_)): 
                         rt.begin_token = rt.begin_token.previous
         ttt = rt.end_token.next0_
         errs = 1
@@ -1143,7 +1132,7 @@ class OrganizationAnalyzer(Analyzer):
                         if (((tt3.isCharOf(":") or tt3.is_hiphen)) and tmp.tell() == 0): 
                             continue
                         if (isinstance(tt3, TextToken)): 
-                            print((Utils.asObjectOrNull(tt3, TextToken)).term, end="", file=tmp)
+                            print((tt3).term, end="", file=tmp)
                         elif (isinstance(tt3, NumberToken)): 
                             print(tt3.getSourceText(), end="", file=tmp)
                         else: 
@@ -1178,12 +1167,12 @@ class OrganizationAnalyzer(Analyzer):
         if (te is not None and len(refs) > 0 and ((te.isChar(')') or has_inn or has_ok > 0))): 
             for rr in refs: 
                 if (rr.type_name == OrganizationAnalyzer.GEONAME): 
-                    (Utils.asObjectOrNull(rt.referent, OrganizationReferent))._addGeoObject(rr)
+                    (rt.referent)._addGeoObject(rr)
                 else: 
                     rt.referent.addSlot(OrganizationReferent.ATTR_MISC, rr, False, 0)
             rt.end_token = te
         if ((rt.whitespaces_before_count < 2) and (isinstance(rt.begin_token.previous, TextToken)) and rt.begin_token.previous.chars.is_all_upper): 
-            term = (Utils.asObjectOrNull(rt.begin_token.previous, TextToken)).term
+            term = (rt.begin_token.previous).term
             for s in o.slots: 
                 if (isinstance(s.value, str)): 
                     a = MiscHelper.getAbbreviation(Utils.asObjectOrNull(s.value, str))
@@ -1192,13 +1181,6 @@ class OrganizationAnalyzer(Analyzer):
                         break
     
     def __tryAttachOrgByAlias(self, t : 'Token', ad : 'OrgAnalyzerData') -> 'ReferentToken':
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.core.Termin import Termin
         if (t is None): 
             return None
         t0 = t
@@ -1255,7 +1237,7 @@ class OrganizationAnalyzer(Analyzer):
                 if (t.isValue(str0_, None)): 
                     if (ad is not None): 
                         ad.aliases.add(Termin._new118(str0_, org00))
-                    term = (Utils.asObjectOrNull(t, TextToken)).term
+                    term = (t).term
                     if (ii < 0): 
                         org00.addName(term, True, t)
                     if (br): 
@@ -1265,7 +1247,6 @@ class OrganizationAnalyzer(Analyzer):
         return None
     
     def __attachMiddleAttributes(self, org0_ : 'OrganizationReferent', t : 'Token') -> 'Token':
-        from pullenti.ner.org.internal.OrgItemNumberToken import OrgItemNumberToken
         from pullenti.ner.org.internal.OrgItemEponymToken import OrgItemEponymToken
         te = None
         first_pass3073 = True
@@ -1292,8 +1273,6 @@ class OrganizationAnalyzer(Analyzer):
     GEONAME = "GEO"
     
     def __isGeo(self, t : 'Token', can_be_adjective : bool=False) -> object:
-        from pullenti.ner.address.AddressReferent import AddressReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         if (t.isValue("В", None) and t.next0_ is not None): 
@@ -1304,7 +1283,7 @@ class OrganizationAnalyzer(Analyzer):
                 if (t.whitespaces_before_count <= 15 or t.morph.case_.is_genitive): 
                     return r
             if (isinstance(r, AddressReferent)): 
-                tt = (Utils.asObjectOrNull(t, ReferentToken)).begin_token
+                tt = (t).begin_token
                 if (tt.getReferent() is not None and tt.getReferent().type_name == OrganizationAnalyzer.GEONAME): 
                     if (t.whitespaces_before_count < 3): 
                         return tt.getReferent()
@@ -1322,25 +1301,17 @@ class OrganizationAnalyzer(Analyzer):
         return rt
     
     def __getGeoEndToken(self, geo_ : object, t : 'Token') -> 'Token':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.address.AddressReferent import AddressReferent
         if (isinstance(geo_, ReferentToken)): 
-            if (isinstance((Utils.asObjectOrNull(geo_, ReferentToken)).getReferent(), AddressReferent)): 
+            if (isinstance((geo_).getReferent(), AddressReferent)): 
                 return t.previous
-            return (Utils.asObjectOrNull(geo_, ReferentToken)).end_token
+            return (geo_).end_token
         elif (t is not None and t.next0_ is not None and t.morph.class0_.is_preposition): 
             return t.next0_
         else: 
             return t
     
     def __attachTailAttributes(self, org0_ : 'OrganizationReferent', t : 'Token', ad : 'OrgAnalyzerData', attach_for_new_org : bool, attach_typ : 'AttachType', is_global : bool=False) -> 'Token':
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         from pullenti.ner.org.internal.OrgItemEngItem import OrgItemEngItem
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
         t1 = None
         ki = org0_.kind
         can_has_geo = True
@@ -1388,10 +1359,10 @@ class OrganizationAnalyzer(Analyzer):
                     continue
                 if (t.isChar('(')): 
                     r = self.__isGeo(t.next0_, False)
-                    if ((isinstance(r, ReferentToken)) and (Utils.asObjectOrNull(r, ReferentToken)).end_token.next0_ is not None and (Utils.asObjectOrNull(r, ReferentToken)).end_token.next0_.isChar(')')): 
+                    if ((isinstance(r, ReferentToken)) and (r).end_token.next0_ is not None and (r).end_token.next0_.isChar(')')): 
                         if (not org0_._addGeoObject(r)): 
                             break
-                        t1 = (Utils.asObjectOrNull(r, ReferentToken)).end_token.next0_
+                        t1 = (r).end_token.next0_
                         t = t1
                         continue
                     if ((isinstance(r, GeoReferent)) and t.next0_.next0_ is not None and t.next0_.next0_.isChar(')')): 
@@ -1559,10 +1530,9 @@ class OrganizationAnalyzer(Analyzer):
         return t1
     
     def __correctOwnerBefore(self, res : 'ReferentToken') -> None:
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         if (res is None): 
             return
-        if ((Utils.asObjectOrNull(res.referent, OrganizationReferent)).kind == OrganizationKind.PRESS): 
+        if ((res.referent).kind == OrganizationKind.PRESS): 
             if (res.begin_token.isValue("КОРРЕСПОНДЕНТ", None) and res.begin_token != res.end_token): 
                 res.begin_token = res.begin_token.next0_
         org0_ = Utils.asObjectOrNull(res.referent, OrganizationReferent)
@@ -1624,9 +1594,6 @@ class OrganizationAnalyzer(Analyzer):
         res.begin_token = t0
     
     def __checkOwnership(self, t : 'Token') -> 'ReferentToken':
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         res = None
@@ -1729,9 +1696,6 @@ class OrganizationAnalyzer(Analyzer):
         return None
     
     def processOntologyItem(self, begin : 'Token') -> 'ReferentToken':
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.ReferentToken import ReferentToken
         if (begin is None): 
             return None
         rt = self.__tryAttachOrg(begin, None, OrganizationAnalyzer.AttachType.EXTONTOLOGY, None, begin.previous is not None, 0, -1)
@@ -1769,13 +1733,12 @@ class OrganizationAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
         from pullenti.ner.org.internal.OrgItemEngItem import OrgItemEngItem
         from pullenti.ner.org.internal.OrgItemNameToken import OrgItemNameToken
-        from pullenti.ner.ProcessorService import ProcessorService
         if (OrganizationAnalyzer.M_INITED): 
             return
         OrganizationAnalyzer.M_INITED = True
+        MetaOrganization.initialize()
         try: 
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
             OrganizationAnalyzer.__initSport()
@@ -1792,14 +1755,6 @@ class OrganizationAnalyzer(Analyzer):
     MAX_ORG_NAME = 200
     
     def __tryAttachOrg(self, t : 'Token', ad : 'OrgAnalyzerData', attach_typ : 'AttachType', mult_typ : 'OrgItemTypeToken'=None, is_additional_attach : bool=False, level : int=0, step : int=-1) -> 'ReferentToken':
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.org.internal.OrgItemNumberToken import OrgItemNumberToken
         if (level > 2 or t is None): 
             return None
         if (t.chars.is_latin_letter and MiscHelper.isEngArticle(t)): 
@@ -1838,14 +1793,14 @@ class OrganizationAnalyzer(Analyzer):
                         return None
                     if (not OrgItemTypeToken.isTypeAccords(Utils.asObjectOrNull(rt0.referent, OrganizationReferent), types[0])): 
                         return None
-                    (Utils.asObjectOrNull(rt0.referent, OrganizationReferent)).addType(types[0], False)
+                    (rt0.referent).addType(types[0], False)
                     if ((rt0.begin_token.begin_char - types[0].end_token.next0_.end_char) < 3): 
                         rt0.begin_token = types[0].begin_token
                     break
                 if (typ is not None and not typ.end_token.morph.class0_.is_verb): 
                     if (OrgItemTypeToken.isTypeAccords(Utils.asObjectOrNull(rt0.referent, OrganizationReferent), typ)): 
                         rt0.begin_token = typ.begin_token
-                        (Utils.asObjectOrNull(rt0.referent, OrganizationReferent)).addType(typ, False)
+                        (rt0.referent).addType(typ, False)
                 break
             if (t.is_hiphen): 
                 if (t == t0 or types is None): 
@@ -1991,7 +1946,7 @@ class OrganizationAnalyzer(Analyzer):
                             if (spec_word_before or t0.previous.isValue("ТЕРРИТОРИЯ", None)): 
                                 org0 = OrganizationReferent()
                                 org0.addType(typ, False)
-                                org0.addName((Utils.asObjectOrNull(t0, TextToken)).term, False, t0)
+                                org0.addName((t0).term, False, t0)
                                 t1 = typ.end_token
                                 t1 = (Utils.ifNotNull(self.__attachTailAttributes(org0, t1.next0_, ad, False, OrganizationAnalyzer.AttachType.NORMAL, False), t1))
                                 return ReferentToken(org0, t0, t1)
@@ -2066,12 +2021,12 @@ class OrganizationAnalyzer(Analyzer):
             if (rt0 is not None): 
                 if (types is not None and rt0.begin_token == types[0].begin_token): 
                     for ty in types: 
-                        (Utils.asObjectOrNull(rt0.referent, OrganizationReferent)).addType(ty, True)
+                        (rt0.referent).addType(ty, True)
                 if ((rt0.begin_token == t0 and t0.previous is not None and t0.previous.morph.class0_.is_adjective) and (t0.whitespaces_before_count < 2)): 
-                    if (len((Utils.asObjectOrNull(rt0.referent, OrganizationReferent))._geo_objects) == 0): 
+                    if (len((rt0.referent)._geo_objects) == 0): 
                         geo_ = self.__isGeo(t0.previous, True)
                         if (geo_ is not None): 
-                            if ((Utils.asObjectOrNull(rt0.referent, OrganizationReferent))._addGeoObject(geo_)): 
+                            if ((rt0.referent)._addGeoObject(geo_)): 
                                 rt0.begin_token = t0.previous
         if (ot_ex_li is not None and rt0 is None and (len(ot_ex_li) < 10)): 
             for ot in ot_ex_li: 
@@ -2170,11 +2125,11 @@ class OrganizationAnalyzer(Analyzer):
                         for ty in org0.types: 
                             org0_.addTypeStr(ty)
                     if (org0.number is not None and (isinstance(ot.begin_token.previous, NumberToken)) and org0_.number is None): 
-                        if (org0.number != str((Utils.asObjectOrNull(ot.begin_token.previous, NumberToken)).value) and (ot.begin_token.whitespaces_before_count < 2)): 
+                        if (org0.number != str((ot.begin_token.previous).value) and (ot.begin_token.whitespaces_before_count < 2)): 
                             if (len(org0_.names) > 0 or org0_.higher is not None): 
                                 is_very_doubt = False
                                 ok = True
-                                org0_.number = str((Utils.asObjectOrNull(ot.begin_token.previous, NumberToken)).value)
+                                org0_.number = str((ot.begin_token.previous).value)
                                 if (org0.higher is not None): 
                                     org0_.higher = org0.higher
                                 t0 = ot.begin_token.previous
@@ -2185,7 +2140,7 @@ class OrganizationAnalyzer(Analyzer):
                             if (ttt.is_hiphen and ttt.next0_ is not None): 
                                 ttt = ttt.next0_
                             if (isinstance(ttt, NumberToken)): 
-                                nnn = OrgItemNumberToken._new1716(ot.end_token.next0_, ttt, str((Utils.asObjectOrNull(ttt, NumberToken)).value))
+                                nnn = OrgItemNumberToken._new1716(ot.end_token.next0_, ttt, str((ttt).value))
                         if (nnn is not None): 
                             org0_.number = nnn.number
                             te = nnn.end_token
@@ -2249,7 +2204,7 @@ class OrganizationAnalyzer(Analyzer):
                                         break
                                 if (not ext): 
                                     continue
-                                rr = (Utils.asObjectOrNull(sl.value, Referent)).clone()
+                                rr = (sl.value).clone()
                                 rr.occurrence.clear()
                                 org0_.uploadSlot(sl, rr)
                                 rt_ex = ReferentToken(rr, t0, t1)
@@ -2257,12 +2212,12 @@ class OrganizationAnalyzer(Analyzer):
                                 org0_.addExtReferent(rt_ex)
                                 for sss in rr.slots: 
                                     if (isinstance(sss.value, Referent)): 
-                                        rrr = (Utils.asObjectOrNull(sss.value, Referent)).clone()
+                                        rrr = (sss.value).clone()
                                         rrr.occurrence.clear()
                                         rr.uploadSlot(sss, rrr)
                                         rt_ex2 = ReferentToken(rrr, t0, t1)
                                         rt_ex2.setDefaultLocalOnto(t0.kit.processor)
-                                        (Utils.asObjectOrNull(sl.value, Referent)).addExtReferent(rt_ex2)
+                                        (sl.value).addExtReferent(rt_ex2)
                     self.__correctAfter(rt0)
                     return rt0
         if ((rt0 is None and types is not None and len(types) == 1) and types[0].name is None): 
@@ -2330,9 +2285,6 @@ class OrganizationAnalyzer(Analyzer):
         return rt0
     
     def __correctAfter(self, rt0 : 'ReferentToken') -> None:
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         if (rt0 is None): 
             return
         if (not rt0.is_newline_after and rt0.end_token.next0_ is not None and rt0.end_token.next0_.isChar('(')): 
@@ -2342,7 +2294,7 @@ class OrganizationAnalyzer(Analyzer):
                     rt0.end_token = tt
                 elif ((tt.length_char > 2 and (tt.length_char < 7) and tt.chars.is_latin_letter) and tt.chars.is_all_upper): 
                     act = tt.getSourceText().upper()
-                    if ((isinstance(tt.next0_, NumberToken)) and not tt.is_whitespace_after and (Utils.asObjectOrNull(tt.next0_, NumberToken)).typ == NumberSpellingType.DIGIT): 
+                    if ((isinstance(tt.next0_, NumberToken)) and not tt.is_whitespace_after and (tt.next0_).typ == NumberSpellingType.DIGIT): 
                         tt = tt.next0_
                         act += tt.getSourceText()
                     if (tt.next0_ is not None and tt.next0_.isChar(')')): 
@@ -2362,23 +2314,9 @@ class OrganizationAnalyzer(Analyzer):
         return None
     
     def __TryAttachOrg_(self, t0 : 'Token', t : 'Token', ad : 'OrgAnalyzerData', types : typing.List['OrgItemTypeToken'], spec_word_before : bool, attach_typ : 'AttachType', mult_typ : 'OrgItemTypeToken', is_additional_attach : bool, level : int) -> 'ReferentToken':
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.ner.org.internal.OrgItemNameToken import OrgItemNameToken
-        from pullenti.ner.org.internal.OrgItemEponymToken import OrgItemEponymToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.org.internal.OrgItemNumberToken import OrgItemNumberToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         from pullenti.ner.org.internal.OrgItemEngItem import OrgItemEngItem
-        from pullenti.ner.org.internal.OrgItemTermin import OrgItemTermin
-        from pullenti.morph.MorphCase import MorphCase
-        from pullenti.morph.CharsInfo import CharsInfo
-        from pullenti.morph.MorphClass import MorphClass
+        from pullenti.ner.org.internal.OrgItemEponymToken import OrgItemEponymToken
+        from pullenti.ner.org.internal.OrgItemNameToken import OrgItemNameToken
         if (t0 is None): 
             return None
         t1 = t
@@ -2421,10 +2359,10 @@ class OrganizationAnalyzer(Analyzer):
             if ((isinstance(t, TextToken)) and t.chars.is_all_upper and not t.is_newline_after): 
                 b = BracketHelper.tryParse(t.next0_, BracketParseAttr.NO, 100)
                 if (b is not None and b.is_quote_type): 
-                    org0_.addTypeStr((Utils.asObjectOrNull(t, TextToken)).term)
+                    org0_.addTypeStr((t).term)
                     t = t.next0_
                 else: 
-                    s = (Utils.asObjectOrNull(t, TextToken)).term
+                    s = (t).term
                     if (len(s) == 2 and s[len(s) - 1] == 'К'): 
                         org0_.addTypeStr(s)
                         t = t.next0_
@@ -2662,7 +2600,7 @@ class OrganizationAnalyzer(Analyzer):
                         org0 = Utils.asObjectOrNull(t1.getReferent(), OrganizationReferent)
                         if ((org0) is not None): 
                             if (((isinstance(t1.previous, NumberToken)) and t1.previous.previous == br.begin_token and not OrgItemTypeToken.isTypesAntagonisticOO(org0_, org0)) and org0.number is None): 
-                                org0.number = str((Utils.asObjectOrNull(t1.previous, NumberToken)).value)
+                                org0.number = str((t1.previous).value)
                                 org0.mergeSlots(org0_, False)
                                 if (BracketHelper.canBeEndOfSequence(t1.next0_, False, None, False)): 
                                     t1 = t1.next0_
@@ -2831,7 +2769,7 @@ class OrganizationAnalyzer(Analyzer):
                 s = (None if te is None else MiscHelper.getTextValue(tt0, te, GetTextAttr.NO))
                 s1 = (None if te is None else MiscHelper.getTextValue(tt0, te, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE))
                 if ((te is not None and (isinstance(te.previous, NumberToken)) and can_has_num) and org0_.number is None): 
-                    org0_.number = str((Utils.asObjectOrNull(te.previous, NumberToken)).value)
+                    org0_.number = str((te.previous).value)
                     tt11 = te.previous
                     if (tt11.previous is not None and tt11.previous.is_hiphen): 
                         tt11 = tt11.previous
@@ -3013,7 +2951,7 @@ class OrganizationAnalyzer(Analyzer):
                                 break
             br = BracketHelper.tryParse(t, BracketParseAttr.NO, 100)
             if ((br) is not None): 
-                if (own_org is not None and not (Utils.asObjectOrNull(own_org.referent, OrganizationReferent))._is_from_global_ontos): 
+                if (own_org is not None and not (own_org.referent)._is_from_global_ontos): 
                     break
                 if (t.is_newline_before and ((attach_typ == OrganizationAnalyzer.AttachType.NORMAL or attach_typ == OrganizationAnalyzer.AttachType.NORMALAFTERDEP))): 
                     break
@@ -3082,10 +3020,10 @@ class OrganizationAnalyzer(Analyzer):
                                 break
                             if (attach_typ == OrganizationAnalyzer.AttachType.NORMAL): 
                                 org0 = OrganizationReferent()
-                                org0.addName((Utils.asObjectOrNull(t.next0_, TextToken)).term, True, t.next0_)
+                                org0.addName((t.next0_).term, True, t.next0_)
                                 if (not OrganizationReferent.canBeSecondDefinition(org0_, org0)): 
                                     break
-                            org0_.addName((Utils.asObjectOrNull(t.next0_, TextToken)).term, True, t.next0_)
+                            org0_.addName((t.next0_).term, True, t.next0_)
                             t = br.end_token
                             t1 = t
                             tmax = t1
@@ -3316,7 +3254,7 @@ class OrganizationAnalyzer(Analyzer):
             if (LanguageHelper.endsWithEx(typ.typ, "комитет", "комиссия", "комітет", "комісія")): 
                 pass
             elif (typ.typ == "служба" and own_org is not None and typ.name is not None): 
-                ki = (Utils.asObjectOrNull(own_org.referent, OrganizationReferent)).kind
+                ki = (own_org.referent).kind
                 if (ki == OrganizationKind.PRESS or ki == OrganizationKind.MEDIA): 
                     typ.coef = typ.coef + (3)
                     do_higher_always = True
@@ -3332,7 +3270,7 @@ class OrganizationAnalyzer(Analyzer):
                             if (rt1 is not None and typ.end_token.next0_.morph.case_.is_genitive): 
                                 geo_ = Utils.asObjectOrNull(rt1.referent.getSlotValue("REF"), GeoReferent)
                                 if (geo_ is not None): 
-                                    org0_.addName("АДМИНИСТРАЦИЯ " + (Utils.asObjectOrNull(typ.end_token.next0_, TextToken)).term, True, None)
+                                    org0_.addName("АДМИНИСТРАЦИЯ " + (typ.end_token.next0_).term, True, None)
                                     org0_._addGeoObject(geo_)
                                     return ReferentToken(org0_, typ.begin_token, rt1.end_token)
                         if ((typ.coef < 5) or typ.chars.is_all_lower): 
@@ -3484,13 +3422,13 @@ class OrganizationAnalyzer(Analyzer):
                     j += 1
                 ok = True
                 name_ = MiscHelper.getTextValue(names[0].begin_token, t1, GetTextAttr.NO)
-                if (num is None and (isinstance(t1, NumberToken)) and (Utils.asObjectOrNull(t1, NumberToken)).typ == NumberSpellingType.DIGIT): 
+                if (num is None and (isinstance(t1, NumberToken)) and (t1).typ == NumberSpellingType.DIGIT): 
                     tt1 = t1.previous
                     if (tt1 is not None and tt1.is_hiphen): 
                         tt1 = tt1.previous
                     if (tt1 is not None and tt1.end_char > names[0].begin_char and (isinstance(tt1, TextToken))): 
                         name_ = MiscHelper.getTextValue(names[0].begin_token, tt1, GetTextAttr.NO)
-                        org0_.number = str((Utils.asObjectOrNull(t1, NumberToken)).value)
+                        org0_.number = str((t1).value)
                 if (len(name_) > OrganizationAnalyzer.MAX_ORG_NAME): 
                     return None
                 org0_.addName(name_, True, names[0].begin_token)
@@ -3644,7 +3582,7 @@ class OrganizationAnalyzer(Analyzer):
                     tt1 = t1
                     if (br1 is not None): 
                         tt1 = br1.begin_token.previous
-                    if ((isinstance(tt1.getReferent(), GeoReferent)) and (Utils.asObjectOrNull(tt1.getReferent(), GeoReferent)).is_state): 
+                    if ((isinstance(tt1.getReferent(), GeoReferent)) and (tt1.getReferent()).is_state): 
                         if (names[0].begin_token != tt1): 
                             tt1 = t1.previous
                             org0_._addGeoObject(t1.getReferent())
@@ -3656,7 +3594,7 @@ class OrganizationAnalyzer(Analyzer):
                         if (cla.is_undefined or cla.is_proper_geo): 
                             if (ki == OrganizationKind.MEDICAL or ki == OrganizationKind.JUSTICE): 
                                 geo_ = GeoReferent()
-                                geo_.addSlot(GeoReferent.ATTR_NAME, t1.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False), False, 0)
+                                geo_.addSlot(GeoReferent.ATTR_NAME, t1.getNormalCaseText(None, False, MorphGender.UNDEFINED, False), False, 0)
                                 geo_.addSlot(GeoReferent.ATTR_TYPE, ("місто" if t1.kit.base_language.is_ua else "город"), False, 0)
                                 rt = ReferentToken(geo_, t1, t1)
                                 rt.data = (ad)
@@ -3717,7 +3655,7 @@ class OrganizationAnalyzer(Analyzer):
                                         ttt = typ.end_token
                                         nu = OrgItemNumberToken.tryAttach(ttt.next0_, True, None)
                                         if (nu is not None): 
-                                            if ((Utils.asObjectOrNull(r, OrganizationReferent)).number != nu.number): 
+                                            if ((r).number != nu.number): 
                                                 ttt = (None)
                                             else: 
                                                 org0_.number = nu.number
@@ -3891,12 +3829,6 @@ class OrganizationAnalyzer(Analyzer):
         return res
     
     def __tryAttachOrgBefore(self, t : 'Token', ad : 'OrgAnalyzerData') -> 'ReferentToken':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.org.internal.OrgItemNumberToken import OrgItemNumberToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
         if (t is None or t.previous is None): 
             return None
         min_end_char = t.previous.end_char
@@ -3926,7 +3858,7 @@ class OrganizationAnalyzer(Analyzer):
                 if (isinstance(ttt, NumberToken)): 
                     if (num is not None): 
                         break
-                    num = str((Utils.asObjectOrNull(ttt, NumberToken)).value)
+                    num = str((ttt).value)
                     num_et = ttt
                     tt0 = ttt.previous
                     continue
@@ -3951,7 +3883,7 @@ class OrganizationAnalyzer(Analyzer):
                             return rt0
                         if (isinstance(ttt.previous, NumberToken)): 
                             rt0.begin_token = ttt.previous
-                            oo.addSlot(OrganizationReferent.ATTR_NUMBER, str((Utils.asObjectOrNull(ttt.previous, NumberToken)).value), False, 0)
+                            oo.addSlot(OrganizationReferent.ATTR_NUMBER, str((ttt.previous).value), False, 0)
                             return rt0
                 typ1 = OrgItemTypeToken.tryAttach(ttt, True, None)
                 if (typ1 is None): 
@@ -4004,7 +3936,7 @@ class OrganizationAnalyzer(Analyzer):
                     ty.number = nn.number
                 elif ((isinstance(ty.end_token.next0_, NumberToken)) and (ty.whitespaces_after_count < 2)): 
                     ty.end_token = ty.end_token.next0_
-                    ty.number = str((Utils.asObjectOrNull(ty.end_token, NumberToken)).value)
+                    ty.number = str((ty.end_token).value)
                 if (ty.end_char >= min_end_char and ty.end_char <= max_end_char): 
                     typ = ty
                 else: 
@@ -4014,11 +3946,6 @@ class OrganizationAnalyzer(Analyzer):
         return res
     
     def __tryAttachDepBeforeOrg(self, typ : 'OrgItemTypeToken', rt_org : 'ReferentToken') -> 'ReferentToken':
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.org.internal.OrgItemNumberToken import OrgItemNumberToken
         if (typ is None): 
             return None
         org0_ = (None if rt_org is None else Utils.asObjectOrNull(rt_org.referent, OrganizationReferent))
@@ -4082,8 +4009,6 @@ class OrganizationAnalyzer(Analyzer):
         return res
     
     def __tryAttachDepAfterOrg(self, typ : 'OrgItemTypeToken') -> 'ReferentToken':
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (typ is None): 
             return None
         t = typ.begin_token.previous
@@ -4113,17 +4038,8 @@ class OrganizationAnalyzer(Analyzer):
         return res
     
     def __tryAttachDep(self, typ : 'OrgItemTypeToken', attach_typ : 'AttachType', spec_word_before : bool) -> 'ReferentToken':
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.org.internal.OrgItemNameToken import OrgItemNameToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.org.internal.OrgItemNumberToken import OrgItemNumberToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         from pullenti.ner.org.internal.OrgItemEponymToken import OrgItemEponymToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.morph.MorphClass import MorphClass
+        from pullenti.ner.org.internal.OrgItemNameToken import OrgItemNameToken
         if (typ is None): 
             return None
         after_org = None
@@ -4289,7 +4205,7 @@ class OrganizationAnalyzer(Analyzer):
                         if ((isinstance(t, NumberToken)) and typ.root is not None and dep.number is None): 
                             if (t.whitespaces_before_count > 1): 
                                 break
-                            dep.number = str((Utils.asObjectOrNull(t, NumberToken)).value)
+                            dep.number = str((t).value)
                             t1 = t
                             continue
                         if (is_pure_dep): 
@@ -4443,7 +4359,7 @@ class OrganizationAnalyzer(Analyzer):
                 if (isinstance(t, NumberToken)): 
                     if (not t.morph.class0_.is_noun): 
                         if (t.is_whitespace_after or t.next0_.isCharOf(";,")): 
-                            val = ((Utils.asObjectOrNull(t, NumberToken)).value)
+                            val = ((t).value)
                 else: 
                     nt = NumberHelper.tryParseRoman(t)
                     if (nt is not None): 
@@ -4460,7 +4376,7 @@ class OrganizationAnalyzer(Analyzer):
                     if (isinstance(t, NumberToken)): 
                         if (not t.morph.class0_.is_noun): 
                             if (t.is_whitespace_before or t.previous.isCharOf(",")): 
-                                val = ((Utils.asObjectOrNull(t, NumberToken)).value)
+                                val = ((t).value)
                     else: 
                         nt = NumberHelper.tryParseRomanBack(t)
                         if (nt is not None): 
@@ -4499,9 +4415,9 @@ class OrganizationAnalyzer(Analyzer):
         if (t1.next0_ is not None and t1.next0_.isChar('(')): 
             ttt = t1.next0_.next0_
             if ((ttt is not None and ttt.next0_ is not None and ttt.next0_.isChar(')')) and (isinstance(ttt, TextToken))): 
-                if ((Utils.asObjectOrNull(ttt, TextToken)).term in dep._name_vars): 
+                if ((ttt).term in dep._name_vars): 
                     coef += (2)
-                    dep.addName((Utils.asObjectOrNull(ttt, TextToken)).term, True, ttt)
+                    dep.addName((ttt).term, True, ttt)
                     t1 = ttt.next0_
         ep_ = OrgItemEponymToken.tryAttach(t1.next0_, False)
         if (ep_ is not None): 
@@ -4530,18 +4446,11 @@ class OrganizationAnalyzer(Analyzer):
             return None
     
     def __correctDepAttrs(self, res : 'ReferentToken', typ : 'OrgItemTypeToken') -> None:
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
         t0 = res.begin_token
         dep = Utils.asObjectOrNull(res.referent, OrganizationReferent)
         if ((((((typ is not None and typ.root is not None and typ.root.can_has_number)) or "отдел" in dep.types or "отделение" in dep.types) or "инспекция" in dep.types or "лаборатория" in dep.types) or "відділ" in dep.types or "відділення" in dep.types) or "інспекція" in dep.types or "лабораторія" in dep.types): 
             if (((isinstance(t0.previous, NumberToken)) and (t0.whitespaces_before_count < 2) and not t0.previous.morph.class0_.is_noun) and t0.previous.is_whitespace_before): 
-                nn = str((Utils.asObjectOrNull(t0.previous, NumberToken)).value)
+                nn = str((t0.previous).value)
                 if (dep.number is None or dep.number == nn): 
                     dep.number = nn
                     t0 = t0.previous
@@ -4560,7 +4469,7 @@ class OrganizationAnalyzer(Analyzer):
         if (br is not None and (t1.whitespaces_after_count < 2) and br.is_quote_type): 
             g = self.__isGeo(br.begin_token.next0_, False)
             if (isinstance(g, ReferentToken)): 
-                if ((Utils.asObjectOrNull(g, ReferentToken)).end_token.next0_ == br.end_token): 
+                if ((g).end_token.next0_ == br.end_token): 
                     dep._addGeoObject(g)
                     res.end_token = br.end_token
                     t1 = res.end_token
@@ -4612,16 +4521,8 @@ class OrganizationAnalyzer(Analyzer):
                 return
     
     def __attachGlobalOrg(self, t : 'Token', attach_typ : 'AttachType', ad : 'AnalyzerData', ext_geo : object=None) -> 'ReferentToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.org.internal.OrgItemNameToken import OrgItemNameToken
         from pullenti.ner.org.internal.OrgItemEponymToken import OrgItemEponymToken
+        from pullenti.ner.org.internal.OrgItemNameToken import OrgItemNameToken
         if ((isinstance(t, TextToken)) and t.chars.is_latin_letter): 
             if (MiscHelper.isEngArticle(t)): 
                 res11 = self.__attachGlobalOrg(t.next0_, attach_typ, ad, ext_geo)
@@ -4633,12 +4534,12 @@ class OrganizationAnalyzer(Analyzer):
             return rt00
         if (not ((isinstance(t, TextToken)))): 
             if (t is not None and t.getReferent() is not None and t.getReferent().type_name == "URI"): 
-                rt = self.__attachGlobalOrg((Utils.asObjectOrNull(t, ReferentToken)).begin_token, attach_typ, ad, None)
+                rt = self.__attachGlobalOrg((t).begin_token, attach_typ, ad, None)
                 if (rt is not None and rt.end_char == t.end_char): 
                     rt.begin_token = rt.end_token = t
                     return rt
             return None
-        term = (Utils.asObjectOrNull(t, TextToken)).term
+        term = (t).term
         if (t.chars.is_all_upper and term == "ВС"): 
             if (t.previous is not None): 
                 if (t.previous.isValue("ПРЕЗИДИУМ", None) or t.previous.isValue("ПЛЕНУМ", None) or t.previous.isValue("СЕССИЯ", None)): 
@@ -4651,7 +4552,7 @@ class OrganizationAnalyzer(Analyzer):
                     return ReferentToken(org00, t, Utils.ifNotNull(te, t))
             if (t.next0_ is not None and (isinstance(t.next0_.getReferent(), GeoReferent))): 
                 is_vc = False
-                if (t.previous is not None and (isinstance(t.previous.getReferent(), OrganizationReferent)) and (Utils.asObjectOrNull(t.previous.getReferent(), OrganizationReferent)).kind == OrganizationKind.MILITARY): 
+                if (t.previous is not None and (isinstance(t.previous.getReferent(), OrganizationReferent)) and (t.previous.getReferent()).kind == OrganizationKind.MILITARY): 
                     is_vc = True
                 elif (ad is not None): 
                     for r in ad.referents: 
@@ -4742,7 +4643,7 @@ class OrganizationAnalyzer(Analyzer):
                         res.end_token = res.end_token.next0_
                 return res
         if (t.chars.is_all_upper and term == "ГШ"): 
-            if (t.next0_ is not None and (isinstance(t.next0_.getReferent(), OrganizationReferent)) and (Utils.asObjectOrNull(t.next0_.getReferent(), OrganizationReferent)).kind == OrganizationKind.MILITARY): 
+            if (t.next0_ is not None and (isinstance(t.next0_.getReferent(), OrganizationReferent)) and (t.next0_.getReferent()).kind == OrganizationKind.MILITARY): 
                 org00 = OrganizationReferent()
                 org00.addTypeStr("генеральный штаб")
                 org00.addProfile(OrgProfile.ARMY)
@@ -4837,7 +4738,7 @@ class OrganizationAnalyzer(Analyzer):
                 continue
             if (ot.begin_token == ot.end_token): 
                 if (len(gt) == 1): 
-                    if ((isinstance(ot.begin_token, TextToken)) and (Utils.asObjectOrNull(ot.begin_token, TextToken)).term == "МГТУ"): 
+                    if ((isinstance(ot.begin_token, TextToken)) and (ot.begin_token).term == "МГТУ"): 
                         ty = OrgItemTypeToken.tryAttach(ot.begin_token, False, None)
                         if (ty is not None): 
                             continue
@@ -4866,7 +4767,7 @@ class OrganizationAnalyzer(Analyzer):
                 else: 
                     continue
             if ((ot.begin_token == ot.end_token and (t.length_char < 6) and not t.chars.is_all_upper) and not t.chars.is_last_lower): 
-                if (org0.findSlot(OrganizationReferent.ATTR_NAME, (Utils.asObjectOrNull(t, TextToken)).term, True) is None): 
+                if (org0.findSlot(OrganizationReferent.ATTR_NAME, (t).term, True) is None): 
                     if (t.isValue("МИД", None)): 
                         pass
                     else: 
@@ -4877,7 +4778,7 @@ class OrganizationAnalyzer(Analyzer):
                     continue
                 elif (t.length_char == 4): 
                     has_vow = False
-                    for ch in (Utils.asObjectOrNull(t, TextToken)).term: 
+                    for ch in (t).term: 
                         if (LanguageHelper.isCyrillicVowel(ch) or LanguageHelper.isLatinVowel(ch)): 
                             has_vow = True
                     if (has_vow): 
@@ -4914,7 +4815,7 @@ class OrganizationAnalyzer(Analyzer):
                     nnn = OrgItemNameToken.tryAttach(t.next0_, None, True, True)
                     if (nnn is not None and nnn.end_char > ot.end_char): 
                         org0_ = OrganizationReferent()
-                        org0_.addTypeStr((Utils.asObjectOrNull(t, TextToken)).lemma.lower())
+                        org0_.addTypeStr((t).lemma.lower())
                         org0_.addName(MiscHelper.getTextValue(t, nnn.end_token, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE), True, None)
                         ot.end_token = nnn.end_token
             if (org0_ is None): 
@@ -4922,7 +4823,7 @@ class OrganizationAnalyzer(Analyzer):
                 if (len(org0_._geo_objects) > 0): 
                     for s in org0_.slots: 
                         if (s.type_name == OrganizationReferent.ATTR_GEO and (isinstance(s.value, GeoReferent))): 
-                            gg = (Utils.asObjectOrNull(s.value, GeoReferent)).clone()
+                            gg = (s.value).clone()
                             gg.occurrence.clear()
                             rtg = ReferentToken(gg, t, t)
                             rtg.data = t.kit.getAnalyzerDataByAnalyzerName("GEO")
@@ -4987,7 +4888,7 @@ class OrganizationAnalyzer(Analyzer):
                 if (tt.is_hiphen and tt.next0_ is not None): 
                     tt = tt.next0_
                 if (isinstance(tt, NumberToken)): 
-                    org0_.number = str((Utils.asObjectOrNull(tt, NumberToken)).value)
+                    org0_.number = str((tt).value)
                     t1 = tt
             if (not t.is_whitespace_before and not t1.is_whitespace_after): 
                 if (BracketHelper.canBeStartOfSequence(t.previous, True, False) and BracketHelper.canBeEndOfSequence(t1.next0_, True, None, False)): 
@@ -4998,12 +4899,9 @@ class OrganizationAnalyzer(Analyzer):
     
     @staticmethod
     def __tryAttachOrgMedTyp(t : 'Token') -> 'MetaToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.MorphCollection import MorphCollection
         if (not ((isinstance(t, TextToken)))): 
             return None
-        s = (Utils.asObjectOrNull(t, TextToken)).term
+        s = (t).term
         if (((t is not None and s == "Г" and t.next0_ is not None) and t.next0_.isCharOf("\\/.") and t.next0_.next0_ is not None) and t.next0_.next0_.isValue("Б", None)): 
             t1 = t.next0_.next0_
             if (t.next0_.isChar('.') and t1.next0_ is not None and t1.next0_.isChar('.')): 
@@ -5028,13 +4926,7 @@ class OrganizationAnalyzer(Analyzer):
         return None
     
     def __tryAttachOrgMed(self, t : 'Token', ad : 'OrgAnalyzerData') -> 'ReferentToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.morph.MorphClass import MorphClass
         from pullenti.ner.org.internal.OrgItemEponymToken import OrgItemEponymToken
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.org.internal.OrgItemNumberToken import OrgItemNumberToken
         if (t is None): 
             return None
         if (t.previous is None or t.previous.previous is None): 
@@ -5052,8 +4944,8 @@ class OrganizationAnalyzer(Analyzer):
             tt = OrganizationAnalyzer.__tryAttachOrgMedTyp(t.next0_)
             if (tt is not None): 
                 org1 = OrganizationReferent()
-                org1.addTypeStr((Utils.asObjectOrNull(tt.tag, str)).lower())
-                org1.number = str((Utils.asObjectOrNull(t, NumberToken)).value)
+                org1.addTypeStr((tt.tag).lower())
+                org1.number = str((t).value)
                 return ReferentToken(org1, t, tt.end_token)
         typ = OrganizationAnalyzer.__tryAttachOrgMedTyp(t)
         adj = None
@@ -5076,7 +4968,7 @@ class OrganizationAnalyzer(Analyzer):
             t1 = epo.end_token
         if (isinstance(t1.next0_, TextToken)): 
             if (t1.next0_.isValue("СКЛИФОСОФСКОГО", None) or t1.next0_.isValue("СЕРБСКОГО", None) or t1.next0_.isValue("БОТКИНА", None)): 
-                org0_.addEponym((Utils.asObjectOrNull(t1.next0_, TextToken)).term)
+                org0_.addEponym((t1.next0_).term)
                 t1 = t1.next0_
         num = OrgItemNumberToken.tryAttach(t1.next0_, False, None)
         if (num is not None): 
@@ -5087,8 +4979,6 @@ class OrganizationAnalyzer(Analyzer):
         return None
     
     def __tryAttachPropNames(self, t : 'Token', ad : 'OrgAnalyzerData') -> 'ReferentToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         rt = self.__tryAttachOrgSportAssociations(t, ad)
         if (rt is None): 
             rt = self.__tryAttachOrgNames(t, ad)
@@ -5099,7 +4989,7 @@ class OrganizationAnalyzer(Analyzer):
             rt0 = t0.kit.processReferent("GEO", t0)
             if (rt0 is not None and rt0.morph.class0_.is_adjective): 
                 rt.begin_token = rt0.begin_token
-                (Utils.asObjectOrNull(rt.referent, OrganizationReferent))._addGeoObject(rt0)
+                (rt.referent)._addGeoObject(rt0)
         if (rt.end_token.whitespaces_after_count < 2): 
             tt1 = self.__attachTailAttributes(Utils.asObjectOrNull(rt.referent, OrganizationReferent), rt.end_token.next0_, ad, True, OrganizationAnalyzer.AttachType.NORMAL, True)
             if (tt1 is not None): 
@@ -5107,15 +4997,8 @@ class OrganizationAnalyzer(Analyzer):
         return rt
     
     def __tryAttachOrgNames(self, t : 'Token', ad : 'OrgAnalyzerData') -> 'ReferentToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         from pullenti.ner.org.internal.OrgItemEngItem import OrgItemEngItem
         from pullenti.ner.org.internal.OrgItemNameToken import OrgItemNameToken
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None): 
             return None
         t0 = t
@@ -5148,7 +5031,7 @@ class OrganizationAnalyzer(Analyzer):
                     return None
             else: 
                 return None
-        elif (t.chars.is_all_upper and (Utils.asObjectOrNull(t, TextToken)).term == "ИА"): 
+        elif (t.chars.is_all_upper and (t).term == "ИА"): 
             prof = OrgProfile.MEDIA
             t = t.next0_
             typ = "информационное агенство"
@@ -5157,7 +5040,7 @@ class OrganizationAnalyzer(Analyzer):
             re = self.__tryAttachOrgNames(t, ad)
             if (re is not None): 
                 re.begin_token = t0
-                (Utils.asObjectOrNull(re.referent, OrganizationReferent)).addTypeStr(typ)
+                (re.referent).addTypeStr(typ)
                 return re
             if (t.chars.is_latin_letter): 
                 nam = OrgItemEngItem.tryAttach(t, False)
@@ -5378,23 +5261,14 @@ class OrganizationAnalyzer(Analyzer):
     
     @staticmethod
     def __isStdPressEnd(t : 'Token') -> bool:
-        from pullenti.ner.TextToken import TextToken
         if (not ((isinstance(t, TextToken)))): 
             return False
-        str0_ = (Utils.asObjectOrNull(t, TextToken)).term
+        str0_ = (t).term
         if ((((((((str0_ == "NEWS" or str0_ == "PRESS" or str0_ == "PRESSE") or str0_ == "ПРЕСС" or str0_ == "НЬЮС") or str0_ == "TIMES" or str0_ == "TIME") or str0_ == "ТАЙМС" or str0_ == "POST") or str0_ == "ПОСТ" or str0_ == "TODAY") or str0_ == "ТУДЕЙ" or str0_ == "DAILY") or str0_ == "ДЕЙЛИ" or str0_ == "ИНФОРМ") or str0_ == "INFORM"): 
             return True
         return False
     
     def __tryAttachOrgSportAssociations(self, t : 'Token', ad : 'OrgAnalyzerData') -> 'ReferentToken':
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         if (t is None): 
             return None
         cou = 0
@@ -5419,7 +5293,7 @@ class OrganizationAnalyzer(Analyzer):
                 return None
             if (((npt.noun.isValue("АССОЦИАЦИЯ", None) or npt.noun.isValue("ФЕДЕРАЦИЯ", None) or npt.noun.isValue("СОЮЗ", None)) or npt.noun.isValue("СБОРНАЯ", None) or npt.noun.isValue("КОМАНДА", None)) or npt.noun.isValue("КЛУБ", None)): 
                 typ = npt.noun.getNormalCaseText(MorphClass.NOUN, True, MorphGender.UNDEFINED, False).lower()
-            elif ((isinstance(t, TextToken)) and t.chars.is_all_upper and (Utils.asObjectOrNull(t, TextToken)).term == "ФК"): 
+            elif ((isinstance(t, TextToken)) and t.chars.is_all_upper and (t).term == "ФК"): 
                 typ = "команда"
             else: 
                 return None
@@ -5457,7 +5331,7 @@ class OrganizationAnalyzer(Analyzer):
             if (tt.isValue("СТРАНА", None) and (isinstance(tt, TextToken))): 
                 t11 = tt
                 t1 = t11
-                del_word = (Utils.asObjectOrNull(tt, TextToken)).term
+                del_word = (tt).term
                 continue
             tok = OrganizationAnalyzer.M_SPORTS.tryParse(tt, TerminParseAttr.NO)
             if (tok is not None): 
@@ -5531,9 +5405,6 @@ class OrganizationAnalyzer(Analyzer):
     
     @staticmethod
     def __initSport() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.morph.MorphLang import MorphLang
         OrganizationAnalyzer.M_SPORTS = TerminCollection()
         for s in ["акробатика;акробатический;акробат", "бадминтон;бадминтонный;бадминтонист", "баскетбол;баскетбольный;баскетболист", "бейсбол;бейсбольный;бейсболист", "биатлон;биатлонный;биатлонист", "бильярд;бильярдный;бильярдист", "бобслей;бобслейный;бобслеист", "боулинг", "боевое искуство", "бокс;боксерский;боксер", "борьба;борец", "водное поло", "волейбол;волейбольный;волейболист", "гандбол;гандбольный;гандболист", "гольф;гольфный;гольфист", "горнолыжный спорт", "слалом;;слаломист", "сквош", "гребля", "дзюдо;дзюдоистский;дзюдоист", "карате;;каратист", "керлинг;;керлингист", "коньки;конькобежный;конькобежец", "легкая атлетика;легкоатлетический;легкоатлет", "лыжных гонок", "мотоцикл;мотоциклетный;мотоциклист", "тяжелая атлетика;тяжелоатлетический;тяжелоатлет", "ориентирование", "плавание;;пловец", "прыжки", "регби;;регбист", "пятиборье", "гимнастика;гимнастический;гимнаст", "самбо;;самбист", "сумо;;сумист", "сноуборд;сноубордический;сноубордист", "софтбол;софтбольный;софтболист", "стрельба;стрелковый", "спорт;спортивный", "теннис;теннисный;теннисист", "триатлон", "тхэквондо", "ушу;;ушуист", "фехтование;фехтовальный;фехтовальщик", "фигурное катание;;фигурист", "фристайл;фристальный", "футбол;футбольный;футболист", "мини-футбол", "хоккей;хоккейный;хоккеист", "хоккей на траве", "шахматы;шахматный;шахматист", "шашки;шашечный"]: 
             pp = Utils.splitString(s.upper(), ';', False)
@@ -5612,9 +5483,6 @@ class OrganizationAnalyzer(Analyzer):
             OrganizationAnalyzer.M_PROP_PREF.add(Termin._new118(s.upper(), OrgProfile.MEDIA))
     
     def __tryAttachArmy(self, t : 'Token', ad : 'OrgAnalyzerData') -> 'ReferentToken':
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (not ((isinstance(t, NumberToken))) or t.whitespaces_after_count > 2): 
             return None
         typ = OrgItemTypeToken.tryAttach(t.next0_, True, ad)
@@ -5625,24 +5493,15 @@ class OrganizationAnalyzer(Analyzer):
             if (rt is not None): 
                 if (rt.begin_token == typ.begin_token): 
                     rt.begin_token = t
-                    (Utils.asObjectOrNull(rt.referent, OrganizationReferent)).number = str((Utils.asObjectOrNull(t, NumberToken)).value)
+                    (rt.referent).number = str((t).value)
                 return rt
             org0_ = OrganizationReferent()
             org0_.addType(typ, True)
-            org0_.number = str((Utils.asObjectOrNull(t, NumberToken)).value)
+            org0_.number = str((t).value)
             return ReferentToken(org0_, t, typ.end_token)
         return None
     
     def __tryAttachPoliticParty(self, t : 'Token', ad : 'OrgAnalyzerData', only_abbrs : bool=False) -> 'ReferentToken':
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.morph.MorphClass import MorphClass
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         if (not ((isinstance(t, TextToken)))): 
             return None
         name_tok = None
@@ -5949,8 +5808,6 @@ class OrganizationAnalyzer(Analyzer):
     
     @staticmethod
     def __initPolitic() -> None:
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.core.Termin import Termin
         OrganizationAnalyzer.M_POLITIC_PREFS = TerminCollection()
         for s in ["либеральный", "либерал", "лейбористский", "демократический", "коммунистрический", "большевистский", "социальный", "социал", "национал", "националистическая", "свободный", "радикальный", "леворадикальный", "радикал", "революционная", "левый", "правый", "социалистический", "рабочий", "трудовой", "республиканский", "народный", "аграрный", "монархический", "анархический", "прогрессивый", "прогрессистский", "консервативный", "гражданский", "фашистский", "марксистский", "ленинский", "маоистский", "имперский", "славянский", "анархический", "баскский", "конституционный", "пиратский", "патриотический", "русский"]: 
             OrganizationAnalyzer.M_POLITIC_PREFS.add(Termin(s.upper()))

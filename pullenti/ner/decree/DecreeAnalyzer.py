@@ -6,20 +6,46 @@ import typing
 import datetime
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.decree.DecreeKind import DecreeKind
+
+from pullenti.ner.Referent import Referent
 from pullenti.ner.decree.internal.DecreeChangeTokenTyp import DecreeChangeTokenTyp
 from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
+from pullenti.ner.decree.DecreeKind import DecreeKind
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.date.DateRangeReferent import DateRangeReferent
+from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.Slot import Slot
-
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.Token import Token
+from pullenti.ner.decree.internal.MetaDecreeChangeValue import MetaDecreeChangeValue
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.decree.internal.MetaDecree import MetaDecree
+from pullenti.ner.decree.internal.MetaDecreeChange import MetaDecreeChange
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.decree.internal.MetaDecreePart import MetaDecreePart
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
+from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
 
 class DecreeAnalyzer(Analyzer):
     
@@ -37,8 +63,8 @@ class DecreeAnalyzer(Analyzer):
         
         @staticmethod
         def tryAttachBack(t : 'Token', base_typ : 'DecreeToken') -> 'ThisDecree':
-            from pullenti.ner.decree.internal.DecreeToken import DecreeToken
             from pullenti.ner.TextToken import TextToken
+            from pullenti.ner.decree.internal.DecreeToken import DecreeToken
             if (t is None): 
                 return None
             ukaz = None
@@ -63,7 +89,7 @@ class DecreeAnalyzer(Analyzer):
                 if (ttt.isValue("ПОРЯДОК", None) and ukaz is not None): 
                     return None
                 res = DecreeAnalyzer.ThisDecree(tt, tt)
-                res.typ = (Utils.asObjectOrNull(tt, TextToken)).getLemma()
+                res.typ = (tt).getLemma()
                 t = tt.previous
                 if (t is not None and ((t.morph.class0_.is_adjective or t.morph.class0_.is_pronoun))): 
                     if (t.isValue("НАСТОЯЩИЙ", "СПРАВЖНІЙ") or t.isValue("ТЕКУЩИЙ", "ПОТОЧНИЙ") or t.isValue("ДАННЫЙ", "ДАНИЙ")): 
@@ -84,13 +110,14 @@ class DecreeAnalyzer(Analyzer):
         
         @staticmethod
         def tryAttach(dtok : 'PartToken', base_typ : 'DecreeToken') -> 'ThisDecree':
-            from pullenti.ner.decree.DecreeReferent import DecreeReferent
-            from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-            from pullenti.ner.core.BracketHelper import BracketHelper
-            from pullenti.ner.TextToken import TextToken
             from pullenti.ner.ReferentToken import ReferentToken
+            from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
             from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-            from pullenti.morph.MorphClass import MorphClass
+            from pullenti.morph.MorphGender import MorphGender
+            from pullenti.ner.decree.DecreeReferent import DecreeReferent
+            from pullenti.ner.TextToken import TextToken
+            from pullenti.ner.core.BracketHelper import BracketHelper
+            from pullenti.ner.decree.internal.DecreeToken import DecreeToken
             t = dtok.end_token.next0_
             if (t is None): 
                 return None
@@ -127,23 +154,23 @@ class DecreeAnalyzer(Analyzer):
             if (not ((isinstance(t, TextToken)))): 
                 return None
             res = DecreeAnalyzer.ThisDecree(t0, (tt.next0_ if br else tt))
-            res.typ = (Utils.asObjectOrNull(tt, TextToken)).getLemma()
+            res.typ = (tt).getLemma()
             if (isinstance(tt.previous, TextToken)): 
                 tt1 = tt.previous
                 mc = tt1.getMorphClassInDictionary()
                 if (mc.is_adjective and not mc.is_verb and not tt1.isValue("НАСТОЯЩИЙ", "СПРАВЖНІЙ")): 
                     nnn = NounPhraseHelper.tryParse(tt1, NounPhraseParseAttr.NO, 0)
                     if (nnn is not None): 
-                        res.typ = nnn.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                        res.typ = nnn.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
                     if (isinstance(tt1.previous, TextToken)): 
                         tt1 = tt1.previous
                         mc = tt1.getMorphClassInDictionary()
                         if (mc.is_adjective and not mc.is_verb and not tt1.isValue("НАСТОЯЩИЙ", "СПРАВЖНІЙ")): 
                             nnn = NounPhraseHelper.tryParse(tt1, NounPhraseParseAttr.NO, 0)
                             if (nnn is not None): 
-                                res.typ = nnn.getNormalCaseText(MorphClass(), False, MorphGender.UNDEFINED, False)
+                                res.typ = nnn.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
             if (tt.isChar('.') and (isinstance(tt.previous, TextToken))): 
-                res.typ = (Utils.asObjectOrNull(tt.previous, TextToken)).getLemma()
+                res.typ = (tt.previous).getLemma()
             if (t.morph.class0_.is_adjective or t.morph.class0_.is_pronoun): 
                 if (t.isValue("НАСТОЯЩИЙ", "СПРАВЖНІЙ") or t.isValue("ТЕКУЩИЙ", "ПОТОЧНИЙ") or t.isValue("ДАННЫЙ", "ДАНИЙ")): 
                     res.has_this_ref = True
@@ -191,18 +218,10 @@ class DecreeAnalyzer(Analyzer):
     
     @property
     def type_system(self) -> typing.List['ReferentClass']:
-        from pullenti.ner.decree.internal.MetaDecree import MetaDecree
-        from pullenti.ner.decree.internal.MetaDecreePart import MetaDecreePart
-        from pullenti.ner.decree.internal.MetaDecreeChange import MetaDecreeChange
-        from pullenti.ner.decree.internal.MetaDecreeChangeValue import MetaDecreeChangeValue
         return [MetaDecree.GLOBAL_META, MetaDecreePart.GLOBAL_META, MetaDecreeChange.GLOBAL_META, MetaDecreeChangeValue.GLOBAL_META]
     
     @property
     def images(self) -> typing.List[tuple]:
-        from pullenti.ner.decree.internal.MetaDecree import MetaDecree
-        from pullenti.ner.decree.internal.MetaDecreePart import MetaDecreePart
-        from pullenti.ner.decree.internal.MetaDecreeChange import MetaDecreeChange
-        from pullenti.ner.decree.internal.MetaDecreeChangeValue import MetaDecreeChangeValue
         res = dict()
         res[MetaDecree.DECREE_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("decree.png")
         res[MetaDecree.STANDADR_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("decreestd.png")
@@ -215,17 +234,9 @@ class DecreeAnalyzer(Analyzer):
     
     @property
     def used_extern_object_types(self) -> typing.List[str]:
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.person.PersonReferent import PersonReferent
         return [DateReferent.OBJ_TYPENAME, GeoReferent.OBJ_TYPENAME, OrganizationReferent.OBJ_TYPENAME, PersonReferent.OBJ_TYPENAME]
     
     def createReferent(self, type0_ : str) -> 'Referent':
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
-        from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
         if (type0_ == DecreeReferent.OBJ_TYPENAME): 
             return DecreeReferent()
         if (type0_ == DecreePartReferent.OBJ_TYPENAME): 
@@ -248,18 +259,9 @@ class DecreeAnalyzer(Analyzer):
             stage: 
         
         """
-        from pullenti.ner.core.TerminCollection import TerminCollection
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.Termin import Termin
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
         from pullenti.ner.decree.internal.DecreeChangeToken import DecreeChangeToken
-        from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
+        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         ad = kit.getAnalyzerData(self)
         base_typ = None
         ref0 = None
@@ -350,7 +352,7 @@ class DecreeAnalyzer(Analyzer):
                     while i < len(rts): 
                         rtt = rts[i]
                         if (isinstance(rtt.referent, DecreePartReferent)): 
-                            (Utils.asObjectOrNull(rtt.referent, DecreePartReferent)).owner = Utils.asObjectOrNull(ad.registerReferent((Utils.asObjectOrNull(rtt.referent, DecreePartReferent)).owner), DecreeReferent)
+                            (rtt.referent).owner = Utils.asObjectOrNull(ad.registerReferent((rtt.referent).owner), DecreeReferent)
                         rtt.referent = ad.registerReferent(rtt.referent)
                         kit.embedToken(rtt)
                         t = (rtt)
@@ -663,7 +665,7 @@ class DecreeAnalyzer(Analyzer):
                     if (dcht.part_typ != PartToken.ItemType.UNDEFINED): 
                         for ss in change_stack: 
                             if (isinstance(ss, DecreePartReferent)): 
-                                if ((Utils.asObjectOrNull(ss, DecreePartReferent))._isAllItemsOverThisLevel(dcht.part_typ)): 
+                                if ((ss)._isAllItemsOverThisLevel(dcht.part_typ)): 
                                     ee = True
                                     chrt = DecreeChangeToken.attachReferents(ss, dcht)
                                     break
@@ -788,14 +790,7 @@ class DecreeAnalyzer(Analyzer):
     
     @staticmethod
     def _tryAttachApproved(t : 'Token', ad : 'AnalyzerData') -> 'ReferentToken':
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
         from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         if (t is None): 
             return None
         br = None
@@ -838,7 +833,7 @@ class DecreeAnalyzer(Analyzer):
             if (tt.is_newline_before): 
                 if (tt.isValue("ИСТОЧНИК", None)): 
                     break
-            if ((((isinstance(tt, NumberToken)) and (Utils.asObjectOrNull(tt, NumberToken)).value == (1))) or tt.isValue("ДРУГОЙ", None)): 
+            if ((((isinstance(tt, NumberToken)) and (tt).value == (1))) or tt.isValue("ДРУГОЙ", None)): 
                 if (tt.next0_ is not None and tt.next0_.isValue("СТОРОНА", None)): 
                     return None
             if (tt.whitespaces_before_count > 15): 
@@ -859,8 +854,8 @@ class DecreeAnalyzer(Analyzer):
                     t1 = aliast0.previous
                 nam = MiscHelper.getTextValue(t, t1, Utils.valToEnum((GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
                 dt = DecreeToken.tryAttach(t, None, False)
-                if (dt is not None and dt.typ == DecreeToken.ItemType.TYP and (Utils.asObjectOrNull(rt0.referent, DecreeReferent)).typ is None): 
-                    (Utils.asObjectOrNull(rt0.referent, DecreeReferent)).typ = dt.value
+                if (dt is not None and dt.typ == DecreeToken.ItemType.TYP and (rt0.referent).typ is None): 
+                    (rt0.referent).typ = dt.value
                     if (dt.end_token.next0_ is not None and dt.end_token.next0_.isValue("О", "ПРО")): 
                         nam = MiscHelper.getTextValue(dt.end_token.next0_, t1, GetTextAttr.KEEPREGISTER)
                 dec = Utils.asObjectOrNull(rt0.referent, DecreeReferent)
@@ -881,12 +876,7 @@ class DecreeAnalyzer(Analyzer):
     
     @staticmethod
     def __tryAttachApproved(t : 'Token', ad : 'AnalyzerData', must_be_comma : bool=True) -> 'ReferentToken':
-        from pullenti.ner.geo.GeoReferent import GeoReferent
         from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         if (t is None or t.next0_ is None): 
             return None
         t0 = t
@@ -903,7 +893,7 @@ class DecreeAnalyzer(Analyzer):
             if (not (t is not None)): break
             if (t.is_comma_and or t.morph.class0_.is_preposition): 
                 continue
-            if ((isinstance(t.getReferent(), GeoReferent)) and (Utils.asObjectOrNull(t.getReferent(), GeoReferent)).is_city): 
+            if ((isinstance(t.getReferent(), GeoReferent)) and (t.getReferent()).is_city): 
                 continue
             if ((((((((t.isValue("УТВ", None) or t.isValue("УТВЕРЖДАТЬ", "СТВЕРДЖУВАТИ") or t.isValue("УТВЕРДИТЬ", "ЗАТВЕРДИТИ")) or t.isValue("УТВЕРЖДЕННЫЙ", "ЗАТВЕРДЖЕНИЙ") or t.isValue("ЗАТВЕРДЖУВАТИ", None)) or t.isValue("СТВЕРДИТИ", None) or t.isValue("ЗАТВЕРДИТИ", None)) or t.isValue("ПРИНЯТЬ", "ПРИЙНЯТИ") or t.isValue("ПРИНЯТЫЙ", "ПРИЙНЯТИЙ")) or t.isValue("ВВОДИТЬ", "ВВОДИТИ") or t.isValue("ВВЕСТИ", None)) or t.isValue("ВВЕДЕННЫЙ", "ВВЕДЕНИЙ") or t.isValue("ПОДПИСАТЬ", "ПІДПИСАТИ")) or t.isValue("ПОДПИСЫВАТЬ", "ПІДПИСУВАТИ") or t.isValue("ЗАКЛЮЧИТЬ", "УКЛАСТИ")) or t.isValue("ЗАКЛЮЧАТЬ", "УКЛАДАТИ")): 
                 ok = True
@@ -945,7 +935,7 @@ class DecreeAnalyzer(Analyzer):
                 while ii < len(dts): 
                     if (dts[ii].typ == DecreeToken.ItemType.NUMBER): 
                         has_num += 1
-                    elif ((dts[ii].typ == DecreeToken.ItemType.DATE and dts[ii].ref is not None and (isinstance(dts[ii].ref.referent, DateReferent))) and (Utils.asObjectOrNull(dts[ii].ref.referent, DateReferent)).dt is not None): 
+                    elif ((dts[ii].typ == DecreeToken.ItemType.DATE and dts[ii].ref is not None and (isinstance(dts[ii].ref.referent, DateReferent))) and (dts[ii].ref.referent).dt is not None): 
                         has_date += 1
                     elif (dts[ii].typ == DecreeToken.ItemType.OWNER or dts[ii].typ == DecreeToken.ItemType.ORG): 
                         has_own += 1
@@ -968,7 +958,7 @@ class DecreeAnalyzer(Analyzer):
                                 dr.addExtReferent(dt.ref)
                     rt = list()
                     rt.append(ReferentToken(dr, dts[0].begin_token, dts[len(dts) - 1].end_token))
-            if (((rt is None and len(dts) == 1 and dts[0].typ == DecreeToken.ItemType.DATE) and dts[0].ref is not None and (isinstance(dts[0].ref.referent, DateReferent))) and (Utils.asObjectOrNull(dts[0].ref.referent, DateReferent)).dt is not None): 
+            if (((rt is None and len(dts) == 1 and dts[0].typ == DecreeToken.ItemType.DATE) and dts[0].ref is not None and (isinstance(dts[0].ref.referent, DateReferent))) and (dts[0].ref.referent).dt is not None): 
                 dr = DecreeReferent()
                 dr._addDate(dts[0])
                 rt = list()
@@ -987,22 +977,18 @@ class DecreeAnalyzer(Analyzer):
     
     @staticmethod
     def _getDecree(t : 'Token') -> 'DecreeReferent':
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
         if (not ((isinstance(t, ReferentToken)))): 
             return None
         r = t.getReferent()
         if (isinstance(r, DecreeReferent)): 
             return Utils.asObjectOrNull(r, DecreeReferent)
         if (isinstance(r, DecreePartReferent)): 
-            return (Utils.asObjectOrNull(r, DecreePartReferent)).owner
+            return (r).owner
         return None
     
     @staticmethod
     def _checkOtherTyp(t : 'Token', first : bool) -> 'Token':
         from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         if (t is None): 
             return None
         dit = DecreeToken.tryAttach(t, None, False)
@@ -1028,15 +1014,8 @@ class DecreeAnalyzer(Analyzer):
         return None
     
     def __tryAttachPulishers(self, dts : typing.List['DecreeToken']) -> typing.List['ReferentToken']:
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.geo.GeoReferent import GeoReferent
-        from pullenti.ner.core.BracketHelper import BracketHelper
         from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.ReferentToken import ReferentToken
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.TextToken import TextToken
+        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         i = 0
         t1 = None
         typ = None
@@ -1187,7 +1166,7 @@ class DecreeAnalyzer(Analyzer):
                         for s in pub_part0.slots: 
                             pub_part.addSlot(s.type_name, s.value, False, 0)
                         pub_part0 = pub_part
-                        pub_part0.clause = str((Utils.asObjectOrNull(t, NumberToken)).value)
+                        pub_part0.clause = str((t).value)
                         res.append(ReferentToken(pub_part0, t, t))
                         continue
             if (((isinstance(t, TextToken)) and t.chars.is_letter and (t.length_char < 3)) and (isinstance(t.next0_, NumberToken))): 
@@ -1212,7 +1191,6 @@ class DecreeAnalyzer(Analyzer):
     
     def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
         from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.ReferentToken import ReferentToken
         dp = DecreeToken.tryAttach(begin, None, False)
         if (dp is not None and dp.typ == DecreeToken.ItemType.TYP): 
             return ReferentToken(None, dp.begin_token, dp.end_token)
@@ -1222,13 +1200,15 @@ class DecreeAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.core.Termin import Termin
         from pullenti.ner.decree.internal.DecreeChangeToken import DecreeChangeToken
         from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.ProcessorService import ProcessorService
         if (DecreeAnalyzer.M_INITED): 
             return
         DecreeAnalyzer.M_INITED = True
+        MetaDecree.initialize()
+        MetaDecreePart.initialize()
+        MetaDecreeChange.initialize()
+        MetaDecreeChangeValue.initialize()
         try: 
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False
             DecreeChangeToken._initialize()
@@ -1246,19 +1226,8 @@ class DecreeAnalyzer(Analyzer):
     
     @staticmethod
     def __TryAttach(dts : typing.List['DecreeToken'], base_typ : 'DecreeToken', after_decree : bool, ad : 'AnalyzerData') -> typing.List['ReferentToken']:
-        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-        from pullenti.ner.Referent import Referent
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-        from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
-        from pullenti.ner.date.DateReferent import DateReferent
-        from pullenti.ner.geo.GeoReferent import GeoReferent
+        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         if (dts is None or (len(dts) < 1)): 
             return None
         if (dts[0].typ == DecreeToken.ItemType.EDITION and len(dts) > 1): 
@@ -1269,7 +1238,7 @@ class DecreeAnalyzer(Analyzer):
                     re = dts[0].ref.getReferent()
                     dre = Utils.asObjectOrNull(re, DecreeReferent)
                     if (dre is None and (isinstance(re, DecreePartReferent))): 
-                        dre = (Utils.asObjectOrNull(re, DecreePartReferent)).owner
+                        dre = (re).owner
                     if (dre is not None): 
                         if (dre.typ == base_typ.value or dre.typ0 == base_typ.value): 
                             return None
@@ -1873,18 +1842,10 @@ class DecreeAnalyzer(Analyzer):
     
     @staticmethod
     def _tryAttachParts(parts : typing.List['PartToken'], base_typ : 'DecreeToken', _def_owner : 'Referent') -> typing.List['MetaToken']:
-        from pullenti.ner.core.BracketHelper import BracketHelper
-        from pullenti.ner.decree.DecreeReferent import DecreeReferent
-        from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         from pullenti.ner.decree.internal.PartToken import PartToken
-        from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-        from pullenti.ner.TextToken import TextToken
-        from pullenti.ner.NumberToken import NumberToken
-        from pullenti.ner.core.MiscHelper import MiscHelper
-        from pullenti.ner.ReferentToken import ReferentToken
         from pullenti.ner.decree.internal.DecreeToken import DecreeToken
+        from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         from pullenti.ner.instrument.internal.InstrToken import InstrToken
-        from pullenti.morph.MorphClass import MorphClass
         if (parts is None or len(parts) == 0): 
             return None
         tt = parts[len(parts) - 1].end_token.next0_
@@ -1917,7 +1878,7 @@ class DecreeAnalyzer(Analyzer):
         if (parts[len(parts) - 1].typ != PartToken.ItemType.SUBPROGRAM and parts[len(parts) - 1].typ != PartToken.ItemType.ADDAGREE): 
             this_dec = DecreeAnalyzer.ThisDecree.tryAttach(parts[len(parts) - 1], base_typ)
             if (this_dec is not None): 
-                if ((isinstance(_def_owner, DecreeReferent)) and (((Utils.asObjectOrNull(_def_owner, DecreeReferent)).typ0 == this_dec.typ or parts[0].typ == PartToken.ItemType.APPENDIX))): 
+                if ((isinstance(_def_owner, DecreeReferent)) and (((_def_owner).typ0 == this_dec.typ or parts[0].typ == PartToken.ItemType.APPENDIX))): 
                     pass
                 else: 
                     _def_owner = (None)
@@ -1932,11 +1893,11 @@ class DecreeAnalyzer(Analyzer):
                                 if (PartToken._getRank(pp.typ) >= PartToken._getRank(PartToken.ItemType.CLAUSE)): 
                                     has_clause = True
                         if (isinstance(_def_owner, DecreePartReferent)): 
-                            if ((Utils.asObjectOrNull(_def_owner, DecreePartReferent)).clause is not None): 
+                            if ((_def_owner).clause is not None): 
                                 has_clause = True
                         if (not has_clause): 
                             p.typ = PartToken.ItemType.DOCPART
-                        elif ((((p == parts[len(parts) - 1] and p.end_token.next0_ is not None and len(p.values) == 1) and (isinstance(p.end_token.next0_.getReferent(), DecreeReferent)) and (isinstance(p.begin_token, TextToken))) and (Utils.asObjectOrNull(p.begin_token, TextToken)).term == "ЧАСТИ" and (isinstance(p.end_token, NumberToken))) and p.begin_token.next0_ == p.end_token): 
+                        elif ((((p == parts[len(parts) - 1] and p.end_token.next0_ is not None and len(p.values) == 1) and (isinstance(p.end_token.next0_.getReferent(), DecreeReferent)) and (isinstance(p.begin_token, TextToken))) and (p.begin_token).term == "ЧАСТИ" and (isinstance(p.end_token, NumberToken))) and p.begin_token.next0_ == p.end_token): 
                             p.typ = PartToken.ItemType.DOCPART
         elif (parts[len(parts) - 1].typ == PartToken.ItemType.ADDAGREE): 
             is_add_agree = True
@@ -1946,7 +1907,7 @@ class DecreeAnalyzer(Analyzer):
             is_program = True
         def_owner = Utils.asObjectOrNull(_def_owner, DecreeReferent)
         if (isinstance(_def_owner, DecreePartReferent)): 
-            def_owner = (Utils.asObjectOrNull(_def_owner, DecreePartReferent)).owner
+            def_owner = (_def_owner).owner
         res = list()
         has_prefix = False
         if (parts[0].typ == PartToken.ItemType.PREFIX): 
@@ -2126,7 +2087,7 @@ class DecreeAnalyzer(Analyzer):
                     s = MiscHelper.getTextValueOfMetaToken(br, GetTextAttr.NO)
                     if (s is not None): 
                         rt = res[len(res) - 1]
-                        (Utils.asObjectOrNull(rt.referent, DecreePartReferent))._addName(s)
+                        (rt.referent)._addName(s)
                         rt.end_token = br.end_token
                         te = rt.end_token.next0_
         if (te is not None and te.isCharOf(",;")): 
@@ -2410,7 +2371,7 @@ class DecreeAnalyzer(Analyzer):
                         if (isinstance(at.tag, str)): 
                             loc_typ = (Utils.asObjectOrNull(at.tag, str))
                         else: 
-                            loc_typ = (Utils.asObjectOrNull(at, TextToken)).lemma
+                            loc_typ = (at).lemma
                 elif (bt is not None): 
                     owner = DecreeAnalyzer._getDecree(bt)
                     owner_paer = (Utils.asObjectOrNull(bt.getReferent(), DecreePartReferent))
@@ -2423,11 +2384,11 @@ class DecreeAnalyzer(Analyzer):
                 owner_paer = (Utils.asObjectOrNull(bt.getReferent(), DecreePartReferent))
                 if (owner_paer is not None and loc_typ is None): 
                     loc_typ = owner_paer.local_typ
-            if (((bt is not None and len(parts) == 1 and parts[0].typ == PartToken.ItemType.DOCPART) and (isinstance(bt.getReferent(), DecreePartReferent)) and (Utils.asObjectOrNull(bt.getReferent(), DecreePartReferent)).clause is not None) and len(res) == 1 and owner == (Utils.asObjectOrNull(bt.getReferent(), DecreePartReferent)).owner): 
+            if (((bt is not None and len(parts) == 1 and parts[0].typ == PartToken.ItemType.DOCPART) and (isinstance(bt.getReferent(), DecreePartReferent)) and (bt.getReferent()).clause is not None) and len(res) == 1 and owner == (bt.getReferent()).owner): 
                 for s in res[0].referent.slots: 
                     if (s.type_name == DecreePartReferent.ATTR_DOCPART): 
                         s.type_name = DecreePartReferent.ATTR_PART
-                (Utils.asObjectOrNull(res[0].referent, DecreePartReferent))._addHighLevelInfo(Utils.asObjectOrNull(bt.getReferent(), DecreePartReferent))
+                (res[0].referent)._addHighLevelInfo(Utils.asObjectOrNull(bt.getReferent(), DecreePartReferent))
         if (owner is None): 
             if (this_dec is None and loc_typ is None): 
                 if ((len(parts) == 1 and len(parts[0].values) == 1 and parts[0].typ == PartToken.ItemType.APPENDIX) and parts[0].begin_token.chars.is_capital_upper): 
@@ -2495,7 +2456,7 @@ class DecreeAnalyzer(Analyzer):
                 if (ok): 
                     s = MiscHelper.getTextValueOfMetaToken(br, GetTextAttr.NO)
                     if (s is not None): 
-                        (Utils.asObjectOrNull(rt.referent, DecreePartReferent))._addName(s)
+                        (rt.referent)._addName(s)
                         rt.end_token = br.end_token
                         if ((isinstance(rt.end_token.next0_, ReferentToken)) and rt.end_token.next0_.getReferent() == owner): 
                             rt.end_token = rt.end_token.next0_
@@ -2505,7 +2466,7 @@ class DecreeAnalyzer(Analyzer):
                     if (tt1.is_table_control_char): 
                         s = MiscHelper.getTextValue(tt.next0_, tt1.previous, GetTextAttr.NO)
                         if (s is not None): 
-                            (Utils.asObjectOrNull(rt.referent, DecreePartReferent))._addName(s)
+                            (rt.referent)._addName(s)
                             rt.end_token = tt1
                         break
                     elif (tt1.is_newline_before): 
@@ -2517,9 +2478,9 @@ class DecreeAnalyzer(Analyzer):
         if (owner_paer is not None): 
             ii = 0
             while ii < len(res): 
-                (Utils.asObjectOrNull(res[ii].referent, DecreePartReferent))._addHighLevelInfo((owner_paer if ii == 0 else Utils.asObjectOrNull(res[ii - 1].referent, DecreePartReferent)))
+                (res[ii].referent)._addHighLevelInfo((owner_paer if ii == 0 else Utils.asObjectOrNull(res[ii - 1].referent, DecreePartReferent)))
                 ii += 1
-        if (len(res) == 1 and (Utils.asObjectOrNull(res[0].referent, DecreePartReferent)).name is None): 
+        if (len(res) == 1 and (res[0].referent).name is None): 
             if ((res[0].begin_token.previous is not None and res[0].begin_token.previous.isChar('(') and res[0].end_token.next0_ is not None) and res[0].end_token.next0_.isChar(')')): 
                 if (BracketHelper.canBeEndOfSequence(res[0].begin_token.previous.previous, False, None, False)): 
                     tt = res[0].begin_token.previous.previous.previous
@@ -2528,7 +2489,7 @@ class DecreeAnalyzer(Analyzer):
                             break
                         if (BracketHelper.canBeStartOfSequence(tt, False, False)): 
                             if (tt.next0_.chars.is_letter and not tt.next0_.chars.is_all_lower): 
-                                (Utils.asObjectOrNull(res[0].referent, DecreePartReferent))._addName(MiscHelper.getTextValue(tt, res[0].begin_token.previous.previous, GetTextAttr.NO))
+                                (res[0].referent)._addName(MiscHelper.getTextValue(tt, res[0].begin_token.previous.previous, GetTextAttr.NO))
                                 res[0].begin_token = tt
                                 res[0].end_token = res[0].end_token.next0_
                             break
