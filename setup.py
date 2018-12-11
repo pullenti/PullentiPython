@@ -1,13 +1,19 @@
 
+import re
 from setuptools import (
     setup,
     find_packages,
 )
 
 
+with open('pullenti/ner/ProcessorService.py') as file:
+    source = file.read()
+    match = re.search(r'return "(\d\.\d\d)"', source)
+    version = match.group(1)
+
 setup(
     name='pullenti',
-    version='3.13',
+    version=version,
     description='Named entity recognition for russian language',
     url='http://pullenti.ru/',
     author='Konstantin Kuznetsov',
