@@ -17,7 +17,7 @@ git status
 git diff
 ```
 
-Собрать пакет, обратить внимание на версию, например dist/pullenti-3.14-py3-none-any.whl
+Собрать пакет, обратить внимание на версию, например `dist/pullenti-3.14-py3-none-any.whl`
 
 ```bash
 make clean wheel
