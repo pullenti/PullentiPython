@@ -13,15 +13,15 @@ class EditionHelper:
     """ Поддержка анализа редакций для фрагментов НПА """
     
     @staticmethod
-    def analizeEditions(root : 'FragToken') -> None:
+    def analize_editions(root : 'FragToken') -> None:
         if (root.number == 6 and root.kind == InstrumentKind.SUBITEM): 
             pass
         if (root.sub_number == 67): 
             pass
         if (len(root.children) > 1 and root.children[0].kind == InstrumentKind.NUMBER and root.children[1].kind == InstrumentKind.CONTENT): 
-            if (root.children[1].begin_token.isValue("УТРАТИТЬ", "ВТРАТИТИ") and root.children[1].begin_token.next0_ is not None and root.children[1].begin_token.next0_.isValue("СИЛА", "ЧИННІСТЬ")): 
+            if (root.children[1].begin_token.is_value("УТРАТИТЬ", "ВТРАТИТИ") and root.children[1].begin_token.next0_ is not None and root.children[1].begin_token.next0_.is_value("СИЛА", "ЧИННІСТЬ")): 
                 root.is_expired = True
-        if ((not root.is_expired and root.kind == InstrumentKind.INDENTION and root.begin_token.isValue("АБЗАЦ", None)) and root.begin_token.next0_ is not None and root.begin_token.next0_.isValue("УТРАТИТЬ", "ВТРАТИТИ")): 
+        if ((not root.is_expired and root.kind == InstrumentKind.INDENTION and root.begin_token.is_value("АБЗАЦ", None)) and root.begin_token.next0_ is not None and root.begin_token.next0_.is_value("УТРАТИТЬ", "ВТРАТИТИ")): 
             root.is_expired = True
         if (root.is_expired or ((root._itok is not None and root._itok.is_expired))): 
             root.is_expired = True
@@ -29,7 +29,7 @@ class EditionHelper:
                 root.referents = list()
             tt = root.begin_token
             while tt is not None and tt.end_char <= root.end_char: 
-                dec = Utils.asObjectOrNull(tt.getReferent(), DecreeReferent)
+                dec = Utils.asObjectOrNull(tt.get_referent(), DecreeReferent)
                 if (dec is not None): 
                     if (not dec in root.referents): 
                         root.referents.append(dec)
@@ -44,9 +44,9 @@ class EditionHelper:
                 break
             i0 += 1
         if (root.number > 0): 
-            edt1 = EditionHelper.__getLastChild(root)
+            edt1 = EditionHelper.__get_last_child(root)
             if (edt1 is not None and edt1.kind == InstrumentKind.EDITIONS and edt1.tag is None): 
-                if (EditionHelper.__canBeEditionFor(root, edt1) > 0): 
+                if (EditionHelper.__can_be_edition_for(root, edt1) > 0): 
                     if (root.referents is None): 
                         root.referents = edt1.referents
                     else: 
@@ -56,16 +56,16 @@ class EditionHelper:
                     edt1.tag = (edt1)
         if (i0 >= len(root.children)): 
             for ch in root.children: 
-                EditionHelper.analizeEditions(ch)
+                EditionHelper.analize_editions(ch)
             return
         ch0 = root.children[i0]
         ok = False
-        if (EditionHelper.__canBeEditionFor(root, ch0) >= 0): 
+        if (EditionHelper.__can_be_edition_for(root, ch0) >= 0): 
             ok = True
             if (i0 > 0 and ((root.children[i0 - 1].kind == InstrumentKind.CONTENT or root.children[i0 - 1].kind == InstrumentKind.INDENTION)) and ((i0 + 1) < len(root.children))): 
-                if (EditionHelper.__canBeEditionFor(root.children[i0 - 1], ch0) >= 0): 
+                if (EditionHelper.__can_be_edition_for(root.children[i0 - 1], ch0) >= 0): 
                     ok = False
-        if (((i0 + 1) < len(root.children)) and EditionHelper.__canBeEditionFor(root, root.children[len(root.children) - 1]) >= 0 and (EditionHelper.__canBeEditionFor(root.children[len(root.children) - 1], root.children[len(root.children) - 1]) < 0)): 
+        if (((i0 + 1) < len(root.children)) and EditionHelper.__can_be_edition_for(root, root.children[len(root.children) - 1]) >= 0 and (EditionHelper.__can_be_edition_for(root.children[len(root.children) - 1], root.children[len(root.children) - 1]) < 0)): 
             ok = True
             ch0 = root.children[len(root.children) - 1]
         if (ok and ch0.tag is None): 
@@ -82,14 +82,14 @@ class EditionHelper:
             edt = None
             edt2 = None
             if (ch.number > 0 and i > 0): 
-                edt = EditionHelper.__getLastChild(root.children[i - 1])
+                edt = EditionHelper.__get_last_child(root.children[i - 1])
             if (((i + 1) < len(root.children)) and root.children[i + 1].kind == InstrumentKind.EDITIONS): 
                 edt2 = root.children[i + 1]
             if (edt is not None): 
-                if (EditionHelper.__canBeEditionFor(ch, edt) < 1): 
+                if (EditionHelper.__can_be_edition_for(ch, edt) < 1): 
                     edt = (None)
             if (edt2 is not None): 
-                if (EditionHelper.__canBeEditionFor(ch, edt2) < 0): 
+                if (EditionHelper.__can_be_edition_for(ch, edt2) < 0): 
                     edt2 = (None)
             if (edt is not None and edt.tag is None): 
                 if (ch.referents is None): 
@@ -109,28 +109,28 @@ class EditionHelper:
                 edt2.tag = (ch)
             i += 1
         for ch in root.children: 
-            EditionHelper.analizeEditions(ch)
+            EditionHelper.analize_editions(ch)
     
     @staticmethod
-    def __getLastChild(fr : 'FragToken') -> 'FragToken':
+    def __get_last_child(fr : 'FragToken') -> 'FragToken':
         if (len(fr.children) == 0): 
             return fr
-        return EditionHelper.__getLastChild(fr.children[len(fr.children) - 1])
+        return EditionHelper.__get_last_child(fr.children[len(fr.children) - 1])
     
     @staticmethod
-    def __canBeEditionFor(fr : 'FragToken', edt : 'FragToken') -> int:
+    def __can_be_edition_for(fr : 'FragToken', edt : 'FragToken') -> int:
         if (edt is None or edt.kind != InstrumentKind.EDITIONS or edt.referents is None): 
             return -1
         if (fr.sub_number3 == 67): 
             pass
         t = edt.begin_token
-        if (t.isChar('(') and t.next0_ is not None): 
+        if (t.is_char('(') and t.next0_ is not None): 
             t = t.next0_
-        if (t.isValue("АБЗАЦ", None)): 
+        if (t.is_value("АБЗАЦ", None)): 
             return (1 if fr.kind == InstrumentKind.INDENTION else -1)
-        pt = PartToken.tryAttach(t, None, False, False)
+        pt = PartToken.try_attach(t, None, False, False)
         if (pt is None): 
-            pt = PartToken.tryAttach(t, None, False, True)
+            pt = PartToken.try_attach(t, None, False, True)
         if (pt is None): 
             return 0
         if (pt.typ == PartToken.ItemType.CLAUSE): 
@@ -144,7 +144,7 @@ class EditionHelper:
                 return -1
         elif (pt.typ == PartToken.ItemType.SUBITEM): 
             if (fr.kind != InstrumentKind.SUBITEM): 
-                if (fr.kind == InstrumentKind.ITEM and t.isValue("ПП", None)): 
+                if (fr.kind == InstrumentKind.ITEM and t.is_value("ПП", None)): 
                     pass
                 else: 
                     return -1
@@ -165,7 +165,7 @@ class EditionHelper:
             return 1
         if (pt.values[0].value.endswith("." + fr.number_string)): 
             return 0
-        if (fr.number == PartToken.getNumber(pt.values[0].value)): 
+        if (fr.number == PartToken.get_number(pt.values[0].value)): 
             if (fr.sub_number == 0): 
                 return 1
         return -1

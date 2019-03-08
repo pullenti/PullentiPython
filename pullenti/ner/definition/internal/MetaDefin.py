@@ -13,15 +13,15 @@ class MetaDefin(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
         MetaDefin._global_meta = MetaDefin()
-        MetaDefin._global_meta.addFeature(DefinitionReferent.ATTR_TERMIN, "Термин", 1, 0)
-        MetaDefin._global_meta.addFeature(DefinitionReferent.ATTR_TERMIN_ADD, "Дополнение термина", 0, 0)
-        MetaDefin._global_meta.addFeature(DefinitionReferent.ATTR_VALUE, "Значение", 1, 0)
-        MetaDefin._global_meta.addFeature(DefinitionReferent.ATTR_MISC, "Мелочь", 0, 0)
-        MetaDefin._global_meta.addFeature(DefinitionReferent.ATTR_DECREE, "Ссылка на НПА", 0, 0)
-        fi = MetaDefin._global_meta.addFeature(DefinitionReferent.ATTR_KIND, "Тип", 1, 1)
-        fi.addValue(Utils.enumToString(DefinitionKind.ASSERTATION), "Утверждение", None, None)
-        fi.addValue(Utils.enumToString(DefinitionKind.DEFINITION), "Определение", None, None)
-        fi.addValue(Utils.enumToString(DefinitionKind.NEGATION), "Отрицание", None, None)
+        MetaDefin._global_meta.add_feature(DefinitionReferent.ATTR_TERMIN, "Термин", 1, 0)
+        MetaDefin._global_meta.add_feature(DefinitionReferent.ATTR_TERMIN_ADD, "Дополнение термина", 0, 0)
+        MetaDefin._global_meta.add_feature(DefinitionReferent.ATTR_VALUE, "Значение", 1, 0)
+        MetaDefin._global_meta.add_feature(DefinitionReferent.ATTR_MISC, "Мелочь", 0, 0)
+        MetaDefin._global_meta.add_feature(DefinitionReferent.ATTR_DECREE, "Ссылка на НПА", 0, 0)
+        fi = MetaDefin._global_meta.add_feature(DefinitionReferent.ATTR_KIND, "Тип", 1, 1)
+        fi.add_value(Utils.enumToString(DefinitionKind.ASSERTATION), "Утверждение", None, None)
+        fi.add_value(Utils.enumToString(DefinitionKind.DEFINITION), "Определение", None, None)
+        fi.add_value(Utils.enumToString(DefinitionKind.NEGATION), "Отрицание", None, None)
     
     @property
     def name(self) -> str:
@@ -36,7 +36,7 @@ class MetaDefin(ReferentClass):
     
     IMAGE_ASS_ID = "assert"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
         if (isinstance(obj, DefinitionReferent)): 
             ki = (obj).kind

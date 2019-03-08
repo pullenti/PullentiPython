@@ -8,6 +8,7 @@ class BookLinkRefType(IntEnum):
     """ Тип ссылки """
     UNDEFINED = 0
     INLINE = 1
+    """ Встроенная в текст """
     
     @classmethod
     def has_value(cls, value):

@@ -28,7 +28,7 @@ class Slot:
         return self.__typename
     
     @property
-    def is_internal(self) -> bool:
+    def is_internal0(self) -> bool:
         return self.type_name is not None and self.type_name[0] == '@'
     
     @property
@@ -76,12 +76,12 @@ class Slot:
             return None
         if (self.owner.instance_of is None): 
             return None
-        return self.owner.instance_of.findFeature(self.type_name)
+        return self.owner.instance_of.find_feature(self.type_name)
     
     def __str__(self) -> str:
-        return self.toString(MorphLang.UNKNOWN)
+        return self.to_string(MorphLang.UNKNOWN)
     
-    def toString(self, lang : 'MorphLang') -> str:
+    def to_string(self, lang : 'MorphLang') -> str:
         res = io.StringIO()
         attr = self.defining_feature
         if (attr is not None): 
@@ -93,20 +93,20 @@ class Slot:
             print("{0}: ".format(self.type_name), end="", file=res, flush=True)
         if (self.value is not None): 
             if (isinstance(self.value, Referent)): 
-                print((self.value).toString(False, lang, 0), end="", file=res)
+                print((self.value).to_string(False, lang, 0), end="", file=res)
             elif (attr is None): 
                 print(str(self.value), end="", file=res)
             else: 
-                print(attr.convertInnerValueToOuterValue(self.value, None), end="", file=res)
+                print(attr.convert_inner_value_to_outer_value(self.value, None), end="", file=res)
         return Utils.toStringStringIO(res)
     
-    def convertValueToString(self, lang : 'MorphLang') -> str:
+    def convert_value_to_string(self, lang : 'MorphLang') -> str:
         if (self.value is None): 
             return None
         attr = self.defining_feature
         if (attr is None): 
             return str(self.value)
-        v = attr.convertInnerValueToOuterValue(self.value, lang)
+        v = attr.convert_inner_value_to_outer_value(self.value, lang)
         if (v is None): 
             return None
         if (isinstance(v, str)): 
@@ -130,7 +130,7 @@ class Slot:
             self.owner = None
     
     @staticmethod
-    def _new1095(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
+    def _new1097(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
         res = Slot()
         res.type_name = _arg1
         res.tag = _arg2
@@ -138,7 +138,7 @@ class Slot:
         return res
     
     @staticmethod
-    def _new2700(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
+    def _new2795(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
         res = Slot()
         res.type_name = _arg1
         res.value = _arg2

@@ -67,24 +67,24 @@ class TitleNameToken(MetaToken):
             k += 1
     
     @staticmethod
-    def canBeStartOfTextOrContent(begin : 'Token', end : 'Token') -> bool:
-        if (begin.isValue("СОДЕРЖАНИЕ", "ЗМІСТ") or begin.isValue("ОГЛАВЛЕНИЕ", None) or begin.isValue("СОДЕРЖИМОЕ", None)): 
+    def can_be_start_of_text_or_content(begin : 'Token', end : 'Token') -> bool:
+        if (begin.is_value("СОДЕРЖАНИЕ", "ЗМІСТ") or begin.is_value("ОГЛАВЛЕНИЕ", None) or begin.is_value("СОДЕРЖИМОЕ", None)): 
             t = begin
-            if (t.next0_ is not None and t.next0_.isCharOf(":.")): 
+            if (t.next0_ is not None and t.next0_.is_char_of(":.")): 
                 t = t.next0_
             if (t == end): 
                 return True
-        if (begin.isValue("ОТ", "ВІД") and begin.next0_ is not None and begin.next0_.isValue("РЕДАКЦИЯ", "РЕДАКЦІЯ")): 
-            if (begin.next0_.next0_ is not None and begin.next0_.next0_.isChar(':')): 
+        if (begin.is_value("ОТ", "ВІД") and begin.next0_ is not None and begin.next0_.is_value("РЕДАКЦИЯ", "РЕДАКЦІЯ")): 
+            if (begin.next0_.next0_ is not None and begin.next0_.next0_.is_char(':')): 
                 return True
         words = 0
         verbs = 0
         t = begin
         while t != end.next0_: 
             if (isinstance(t, TextToken)): 
-                if (t.chars.is_letter): 
+                if (t.chars.is_letter0): 
                     words += 1
-                if (t.chars.is_all_lower and (t).is_pure_verb): 
+                if (t.chars.is_all_lower0 and (t).is_pure_verb0): 
                     verbs += 1
             t = t.next0_
         if (words > 10 and verbs > 1): 
@@ -92,17 +92,17 @@ class TitleNameToken(MetaToken):
         return False
     
     @staticmethod
-    def tryParse(begin : 'Token', end : 'Token', min_newlines_count : int) -> 'TitleNameToken':
+    def try_parse(begin : 'Token', end : 'Token', min_newlines_count : int) -> 'TitleNameToken':
         res = TitleNameToken(begin, end)
-        if (not res.__calcRankAndValue(min_newlines_count)): 
+        if (not res.__calc_rank_and_value(min_newlines_count)): 
             return None
         if (res.begin_name_token is None or res.end_name_token is None): 
             return None
         return res
     
-    def __calcRankAndValue(self, min_newlines_count : int) -> bool:
+    def __calc_rank_and_value(self, min_newlines_count : int) -> bool:
         self.rank = 0
-        if (self.begin_token.chars.is_all_lower): 
+        if (self.begin_token.chars.is_all_lower0): 
             self.rank -= 30
         words = 0
         up_words = 0
@@ -111,14 +111,14 @@ class TitleNameToken(MetaToken):
         tstart = self.begin_token
         tend = self.end_token
         t = self.begin_token
-        first_pass3139 = True
+        first_pass3240 = True
         while True:
-            if first_pass3139: first_pass3139 = False
+            if first_pass3240: first_pass3240 = False
             else: t = t.next0_
             if (not (t != self.end_token.next0_ and t is not None and t.end_char <= self.end_token.end_char)): break
-            if (t.is_newline_before): 
+            if (t.is_newline_before0): 
                 pass
-            tit = TitleItemToken.tryAttach(t)
+            tit = TitleItemToken.try_attach(t)
             if (tit is not None): 
                 if (tit.typ == TitleItemToken.Types.THEME or tit.typ == TitleItemToken.Types.TYPANDTHEME): 
                     if (t != self.begin_token): 
@@ -131,7 +131,7 @@ class TitleNameToken(MetaToken):
                     t = tit.end_token
                     if (t.next0_ is None): 
                         return False
-                    if (t.next0_.chars.is_letter and t.next0_.chars.is_all_lower): 
+                    if (t.next0_.chars.is_letter0 and t.next0_.chars.is_all_lower0): 
                         self.rank += 20
                     else: 
                         self.rank += 100
@@ -141,7 +141,7 @@ class TitleNameToken(MetaToken):
                     continue
                 if (tit.typ == TitleItemToken.Types.TYP): 
                     if (t == self.begin_token): 
-                        if (tit.end_token.is_newline_after): 
+                        if (tit.end_token.is_newline_after0): 
                             self.type_value = tit.value
                             self.rank += 5
                             tstart = tit.end_token.next0_
@@ -149,7 +149,7 @@ class TitleNameToken(MetaToken):
                     words += 1
                     if (tit.begin_token != tit.end_token): 
                         words += 1
-                    if (tit.chars.is_all_upper): 
+                    if (tit.chars.is_all_upper0): 
                         up_words += 1
                     continue
                 if (tit.typ == TitleItemToken.Types.DUST or tit.typ == TitleItemToken.Types.SPECIALITY): 
@@ -162,59 +162,59 @@ class TitleNameToken(MetaToken):
                     continue
                 if (tit.typ == TitleItemToken.Types.CONSULTANT or tit.typ == TitleItemToken.Types.BOSS or tit.typ == TitleItemToken.Types.EDITOR): 
                     t = tit.end_token
-                    if (t.next0_ is not None and ((t.next0_.isCharOf(":") or t.next0_.is_hiphen or t.whitespaces_after_count > 4))): 
+                    if (t.next0_ is not None and ((t.next0_.is_char_of(":") or t.next0_.is_hiphen0 or t.whitespaces_after_count > 4))): 
                         self.rank -= 10
                     else: 
                         self.rank -= 2
                     continue
                 return False
-            blt = BookLinkToken.tryParse(t, 0)
+            blt = BookLinkToken.try_parse(t, 0)
             if (blt is not None): 
                 if (blt.typ == BookLinkTyp.MISC or blt.typ == BookLinkTyp.N or blt.typ == BookLinkTyp.PAGES): 
                     self.rank -= 10
                 elif (blt.typ == BookLinkTyp.N or blt.typ == BookLinkTyp.PAGERANGE): 
                     self.rank -= 20
-            if (t == self.begin_token and BookLinkToken.tryParseAuthor(t, FioTemplateType.UNDEFINED) is not None): 
+            if (t == self.begin_token and BookLinkToken.try_parse_author(t, FioTemplateType.UNDEFINED) is not None): 
                 self.rank -= 20
-            if (t.is_newline_before and t != self.begin_token): 
+            if (t.is_newline_before0 and t != self.begin_token): 
                 line_number += 1
                 if (line_number > 4): 
                     return False
-                if (t.chars.is_all_lower): 
+                if (t.chars.is_all_lower0): 
                     self.rank += 10
-                elif (t.previous.isChar('.')): 
+                elif (t.previous.is_char('.')): 
                     self.rank -= 10
-                elif (t.previous.isCharOf(",-")): 
+                elif (t.previous.is_char_of(",-")): 
                     self.rank += 10
                 else: 
-                    npt = NounPhraseHelper.tryParse(t.previous, NounPhraseParseAttr.NO, 0)
+                    npt = NounPhraseHelper.try_parse(t.previous, NounPhraseParseAttr.NO, 0)
                     if (npt is not None and npt.end_char >= t.end_char): 
                         self.rank += 10
             if (t != self.begin_token and t.newlines_before_count > min_newlines_count): 
                 self.rank -= (t.newlines_before_count - min_newlines_count)
-            bst = BracketHelper.tryParse(t, BracketParseAttr.NO, 100)
-            if (bst is not None and bst.is_quote_type and bst.end_token.end_char <= self.end_token.end_char): 
+            bst = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
+            if (bst is not None and bst.is_quote_type0 and bst.end_token.end_char <= self.end_token.end_char): 
                 if (words == 0): 
                     tstart = bst.begin_token
                     self.rank += 10
                     if (bst.end_token == self.end_token): 
                         tend = self.end_token
                         self.rank += 10
-            rli = t.getReferents()
+            rli = t.get_referents()
             if (rli is not None): 
                 for r in rli: 
                     if (isinstance(r, OrganizationReferent)): 
-                        if (t.is_newline_before): 
+                        if (t.is_newline_before0): 
                             self.rank -= 10
                         else: 
                             self.rank -= 4
                         continue
                     if ((isinstance(r, GeoReferent)) or (isinstance(r, PersonReferent))): 
-                        if (t.is_newline_before): 
+                        if (t.is_newline_before0): 
                             self.rank -= 5
-                            if (t.is_newline_after or t.next0_ is None): 
+                            if (t.is_newline_after0 or t.next0_ is None): 
                                 self.rank -= 20
-                            elif (t.next0_.is_hiphen or (isinstance(t.next0_, NumberToken)) or (isinstance(t.next0_.getReferent(), DateReferent))): 
+                            elif (t.next0_.is_hiphen0 or (isinstance(t.next0_, NumberToken)) or (isinstance(t.next0_.get_referent(), DateReferent))): 
                                 self.rank -= 20
                             elif (t != self.begin_token): 
                                 self.rank -= 20
@@ -223,54 +223,54 @@ class TitleNameToken(MetaToken):
                         continue
                     if ((isinstance(r, UriReferent)) or (isinstance(r, PhoneReferent))): 
                         return False
-                    if (t.is_newline_before): 
+                    if (t.is_newline_before0): 
                         self.rank -= 4
                     else: 
                         self.rank -= 2
-                    if (t == self.begin_token and (isinstance(self.end_token.getReferent(), PersonReferent))): 
+                    if (t == self.begin_token and (isinstance(self.end_token.get_referent(), PersonReferent))): 
                         self.rank -= 10
                 words += 1
-                if (t.chars.is_all_upper): 
+                if (t.chars.is_all_upper0): 
                     up_words += 1
                 if (t == self.begin_token): 
-                    if (t.is_newline_after): 
+                    if (t.is_newline_after0): 
                         self.rank -= 10
-                    elif (t.next0_ is not None and t.next0_.isChar('.') and t.next0_.is_newline_after): 
+                    elif (t.next0_ is not None and t.next0_.is_char('.') and t.next0_.is_newline_after0): 
                         self.rank -= 10
                 continue
             if (isinstance(t, NumberToken)): 
                 if ((t).typ == NumberSpellingType.WORDS): 
                     words += 1
-                    if (t.chars.is_all_upper): 
+                    if (t.chars.is_all_upper0): 
                         up_words += 1
                 else: 
                     notwords += 1
                 continue
-            pat = PersonAttrToken.tryAttach(t, None, PersonAttrToken.PersonAttrAttachAttrs.NO)
+            pat = PersonAttrToken.try_attach(t, None, PersonAttrToken.PersonAttrAttachAttrs.NO)
             if (pat is not None): 
-                if (t.is_newline_before): 
-                    if (not pat.morph.case_.is_undefined and not pat.morph.case_.is_nominative): 
+                if (t.is_newline_before0): 
+                    if (not pat.morph.case_.is_undefined0 and not pat.morph.case_.is_nominative0): 
                         pass
-                    elif (pat.chars.is_all_upper): 
+                    elif (pat.chars.is_all_upper0): 
                         pass
                     else: 
                         self.rank -= 20
-                elif (t.chars.is_all_lower): 
+                elif (t.chars.is_all_lower0): 
                     self.rank -= 1
                 while t is not None: 
                     words += 1
-                    if (t.chars.is_all_upper): 
+                    if (t.chars.is_all_upper0): 
                         up_words += 1
                     if (t == pat.end_token): 
                         break
                     t = t.next0_
                 continue
-            oitt = OrgItemTypeToken.tryAttach(t, True, None)
+            oitt = OrgItemTypeToken.try_attach(t, True, None)
             if (oitt is not None): 
-                if (oitt.morph.number != MorphNumber.PLURAL and not oitt.is_doubt_root_word): 
-                    if (not oitt.morph.case_.is_undefined and not oitt.morph.case_.is_nominative): 
+                if (oitt.morph.number != MorphNumber.PLURAL and not oitt.is_doubt_root_word0): 
+                    if (not oitt.morph.case_.is_undefined0 and not oitt.morph.case_.is_nominative0): 
                         words += 1
-                        if (t.chars.is_all_upper): 
+                        if (t.chars.is_all_upper0): 
                             up_words += 1
                     else: 
                         self.rank -= 4
@@ -278,33 +278,33 @@ class TitleNameToken(MetaToken):
                             self.rank -= 5
                 else: 
                     words += 1
-                    if (t.chars.is_all_upper): 
+                    if (t.chars.is_all_upper0): 
                         up_words += 1
                 t = oitt.end_token
                 continue
             tt = Utils.asObjectOrNull(t, TextToken)
             if (tt is not None): 
-                if (tt.isChar('©')): 
+                if (tt.is_char('©')): 
                     self.rank -= 10
-                if (tt.isChar('_')): 
+                if (tt.is_char('_')): 
                     self.rank -= 1
-                if (tt.chars.is_letter): 
+                if (tt.chars.is_letter0): 
                     if (tt.length_char > 2): 
                         words += 1
-                        if (t.chars.is_all_upper): 
+                        if (t.chars.is_all_upper0): 
                             up_words += 1
-                elif (not tt.isChar(',')): 
+                elif (not tt.is_char(',')): 
                     notwords += 1
-                if (tt.is_pure_verb): 
+                if (tt.is_pure_verb0): 
                     self.rank -= 30
                     words -= 1
                     break
                 if (tt == self.end_token): 
-                    if (tt.morph.class0_.is_preposition or tt.morph.class0_.is_conjunction): 
+                    if (tt.morph.class0_.is_preposition0 or tt.morph.class0_.is_conjunction0): 
                         self.rank -= 10
-                    elif (tt.isChar('.')): 
+                    elif (tt.is_char('.')): 
                         self.rank += 5
-                elif (tt.isCharOf("._")): 
+                elif (tt.is_char_of("._")): 
                     self.rank -= 5
         self.rank += words
         self.rank -= notwords
@@ -314,16 +314,16 @@ class TitleNameToken(MetaToken):
             return False
         if (tstart.end_char > tend.end_char): 
             return False
-        tit1 = TitleItemToken.tryAttach(self.end_token.next0_)
+        tit1 = TitleItemToken.try_attach(self.end_token.next0_)
         if (tit1 is not None and ((tit1.typ == TitleItemToken.Types.TYP or tit1.typ == TitleItemToken.Types.SPECIALITY))): 
-            if (tit1.end_token.is_newline_after): 
+            if (tit1.end_token.is_newline_after0): 
                 self.rank += 15
             else: 
                 self.rank += 10
             if (tit1.typ == TitleItemToken.Types.SPECIALITY): 
                 self.speciality = tit1.value
-        if (up_words > 4 and up_words > (math.floor((.8 * (words))))): 
-            if (tstart.previous is not None and (isinstance(tstart.previous.getReferent(), PersonReferent))): 
+        if (up_words > 4 and up_words > (math.floor((0.8 * (words))))): 
+            if (tstart.previous is not None and (isinstance(tstart.previous.get_referent(), PersonReferent))): 
                 self.rank += (5 + up_words)
         self.begin_name_token = tstart
         self.end_name_token = tend

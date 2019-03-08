@@ -13,16 +13,16 @@ class MetaDecree(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
         MetaDecree.GLOBAL_META = MetaDecree()
-        MetaDecree.GLOBAL_META.addFeature(DecreeReferent.ATTR_TYPE, "Тип", 1, 1)
-        MetaDecree.GLOBAL_META.addFeature(DecreeReferent.ATTR_NUMBER, "Номер", 0, 0)
-        MetaDecree.GLOBAL_META.addFeature(DecreeReferent.ATTR_CASENUMBER, "Номер дела", 0, 0)
-        MetaDecree.GLOBAL_META.addFeature(DecreeReferent.ATTR_DATE, "Дата", 0, 0)
-        MetaDecree.GLOBAL_META.addFeature(DecreeReferent.ATTR_SOURCE, "Источник", 0, 1)
-        MetaDecree.GLOBAL_META.addFeature(DecreeReferent.ATTR_GEO, "Географический объект", 0, 1)
-        MetaDecree.GLOBAL_META.addFeature(DecreeReferent.ATTR_NAME, "Наименование", 0, 0)
-        MetaDecree.GLOBAL_META.addFeature(DecreeReferent.ATTR_READING, "Чтение", 0, 1)
-        MetaDecree.GLOBAL_META.addFeature(DecreeReferent.ATTR_EDITION, "В редакции", 0, 0)
-        MetaDecree.GLOBAL_META.addFeature(Referent.ATTR_GENERAL, "Обобщающий объект", 0, 1)
+        MetaDecree.GLOBAL_META.add_feature(DecreeReferent.ATTR_TYPE, "Тип", 1, 1)
+        MetaDecree.GLOBAL_META.add_feature(DecreeReferent.ATTR_NUMBER, "Номер", 0, 0)
+        MetaDecree.GLOBAL_META.add_feature(DecreeReferent.ATTR_CASENUMBER, "Номер дела", 0, 0)
+        MetaDecree.GLOBAL_META.add_feature(DecreeReferent.ATTR_DATE, "Дата", 0, 0)
+        MetaDecree.GLOBAL_META.add_feature(DecreeReferent.ATTR_SOURCE, "Источник", 0, 1)
+        MetaDecree.GLOBAL_META.add_feature(DecreeReferent.ATTR_GEO, "Географический объект", 0, 1)
+        MetaDecree.GLOBAL_META.add_feature(DecreeReferent.ATTR_NAME, "Наименование", 0, 0)
+        MetaDecree.GLOBAL_META.add_feature(DecreeReferent.ATTR_READING, "Чтение", 0, 1)
+        MetaDecree.GLOBAL_META.add_feature(DecreeReferent.ATTR_EDITION, "В редакции", 0, 0)
+        MetaDecree.GLOBAL_META.add_feature(Referent.ATTR_GENERAL, "Обобщающий объект", 0, 1)
     
     @property
     def name(self) -> str:
@@ -39,7 +39,7 @@ class MetaDecree(ReferentClass):
     
     STANDADR_IMAGE_ID = "decreestd"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
         if (isinstance(obj, DecreeReferent)): 
             ki = (obj).kind

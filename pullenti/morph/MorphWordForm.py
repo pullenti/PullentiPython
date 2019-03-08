@@ -17,17 +17,17 @@ class MorphWordForm(MorphBaseInfo):
     """ Словоформа (вариант морфанализа лексемы) """
     
     @property
-    def is_in_dictionary(self) -> bool:
+    def is_in_dictionary0(self) -> bool:
         """ Находится ли словоформа в словаре (если false, то восстановлена по аналогии) """
         return self.undef_coef == (0)
     
     def clone(self) -> object:
         res = MorphWordForm()
-        self.copyToWordForm(res)
+        self.copy_to_word_form(res)
         return res
     
-    def copyToWordForm(self, dst : 'MorphWordForm') -> None:
-        super().copyTo(dst)
+    def copy_to_word_form(self, dst : 'MorphWordForm') -> None:
+        super().copy_to(dst)
         dst.undef_coef = self.undef_coef
         dst.normal_case = self.normal_case
         dst.normal_full = self.normal_full
@@ -43,12 +43,12 @@ class MorphWordForm(MorphBaseInfo):
         self.tag = None;
         if (v is None): 
             return
-        v.copyTo(self)
+        v.copy_to(self)
         self.misc = v.misc_info
         self.tag = (v)
         if (v.normal_tail is not None and word is not None): 
             word_begin = word
-            if (LanguageHelper.endsWith(word, v.tail)): 
+            if (LanguageHelper.ends_with(word, v.tail)): 
                 word_begin = word[0:0+len(word) - len(v.tail)]
             if (len(v.normal_tail) > 0): 
                 self.normal_case = (word_begin + v.normal_tail)
@@ -56,7 +56,7 @@ class MorphWordForm(MorphBaseInfo):
                 self.normal_case = word_begin
         if (v.full_normal_tail is not None and word is not None): 
             word_begin = word
-            if (LanguageHelper.endsWith(word, v.tail)): 
+            if (LanguageHelper.ends_with(word, v.tail)): 
                 word_begin = word[0:0+len(word) - len(v.tail)]
             if (len(v.full_normal_tail) > 0): 
                 self.normal_full = (word_begin + v.full_normal_tail)
@@ -77,13 +77,13 @@ class MorphWordForm(MorphBaseInfo):
             print(" (? {0})".format(self.undef_coef), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
-    def containsAttr(self, attr_value : str, cla : 'MorphClass'=None) -> bool:
+    def contains_attr(self, attr_value : str, cla : 'MorphClass'=None) -> bool:
         if (self.misc is not None and self.misc.attrs is not None): 
             return attr_value in self.misc.attrs
         return False
     
     @staticmethod
-    def _hasMorphEquals(list0_ : typing.List['MorphWordForm'], mv : 'MorphWordForm') -> bool:
+    def _has_morph_equals(list0_ : typing.List['MorphWordForm'], mv : 'MorphWordForm') -> bool:
         for mr in list0_: 
             if ((mv.class0_ == mr.class0_ and mv.number == mr.number and mv.gender == mr.gender) and mv.normal_case == mr.normal_case and mv.normal_full == mr.normal_full): 
                 mr.case_ = (mr.case_) | mv.case_
@@ -103,9 +103,17 @@ class MorphWordForm(MorphBaseInfo):
         return False
     
     @staticmethod
-    def _new12(_arg1 : str, _arg2 : 'MorphClass', _arg3 : int) -> 'MorphWordForm':
+    def _new11(_arg1 : str, _arg2 : 'MorphClass', _arg3 : int) -> 'MorphWordForm':
         res = MorphWordForm()
         res.normal_case = _arg1
         res.class0_ = _arg2
         res.undef_coef = _arg3
+        return res
+    
+    @staticmethod
+    def _new657(_arg1 : 'MorphCase', _arg2 : 'MorphNumber', _arg3 : 'MorphGender') -> 'MorphWordForm':
+        res = MorphWordForm()
+        res.case_ = _arg1
+        res.number = _arg2
+        res.gender = _arg3
         return res

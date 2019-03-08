@@ -25,9 +25,9 @@ class NounPhraseItemTextVar(MorphBaseInfo):
                 self.single_number_value = wf.normal_full
             self.undef_coef = (wf.undef_coef)
         elif (t is not None): 
-            self.normal_value = t.getNormalCaseText(None, False, MorphGender.UNDEFINED, False)
-        if (self.case_.is_undefined and src is not None): 
-            if (src.containsAttr("неизм.", None)): 
+            self.normal_value = t.get_normal_case_text(None, False, MorphGender.UNDEFINED, False)
+        if (self.case_.is_undefined0 and src is not None): 
+            if (src.contains_attr("неизм.", None)): 
                 self.case_ = MorphCase.ALL_CASES
     
     def __str__(self) -> str:
@@ -35,17 +35,17 @@ class NounPhraseItemTextVar(MorphBaseInfo):
     
     def clone(self) -> object:
         res = NounPhraseItemTextVar()
-        self.copyTo(res)
+        self.copy_to(res)
         res.normal_value = self.normal_value
         res.single_number_value = self.single_number_value
         res.undef_coef = self.undef_coef
         return res
     
-    def correctPrefix(self, t : 'TextToken', ignore_gender : bool) -> None:
+    def correct_prefix(self, t : 'TextToken', ignore_gender : bool) -> None:
         if (t is None): 
             return
         for v in t.morph.items: 
-            if (v.class0_ == self.class0_ and self.checkAccord(v, ignore_gender)): 
+            if (v.class0_ == self.class0_ and self.check_accord(v, ignore_gender, False)): 
                 self.normal_value = "{0}-{1}".format((v).normal_case, self.normal_value)
                 if (self.single_number_value is not None): 
                     self.single_number_value = "{0}-{1}".format(Utils.ifNotNull((v).normal_full, (v).normal_case), self.single_number_value)

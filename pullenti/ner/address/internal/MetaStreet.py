@@ -11,14 +11,14 @@ class MetaStreet(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.address.StreetReferent import StreetReferent
         MetaStreet._global_meta = MetaStreet()
-        MetaStreet._global_meta.addFeature(StreetReferent.ATTR_TYP, "Тип", 0, 0)
-        MetaStreet._global_meta.addFeature(StreetReferent.ATTR_NAME, "Наименование", 1, 0)
-        MetaStreet._global_meta.addFeature(StreetReferent.ATTR_NUMBER, "Номер", 0, 1)
-        MetaStreet._global_meta.addFeature(StreetReferent.ATTR_SECNUMBER, "Доп.номер", 0, 1)
-        MetaStreet._global_meta.addFeature(StreetReferent.ATTR_GEO, "Географический объект", 0, 1)
-        MetaStreet._global_meta.addFeature(StreetReferent.ATTR_FIAS, "Объект ФИАС", 0, 1)
-        MetaStreet._global_meta.addFeature(StreetReferent.ATTR_BTI, "Объект БТИ", 0, 1)
-        MetaStreet._global_meta.addFeature(StreetReferent.ATTR_OKM, "Код ОКМ УМ", 0, 1)
+        MetaStreet._global_meta.add_feature(StreetReferent.ATTR_TYP, "Тип", 0, 0)
+        MetaStreet._global_meta.add_feature(StreetReferent.ATTR_NAME, "Наименование", 1, 0)
+        MetaStreet._global_meta.add_feature(StreetReferent.ATTR_NUMBER, "Номер", 0, 1)
+        MetaStreet._global_meta.add_feature(StreetReferent.ATTR_SECNUMBER, "Доп.номер", 0, 1)
+        MetaStreet._global_meta.add_feature(StreetReferent.ATTR_GEO, "Географический объект", 0, 1)
+        MetaStreet._global_meta.add_feature(StreetReferent.ATTR_FIAS, "Объект ФИАС", 0, 1)
+        MetaStreet._global_meta.add_feature(StreetReferent.ATTR_BTI, "Объект БТИ", 0, 1)
+        MetaStreet._global_meta.add_feature(StreetReferent.ATTR_OKM, "Код ОКМ УМ", 0, 1)
     
     @property
     def name(self) -> str:
@@ -31,7 +31,7 @@ class MetaStreet(ReferentClass):
     
     IMAGE_ID = "street"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         return MetaStreet.IMAGE_ID
     
     _global_meta = None

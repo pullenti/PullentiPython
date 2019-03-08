@@ -26,16 +26,16 @@ class MorphMiscInfo:
         """ Дополнительные атрибуты """
         return self.__m_attrs
     
-    def __getValue(self, i : int) -> bool:
+    def __get_value(self, i : int) -> bool:
         return (((((self._m_value) >> i)) & 1)) != 0
     
-    def __setValue(self, i : int, val : bool) -> None:
+    def __set_value(self, i : int, val : bool) -> None:
         if (val): 
             self._m_value |= ((1 << i))
         else: 
             self._m_value &= (~ ((1 << i)))
     
-    def __addAttr(self, attr : str) -> None:
+    def __add_attr(self, attr : str) -> None:
         if (not attr in self.__m_attrs): 
             self.__m_attrs.append(attr)
     
@@ -59,11 +59,11 @@ class MorphMiscInfo:
     @person.setter
     def person(self, value) -> 'MorphPerson':
         if ((((value) & (MorphPerson.FIRST))) != (MorphPerson.UNDEFINED)): 
-            self.__addAttr("1 л.")
+            self.__add_attr("1 л.")
         if ((((value) & (MorphPerson.SECOND))) != (MorphPerson.UNDEFINED)): 
-            self.__addAttr("2 л.")
+            self.__add_attr("2 л.")
         if ((((value) & (MorphPerson.THIRD))) != (MorphPerson.UNDEFINED)): 
-            self.__addAttr("3 л.")
+            self.__add_attr("3 л.")
         return value
     
     @property
@@ -79,11 +79,11 @@ class MorphMiscInfo:
     @tense.setter
     def tense(self, value) -> 'MorphTense':
         if (value == MorphTense.PAST): 
-            self.__addAttr("п.вр.")
+            self.__add_attr("п.вр.")
         if (value == MorphTense.PRESENT): 
-            self.__addAttr("н.вр.")
+            self.__add_attr("н.вр.")
         if (value == MorphTense.FUTURE): 
-            self.__addAttr("б.вр.")
+            self.__add_attr("б.вр.")
         return value
     
     @property
@@ -97,9 +97,9 @@ class MorphMiscInfo:
     @aspect.setter
     def aspect(self, value) -> 'MorphAspect':
         if (value == MorphAspect.IMPERFECTIVE): 
-            self.__addAttr("нес.в.")
+            self.__add_attr("нес.в.")
         if (value == MorphAspect.PERFECTIVE): 
-            self.__addAttr("сов.в.")
+            self.__add_attr("сов.в.")
         return value
     
     @property
@@ -111,7 +111,7 @@ class MorphMiscInfo:
     @mood.setter
     def mood(self, value) -> 'MorphMood':
         if (value == MorphMood.IMPERATIVE): 
-            self.__addAttr("пов.накл.")
+            self.__add_attr("пов.накл.")
         return value
     
     @property
@@ -125,9 +125,9 @@ class MorphMiscInfo:
     @voice.setter
     def voice(self, value) -> 'MorphVoice':
         if (value == MorphVoice.ACTIVE): 
-            self.__addAttr("дейст.з.")
+            self.__add_attr("дейст.з.")
         if (value == MorphVoice.PASSIVE): 
-            self.__addAttr("страд.з.")
+            self.__add_attr("страд.з.")
         return value
     
     @property
@@ -137,24 +137,24 @@ class MorphMiscInfo:
             return MorphForm.SHORT
         if ("синоним.форма" in self.__m_attrs): 
             return MorphForm.SYNONYM
-        if (self.is_synonym_form): 
+        if (self.is_synonym_form0): 
             return MorphForm.SYNONYM
         return MorphForm.UNDEFINED
     
     @property
-    def is_synonym_form(self) -> bool:
+    def is_synonym_form0(self) -> bool:
         """ Синонимическая форма """
-        return self.__getValue(0)
-    @is_synonym_form.setter
-    def is_synonym_form(self, value) -> bool:
-        self.__setValue(0, value)
+        return self.__get_value(0)
+    @is_synonym_form0.setter
+    def is_synonym_form0(self, value) -> bool:
+        self.__set_value(0, value)
         return value
     
     def __str__(self) -> str:
         if (len(self.__m_attrs) == 0 and self._m_value == (0)): 
             return ""
         res = io.StringIO()
-        if (self.is_synonym_form): 
+        if (self.is_synonym_form0): 
             print("синоним.форма ", end="", file=res)
         i = 0
         while i < len(self.__m_attrs): 

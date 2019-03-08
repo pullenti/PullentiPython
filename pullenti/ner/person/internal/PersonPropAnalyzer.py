@@ -27,8 +27,8 @@ class PersonPropAnalyzer(Analyzer):
     def clone(self) -> 'Analyzer':
         return PersonPropAnalyzer()
     
-    def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        pat = PersonAttrToken.tryAttach(begin, None, PersonAttrToken.PersonAttrAttachAttrs.NO)
+    def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
+        pat = PersonAttrToken.try_attach(begin, None, PersonAttrToken.PersonAttrAttachAttrs.INPROCESS)
         if (pat is not None and pat.prop_ref is not None): 
-            return ReferentToken._new2450(pat.prop_ref, pat.begin_token, pat.end_token, pat.morph, pat)
+            return ReferentToken._new2533(pat.prop_ref, pat.begin_token, pat.end_token, pat.morph, pat)
         return None

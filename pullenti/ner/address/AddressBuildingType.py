@@ -8,8 +8,11 @@ class AddressBuildingType(IntEnum):
     """ Тип строения """
     UNDEFINED = 0
     BUILDING = 1
+    """ Строение """
     CONSTRUCTION = 2
+    """ Сооружение """
     LITER = 3
+    """ Литера """
     
     @classmethod
     def has_value(cls, value):

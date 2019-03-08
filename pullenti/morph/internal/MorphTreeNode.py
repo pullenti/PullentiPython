@@ -11,12 +11,12 @@ class MorphTreeNode:
         self.reverce_variants = None;
         self.lazy_pos = 0
     
-    def calcTotalNodes(self) -> int:
+    def calc_total_nodes(self) -> int:
         res = 0
         if (self.nodes is not None): 
             for v in self.nodes.items(): 
-                res += (v[1].calcTotalNodes() + 1)
+                res += (v[1].calc_total_nodes() + 1)
         return res
     
     def __str__(self) -> str:
-        return "{0} ({1}, {2})".format("?", self.calcTotalNodes(), (0 if self.rules is None else len(self.rules)))
+        return "{0} ({1}, {2})".format("?", self.calc_total_nodes(), (0 if self.rules is None else len(self.rules)))

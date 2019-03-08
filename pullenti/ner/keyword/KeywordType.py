@@ -5,10 +5,17 @@
 from enum import IntEnum
 
 class KeywordType(IntEnum):
+    """ Тип ключевой комбинации """
     UNDEFINED = 0
+    """ Неопределён """
     OBJECT = 1
+    """ Объект (именная группа) """
     REFERENT = 2
+    """ Именованная сущность """
     PREDICATE = 3
+    """ Предикат (глагол) """
+    ANNOTATION = 4
+    """ Автоаннотация всего текста """
     
     @classmethod
     def has_value(cls, value):

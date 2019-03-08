@@ -8,12 +8,19 @@ class DecreeChangeValueKind(IntEnum):
     """ Типы изменяющих СЭ значений """
     UNDEFINED = 0
     TEXT = 1
+    """ Текстовой фрагмент """
     WORDS = 2
+    """ Слова (в точном значении) """
     ROBUSTWORDS = 3
+    """ Слова (в неточном значений) """
     NUMBERS = 4
+    """ Цифры """
     SEQUENCE = 5
+    """ Предложение """
     FOOTNOTE = 6
+    """ Сноска """
     BLOCK = 7
+    """ Блок со словами """
     
     @classmethod
     def has_value(cls, value):

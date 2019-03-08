@@ -4,17 +4,18 @@
 
 
 from pullenti.ner.ProcessorService import ProcessorService
-from pullenti.ner.transport.TransportAnalyzer import TransportAnalyzer
 from pullenti.ner.decree.DecreeAnalyzer import DecreeAnalyzer
-from pullenti.ner.mail.MailAnalyzer import MailAnalyzer
-from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
-from pullenti.ner.person.PersonAnalyzer import PersonAnalyzer
 from pullenti.ner.instrument.InstrumentAnalyzer import InstrumentAnalyzer
+from pullenti.ner.transport.TransportAnalyzer import TransportAnalyzer
+from pullenti.ner.person.PersonAnalyzer import PersonAnalyzer
+from pullenti.ner.mail.MailAnalyzer import MailAnalyzer
+from pullenti.ner.titlepage.TitlePageAnalyzer import TitlePageAnalyzer
 from pullenti.ner.named.NamedEntityAnalyzer import NamedEntityAnalyzer
 from pullenti.ner.weapon.WeaponAnalyzer import WeaponAnalyzer
-from pullenti.ner.business.BusinessAnalyzer import BusinessAnalyzer
-from pullenti.ner.titlepage.TitlePageAnalyzer import TitlePageAnalyzer
+from pullenti.ner.goods.GoodsAnalyzer import GoodsAnalyzer
 from pullenti.ner.booklink.BookLinkAnalyzer import BookLinkAnalyzer
+from pullenti.ner.business.BusinessAnalyzer import BusinessAnalyzer
+from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
 from pullenti.ner.date.DateAnalyzer import DateAnalyzer
 from pullenti.ner.keyword.KeywordAnalyzer import KeywordAnalyzer
 from pullenti.ner.phone.PhoneAnalyzer import PhoneAnalyzer
@@ -31,8 +32,8 @@ class Sdk:
     """ Инициализация SDK """
     
     @staticmethod
-    def getVersion() -> str:
-        return ProcessorService.getVersion()
+    def get_version() -> str:
+        return ProcessorService.get_version()
     
     @staticmethod
     def initialize(lang : 'MorphLang'=None) -> None:
@@ -62,5 +63,6 @@ class Sdk:
         TitlePageAnalyzer.initialize()
         BookLinkAnalyzer.initialize()
         BusinessAnalyzer.initialize()
+        GoodsAnalyzer.initialize()
         NamedEntityAnalyzer.initialize()
         WeaponAnalyzer.initialize()

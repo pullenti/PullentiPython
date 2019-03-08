@@ -5,39 +5,34 @@
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.ner.TextToken import TextToken
-from pullenti.ner.core.NumberExToken import NumberExToken
 
 class MeasureHelper:
     
     @staticmethod
-    def tryParseDouble(val : str, f : float) -> bool:
+    def try_parse_double(val : str, f : float) -> bool:
         f.value = (0)
         if (Utils.isNullOrEmpty(val)): 
             return False
-        inoutres1518 = Utils.tryParseFloat(val.replace(',', '.'), f)
-        if (val.find(',') >= 0 and inoutres1518): 
+        inoutres1589 = Utils.tryParseFloat(val.replace(',', '.'), f)
+        if (val.find(',') >= 0 and inoutres1589): 
             return True
-        inoutres1517 = Utils.tryParseFloat(val, f)
-        if (inoutres1517): 
+        inoutres1588 = Utils.tryParseFloat(val, f)
+        if (inoutres1588): 
             return True
         return False
     
     @staticmethod
-    def doubleToString(d : float) -> str:
-        return NumberExToken.convertToString(d)
-    
-    @staticmethod
-    def isMultChar(t : 'Token') -> bool:
+    def is_mult_char(t : 'Token') -> bool:
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             return False
         if (tt.length_char == 1): 
-            if (tt.isCharOf("*xXхХ·×◦∙•")): 
+            if (tt.is_char_of("*xXхХ·×◦∙•")): 
                 return True
         return False
     
     @staticmethod
-    def isMultCharEnd(t : 'Token') -> bool:
+    def is_mult_char_end(t : 'Token') -> bool:
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
             return False

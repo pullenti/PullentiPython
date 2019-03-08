@@ -8,7 +8,9 @@ class FundsKind(IntEnum):
     """ Типы ценных бумаг """
     UNDEFINED = 0
     STOCK = 1
+    """ Акция """
     CAPITAL = 2
+    """ Уставной капитал """
     
     @classmethod
     def has_value(cls, value):

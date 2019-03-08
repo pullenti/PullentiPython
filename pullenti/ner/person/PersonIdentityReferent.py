@@ -30,16 +30,16 @@ class PersonIdentityReferent(Referent):
     
     ATTR_ADDRESS = "ADDRESS"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
+    def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         print(Utils.ifNotNull(self.typ, "?"), end="", file=res)
         if (self.number is not None): 
             print(" №{0}".format(self.number), end="", file=res, flush=True)
         if (self.state is not None): 
-            print(", {0}".format(self.state.toString(True, lang, lev + 1)), end="", file=res, flush=True)
+            print(", {0}".format(self.state.to_string(True, lang, lev + 1)), end="", file=res, flush=True)
         if (not short_variant): 
-            dat = self.getStringValue(PersonIdentityReferent.ATTR_DATE)
-            org0_ = self.getStringValue(PersonIdentityReferent.ATTR_ORG)
+            dat = self.get_string_value(PersonIdentityReferent.ATTR_DATE)
+            org0_ = self.get_string_value(PersonIdentityReferent.ATTR_ORG)
             if (dat is not None or org0_ is not None): 
                 print(", выдан", end="", file=res)
                 if (dat is not None): 
@@ -51,40 +51,40 @@ class PersonIdentityReferent(Referent):
     @property
     def typ(self) -> str:
         """ Тип документа """
-        return self.getStringValue(PersonIdentityReferent.ATTR_TYPE)
+        return self.get_string_value(PersonIdentityReferent.ATTR_TYPE)
     @typ.setter
     def typ(self, value) -> str:
-        self.addSlot(PersonIdentityReferent.ATTR_TYPE, value, True, 0)
+        self.add_slot(PersonIdentityReferent.ATTR_TYPE, value, True, 0)
         return value
     
     @property
     def number(self) -> str:
         """ Номер (вместе с серией) """
-        return self.getStringValue(PersonIdentityReferent.ATTR_NUMBER)
+        return self.get_string_value(PersonIdentityReferent.ATTR_NUMBER)
     @number.setter
     def number(self, value) -> str:
-        self.addSlot(PersonIdentityReferent.ATTR_NUMBER, value, True, 0)
+        self.add_slot(PersonIdentityReferent.ATTR_NUMBER, value, True, 0)
         return value
     
     @property
     def state(self) -> 'Referent':
         """ Государство """
-        return Utils.asObjectOrNull(self.getSlotValue(PersonIdentityReferent.ATTR_STATE), Referent)
+        return Utils.asObjectOrNull(self.get_slot_value(PersonIdentityReferent.ATTR_STATE), Referent)
     @state.setter
     def state(self, value) -> 'Referent':
-        self.addSlot(PersonIdentityReferent.ATTR_STATE, value, True, 0)
+        self.add_slot(PersonIdentityReferent.ATTR_STATE, value, True, 0)
         return value
     
     @property
     def address(self) -> 'Referent':
         """ Адрес регистрации """
-        return Utils.asObjectOrNull(self.getSlotValue(PersonIdentityReferent.ATTR_ADDRESS), Referent)
+        return Utils.asObjectOrNull(self.get_slot_value(PersonIdentityReferent.ATTR_ADDRESS), Referent)
     @address.setter
     def address(self, value) -> 'Referent':
-        self.addSlot(PersonIdentityReferent.ATTR_ADDRESS, value, True, 0)
+        self.add_slot(PersonIdentityReferent.ATTR_ADDRESS, value, True, 0)
         return value
     
-    def canBeEquals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
         id0_ = Utils.asObjectOrNull(obj, PersonIdentityReferent)
         if (id0_ is None): 
             return False

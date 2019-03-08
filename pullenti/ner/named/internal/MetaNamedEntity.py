@@ -12,10 +12,10 @@ class MetaNamedEntity(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.named.NamedEntityReferent import NamedEntityReferent
         MetaNamedEntity.GLOBAL_META = MetaNamedEntity()
-        MetaNamedEntity.GLOBAL_META.addFeature(NamedEntityReferent.ATTR_KIND, "Класс", 1, 1)
-        MetaNamedEntity.GLOBAL_META.addFeature(NamedEntityReferent.ATTR_TYPE, "Тип", 0, 0)
-        MetaNamedEntity.GLOBAL_META.addFeature(NamedEntityReferent.ATTR_NAME, "Наименование", 0, 0)
-        MetaNamedEntity.GLOBAL_META.addFeature(NamedEntityReferent.ATTR_REF, "Ссылка", 0, 1)
+        MetaNamedEntity.GLOBAL_META.add_feature(NamedEntityReferent.ATTR_KIND, "Класс", 1, 1)
+        MetaNamedEntity.GLOBAL_META.add_feature(NamedEntityReferent.ATTR_TYPE, "Тип", 0, 0)
+        MetaNamedEntity.GLOBAL_META.add_feature(NamedEntityReferent.ATTR_NAME, "Наименование", 0, 0)
+        MetaNamedEntity.GLOBAL_META.add_feature(NamedEntityReferent.ATTR_REF, "Ссылка", 0, 1)
     
     @property
     def name(self) -> str:
@@ -28,7 +28,7 @@ class MetaNamedEntity(ReferentClass):
     
     IMAGE_ID = "monument"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.named.NamedEntityReferent import NamedEntityReferent
         if (isinstance(obj, NamedEntityReferent)): 
             return Utils.enumToString((obj).kind)

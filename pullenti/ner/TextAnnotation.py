@@ -34,9 +34,9 @@ class TextAnnotation:
     def __str__(self) -> str:
         if (self.sofa is None): 
             return "{0}:{1}".format(self.begin_char, self.end_char)
-        return self.getText()
+        return self.get_text()
     
-    def getText(self) -> str:
+    def get_text(self) -> str:
         """ Извлечь фрагмент исходного текста, соответствующий аннотации
         
         """
@@ -44,7 +44,7 @@ class TextAnnotation:
             return None
         return self.sofa.text[self.begin_char:self.begin_char+(self.end_char + 1) - self.begin_char]
     
-    def _compareWith(self, loc : 'TextAnnotation') -> 'TextsCompareType':
+    def _compare_with(self, loc : 'TextAnnotation') -> 'TextsCompareType':
         if (loc.sofa != self.sofa): 
             return TextsCompareType.NONCOMPARABLE
         return self._compare(loc.begin_char, loc.end_char)
@@ -73,7 +73,7 @@ class TextAnnotation:
             self.essential_for_occurence = True
     
     @staticmethod
-    def _new507(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int) -> 'TextAnnotation':
+    def _new544(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int) -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.begin_char = _arg2
@@ -81,7 +81,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new727(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int, _arg4 : 'Referent') -> 'TextAnnotation':
+    def _new719(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int, _arg4 : 'Referent') -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.begin_char = _arg2
@@ -90,7 +90,16 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2699(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
+    def _new1572(_arg1 : int, _arg2 : int, _arg3 : 'Referent', _arg4 : 'SourceOfAnalysis') -> 'TextAnnotation':
+        res = TextAnnotation()
+        res.begin_char = _arg1
+        res.end_char = _arg2
+        res.occurence_of = _arg3
+        res.sofa = _arg4
+        return res
+    
+    @staticmethod
+    def _new2794(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
         res = TextAnnotation()
         res.begin_char = _arg1
         res.end_char = _arg2
@@ -98,7 +107,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2701(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
+    def _new2796(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.occurence_of = _arg2

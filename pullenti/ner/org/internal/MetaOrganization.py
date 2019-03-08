@@ -14,17 +14,17 @@ class MetaOrganization(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         MetaOrganization._global_meta = MetaOrganization()
-        MetaOrganization._global_meta.addFeature(OrganizationReferent.ATTR_NAME, "Название", 0, 0)
-        MetaOrganization._global_meta.addFeature(OrganizationReferent.ATTR_TYPE, "Тип", 0, 0)
-        MetaOrganization._global_meta.addFeature(OrganizationReferent.ATTR_EPONYM, "Эпоним (имени)", 0, 0)
-        MetaOrganization._global_meta.addFeature(OrganizationReferent.ATTR_NUMBER, "Номер", 0, 1)
-        MetaOrganization._global_meta.addFeature(OrganizationReferent.ATTR_HIGHER, "Вышестоящая организация", 0, 1)
-        MetaOrganization._global_meta.addFeature(OrganizationReferent.ATTR_OWNER, "Объект-владелец", 0, 1)
-        MetaOrganization._global_meta.addFeature(OrganizationReferent.ATTR_GEO, "Географический объект", 0, 1)
-        MetaOrganization._global_meta.addFeature(Referent.ATTR_GENERAL, "Обобщающая организация", 0, 1)
-        MetaOrganization._global_meta.addFeature(OrganizationReferent.ATTR_KLADR, "Код КЛАДР", 0, 1)
-        MetaOrganization._global_meta.addFeature(OrganizationReferent.ATTR_MISC, "Разное", 0, 0)
-        MetaOrganization._global_meta.addFeature(OrganizationReferent.ATTR_PROFILE, "Профиль", 0, 0)
+        MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_NAME, "Название", 0, 0)
+        MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_TYPE, "Тип", 0, 0)
+        MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_EPONYM, "Эпоним (имени)", 0, 0)
+        MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_NUMBER, "Номер", 0, 1)
+        MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_HIGHER, "Вышестоящая организация", 0, 1)
+        MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_OWNER, "Объект-владелец", 0, 1)
+        MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_GEO, "Географический объект", 0, 1)
+        MetaOrganization._global_meta.add_feature(Referent.ATTR_GENERAL, "Обобщающая организация", 0, 1)
+        MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_KLADR, "Код КЛАДР", 0, 1)
+        MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_MISC, "Разное", 0, 0)
+        MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_PROFILE, "Профиль", 0, 0)
     
     @property
     def name(self) -> str:
@@ -37,7 +37,7 @@ class MetaOrganization(ReferentClass):
     
     ORG_IMAGE_ID = "org"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.org.OrganizationReferent import OrganizationReferent
         if (isinstance(obj, OrganizationReferent)): 
             prs = (obj).profiles

@@ -13,11 +13,11 @@ class MetaBookLinkRef(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.booklink.BookLinkRefReferent import BookLinkRefReferent
         MetaBookLinkRef._global_meta = MetaBookLinkRef()
-        MetaBookLinkRef._global_meta.addFeature(BookLinkRefReferent.ATTR_BOOK, "Источник", 1, 1)
-        MetaBookLinkRef._global_meta.addFeature(BookLinkRefReferent.ATTR_TYPE, "Тип", 0, 1)
-        MetaBookLinkRef._global_meta.addFeature(BookLinkRefReferent.ATTR_PAGES, "Страницы", 0, 1)
-        MetaBookLinkRef._global_meta.addFeature(BookLinkRefReferent.ATTR_NUMBER, "Номер", 0, 1)
-        MetaBookLinkRef._global_meta.addFeature(BookLinkRefReferent.ATTR_MISC, "Разное", 0, 0)
+        MetaBookLinkRef._global_meta.add_feature(BookLinkRefReferent.ATTR_BOOK, "Источник", 1, 1)
+        MetaBookLinkRef._global_meta.add_feature(BookLinkRefReferent.ATTR_TYPE, "Тип", 0, 1)
+        MetaBookLinkRef._global_meta.add_feature(BookLinkRefReferent.ATTR_PAGES, "Страницы", 0, 1)
+        MetaBookLinkRef._global_meta.add_feature(BookLinkRefReferent.ATTR_NUMBER, "Номер", 0, 1)
+        MetaBookLinkRef._global_meta.add_feature(BookLinkRefReferent.ATTR_MISC, "Разное", 0, 0)
     
     @property
     def name(self) -> str:
@@ -34,7 +34,7 @@ class MetaBookLinkRef(ReferentClass):
     
     IMAGE_ID_LAST = "booklinkreflast"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.booklink.BookLinkRefReferent import BookLinkRefReferent
         rr = Utils.asObjectOrNull(obj, BookLinkRefReferent)
         if (rr is not None): 

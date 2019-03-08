@@ -28,13 +28,13 @@ class PersonRelation:
     
     def __str__(self) -> str:
         res = io.StringIO()
-        print("{0} {1}".format(self.person.toString(True, MorphLang.UNKNOWN, 0), Utils.enumToString(self.best)), end="", file=res, flush=True)
+        print("{0} {1}".format(self.person.to_string(True, MorphLang.UNKNOWN, 0), Utils.enumToString(self.best)), end="", file=res, flush=True)
         for v in self.coefs.items(): 
             print(" {0}({1})".format(v[1], Utils.enumToString(v[0])), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
     @staticmethod
-    def _new2512(_arg1 : 'PersonReferent') -> 'PersonRelation':
+    def _new2595(_arg1 : 'PersonReferent') -> 'PersonRelation':
         res = PersonRelation()
         res.person = _arg1
         return res

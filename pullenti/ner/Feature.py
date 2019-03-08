@@ -75,7 +75,7 @@ class Feature:
                 print("[{0}..{1}]".format(self.lower_bound, self.upper_bound), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
-    def convertInnerValueToOuterValue(self, inner_value : object, lang : 'MorphLang'=None) -> object:
+    def convert_inner_value_to_outer_value(self, inner_value : object, lang : 'MorphLang'=None) -> object:
         if (inner_value is None): 
             return None
         val = str(inner_value)
@@ -83,15 +83,15 @@ class Feature:
         while i < len(self.inner_values): 
             if (Utils.compareStrings(self.inner_values[i], val, True) == 0 and (i < len(self.outer_values))): 
                 if (lang is not None): 
-                    if (lang.is_ua and (i < len(self.outer_valuesua)) and self.outer_valuesua[i] is not None): 
+                    if (lang.is_ua0 and (i < len(self.outer_valuesua)) and self.outer_valuesua[i] is not None): 
                         return self.outer_valuesua[i]
-                    if (lang.is_en and (i < len(self.outer_valuesen)) and self.outer_valuesen[i] is not None): 
+                    if (lang.is_en0 and (i < len(self.outer_valuesen)) and self.outer_valuesen[i] is not None): 
                         return self.outer_valuesen[i]
                 return self.outer_values[i]
             i += 1
         return inner_value
     
-    def convertOuterValueToInnerValue(self, outer_value : object) -> object:
+    def convert_outer_value_to_inner_value(self, outer_value : object) -> object:
         val = Utils.asObjectOrNull(outer_value, str)
         if (val is None): 
             return outer_value
@@ -104,14 +104,14 @@ class Feature:
             i += 1
         return outer_value
     
-    def addValue(self, int_val : str, ext_val : str, ext_val_ua : str=None, ext_val_eng : str=None) -> None:
+    def add_value(self, int_val : str, ext_val : str, ext_val_ua : str=None, ext_val_eng : str=None) -> None:
         self.inner_values.append(int_val)
         self.outer_values.append(ext_val)
         self.outer_valuesua.append(ext_val_ua)
         self.outer_valuesen.append(ext_val_eng)
     
     @staticmethod
-    def _new2702(_arg1 : str, _arg2 : str, _arg3 : int, _arg4 : int) -> 'Feature':
+    def _new2797(_arg1 : str, _arg2 : str, _arg3 : int, _arg4 : int) -> 'Feature':
         res = Feature()
         res.name = _arg1
         res.caption = _arg2

@@ -34,36 +34,36 @@ class DecreeChangeReferent(Referent):
     
     ATTR_MISC = "MISC"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
+    def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         if (self.kind != DecreeChangeKind.UNDEFINED): 
-            print("{0} ".format(MetaDecreeChange.KIND_FEATURE.convertInnerValueToOuterValue(self.kind, lang)), end="", file=res, flush=True)
-        if (self.is_owner_name_and_text): 
+            print("{0} ".format(MetaDecreeChange.KIND_FEATURE.convert_inner_value_to_outer_value(self.kind, lang)), end="", file=res, flush=True)
+        if (self.is_owner_name_and_text0): 
             print("наименование и текст ", end="", file=res)
-        elif (self.is_owner_name): 
+        elif (self.is_owner_name0): 
             print("наименование ", end="", file=res)
-        elif (self.is_only_text): 
+        elif (self.is_only_text0): 
             print("текст ", end="", file=res)
         for o in self.owners: 
-            print("'{0}' ".format(o.toString(True, lang, 0)), end="", file=res, flush=True)
+            print("'{0}' ".format(o.to_string(True, lang, 0)), end="", file=res, flush=True)
         if (self.value is not None): 
-            print("{0} ".format(self.value.toString(True, lang, 0)), end="", file=res, flush=True)
+            print("{0} ".format(self.value.to_string(True, lang, 0)), end="", file=res, flush=True)
         if (self.param is not None): 
             if (self.kind == DecreeChangeKind.APPEND): 
                 print("после ", end="", file=res)
             elif (self.kind == DecreeChangeKind.EXCHANGE): 
                 print("вместо ", end="", file=res)
-            print(self.param.toString(True, lang, 0), end="", file=res)
+            print(self.param.to_string(True, lang, 0), end="", file=res)
         return Utils.toStringStringIO(res).strip()
     
     @property
     def parent_referent(self) -> 'Referent':
-        return Utils.asObjectOrNull(self.getSlotValue(DecreeChangeReferent.ATTR_OWNER), Referent)
+        return Utils.asObjectOrNull(self.get_slot_value(DecreeChangeReferent.ATTR_OWNER), Referent)
     
     @property
     def kind(self) -> 'DecreeChangeKind':
         """ Классификатор """
-        s = self.getStringValue(DecreeChangeReferent.ATTR_KIND)
+        s = self.get_string_value(DecreeChangeReferent.ATTR_KIND)
         if (s is None): 
             return DecreeChangeKind.UNDEFINED
         try: 
@@ -72,13 +72,13 @@ class DecreeChangeReferent(Referent):
             res = Utils.valToEnum(s, DecreeChangeKind)
             if (isinstance(res, DecreeChangeKind)): 
                 return Utils.valToEnum(res, DecreeChangeKind)
-        except Exception as ex1099: 
+        except Exception as ex1101: 
             pass
         return DecreeChangeKind.UNDEFINED
     @kind.setter
     def kind(self, value_) -> 'DecreeChangeKind':
         if (value_ != DecreeChangeKind.UNDEFINED): 
-            self.addSlot(DecreeChangeReferent.ATTR_KIND, Utils.enumToString(value_), True, 0)
+            self.add_slot(DecreeChangeReferent.ATTR_KIND, Utils.enumToString(value_), True, 0)
         return value_
     
     @property
@@ -102,55 +102,55 @@ class DecreeChangeReferent(Referent):
     @property
     def value(self) -> 'DecreeChangeValueReferent':
         """ Значение """
-        return Utils.asObjectOrNull(self.getSlotValue(DecreeChangeReferent.ATTR_VALUE), DecreeChangeValueReferent)
+        return Utils.asObjectOrNull(self.get_slot_value(DecreeChangeReferent.ATTR_VALUE), DecreeChangeValueReferent)
     @value.setter
     def value(self, value_) -> 'DecreeChangeValueReferent':
-        self.addSlot(DecreeChangeReferent.ATTR_VALUE, value_, True, 0)
+        self.add_slot(DecreeChangeReferent.ATTR_VALUE, value_, True, 0)
         return value_
     
     @property
     def param(self) -> 'DecreeChangeValueReferent':
         """ Дополнительный параметр (для типа Exchange - что заменяется, для Append - после чего) """
-        return Utils.asObjectOrNull(self.getSlotValue(DecreeChangeReferent.ATTR_PARAM), DecreeChangeValueReferent)
+        return Utils.asObjectOrNull(self.get_slot_value(DecreeChangeReferent.ATTR_PARAM), DecreeChangeValueReferent)
     @param.setter
     def param(self, value_) -> 'DecreeChangeValueReferent':
-        self.addSlot(DecreeChangeReferent.ATTR_PARAM, value_, True, 0)
+        self.add_slot(DecreeChangeReferent.ATTR_PARAM, value_, True, 0)
         return value_
     
     @property
-    def is_owner_name(self) -> bool:
+    def is_owner_name0(self) -> bool:
         """ Признак того, что изменения касаются наименования структурного элемента """
-        return self.findSlot(DecreeChangeReferent.ATTR_MISC, "NAME", True) is not None
-    @is_owner_name.setter
-    def is_owner_name(self, value_) -> bool:
+        return self.find_slot(DecreeChangeReferent.ATTR_MISC, "NAME", True) is not None
+    @is_owner_name0.setter
+    def is_owner_name0(self, value_) -> bool:
         if (value_): 
-            self.addSlot(DecreeChangeReferent.ATTR_MISC, "NAME", False, 0)
+            self.add_slot(DecreeChangeReferent.ATTR_MISC, "NAME", False, 0)
         return value_
     
     @property
-    def is_only_text(self) -> bool:
+    def is_only_text0(self) -> bool:
         """ Признак того, что изменения касаются только текста (без заголовка) """
-        return self.findSlot(DecreeChangeReferent.ATTR_MISC, "TEXT", True) is not None
-    @is_only_text.setter
-    def is_only_text(self, value_) -> bool:
+        return self.find_slot(DecreeChangeReferent.ATTR_MISC, "TEXT", True) is not None
+    @is_only_text0.setter
+    def is_only_text0(self, value_) -> bool:
         if (value_): 
-            self.addSlot(DecreeChangeReferent.ATTR_MISC, "TEXT", False, 0)
+            self.add_slot(DecreeChangeReferent.ATTR_MISC, "TEXT", False, 0)
         return value_
     
     @property
-    def is_owner_name_and_text(self) -> bool:
+    def is_owner_name_and_text0(self) -> bool:
         """ Признак того, что изменения касаются наименования и текста структурного элемента """
-        return self.findSlot(DecreeChangeReferent.ATTR_MISC, "NAMETEXT", True) is not None
-    @is_owner_name_and_text.setter
-    def is_owner_name_and_text(self, value_) -> bool:
+        return self.find_slot(DecreeChangeReferent.ATTR_MISC, "NAMETEXT", True) is not None
+    @is_owner_name_and_text0.setter
+    def is_owner_name_and_text0(self, value_) -> bool:
         if (value_): 
-            self.addSlot(DecreeChangeReferent.ATTR_MISC, "NAMETEXT", False, 0)
+            self.add_slot(DecreeChangeReferent.ATTR_MISC, "NAMETEXT", False, 0)
         return value_
     
-    def canBeEquals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
         return obj == self
     
-    def _checkCorrect(self) -> bool:
+    def _check_correct(self) -> bool:
         if (self.kind == DecreeChangeKind.UNDEFINED): 
             return False
         if (self.kind == DecreeChangeKind.EXPIRE or self.kind == DecreeChangeKind.REMOVE): 
@@ -159,14 +159,14 @@ class DecreeChangeReferent(Referent):
             return False
         if (self.kind == DecreeChangeKind.EXCHANGE): 
             if (self.param is None): 
-                if (len(self.owners) > 0 and self.owners[0].findSlot(DecreePartReferent.ATTR_INDENTION, None, True) is not None): 
+                if (len(self.owners) > 0 and self.owners[0].find_slot(DecreePartReferent.ATTR_INDENTION, None, True) is not None): 
                     self.kind = DecreeChangeKind.NEW
                 else: 
                     return False
         return True
     
     @staticmethod
-    def _new1085(_arg1 : 'DecreeChangeKind') -> 'DecreeChangeReferent':
+    def _new1088(_arg1 : 'DecreeChangeKind') -> 'DecreeChangeReferent':
         res = DecreeChangeReferent()
         res.kind = _arg1
         return res

@@ -16,7 +16,7 @@ class ByteArrayWrapper:
         self.__m_len = (len(self.__m_array))
     
     @property
-    def iseof(self) -> bool:
+    def iseof0(self) -> bool:
         return self.__m_pos >= self.__m_len
     
     def __str__(self) -> str:
@@ -32,14 +32,14 @@ class ByteArrayWrapper:
     def position(self) -> int:
         return self.__m_pos
     
-    def deserializeByte(self) -> int:
+    def deserialize_byte(self) -> int:
         if (self.__m_pos >= self.__m_len): 
             return 0
-        retVal2715 = self.__m_array[self.__m_pos]
+        retVal2812 = self.__m_array[self.__m_pos]
         self.__m_pos += 1
-        return retVal2715
+        return retVal2812
     
-    def deserializeShort(self) -> int:
+    def deserialize_short(self) -> int:
         if ((self.__m_pos + 1) >= self.__m_len): 
             return 0
         b0 = self.__m_array[self.__m_pos]
@@ -50,7 +50,7 @@ class ByteArrayWrapper:
         res <<= 8
         return (res | (b0))
     
-    def deserializeInt(self) -> int:
+    def deserialize_int(self) -> int:
         if ((self.__m_pos + 1) >= self.__m_len): 
             return 0
         b0 = self.__m_array[self.__m_pos]
@@ -69,7 +69,7 @@ class ByteArrayWrapper:
         res <<= 8
         return (res | (b0))
     
-    def deserializeString(self) -> str:
+    def deserialize_string(self) -> str:
         if (self.__m_pos >= self.__m_len): 
             return None
         len0_ = self.__m_array[self.__m_pos]

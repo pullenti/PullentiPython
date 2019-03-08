@@ -10,6 +10,7 @@ from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.measure.UnitReferent import UnitReferent
 from pullenti.ner.measure.MeasureKind import MeasureKind
 from pullenti.ner.Referent import Referent
+from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.measure.internal.MeasureMeta import MeasureMeta
 from pullenti.ner.measure.internal.MeasureHelper import MeasureHelper
@@ -38,10 +39,10 @@ class MeasureReferent(Referent):
     @property
     def template(self) -> str:
         """ Шаблон для значений, например, [1..2], 1x2, 1 ]..1] """
-        return Utils.ifNotNull(self.getStringValue(MeasureReferent.ATTR_TEMPLATE), "1")
+        return Utils.ifNotNull(self.get_string_value(MeasureReferent.ATTR_TEMPLATE), "1")
     @template.setter
     def template(self, value) -> str:
-        self.addSlot(MeasureReferent.ATTR_TEMPLATE, value, True, 0)
+        self.add_slot(MeasureReferent.ATTR_TEMPLATE, value, True, 0)
         return value
     
     @property
@@ -49,15 +50,15 @@ class MeasureReferent(Referent):
         res = list()
         for s in self.slots: 
             if (s.type_name == MeasureReferent.ATTR_VALUE and (isinstance(s.value, str))): 
-                wrapd1636 = RefOutArgWrapper(0)
-                inoutres1637 = MeasureHelper.tryParseDouble(Utils.asObjectOrNull(s.value, str), wrapd1636)
-                d = wrapd1636.value
-                if (inoutres1637): 
+                wrapd1710 = RefOutArgWrapper(0)
+                inoutres1711 = MeasureHelper.try_parse_double(Utils.asObjectOrNull(s.value, str), wrapd1710)
+                d = wrapd1710.value
+                if (inoutres1711): 
                     res.append(d)
         return res
     
-    def addValue(self, d : float) -> None:
-        self.addSlot(MeasureReferent.ATTR_VALUE, MeasureHelper.doubleToString(d), False, 0)
+    def add_value(self, d : float) -> None:
+        self.add_slot(MeasureReferent.ATTR_VALUE, NumberHelper.double_to_string(d), False, 0)
     
     @property
     def units(self) -> typing.List['UnitReferent']:
@@ -69,29 +70,32 @@ class MeasureReferent(Referent):
     
     @property
     def kind(self) -> 'MeasureKind':
-        str0_ = self.getStringValue(MeasureReferent.ATTR_KIND)
+        str0_ = self.get_string_value(MeasureReferent.ATTR_KIND)
         if (str0_ is None): 
             return MeasureKind.UNDEFINED
         try: 
             return Utils.valToEnum(str0_, MeasureKind)
-        except Exception as ex1638: 
+        except Exception as ex1712: 
             pass
         return MeasureKind.UNDEFINED
     @kind.setter
     def kind(self, value) -> 'MeasureKind':
         if (value != MeasureKind.UNDEFINED): 
-            self.addSlot(MeasureReferent.ATTR_KIND, Utils.enumToString(value).upper(), True, 0)
+            self.add_slot(MeasureReferent.ATTR_KIND, Utils.enumToString(value).upper(), True, 0)
         return value
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
+    def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = Utils.newStringIO(self.template)
         vals = list()
         for s in self.slots: 
             if (s.type_name == MeasureReferent.ATTR_VALUE): 
                 if (isinstance(s.value, str)): 
-                    vals.append(Utils.asObjectOrNull(s.value, str))
+                    val = Utils.asObjectOrNull(s.value, str)
+                    if (val == "NaN"): 
+                        val = "?"
+                    vals.append(val)
                 elif (isinstance(s.value, Referent)): 
-                    vals.append((s.value).toString(True, lang, 0))
+                    vals.append((s.value).to_string(True, lang, 0))
         for i in range(res.tell() - 1, -1, -1):
             ch = Utils.getCharAtStringIO(res, i)
             if (not str.isdigit(ch)): 
@@ -101,39 +105,43 @@ class MeasureReferent(Referent):
                 continue
             Utils.removeStringIO(res, i, 1)
             Utils.insertStringIO(res, i, vals[j])
-        uu = self.units
-        if (len(uu) > 0): 
-            print(uu[0].toString(True, lang, 0), end="", file=res)
-            i = 1
-            while i < len(uu): 
-                pow0_ = uu[i].getStringValue(UnitReferent.ATTR_POW)
-                if (not Utils.isNullOrEmpty(pow0_) and pow0_[0] == '-'): 
-                    print("/{0}".format(uu[i].toString(True, lang, 1)), end="", file=res, flush=True)
-                    if (pow0_ != "-1"): 
-                        print("<{0}>".format(pow0_[1:]), end="", file=res, flush=True)
-                else: 
-                    print("*{0}".format(uu[i].toString(True, lang, 0)), end="", file=res, flush=True)
-                i += 1
+        self.out_units(res, lang)
         if (not short_variant): 
-            nam = self.getStringValue(MeasureReferent.ATTR_NAME)
+            nam = self.get_string_value(MeasureReferent.ATTR_NAME)
             if (nam is not None): 
                 print(" - {0}".format(nam), end="", file=res, flush=True)
             for s in self.slots: 
                 if (s.type_name == MeasureReferent.ATTR_REF and (isinstance(s.value, MeasureReferent))): 
-                    print(" / {0}".format((s.value).toString(True, lang, 0)), end="", file=res, flush=True)
+                    print(" / {0}".format((s.value).to_string(True, lang, 0)), end="", file=res, flush=True)
             ki = self.kind
             if (ki != MeasureKind.UNDEFINED): 
                 print(" ({0})".format(Utils.enumToString(ki).upper()), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
-    def canBeEquals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def out_units(self, res : io.StringIO, lang : 'MorphLang'=None) -> None:
+        uu = self.units
+        if (len(uu) == 0): 
+            return
+        print(uu[0].to_string(True, lang, 0), end="", file=res)
+        i = 1
+        while i < len(uu): 
+            pow0_ = uu[i].get_string_value(UnitReferent.ATTR_POW)
+            if (not Utils.isNullOrEmpty(pow0_) and pow0_[0] == '-'): 
+                print("/{0}".format(uu[i].to_string(True, lang, 1)), end="", file=res, flush=True)
+                if (pow0_ != "-1"): 
+                    print("<{0}>".format(pow0_[1:]), end="", file=res, flush=True)
+            else: 
+                print("*{0}".format(uu[i].to_string(True, lang, 0)), end="", file=res, flush=True)
+            i += 1
+    
+    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
         mr = Utils.asObjectOrNull(obj, MeasureReferent)
         if (mr is None): 
             return False
         if (self.template != mr.template): 
             return False
-        vals1 = self.getStringValues(MeasureReferent.ATTR_VALUE)
-        vals2 = mr.getStringValues(MeasureReferent.ATTR_VALUE)
+        vals1 = self.get_string_values(MeasureReferent.ATTR_VALUE)
+        vals2 = mr.get_string_values(MeasureReferent.ATTR_VALUE)
         if (len(vals1) != len(vals2)): 
             return False
         i = 0
@@ -152,10 +160,10 @@ class MeasureReferent(Referent):
             i += 1
         for s in self.slots: 
             if (s.type_name == MeasureReferent.ATTR_REF or s.type_name == MeasureReferent.ATTR_NAME): 
-                if (mr.findSlot(s.type_name, s.value, True) is None): 
+                if (mr.find_slot(s.type_name, s.value, True) is None): 
                     return False
         for s in mr.slots: 
             if (s.type_name == MeasureReferent.ATTR_REF or s.type_name == MeasureReferent.ATTR_NAME): 
-                if (self.findSlot(s.type_name, s.value, True) is None): 
+                if (self.find_slot(s.type_name, s.value, True) is None): 
                     return False
         return True

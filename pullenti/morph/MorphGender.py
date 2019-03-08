@@ -7,9 +7,13 @@ from enum import IntEnum
 class MorphGender(IntEnum):
     """ Род (мужской-средний-женский) """
     UNDEFINED = 0
+    """ Неопределён """
     MASCULINE = 1
+    """ Мужской """
     FEMINIE = 2
+    """ Женский """
     NEUTER = 4
+    """ Средний """
     
     @classmethod
     def has_value(cls, value):

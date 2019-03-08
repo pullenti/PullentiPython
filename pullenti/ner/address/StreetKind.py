@@ -7,8 +7,11 @@ from enum import IntEnum
 class StreetKind(IntEnum):
     """ Типы улиц """
     UNDEFINED = 0
+    """ Обычная улица-переулок-площадь """
     ROAD = 1
+    """ Автодорога """
     METRO = 2
+    """ Станция метро """
     
     @classmethod
     def has_value(cls, value):

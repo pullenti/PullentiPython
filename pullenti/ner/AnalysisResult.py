@@ -34,7 +34,7 @@ class AnalysisResult:
         """ Это некоторые информационные сообщения """
         return self.__m_log
     
-    def _addException(self, ex : Exception) -> None:
+    def _add_exception(self, ex : Exception) -> None:
         str0_ = str(ex)
         for e0_ in self.exceptions: 
             if (str(e0_) == str0_): 

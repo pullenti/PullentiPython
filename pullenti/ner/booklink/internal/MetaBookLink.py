@@ -11,14 +11,14 @@ class MetaBookLink(MetaTitleInfo):
     def initialize2() -> None:
         from pullenti.ner.booklink.BookLinkReferent import BookLinkReferent
         MetaBookLink._global_meta = MetaBookLink()
-        MetaBookLink._global_meta.addFeature(BookLinkReferent.ATTR_AUTHOR, "Автор", 0, 0)
-        MetaBookLink._global_meta.addFeature(BookLinkReferent.ATTR_NAME, "Наименование", 1, 1)
-        MetaBookLink._global_meta.addFeature(BookLinkReferent.ATTR_TYPE, "Тип", 0, 1)
-        MetaBookLink._global_meta.addFeature(BookLinkReferent.ATTR_YEAR, "Год", 0, 1)
-        MetaBookLink._global_meta.addFeature(BookLinkReferent.ATTR_GEO, "География", 0, 1)
-        MetaBookLink._global_meta.addFeature(BookLinkReferent.ATTR_LANG, "Язык", 0, 1)
-        MetaBookLink._global_meta.addFeature(BookLinkReferent.ATTR_URL, "URL", 0, 0)
-        MetaBookLink._global_meta.addFeature(BookLinkReferent.ATTR_MISC, "Разное", 0, 0)
+        MetaBookLink._global_meta.add_feature(BookLinkReferent.ATTR_AUTHOR, "Автор", 0, 0)
+        MetaBookLink._global_meta.add_feature(BookLinkReferent.ATTR_NAME, "Наименование", 1, 1)
+        MetaBookLink._global_meta.add_feature(BookLinkReferent.ATTR_TYPE, "Тип", 0, 1)
+        MetaBookLink._global_meta.add_feature(BookLinkReferent.ATTR_YEAR, "Год", 0, 1)
+        MetaBookLink._global_meta.add_feature(BookLinkReferent.ATTR_GEO, "География", 0, 1)
+        MetaBookLink._global_meta.add_feature(BookLinkReferent.ATTR_LANG, "Язык", 0, 1)
+        MetaBookLink._global_meta.add_feature(BookLinkReferent.ATTR_URL, "URL", 0, 0)
+        MetaBookLink._global_meta.add_feature(BookLinkReferent.ATTR_MISC, "Разное", 0, 0)
     
     @property
     def name(self) -> str:
@@ -31,7 +31,7 @@ class MetaBookLink(MetaTitleInfo):
     
     IMAGE_ID = "booklink"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         return MetaBookLink.IMAGE_ID
     
     _global_meta = None

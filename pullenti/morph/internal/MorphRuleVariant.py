@@ -5,7 +5,11 @@
 import io
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.morph.MorphVoice import MorphVoice
+from pullenti.morph.MorphPerson import MorphPerson
+from pullenti.morph.MorphTense import MorphTense
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.morph.MorphMood import MorphMood
 
 class MorphRuleVariant(MorphBaseInfo):
     
@@ -21,7 +25,7 @@ class MorphRuleVariant(MorphBaseInfo):
         if (src is None): 
             return
         self.tail = src.tail
-        src.copyTo(self)
+        src.copy_to(self)
         self.misc_info = src.misc_info
         self.normal_tail = src.normal_tail
         self.full_normal_tail = src.full_normal_tail
@@ -29,9 +33,9 @@ class MorphRuleVariant(MorphBaseInfo):
         self.tag = src.tag
     
     def __str__(self) -> str:
-        return self.toStringEx(False)
+        return self.to_string_ex(False)
     
-    def toStringEx(self, hide_tails : bool) -> str:
+    def to_string_ex(self, hide_tails : bool) -> str:
         res = io.StringIO()
         if (not hide_tails): 
             print("-{0}".format(self.tail), end="", file=res, flush=True)
@@ -51,17 +55,30 @@ class MorphRuleVariant(MorphBaseInfo):
             return False
         return True
     
-    def calcEqCoef(self, wf : 'MorphWordForm') -> int:
-        if (self.class0_ != wf.class0_): 
-            return -1
+    def calc_eq_coef(self, wf : 'MorphWordForm') -> int:
+        if (wf.class0_.value != (0)): 
+            if ((((self.class0_.value) & (wf.class0_.value))) == 0): 
+                return -1
         if (self.misc_info != wf.misc): 
-            return -1
-        if (not self.checkAccord(wf, False)): 
+            if (self.misc_info.mood != MorphMood.UNDEFINED and wf.misc.mood != MorphMood.UNDEFINED): 
+                if (self.misc_info.mood != wf.misc.mood): 
+                    return -1
+            if (self.misc_info.tense != MorphTense.UNDEFINED and wf.misc.tense != MorphTense.UNDEFINED): 
+                if ((((self.misc_info.tense) & (wf.misc.tense))) == (MorphTense.UNDEFINED)): 
+                    return -1
+            if (self.misc_info.voice != MorphVoice.UNDEFINED and wf.misc.voice != MorphVoice.UNDEFINED): 
+                if (self.misc_info.voice != wf.misc.voice): 
+                    return -1
+            if (self.misc_info.person != MorphPerson.UNDEFINED and wf.misc.person != MorphPerson.UNDEFINED): 
+                if ((((self.misc_info.person) & (wf.misc.person))) == (MorphPerson.UNDEFINED)): 
+                    return -1
+            return 0
+        if (not self.check_accord(wf, False, False)): 
             return -1
         return 1
     
     @staticmethod
-    def _new37(_arg1 : 'MorphMiscInfo') -> 'MorphRuleVariant':
+    def _new36(_arg1 : 'MorphMiscInfo') -> 'MorphRuleVariant':
         res = MorphRuleVariant()
         res.misc_info = _arg1
         return res

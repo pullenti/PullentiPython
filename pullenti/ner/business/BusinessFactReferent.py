@@ -38,46 +38,46 @@ class BusinessFactReferent(Referent):
     @property
     def kind(self) -> 'BusinessFactKind':
         """ Классификатор бизнес-факта """
-        s = self.getStringValue(BusinessFactReferent.ATTR_KIND)
+        s = self.get_string_value(BusinessFactReferent.ATTR_KIND)
         if (s is None): 
             return BusinessFactKind.UNDEFINED
         try: 
             res = Utils.valToEnum(s, BusinessFactKind)
             if (isinstance(res, BusinessFactKind)): 
                 return Utils.valToEnum(res, BusinessFactKind)
-        except Exception as ex449: 
+        except Exception as ex450: 
             pass
         return BusinessFactKind.UNDEFINED
     @kind.setter
     def kind(self, value) -> 'BusinessFactKind':
         if (value != BusinessFactKind.UNDEFINED): 
-            self.addSlot(BusinessFactReferent.ATTR_KIND, Utils.enumToString(value), True, 0)
+            self.add_slot(BusinessFactReferent.ATTR_KIND, Utils.enumToString(value), True, 0)
         return value
     
     @property
     def typ(self) -> str:
         """ Краткое описание факта """
-        typ_ = self.getStringValue(BusinessFactReferent.ATTR_TYPE)
+        typ_ = self.get_string_value(BusinessFactReferent.ATTR_TYPE)
         if (typ_ is not None): 
             return typ_
-        kind_ = self.getStringValue(BusinessFactReferent.ATTR_KIND)
+        kind_ = self.get_string_value(BusinessFactReferent.ATTR_KIND)
         if (kind_ is not None): 
-            typ_ = (Utils.asObjectOrNull(MetaBusinessFact.GLOBAL_META.kind_feature.convertInnerValueToOuterValue(kind_, None), str))
+            typ_ = (Utils.asObjectOrNull(MetaBusinessFact.GLOBAL_META.kind_feature.convert_inner_value_to_outer_value(kind_, None), str))
         if (typ_ is not None): 
             return typ_.lower()
         return None
     @typ.setter
     def typ(self, value) -> str:
-        self.addSlot(BusinessFactReferent.ATTR_TYPE, value, True, 0)
+        self.add_slot(BusinessFactReferent.ATTR_TYPE, value, True, 0)
         return value
     
     @property
     def who(self) -> 'Referent':
         """ Кто (действительный залог) """
-        return Utils.asObjectOrNull(self.getSlotValue(BusinessFactReferent.ATTR_WHO), Referent)
+        return Utils.asObjectOrNull(self.get_slot_value(BusinessFactReferent.ATTR_WHO), Referent)
     @who.setter
     def who(self, value) -> 'Referent':
-        self.addSlot(BusinessFactReferent.ATTR_WHO, value, True, 0)
+        self.add_slot(BusinessFactReferent.ATTR_WHO, value, True, 0)
         return value
     
     @property
@@ -92,25 +92,25 @@ class BusinessFactReferent(Referent):
         return None
     @who2.setter
     def who2(self, value) -> 'Referent':
-        self.addSlot(BusinessFactReferent.ATTR_WHO, value, False, 0)
+        self.add_slot(BusinessFactReferent.ATTR_WHO, value, False, 0)
         return value
     
     @property
     def whom(self) -> 'Referent':
         """ Кого (страдательный залог) """
-        return Utils.asObjectOrNull(self.getSlotValue(BusinessFactReferent.ATTR_WHOM), Referent)
+        return Utils.asObjectOrNull(self.get_slot_value(BusinessFactReferent.ATTR_WHOM), Referent)
     @whom.setter
     def whom(self, value) -> 'Referent':
-        self.addSlot(BusinessFactReferent.ATTR_WHOM, value, True, 0)
+        self.add_slot(BusinessFactReferent.ATTR_WHOM, value, True, 0)
         return value
     
     @property
     def when(self) -> 'Referent':
         """ Когда (DateReferent или DateRangeReferent) """
-        return Utils.asObjectOrNull(self.getSlotValue(BusinessFactReferent.ATTR_WHEN), Referent)
+        return Utils.asObjectOrNull(self.get_slot_value(BusinessFactReferent.ATTR_WHEN), Referent)
     @when.setter
     def when(self, value) -> 'Referent':
-        self.addSlot(BusinessFactReferent.ATTR_WHEN, value, True, 0)
+        self.add_slot(BusinessFactReferent.ATTR_WHEN, value, True, 0)
         return value
     
     @property
@@ -122,35 +122,35 @@ class BusinessFactReferent(Referent):
                 res.append(Utils.asObjectOrNull(s.value, Referent))
         return res
     
-    def _addWhat(self, w : object) -> None:
+    def _add_what(self, w : object) -> None:
         if (isinstance(w, Referent)): 
-            self.addSlot(BusinessFactReferent.ATTR_WHAT, w, False, 0)
+            self.add_slot(BusinessFactReferent.ATTR_WHAT, w, False, 0)
     
-    def toString(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
+    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         res = io.StringIO()
         typ_ = Utils.ifNotNull(self.typ, "Бизнес-факт")
-        print(MiscHelper.convertFirstCharUpperAndOtherLower(typ_), end="", file=res)
-        v = self.getSlotValue(BusinessFactReferent.ATTR_WHO)
+        print(MiscHelper.convert_first_char_upper_and_other_lower(typ_), end="", file=res)
+        v = self.get_slot_value(BusinessFactReferent.ATTR_WHO)
         if (isinstance((v), Referent)): 
-            print("; Кто: {0}".format((v).toString(True, lang, 0)), end="", file=res, flush=True)
+            print("; Кто: {0}".format((v).to_string(True, lang, 0)), end="", file=res, flush=True)
             if (self.who2 is not None): 
-                print(" и {0}".format(self.who2.toString(True, lang, 0)), end="", file=res, flush=True)
-        v = self.getSlotValue(BusinessFactReferent.ATTR_WHOM)
+                print(" и {0}".format(self.who2.to_string(True, lang, 0)), end="", file=res, flush=True)
+        v = self.get_slot_value(BusinessFactReferent.ATTR_WHOM)
         if (isinstance((v), Referent)): 
-            print("; Кого: {0}".format((v).toString(True, lang, 0)), end="", file=res, flush=True)
+            print("; Кого: {0}".format((v).to_string(True, lang, 0)), end="", file=res, flush=True)
         if (not short_variant): 
-            v = self.getSlotValue(BusinessFactReferent.ATTR_WHAT)
+            v = self.get_slot_value(BusinessFactReferent.ATTR_WHAT)
             if ((v) is not None): 
                 print("; Что: {0}".format(v), end="", file=res, flush=True)
-            v = self.getSlotValue(BusinessFactReferent.ATTR_WHEN)
+            v = self.get_slot_value(BusinessFactReferent.ATTR_WHEN)
             if (isinstance((v), Referent)): 
-                print("; Когда: {0}".format((v).toString(short_variant, lang, 0)), end="", file=res, flush=True)
+                print("; Когда: {0}".format((v).to_string(short_variant, lang, 0)), end="", file=res, flush=True)
             for s in self.slots: 
                 if (s.type_name == BusinessFactReferent.ATTR_MISC): 
                     print("; {0}".format(s.value), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
-    def canBeEquals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
         br = Utils.asObjectOrNull(obj, BusinessFactReferent)
         if (br is None): 
             return False
@@ -161,23 +161,23 @@ class BusinessFactReferent(Referent):
         if (br.who != self.who or br.whom != self.whom): 
             return False
         if (self.when is not None and br.when is not None): 
-            if (not self.when.canBeEquals(br.when, Referent.EqualType.WITHINONETEXT)): 
+            if (not self.when.can_be_equals(br.when, Referent.EqualType.WITHINONETEXT)): 
                 return False
-        mi1 = Utils.asObjectOrNull(self.getSlotValue(BusinessFactReferent.ATTR_WHAT), Referent)
-        mi2 = Utils.asObjectOrNull(br.getSlotValue(BusinessFactReferent.ATTR_WHAT), Referent)
+        mi1 = Utils.asObjectOrNull(self.get_slot_value(BusinessFactReferent.ATTR_WHAT), Referent)
+        mi2 = Utils.asObjectOrNull(br.get_slot_value(BusinessFactReferent.ATTR_WHAT), Referent)
         if (mi1 is not None and mi2 is not None): 
-            if (not mi1.canBeEquals(mi2, Referent.EqualType.WITHINONETEXT)): 
+            if (not mi1.can_be_equals(mi2, Referent.EqualType.WITHINONETEXT)): 
                 return False
         return True
     
     @staticmethod
-    def _new437(_arg1 : 'BusinessFactKind') -> 'BusinessFactReferent':
+    def _new438(_arg1 : 'BusinessFactKind') -> 'BusinessFactReferent':
         res = BusinessFactReferent()
         res.kind = _arg1
         return res
     
     @staticmethod
-    def _new448(_arg1 : 'BusinessFactKind', _arg2 : str) -> 'BusinessFactReferent':
+    def _new449(_arg1 : 'BusinessFactKind', _arg2 : str) -> 'BusinessFactReferent':
         res = BusinessFactReferent()
         res.kind = _arg1
         res.typ = _arg2

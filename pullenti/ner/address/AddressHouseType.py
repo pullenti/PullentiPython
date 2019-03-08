@@ -8,8 +8,11 @@ class AddressHouseType(IntEnum):
     """ Тип дома """
     UNDEFINED = 0
     ESTATE = 1
+    """ Владение """
     HOUSE = 2
+    """ Просто дом """
     HOUSEESTATE = 3
+    """ Домовладение """
     
     @classmethod
     def has_value(cls, value):

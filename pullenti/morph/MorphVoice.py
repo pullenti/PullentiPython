@@ -7,9 +7,13 @@ from enum import IntEnum
 class MorphVoice(IntEnum):
     """ Залог (для глаголов) """
     UNDEFINED = 0
+    """ Неопределено """
     ACTIVE = 1
+    """ Действительный """
     PASSIVE = 2
+    """ Страдательный """
     MIDDLE = 4
+    """ Средний """
     
     @classmethod
     def has_value(cls, value):

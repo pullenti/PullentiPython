@@ -13,14 +13,14 @@ class MetaSentiment(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.sentiment.SentimentReferent import SentimentReferent
         MetaSentiment._global_meta = MetaSentiment()
-        f = MetaSentiment._global_meta.addFeature(SentimentReferent.ATTR_KIND, "Тип", 1, 1)
+        f = MetaSentiment._global_meta.add_feature(SentimentReferent.ATTR_KIND, "Тип", 1, 1)
         MetaSentiment.FTYP = f
-        f.addValue(Utils.enumToString(SentimentKind.UNDEFINED), "Неизвестно", None, None)
-        f.addValue(Utils.enumToString(SentimentKind.POSITIVE), "Положительно", None, None)
-        f.addValue(Utils.enumToString(SentimentKind.NEGATIVE), "Отрицательно", None, None)
-        MetaSentiment._global_meta.addFeature(SentimentReferent.ATTR_SPELLING, "Текст", 0, 0)
-        MetaSentiment._global_meta.addFeature(SentimentReferent.ATTR_REF, "Ссылка", 0, 0)
-        MetaSentiment._global_meta.addFeature(SentimentReferent.ATTR_COEF, "Коэффициент", 0, 0)
+        f.add_value(Utils.enumToString(SentimentKind.UNDEFINED), "Неизвестно", None, None)
+        f.add_value(Utils.enumToString(SentimentKind.POSITIVE), "Положительно", None, None)
+        f.add_value(Utils.enumToString(SentimentKind.NEGATIVE), "Отрицательно", None, None)
+        MetaSentiment._global_meta.add_feature(SentimentReferent.ATTR_SPELLING, "Текст", 0, 0)
+        MetaSentiment._global_meta.add_feature(SentimentReferent.ATTR_REF, "Ссылка", 0, 0)
+        MetaSentiment._global_meta.add_feature(SentimentReferent.ATTR_COEF, "Коэффициент", 0, 0)
     
     FTYP = None
     
@@ -39,7 +39,7 @@ class MetaSentiment(ReferentClass):
     
     IMAGE_ID = "unknown"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.sentiment.SentimentReferent import SentimentReferent
         sy = Utils.asObjectOrNull(obj, SentimentReferent)
         if (sy is not None): 

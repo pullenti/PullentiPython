@@ -12,7 +12,7 @@ from pullenti.ner.org.OrganizationReferent import OrganizationReferent
 class OrgOwnershipHelper:
     
     @staticmethod
-    def canBeHigher(higher : 'OrganizationReferent', lower : 'OrganizationReferent', robust : bool=False) -> bool:
+    def can_be_higher(higher : 'OrganizationReferent', lower : 'OrganizationReferent', robust : bool=False) -> bool:
         """ Проверка на отношения "вышестоящий - нижестоящий"
         
         Args:
@@ -26,9 +26,9 @@ class OrgOwnershipHelper:
             return False
         hk = higher.kind
         lk = lower.kind
-        if (higher.canBeEquals(lower, Referent.EqualType.WITHINONETEXT)): 
+        if (higher.can_be_equals(lower, Referent.EqualType.WITHINONETEXT)): 
             return False
-        if (lower.higher is None and lower.findSlot(OrganizationReferent.ATTR_HIGHER, None, True) is not None): 
+        if (lower.higher is None and lower.find_slot(OrganizationReferent.ATTR_HIGHER, None, True) is not None): 
             return False
         htyps = higher.types
         ltyps = lower.types
@@ -37,107 +37,107 @@ class OrgOwnershipHelper:
                 if (v in ltyps): 
                     return False
         if (hk != OrganizationKind.DEPARTMENT and lk == OrganizationKind.DEPARTMENT): 
-            if (OrgOwnershipHelper.__Contains(ltyps, "курс", None) or OrgOwnershipHelper.__Contains(ltyps, "группа", "група")): 
-                return hk == OrganizationKind.STUDY or OrgOwnershipHelper.__Contains(htyps, "институт", "інститут")
-            if (OrgOwnershipHelper.__Contains(ltyps, "епархия", "єпархія") or OrgOwnershipHelper.__Contains(ltyps, "патриархия", "патріархія")): 
+            if (OrgOwnershipHelper.__contains(ltyps, "курс", None) or OrgOwnershipHelper.__contains(ltyps, "группа", "група")): 
+                return hk == OrganizationKind.STUDY or OrgOwnershipHelper.__contains(htyps, "институт", "інститут")
+            if (OrgOwnershipHelper.__contains(ltyps, "епархия", "єпархія") or OrgOwnershipHelper.__contains(ltyps, "патриархия", "патріархія")): 
                 return hk == OrganizationKind.CHURCH
             if (hk == OrganizationKind.UNDEFINED): 
-                if (OrgOwnershipHelper.__Contains(htyps, "управление", "управління")): 
+                if (OrgOwnershipHelper.__contains(htyps, "управление", "управління")): 
                     return False
             return True
-        if (lower.containsProfile(OrgProfile.UNIT) or OrgOwnershipHelper.__Contains(ltyps, "department", None)): 
-            if (not higher.containsProfile(OrgProfile.UNIT) and lk != OrganizationKind.DEPARTMENT): 
+        if (lower.contains_profile(OrgProfile.UNIT) or OrgOwnershipHelper.__contains(ltyps, "department", None)): 
+            if (not higher.contains_profile(OrgProfile.UNIT) and lk != OrganizationKind.DEPARTMENT): 
                 return True
-        if (OrgOwnershipHelper.__Contains(htyps, "правительство", "уряд")): 
+        if (OrgOwnershipHelper.__contains(htyps, "правительство", "уряд")): 
             if (lk == OrganizationKind.GOVENMENT): 
                 return ((("агентство" in ltyps or "федеральная служба" in ltyps or "федеральна служба" in ltyps) or "департамент" in ltyps or "комиссия" in ltyps) or "комитет" in ltyps or "комісія" in ltyps) or "комітет" in ltyps
         if (hk == OrganizationKind.GOVENMENT): 
             if (lk == OrganizationKind.GOVENMENT): 
-                if (OrgOwnershipHelper.__Contains(ltyps, "комиссия", "комісія") or OrgOwnershipHelper.__Contains(ltyps, "инспекция", "інспекція") or OrgOwnershipHelper.__Contains(ltyps, "комитет", "комітет")): 
-                    if ((not OrgOwnershipHelper.__Contains(htyps, "комиссия", "комісія") and not OrgOwnershipHelper.__Contains(htyps, "инспекция", "інспекція") and not OrgOwnershipHelper.__Contains(ltyps, "государственный комитет", None)) and not OrgOwnershipHelper.__Contains(htyps, "комитет", "комітет") and ((not OrgOwnershipHelper.__Contains(htyps, "совет", "рада") or "Верховн" in str(higher)))): 
+                if (OrgOwnershipHelper.__contains(ltyps, "комиссия", "комісія") or OrgOwnershipHelper.__contains(ltyps, "инспекция", "інспекція") or OrgOwnershipHelper.__contains(ltyps, "комитет", "комітет")): 
+                    if ((not OrgOwnershipHelper.__contains(htyps, "комиссия", "комісія") and not OrgOwnershipHelper.__contains(htyps, "инспекция", "інспекція") and not OrgOwnershipHelper.__contains(ltyps, "государственный комитет", None)) and not OrgOwnershipHelper.__contains(htyps, "комитет", "комітет") and ((not OrgOwnershipHelper.__contains(htyps, "совет", "рада") or "Верховн" in str(higher)))): 
                         return True
-                if (higher.findSlot(OrganizationReferent.ATTR_NAME, "ФЕДЕРАЛЬНОЕ СОБРАНИЕ", True) is not None or "конгресс" in htyps or "парламент" in htyps): 
-                    if ((lower.findSlot(OrganizationReferent.ATTR_NAME, "СОВЕТ ФЕДЕРАЦИИ", True) is not None or lower.findSlot(OrganizationReferent.ATTR_NAME, "ГОСУДАРСТВЕННАЯ ДУМА", True) is not None or lower.findSlot(OrganizationReferent.ATTR_NAME, "ВЕРХОВНА РАДА", True) is not None) or OrgOwnershipHelper.__Contains(ltyps, "палата", None) or OrgOwnershipHelper.__Contains(ltyps, "совет", None)): 
+                if (higher.find_slot(OrganizationReferent.ATTR_NAME, "ФЕДЕРАЛЬНОЕ СОБРАНИЕ", True) is not None or "конгресс" in htyps or "парламент" in htyps): 
+                    if ((lower.find_slot(OrganizationReferent.ATTR_NAME, "СОВЕТ ФЕДЕРАЦИИ", True) is not None or lower.find_slot(OrganizationReferent.ATTR_NAME, "ГОСУДАРСТВЕННАЯ ДУМА", True) is not None or lower.find_slot(OrganizationReferent.ATTR_NAME, "ВЕРХОВНА РАДА", True) is not None) or OrgOwnershipHelper.__contains(ltyps, "палата", None) or OrgOwnershipHelper.__contains(ltyps, "совет", None)): 
                         return True
-                if (higher.findSlot(OrganizationReferent.ATTR_NAME, "ФСБ", True) is not None): 
-                    if (lower.findSlot(OrganizationReferent.ATTR_NAME, "ФПС", True) is not None): 
+                if (higher.find_slot(OrganizationReferent.ATTR_NAME, "ФСБ", True) is not None): 
+                    if (lower.find_slot(OrganizationReferent.ATTR_NAME, "ФПС", True) is not None): 
                         return True
-                if (OrgOwnershipHelper.__Contains(htyps, "государственный комитет", None)): 
-                    if ((OrgOwnershipHelper.__Contains(ltyps, "комиссия", "комісія") or OrgOwnershipHelper.__Contains(ltyps, "инспекция", "інспекція") or OrgOwnershipHelper.__Contains(ltyps, "комитет", "комітет")) or OrgOwnershipHelper.__Contains(ltyps, "департамент", None)): 
+                if (OrgOwnershipHelper.__contains(htyps, "государственный комитет", None)): 
+                    if ((OrgOwnershipHelper.__contains(ltyps, "комиссия", "комісія") or OrgOwnershipHelper.__contains(ltyps, "инспекция", "інспекція") or OrgOwnershipHelper.__contains(ltyps, "комитет", "комітет")) or OrgOwnershipHelper.__contains(ltyps, "департамент", None)): 
                         return True
             elif (lk == OrganizationKind.UNDEFINED): 
-                if ((OrgOwnershipHelper.__Contains(ltyps, "комиссия", "комісія") or OrgOwnershipHelper.__Contains(ltyps, "инспекция", "інспекція") or OrgOwnershipHelper.__Contains(ltyps, "комитет", "комітет")) or OrgOwnershipHelper.__Contains(ltyps, "управление", "управління") or OrgOwnershipHelper.__Contains(ltyps, "служба", None)): 
+                if ((OrgOwnershipHelper.__contains(ltyps, "комиссия", "комісія") or OrgOwnershipHelper.__contains(ltyps, "инспекция", "інспекція") or OrgOwnershipHelper.__contains(ltyps, "комитет", "комітет")) or OrgOwnershipHelper.__contains(ltyps, "управление", "управління") or OrgOwnershipHelper.__contains(ltyps, "служба", None)): 
                     return True
             elif (lk == OrganizationKind.BANK): 
                 pass
-        if (OrgOwnershipHelper.__Contains(htyps, "министерство", "міністерство")): 
-            if ((((((OrgOwnershipHelper.__Contains(ltyps, "институт", "інститут") or OrgOwnershipHelper.__Contains(ltyps, "университет", "університет") or OrgOwnershipHelper.__Contains(ltyps, "училище", None)) or OrgOwnershipHelper.__Contains(ltyps, "школа", None) or OrgOwnershipHelper.__Contains(ltyps, "лицей", "ліцей")) or OrgOwnershipHelper.__Contains(ltyps, "НИИ", "НДІ") or OrgOwnershipHelper.__Contains(ltyps, "Ф", None)) or OrgOwnershipHelper.__Contains(ltyps, "департамент", None) or OrgOwnershipHelper.__Contains(ltyps, "управление", "управління")) or OrgOwnershipHelper.__Contains(ltyps, "комитет", "комітет") or OrgOwnershipHelper.__Contains(ltyps, "комиссия", "комісія")) or OrgOwnershipHelper.__Contains(ltyps, "инспекция", "інспекція") or OrgOwnershipHelper.__Contains(ltyps, "центр", None)): 
+        if (OrgOwnershipHelper.__contains(htyps, "министерство", "міністерство")): 
+            if ((((((OrgOwnershipHelper.__contains(ltyps, "институт", "інститут") or OrgOwnershipHelper.__contains(ltyps, "университет", "університет") or OrgOwnershipHelper.__contains(ltyps, "училище", None)) or OrgOwnershipHelper.__contains(ltyps, "школа", None) or OrgOwnershipHelper.__contains(ltyps, "лицей", "ліцей")) or OrgOwnershipHelper.__contains(ltyps, "НИИ", "НДІ") or OrgOwnershipHelper.__contains(ltyps, "Ф", None)) or OrgOwnershipHelper.__contains(ltyps, "департамент", None) or OrgOwnershipHelper.__contains(ltyps, "управление", "управління")) or OrgOwnershipHelper.__contains(ltyps, "комитет", "комітет") or OrgOwnershipHelper.__contains(ltyps, "комиссия", "комісія")) or OrgOwnershipHelper.__contains(ltyps, "инспекция", "інспекція") or OrgOwnershipHelper.__contains(ltyps, "центр", None)): 
                 return True
-            if (OrgOwnershipHelper.__Contains(ltyps, "академия", "академія")): 
+            if (OrgOwnershipHelper.__contains(ltyps, "академия", "академія")): 
                 pass
-            if (OrgOwnershipHelper.__Contains(ltyps, "служба", None) and not OrgOwnershipHelper.__Contains(ltyps, "федеральная служба", "федеральна служба")): 
+            if (OrgOwnershipHelper.__contains(ltyps, "служба", None) and not OrgOwnershipHelper.__contains(ltyps, "федеральная служба", "федеральна служба")): 
                 return True
             if (lk == OrganizationKind.CULTURE or lk == OrganizationKind.MEDICAL): 
                 return True
-        if (OrgOwnershipHelper.__Contains(htyps, "академия", "академія")): 
-            if (OrgOwnershipHelper.__Contains(ltyps, "институт", "інститут") or OrgOwnershipHelper.__Contains(ltyps, "научн", "науков") or OrgOwnershipHelper.__Contains(ltyps, "НИИ", "НДІ")): 
+        if (OrgOwnershipHelper.__contains(htyps, "академия", "академія")): 
+            if (OrgOwnershipHelper.__contains(ltyps, "институт", "інститут") or OrgOwnershipHelper.__contains(ltyps, "научн", "науков") or OrgOwnershipHelper.__contains(ltyps, "НИИ", "НДІ")): 
                 return True
-        if (OrgOwnershipHelper.__Contains(htyps, "факультет", None)): 
-            if (OrgOwnershipHelper.__Contains(ltyps, "курс", None) or OrgOwnershipHelper.__Contains(ltyps, "кафедра", None)): 
+        if (OrgOwnershipHelper.__contains(htyps, "факультет", None)): 
+            if (OrgOwnershipHelper.__contains(ltyps, "курс", None) or OrgOwnershipHelper.__contains(ltyps, "кафедра", None)): 
                 return True
-        if (OrgOwnershipHelper.__Contains(htyps, "university", None)): 
-            if (OrgOwnershipHelper.__Contains(ltyps, "school", None) or OrgOwnershipHelper.__Contains(ltyps, "college", None)): 
+        if (OrgOwnershipHelper.__contains(htyps, "university", None)): 
+            if (OrgOwnershipHelper.__contains(ltyps, "school", None) or OrgOwnershipHelper.__contains(ltyps, "college", None)): 
                 return True
-        hr = OrgOwnershipHelper.__militaryRank(htyps)
+        hr = OrgOwnershipHelper.__military_rank(htyps)
         if (hr > 0): 
-            lr = OrgOwnershipHelper.__militaryRank(ltyps)
+            lr = OrgOwnershipHelper.__military_rank(ltyps)
             if (lr > 0): 
                 return hr < lr
             elif (hr == 3 and (("войсковая часть" in ltyps or "військова частина" in ltyps))): 
                 return True
         elif ("войсковая часть" in htyps or "військова частина" in htyps): 
-            lr = OrgOwnershipHelper.__militaryRank(ltyps)
+            lr = OrgOwnershipHelper.__military_rank(ltyps)
             if (lr >= 6): 
                 return True
-        if (hk == OrganizationKind.STUDY or OrgOwnershipHelper.__Contains(htyps, "институт", "інститут") or OrgOwnershipHelper.__Contains(htyps, "академия", "академія")): 
-            if (((OrgOwnershipHelper.__Contains(ltyps, "магистратура", "магістратура") or OrgOwnershipHelper.__Contains(ltyps, "аспирантура", "аспірантура") or OrgOwnershipHelper.__Contains(ltyps, "докторантура", None)) or OrgOwnershipHelper.__Contains(ltyps, "факультет", None) or OrgOwnershipHelper.__Contains(ltyps, "кафедра", None)) or OrgOwnershipHelper.__Contains(ltyps, "курс", None)): 
+        if (hk == OrganizationKind.STUDY or OrgOwnershipHelper.__contains(htyps, "институт", "інститут") or OrgOwnershipHelper.__contains(htyps, "академия", "академія")): 
+            if (((OrgOwnershipHelper.__contains(ltyps, "магистратура", "магістратура") or OrgOwnershipHelper.__contains(ltyps, "аспирантура", "аспірантура") or OrgOwnershipHelper.__contains(ltyps, "докторантура", None)) or OrgOwnershipHelper.__contains(ltyps, "факультет", None) or OrgOwnershipHelper.__contains(ltyps, "кафедра", None)) or OrgOwnershipHelper.__contains(ltyps, "курс", None)): 
                 return True
         if (hk != OrganizationKind.DEPARTMENT): 
-            if (((((OrgOwnershipHelper.__Contains(ltyps, "департамент", None) or OrgOwnershipHelper.__Contains(ltyps, "центр", None))) and hk != OrganizationKind.MEDICAL and hk != OrganizationKind.SCIENCE) and not OrgOwnershipHelper.__Contains(htyps, "центр", None) and not OrgOwnershipHelper.__Contains(htyps, "департамент", None)) and not OrgOwnershipHelper.__Contains(htyps, "управление", "управління")): 
+            if (((((OrgOwnershipHelper.__contains(ltyps, "департамент", None) or OrgOwnershipHelper.__contains(ltyps, "центр", None))) and hk != OrganizationKind.MEDICAL and hk != OrganizationKind.SCIENCE) and not OrgOwnershipHelper.__contains(htyps, "центр", None) and not OrgOwnershipHelper.__contains(htyps, "департамент", None)) and not OrgOwnershipHelper.__contains(htyps, "управление", "управління")): 
                 return True
-            if (OrgOwnershipHelper.__Contains(htyps, "департамент", None) or robust): 
-                if (OrgOwnershipHelper.__Contains(ltyps, "центр", None)): 
+            if (OrgOwnershipHelper.__contains(htyps, "департамент", None) or robust): 
+                if (OrgOwnershipHelper.__contains(ltyps, "центр", None)): 
                     return True
                 if (lk == OrganizationKind.STUDY): 
                     return True
-            if (OrgOwnershipHelper.__Contains(htyps, "служба", None) or OrgOwnershipHelper.__Contains(htyps, "штаб", None)): 
-                if (OrgOwnershipHelper.__Contains(ltyps, "управление", "управління")): 
+            if (OrgOwnershipHelper.__contains(htyps, "служба", None) or OrgOwnershipHelper.__contains(htyps, "штаб", None)): 
+                if (OrgOwnershipHelper.__contains(ltyps, "управление", "управління")): 
                     return True
             if (hk == OrganizationKind.BANK): 
-                if (OrgOwnershipHelper.__Contains(ltyps, "управление", "управління") or OrgOwnershipHelper.__Contains(ltyps, "департамент", None)): 
+                if (OrgOwnershipHelper.__contains(ltyps, "управление", "управління") or OrgOwnershipHelper.__contains(ltyps, "департамент", None)): 
                     return True
             if (hk == OrganizationKind.PARTY or hk == OrganizationKind.FEDERATION): 
-                if (OrgOwnershipHelper.__Contains(ltyps, "комитет", "комітет")): 
+                if (OrgOwnershipHelper.__contains(ltyps, "комитет", "комітет")): 
                     return True
             if ((lk == OrganizationKind.FEDERATION and hk != OrganizationKind.FEDERATION and hk != OrganizationKind.GOVENMENT) and hk != OrganizationKind.PARTY): 
-                if (not OrgOwnershipHelper.__Contains(htyps, "фонд", None) and hk != OrganizationKind.UNDEFINED): 
+                if (not OrgOwnershipHelper.__contains(htyps, "фонд", None) and hk != OrganizationKind.UNDEFINED): 
                     return True
-        elif (OrgOwnershipHelper.__Contains(htyps, "управление", "управління") or OrgOwnershipHelper.__Contains(htyps, "департамент", None)): 
-            if (not OrgOwnershipHelper.__Contains(ltyps, "управление", "управління") and not OrgOwnershipHelper.__Contains(ltyps, "департамент", None) and lk == OrganizationKind.DEPARTMENT): 
+        elif (OrgOwnershipHelper.__contains(htyps, "управление", "управління") or OrgOwnershipHelper.__contains(htyps, "департамент", None)): 
+            if (not OrgOwnershipHelper.__contains(ltyps, "управление", "управління") and not OrgOwnershipHelper.__contains(ltyps, "департамент", None) and lk == OrganizationKind.DEPARTMENT): 
                 return True
-            if (OrgOwnershipHelper.__Contains(htyps, "главное", "головне") and OrgOwnershipHelper.__Contains(htyps, "управление", "управління")): 
-                if (OrgOwnershipHelper.__Contains(ltyps, "департамент", None)): 
+            if (OrgOwnershipHelper.__contains(htyps, "главное", "головне") and OrgOwnershipHelper.__contains(htyps, "управление", "управління")): 
+                if (OrgOwnershipHelper.__contains(ltyps, "департамент", None)): 
                     return True
-                if (OrgOwnershipHelper.__Contains(ltyps, "управление", "управління")): 
+                if (OrgOwnershipHelper.__contains(ltyps, "управление", "управління")): 
                     if (not "главное управление" in ltyps and not "головне управління" in ltyps and not "пограничное управление" in ltyps): 
                         return True
-            if (OrgOwnershipHelper.__Contains(htyps, "управление", "управління") and OrgOwnershipHelper.__Contains(ltyps, "центр", None)): 
+            if (OrgOwnershipHelper.__contains(htyps, "управление", "управління") and OrgOwnershipHelper.__contains(ltyps, "центр", None)): 
                 return True
-            if (OrgOwnershipHelper.__Contains(htyps, "департамент", None) and OrgOwnershipHelper.__Contains(ltyps, "управление", "управління")): 
+            if (OrgOwnershipHelper.__contains(htyps, "департамент", None) and OrgOwnershipHelper.__contains(ltyps, "управление", "управління")): 
                 return True
-        elif ((lk == OrganizationKind.GOVENMENT and OrgOwnershipHelper.__Contains(ltyps, "служба", None) and higher.higher is not None) and higher.higher.kind == OrganizationKind.GOVENMENT): 
+        elif ((lk == OrganizationKind.GOVENMENT and OrgOwnershipHelper.__contains(ltyps, "служба", None) and higher.higher is not None) and higher.higher.kind == OrganizationKind.GOVENMENT): 
             return True
-        elif (OrgOwnershipHelper.__Contains(htyps, "отдел", "відділ") and lk == OrganizationKind.DEPARTMENT and ((OrgOwnershipHelper.__Contains(ltyps, "стол", "стіл") or OrgOwnershipHelper.__Contains(ltyps, "направление", "напрямок")))): 
+        elif (OrgOwnershipHelper.__contains(htyps, "отдел", "відділ") and lk == OrganizationKind.DEPARTMENT and ((OrgOwnershipHelper.__contains(ltyps, "стол", "стіл") or OrgOwnershipHelper.__contains(ltyps, "направление", "напрямок") or OrgOwnershipHelper.__contains(ltyps, "отделение", "відділ")))): 
             return True
         if (hk == OrganizationKind.BANK): 
             if ("СБЕРЕГАТЕЛЬНЫЙ БАНК" in higher.names): 
@@ -146,36 +146,41 @@ class OrgOwnershipHelper:
         if (lk == OrganizationKind.MEDICAL): 
             if ("департамент" in htyps): 
                 return True
+        if (lk == OrganizationKind.DEPARTMENT): 
+            if (hk == OrganizationKind.DEPARTMENT and higher.higher is not None and len(htyps) == 0): 
+                if (OrgOwnershipHelper.can_be_higher(higher.higher, lower, False)): 
+                    if (OrgOwnershipHelper.__contains(ltyps, "управление", "управління")): 
+                        return True
         return False
     
     @staticmethod
-    def __militaryRank(li : typing.List[str]) -> int:
-        if (OrgOwnershipHelper.__Contains(li, "фронт", None)): 
+    def __military_rank(li : typing.List[str]) -> int:
+        if (OrgOwnershipHelper.__contains(li, "фронт", None)): 
             return 1
-        if (OrgOwnershipHelper.__Contains(li, "группа армий", "група армій")): 
+        if (OrgOwnershipHelper.__contains(li, "группа армий", "група армій")): 
             return 2
-        if (OrgOwnershipHelper.__Contains(li, "армия", "армія")): 
+        if (OrgOwnershipHelper.__contains(li, "армия", "армія")): 
             return 3
-        if (OrgOwnershipHelper.__Contains(li, "корпус", None)): 
+        if (OrgOwnershipHelper.__contains(li, "корпус", None)): 
             return 4
-        if (OrgOwnershipHelper.__Contains(li, "округ", None)): 
+        if (OrgOwnershipHelper.__contains(li, "округ", None)): 
             return 5
-        if (OrgOwnershipHelper.__Contains(li, "дивизия", "дивізія")): 
+        if (OrgOwnershipHelper.__contains(li, "дивизия", "дивізія")): 
             return 6
-        if (OrgOwnershipHelper.__Contains(li, "бригада", None)): 
+        if (OrgOwnershipHelper.__contains(li, "бригада", None)): 
             return 7
-        if (OrgOwnershipHelper.__Contains(li, "полк", None)): 
+        if (OrgOwnershipHelper.__contains(li, "полк", None)): 
             return 8
-        if (OrgOwnershipHelper.__Contains(li, "батальон", "батальйон") or OrgOwnershipHelper.__Contains(li, "дивизион", "дивізіон")): 
+        if (OrgOwnershipHelper.__contains(li, "батальон", "батальйон") or OrgOwnershipHelper.__contains(li, "дивизион", "дивізіон")): 
             return 9
-        if (OrgOwnershipHelper.__Contains(li, "рота", None) or OrgOwnershipHelper.__Contains(li, "батарея", None) or OrgOwnershipHelper.__Contains(li, "эскадрон", "ескадрон")): 
+        if (OrgOwnershipHelper.__contains(li, "рота", None) or OrgOwnershipHelper.__contains(li, "батарея", None) or OrgOwnershipHelper.__contains(li, "эскадрон", "ескадрон")): 
             return 10
-        if (OrgOwnershipHelper.__Contains(li, "взвод", None) or OrgOwnershipHelper.__Contains(li, "отряд", "загін")): 
+        if (OrgOwnershipHelper.__contains(li, "взвод", None) or OrgOwnershipHelper.__contains(li, "отряд", "загін")): 
             return 11
         return -1
     
     @staticmethod
-    def __Contains(li : typing.List[str], v : str, v2 : str=None) -> bool:
+    def __contains(li : typing.List[str], v : str, v2 : str=None) -> bool:
         for l_ in li: 
             if (v in l_): 
                 return True

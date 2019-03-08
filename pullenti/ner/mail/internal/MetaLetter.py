@@ -11,9 +11,9 @@ class MetaLetter(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.mail.MailReferent import MailReferent
         MetaLetter._global_meta = MetaLetter()
-        MetaLetter._global_meta.addFeature(MailReferent.ATTR_KIND, "Тип блока", 1, 1)
-        MetaLetter._global_meta.addFeature(MailReferent.ATTR_TEXT, "Текст блока", 1, 1)
-        MetaLetter._global_meta.addFeature(MailReferent.ATTR_REF, "Ссылка на объект", 0, 0)
+        MetaLetter._global_meta.add_feature(MailReferent.ATTR_KIND, "Тип блока", 1, 1)
+        MetaLetter._global_meta.add_feature(MailReferent.ATTR_TEXT, "Текст блока", 1, 1)
+        MetaLetter._global_meta.add_feature(MailReferent.ATTR_REF, "Ссылка на объект", 0, 0)
     
     @property
     def name(self) -> str:
@@ -26,7 +26,7 @@ class MetaLetter(ReferentClass):
     
     IMAGE_ID = "letter"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         return MetaLetter.IMAGE_ID
     
     _global_meta = None

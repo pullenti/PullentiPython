@@ -4,15 +4,14 @@
 
 
 from pullenti.morph.MorphCase import MorphCase
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.PrepositionHelper import PrepositionHelper
 
 class NounPhraseHelper:
     """ Выделение именных групп (существительсно с согласованными прилагательными (если они есть). """
     
     @staticmethod
-    def tryParse(t : 'Token', typ : 'NounPhraseParseAttr'=NounPhraseParseAttr.NO, max_char_pos : int=0) -> 'NounPhraseToken':
+    def try_parse(t : 'Token', typ : 'NounPhraseParseAttr'=NounPhraseParseAttr.NO, max_char_pos : int=0) -> 'NounPhraseToken':
         """ Попробовать создать именную группу с указанного токена
         
         Args:
@@ -24,19 +23,19 @@ class NounPhraseHelper:
             NounPhraseToken: именная группа или null
         """
         from pullenti.ner.core._NounPraseHelperInt import _NounPraseHelperInt
-        res = _NounPraseHelperInt.tryParse(t, typ, max_char_pos)
+        res = _NounPraseHelperInt.try_parse(t, typ, max_char_pos)
         if (res is not None): 
             return res
         if ((((typ) & (NounPhraseParseAttr.PARSEPREPOSITION))) != (NounPhraseParseAttr.NO)): 
-            if ((isinstance(t, TextToken)) and t.morph.class0_.is_preposition and (t.whitespaces_after_count < 3)): 
-                res = _NounPraseHelperInt.tryParse(t.next0_, typ, max_char_pos)
+            prep = PrepositionHelper.try_parse(t)
+            if (prep is not None and (prep.whitespaces_after_count < 3)): 
+                res = _NounPraseHelperInt.try_parse(prep.end_token.next0_, typ, max_char_pos)
                 if (res is not None): 
-                    mc = LanguageHelper.getCaseAfterPreposition((t).lemma)
-                    res.preposition = t
+                    res.preposition = prep
                     res.begin_token = t
-                    if (not ((mc) & res.morph.case_).is_undefined): 
-                        res.morph.removeItems(mc, False)
-                    elif (t.morph.class0_.is_adverb): 
+                    if (not ((prep.next_case) & res.morph.case_).is_undefined0): 
+                        res.morph.remove_items(prep.next_case, False)
+                    elif (t.morph.class0_.is_adverb0): 
                         return None
                     return res
         return None

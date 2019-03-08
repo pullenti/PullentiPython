@@ -12,11 +12,11 @@ class MetaPhone(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.phone.PhoneReferent import PhoneReferent
         MetaPhone._global_meta = MetaPhone()
-        MetaPhone._global_meta.addFeature(PhoneReferent.ATTR_NUNBER, "Номер", 1, 1)
-        MetaPhone._global_meta.addFeature(PhoneReferent.ATTR_ADDNUMBER, "Добавочный номер", 0, 1)
-        MetaPhone._global_meta.addFeature(PhoneReferent.ATTR_COUNTRYCODE, "Код страны", 0, 1)
-        MetaPhone._global_meta.addFeature(Referent.ATTR_GENERAL, "Обобщающий номер", 0, 1)
-        MetaPhone._global_meta.addFeature(PhoneReferent.ATTR_KIND, "Тип", 0, 1)
+        MetaPhone._global_meta.add_feature(PhoneReferent.ATTR_NUNBER, "Номер", 1, 1)
+        MetaPhone._global_meta.add_feature(PhoneReferent.ATTR_ADDNUMBER, "Добавочный номер", 0, 1)
+        MetaPhone._global_meta.add_feature(PhoneReferent.ATTR_COUNTRYCODE, "Код страны", 0, 1)
+        MetaPhone._global_meta.add_feature(Referent.ATTR_GENERAL, "Обобщающий номер", 0, 1)
+        MetaPhone._global_meta.add_feature(PhoneReferent.ATTR_KIND, "Тип", 0, 1)
     
     @property
     def name(self) -> str:
@@ -29,7 +29,7 @@ class MetaPhone(ReferentClass):
     
     PHONE_IMAGE_ID = "phone"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         return MetaPhone.PHONE_IMAGE_ID
     
     _global_meta = None

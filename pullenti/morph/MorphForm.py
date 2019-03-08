@@ -7,8 +7,11 @@ from enum import IntEnum
 class MorphForm(IntEnum):
     """ Форма """
     UNDEFINED = 0
+    """ Не определена """
     SHORT = 1
+    """ Краткая форма """
     SYNONYM = 2
+    """ Синонимичная форма """
     
     @classmethod
     def has_value(cls, value):

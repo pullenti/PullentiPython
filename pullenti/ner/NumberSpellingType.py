@@ -7,9 +7,13 @@ from enum import IntEnum
 class NumberSpellingType(IntEnum):
     """ Возможные типы написаний """
     DIGIT = 0
+    """ Цифрами """
     ROMAN = 1
+    """ Римскими цифрами """
     WORDS = 2
+    """ Прописью (словами) """
     AGE = 3
+    """ Возраст (летие) """
     
     @classmethod
     def has_value(cls, value):

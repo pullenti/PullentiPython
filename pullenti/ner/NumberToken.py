@@ -2,23 +2,74 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
+import math
 import io
 from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 
 class NumberToken(MetaToken):
     """ Числовой токен (числительное) """
     
-    def __init__(self, begin : 'Token', end : 'Token', val : int, typ_ : 'NumberSpellingType', kit_ : 'AnalysisKit'=None) -> None:
+    def __init__(self, begin : 'Token', end : 'Token', val : str, typ_ : 'NumberSpellingType', kit_ : 'AnalysisKit'=None) -> None:
         super().__init__(begin, end, kit_)
-        self.value = 0
+        self.__m_value = None;
+        self.__m_int_val = None
+        self.__m_real_val = 0
         self.typ = NumberSpellingType.DIGIT
         self.value = val
         self.typ = typ_
+    
+    @property
+    def value(self) -> str:
+        """ Числовое значение (если действительное, то с точкой - разделителем дробных). """
+        return self.__m_value
+    @value.setter
+    def value(self, value_) -> str:
+        from pullenti.ner.core.NumberHelper import NumberHelper
+        self.__m_value = (Utils.ifNotNull(value_, ""))
+        if (len(self.__m_value) > 2 and self.__m_value.endswith(".0")): 
+            self.__m_value = self.__m_value[0:0+len(self.__m_value) - 2]
+        while len(self.__m_value) > 1 and self.__m_value[0] == '0' and self.__m_value[1] != '.':
+            self.__m_value = self.__m_value[1:]
+        wrapn2769 = RefOutArgWrapper(0)
+        inoutres2770 = Utils.tryParseInt(self.__m_value, wrapn2769)
+        n = wrapn2769.value
+        if (inoutres2770): 
+            self.__m_int_val = n
+        else: 
+            self.__m_int_val = (None)
+        d = NumberHelper.string_to_double(self.__m_value)
+        if (d is None): 
+            self.__m_real_val = math.nan
+        else: 
+            self.__m_real_val = d
+        return value_
+    
+    @property
+    def int_value(self) -> int:
+        """ Целочисленное 32-х битное значение.
+         Число может быть большое и не умещаться в Int, тогда вернёт null.
+         Если есть дробная часть, то тоже вернёт null.
+         Long не используется, так как не поддерживается в Javascript """
+        return self.__m_int_val
+    @int_value.setter
+    def int_value(self, value_) -> int:
+        self.value = str(value_)
+        return value_
+    
+    @property
+    def real_value(self) -> float:
+        """ Получить действительное значение из Value. Если не удалось, то NaN. """
+        return self.__m_real_val
+    @real_value.setter
+    def real_value(self, value_) -> float:
+        from pullenti.ner.core.NumberHelper import NumberHelper
+        self.value = NumberHelper.double_to_string(value_)
+        return value_
     
     @property
     def is_number(self) -> bool:
@@ -31,23 +82,29 @@ class NumberToken(MetaToken):
             print(" {0}".format(str(self.morph)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
-    def getNormalCaseText(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         return str(self.value)
     
     def _serialize(self, stream : io.IOBase) -> None:
+        from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         super()._serialize(stream)
-        Utils.writeIO(stream, (self.value).to_bytes(8, byteorder="little"), 0, 8)
-        SerializerHelper.serializeInt(stream, self.typ)
+        SerializerHelper.serialize_string(stream, self.__m_value)
+        SerializerHelper.serialize_int(stream, self.typ)
     
-    def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit') -> None:
-        super()._deserialize(stream, kit_)
-        buf = Utils.newArrayOfBytes(8, 0)
-        Utils.readIO(stream, buf, 0, 8)
-        self.value = int.from_bytes(buf[0:0+8], byteorder="little")
-        self.typ = (Utils.valToEnum(SerializerHelper.deserializeInt(stream), NumberSpellingType))
+    def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit', vers : int) -> None:
+        from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
+        super()._deserialize(stream, kit_, vers)
+        if (vers == 0): 
+            buf = Utils.newArrayOfBytes(8, 0)
+            Utils.readIO(stream, buf, 0, 8)
+            lo = int.from_bytes(buf[0:0+8], byteorder="little")
+            self.value = str(lo)
+        else: 
+            self.value = SerializerHelper.deserialize_string(stream)
+        self.typ = (Utils.valToEnum(SerializerHelper.deserialize_int(stream), NumberSpellingType))
     
     @staticmethod
-    def _new595(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : 'NumberSpellingType', _arg5 : 'MorphCollection') -> 'NumberToken':
+    def _new567(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'MorphCollection') -> 'NumberToken':
         res = NumberToken(_arg1, _arg2, _arg3, _arg4)
         res.morph = _arg5
         return res

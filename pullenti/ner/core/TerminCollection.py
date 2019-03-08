@@ -7,13 +7,13 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.Token import Token
-from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.ner.NumberToken import NumberToken
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.Token import Token
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.TextToken import TextToken
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.Termin import Termin
 
 class TerminCollection:
@@ -44,7 +44,7 @@ class TerminCollection:
         self.__m_hash_canonic = (None)
         self.reindex(term)
     
-    def addStr(self, termins_ : str, tag : object=None, lang : 'MorphLang'=None, is_normal_text : bool=False) -> 'Termin':
+    def add_str(self, termins_ : str, tag : object=None, lang : 'MorphLang'=None, is_normal_text : bool=False) -> 'Termin':
         """ Добавить строку вместе с морфологическими вариантами
         
         Args:
@@ -60,8 +60,8 @@ class TerminCollection:
         self.add(t)
         return t
     
-    def __getRoot(self, lang : 'MorphLang', is_lat : bool) -> 'CharNode':
-        if (lang is not None and lang.is_ua and not lang.is_ru): 
+    def __get_root(self, lang : 'MorphLang', is_lat : bool) -> 'CharNode':
+        if (lang is not None and lang.is_ua0 and not lang.is_ru0): 
             return self.__m_root_ua
         return self.__m_root
     
@@ -76,22 +76,22 @@ class TerminCollection:
         if (len(t.terms) > 20): 
             pass
         if (t.acronym_smart is not None): 
-            self.__addToHash1(ord(t.acronym_smart[0]), t)
+            self.__add_to_hash1(ord(t.acronym_smart[0]), t)
         if (t.abridges is not None): 
             for a in t.abridges: 
                 if (len(a.parts[0].value) == 1): 
-                    self.__addToHash1(ord(a.parts[0].value[0]), t)
-        for v in t._getHashVariants(): 
-            self.__AddToTree(v, t)
+                    self.__add_to_hash1(ord(a.parts[0].value[0]), t)
+        for v in t._get_hash_variants(): 
+            self.__add_to_tree(v, t)
         if (t.additional_vars is not None): 
             for av in t.additional_vars: 
                 av.ignore_terms_order = t.ignore_terms_order
-                for v in av._getHashVariants(): 
-                    self.__AddToTree(v, t)
+                for v in av._get_hash_variants(): 
+                    self.__add_to_tree(v, t)
     
     def remove(self, t : 'Termin') -> None:
-        for v in t._getHashVariants(): 
-            self.__RemoveFromTree(v, t)
+        for v in t._get_hash_variants(): 
+            self.__remove_from_tree(v, t)
         for li in self.__m_hash1.values(): 
             for tt in li: 
                 if (tt == t): 
@@ -101,19 +101,19 @@ class TerminCollection:
         if (i >= 0): 
             del self.termins[i]
     
-    def __AddToTree(self, key : str, t : 'Termin') -> None:
+    def __add_to_tree(self, key : str, t : 'Termin') -> None:
         if (key is None): 
             return
-        nod = self.__getRoot(t.lang, t.lang.is_undefined and LanguageHelper.isLatin(key))
+        nod = self.__get_root(t.lang, t.lang.is_undefined0 and LanguageHelper.is_latin(key))
         i = 0
         while i < len(key): 
             ch = ord(key[i])
             if (nod.children is None): 
                 nod.children = dict()
-            wrapnn639 = RefOutArgWrapper(None)
-            inoutres640 = Utils.tryGetValue(nod.children, ch, wrapnn639)
-            nn = wrapnn639.value
-            if (not inoutres640): 
+            wrapnn630 = RefOutArgWrapper(None)
+            inoutres631 = Utils.tryGetValue(nod.children, ch, wrapnn630)
+            nn = wrapnn630.value
+            if (not inoutres631): 
                 nn = TerminCollection.CharNode()
                 nod.children[ch] = nn
             nod = nn
@@ -123,19 +123,19 @@ class TerminCollection:
         if (not t in nod.termins): 
             nod.termins.append(t)
     
-    def __RemoveFromTree(self, key : str, t : 'Termin') -> None:
+    def __remove_from_tree(self, key : str, t : 'Termin') -> None:
         if (key is None): 
             return
-        nod = self.__getRoot(t.lang, t.lang.is_undefined and LanguageHelper.isLatin(key))
+        nod = self.__get_root(t.lang, t.lang.is_undefined0 and LanguageHelper.is_latin(key))
         i = 0
         while i < len(key): 
             ch = ord(key[i])
             if (nod.children is None): 
                 return
-            wrapnn641 = RefOutArgWrapper(None)
-            inoutres642 = Utils.tryGetValue(nod.children, ch, wrapnn641)
-            nn = wrapnn641.value
-            if (not inoutres642): 
+            wrapnn632 = RefOutArgWrapper(None)
+            inoutres633 = Utils.tryGetValue(nod.children, ch, wrapnn632)
+            nn = wrapnn632.value
+            if (not inoutres633): 
                 return
             nod = nn
             i += 1
@@ -144,30 +144,30 @@ class TerminCollection:
         if (t in nod.termins): 
             nod.termins.remove(t)
     
-    def __FindInTree(self, key : str, lang : 'MorphLang') -> typing.List['Termin']:
+    def __find_in_tree(self, key : str, lang : 'MorphLang') -> typing.List['Termin']:
         if (key is None): 
             return None
-        nod = self.__getRoot(lang, ((lang is None or lang.is_undefined)) and LanguageHelper.isLatin(key))
+        nod = self.__get_root(lang, ((lang is None or lang.is_undefined0)) and LanguageHelper.is_latin(key))
         i = 0
         while i < len(key): 
             ch = ord(key[i])
             if (nod.children is None): 
                 return None
-            wrapnn643 = RefOutArgWrapper(None)
-            inoutres644 = Utils.tryGetValue(nod.children, ch, wrapnn643)
-            nn = wrapnn643.value
-            if (not inoutres644): 
+            wrapnn634 = RefOutArgWrapper(None)
+            inoutres635 = Utils.tryGetValue(nod.children, ch, wrapnn634)
+            nn = wrapnn634.value
+            if (not inoutres635): 
                 return None
             nod = nn
             i += 1
         return nod.termins
     
-    def __addToHash1(self, key : int, t : 'Termin') -> None:
+    def __add_to_hash1(self, key : int, t : 'Termin') -> None:
         li = None
-        wrapli645 = RefOutArgWrapper(None)
-        inoutres646 = Utils.tryGetValue(self.__m_hash1, key, wrapli645)
-        li = wrapli645.value
-        if (not inoutres646): 
+        wrapli636 = RefOutArgWrapper(None)
+        inoutres637 = Utils.tryGetValue(self.__m_hash1, key, wrapli636)
+        li = wrapli636.value
+        if (not inoutres637): 
             li = list()
             self.__m_hash1[key] = li
         if (not t in li): 
@@ -177,15 +177,15 @@ class TerminCollection:
         if (Utils.isNullOrEmpty(key)): 
             return None
         li = [ ]
-        if (LanguageHelper.isLatinChar(key[0])): 
-            li = self.__FindInTree(key, MorphLang.EN)
+        if (LanguageHelper.is_latin_char(key[0])): 
+            li = self.__find_in_tree(key, MorphLang.EN)
         else: 
-            li = self.__FindInTree(key, MorphLang.RU)
+            li = self.__find_in_tree(key, MorphLang.RU)
             if (li is None): 
-                li = self.__FindInTree(key, MorphLang.UA)
+                li = self.__find_in_tree(key, MorphLang.UA)
         return (li[0] if li is not None and len(li) > 0 else None)
     
-    def tryParse(self, token : 'Token', pars : 'TerminParseAttr'=TerminParseAttr.NO) -> 'TerminToken':
+    def try_parse(self, token : 'Token', pars : 'TerminParseAttr'=TerminParseAttr.NO) -> 'TerminToken':
         """ Попытка привязать к аналитическому контейнеру с указанной позиции
         
         Args:
@@ -195,13 +195,13 @@ class TerminCollection:
         """
         if (len(self.termins) == 0): 
             return None
-        li = self.tryParseAll(token, pars)
+        li = self.try_parse_all(token, pars)
         if (li is not None): 
             return li[0]
         else: 
             return None
     
-    def tryParseAll(self, token : 'Token', pars : 'TerminParseAttr'=TerminParseAttr.NO) -> typing.List['TerminToken']:
+    def try_parse_all(self, token : 'Token', pars : 'TerminParseAttr'=TerminParseAttr.NO) -> typing.List['TerminToken']:
         """ Попытка привязать все возможные варианты
         
         Args:
@@ -211,12 +211,12 @@ class TerminCollection:
         """
         if (token is None): 
             return None
-        re = self.__TryAttachAll_(token, pars, False)
-        if (re is None and token.morph.language.is_ua): 
-            re = self.__TryAttachAll_(token, pars, True)
+        re = self.__try_attach_all_(token, pars, False)
+        if (re is None and token.morph.language.is_ua0): 
+            re = self.__try_attach_all_(token, pars, True)
         return re
     
-    def __TryAttachAll_(self, token : 'Token', pars : 'TerminParseAttr'=TerminParseAttr.NO, main_root : bool=False) -> typing.List['TerminToken']:
+    def __try_attach_all_(self, token : 'Token', pars : 'TerminParseAttr'=TerminParseAttr.NO, main_root : bool=False) -> typing.List['TerminToken']:
         if (len(self.termins) == 0 or token is None): 
             return None
         s = None
@@ -225,7 +225,7 @@ class TerminCollection:
             tt = (Utils.asObjectOrNull((token).begin_token, TextToken))
         res = None
         was_vars = False
-        root = (self.__m_root if main_root else self.__getRoot(token.morph.language, token.chars.is_latin_letter))
+        root = (self.__m_root if main_root else self.__get_root(token.morph.language, token.chars.is_latin_letter0))
         if (tt is not None): 
             s = tt.term
             nod = root
@@ -241,33 +241,33 @@ class TerminCollection:
                     if (nod.children is None): 
                         no_vars = True
                         break
-                    wrapnn647 = RefOutArgWrapper(None)
-                    inoutres648 = Utils.tryGetValue(nod.children, ch, wrapnn647)
-                    nn = wrapnn647.value
-                    if (not inoutres648): 
+                    wrapnn638 = RefOutArgWrapper(None)
+                    inoutres639 = Utils.tryGetValue(nod.children, ch, wrapnn638)
+                    nn = wrapnn638.value
+                    if (not inoutres639): 
                         no_vars = True
                         break
                     nod = nn
                     i += 1
             if (not no_vars): 
-                wrapres653 = RefOutArgWrapper(res)
-                inoutres654 = self.__manageVar(token, pars, s, nod, len0, wrapres653)
-                res = wrapres653.value
-                if (inoutres654): 
+                wrapres644 = RefOutArgWrapper(res)
+                inoutres645 = self.__manage_var(token, pars, s, nod, len0, wrapres644)
+                res = wrapres644.value
+                if (inoutres645): 
                     was_vars = True
                 i = 0
-                first_pass2826 = True
+                first_pass2919 = True
                 while True:
-                    if first_pass2826: first_pass2826 = False
+                    if first_pass2919: first_pass2919 = False
                     else: i += 1
                     if (not (i < tt.morph.items_count)): break
                     if ((((pars) & (TerminParseAttr.TERMONLY))) != (TerminParseAttr.NO)): 
                         continue
-                    wf = Utils.asObjectOrNull(tt.morph.getIndexerItem(i), MorphWordForm)
+                    wf = Utils.asObjectOrNull(tt.morph.get_indexer_item(i), MorphWordForm)
                     if (wf is None): 
                         continue
                     if ((((pars) & (TerminParseAttr.INDICTIONARYONLY))) != (TerminParseAttr.NO)): 
-                        if (not wf.is_in_dictionary): 
+                        if (not wf.is_in_dictionary0): 
                             continue
                     ok = True
                     if (wf.normal_case is None or wf.normal_case == s): 
@@ -275,7 +275,7 @@ class TerminCollection:
                     else: 
                         j = 0
                         while j < i: 
-                            wf2 = Utils.asObjectOrNull(tt.morph.getIndexerItem(j), MorphWordForm)
+                            wf2 = Utils.asObjectOrNull(tt.morph.get_indexer_item(j), MorphWordForm)
                             if (wf2 is not None): 
                                 if (wf2.normal_case == wf.normal_case or wf2.normal_full == wf.normal_case): 
                                     break
@@ -283,46 +283,46 @@ class TerminCollection:
                         if (j < i): 
                             ok = False
                     if (ok): 
-                        wrapres649 = RefOutArgWrapper(res)
-                        inoutres650 = self.__manageVar(token, pars, wf.normal_case, nod, tt.invariant_prefix_length, wrapres649)
-                        res = wrapres649.value
-                        if (inoutres650): 
+                        wrapres640 = RefOutArgWrapper(res)
+                        inoutres641 = self.__manage_var(token, pars, wf.normal_case, nod, tt.invariant_prefix_length, wrapres640)
+                        res = wrapres640.value
+                        if (inoutres641): 
                             was_vars = True
                     if (wf.normal_full is None or wf.normal_full == wf.normal_case or wf.normal_full == s): 
                         continue
                     j = 0
                     while j < i: 
-                        wf2 = Utils.asObjectOrNull(tt.morph.getIndexerItem(j), MorphWordForm)
+                        wf2 = Utils.asObjectOrNull(tt.morph.get_indexer_item(j), MorphWordForm)
                         if (wf2 is not None and wf2.normal_full == wf.normal_full): 
                             break
                         j += 1
                     if (j < i): 
                         continue
-                    wrapres651 = RefOutArgWrapper(res)
-                    inoutres652 = self.__manageVar(token, pars, wf.normal_full, nod, tt.invariant_prefix_length, wrapres651)
-                    res = wrapres651.value
-                    if (inoutres652): 
+                    wrapres642 = RefOutArgWrapper(res)
+                    inoutres643 = self.__manage_var(token, pars, wf.normal_full, nod, tt.invariant_prefix_length, wrapres642)
+                    res = wrapres642.value
+                    if (inoutres643): 
                         was_vars = True
         elif (isinstance(token, NumberToken)): 
-            wrapres655 = RefOutArgWrapper(res)
-            inoutres656 = self.__manageVar(token, pars, str((token).value), root, 0, wrapres655)
-            res = wrapres655.value
-            if (inoutres656): 
+            wrapres646 = RefOutArgWrapper(res)
+            inoutres647 = self.__manage_var(token, pars, str((token).value), root, 0, wrapres646)
+            res = wrapres646.value
+            if (inoutres647): 
                 was_vars = True
         else: 
             return None
         if (not was_vars and s is not None and len(s) == 1): 
             vars0_ = [ ]
-            wrapvars657 = RefOutArgWrapper(None)
-            inoutres658 = Utils.tryGetValue(self.__m_hash1, ord(s[0]), wrapvars657)
-            vars0_ = wrapvars657.value
-            if (inoutres658): 
+            wrapvars648 = RefOutArgWrapper(None)
+            inoutres649 = Utils.tryGetValue(self.__m_hash1, ord(s[0]), wrapvars648)
+            vars0_ = wrapvars648.value
+            if (inoutres649): 
                 for t in vars0_: 
-                    if (not t.lang.is_undefined): 
-                        if (not token.morph.language.is_undefined): 
-                            if (((token.morph.language) & t.lang).is_undefined): 
+                    if (not t.lang.is_undefined0): 
+                        if (not token.morph.language.is_undefined0): 
+                            if (((token.morph.language) & t.lang).is_undefined0): 
                                 continue
-                    ar = t.tryParse(tt, TerminParseAttr.NO)
+                    ar = t.try_parse(tt, TerminParseAttr.NO)
                     if (ar is None): 
                         continue
                     ar.termin = t
@@ -349,16 +349,16 @@ class TerminCollection:
                 res.insert(0, v)
         return res
     
-    def __manageVar(self, token : 'Token', pars : 'TerminParseAttr', v : str, nod : 'CharNode', i0 : int, res : typing.List['TerminToken']) -> bool:
+    def __manage_var(self, token : 'Token', pars : 'TerminParseAttr', v : str, nod : 'CharNode', i0 : int, res : typing.List['TerminToken']) -> bool:
         i = i0
         while i < len(v): 
             ch = ord(v[i])
             if (nod.children is None): 
                 return False
-            wrapnn659 = RefOutArgWrapper(None)
-            inoutres660 = Utils.tryGetValue(nod.children, ch, wrapnn659)
-            nn = wrapnn659.value
-            if (not inoutres660): 
+            wrapnn650 = RefOutArgWrapper(None)
+            inoutres651 = Utils.tryGetValue(nod.children, ch, wrapnn650)
+            nn = wrapnn650.value
+            if (not inoutres651): 
                 return False
             nod = nn
             i += 1
@@ -366,7 +366,7 @@ class TerminCollection:
         if (vars0_ is None or len(vars0_) == 0): 
             return False
         for t in vars0_: 
-            ar = t.tryParse(token, pars)
+            ar = t.try_parse(token, pars)
             if (ar is not None): 
                 ar.termin = t
                 if (res.value is None): 
@@ -385,7 +385,7 @@ class TerminCollection:
                         res.value.append(ar)
             if (t.additional_vars is not None): 
                 for av in t.additional_vars: 
-                    ar = av.tryParse(token, pars)
+                    ar = av.try_parse(token, pars)
                     if (ar is None): 
                         continue
                     ar.termin = t
@@ -405,7 +405,7 @@ class TerminCollection:
                             res.value.append(ar)
         return len(v) > 1
     
-    def tryAttach(self, termin : 'Termin') -> typing.List['Termin']:
+    def try_attach(self, termin : 'Termin') -> typing.List['Termin']:
         """ Поискать эквивалентные термины
         
         Args:
@@ -413,40 +413,40 @@ class TerminCollection:
         
         """
         res = None
-        for v in termin._getHashVariants(): 
-            vars0_ = self.__FindInTree(v, termin.lang)
+        for v in termin._get_hash_variants(): 
+            vars0_ = self.__find_in_tree(v, termin.lang)
             if (vars0_ is None): 
                 continue
             for t in vars0_: 
-                if (t.isEqual(termin)): 
+                if (t.is_equal(termin)): 
                     if (res is None): 
                         res = list()
                     if (not t in res): 
                         res.append(t)
         return res
     
-    def tryAttachStr(self, termin : str, lang : 'MorphLang'=None) -> typing.List['Termin']:
-        return self.__FindInTree(termin, lang)
+    def try_attach_str(self, termin : str, lang : 'MorphLang'=None) -> typing.List['Termin']:
+        return self.__find_in_tree(termin, lang)
     
-    def findTerminByCanonicText(self, text : str) -> typing.List['Termin']:
+    def find_termin_by_canonic_text(self, text : str) -> typing.List['Termin']:
         if (self.__m_hash_canonic is None): 
             self.__m_hash_canonic = dict()
             for t in self.termins: 
                 ct = t.canonic_text
                 li = [ ]
-                wrapli661 = RefOutArgWrapper(None)
-                inoutres662 = Utils.tryGetValue(self.__m_hash_canonic, ct, wrapli661)
-                li = wrapli661.value
-                if (not inoutres662): 
+                wrapli652 = RefOutArgWrapper(None)
+                inoutres653 = Utils.tryGetValue(self.__m_hash_canonic, ct, wrapli652)
+                li = wrapli652.value
+                if (not inoutres653): 
                     li = list()
                     self.__m_hash_canonic[ct] = li
                 if (not t in li): 
                     li.append(t)
         res = [ ]
-        wrapres663 = RefOutArgWrapper(None)
-        inoutres664 = Utils.tryGetValue(self.__m_hash_canonic, text, wrapres663)
-        res = wrapres663.value
-        if (not inoutres664): 
+        wrapres654 = RefOutArgWrapper(None)
+        inoutres655 = Utils.tryGetValue(self.__m_hash_canonic, text, wrapres654)
+        res = wrapres654.value
+        if (not inoutres655): 
             return None
         else: 
             return res

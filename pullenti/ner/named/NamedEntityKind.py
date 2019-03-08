@@ -5,12 +5,17 @@
 from enum import IntEnum
 
 class NamedEntityKind(IntEnum):
-    """ Разновидности организаций """
+    """ Разновидности мелких именованных сущностей """
     UNDEFINED = 0
+    """ Неопределённая """
     PLANET = 1
+    """ Планеты """
     LOCATION = 2
+    """ Разные географические объекты (не города) - реки, моря, континенты ... """
     MONUMENT = 3
+    """ Памятники и монументы """
     BUILDING = 4
+    """ Выдающиеся здания """
     
     @classmethod
     def has_value(cls, value):

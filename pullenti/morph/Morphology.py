@@ -29,32 +29,32 @@ class Morphology:
             langs(MorphLang): по умолчанию, русский и английский
         """
         UnicodeInfo.initialize()
-        if (langs is None or langs.is_undefined): 
+        if (langs is None or langs.is_undefined0): 
             langs = ((MorphLang.RU) | MorphLang.EN)
-        InnerMorphology._loadLanguages(langs)
+        InnerMorphology._load_languages(langs)
     
     @staticmethod
-    def getLoadedLanguages() -> 'MorphLang':
+    def get_loaded_languages() -> 'MorphLang':
         """ Языки, морфологические словари для которых загружены в память """
-        return InnerMorphology.getLoadedLanguages()
+        return InnerMorphology.get_loaded_languages()
     
     @staticmethod
-    def loadLanguages(langs : 'MorphLang') -> None:
+    def load_languages(langs : 'MorphLang') -> None:
         """ Загрузить язык(и), если они ещё не загружены
         
         Args:
             langs(MorphLang): загружаемые языки
         """
-        InnerMorphology._loadLanguages(langs)
+        InnerMorphology._load_languages(langs)
     
     @staticmethod
-    def unloadLanguages(langs : 'MorphLang') -> None:
+    def unload_languages(langs : 'MorphLang') -> None:
         """ Выгрузить язык(и), если они больше не нужны
         
         Args:
             langs(MorphLang): выгружаемые языки
         """
-        InnerMorphology._unloadLanguages(langs)
+        InnerMorphology._unload_languages(langs)
     
     __m_inner = None
     
@@ -109,7 +109,7 @@ class Morphology:
     __m_empty_misc = None
     
     @staticmethod
-    def getAllWordforms(word : str, lang : 'MorphLang'=None) -> typing.List['MorphWordForm']:
+    def get_all_wordforms(word : str, lang : 'MorphLang'=None) -> typing.List['MorphWordForm']:
         """ Получить все варианты словоформ для нормальной формы слова
         
         Args:
@@ -119,7 +119,7 @@ class Morphology:
         Returns:
             typing.List[MorphWordForm]: список словоформ
         """
-        res = Morphology.__m_inner.getAllWordforms(word, lang)
+        res = Morphology.__m_inner.get_all_wordforms(word, lang)
         if (res is not None): 
             for r in res: 
                 if (r.misc is None): 
@@ -127,7 +127,7 @@ class Morphology:
         return res
     
     @staticmethod
-    def getWordform(word : str, morph_info : 'MorphBaseInfo') -> str:
+    def get_wordform(word : str, morph_info : 'MorphBaseInfo') -> str:
         """ Получить вариант написания словоформы
         
         Args:
@@ -140,18 +140,18 @@ class Morphology:
         if (morph_info is None or Utils.isNullOrEmpty(word)): 
             return word
         cla = morph_info.class0_
-        if (cla.is_undefined): 
-            mi0 = Morphology.getWordBaseInfo(word, None, False, False)
+        if (cla.is_undefined0): 
+            mi0 = Morphology.get_word_base_info(word, None, False, False)
             if (mi0 is not None): 
                 cla = mi0.class0_
         for ch in word: 
             if (str.islower(ch)): 
                 word = word.upper()
                 break
-        return Utils.ifNotNull(Morphology.__m_inner.getWordform(word, cla, morph_info.gender, morph_info.case_, morph_info.number, morph_info.language, Utils.asObjectOrNull(morph_info, MorphWordForm)), word)
+        return Utils.ifNotNull(Morphology.__m_inner.get_wordform(word, cla, morph_info.gender, morph_info.case_, morph_info.number, morph_info.language, Utils.asObjectOrNull(morph_info, MorphWordForm)), word)
     
     @staticmethod
-    def getWordBaseInfo(word : str, lang : 'MorphLang'=None, is_case_nominative : bool=False, in_dict_only : bool=False) -> 'MorphBaseInfo':
+    def get_word_base_info(word : str, lang : 'MorphLang'=None, is_case_nominative : bool=False, in_dict_only : bool=False) -> 'MorphBaseInfo':
         """ Получить для словоформы род\число\падеж
         
         Args:
@@ -171,12 +171,12 @@ class Morphology:
                 ok = False
                 for wf in mt[0].word_forms: 
                     if (k == 0): 
-                        if (not wf.is_in_dictionary): 
+                        if (not wf.is_in_dictionary0): 
                             continue
-                    elif (wf.is_in_dictionary): 
+                    elif (wf.is_in_dictionary0): 
                         continue
                     if (is_case_nominative): 
-                        if (not wf.case_.is_nominative and not wf.case_.is_undefined): 
+                        if (not wf.case_.is_nominative0 and not wf.case_.is_undefined0): 
                             continue
                     cla.value |= wf.class0_.value
                     bi.gender = Utils.valToEnum((bi.gender) | (wf.gender), MorphGender)
@@ -191,7 +191,7 @@ class Morphology:
         return bi
     
     @staticmethod
-    def correctWord(word : str, lang : 'MorphLang'=None) -> str:
+    def correct_word(word : str, lang : 'MorphLang'=None) -> str:
         """ Попробовать откорретировать одну букву словоформы, чтобы получилось словарное слово
         
         Args:
@@ -201,10 +201,10 @@ class Morphology:
         Returns:
             str: откорректированное слово или null при невозможности
         """
-        return Morphology.__m_inner.correctWordByMorph(word, lang)
+        return Morphology.__m_inner.correct_word_by_morph(word, lang)
     
     @staticmethod
-    def convertAdverbToAdjective(adverb : str, bi : 'MorphBaseInfo') -> str:
+    def convert_adverb_to_adjective(adverb : str, bi : 'MorphBaseInfo') -> str:
         """ Преобразовать наречие в прилагательное (это пока только для русского языка)
         
         Args:
@@ -221,14 +221,14 @@ class Morphology:
             return adverb
         var1 = adverb[0:0+len(adverb) - 1] + "ИЙ"
         var2 = adverb[0:0+len(adverb) - 1] + "ЫЙ"
-        bi1 = Morphology.getWordBaseInfo(var1, None, False, False)
-        bi2 = Morphology.getWordBaseInfo(var2, None, False, False)
+        bi1 = Morphology.get_word_base_info(var1, None, False, False)
+        bi2 = Morphology.get_word_base_info(var2, None, False, False)
         var = var1
-        if (not bi1.class0_.is_adjective and bi2.class0_.is_adjective): 
+        if (not bi1.class0_.is_adjective0 and bi2.class0_.is_adjective0): 
             var = var2
         if (bi is None): 
             return var
-        return Utils.ifNotNull(Morphology.__m_inner.getWordform(var, MorphClass.ADJECTIVE, bi.gender, bi.case_, bi.number, MorphLang.UNKNOWN, None), var)
+        return Utils.ifNotNull(Morphology.__m_inner.get_wordform(var, MorphClass.ADJECTIVE, bi.gender, bi.case_, bi.number, MorphLang.UNKNOWN, None), var)
     
     # static constructor for class Morphology
     @staticmethod

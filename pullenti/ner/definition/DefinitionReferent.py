@@ -33,43 +33,43 @@ class DefinitionReferent(Referent):
     @property
     def termin(self) -> str:
         """ Термин """
-        return self.getStringValue(DefinitionReferent.ATTR_TERMIN)
+        return self.get_string_value(DefinitionReferent.ATTR_TERMIN)
     
     @property
     def termin_add(self) -> str:
         """ Дополнительный атрибут термина ("как наука", "в широком смысле" ...) """
-        return self.getStringValue(DefinitionReferent.ATTR_TERMIN_ADD)
+        return self.get_string_value(DefinitionReferent.ATTR_TERMIN_ADD)
     
     @property
     def value(self) -> str:
         """ Собственно определение (правая часть) """
-        return self.getStringValue(DefinitionReferent.ATTR_VALUE)
+        return self.get_string_value(DefinitionReferent.ATTR_VALUE)
     
     @property
     def kind(self) -> 'DefinitionKind':
         """ Тип определение """
-        s = self.getStringValue(DefinitionReferent.ATTR_KIND)
+        s = self.get_string_value(DefinitionReferent.ATTR_KIND)
         if (s is None): 
             return DefinitionKind.UNDEFINED
         try: 
             res = Utils.valToEnum(s, DefinitionKind)
             if (isinstance(res, DefinitionKind)): 
                 return Utils.valToEnum(res, DefinitionKind)
-        except Exception as ex1109: 
+        except Exception as ex1111: 
             pass
         return DefinitionKind.UNDEFINED
     @kind.setter
     def kind(self, value_) -> 'DefinitionKind':
-        self.addSlot(DefinitionReferent.ATTR_KIND, Utils.enumToString(value_), True, 0)
+        self.add_slot(DefinitionReferent.ATTR_KIND, Utils.enumToString(value_), True, 0)
         return value_
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
-        misc = self.getStringValue(DefinitionReferent.ATTR_TERMIN_ADD)
+    def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
+        misc = self.get_string_value(DefinitionReferent.ATTR_TERMIN_ADD)
         if (misc is None): 
-            misc = self.getStringValue(DefinitionReferent.ATTR_MISC)
+            misc = self.get_string_value(DefinitionReferent.ATTR_MISC)
         return "[{0}] {1}{2} = {3}".format(Utils.enumToString(self.kind), Utils.ifNotNull(self.termin, "?"), ("" if misc is None else " ({0})".format(misc)), Utils.ifNotNull(self.value, "?"))
     
-    def canBeEquals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
         dr = Utils.asObjectOrNull(obj, DefinitionReferent)
         if (dr is None): 
             return False
@@ -82,7 +82,7 @@ class DefinitionReferent(Referent):
         return True
     
     @staticmethod
-    def _new1105(_arg1 : 'DefinitionKind') -> 'DefinitionReferent':
+    def _new1107(_arg1 : 'DefinitionKind') -> 'DefinitionReferent':
         res = DefinitionReferent()
         res.kind = _arg1
         return res

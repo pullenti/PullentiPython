@@ -9,171 +9,204 @@ class ExplanWordAttr:
     """ Дополнительные характеристики слова """
     
     def __init__(self, val : 'ExplanWordAttr'=None) -> None:
-        self._value = 0
-        self._value = (0)
+        self.value = 0
+        self.value = (0)
         if (val is not None): 
-            self._value = val._value
+            self.value = val.value
     
-    def __getValue(self, i : int) -> bool:
-        return (((((self._value) >> i)) & 1)) != 0
+    def __get_value(self, i : int) -> bool:
+        return (((((self.value) >> i)) & 1)) != 0
     
-    def __setValue(self, i : int, val : bool) -> None:
+    def __set_value(self, i : int, val : bool) -> None:
         if (val): 
-            self._value |= ((1 << i))
+            self.value |= ((1 << i))
         else: 
-            self._value &= (~ ((1 << i)))
+            self.value &= (~ ((1 << i)))
     
     @property
-    def is_undefined(self) -> bool:
+    def is_undefined0(self) -> bool:
         """ Неопределённый тип """
-        return self._value == (0)
-    @is_undefined.setter
-    def is_undefined(self, value) -> bool:
-        self._value = (0)
-        return value
+        return self.value == (0)
+    @is_undefined0.setter
+    def is_undefined0(self, value_) -> bool:
+        self.value = (0)
+        return value_
     
     @property
-    def is_animated(self) -> bool:
+    def is_animated0(self) -> bool:
         """ Одушевлённое """
-        return self.__getValue(0)
-    @is_animated.setter
-    def is_animated(self, value) -> bool:
-        self.__setValue(0, value)
-        return value
+        return self.__get_value(0)
+    @is_animated0.setter
+    def is_animated0(self, value_) -> bool:
+        self.__set_value(0, value_)
+        return value_
     
     @property
-    def is_named(self) -> bool:
+    def is_named0(self) -> bool:
         """ Может иметь собственное имя """
-        return self.__getValue(1)
-    @is_named.setter
-    def is_named(self, value) -> bool:
-        self.__setValue(1, value)
-        return value
+        return self.__get_value(1)
+    @is_named0.setter
+    def is_named0(self, value_) -> bool:
+        self.__set_value(1, value_)
+        return value_
     
     @property
-    def is_numbered(self) -> bool:
+    def is_numbered0(self) -> bool:
         """ Может иметь номер (например, Олимпиада 80) """
-        return self.__getValue(2)
-    @is_numbered.setter
-    def is_numbered(self, value) -> bool:
-        self.__setValue(2, value)
-        return value
+        return self.__get_value(2)
+    @is_numbered0.setter
+    def is_numbered0(self, value_) -> bool:
+        self.__set_value(2, value_)
+        return value_
     
     @property
-    def is_measured(self) -> bool:
+    def is_measured0(self) -> bool:
         """ Может ли иметь числовую характеристику (длина, количество, деньги ...) """
-        return self.__getValue(3)
-    @is_measured.setter
-    def is_measured(self, value) -> bool:
-        self.__setValue(3, value)
-        return value
+        return self.__get_value(3)
+    @is_measured0.setter
+    def is_measured0(self, value_) -> bool:
+        self.__set_value(3, value_)
+        return value_
     
     @property
-    def is_emo_positive(self) -> bool:
+    def is_emo_positive0(self) -> bool:
         """ Позитивная окраска """
-        return self.__getValue(4)
-    @is_emo_positive.setter
-    def is_emo_positive(self, value) -> bool:
-        self.__setValue(4, value)
-        return value
+        return self.__get_value(4)
+    @is_emo_positive0.setter
+    def is_emo_positive0(self, value_) -> bool:
+        self.__set_value(4, value_)
+        return value_
     
     @property
-    def is_emo_negative(self) -> bool:
+    def is_emo_negative0(self) -> bool:
         """ Негативная окраска """
-        return self.__getValue(5)
-    @is_emo_negative.setter
-    def is_emo_negative(self, value) -> bool:
-        self.__setValue(5, value)
-        return value
+        return self.__get_value(5)
+    @is_emo_negative0.setter
+    def is_emo_negative0(self, value_) -> bool:
+        self.__set_value(5, value_)
+        return value_
     
     @property
-    def is_animal(self) -> bool:
+    def is_animal0(self) -> bool:
         """ Это животное, а не человек (для IsAnimated = true) """
-        return self.__getValue(6)
-    @is_animal.setter
-    def is_animal(self, value) -> bool:
-        self.__setValue(6, value)
-        return value
+        return self.__get_value(6)
+    @is_animal0.setter
+    def is_animal0(self, value_) -> bool:
+        self.__set_value(6, value_)
+        return value_
     
     @property
-    def is_can_person_after(self) -> bool:
+    def is_man0(self) -> bool:
+        """ Это человек, а не животное (для IsAnimated = true) """
+        return self.__get_value(7)
+    @is_man0.setter
+    def is_man0(self, value_) -> bool:
+        self.__set_value(7, value_)
+        return value_
+    
+    @property
+    def is_can_person_after0(self) -> bool:
         """ За словом может быть персона в родительном падеже (слуга Хозяина, отец Ивана ...) """
-        return self.__getValue(7)
-    @is_can_person_after.setter
-    def is_can_person_after(self, value) -> bool:
-        self.__setValue(7, value)
-        return value
+        return self.__get_value(8)
+    @is_can_person_after0.setter
+    def is_can_person_after0(self, value_) -> bool:
+        self.__set_value(8, value_)
+        return value_
+    
+    @property
+    def is_space_object0(self) -> bool:
+        """ Пространственный объект """
+        return self.__get_value(9)
+    @is_space_object0.setter
+    def is_space_object0(self, value_) -> bool:
+        self.__set_value(9, value_)
+        return value_
+    
+    @property
+    def is_time_object0(self) -> bool:
+        """ Временной объект """
+        return self.__get_value(10)
+    @is_time_object0.setter
+    def is_time_object0(self, value_) -> bool:
+        self.__set_value(10, value_)
+        return value_
     
     def __str__(self) -> str:
         tmp_str = io.StringIO()
-        if (self.is_animated): 
+        if (self.is_animated0): 
             print("одуш.", end="", file=tmp_str)
-        if (self.is_animal): 
+        if (self.is_animal0): 
             print("животн.", end="", file=tmp_str)
-        if (self.is_named): 
+        if (self.is_man0): 
+            print("чел.", end="", file=tmp_str)
+        if (self.is_space_object0): 
+            print("простр.", end="", file=tmp_str)
+        if (self.is_time_object0): 
+            print("времен.", end="", file=tmp_str)
+        if (self.is_named0): 
             print("именов.", end="", file=tmp_str)
-        if (self.is_numbered): 
+        if (self.is_numbered0): 
             print("нумеруем.", end="", file=tmp_str)
-        if (self.is_measured): 
+        if (self.is_measured0): 
             print("измеряем.", end="", file=tmp_str)
-        if (self.is_emo_positive): 
+        if (self.is_emo_positive0): 
             print("позитив.", end="", file=tmp_str)
-        if (self.is_emo_negative): 
+        if (self.is_emo_negative0): 
             print("негатив.", end="", file=tmp_str)
-        if (self.is_can_person_after): 
+        if (self.is_can_person_after0): 
             print("персона_за_родит.", end="", file=tmp_str)
         return Utils.toStringStringIO(tmp_str)
     
     def equals(self, obj : object) -> bool:
         if (not ((isinstance(obj, ExplanWordAttr)))): 
             return False
-        return self._value == (obj)._value
+        return self.value == (obj).value
     
     def __hash__(self) -> int:
-        return self._value
+        return self.value
     
     def __and__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> 'ExplanWordAttr':
         val1 = 0
         val2 = 0
         if (self is not None): 
-            val1 = self._value
+            val1 = self.value
         if (arg2 is not None): 
-            val2 = arg2._value
-        return ExplanWordAttr._new42(((val1) & (val2)))
+            val2 = arg2.value
+        return ExplanWordAttr._new43(((val1) & (val2)))
     
     def __or__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> 'ExplanWordAttr':
         val1 = 0
         val2 = 0
         if (self is not None): 
-            val1 = self._value
+            val1 = self.value
         if (arg2 is not None): 
-            val2 = arg2._value
-        return ExplanWordAttr._new42(((val1) | (val2)))
+            val2 = arg2.value
+        return ExplanWordAttr._new43(((val1) | (val2)))
     
     def __eq__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> bool:
         val1 = 0
         val2 = 0
         if (self is not None): 
-            val1 = self._value
+            val1 = self.value
         if (arg2 is not None): 
-            val2 = arg2._value
+            val2 = arg2.value
         return val1 == val2
     
     def __ne__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> bool:
         val1 = 0
         val2 = 0
         if (self is not None): 
-            val1 = self._value
+            val1 = self.value
         if (arg2 is not None): 
-            val2 = arg2._value
+            val2 = arg2.value
         return val1 != val2
     
     UNDEFINED = None
     
     @staticmethod
-    def _new42(_arg1 : int) -> 'ExplanWordAttr':
+    def _new43(_arg1 : int) -> 'ExplanWordAttr':
         res = ExplanWordAttr()
-        res._value = _arg1
+        res.value = _arg1
         return res
     
     # static constructor for class ExplanWordAttr

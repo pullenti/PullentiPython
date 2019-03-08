@@ -56,11 +56,11 @@ class MeasureAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[MeasureMeta.IMAGE_ID] = EpNerBankInternalResourceHelper.getBytes("measure.png")
-        res[UnitMeta.IMAGE_ID] = EpNerBankInternalResourceHelper.getBytes("munit.png")
+        res[MeasureMeta.IMAGE_ID] = EpNerBankInternalResourceHelper.get_bytes("measure.png")
+        res[UnitMeta.IMAGE_ID] = EpNerBankInternalResourceHelper.get_bytes("munit.png")
         return res
     
-    def createReferent(self, type0_ : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         if (type0_ == MeasureReferent.OBJ_TYPENAME): 
             return MeasureReferent()
         if (type0_ == UnitReferent.OBJ_TYPENAME): 
@@ -79,7 +79,7 @@ class MeasureAnalyzer(Analyzer):
             stage: 
         
         """
-        ad = kit.getAnalyzerData(self)
+        ad = kit.get_analyzer_data(self)
         addunits = None
         if (kit.ontology is not None): 
             addunits = TerminCollection()
@@ -91,25 +91,25 @@ class MeasureAnalyzer(Analyzer):
                     continue
                 for s in uu.slots: 
                     if (s.type_name == UnitReferent.ATTR_NAME or s.type_name == UnitReferent.ATTR_FULLNAME): 
-                        addunits.add(Termin._new118(Utils.asObjectOrNull(s.value, str), uu))
+                        addunits.add(Termin._new119(Utils.asObjectOrNull(s.value, str), uu))
         t = kit.first_token
-        first_pass3052 = True
+        first_pass3152 = True
         while True:
-            if first_pass3052: first_pass3052 = False
+            if first_pass3152: first_pass3152 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            mt = MeasureToken.tryParseMinimal(t, addunits, False)
+            mt = MeasureToken.try_parse_minimal(t, addunits, False)
             if (mt is None): 
-                mt = MeasureToken.tryParse(t, addunits, True)
+                mt = MeasureToken.try_parse(t, addunits, True, False)
             if (mt is None): 
                 continue
-            rts = mt.createRefenetsTokensWithRegister(ad, True)
+            rts = mt.create_refenets_tokens_with_register(ad, True)
             if (rts is None): 
                 continue
             i = 0
             while i < len(rts): 
                 rt = rts[i]
-                t.kit.embedToken(rt)
+                t.kit.embed_token(rt)
                 t = (rt)
                 j = i + 1
                 while j < len(rts): 
@@ -131,7 +131,7 @@ class MeasureAnalyzer(Analyzer):
                     ok = False
                     for s in uu.slots: 
                         if (s.type_name == UnitReferent.ATTR_NAME or s.type_name == UnitReferent.ATTR_FULLNAME): 
-                            if (u.findSlot(None, s.value, True) is not None): 
+                            if (u.find_slot(None, s.value, True) is not None): 
                                 ok = True
                                 break
                     if (ok): 
@@ -139,22 +139,22 @@ class MeasureAnalyzer(Analyzer):
                         u.ontology_items.append(r)
                         break
     
-    def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        mt = MeasureToken.tryParseMinimal(begin, None, True)
+    def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
+        mt = MeasureToken.try_parse_minimal(begin, None, True)
         if (mt is not None): 
-            rts = mt.createRefenetsTokensWithRegister(None, True)
+            rts = mt.create_refenets_tokens_with_register(None, True)
             if (rts is not None): 
                 return rts[len(rts) - 1]
         return None
     
-    def processOntologyItem(self, begin : 'Token') -> 'ReferentToken':
+    def process_ontology_item(self, begin : 'Token') -> 'ReferentToken':
         if (not ((isinstance(begin, TextToken)))): 
             return None
-        ut = UnitToken.tryParse(begin, None, None)
+        ut = UnitToken.try_parse(begin, None, None, False)
         if (ut is not None): 
-            return ReferentToken(ut.createReferentWithRegister(None), ut.begin_token, ut.end_token)
+            return ReferentToken(ut.create_referent_with_register(None), ut.begin_token, ut.end_token)
         u = UnitReferent()
-        u.addSlot(UnitReferent.ATTR_NAME, begin.getSourceText(), False, 0)
+        u.add_slot(UnitReferent.ATTR_NAME, begin.get_source_text(), False, 0)
         return ReferentToken(u, begin, begin)
     
     __m_initialized = False
@@ -173,7 +173,7 @@ class MeasureAnalyzer(Analyzer):
             UnitsHelper.initialize()
             NumbersWithUnitToken._initialize()
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False
-            ProcessorService.registerAnalyzer(MeasureAnalyzer())
+            ProcessorService.register_analyzer(MeasureAnalyzer())
     
     # static constructor for class MeasureAnalyzer
     @staticmethod

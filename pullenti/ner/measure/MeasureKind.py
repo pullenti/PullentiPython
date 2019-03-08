@@ -8,11 +8,17 @@ class MeasureKind(IntEnum):
     """ Что измеряется этой величиной """
     UNDEFINED = 0
     TIME = 1
+    """ Время """
     LENGTH = 2
+    """ Длина """
     AREA = 3
+    """ Площадь """
     VOLUME = 4
+    """ Объём """
     WEIGHT = 5
+    """ Вес """
     SPEED = 6
+    """ Скорость """
     
     @classmethod
     def has_value(cls, value):

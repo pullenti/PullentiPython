@@ -17,7 +17,7 @@ class MorphToken:
         """ Число символов (нормализованного фрагмента = Term.Length) """
         return (0 if self.term is None else len(self.term))
     
-    def getSourceText(self, text : str) -> str:
+    def get_source_text(self, text : str) -> str:
         """ Извлечь фрагмент из исходного текста, соответствующий токену
         
         Args:
@@ -37,31 +37,31 @@ class MorphToken:
         if (self.word_forms is not None and len(self.word_forms) > 0): 
             if (len(self.word_forms) == 1): 
                 res = (Utils.ifNotNull(self.word_forms[0].normal_full, self.word_forms[0].normal_case))
-            if (res is None and not self.char_info.is_all_lower): 
+            if (res is None and not self.char_info.is_all_lower0): 
                 for m in self.word_forms: 
-                    if (m.class0_.is_proper_surname): 
+                    if (m.class0_.is_proper_surname0): 
                         s = Utils.ifNotNull(m.normal_full, Utils.ifNotNull(m.normal_case, ""))
-                        if (LanguageHelper.endsWithEx(s, "ОВ", "ЕВ", None, None)): 
+                        if (LanguageHelper.ends_with_ex(s, "ОВ", "ЕВ", None, None)): 
                             res = s
                             break
-                    elif (m.class0_.is_proper_name and m.is_in_dictionary): 
+                    elif (m.class0_.is_proper_name0 and m.is_in_dictionary0): 
                         return m.normal_case
             if (res is None): 
                 best = None
                 for m in self.word_forms: 
                     if (best is None): 
                         best = m
-                    elif (self.__compareForms(best, m) > 0): 
+                    elif (self.__compare_forms(best, m) > 0): 
                         best = m
                 res = (Utils.ifNotNull(best.normal_full, best.normal_case))
         if (res is not None): 
-            if (LanguageHelper.endsWithEx(res, "АНЫЙ", "ЕНЫЙ", None, None)): 
+            if (LanguageHelper.ends_with_ex(res, "АНЫЙ", "ЕНЫЙ", None, None)): 
                 res = (res[0:0+len(res) - 3] + "ННЫЙ")
-            elif (LanguageHelper.endsWith(res, "ЙСЯ")): 
+            elif (LanguageHelper.ends_with(res, "ЙСЯ")): 
                 res = res[0:0+len(res) - 2]
-            elif (LanguageHelper.endsWith(res, "АНИЙ") and res == self.term): 
+            elif (LanguageHelper.ends_with(res, "АНИЙ") and res == self.term): 
                 for wf in self.word_forms: 
-                    if (wf.is_in_dictionary): 
+                    if (wf.is_in_dictionary0): 
                         return res
                 return res[0:0+len(res) - 1] + "Е"
             return res
@@ -71,7 +71,7 @@ class MorphToken:
         self.__m_lemma = value
         return value
     
-    def __compareForms(self, x : 'MorphWordForm', y : 'MorphWordForm') -> int:
+    def __compare_forms(self, x : 'MorphWordForm', y : 'MorphWordForm') -> int:
         vx = Utils.ifNotNull(x.normal_full, x.normal_case)
         vy = Utils.ifNotNull(y.normal_full, y.normal_case)
         if (vx == vy): 
@@ -82,13 +82,13 @@ class MorphToken:
             return -1
         lastx = vx[len(vx) - 1]
         lasty = vy[len(vy) - 1]
-        if (x.class0_.is_proper_surname and not self.char_info.is_all_lower): 
-            if (LanguageHelper.endsWithEx(vx, "ОВ", "ЕВ", "ИН", None)): 
-                if (not y.class0_.is_proper_surname): 
+        if (x.class0_.is_proper_surname0 and not self.char_info.is_all_lower0): 
+            if (LanguageHelper.ends_with_ex(vx, "ОВ", "ЕВ", "ИН", None)): 
+                if (not y.class0_.is_proper_surname0): 
                     return -1
-        if (y.class0_.is_proper_surname and not self.char_info.is_all_lower): 
-            if (LanguageHelper.endsWithEx(vy, "ОВ", "ЕВ", "ИН", None)): 
-                if (not x.class0_.is_proper_surname): 
+        if (y.class0_.is_proper_surname0 and not self.char_info.is_all_lower0): 
+            if (LanguageHelper.ends_with_ex(vy, "ОВ", "ЕВ", "ИН", None)): 
+                if (not x.class0_.is_proper_surname0): 
                     return 1
                 if (len(vx) > len(vy)): 
                     return -1
@@ -96,16 +96,16 @@ class MorphToken:
                     return 1
                 return 0
         if (x.class0_ == y.class0_): 
-            if (x.class0_.is_adjective): 
+            if (x.class0_.is_adjective0): 
                 if (lastx == 'Й' and lasty != 'Й'): 
                     return -1
                 if (lastx != 'Й' and lasty == 'Й'): 
                     return 1
-                if (not LanguageHelper.endsWith(vx, "ОЙ") and LanguageHelper.endsWith(vy, "ОЙ")): 
+                if (not LanguageHelper.ends_with(vx, "ОЙ") and LanguageHelper.ends_with(vy, "ОЙ")): 
                     return -1
-                if (LanguageHelper.endsWith(vx, "ОЙ") and not LanguageHelper.endsWith(vy, "ОЙ")): 
+                if (LanguageHelper.ends_with(vx, "ОЙ") and not LanguageHelper.ends_with(vy, "ОЙ")): 
                     return 1
-            if (x.class0_.is_noun): 
+            if (x.class0_.is_noun0): 
                 if (x.number == MorphNumber.SINGULAR and y.number == MorphNumber.PLURAL and len(vx) <= (len(vy) + 1)): 
                     return -1
                 if (x.number == MorphNumber.PLURAL and y.number == MorphNumber.SINGULAR and len(vx) >= (len(vy) - 1)): 
@@ -115,36 +115,36 @@ class MorphToken:
             if (len(vx) > len(vy)): 
                 return 1
             return 0
-        if (x.class0_.is_adverb): 
+        if (x.class0_.is_adverb0): 
             return 1
-        if (x.class0_.is_noun and x.is_in_dictionary): 
-            if (y.class0_.is_adjective and y.is_in_dictionary): 
+        if (x.class0_.is_noun0 and x.is_in_dictionary0): 
+            if (y.class0_.is_adjective0 and y.is_in_dictionary0): 
                 if (not "к.ф." in y.misc.attrs): 
                     return 1
             return -1
-        if (x.class0_.is_adjective): 
-            if (not x.is_in_dictionary and y.class0_.is_noun and y.is_in_dictionary): 
+        if (x.class0_.is_adjective0): 
+            if (not x.is_in_dictionary0 and y.class0_.is_noun0 and y.is_in_dictionary0): 
                 return 1
             return -1
-        if (x.class0_.is_verb): 
-            if (y.class0_.is_noun or y.class0_.is_adjective or y.class0_.is_preposition): 
+        if (x.class0_.is_verb0): 
+            if (y.class0_.is_noun0 or y.class0_.is_adjective0 or y.class0_.is_preposition0): 
                 return 1
             return -1
-        if (y.class0_.is_adverb): 
+        if (y.class0_.is_adverb0): 
             return -1
-        if (y.class0_.is_noun and y.is_in_dictionary): 
+        if (y.class0_.is_noun0 and y.is_in_dictionary0): 
             return 1
-        if (y.class0_.is_adjective): 
-            if (((x.class0_.is_noun or x.class0_.is_proper_secname)) and x.is_in_dictionary): 
+        if (y.class0_.is_adjective0): 
+            if (((x.class0_.is_noun0 or x.class0_.is_proper_secname0)) and x.is_in_dictionary0): 
                 return -1
-            if (x.class0_.is_noun and not y.is_in_dictionary): 
+            if (x.class0_.is_noun0 and not y.is_in_dictionary0): 
                 if (len(vx) < len(vy)): 
                     return -1
             return 1
-        if (y.class0_.is_verb): 
-            if (x.class0_.is_noun or x.class0_.is_adjective or x.class0_.is_preposition): 
+        if (y.class0_.is_verb0): 
+            if (x.class0_.is_noun0 or x.class0_.is_adjective0 or x.class0_.is_preposition0): 
                 return -1
-            if (x.class0_.is_proper): 
+            if (x.class0_.is_proper0): 
                 return -1
             return 1
         if (len(vx) < len(vy)): 
@@ -183,11 +183,11 @@ class MorphToken:
         if (Utils.isNullOrEmpty(self.term)): 
             return "Null"
         str0_ = self.term
-        if (self.char_info.is_all_lower): 
+        if (self.char_info.is_all_lower0): 
             str0_ = str0_.lower()
-        elif (self.char_info.is_capital_upper and len(str0_) > 0): 
+        elif (self.char_info.is_capital_upper0 and len(str0_) > 0): 
             str0_ = "{0}{1}".format(self.term[0], self.term[1:].lower())
-        elif (self.char_info.is_last_lower): 
+        elif (self.char_info.is_last_lower0): 
             str0_ = "{0}{1}".format(self.term[0:0+len(self.term) - 1], self.term[len(self.term) - 1:].lower())
         if (self.word_forms is None): 
             return str0_

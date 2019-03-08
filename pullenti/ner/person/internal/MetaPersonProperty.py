@@ -13,11 +13,11 @@ class MetaPersonProperty(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
         MetaPersonProperty._global_meta = MetaPersonProperty()
-        MetaPersonProperty._global_meta.addFeature(PersonPropertyReferent.ATTR_NAME, "Наименование", 1, 1)
-        MetaPersonProperty._global_meta.addFeature(PersonPropertyReferent.ATTR_HIGHER, "Вышестоящее свойство", 0, 0)
-        MetaPersonProperty._global_meta.addFeature(PersonPropertyReferent.ATTR_ATTR, "Атрибут", 0, 0)
-        MetaPersonProperty._global_meta.addFeature(PersonPropertyReferent.ATTR_REF, "Ссылка на объект", 0, 1)
-        MetaPersonProperty._global_meta.addFeature(Referent.ATTR_GENERAL, "Обобщающее свойство", 1, 0)
+        MetaPersonProperty._global_meta.add_feature(PersonPropertyReferent.ATTR_NAME, "Наименование", 1, 1)
+        MetaPersonProperty._global_meta.add_feature(PersonPropertyReferent.ATTR_HIGHER, "Вышестоящее свойство", 0, 0)
+        MetaPersonProperty._global_meta.add_feature(PersonPropertyReferent.ATTR_ATTR, "Атрибут", 0, 0)
+        MetaPersonProperty._global_meta.add_feature(PersonPropertyReferent.ATTR_REF, "Ссылка на объект", 0, 1)
+        MetaPersonProperty._global_meta.add_feature(Referent.ATTR_GENERAL, "Обобщающее свойство", 1, 0)
     
     @property
     def name(self) -> str:
@@ -40,7 +40,7 @@ class MetaPersonProperty(ReferentClass):
     
     PERSON_PROP_NATION_ID = "nationality"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
         ki = PersonPropertyKind.UNDEFINED
         if (isinstance(obj, PersonPropertyReferent)): 

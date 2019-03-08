@@ -51,7 +51,7 @@ class SourceOfAnalysis:
             return
         self.text = txt
     
-    def __doCrLfCorrection(self, txt : str) -> str:
+    def __do_cr_lf_correction(self, txt : str) -> str:
         """ Это анализ случаев принудительно отформатированного текста
         
         Args:
@@ -60,9 +60,9 @@ class SourceOfAnalysis:
         cou = 0
         total_len = 0
         i = 0
-        first_pass3178 = True
+        first_pass3280 = True
         while True:
-            if first_pass3178: first_pass3178 = False
+            if first_pass3280: first_pass3280 = False
             else: i += 1
             if (not (i < len(txt))): break
             ch = txt[i]
@@ -152,7 +152,7 @@ class SourceOfAnalysis:
         return Utils.toStringStringIO(tmp)
     
     @staticmethod
-    def __doTransliteralCorrection(txt : io.StringIO, info : io.StringIO) -> int:
+    def __do_transliteral_correction(txt : io.StringIO, info : io.StringIO) -> int:
         """ Произвести транслитеральную коррекцию
         
         Args:
@@ -213,11 +213,11 @@ class SourceOfAnalysis:
     __m_rus_chars = "АВЕКМНОРСТУХаекморстух"
     
     @staticmethod
-    def __calcTransliteralStatistics(txt : str, info : io.StringIO) -> int:
+    def __calc_transliteral_statistics(txt : str, info : io.StringIO) -> int:
         if (txt is None): 
             return 0
         tmp = Utils.newStringIO(txt)
-        return SourceOfAnalysis.__doTransliteralCorrection(tmp, info)
+        return SourceOfAnalysis.__do_transliteral_correction(tmp, info)
     
     @property
     def __total_transliteral_substitutions(self) -> int:
@@ -242,7 +242,7 @@ class SourceOfAnalysis:
             return res
         return "Position + Length > Text.Length"
     
-    def calcWhitespaceDistanceBetweenPositions(self, pos_from : int, pos_to : int) -> int:
+    def calc_whitespace_distance_between_positions(self, pos_from : int, pos_to : int) -> int:
         """ Вычислить расстояние в символах между соседними элементами
         
         Args:
@@ -270,7 +270,7 @@ class SourceOfAnalysis:
         return res
     
     def serialize(self, stream : io.IOBase) -> None:
-        SerializerHelper.serializeString(stream, self.text)
+        SerializerHelper.serialize_string(stream, self.text)
     
     def deserialize(self, stream : io.IOBase) -> None:
-        self.text = SerializerHelper.deserializeString(stream)
+        self.text = SerializerHelper.deserialize_string(stream)

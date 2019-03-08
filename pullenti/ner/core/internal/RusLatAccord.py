@@ -36,7 +36,7 @@ class RusLatAccord:
     __m_accords = None
     
     @staticmethod
-    def __getAccords() -> typing.List['RusLatAccord']:
+    def __get_accords() -> typing.List['RusLatAccord']:
         if (RusLatAccord.__m_accords is not None): 
             return RusLatAccord.__m_accords
         RusLatAccord.__m_accords = list()
@@ -101,7 +101,7 @@ class RusLatAccord:
         RusLatAccord.__m_accords.append(RusLatAccord("ь", ""))
         RusLatAccord.__m_accords.append(RusLatAccord("", "gh"))
         RusLatAccord.__m_accords.append(RusLatAccord("", "h"))
-        RusLatAccord.__m_accords.append(RusLatAccord._new493("", "e", True))
+        RusLatAccord.__m_accords.append(RusLatAccord._new530("", "e", True))
         RusLatAccord.__m_accords.append(RusLatAccord("еи", "ei"))
         RusLatAccord.__m_accords.append(RusLatAccord("аи", "ai"))
         RusLatAccord.__m_accords.append(RusLatAccord("ай", "i"))
@@ -117,7 +117,7 @@ class RusLatAccord:
         return RusLatAccord.__m_accords
     
     @staticmethod
-    def __isPref(str0_ : str, i : int, pref : str) -> bool:
+    def __is_pref(str0_ : str, i : int, pref : str) -> bool:
         if ((len(pref) + i) > len(str0_)): 
             return False
         j = 0
@@ -128,10 +128,10 @@ class RusLatAccord:
         return True
     
     @staticmethod
-    def __getVarsPref(rus_ : str, ri : int, lat_ : str, li : int) -> typing.List['RusLatAccord']:
+    def __get_vars_pref(rus_ : str, ri : int, lat_ : str, li : int) -> typing.List['RusLatAccord']:
         res = None
-        for a in RusLatAccord.__getAccords(): 
-            if (RusLatAccord.__isPref(rus_, ri, a.rus) and RusLatAccord.__isPref(lat_, li, a.lat) and a.rus_to_lat): 
+        for a in RusLatAccord.__get_accords(): 
+            if (RusLatAccord.__is_pref(rus_, ri, a.rus) and RusLatAccord.__is_pref(lat_, li, a.lat) and a.rus_to_lat): 
                 if (a.on_tail): 
                     if ((ri + len(a.rus)) < len(rus_)): 
                         continue
@@ -143,7 +143,7 @@ class RusLatAccord:
         return res
     
     @staticmethod
-    def getVariants(rus_or_lat : str) -> typing.List[str]:
+    def get_variants(rus_or_lat : str) -> typing.List[str]:
         """ Сформировать всевозможные варианты написаний на другой раскладке
         
         Args:
@@ -154,13 +154,13 @@ class RusLatAccord:
         if (Utils.isNullOrEmpty(rus_or_lat)): 
             return res
         rus_or_lat = rus_or_lat.upper()
-        is_rus = LanguageHelper.isCyrillicChar(rus_or_lat[0])
+        is_rus = LanguageHelper.is_cyrillic_char(rus_or_lat[0])
         stack = list()
         i = 0
         while i < len(rus_or_lat): 
             li = list()
             maxlen = 0
-            for a in RusLatAccord.__getAccords(): 
+            for a in RusLatAccord.__get_accords(): 
                 pref = None
                 if (is_rus and len(a.rus) > 0): 
                     pref = a.rus
@@ -170,7 +170,7 @@ class RusLatAccord:
                     continue
                 if (len(pref) < maxlen): 
                     continue
-                if (not RusLatAccord.__isPref(rus_or_lat, i, pref)): 
+                if (not RusLatAccord.__is_pref(rus_or_lat, i, pref)): 
                     continue
                 if (a.on_tail): 
                     if ((len(pref) + i) < len(rus_or_lat)): 
@@ -207,7 +207,7 @@ class RusLatAccord:
                         if (i == 0): 
                             ok = False
                             break
-                        if (not LanguageHelper.isCyrillicVowel(Utils.getCharAtStringIO(tmp, i - 1))): 
+                        if (not LanguageHelper.is_cyrillic_vowel(Utils.getCharAtStringIO(tmp, i - 1))): 
                             ok = False
                             break
                     i += 1
@@ -225,12 +225,12 @@ class RusLatAccord:
         return res
     
     @staticmethod
-    def canBeEquals(rus_ : str, lat_ : str) -> bool:
+    def can_be_equals(rus_ : str, lat_ : str) -> bool:
         if (Utils.isNullOrEmpty(rus_) or Utils.isNullOrEmpty(lat_)): 
             return False
         rus_ = rus_.upper()
         lat_ = lat_.upper()
-        vs = RusLatAccord.__getVarsPref(rus_, 0, lat_, 0)
+        vs = RusLatAccord.__get_vars_pref(rus_, 0, lat_, 0)
         if (vs is None): 
             return False
         stack = list()
@@ -245,7 +245,7 @@ class RusLatAccord:
                 li += len(s[0].lat)
             if (ri >= len(rus_) and li >= len(lat_)): 
                 return True
-            vs = RusLatAccord.__getVarsPref(rus_, ri, lat_, li)
+            vs = RusLatAccord.__get_vars_pref(rus_, ri, lat_, li)
             if (vs is not None): 
                 stack.insert(0, vs)
                 continue
@@ -257,7 +257,7 @@ class RusLatAccord:
         return False
     
     @staticmethod
-    def findAccordsRusToLat(txt : str, pos : int, res : typing.List[str]) -> int:
+    def find_accords_rus_to_lat(txt : str, pos : int, res : typing.List[str]) -> int:
         """ Вернёт длину привязки
         
         Args:
@@ -272,13 +272,13 @@ class RusLatAccord:
         ok = False
         if ((pos + 1) < len(txt)): 
             ch1 = txt[pos + 1]
-            for a in RusLatAccord.__getAccords(): 
+            for a in RusLatAccord.__get_accords(): 
                 if ((a.rus_to_lat and len(a.rus) == 2 and a.rus[0] == ch0) and a.rus[1] == ch1): 
                     res.append(a.lat)
                     ok = True
             if (ok): 
                 return 2
-        for a in RusLatAccord.__getAccords(): 
+        for a in RusLatAccord.__get_accords(): 
             if (a.rus_to_lat and len(a.rus) == 1 and a.rus[0] == ch0): 
                 res.append(a.lat)
                 ok = True
@@ -287,11 +287,11 @@ class RusLatAccord:
         return 0
     
     @staticmethod
-    def findAccordsLatToRus(txt : str, pos : int, res : typing.List[str]) -> int:
+    def find_accords_lat_to_rus(txt : str, pos : int, res : typing.List[str]) -> int:
         if (pos >= len(txt)): 
             return 0
         max_len = 0
-        for a in RusLatAccord.__getAccords(): 
+        for a in RusLatAccord.__get_accords(): 
             if (a.lat_to_rus and len(a.lat) >= max_len): 
                 i = 0
                 while i < len(a.lat): 
@@ -309,7 +309,7 @@ class RusLatAccord:
         return max_len
     
     @staticmethod
-    def _new493(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'RusLatAccord':
+    def _new530(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'RusLatAccord':
         res = RusLatAccord(_arg1, _arg2)
         res.on_tail = _arg3
         return res

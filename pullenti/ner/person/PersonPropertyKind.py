@@ -5,13 +5,18 @@
 from enum import IntEnum
 
 class PersonPropertyKind(IntEnum):
-    """ Типы свойств """
+    """ Типы свойств персон """
     UNDEFINED = 0
     BOSS = 1
+    """ Начальник """
     KING = 2
+    """ Вельможные и духовные особы """
     KIN = 3
+    """ Родственники """
     MILITARYRANK = 4
+    """ Воинское звание """
     NATIONALITY = 5
+    """ Национальность """
     
     @classmethod
     def has_value(cls, value):

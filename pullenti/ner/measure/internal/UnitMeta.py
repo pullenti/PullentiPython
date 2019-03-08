@@ -11,11 +11,12 @@ class UnitMeta(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.measure.UnitReferent import UnitReferent
         UnitMeta.GLOBAL_META = UnitMeta()
-        UnitMeta.GLOBAL_META.addFeature(UnitReferent.ATTR_NAME, "Краткое наименование", 1, 0)
-        UnitMeta.GLOBAL_META.addFeature(UnitReferent.ATTR_FULLNAME, "Полное наименование", 1, 0)
-        UnitMeta.GLOBAL_META.addFeature(UnitReferent.ATTR_POW, "Степень", 0, 1)
-        UnitMeta.GLOBAL_META.addFeature(UnitReferent.ATTR_BASEFACTOR, "Мультипликатор для базовой единицы", 0, 1)
-        UnitMeta.GLOBAL_META.addFeature(UnitReferent.ATTR_BASEUNIT, "Базовая единица", 0, 1)
+        UnitMeta.GLOBAL_META.add_feature(UnitReferent.ATTR_NAME, "Краткое наименование", 1, 0)
+        UnitMeta.GLOBAL_META.add_feature(UnitReferent.ATTR_FULLNAME, "Полное наименование", 1, 0)
+        UnitMeta.GLOBAL_META.add_feature(UnitReferent.ATTR_POW, "Степень", 0, 1)
+        UnitMeta.GLOBAL_META.add_feature(UnitReferent.ATTR_BASEFACTOR, "Мультипликатор для базовой единицы", 0, 1)
+        UnitMeta.GLOBAL_META.add_feature(UnitReferent.ATTR_BASEUNIT, "Базовая единица", 0, 1)
+        UnitMeta.GLOBAL_META.add_feature(UnitReferent.ATTR_UNKNOWN, "Неизвестная метрика", 0, 1)
     
     @property
     def name(self) -> str:
@@ -28,7 +29,7 @@ class UnitMeta(ReferentClass):
     
     IMAGE_ID = "munit"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         return UnitMeta.IMAGE_ID
     
     GLOBAL_META = None

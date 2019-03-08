@@ -4,20 +4,19 @@
 
 from enum import IntEnum
 
-class ChatType(IntEnum):
-    """ Типы диалоговых элементов """
+class NextModelQuestion(IntEnum):
+    """ Основные вопросы модели управления """
     UNDEFINED = 0
-    THANKS = 1
-    MISC = 2
-    HELLO = 3
-    BYE = 4
-    ACCEPT = 5
-    CANCEL = 6
-    BUSY = 7
-    VERB = 8
-    LATER = 9
-    DATE = 10
-    REPEAT = 11
+    WHERE = 1
+    """ Где """
+    WHEREFROM = 2
+    """ Откуда """
+    WHERETO = 4
+    """ Куда """
+    WHEN = 8
+    """ Когда """
+    WHATTODO = 0x10
+    """ Что делать (инфинитив за группой) """
     
     @classmethod
     def has_value(cls, value):

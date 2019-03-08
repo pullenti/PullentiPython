@@ -14,81 +14,81 @@ class MorphLang:
         if (lng is not None): 
             self.value = lng.value
     
-    def __getValue(self, i : int) -> bool:
+    def __get_value(self, i : int) -> bool:
         return (((((self.value) >> i)) & 1)) != 0
     
-    def __setValue(self, i : int, val : bool) -> None:
+    def __set_value(self, i : int, val : bool) -> None:
         if (val): 
             self.value |= ((1 << i))
         else: 
             self.value &= (~ ((1 << i)))
     
     @property
-    def is_undefined(self) -> bool:
+    def is_undefined0(self) -> bool:
         """ Неопределённый язык """
         return self.value == (0)
-    @is_undefined.setter
-    def is_undefined(self, value_) -> bool:
+    @is_undefined0.setter
+    def is_undefined0(self, value_) -> bool:
         self.value = (0)
         return value_
     
     @property
-    def is_ru(self) -> bool:
+    def is_ru0(self) -> bool:
         """ Русский язык """
-        return self.__getValue(0)
-    @is_ru.setter
-    def is_ru(self, value_) -> bool:
-        self.__setValue(0, value_)
+        return self.__get_value(0)
+    @is_ru0.setter
+    def is_ru0(self, value_) -> bool:
+        self.__set_value(0, value_)
         return value_
     
     @property
-    def is_ua(self) -> bool:
+    def is_ua0(self) -> bool:
         """ Украинский язык """
-        return self.__getValue(1)
-    @is_ua.setter
-    def is_ua(self, value_) -> bool:
-        self.__setValue(1, value_)
+        return self.__get_value(1)
+    @is_ua0.setter
+    def is_ua0(self, value_) -> bool:
+        self.__set_value(1, value_)
         return value_
     
     @property
-    def is_by(self) -> bool:
+    def is_by0(self) -> bool:
         """ Белорусский язык """
-        return self.__getValue(2)
-    @is_by.setter
-    def is_by(self, value_) -> bool:
-        self.__setValue(2, value_)
+        return self.__get_value(2)
+    @is_by0.setter
+    def is_by0(self, value_) -> bool:
+        self.__set_value(2, value_)
         return value_
     
     @property
-    def is_cyrillic(self) -> bool:
+    def is_cyrillic0(self) -> bool:
         """ Русский, украинский, белорусский или казахский язык """
-        return (self.is_ru | self.is_ua | self.is_by) | self.is_kz
+        return (self.is_ru0 | self.is_ua0 | self.is_by0) | self.is_kz0
     
     @property
-    def is_en(self) -> bool:
+    def is_en0(self) -> bool:
         """ Английский язык """
-        return self.__getValue(3)
-    @is_en.setter
-    def is_en(self, value_) -> bool:
-        self.__setValue(3, value_)
+        return self.__get_value(3)
+    @is_en0.setter
+    def is_en0(self, value_) -> bool:
+        self.__set_value(3, value_)
         return value_
     
     @property
-    def is_it(self) -> bool:
+    def is_it0(self) -> bool:
         """ Итальянский язык """
-        return self.__getValue(4)
-    @is_it.setter
-    def is_it(self, value_) -> bool:
-        self.__setValue(4, value_)
+        return self.__get_value(4)
+    @is_it0.setter
+    def is_it0(self, value_) -> bool:
+        self.__set_value(4, value_)
         return value_
     
     @property
-    def is_kz(self) -> bool:
+    def is_kz0(self) -> bool:
         """ Казахский язык """
-        return self.__getValue(5)
-    @is_kz.setter
-    def is_kz(self, value_) -> bool:
-        self.__setValue(5, value_)
+        return self.__get_value(5)
+    @is_kz0.setter
+    def is_kz0(self, value_) -> bool:
+        self.__set_value(5, value_)
         return value_
     
     __m_names = None
@@ -97,7 +97,7 @@ class MorphLang:
         tmp_str = io.StringIO()
         i = 0
         while i < len(MorphLang.__m_names): 
-            if (self.__getValue(i)): 
+            if (self.__get_value(i)): 
                 if (tmp_str.tell() > 0): 
                     print(";", end="", file=tmp_str)
                 print(MorphLang.__m_names[i], end="", file=tmp_str)
@@ -113,7 +113,7 @@ class MorphLang:
         return self.value
     
     @staticmethod
-    def tryParse(str0_ : str, lang : 'MorphLang') -> bool:
+    def try_parse(str0_ : str, lang : 'MorphLang') -> bool:
         """ Преобразовать из строки
         
         Args:
@@ -139,7 +139,7 @@ class MorphLang:
             if (i >= len(str0_)): 
                 break
             str0_ = str0_[i:]
-        if (lang.value.is_undefined): 
+        if (lang.value.is_undefined0): 
             return False
         return True
     
@@ -150,7 +150,7 @@ class MorphLang:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphLang._new6(((val1) & (val2)))
+        return MorphLang._new5(((val1) & (val2)))
     
     def __or__(self : 'MorphLang', arg2 : 'MorphLang') -> 'MorphLang':
         val1 = 0
@@ -159,7 +159,7 @@ class MorphLang:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphLang._new6(((val1) | (val2)))
+        return MorphLang._new5(((val1) | (val2)))
     
     def __eq__(self : 'MorphLang', arg2 : 'MorphLang') -> bool:
         val1 = 0
@@ -194,45 +194,45 @@ class MorphLang:
     KZ = None
     
     @staticmethod
-    def _new6(_arg1 : int) -> 'MorphLang':
+    def _new5(_arg1 : int) -> 'MorphLang':
         res = MorphLang()
         res.value = _arg1
         return res
     
     @staticmethod
-    def _new77(_arg1 : bool) -> 'MorphLang':
-        res = MorphLang()
-        res.is_ru = _arg1
-        return res
-    
-    @staticmethod
     def _new78(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
-        res.is_ua = _arg1
+        res.is_ru0 = _arg1
         return res
     
     @staticmethod
     def _new79(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
-        res.is_by = _arg1
+        res.is_ua0 = _arg1
         return res
     
     @staticmethod
     def _new80(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
-        res.is_en = _arg1
+        res.is_by0 = _arg1
         return res
     
     @staticmethod
     def _new81(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
-        res.is_it = _arg1
+        res.is_en0 = _arg1
         return res
     
     @staticmethod
     def _new82(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
-        res.is_kz = _arg1
+        res.is_it0 = _arg1
+        return res
+    
+    @staticmethod
+    def _new83(_arg1 : bool) -> 'MorphLang':
+        res = MorphLang()
+        res.is_kz0 = _arg1
         return res
     
     # static constructor for class MorphLang
@@ -240,11 +240,11 @@ class MorphLang:
     def _static_ctor():
         MorphLang.__m_names = ["RU", "UA", "BY", "EN", "IT", "KZ"]
         MorphLang.UNKNOWN = MorphLang()
-        MorphLang.RU = MorphLang._new77(True)
-        MorphLang.UA = MorphLang._new78(True)
-        MorphLang.BY = MorphLang._new79(True)
-        MorphLang.EN = MorphLang._new80(True)
-        MorphLang.IT = MorphLang._new81(True)
-        MorphLang.KZ = MorphLang._new82(True)
+        MorphLang.RU = MorphLang._new78(True)
+        MorphLang.UA = MorphLang._new79(True)
+        MorphLang.BY = MorphLang._new80(True)
+        MorphLang.EN = MorphLang._new81(True)
+        MorphLang.IT = MorphLang._new82(True)
+        MorphLang.KZ = MorphLang._new83(True)
 
 MorphLang._static_ctor()

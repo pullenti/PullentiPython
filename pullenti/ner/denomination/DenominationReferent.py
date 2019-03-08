@@ -30,25 +30,25 @@ class DenominationReferent(Referent):
     @property
     def value(self) -> str:
         """ Значение (одно или несколько) """
-        return self.getStringValue(DenominationReferent.ATTR_VALUE)
+        return self.get_string_value(DenominationReferent.ATTR_VALUE)
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
+    def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         return Utils.ifNotNull(self.value, "?")
     
-    def _addValue(self, begin : 'Token', end : 'Token') -> None:
+    def _add_value(self, begin : 'Token', end : 'Token') -> None:
         tmp = io.StringIO()
         t = begin
-        first_pass2902 = True
+        first_pass2995 = True
         while True:
-            if first_pass2902: first_pass2902 = False
+            if first_pass2995: first_pass2995 = False
             else: t = t.next0_
             if (not (t is not None and t.previous != end)): break
             if (isinstance(t, NumberToken)): 
-                print(t.getSourceText(), end="", file=tmp)
+                print(t.get_source_text(), end="", file=tmp)
                 continue
             if (isinstance(t, TextToken)): 
                 s = (t).term
-                if (t.isCharOf("-\\/")): 
+                if (t.is_char_of("-\\/")): 
                     s = "-"
                 print(s, end="", file=tmp)
         i = 0
@@ -62,10 +62,10 @@ class DenominationReferent(Referent):
                     elif (not str.isdigit(ch0) and str.isdigit(ch1)): 
                         Utils.removeStringIO(tmp, i, 1)
             i += 1
-        self.addSlot(DenominationReferent.ATTR_VALUE, Utils.toStringStringIO(tmp), False, 0)
+        self.add_slot(DenominationReferent.ATTR_VALUE, Utils.toStringStringIO(tmp), False, 0)
         self.__m_names = (None)
     
-    def canBeEquals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
         dr = Utils.asObjectOrNull(obj, DenominationReferent)
         if (dr is None): 
             return False
@@ -100,7 +100,7 @@ class DenominationReferent(Referent):
                 if (i > i0): 
                     vars0_ = list()
                     p = nam[i0:i0+i - i0]
-                    DenominationReferent.__addVars(p, vars0_)
+                    DenominationReferent.__add_vars(p, vars0_)
                     items.append(vars0_)
                     if (ty == 1 and ty0 == 2): 
                         vars0_ = list()
@@ -141,16 +141,16 @@ class DenominationReferent(Referent):
         return self.__m_names
     
     @staticmethod
-    def __addVars(str0_ : str, vars0_ : typing.List[str]) -> None:
+    def __add_vars(str0_ : str, vars0_ : typing.List[str]) -> None:
         vars0_.append(str0_)
         for k in range(2):
             tmp = io.StringIO()
             i = 0
             while i < len(str0_): 
-                wrapv1110 = RefOutArgWrapper(None)
-                inoutres1111 = Utils.tryGetValue(DenominationReferent.__m_var_chars, str0_[i], wrapv1110)
-                v = wrapv1110.value
-                if (not inoutres1111): 
+                wrapv1112 = RefOutArgWrapper(None)
+                inoutres1113 = Utils.tryGetValue(DenominationReferent.__m_var_chars, str0_[i], wrapv1112)
+                v = wrapv1112.value
+                if (not inoutres1113): 
                     break
                 if ((len(v) < 2) or v[k] == '-'): 
                     break
@@ -163,7 +163,7 @@ class DenominationReferent(Referent):
     
     __m_var_chars = None
     
-    def createOntologyItem(self) -> 'IntOntologyItem':
+    def create_ontology_item(self) -> 'IntOntologyItem':
         oi = IntOntologyItem(self)
         for v in self.__name_vars: 
             oi.termins.append(Termin(v))

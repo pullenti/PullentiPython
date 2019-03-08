@@ -9,6 +9,7 @@ from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.ner.Referent import Referent
 from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.money.internal.MoneyMeta import MoneyMeta
 
 class MoneyReferent(Referent):
@@ -30,12 +31,12 @@ class MoneyReferent(Referent):
     
     ATTR_ALTREST = "ALTREST"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
+    def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
-        v = self.value
+        v = self.get_string_value(MoneyReferent.ATTR_VALUE)
         r = self.rest
-        if (v > (0) or r > 0): 
-            print(v, end="", file=res)
+        if (v is not None or r > 0): 
+            print(Utils.ifNotNull(v, "0"), end="", file=res)
             cou = 0
             for i in range(res.tell() - 1, 0, -1):
                 cou += 1
@@ -52,99 +53,81 @@ class MoneyReferent(Referent):
     @property
     def currency(self) -> str:
         """ Тип валюты (3-х значный код ISO 4217) """
-        return self.getStringValue(MoneyReferent.ATTR_CURRENCY)
+        return self.get_string_value(MoneyReferent.ATTR_CURRENCY)
     @currency.setter
     def currency(self, value_) -> str:
-        self.addSlot(MoneyReferent.ATTR_CURRENCY, value_, True, 0)
+        self.add_slot(MoneyReferent.ATTR_CURRENCY, value_, True, 0)
         return value_
     
     @property
-    def value(self) -> int:
+    def value(self) -> float:
         """ Значение """
-        val = self.getStringValue(MoneyReferent.ATTR_VALUE)
+        val = self.get_string_value(MoneyReferent.ATTR_VALUE)
         if (val is None): 
             return 0
-        wrapv1639 = RefOutArgWrapper(0)
-        inoutres1640 = Utils.tryParseInt(val, wrapv1639)
-        v = wrapv1639.value
-        if (not inoutres1640): 
+        wrapv1713 = RefOutArgWrapper(0)
+        inoutres1714 = Utils.tryParseFloat(val, wrapv1713)
+        v = wrapv1713.value
+        if (not inoutres1714): 
             return 0
         return v
-    @value.setter
-    def value(self, value_) -> int:
-        self.addSlot(MoneyReferent.ATTR_VALUE, str(value_), True, 0)
-        return value_
     
     @property
-    def alt_value(self) -> int:
+    def alt_value(self) -> float:
         """ Альтернативное значение (если есть, то значит неправильно написали сумму
          числом и далее прописью в скобках) """
-        val = self.getStringValue(MoneyReferent.ATTR_ALTVALUE)
+        val = self.get_string_value(MoneyReferent.ATTR_ALTVALUE)
         if (val is None): 
             return None
-        wrapv1641 = RefOutArgWrapper(0)
-        inoutres1642 = Utils.tryParseInt(val, wrapv1641)
-        v = wrapv1641.value
-        if (not inoutres1642): 
+        wrapv1715 = RefOutArgWrapper(0)
+        inoutres1716 = Utils.tryParseFloat(val, wrapv1715)
+        v = wrapv1715.value
+        if (not inoutres1716): 
             return None
         return v
-    @alt_value.setter
-    def alt_value(self, value_) -> int:
-        self.addSlot(MoneyReferent.ATTR_ALTVALUE, (None if value_ is None else str(value_)), True, 0)
-        return value_
     
     @property
     def rest(self) -> int:
         """ Остаток (от 0 до 99) - копеек, центов и т.п. """
-        val = self.getStringValue(MoneyReferent.ATTR_REST)
+        val = self.get_string_value(MoneyReferent.ATTR_REST)
         if (val is None): 
             return 0
-        wrapv1643 = RefOutArgWrapper(0)
-        inoutres1644 = Utils.tryParseInt(val, wrapv1643)
-        v = wrapv1643.value
-        if (not inoutres1644): 
+        wrapv1717 = RefOutArgWrapper(0)
+        inoutres1718 = Utils.tryParseInt(val, wrapv1717)
+        v = wrapv1717.value
+        if (not inoutres1718): 
             return 0
         return v
-    @rest.setter
-    def rest(self, value_) -> int:
-        if (value_ > 0): 
-            self.addSlot(MoneyReferent.ATTR_REST, str(value_), True, 0)
-        else: 
-            self.addSlot(MoneyReferent.ATTR_REST, None, True, 0)
-        return value_
     
     @property
     def alt_rest(self) -> int:
         """ Остаток (от 0 до 99) - копеек, центов и т.п. """
-        val = self.getStringValue(MoneyReferent.ATTR_ALTREST)
+        val = self.get_string_value(MoneyReferent.ATTR_ALTREST)
         if (val is None): 
             return None
-        wrapv1645 = RefOutArgWrapper(0)
-        inoutres1646 = Utils.tryParseInt(val, wrapv1645)
-        v = wrapv1645.value
-        if (not inoutres1646): 
+        wrapv1719 = RefOutArgWrapper(0)
+        inoutres1720 = Utils.tryParseInt(val, wrapv1719)
+        v = wrapv1719.value
+        if (not inoutres1720): 
             return None
         return v
-    @alt_rest.setter
-    def alt_rest(self, value_) -> int:
-        if (value_ is not None and value_ > 0): 
-            self.addSlot(MoneyReferent.ATTR_ALTREST, str(value_), True, 0)
-        else: 
-            self.addSlot(MoneyReferent.ATTR_ALTREST, None, True, 0)
-        return value_
     
     @property
     def real_value(self) -> float:
-        """ Действительное значение """
+        """ Действительное значение (вместе с копейками) """
         return (self.value) + (((self.rest) / (100)))
     @real_value.setter
     def real_value(self, value_) -> float:
-        self.value = math.floor(value_)
-        re = ((value_ - (self.value))) * (100)
-        self.rest = math.floor((re + .0001))
+        val = NumberHelper.double_to_string(value_)
+        ii = val.find('.')
+        if (ii > 0): 
+            val = val[0:0+ii]
+        self.add_slot(MoneyReferent.ATTR_VALUE, val, True, 0)
+        re = ((value_ - self.value)) * (100)
+        self.add_slot(MoneyReferent.ATTR_REST, str((math.floor((re + 0.0001)))), True, 0)
         return value_
     
-    def canBeEquals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
         s = Utils.asObjectOrNull(obj, MoneyReferent)
         if (s is None): 
             return False
@@ -161,7 +144,7 @@ class MoneyReferent(Referent):
         return True
     
     @staticmethod
-    def _new838(_arg1 : str, _arg2 : float) -> 'MoneyReferent':
+    def _new830(_arg1 : str, _arg2 : float) -> 'MoneyReferent':
         res = MoneyReferent()
         res.currency = _arg1
         res.real_value = _arg2

@@ -5,11 +5,16 @@
 from enum import IntEnum
 
 class PhoneKind(IntEnum):
+    """ Тип телефонного номера """
     UNDEFINED = 0
     HOME = 1
+    """ Домашний """
     MOBILE = 2
+    """ Мобильный """
     WORK = 3
+    """ Рабочий """
     FAX = 4
+    """ Факс """
     
     @classmethod
     def has_value(cls, value):

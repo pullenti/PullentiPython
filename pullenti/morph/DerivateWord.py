@@ -23,14 +23,13 @@ class DerivateWord:
         self.reflexive = False
         self.lang = None;
         self.attrs = ExplanWordAttr()
-        self.nexts = None;
         self.tag = None;
         self.group = gr
     
     def __str__(self) -> str:
         tmp = io.StringIO()
         print(self.spelling, end="", file=tmp)
-        if (self.class0_ is not None and not self.class0_.is_undefined): 
+        if (self.class0_ is not None and not self.class0_.is_undefined0): 
             print(", {0}".format(str(self.class0_)), end="", file=tmp, flush=True)
         if (self.aspect != MorphAspect.UNDEFINED): 
             print(", {0}".format(("соверш." if self.aspect == MorphAspect.PERFECTIVE else "несоверш.")), end="", file=tmp, flush=True)
@@ -40,15 +39,12 @@ class DerivateWord:
             print(", {0}".format(("прош." if self.tense == MorphTense.PAST else ("настоящ." if self.tense == MorphTense.PRESENT else "будущ."))), end="", file=tmp, flush=True)
         if (self.reflexive): 
             print(", возвр.", end="", file=tmp)
-        if (self.attrs._value != (0)): 
+        if (self.attrs.value != (0)): 
             print(", {0}".format(str(self.attrs)), end="", file=tmp, flush=True)
-        if (self.nexts is not None): 
-            for v in self.nexts.items(): 
-                print(" -{0}[{1}];".format(v[0], v[1]), end="", file=tmp, flush=True)
         return Utils.toStringStringIO(tmp)
     
     @staticmethod
-    def _new41(_arg1 : 'DerivateGroup', _arg2 : str, _arg3 : 'MorphLang', _arg4 : 'MorphClass', _arg5 : 'MorphAspect', _arg6 : bool, _arg7 : 'MorphTense', _arg8 : 'MorphVoice', _arg9 : 'ExplanWordAttr') -> 'DerivateWord':
+    def _new42(_arg1 : 'DerivateGroup', _arg2 : str, _arg3 : 'MorphLang', _arg4 : 'MorphClass', _arg5 : 'MorphAspect', _arg6 : bool, _arg7 : 'MorphTense', _arg8 : 'MorphVoice', _arg9 : 'ExplanWordAttr') -> 'DerivateWord':
         res = DerivateWord(_arg1)
         res.spelling = _arg2
         res.lang = _arg3

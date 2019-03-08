@@ -7,9 +7,13 @@ from enum import IntEnum
 class DefinitionKind(IntEnum):
     """ Тип определения """
     UNDEFINED = 0
+    """ Непонятно """
     ASSERTATION = 1
+    """ Просто утрерждение """
     DEFINITION = 2
+    """ Строгое определение """
     NEGATION = 3
+    """ Отрицание """
     
     @classmethod
     def has_value(cls, value):

@@ -5,7 +5,7 @@
 from enum import IntEnum
 
 class TransportKind(IntEnum):
-    """ Разновидности организаций """
+    """ Разновидности транспортных средств """
     UNDEFINED = 0
     AUTO = 1
     TRAIN = 2

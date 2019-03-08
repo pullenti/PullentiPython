@@ -28,6 +28,7 @@ class BookLinkTyp(IntEnum):
     URL = 20
     SEE = 21
     TAMZE = 22
+    """ там же """
     
     @classmethod
     def has_value(cls, value):

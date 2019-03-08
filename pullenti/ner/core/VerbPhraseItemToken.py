@@ -4,9 +4,11 @@
 
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.MorphWordForm import MorphWordForm
-from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphPerson import MorphPerson
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.morph.Morphology import Morphology
 from pullenti.ner.TextToken import TextToken
 
@@ -17,54 +19,95 @@ class VerbPhraseItemToken(MetaToken):
         super().__init__(begin, end, None)
         self.not0_ = False
         self.is_adverb = False
-        self.__m_is_verb_adjective = -1
-        self.normal = None;
+        self.__m_is_participle = -1
+        self.__m_normal = None;
+        self.__m_verb_morph = None;
     
     @property
-    def is_verb_adjective(self) -> bool:
+    def is_participle0(self) -> bool:
         """ Причастие """
-        if (self.__m_is_verb_adjective >= 0): 
-            return self.__m_is_verb_adjective > 0
+        if (self.__m_is_participle >= 0): 
+            return self.__m_is_participle > 0
         for f in self.morph.items: 
-            if (f.class0_.is_adjective and (isinstance(f, MorphWordForm)) and not "к.ф." in (f).misc.attrs): 
+            if (f.class0_.is_adjective0 and (isinstance(f, MorphWordForm)) and not "к.ф." in (f).misc.attrs): 
                 return True
-        self.__m_is_verb_adjective = 0
+            elif (f.class0_.is_verb0 and not f.case_.is_undefined0): 
+                return True
+        self.__m_is_participle = 0
         tt = Utils.asObjectOrNull(self.end_token, TextToken)
         if (tt is not None and tt.term.endswith("СЯ")): 
-            mb = Morphology.getWordBaseInfo(tt.term[0:0+len(tt.term) - 2], None, False, False)
+            mb = Morphology.get_word_base_info(tt.term[0:0+len(tt.term) - 2], None, False, False)
             if (mb is not None): 
-                if (mb.class0_.is_adjective): 
-                    self.__m_is_verb_adjective = 1
-        return self.__m_is_verb_adjective > 0
-    @is_verb_adjective.setter
-    def is_verb_adjective(self, value) -> bool:
-        self.__m_is_verb_adjective = (1 if value else 0)
+                if (mb.class0_.is_adjective0): 
+                    self.__m_is_participle = 1
+        return self.__m_is_participle > 0
+    @is_participle0.setter
+    def is_participle0(self, value) -> bool:
+        self.__m_is_participle = (1 if value else 0)
         return value
     
     @property
-    def is_verb_infinitive(self) -> bool:
-        """ Глагол-инфиниитив """
-        for f in self.morph.items: 
-            if (f.class0_.is_verb and (isinstance(f, MorphWordForm)) and "инф." in (f).misc.attrs): 
+    def is_dee_participle0(self) -> bool:
+        """ Признак деепричастия """
+        tt = Utils.asObjectOrNull(self.end_token, TextToken)
+        if (tt is None): 
+            return False
+        if (not tt.term.endswith("Я") and not tt.term.endswith("В")): 
+            return False
+        if (tt.morph.class0_.is_verb0 and not tt.morph.class0_.is_adjective0): 
+            if (tt.morph.gender == MorphGender.UNDEFINED and tt.morph.case_.is_undefined0 and tt.morph.number == MorphNumber.UNDEFINED): 
                 return True
         return False
     
     @property
+    def is_verb_infinitive0(self) -> bool:
+        """ Глагол-инфиниитив """
+        for f in self.morph.items: 
+            if (f.class0_.is_verb0 and (isinstance(f, MorphWordForm)) and "инф." in (f).misc.attrs): 
+                return True
+        return False
+    
+    @property
+    def normal(self) -> str:
+        """ Нормализованное значение """
+        wf = self.verb_morph
+        if (wf is not None): 
+            if (not wf.class0_.is_adjective0 and not wf.case_.is_undefined0 and self.__m_normal is not None): 
+                return self.__m_normal
+            if (wf.class0_.is_adjective0 and not wf.class0_.is_verb0): 
+                return Utils.ifNotNull(wf.normal_full, wf.normal_case)
+            return wf.normal_case
+        return self.__m_normal
+    @normal.setter
+    def normal(self, value) -> str:
+        self.__m_normal = value
+        return value
+    
+    @property
     def verb_morph(self) -> 'MorphWordForm':
         """ Полное морф.информация о глаголе глагола """
+        if (self.__m_verb_morph is not None): 
+            return self.__m_verb_morph
         for f in self.morph.items: 
-            if (f.class0_.is_verb and (isinstance(f, MorphWordForm)) and ((((f).misc.person) & (MorphPerson.THIRD))) != (MorphPerson.UNDEFINED)): 
+            if (f.class0_.is_verb0 and (isinstance(f, MorphWordForm)) and ((((f).misc.person) & (MorphPerson.THIRD))) != (MorphPerson.UNDEFINED)): 
                 return (Utils.asObjectOrNull(f, MorphWordForm))
         for f in self.morph.items: 
-            if (f.class0_.is_verb and (isinstance(f, MorphWordForm))): 
+            if (f.class0_.is_verb0 and (isinstance(f, MorphWordForm))): 
+                return (Utils.asObjectOrNull(f, MorphWordForm))
+        for f in self.morph.items: 
+            if (f.class0_.is_adjective0 and (isinstance(f, MorphWordForm))): 
                 return (Utils.asObjectOrNull(f, MorphWordForm))
         return None
+    @verb_morph.setter
+    def verb_morph(self, value) -> 'MorphWordForm':
+        self.__m_verb_morph = value
+        return value
     
     def __str__(self) -> str:
         return ((("НЕ " if self.not0_ else ""))) + self.normal
     
     @staticmethod
-    def _new665(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'VerbPhraseItemToken':
+    def _new656(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'VerbPhraseItemToken':
         res = VerbPhraseItemToken(_arg1, _arg2)
         res.morph = _arg3
         return res

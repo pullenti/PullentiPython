@@ -11,8 +11,8 @@ class MetaDateRange(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.date.DateRangeReferent import DateRangeReferent
         MetaDateRange.GLOBAL_META = MetaDateRange()
-        MetaDateRange.GLOBAL_META.addFeature(DateRangeReferent.ATTR_FROM, "Начало периода", 0, 1)
-        MetaDateRange.GLOBAL_META.addFeature(DateRangeReferent.ATTR_TO, "Конец периода", 0, 1)
+        MetaDateRange.GLOBAL_META.add_feature(DateRangeReferent.ATTR_FROM, "Начало периода", 0, 1)
+        MetaDateRange.GLOBAL_META.add_feature(DateRangeReferent.ATTR_TO, "Конец периода", 0, 1)
     
     @property
     def name(self) -> str:
@@ -25,7 +25,7 @@ class MetaDateRange(ReferentClass):
     
     DATE_RANGE_IMAGE_ID = "daterange"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         return MetaDateRange.DATE_RANGE_IMAGE_ID
     
     GLOBAL_META = None

@@ -19,7 +19,7 @@ class MorphRule:
         self.variants_key = list()
         self.lazy_pos = 0
     
-    def refreshVariants(self) -> None:
+    def refresh_variants(self) -> None:
         vars0_ = list()
         for v in self.variants_list: 
             vars0_.extend(v)
@@ -28,10 +28,10 @@ class MorphRule:
         self.variants_list.clear()
         for v in vars0_: 
             li = [ ]
-            wrapli33 = RefOutArgWrapper(None)
-            inoutres34 = Utils.tryGetValue(self.variants, Utils.ifNotNull(v.tail, ""), wrapli33)
-            li = wrapli33.value
-            if (not inoutres34): 
+            wrapli32 = RefOutArgWrapper(None)
+            inoutres33 = Utils.tryGetValue(self.variants, Utils.ifNotNull(v.tail, ""), wrapli32)
+            li = wrapli32.value
+            if (not inoutres33): 
                 li = list()
                 self.variants[Utils.ifNotNull(v.tail, "")] = li
             li.append(v)
@@ -50,21 +50,21 @@ class MorphRule:
         return Utils.toStringStringIO(res)
     
     def add(self, tail : str, var : 'MorphRuleVariant') -> None:
-        tail = LanguageHelper.correctWord(tail)
-        if (var.class0_.is_undefined): 
+        tail = LanguageHelper.correct_word(tail)
+        if (var.class0_.is_undefined0): 
             pass
         li = [ ]
-        wrapli35 = RefOutArgWrapper(None)
-        inoutres36 = Utils.tryGetValue(self.variants, tail, wrapli35)
-        li = wrapli35.value
-        if (not inoutres36): 
+        wrapli34 = RefOutArgWrapper(None)
+        inoutres35 = Utils.tryGetValue(self.variants, tail, wrapli34)
+        li = wrapli34.value
+        if (not inoutres35): 
             li = list()
             self.variants[tail] = li
         var.tail = tail
         li.append(var)
         var.rule = self
     
-    def processResult(self, res : typing.List['MorphWordForm'], word_begin : str, mvs : typing.List['MorphRuleVariant']) -> None:
+    def process_result(self, res : typing.List['MorphWordForm'], word_begin : str, mvs : typing.List['MorphRuleVariant']) -> None:
         for mv in mvs: 
             r = MorphWordForm(mv, None)
             if (mv.normal_tail is not None and len(mv.normal_tail) > 0 and mv.normal_tail[0] != '-'): 
@@ -76,6 +76,6 @@ class MorphRule:
                     r.normal_full = (word_begin + mv.full_normal_tail)
                 else: 
                     r.normal_full = word_begin
-            if (not MorphWordForm._hasMorphEquals(res, r)): 
+            if (not MorphWordForm._has_morph_equals(res, r)): 
                 r.undef_coef = (0)
                 res.append(r)

@@ -4,11 +4,11 @@
 
 import gc
 import typing
-import threading
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.MorphLang import MorphLang
 from pullenti.morph.internal.DerivateDictionary import DerivateDictionary
+from pullenti.morph.internal.NextModelHelper import NextModelHelper
+from pullenti.morph.MorphLang import MorphLang
 
 class Explanatory:
     """ Сервис для получение толковой информации о словах.
@@ -23,46 +23,47 @@ class Explanatory:
         Args:
             langs(MorphLang): по умолчанию, русский с украинским
         """
-        if (langs is None or langs.is_undefined): 
+        if (langs is None or langs.is_undefined0): 
             langs = MorphLang.RU
-        Explanatory.loadLanguages(langs)
+        NextModelHelper.initialize()
+        Explanatory.load_languages(langs)
     
     __m_der_ru = None
     
     @staticmethod
-    def getLoadedLanguages() -> 'MorphLang':
+    def get_loaded_languages() -> 'MorphLang':
         """ Языки, морфологические словари для которых загружены в память """
         if (len(Explanatory.__m_der_ru._m_all_groups) > 0): 
             return (MorphLang.RU) | MorphLang.UA
         return MorphLang.UNKNOWN
     
     @staticmethod
-    def loadLanguages(langs : 'MorphLang') -> None:
+    def load_languages(langs : 'MorphLang') -> None:
         """ Загрузить язык(и), если они ещё не загружены
         
         Args:
             langs(MorphLang): 
         """
-        if (langs.is_ru or langs.is_ua): 
+        if (langs.is_ru0 or langs.is_ua0): 
             if (not Explanatory.__m_der_ru.init(MorphLang.RU)): 
                 raise Utils.newException("Not found resource file e_ru.dat in Enplanatory", None)
-        if (langs.is_ua): 
+        if (langs.is_ua0): 
             pass
     
     @staticmethod
-    def unloadLanguages(langs : 'MorphLang') -> None:
+    def unload_languages(langs : 'MorphLang') -> None:
         """ Выгрузить язык(и), если они больше не нужны
         
         Args:
             langs(MorphLang): 
         """
-        if (langs.is_ru or langs.is_ua): 
-            if (langs.is_ru and langs.is_ua): 
+        if (langs.is_ru0 or langs.is_ua0): 
+            if (langs.is_ru0 and langs.is_ua0): 
                 Explanatory.__m_der_ru.unload()
         gc.collect()
     
     @staticmethod
-    def findDerivates(word : str, try_variants : bool=True, lang : 'MorphLang'=None) -> typing.List['DerivateGroup']:
+    def find_derivates(word : str, try_variants : bool=True, lang : 'MorphLang'=None) -> typing.List['DerivateGroup']:
         """ Найти для слова дериативные группы, в которые входит это слово
          (групп может быть несколько, но в большинстве случаев - одна)
         
@@ -75,7 +76,7 @@ class Explanatory:
         return Explanatory.__m_der_ru.find(word, try_variants, lang)
     
     @staticmethod
-    def findWords(word : str, lang : 'MorphLang'=None) -> typing.List['DerivateWord']:
+    def find_words(word : str, lang : 'MorphLang'=None) -> typing.List['DerivateWord']:
         """ Найти для слова его толковую информацию (среди деривативных групп)
         
         Args:
@@ -96,7 +97,7 @@ class Explanatory:
         return res
     
     @staticmethod
-    def getWordClassVar(word : str, cla : 'MorphClass', lang : 'MorphLang'=None) -> str:
+    def get_word_class_var(word : str, cla : 'MorphClass', lang : 'MorphLang'=None) -> str:
         """ Получить вариант для слова аналог нужного типа.
          Например, для "ГЛАГОЛ" вариант прилагательного: "ГЛАГОЛЬНЫЙ"
         
@@ -118,7 +119,7 @@ class Explanatory:
         return None
     
     @staticmethod
-    def isAnimated(word : str, lang : 'MorphLang'=None) -> bool:
+    def is_animated(word : str, lang : 'MorphLang'=None) -> bool:
         """ Может ли быть одушевлённым
         
         Args:
@@ -132,12 +133,12 @@ class Explanatory:
         for g in grs: 
             for w in g.words: 
                 if (w.spelling == word): 
-                    if (w.attrs.is_animated): 
+                    if (w.attrs.is_animated0): 
                         return True
         return False
     
     @staticmethod
-    def isNamed(word : str, lang : 'MorphLang'=None) -> bool:
+    def is_named(word : str, lang : 'MorphLang'=None) -> bool:
         """ Может ли иметь собственное имя
         
         Args:
@@ -151,7 +152,7 @@ class Explanatory:
         for g in grs: 
             for w in g.words: 
                 if (w.spelling == word): 
-                    if (w.attrs.is_named): 
+                    if (w.attrs.is_named0): 
                         return True
         return False
     
@@ -161,6 +162,6 @@ class Explanatory:
     @staticmethod
     def _static_ctor():
         Explanatory.__m_der_ru = DerivateDictionary()
-        Explanatory._m_lock = threading.Lock()
+        Explanatory._m_lock = object()
 
 Explanatory._static_ctor()

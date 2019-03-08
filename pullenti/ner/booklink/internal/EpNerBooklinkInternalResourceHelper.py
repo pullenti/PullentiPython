@@ -9,7 +9,7 @@ class EpNerBooklinkInternalResourceHelper:
     """ Это для поддержки получения встроенных ресурсов """
     
     @staticmethod
-    def getBytes(name : str) -> bytearray:
+    def get_bytes(name : str) -> bytearray:
         """ Получить встроенный ресурс
         
         Args:
@@ -33,8 +33,8 @@ class EpNerBooklinkInternalResourceHelper:
         return None
     
     @staticmethod
-    def getString(name : str) -> str:
-        arr = EpNerBooklinkInternalResourceHelper.getBytes(name)
+    def get_string(name : str) -> str:
+        arr = EpNerBooklinkInternalResourceHelper.get_bytes(name)
         if (arr is None): 
             return None
         if ((len(arr) > 3 and arr[0] == (0xEF) and arr[1] == (0xBB)) and arr[2] == (0xBF)): 

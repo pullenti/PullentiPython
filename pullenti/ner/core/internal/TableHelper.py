@@ -41,13 +41,13 @@ class TableHelper:
             self.src = t
             if (t is None): 
                 return
-            if (t.isChar(chr(0x1E))): 
+            if (t.is_char(chr(0x1E))): 
                 self.typ = TableHelper.TableTypes.TABLESTART
                 return
-            if (t.isChar(chr(0x1F))): 
+            if (t.is_char(chr(0x1F))): 
                 self.typ = TableHelper.TableTypes.TABLEEND
                 return
-            if (not t.isChar(chr(7))): 
+            if (not t.is_char(chr(7))): 
                 return
             txt = t.kit.sofa.text
             self.typ = TableHelper.TableTypes.CELLEND
@@ -69,7 +69,7 @@ class TableHelper:
                 p -= 1
     
     @staticmethod
-    def tryParseRows(t : 'Token', max_char : int, must_be_start_of_table : bool) -> typing.List['TableRowToken']:
+    def try_parse_rows(t : 'Token', max_char : int, must_be_start_of_table : bool) -> typing.List['TableRowToken']:
         """ Получить список строк таблицы
         
         Args:
@@ -84,21 +84,21 @@ class TableHelper:
             return None
         is_tab = False
         if (must_be_start_of_table): 
-            if (not t.isChar(chr(0x1E))): 
+            if (not t.is_char(chr(0x1E))): 
                 return None
             is_tab = True
-        wrapis_tab495 = RefOutArgWrapper(is_tab)
-        rw = TableHelper.__parse(t, max_char, None, wrapis_tab495)
-        is_tab = wrapis_tab495.value
+        wrapis_tab532 = RefOutArgWrapper(is_tab)
+        rw = TableHelper.__parse(t, max_char, None, wrapis_tab532)
+        is_tab = wrapis_tab532.value
         if (rw is None): 
             return None
         res = list()
         res.append(rw)
         t = rw.end_token.next0_
         while t is not None: 
-            wrapis_tab494 = RefOutArgWrapper(is_tab)
-            rw0 = TableHelper.__parse(t, max_char, rw, wrapis_tab494)
-            is_tab = wrapis_tab494.value
+            wrapis_tab531 = RefOutArgWrapper(is_tab)
+            rw0 = TableHelper.__parse(t, max_char, rw, wrapis_tab531)
+            is_tab = wrapis_tab531.value
             if (rw0 is None): 
                 break
             rw = rw0
@@ -135,18 +135,18 @@ class TableHelper:
             return None
         txt = t.kit.sofa.text
         t0 = t
-        if (t.isChar(chr(0x1E)) and t.next0_ is not None): 
+        if (t.is_char(chr(0x1E)) and t.next0_ is not None): 
             is_tab.value = True
             t = t.next0_
         cell_info = None
         tt = t
         while tt is not None and ((tt.end_char <= max_char or max_char == 0)): 
-            if (tt.is_table_control_char): 
+            if (tt.is_table_control_char0): 
                 cell_info = TableHelper.TableInfo(tt)
                 if (cell_info.typ != TableHelper.TableTypes.CELLEND): 
                     cell_info = (None)
                 break
-            elif (tt.is_newline_after): 
+            elif (tt.is_newline_after0): 
                 if (not is_tab.value and prev is None): 
                     break
                 if ((tt.end_char - t.begin_char) > 100): 
@@ -161,16 +161,16 @@ class TableHelper:
         if (cell_info is None): 
             return None
         res = TableRowToken(t0, tt)
-        res.cells.append(TableCellToken._new496(t, tt, cell_info.row_span, cell_info.col_span))
+        res.cells.append(TableCellToken._new533(t, tt, cell_info.row_span, cell_info.col_span))
         tt = tt.next0_
         while tt is not None and ((tt.end_char <= max_char or max_char == 0)): 
             t0 = tt
             cell_info = (None)
             while tt is not None and ((tt.end_char <= max_char or max_char == 0)): 
-                if (tt.is_table_control_char): 
+                if (tt.is_table_control_char0): 
                     cell_info = TableHelper.TableInfo(tt)
                     break
-                elif (tt.is_newline_after): 
+                elif (tt.is_newline_after0): 
                     if (not is_tab.value and prev is None): 
                         break
                     if ((tt.end_char - t0.begin_char) > 400): 
@@ -190,25 +190,25 @@ class TableHelper:
                 break
             if (cell_info.typ != TableHelper.TableTypes.CELLEND): 
                 break
-            res.cells.append(TableCellToken._new496(t0, tt, cell_info.row_span, cell_info.col_span))
+            res.cells.append(TableCellToken._new533(t0, tt, cell_info.row_span, cell_info.col_span))
             res.end_token = tt
             tt = tt.next0_
         if ((len(res.cells) < 2) and not res._eor): 
             return None
-        if (res.end_token.next0_ is not None and res.end_token.next0_.isChar(chr(0x1F))): 
+        if (res.end_token.next0_ is not None and res.end_token.next0_.is_char(chr(0x1F))): 
             res._last_row = True
             res.end_token = res.end_token.next0_
         return res
     
     @staticmethod
-    def isCellEnd(t : 'Token') -> bool:
-        if (t is not None and t.isChar(chr(7))): 
+    def is_cell_end(t : 'Token') -> bool:
+        if (t is not None and t.is_char(chr(7))): 
             return True
         return False
     
     @staticmethod
-    def isRowEnd(t : 'Token') -> bool:
-        if (t is None or not t.isChar(chr(7))): 
+    def is_row_end(t : 'Token') -> bool:
+        if (t is None or not t.is_char(chr(7))): 
             return False
         ti = TableHelper.TableInfo(t)
         return ti.typ == TableHelper.TableTypes.ROWEND

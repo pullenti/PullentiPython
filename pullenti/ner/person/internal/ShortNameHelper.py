@@ -24,7 +24,7 @@ class ShortNameHelper:
             return self.name
         
         @staticmethod
-        def _new2453(_arg1 : str, _arg2 : 'MorphGender') -> 'ShortnameVar':
+        def _new2536(_arg1 : str, _arg2 : 'MorphGender') -> 'ShortnameVar':
             res = ShortNameHelper.ShortnameVar()
             res.name = _arg1
             res.gender = _arg2
@@ -33,7 +33,7 @@ class ShortNameHelper:
     M_SHORTS_NAMES = None
     
     @staticmethod
-    def getShortnamesForName(name : str) -> typing.List[str]:
+    def get_shortnames_for_name(name : str) -> typing.List[str]:
         res = list()
         for kp in ShortNameHelper.M_SHORTS_NAMES.items(): 
             for v in kp[1]: 
@@ -43,12 +43,12 @@ class ShortNameHelper:
         return res
     
     @staticmethod
-    def getNamesForShortname(shortname : str) -> typing.List['ShortnameVar']:
+    def get_names_for_shortname(shortname : str) -> typing.List['ShortnameVar']:
         res = [ ]
-        wrapres2451 = RefOutArgWrapper(None)
-        inoutres2452 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, shortname, wrapres2451)
-        res = wrapres2451.value
-        if (not inoutres2452): 
+        wrapres2534 = RefOutArgWrapper(None)
+        inoutres2535 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, shortname, wrapres2534)
+        res = wrapres2534.value
+        if (not inoutres2535): 
             return None
         else: 
             return res
@@ -60,32 +60,32 @@ class ShortNameHelper:
         if (ShortNameHelper.M_INITED): 
             return
         ShortNameHelper.M_INITED = True
-        obj = EpNerPersonInternalResourceHelper.getString("ShortNames.txt")
+        obj = EpNerPersonInternalResourceHelper.get_string("ShortNames.txt")
         if (obj is not None): 
             kit = AnalysisKit(SourceOfAnalysis(obj))
             t = kit.first_token
             while t is not None: 
-                if (t.is_newline_before): 
-                    g = (MorphGender.FEMINIE if t.isValue("F", None) else MorphGender.MASCULINE)
+                if (t.is_newline_before0): 
+                    g = (MorphGender.FEMINIE if t.is_value("F", None) else MorphGender.MASCULINE)
                     t = t.next0_
                     nam = (t).term
                     shos = list()
                     t = t.next0_
                     while t is not None: 
-                        if (t.is_newline_before): 
+                        if (t.is_newline_before0): 
                             break
                         else: 
                             shos.append((t).term)
                         t = t.next0_
                     for s in shos: 
                         li = None
-                        wrapli2454 = RefOutArgWrapper(None)
-                        inoutres2455 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, s, wrapli2454)
-                        li = wrapli2454.value
-                        if (not inoutres2455): 
+                        wrapli2537 = RefOutArgWrapper(None)
+                        inoutres2538 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, s, wrapli2537)
+                        li = wrapli2537.value
+                        if (not inoutres2538): 
                             li = list()
                             ShortNameHelper.M_SHORTS_NAMES[s] = li
-                        li.append(ShortNameHelper.ShortnameVar._new2453(nam, g))
+                        li.append(ShortNameHelper.ShortnameVar._new2536(nam, g))
                     if (t is None): 
                         break
                     t = t.previous

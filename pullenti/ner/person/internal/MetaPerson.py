@@ -17,21 +17,21 @@ class MetaPerson(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.person.PersonReferent import PersonReferent
         MetaPerson._global_meta = MetaPerson()
-        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_IDENTITY, "Идентификация", 0, 0)
-        sex = MetaPerson._global_meta.addFeature(PersonReferent.ATTR_SEX, "Пол", 0, 0)
-        sex.addValue(MetaPerson.ATTR_SEXMALE, "мужской", None, None)
-        sex.addValue(MetaPerson.ATTR_SEXFEMALE, "женский", None, None)
-        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_LASTNAME, "Фамилия", 0, 0)
-        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_FIRSTNAME, "Имя", 0, 0)
-        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_MIDDLENAME, "Отчество", 0, 0)
-        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_NICKNAME, "Псевдоним", 0, 0)
-        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_ATTR, "Свойство", 0, 0)
-        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_AGE, "Возраст", 0, 1)
-        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_BORN, "Родился", 0, 1)
-        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_DIE, "Умер", 0, 1)
-        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_CONTACT, "Контактные данные", 0, 0)
-        MetaPerson._global_meta.addFeature(PersonReferent.ATTR_IDDOC, "Удостоверение личности", 0, 0).show_as_parent = True
-        MetaPerson._global_meta.addFeature(Referent.ATTR_GENERAL, "Обобщающая персона", 0, 1)
+        MetaPerson._global_meta.add_feature(PersonReferent.ATTR_IDENTITY, "Идентификация", 0, 0)
+        sex = MetaPerson._global_meta.add_feature(PersonReferent.ATTR_SEX, "Пол", 0, 0)
+        sex.add_value(MetaPerson.ATTR_SEXMALE, "мужской", None, None)
+        sex.add_value(MetaPerson.ATTR_SEXFEMALE, "женский", None, None)
+        MetaPerson._global_meta.add_feature(PersonReferent.ATTR_LASTNAME, "Фамилия", 0, 0)
+        MetaPerson._global_meta.add_feature(PersonReferent.ATTR_FIRSTNAME, "Имя", 0, 0)
+        MetaPerson._global_meta.add_feature(PersonReferent.ATTR_MIDDLENAME, "Отчество", 0, 0)
+        MetaPerson._global_meta.add_feature(PersonReferent.ATTR_NICKNAME, "Псевдоним", 0, 0)
+        MetaPerson._global_meta.add_feature(PersonReferent.ATTR_ATTR, "Свойство", 0, 0)
+        MetaPerson._global_meta.add_feature(PersonReferent.ATTR_AGE, "Возраст", 0, 1)
+        MetaPerson._global_meta.add_feature(PersonReferent.ATTR_BORN, "Родился", 0, 1)
+        MetaPerson._global_meta.add_feature(PersonReferent.ATTR_DIE, "Умер", 0, 1)
+        MetaPerson._global_meta.add_feature(PersonReferent.ATTR_CONTACT, "Контактные данные", 0, 0)
+        MetaPerson._global_meta.add_feature(PersonReferent.ATTR_IDDOC, "Удостоверение личности", 0, 0).show_as_parent = True
+        MetaPerson._global_meta.add_feature(Referent.ATTR_GENERAL, "Обобщающая персона", 0, 1)
     
     @property
     def name(self) -> str:
@@ -50,15 +50,15 @@ class MetaPerson(ReferentClass):
     
     GENERAL_IMAGE_ID = "general"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.person.PersonReferent import PersonReferent
         pers = Utils.asObjectOrNull(obj, PersonReferent)
         if (pers is not None): 
-            if (pers.findSlot("@GENERAL", None, True) is not None): 
+            if (pers.find_slot("@GENERAL", None, True) is not None): 
                 return MetaPerson.GENERAL_IMAGE_ID
-            if (pers.is_male): 
+            if (pers.is_male0): 
                 return MetaPerson.MAN_IMAGE_ID
-            if (pers.is_female): 
+            if (pers.is_female0): 
                 return MetaPerson.WOMEN_IMAGE_ID
         return MetaPerson.PERSON_IMAGE_ID
     

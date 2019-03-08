@@ -28,16 +28,16 @@ class MetaToken(Token):
         if (begin != end): 
             t = begin.next0_
             while t is not None: 
-                if (t.chars.is_letter): 
-                    if (self.chars.is_capital_upper and t.chars.is_all_lower): 
+                if (t.chars.is_letter0): 
+                    if (self.chars.is_capital_upper0 and t.chars.is_all_lower0): 
                         pass
                     else: 
-                        self.chars = CharsInfo._new2668(((self.chars.value) & (t.chars.value)))
+                        self.chars = CharsInfo._new2761(((self.chars.value) & (t.chars.value)))
                 if (t == end): 
                     break
                 t = t.next0_
     
-    def __RefreshCharsInfo(self) -> None:
+    def __refresh_chars_info(self) -> None:
         if (self._m_begin_token is None): 
             return
         self.chars = self._m_begin_token.chars
@@ -50,8 +50,8 @@ class MetaToken(Token):
                     break
                 if (t.end_char > self._m_end_token.end_char): 
                     break
-                if (t.chars.is_letter): 
-                    self.chars = CharsInfo._new2668(((self.chars.value) & (t.chars.value)))
+                if (t.chars.is_letter0): 
+                    self.chars = CharsInfo._new2761(((self.chars.value) & (t.chars.value)))
                 if (t == self._m_end_token): 
                     break
                 t = t.next0_
@@ -69,7 +69,7 @@ class MetaToken(Token):
                 self._m_begin_token = value
                 if (value is not None): 
                     self.begin_char = self._m_begin_token.begin_char
-                self.__RefreshCharsInfo()
+                self.__refresh_chars_info()
         return value
     
     @property
@@ -85,7 +85,7 @@ class MetaToken(Token):
                 self._m_end_token = value
                 if (value is not None): 
                     self.end_char = self._m_end_token.end_char
-                self.__RefreshCharsInfo()
+                self.__refresh_chars_info()
         return value
     
     @property
@@ -102,19 +102,19 @@ class MetaToken(Token):
     
     @property
     def is_whitespace_before(self) -> bool:
-        return self._m_begin_token.is_whitespace_before
+        return self._m_begin_token.is_whitespace_before0
     
     @property
     def is_whitespace_after(self) -> bool:
-        return self._m_end_token.is_whitespace_after
+        return self._m_end_token.is_whitespace_after0
     
     @property
     def is_newline_before(self) -> bool:
-        return self._m_begin_token.is_newline_before
+        return self._m_begin_token.is_newline_before0
     
     @property
     def is_newline_after(self) -> bool:
-        return self._m_end_token.is_newline_after
+        return self._m_end_token.is_newline_after0
     
     @property
     def whitespaces_before_count(self) -> int:
@@ -128,26 +128,26 @@ class MetaToken(Token):
         res = io.StringIO()
         t = self._m_begin_token
         while t is not None: 
-            if (res.tell() > 0 and t.is_whitespace_before): 
+            if (res.tell() > 0 and t.is_whitespace_before0): 
                 print(' ', end="", file=res)
-            print(t.getSourceText(), end="", file=res)
+            print(t.get_source_text(), end="", file=res)
             if (t == self._m_end_token): 
                 break
             t = t.next0_
         return Utils.toStringStringIO(res)
     
-    def isValue(self, term : str, termua : str=None) -> bool:
-        return self.begin_token.isValue(term, termua)
+    def is_value(self, term : str, termua : str=None) -> bool:
+        return self.begin_token.is_value(term, termua)
     
-    def getReferents(self) -> typing.List['Referent']:
+    def get_referents(self) -> typing.List['Referent']:
         res = None
         t = self.begin_token
-        first_pass3175 = True
+        first_pass3277 = True
         while True:
-            if first_pass3175: first_pass3175 = False
+            if first_pass3277: first_pass3277 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= self.end_char)): break
-            li = t.getReferents()
+            li = t.get_referents()
             if (li is None): 
                 continue
             if (res is None): 
@@ -173,7 +173,7 @@ class MetaToken(Token):
             return False
         return True
     
-    def getNormalCaseText(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         attr = GetTextAttr.NO
         if (single_number): 
@@ -183,24 +183,24 @@ class MetaToken(Token):
         if (keep_chars): 
             attr = (Utils.valToEnum((attr) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
         if (self.begin_token == self.end_token): 
-            return self.begin_token.getNormalCaseText(mc, single_number, gender, keep_chars)
+            return self.begin_token.get_normal_case_text(mc, single_number, gender, keep_chars)
         else: 
-            return MiscHelper.getTextValue(self.begin_token, self.end_token, attr)
+            return MiscHelper.get_text_value(self.begin_token, self.end_token, attr)
     
     @staticmethod
-    def _new600(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'MetaToken':
+    def _new572(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.morph = _arg3
         return res
     
     @staticmethod
-    def _new836(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object) -> 'MetaToken':
+    def _new828(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object) -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.tag = _arg3
         return res
     
     @staticmethod
-    def _new2222(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
+    def _new2286(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.tag = _arg3
         res.morph = _arg4

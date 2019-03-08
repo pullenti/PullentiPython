@@ -8,14 +8,23 @@ class DatePointerType(IntEnum):
     """ Дополнительные указатели для дат """
     NO = 0
     BEGIN = 1
+    """ В начале """
     CENTER = 2
+    """ В середине """
     END = 3
+    """ В конце """
     TODAY = 4
+    """ В настоящее время, сегодня """
     WINTER = 5
+    """ Зимой """
     SPRING = 6
+    """ Весной """
     SUMMER = 7
+    """ Летом """
     AUTUMN = 8
+    """ Осенью """
     UNDEFINED = 9
+    """ Неопределено (например, 20__ года ) """
     
     @classmethod
     def has_value(cls, value):

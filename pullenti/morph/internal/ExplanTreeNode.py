@@ -11,15 +11,9 @@ class ExplanTreeNode:
     def __init__(self) -> None:
         self.nodes = None;
         self.groups = None;
-        self._lazy = None
+        self.lazy_pos = 0
     
-    def _load(self) -> None:
-        if (self._lazy is None): 
-            return
-        self._lazy.loadNode(self)
-        self._lazy = (None)
-    
-    def _addGroup(self, gr : 'DerivateGroup') -> None:
+    def _add_group(self, gr : 'DerivateGroup') -> None:
         if (self.groups is None): 
             self.groups = (gr)
             return

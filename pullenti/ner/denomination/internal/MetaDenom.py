@@ -11,7 +11,7 @@ class MetaDenom(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.denomination.DenominationReferent import DenominationReferent
         MetaDenom._global_meta = MetaDenom()
-        MetaDenom._global_meta.addFeature(DenominationReferent.ATTR_VALUE, "Значение", 0, 1)
+        MetaDenom._global_meta.add_feature(DenominationReferent.ATTR_VALUE, "Значение", 0, 1)
     
     @property
     def name(self) -> str:
@@ -24,7 +24,7 @@ class MetaDenom(ReferentClass):
     
     DENOM_IMAGE_ID = "denom"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         return MetaDenom.DENOM_IMAGE_ID
     
     _global_meta = None

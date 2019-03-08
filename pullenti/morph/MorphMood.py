@@ -7,9 +7,13 @@ from enum import IntEnum
 class MorphMood(IntEnum):
     """ Наклонение (для глаголов) """
     UNDEFINED = 0
+    """ Неопределено """
     INDICATIVE = 1
+    """ Изъявительное """
     SUBJUNCTIVE = 2
+    """ Условное """
     IMPERATIVE = 4
+    """ Повелительное """
     
     @classmethod
     def has_value(cls, value):

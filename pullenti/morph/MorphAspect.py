@@ -7,8 +7,11 @@ from enum import IntEnum
 class MorphAspect(IntEnum):
     """ Аспект (для глаголов) """
     UNDEFINED = 0
+    """ Неопределено """
     PERFECTIVE = 1
+    """ Совершенный """
     IMPERFECTIVE = 2
+    """ Несовершенный """
     
     @classmethod
     def has_value(cls, value):

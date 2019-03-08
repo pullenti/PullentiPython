@@ -11,12 +11,14 @@ class MetaWeapon(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.weapon.WeaponReferent import WeaponReferent
         MetaWeapon._global_meta = MetaWeapon()
-        MetaWeapon._global_meta.addFeature(WeaponReferent.ATTR_TYPE, "Тип", 0, 0)
-        MetaWeapon._global_meta.addFeature(WeaponReferent.ATTR_NAME, "Название", 0, 0)
-        MetaWeapon._global_meta.addFeature(WeaponReferent.ATTR_NUMBER, "Номер", 0, 1)
-        MetaWeapon._global_meta.addFeature(WeaponReferent.ATTR_BRAND, "Марка", 0, 0)
-        MetaWeapon._global_meta.addFeature(WeaponReferent.ATTR_MODEL, "Модель", 0, 0)
-        MetaWeapon._global_meta.addFeature(WeaponReferent.ATTR_DATE, "Дата создания", 0, 1)
+        MetaWeapon._global_meta.add_feature(WeaponReferent.ATTR_TYPE, "Тип", 0, 0)
+        MetaWeapon._global_meta.add_feature(WeaponReferent.ATTR_NAME, "Название", 0, 0)
+        MetaWeapon._global_meta.add_feature(WeaponReferent.ATTR_NUMBER, "Номер", 0, 1)
+        MetaWeapon._global_meta.add_feature(WeaponReferent.ATTR_BRAND, "Марка", 0, 0)
+        MetaWeapon._global_meta.add_feature(WeaponReferent.ATTR_MODEL, "Модель", 0, 0)
+        MetaWeapon._global_meta.add_feature(WeaponReferent.ATTR_DATE, "Дата создания", 0, 1)
+        MetaWeapon._global_meta.add_feature(WeaponReferent.ATTR_CALIBER, "Калибр", 0, 1)
+        MetaWeapon._global_meta.add_feature(WeaponReferent.ATTR_REF, "Ссылка", 0, 0)
     
     @property
     def name(self) -> str:
@@ -29,7 +31,7 @@ class MetaWeapon(ReferentClass):
     
     IMAGE_ID = "weapon"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         return MetaWeapon.IMAGE_ID
     
     _global_meta = None

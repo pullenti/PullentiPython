@@ -18,12 +18,13 @@ from pullenti.ner.bank.BankDataReferent import BankDataReferent
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.ProcessorService import ProcessorService
 from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
 class BankAnalyzer(Analyzer):
+    """ Анализатор банковских данных (счетов, платёжных реквизитов...) """
     
     ANALYZER_NAME = "BANKDATA"
     
@@ -53,10 +54,10 @@ class BankAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[MetaBank.IMAGE_ID] = EpNerBankInternalResourceHelper.getBytes("dollar.png")
+        res[MetaBank.IMAGE_ID] = EpNerBankInternalResourceHelper.get_bytes("dollar.png")
         return res
     
-    def createReferent(self, type0_ : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         if (type0_ == BankDataReferent.OBJ_TYPENAME): 
             return BankDataReferent()
         return None
@@ -66,35 +67,35 @@ class BankAnalyzer(Analyzer):
         return ["URI", "ORGANIZATION"]
     
     def process(self, kit : 'AnalysisKit') -> None:
-        ad = kit.getAnalyzerData(self)
+        ad = kit.get_analyzer_data(self)
         t = kit.first_token
         while t is not None: 
             rt = None
-            if (t.chars.is_letter): 
-                tok = BankAnalyzer.__m_ontology.tryParse(t, TerminParseAttr.NO)
+            if (t.chars.is_letter0): 
+                tok = BankAnalyzer.__m_ontology.try_parse(t, TerminParseAttr.NO)
                 if (tok is not None): 
                     tt = tok.end_token.next0_
-                    if (tt is not None and tt.isChar(':')): 
+                    if (tt is not None and tt.is_char(':')): 
                         tt = tt.next0_
-                    rt = self.__tryAttach(tt, True)
+                    rt = self.__try_attach(tt, True)
                     if (rt is not None): 
                         rt.begin_token = t
-            if (rt is None and (((isinstance(t, ReferentToken)) or t.is_newline_before))): 
-                rt = self.__tryAttach(t, False)
+            if (rt is None and (((isinstance(t, ReferentToken)) or t.is_newline_before0))): 
+                rt = self.__try_attach(t, False)
             if (rt is not None): 
-                rt.referent = ad.registerReferent(rt.referent)
-                kit.embedToken(rt)
+                rt.referent = ad.register_referent(rt.referent)
+                kit.embed_token(rt)
                 t = (rt)
             t = t.next0_
     
     @staticmethod
-    def __isBankReq(txt : str) -> bool:
+    def __is_bank_req(txt : str) -> bool:
         if (((((((txt == "Р/С" or txt == "К/С" or txt == "Л/С") or txt == "ОКФС" or txt == "ОКАТО") or txt == "ОГРН" or txt == "БИК") or txt == "SWIFT" or txt == "ОКПО") or txt == "ОКВЭД" or txt == "ОКОНХ") or txt == "КБК" or txt == "ИНН") or txt == "КПП"): 
             return True
         else: 
             return False
     
-    def __tryAttach(self, t : 'Token', key_word : bool) -> 'ReferentToken':
+    def __try_attach(self, t : 'Token', key_word : bool) -> 'ReferentToken':
         if (t is None): 
             return None
         t0 = t
@@ -106,42 +107,42 @@ class BankAnalyzer(Analyzer):
         org_is_bank = False
         empty = 0
         last_uri = None
-        first_pass2758 = True
+        first_pass2855 = True
         while True:
-            if first_pass2758: first_pass2758 = False
+            if first_pass2855: first_pass2855 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (t.is_table_control_char and t != t0): 
+            if (t.is_table_control_char0 and t != t0): 
                 break
-            if (t.is_comma or t.morph.class0_.is_preposition or t.isCharOf("/\\")): 
+            if (t.is_comma0 or t.morph.class0_.is_preposition0 or t.is_char_of("/\\")): 
                 continue
             bank_keyword = False
-            if (t.isValue("ПОЛНЫЙ", None) and t.next0_ is not None and ((t.next0_.isValue("НАИМЕНОВАНИЕ", None) or t.next0_.isValue("НАЗВАНИЕ", None)))): 
+            if (t.is_value("ПОЛНЫЙ", None) and t.next0_ is not None and ((t.next0_.is_value("НАИМЕНОВАНИЕ", None) or t.next0_.is_value("НАЗВАНИЕ", None)))): 
                 t = t.next0_.next0_
                 if (t is None): 
                     break
-            if (t.isValue("БАНК", None)): 
-                if ((isinstance(t, ReferentToken)) and t.getReferent().type_name == "ORGANIZATION"): 
+            if (t.is_value("БАНК", None)): 
+                if ((isinstance(t, ReferentToken)) and t.get_referent().type_name == "ORGANIZATION"): 
                     bank_keyword = True
                 tt = t.next0_
-                npt = NounPhraseHelper.tryParse(tt, NounPhraseParseAttr.NO, 0)
+                npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
                 if (npt is not None): 
                     tt = npt.end_token.next0_
-                if (tt is not None and tt.isChar(':')): 
+                if (tt is not None and tt.is_char(':')): 
                     tt = tt.next0_
                 if (tt is not None): 
                     if (not bank_keyword): 
                         t = tt
                         bank_keyword = True
-                    elif (tt.getReferent() is not None and tt.getReferent().type_name == "ORGANIZATION"): 
+                    elif (tt.get_referent() is not None and tt.get_referent().type_name == "ORGANIZATION"): 
                         t = tt
-            r = t.getReferent()
+            r = t.get_referent()
             if (r is not None and r.type_name == "ORGANIZATION"): 
                 is_bank = False
                 kk = 0
                 rr = r
                 while rr is not None and (kk < 4): 
-                    is_bank = Utils.compareStrings(Utils.ifNotNull(rr.getStringValue("KIND"), ""), "Bank", True) == 0
+                    is_bank = Utils.compareStrings(Utils.ifNotNull(rr.get_string_value("KIND"), ""), "Bank", True) == 0
                     if (is_bank): 
                         break
                     rr = rr.parent_referent; kk += 1
@@ -149,7 +150,7 @@ class BankAnalyzer(Analyzer):
                     is_bank = True
                 if (not is_bank and uris is not None and "ИНН" in uris_keys): 
                     return None
-                if ((last_uri is not None and last_uri.scheme == "К/С" and t.previous is not None) and t.previous.isValue("В", None)): 
+                if ((last_uri is not None and last_uri.scheme == "К/С" and t.previous is not None) and t.previous.is_value("В", None)): 
                     cor_org = r
                     t1 = t
                 elif (org0_ is None or ((not org_is_bank and is_bank))): 
@@ -164,14 +165,14 @@ class BankAnalyzer(Analyzer):
             if (isinstance(r, UriReferent)): 
                 u = Utils.asObjectOrNull(r, UriReferent)
                 if (uris is None): 
-                    if (not BankAnalyzer.__isBankReq(u.scheme)): 
+                    if (not BankAnalyzer.__is_bank_req(u.scheme)): 
                         return None
-                    if (u.scheme == "ИНН" and t.is_newline_after): 
+                    if (u.scheme == "ИНН" and t.is_newline_after0): 
                         return None
                     uris = list()
                     uris_keys = list()
                 else: 
-                    if (not BankAnalyzer.__isBankReq(u.scheme)): 
+                    if (not BankAnalyzer.__is_bank_req(u.scheme)): 
                         break
                     if (u.scheme in uris_keys): 
                         break
@@ -190,26 +191,26 @@ class BankAnalyzer(Analyzer):
                 empty += 1
                 continue
             if (isinstance(t, TextToken)): 
-                if (t.isValue("ПОЛНЫЙ", None) or t.isValue("НАИМЕНОВАНИЕ", None) or t.isValue("НАЗВАНИЕ", None)): 
+                if (t.is_value("ПОЛНЫЙ", None) or t.is_value("НАИМЕНОВАНИЕ", None) or t.is_value("НАЗВАНИЕ", None)): 
                     pass
-                elif (t.chars.is_letter): 
-                    tok = BankAnalyzer.__m_ontology.tryParse(t, TerminParseAttr.NO)
+                elif (t.chars.is_letter0): 
+                    tok = BankAnalyzer.__m_ontology.try_parse(t, TerminParseAttr.NO)
                     if (tok is not None): 
                         t = tok.end_token
                         empty = 0
                     else: 
                         empty += 1
-                        if (t.is_newline_before): 
-                            nnn = NounPhraseHelper.tryParse(t, NounPhraseParseAttr.NO, 0)
-                            if (nnn is not None and nnn.end_token.next0_ is not None and nnn.end_token.next0_.isChar(':')): 
+                        if (t.is_newline_before0): 
+                            nnn = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
+                            if (nnn is not None and nnn.end_token.next0_ is not None and nnn.end_token.next0_.is_char(':')): 
                                 break
                     if (uris is None): 
                         break
             if (empty > 2): 
                 break
-            if (empty > 0 and t.isChar(':') and t.is_newline_after): 
+            if (empty > 0 and t.is_char(':') and t.is_newline_after0): 
                 break
-            if (((isinstance(t, NumberToken)) and t.is_newline_before and t.next0_ is not None) and not t.next0_.chars.is_letter): 
+            if (((isinstance(t, NumberToken)) and t.is_newline_before0 and t.next0_ is not None) and not t.next0_.chars.is_letter0): 
                 break
         if (uris is None): 
             return None
@@ -220,19 +221,19 @@ class BankAnalyzer(Analyzer):
             return None
         bdr = BankDataReferent()
         for u in uris: 
-            bdr.addSlot(BankDataReferent.ATTR_ITEM, u, False, 0)
+            bdr.add_slot(BankDataReferent.ATTR_ITEM, u, False, 0)
         if (org0_ is not None): 
-            bdr.addSlot(BankDataReferent.ATTR_BANK, org0_, False, 0)
+            bdr.add_slot(BankDataReferent.ATTR_BANK, org0_, False, 0)
         if (cor_org is not None): 
-            bdr.addSlot(BankDataReferent.ATTR_CORBANK, cor_org, False, 0)
-        org0 = (None if t0.previous is None else t0.previous.getReferent())
+            bdr.add_slot(BankDataReferent.ATTR_CORBANK, cor_org, False, 0)
+        org0 = (None if t0.previous is None else t0.previous.get_referent())
         if (org0 is not None and org0.type_name == "ORGANIZATION"): 
             for s in org0.slots: 
                 if (isinstance(s.value, UriReferent)): 
                     u = Utils.asObjectOrNull(s.value, UriReferent)
-                    if (BankAnalyzer.__isBankReq(u.scheme)): 
+                    if (BankAnalyzer.__is_bank_req(u.scheme)): 
                         if (not u.scheme in uris_keys): 
-                            bdr.addSlot(BankDataReferent.ATTR_ITEM, u, False, 0)
+                            bdr.add_slot(BankDataReferent.ATTR_ITEM, u, False, 0)
         return ReferentToken(bdr, t0, t1)
     
     __m_ontology = None
@@ -244,7 +245,7 @@ class BankAnalyzer(Analyzer):
         MetaBank.initialize()
         BankAnalyzer.__m_ontology = TerminCollection()
         t = Termin("БАНКОВСКИЕ РЕКВИЗИТЫ", None, True)
-        t.addVariant("ПЛАТЕЖНЫЕ РЕКВИЗИТЫ", False)
-        t.addVariant("РЕКВИЗИТЫ", False)
+        t.add_variant("ПЛАТЕЖНЫЕ РЕКВИЗИТЫ", False)
+        t.add_variant("РЕКВИЗИТЫ", False)
         BankAnalyzer.__m_ontology.add(t)
-        ProcessorService.registerAnalyzer(BankAnalyzer())
+        ProcessorService.register_analyzer(BankAnalyzer())

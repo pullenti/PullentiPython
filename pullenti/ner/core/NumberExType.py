@@ -5,6 +5,7 @@
 from enum import IntEnum
 
 class NumberExType(IntEnum):
+    """ Единицы измерения для NumberExToken """
     UNDEFINED = 0
     PERCENT = 1
     METER = 2

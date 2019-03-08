@@ -37,16 +37,16 @@ class BookLinkReferent(Referent):
         super().__init__(BookLinkReferent.OBJ_TYPENAME)
         self.instance_of = MetaBookLink._global_meta
     
-    def toString(self, short_variant : bool, lang_ : 'MorphLang'=None, lev : int=0) -> str:
+    def to_string(self, short_variant : bool, lang_ : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
-        a = self.getSlotValue(BookLinkReferent.ATTR_AUTHOR)
+        a = self.get_slot_value(BookLinkReferent.ATTR_AUTHOR)
         if (a is not None): 
             for s in self.slots: 
                 if (s.type_name == BookLinkReferent.ATTR_AUTHOR): 
                     if (a != s.value): 
                         print(", ", end="", file=res)
                     if (isinstance(s.value, Referent)): 
-                        print((s.value).toString(True, lang_, lev + 1), end="", file=res)
+                        print((s.value).to_string(True, lang_, lev + 1), end="", file=res)
                     elif (isinstance(s.value, str)): 
                         print(Utils.asObjectOrNull(s.value, str), end="", file=res)
             if (self.authors_and_other): 
@@ -58,7 +58,7 @@ class BookLinkReferent(Referent):
             if (len(nam) > 200): 
                 nam = (nam[0:0+200] + "...")
             print("\"{0}\"".format(nam), end="", file=res, flush=True)
-        uri = Utils.asObjectOrNull(self.getSlotValue(BookLinkReferent.ATTR_URL), UriReferent)
+        uri = Utils.asObjectOrNull(self.get_slot_value(BookLinkReferent.ATTR_URL), UriReferent)
         if (uri is not None): 
             print(" [{0}]".format(str(uri)), end="", file=res, flush=True)
         if (self.year > 0): 
@@ -67,55 +67,55 @@ class BookLinkReferent(Referent):
     
     @property
     def name(self) -> str:
-        return self.getStringValue(BookLinkReferent.ATTR_NAME)
+        return self.get_string_value(BookLinkReferent.ATTR_NAME)
     @name.setter
     def name(self, value) -> str:
-        self.addSlot(BookLinkReferent.ATTR_NAME, value, True, 0)
+        self.add_slot(BookLinkReferent.ATTR_NAME, value, True, 0)
         return value
     
     @property
     def lang(self) -> str:
-        return self.getStringValue(BookLinkReferent.ATTR_LANG)
+        return self.get_string_value(BookLinkReferent.ATTR_LANG)
     @lang.setter
     def lang(self, value) -> str:
-        self.addSlot(BookLinkReferent.ATTR_LANG, value, True, 0)
+        self.add_slot(BookLinkReferent.ATTR_LANG, value, True, 0)
         return value
     
     @property
     def typ(self) -> str:
-        return self.getStringValue(BookLinkReferent.ATTR_TYPE)
+        return self.get_string_value(BookLinkReferent.ATTR_TYPE)
     @typ.setter
     def typ(self, value) -> str:
-        self.addSlot(BookLinkReferent.ATTR_TYPE, value, True, 0)
+        self.add_slot(BookLinkReferent.ATTR_TYPE, value, True, 0)
         return value
     
     @property
     def url(self) -> 'UriReferent':
-        return Utils.asObjectOrNull(self.getSlotValue(BookLinkReferent.ATTR_URL), UriReferent)
+        return Utils.asObjectOrNull(self.get_slot_value(BookLinkReferent.ATTR_URL), UriReferent)
     
     @property
     def year(self) -> int:
-        wrapyear396 = RefOutArgWrapper(0)
-        inoutres397 = Utils.tryParseInt(Utils.ifNotNull(self.getStringValue(BookLinkReferent.ATTR_YEAR), ""), wrapyear396)
-        year_ = wrapyear396.value
-        if (inoutres397): 
+        wrapyear397 = RefOutArgWrapper(0)
+        inoutres398 = Utils.tryParseInt(Utils.ifNotNull(self.get_string_value(BookLinkReferent.ATTR_YEAR), ""), wrapyear397)
+        year_ = wrapyear397.value
+        if (inoutres398): 
             return year_
         else: 
             return 0
     @year.setter
     def year(self, value) -> int:
-        self.addSlot(BookLinkReferent.ATTR_YEAR, str(value), True, 0)
+        self.add_slot(BookLinkReferent.ATTR_YEAR, str(value), True, 0)
         return value
     
     @property
     def authors_and_other(self) -> bool:
-        return self.findSlot(BookLinkReferent.ATTR_MISC, "и др.", True) is not None
+        return self.find_slot(BookLinkReferent.ATTR_MISC, "и др.", True) is not None
     @authors_and_other.setter
     def authors_and_other(self, value) -> bool:
-        self.addSlot(BookLinkReferent.ATTR_MISC, "и др.", False, 0)
+        self.add_slot(BookLinkReferent.ATTR_MISC, "и др.", False, 0)
         return value
     
-    def canBeEquals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
         br = Utils.asObjectOrNull(obj, BookLinkReferent)
         if (br is None): 
             return False
@@ -129,11 +129,11 @@ class BookLinkReferent(Referent):
             if (self.typ != br.typ): 
                 return False
         eq_auth = False
-        if (self.findSlot(BookLinkReferent.ATTR_AUTHOR, None, True) is not None and br.findSlot(BookLinkReferent.ATTR_AUTHOR, None, True) is not None): 
+        if (self.find_slot(BookLinkReferent.ATTR_AUTHOR, None, True) is not None and br.find_slot(BookLinkReferent.ATTR_AUTHOR, None, True) is not None): 
             ok = False
             for a in self.slots: 
                 if (a.type_name == BookLinkReferent.ATTR_AUTHOR): 
-                    if (br.findSlot(BookLinkReferent.ATTR_AUTHOR, a.value, True) is not None): 
+                    if (br.find_slot(BookLinkReferent.ATTR_AUTHOR, a.value, True) is not None): 
                         eq += 1
                         ok = True
                         eq_auth = True
@@ -144,7 +144,7 @@ class BookLinkReferent(Referent):
                 return False
             if (self.name.startswith(br.name) or br.name.startswith(self.name)): 
                 eq += 1
-            elif (eq_auth and MiscHelper.canBeEquals(self.name, br.name, False, True, False)): 
+            elif (eq_auth and MiscHelper.can_be_equals(self.name, br.name, False, True, False)): 
                 eq += 1
             else: 
                 return False

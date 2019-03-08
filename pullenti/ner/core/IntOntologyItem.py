@@ -31,7 +31,7 @@ class IntOntologyItem:
         self.__m_canonic_text = value
         return value
     
-    def setShortestCanonicalText(self, ignore_termins_with_notnull_tags : bool=False) -> None:
+    def set_shortest_canonical_text(self, ignore_termins_with_notnull_tags : bool=False) -> None:
         """ В качестве канонического текста установить самый короткий среди терминов
         
         Args:
@@ -44,7 +44,7 @@ class IntOntologyItem:
             if (len(t.terms) == 0): 
                 continue
             s = t.canonic_text
-            if (not LanguageHelper.isCyrillicChar(s[0])): 
+            if (not LanguageHelper.is_cyrillic_char(s[0])): 
                 continue
             if (self.__m_canonic_text is None): 
                 self.__m_canonic_text = s

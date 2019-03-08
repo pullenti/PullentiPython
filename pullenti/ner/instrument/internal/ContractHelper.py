@@ -12,7 +12,7 @@ from pullenti.ner.core.BracketHelper import BracketHelper
 class ContractHelper:
     
     @staticmethod
-    def correctDummyNewlines(fr : 'FragToken') -> None:
+    def correct_dummy_newlines(fr : 'FragToken') -> None:
         """ Объединение абзацев в один фрагмент, если переход на новую строку
          является сомнительным (для договоров обычно кривые документы)
         
@@ -32,7 +32,7 @@ class ContractHelper:
             while j < len(fr.children): 
                 if (fr.children[j].kind != InstrumentKind.INDENTION): 
                     break
-                elif (ContractHelper.__calcNewlineBetweenCoef(fr.children[j - 1], fr.children[j]) > 0): 
+                elif (ContractHelper.__calc_newline_between_coef(fr.children[j - 1], fr.children[j]) > 0): 
                     break
                 j += 1
             if (j >= len(fr.children)): 
@@ -48,7 +48,7 @@ class ContractHelper:
                 ch = False
                 j = (i + 1)
                 while j < len(fr.children): 
-                    if (fr.children[j - 1].kind == InstrumentKind.INDENTION and fr.children[j].kind == InstrumentKind.INDENTION and (ContractHelper.__calcNewlineBetweenCoef(fr.children[j - 1], fr.children[j]) < 0)): 
+                    if (fr.children[j - 1].kind == InstrumentKind.INDENTION and fr.children[j].kind == InstrumentKind.INDENTION and (ContractHelper.__calc_newline_between_coef(fr.children[j - 1], fr.children[j]) < 0)): 
                         fr.children[j - 1].end_token = fr.children[j].end_token
                         del fr.children[j]
                         j -= 1
@@ -63,35 +63,35 @@ class ContractHelper:
                             num += 1
                         j += 1
         for ch in fr.children: 
-            ContractHelper.correctDummyNewlines(ch)
+            ContractHelper.correct_dummy_newlines(ch)
     
     @staticmethod
-    def __calcNewlineBetweenCoef(fr1 : 'FragToken', fr2 : 'FragToken') -> int:
+    def __calc_newline_between_coef(fr1 : 'FragToken', fr2 : 'FragToken') -> int:
         if (fr1.newlines_after_count > 1): 
             return 1
         tt = fr1.begin_token
         while tt is not None and tt.end_char <= fr1.end_char: 
-            if (BracketHelper.canBeStartOfSequence(tt, False, False)): 
-                br = BracketHelper.tryParse(tt, BracketParseAttr.CANBEMANYLINES, 100)
+            if (BracketHelper.can_be_start_of_sequence(tt, False, False)): 
+                br = BracketHelper.try_parse(tt, BracketParseAttr.CANBEMANYLINES, 100)
                 if (br is not None and br.end_char >= fr2.begin_char): 
                     return -1
             tt = tt.next0_
         t = fr1.end_token
-        if (t.isCharOf(":;.")): 
+        if (t.is_char_of(":;.")): 
             return 1
-        if ((isinstance(t, TextToken)) and ((t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction))): 
+        if ((isinstance(t, TextToken)) and ((t.morph.class0_.is_preposition0 or t.morph.class0_.is_conjunction0))): 
             return -1
         t1 = fr2.begin_token
         if (isinstance(t1, TextToken)): 
-            if (t1.chars.is_all_lower): 
+            if (t1.chars.is_all_lower0): 
                 return -1
-            if (BracketHelper.canBeStartOfSequence(t1, False, False)): 
-                if (t.chars.is_all_lower): 
+            if (BracketHelper.can_be_start_of_sequence(t1, False, False)): 
+                if (t.chars.is_all_lower0): 
                     return -1
         elif (isinstance(t1, NumberToken)): 
-            if (t.chars.is_all_lower): 
+            if (t.chars.is_all_lower0): 
                 return -1
-        if (t.chars.is_all_lower): 
-            if (fr2.end_token.isChar(';')): 
+        if (t.chars.is_all_lower0): 
+            if (fr2.end_token.is_char(';')): 
                 return -1
         return 0

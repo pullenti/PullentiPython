@@ -13,20 +13,20 @@ class MetaDecreeChange(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
         MetaDecreeChange.GLOBAL_META = MetaDecreeChange()
-        MetaDecreeChange.GLOBAL_META.addFeature(DecreeChangeReferent.ATTR_OWNER, "Структурный элемент", 1, 0)
-        fi = MetaDecreeChange.GLOBAL_META.addFeature(DecreeChangeReferent.ATTR_KIND, "Тип", 1, 1)
-        fi.addValue(Utils.enumToString(DecreeChangeKind.APPEND), "Дополнить", None, None)
-        fi.addValue(Utils.enumToString(DecreeChangeKind.EXPIRE), "Утратить силу", None, None)
-        fi.addValue(Utils.enumToString(DecreeChangeKind.NEW), "В редакции", None, None)
-        fi.addValue(Utils.enumToString(DecreeChangeKind.EXCHANGE), "Заменить", None, None)
-        fi.addValue(Utils.enumToString(DecreeChangeKind.REMOVE), "Исключить", None, None)
-        fi.addValue(Utils.enumToString(DecreeChangeKind.CONSIDER), "Считать", None, None)
-        fi.addValue(Utils.enumToString(DecreeChangeKind.CONTAINER), "Внести изменение", None, None)
+        MetaDecreeChange.GLOBAL_META.add_feature(DecreeChangeReferent.ATTR_OWNER, "Структурный элемент", 1, 0)
+        fi = MetaDecreeChange.GLOBAL_META.add_feature(DecreeChangeReferent.ATTR_KIND, "Тип", 1, 1)
+        fi.add_value(Utils.enumToString(DecreeChangeKind.APPEND), "Дополнить", None, None)
+        fi.add_value(Utils.enumToString(DecreeChangeKind.EXPIRE), "Утратить силу", None, None)
+        fi.add_value(Utils.enumToString(DecreeChangeKind.NEW), "В редакции", None, None)
+        fi.add_value(Utils.enumToString(DecreeChangeKind.EXCHANGE), "Заменить", None, None)
+        fi.add_value(Utils.enumToString(DecreeChangeKind.REMOVE), "Исключить", None, None)
+        fi.add_value(Utils.enumToString(DecreeChangeKind.CONSIDER), "Считать", None, None)
+        fi.add_value(Utils.enumToString(DecreeChangeKind.CONTAINER), "Внести изменение", None, None)
         MetaDecreeChange.KIND_FEATURE = fi
-        MetaDecreeChange.GLOBAL_META.addFeature(DecreeChangeReferent.ATTR_CHILD, "Дочернее изменение", 0, 0)
-        MetaDecreeChange.GLOBAL_META.addFeature(DecreeChangeReferent.ATTR_VALUE, "Значение", 0, 1).show_as_parent = True
-        MetaDecreeChange.GLOBAL_META.addFeature(DecreeChangeReferent.ATTR_PARAM, "Параметр", 0, 1).show_as_parent = True
-        MetaDecreeChange.GLOBAL_META.addFeature(DecreeChangeReferent.ATTR_MISC, "Разное", 0, 0)
+        MetaDecreeChange.GLOBAL_META.add_feature(DecreeChangeReferent.ATTR_CHILD, "Дочернее изменение", 0, 0)
+        MetaDecreeChange.GLOBAL_META.add_feature(DecreeChangeReferent.ATTR_VALUE, "Значение", 0, 1).show_as_parent = True
+        MetaDecreeChange.GLOBAL_META.add_feature(DecreeChangeReferent.ATTR_PARAM, "Параметр", 0, 1).show_as_parent = True
+        MetaDecreeChange.GLOBAL_META.add_feature(DecreeChangeReferent.ATTR_MISC, "Разное", 0, 0)
     
     KIND_FEATURE = None
     
@@ -41,7 +41,7 @@ class MetaDecreeChange(ReferentClass):
     
     IMAGE_ID = "decreechange"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         return MetaDecreeChange.IMAGE_ID
     
     GLOBAL_META = None

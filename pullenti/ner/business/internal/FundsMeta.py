@@ -17,16 +17,16 @@ class FundsMeta(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.business.FundsReferent import FundsReferent
         FundsMeta.GLOBAL_META = FundsMeta()
-        f = FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_KIND, "Класс", 0, 1)
+        f = FundsMeta.GLOBAL_META.add_feature(FundsReferent.ATTR_KIND, "Класс", 0, 1)
         FundsMeta.GLOBAL_META.kind_feature = f
-        f.addValue(Utils.enumToString(FundsKind.STOCK), "Акция", None, None)
-        f.addValue(Utils.enumToString(FundsKind.CAPITAL), "Уставной капитал", None, None)
-        FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_TYPE, "Тип", 0, 1)
-        FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_SOURCE, "Эмитент", 0, 1)
-        FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_PERCENT, "Процент", 0, 1)
-        FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_COUNT, "Количество", 0, 1)
-        FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_PRICE, "Номинал", 0, 1)
-        FundsMeta.GLOBAL_META.addFeature(FundsReferent.ATTR_SUM, "Денежная сумма", 0, 1)
+        f.add_value(Utils.enumToString(FundsKind.STOCK), "Акция", None, None)
+        f.add_value(Utils.enumToString(FundsKind.CAPITAL), "Уставной капитал", None, None)
+        FundsMeta.GLOBAL_META.add_feature(FundsReferent.ATTR_TYPE, "Тип", 0, 1)
+        FundsMeta.GLOBAL_META.add_feature(FundsReferent.ATTR_SOURCE, "Эмитент", 0, 1)
+        FundsMeta.GLOBAL_META.add_feature(FundsReferent.ATTR_PERCENT, "Процент", 0, 1)
+        FundsMeta.GLOBAL_META.add_feature(FundsReferent.ATTR_COUNT, "Количество", 0, 1)
+        FundsMeta.GLOBAL_META.add_feature(FundsReferent.ATTR_PRICE, "Номинал", 0, 1)
+        FundsMeta.GLOBAL_META.add_feature(FundsReferent.ATTR_SUM, "Денежная сумма", 0, 1)
     
     @property
     def name(self) -> str:
@@ -39,7 +39,7 @@ class FundsMeta(ReferentClass):
     
     IMAGE_ID = "funds"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         return FundsMeta.IMAGE_ID
     
     GLOBAL_META = None

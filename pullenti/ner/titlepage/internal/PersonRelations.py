@@ -21,14 +21,14 @@ class PersonRelations:
                 r = rr
                 break
         if (r is None): 
-            r = PersonRelation._new2512(pers)
+            r = PersonRelation._new2595(pers)
             self.rels.append(r)
         if (not typ in r.coefs): 
             r.coefs[typ] = coef
         else: 
             r.coefs[typ] += coef
     
-    def getPersons(self, typ : 'Types') -> typing.List['PersonReferent']:
+    def get_persons(self, typ : 'Types') -> typing.List['PersonReferent']:
         res = list()
         for v in self.rels: 
             if (v.best == typ): 
@@ -47,7 +47,7 @@ class PersonRelations:
         res.append(TitleItemToken.Types.TRANSLATE)
         return res
     
-    def getAttrNameForType(self, typ : 'Types') -> str:
+    def get_attr_name_for_type(self, typ : 'Types') -> str:
         if (typ == TitleItemToken.Types.WORKER): 
             return TitlePageReferent.ATTR_AUTHOR
         if (typ == TitleItemToken.Types.BOSS): 
@@ -64,7 +64,7 @@ class PersonRelations:
             return TitlePageReferent.ATTR_TRANSLATOR
         return None
     
-    def calcTypFromAttrs(self, pers : 'PersonReferent') -> 'Types':
+    def calc_typ_from_attrs(self, pers : 'PersonReferent') -> 'Types':
         for a in pers.slots: 
             if (a.type_name == PersonReferent.ATTR_ATTR): 
                 s = str(a.value)

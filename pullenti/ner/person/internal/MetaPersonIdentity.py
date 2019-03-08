@@ -11,11 +11,11 @@ class MetaPersonIdentity(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
         MetaPersonIdentity._global_meta = MetaPersonIdentity()
-        MetaPersonIdentity._global_meta.addFeature(PersonIdentityReferent.ATTR_TYPE, "Тип", 1, 1)
-        MetaPersonIdentity._global_meta.addFeature(PersonIdentityReferent.ATTR_NUMBER, "Номер", 1, 1)
-        MetaPersonIdentity._global_meta.addFeature(PersonIdentityReferent.ATTR_DATE, "Дата выдачи", 0, 1)
-        MetaPersonIdentity._global_meta.addFeature(PersonIdentityReferent.ATTR_ORG, "Кто выдал", 0, 1)
-        MetaPersonIdentity._global_meta.addFeature(PersonIdentityReferent.ATTR_ADDRESS, "Адрес регистрации", 0, 1)
+        MetaPersonIdentity._global_meta.add_feature(PersonIdentityReferent.ATTR_TYPE, "Тип", 1, 1)
+        MetaPersonIdentity._global_meta.add_feature(PersonIdentityReferent.ATTR_NUMBER, "Номер", 1, 1)
+        MetaPersonIdentity._global_meta.add_feature(PersonIdentityReferent.ATTR_DATE, "Дата выдачи", 0, 1)
+        MetaPersonIdentity._global_meta.add_feature(PersonIdentityReferent.ATTR_ORG, "Кто выдал", 0, 1)
+        MetaPersonIdentity._global_meta.add_feature(PersonIdentityReferent.ATTR_ADDRESS, "Адрес регистрации", 0, 1)
     
     @property
     def name(self) -> str:
@@ -28,7 +28,7 @@ class MetaPersonIdentity(ReferentClass):
     
     IMAGE_ID = "identity"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         return MetaPersonIdentity.IMAGE_ID
     
     _global_meta = None

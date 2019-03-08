@@ -7,9 +7,13 @@ from enum import IntEnum
 class MorphTense(IntEnum):
     """ Время (для глаголов) """
     UNDEFINED = 0
+    """ Неопределено """
     PAST = 1
+    """ Прошлое """
     PRESENT = 2
+    """ Настоящее """
     FUTURE = 4
+    """ Будущее """
     
     @classmethod
     def has_value(cls, value):

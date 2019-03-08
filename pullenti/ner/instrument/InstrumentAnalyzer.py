@@ -6,20 +6,22 @@ import typing
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.instrument.InstrumentKind import InstrumentKind
-from pullenti.ner.instrument.InstrumentArtefact import InstrumentArtefact
 from pullenti.ner.core.Termin import Termin
+from pullenti.ner.instrument.InstrumentArtefact import InstrumentArtefact
+from pullenti.ner.instrument.InstrumentKind import InstrumentKind
 from pullenti.ner.instrument.internal.MetaInstrumentBlock import MetaInstrumentBlock
 from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
+from pullenti.ner.instrument.internal.InstrToken import InstrToken
 from pullenti.ner.ProcessorService import ProcessorService
-from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-from pullenti.ner.instrument.internal.InstrumentParticipantMeta import InstrumentParticipantMeta
 from pullenti.ner.instrument.internal.InstrumentArtefactMeta import InstrumentArtefactMeta
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
 from pullenti.ner.instrument.internal.MetaInstrument import MetaInstrument
+from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.instrument.internal.InstrumentParticipantMeta import InstrumentParticipantMeta
 from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
 
 class InstrumentAnalyzer(Analyzer):
+    """ Анализатор структуры нормативных актов и договоров """
     
     @property
     def name(self) -> str:
@@ -54,13 +56,13 @@ class InstrumentAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[MetaInstrument.DOC_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("decree.png")
-        res[MetaInstrumentBlock.PART_IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("part.png")
-        res[InstrumentParticipantMeta.IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("participant.png")
-        res[InstrumentArtefactMeta.IMAGE_ID] = EpNerCoreInternalResourceHelper.getBytes("artefact.png")
+        res[MetaInstrument.DOC_IMAGE_ID] = EpNerCoreInternalResourceHelper.get_bytes("decree.png")
+        res[MetaInstrumentBlock.PART_IMAGE_ID] = EpNerCoreInternalResourceHelper.get_bytes("part.png")
+        res[InstrumentParticipantMeta.IMAGE_ID] = EpNerCoreInternalResourceHelper.get_bytes("participant.png")
+        res[InstrumentArtefactMeta.IMAGE_ID] = EpNerCoreInternalResourceHelper.get_bytes("artefact.png")
         return res
     
-    def createReferent(self, type0_ : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         if (type0_ == InstrumentReferent.OBJ_TYPENAME): 
             return InstrumentReferent()
         if (type0_ == InstrumentBlockReferent.OBJ_TYPENAME): 
@@ -77,17 +79,16 @@ class InstrumentAnalyzer(Analyzer):
         t1 = t
         if (t is None): 
             return
-        dfr = FragToken.createDocument(t, 0, InstrumentKind.UNDEFINED)
+        dfr = FragToken.create_document(t, 0, InstrumentKind.UNDEFINED)
         if (dfr is None): 
             return
-        ad = kit.getAnalyzerData(self)
-        res = dfr.createReferent(ad)
+        ad = kit.get_analyzer_data(self)
+        res = dfr.create_referent(ad)
     
     __m_inited = None
     
     @staticmethod
     def initialize() -> None:
-        from pullenti.ner.instrument.internal.InstrToken import InstrToken
         from pullenti.ner.instrument.internal.ParticipantToken import ParticipantToken
         if (InstrumentAnalyzer.__m_inited): 
             return
@@ -103,4 +104,4 @@ class InstrumentAnalyzer(Analyzer):
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False
         except Exception as ex: 
             raise Utils.newException(ex.__str__(), ex)
-        ProcessorService.registerAnalyzer(InstrumentAnalyzer())
+        ProcessorService.register_analyzer(InstrumentAnalyzer())

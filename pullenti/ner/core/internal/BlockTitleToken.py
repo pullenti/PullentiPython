@@ -22,21 +22,21 @@ class BlockTitleToken(MetaToken):
         self.value = None;
     
     def __str__(self) -> str:
-        return "{0} {1} {2}".format(Utils.enumToString(self.typ), Utils.ifNotNull(self.value, ""), self.getSourceText())
+        return "{0} {1} {2}".format(Utils.enumToString(self.typ), Utils.ifNotNull(self.value, ""), self.get_source_text())
     
     @staticmethod
-    def tryAttachList(t : 'Token') -> typing.List['BlockTitleToken']:
+    def try_attach_list(t : 'Token') -> typing.List['BlockTitleToken']:
         content = None
         intro = None
         lits = None
         tt = t
-        first_pass2796 = True
+        first_pass2888 = True
         while True:
-            if first_pass2796: first_pass2796 = False
+            if first_pass2888: first_pass2888 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
-            if (tt.is_newline_before): 
-                btt = BlockTitleToken.tryAttach(tt, False, None)
+            if (tt.is_newline_before0): 
+                btt = BlockTitleToken.try_attach(tt, False, None)
                 if (btt is None): 
                     continue
                 if (btt.typ == BlkTyps.INDEX): 
@@ -75,22 +75,22 @@ class BlockTitleToken(MetaToken):
             cou = 0
             err = 0
             tt = content.end_token.next0_
-            first_pass2797 = True
+            first_pass2889 = True
             while True:
-                if first_pass2797: first_pass2797 = False
+                if first_pass2889: first_pass2889 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
-                if (not tt.is_newline_before): 
+                if (not tt.is_newline_before0): 
                     continue
                 li = BlockLine.create(tt, None)
                 if (li is None): 
                     break
                 if (li.has_verb): 
-                    if (li.end_token.isChar('.')): 
+                    if (li.end_token.is_char('.')): 
                         break
                     if (li.length_char > 100): 
                         break
-                btt = BlockTitleToken.tryAttach(tt, True, None)
+                btt = BlockTitleToken.try_attach(tt, True, None)
                 if (btt is None): 
                     continue
                 err = 0
@@ -101,7 +101,7 @@ class BlockTitleToken(MetaToken):
                 content.end_token = btt.end_token
                 tt = content.end_token
                 if (btt.value is not None): 
-                    chapter_names.addStr(btt.value, None, None, False)
+                    chapter_names.add_str(btt.value, None, None, False)
             content.typ = BlkTyps.INDEX
             t0 = content.end_token.next0_
         elif (intro is not None): 
@@ -112,16 +112,16 @@ class BlockTitleToken(MetaToken):
             return None
         first = True
         tt = t0
-        first_pass2798 = True
+        first_pass2890 = True
         while True:
-            if first_pass2798: first_pass2798 = False
+            if first_pass2890: first_pass2890 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
-            if (not tt.is_newline_before): 
+            if (not tt.is_newline_before0): 
                 continue
-            if (tt.isValue("СЛАБОЕ", None)): 
+            if (tt.is_value("СЛАБОЕ", None)): 
                 pass
-            btt = BlockTitleToken.tryAttach(tt, False, chapter_names)
+            btt = BlockTitleToken.try_attach(tt, False, chapter_names)
             if (btt is None): 
                 continue
             if (len(res) == 104): 
@@ -153,12 +153,12 @@ class BlockTitleToken(MetaToken):
         return res
     
     @staticmethod
-    def tryAttach(t : 'Token', is_content_item : bool=False, names : 'TerminCollection'=None) -> 'BlockTitleToken':
+    def try_attach(t : 'Token', is_content_item : bool=False, names : 'TerminCollection'=None) -> 'BlockTitleToken':
         if (t is None): 
             return None
-        if (not t.is_newline_before): 
+        if (not t.is_newline_before0): 
             return None
-        if (t.chars.is_all_lower): 
+        if (t.chars.is_all_lower0): 
             return None
         li = BlockLine.create(t, names)
         if (li is None): 
@@ -168,9 +168,9 @@ class BlockTitleToken(MetaToken):
         if (li.typ == BlkTyps.INDEX): 
             pass
         if (li.is_exist_name): 
-            return BlockTitleToken._new481(t, li.end_token, li.typ)
-        if (li.end_token == li.number_end or ((li.end_token.isCharOf(".:") and li.end_token.previous == li.number_end))): 
-            res2 = BlockTitleToken._new481(t, li.end_token, li.typ)
+            return BlockTitleToken._new461(t, li.end_token, li.typ)
+        if (li.end_token == li.number_end or ((li.end_token.is_char_of(".:") and li.end_token.previous == li.number_end))): 
+            res2 = BlockTitleToken._new461(t, li.end_token, li.typ)
             if (li.typ == BlkTyps.CHAPTER or li.typ == BlkTyps.APPENDIX): 
                 li2 = BlockLine.create(li.end_token.next0_, names)
                 if ((li2 is not None and li2.typ == BlkTyps.UNDEFINED and li2.is_all_upper) and li2.words > 0): 
@@ -188,7 +188,7 @@ class BlockTitleToken(MetaToken):
             return res2
         if (li.number_end is None): 
             return None
-        res = BlockTitleToken._new481(t, li.end_token, li.typ)
+        res = BlockTitleToken._new461(t, li.end_token, li.typ)
         if (res.typ == BlkTyps.UNDEFINED): 
             if (li.words < 1): 
                 return None
@@ -198,7 +198,7 @@ class BlockTitleToken(MetaToken):
                 if (not li.is_all_upper or li.not_words > (math.floor(li.words / 2))): 
                     return None
             res.typ = BlkTyps.CHAPTER
-            if ((li.number_end.end_char - t.begin_char) == 7 and li.number_end.next0_ is not None and li.number_end.next0_.is_hiphen): 
+            if ((li.number_end.end_char - t.begin_char) == 7 and li.number_end.next0_ is not None and li.number_end.next0_.is_hiphen0): 
                 res.typ = BlkTyps.UNDEFINED
         if (li.has_content_item_tail and is_content_item): 
             res.typ = BlkTyps.INDEXITEM
@@ -226,8 +226,8 @@ class BlockTitleToken(MetaToken):
                 t = t.next0_
         tt = res.end_token
         while tt is not None and tt.begin_char > li.number_end.end_char: 
-            if ((isinstance(tt, TextToken)) and tt.chars.is_letter): 
-                res.value = MiscHelper.getTextValue(li.number_end.next0_, tt, GetTextAttr.NO)
+            if ((isinstance(tt, TextToken)) and tt.chars.is_letter0): 
+                res.value = MiscHelper.get_text_value(li.number_end.next0_, tt, GetTextAttr.NO)
                 break
             tt = tt.previous
         if ((res.typ == BlkTyps.INDEX or res.typ == BlkTyps.INTRO or res.typ == BlkTyps.CONSLUSION) or res.typ == BlkTyps.LITERATURE): 
@@ -238,7 +238,7 @@ class BlockTitleToken(MetaToken):
         return res
     
     @staticmethod
-    def _new481(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BlkTyps') -> 'BlockTitleToken':
+    def _new461(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BlkTyps') -> 'BlockTitleToken':
         res = BlockTitleToken(_arg1, _arg2)
         res.typ = _arg3
         return res

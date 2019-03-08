@@ -34,7 +34,7 @@ class ReferentClass:
         """ Атрибуты класса """
         return self.__m_features
     
-    def addFeature(self, attr_name : str, attr_caption : str, low_bound : int=0, up_bound : int=0) -> 'Feature':
+    def add_feature(self, attr_name : str, attr_caption : str, low_bound : int=0, up_bound : int=0) -> 'Feature':
         """ Добавить фичу
         
         Args:
@@ -44,7 +44,7 @@ class ReferentClass:
             up_bound(int): 
         
         """
-        res = Feature._new2702(attr_name, attr_caption, low_bound, up_bound)
+        res = Feature._new2797(attr_name, attr_caption, low_bound, up_bound)
         self.__m_features.append(res)
         if (not attr_name in self.__m_attrs): 
             self.__m_attrs[attr_name] = res
@@ -52,22 +52,22 @@ class ReferentClass:
             self.__m_attrs[attr_name] = res
         return res
     
-    def findFeature(self, name_ : str) -> 'Feature':
+    def find_feature(self, name_ : str) -> 'Feature':
         """ Найти атрибут по его системному имени
         
         Args:
             name_(str): 
         
         """
-        wrapres2703 = RefOutArgWrapper(None)
-        inoutres2704 = Utils.tryGetValue(self.__m_attrs, name_, wrapres2703)
-        res = wrapres2703.value
-        if (not inoutres2704): 
+        wrapres2798 = RefOutArgWrapper(None)
+        inoutres2799 = Utils.tryGetValue(self.__m_attrs, name_, wrapres2798)
+        res = wrapres2798.value
+        if (not inoutres2799): 
             return None
         else: 
             return res
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         """ Вычислить картинку
         
         Args:

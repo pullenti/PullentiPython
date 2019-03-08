@@ -7,10 +7,10 @@ import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.morph.Morphology import Morphology
@@ -36,7 +36,7 @@ class TextToken(Token):
         self.morph = MorphCollection()
         if (source.word_forms is not None): 
             for wf in source.word_forms: 
-                self.morph.addItem(wf)
+                self.morph.add_item(wf)
                 if (wf.normal_case is not None and (self.max_length < len(wf.normal_case))): 
                     self.max_length = (len(wf.normal_case))
                 if (wf.normal_full is not None and (self.max_length < len(wf.normal_full))): 
@@ -46,7 +46,7 @@ class TextToken(Token):
             ch = self.term[i]
             j = 0
             while j < self.morph.items_count: 
-                wf = Utils.asObjectOrNull(self.morph.getIndexerItem(j), MorphWordForm)
+                wf = Utils.asObjectOrNull(self.morph.get_indexer_item(j), MorphWordForm)
                 if (wf.normal_case is not None): 
                     if (i >= len(wf.normal_case)): 
                         break
@@ -62,10 +62,10 @@ class TextToken(Token):
                 break
             self.invariant_prefix_length = ((i + 1))
             i += 1
-        if (self.morph.language.is_undefined and not source.language.is_undefined): 
+        if (self.morph.language.is_undefined0 and not source.language.is_undefined0): 
             self.morph.language = source.language
     
-    def getLemma(self) -> str:
+    def get_lemma(self) -> str:
         """ Получить лемму (устарело, используйте Lemma)
         
         """
@@ -77,7 +77,7 @@ class TextToken(Token):
             print(", {0}".format(str(l_)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
-    def checkValue(self, dict0_ : typing.List[tuple]) -> object:
+    def check_value(self, dict0_ : typing.List[tuple]) -> object:
         """ Попробовать привязать словарь
         
         Args:
@@ -86,35 +86,35 @@ class TextToken(Token):
         """
         if (dict0_ is None): 
             return None
-        wrapres2709 = RefOutArgWrapper(None)
-        inoutres2710 = Utils.tryGetValue(dict0_, self.term, wrapres2709)
-        res = wrapres2709.value
-        if (inoutres2710): 
+        wrapres2804 = RefOutArgWrapper(None)
+        inoutres2805 = Utils.tryGetValue(dict0_, self.term, wrapres2804)
+        res = wrapres2804.value
+        if (inoutres2805): 
             return res
         if (self.morph is not None): 
             for it in self.morph.items: 
                 mf = Utils.asObjectOrNull(it, MorphWordForm)
                 if (mf is not None): 
                     if (mf.normal_case is not None): 
-                        wrapres2705 = RefOutArgWrapper(None)
-                        inoutres2706 = Utils.tryGetValue(dict0_, mf.normal_case, wrapres2705)
-                        res = wrapres2705.value
-                        if (inoutres2706): 
+                        wrapres2800 = RefOutArgWrapper(None)
+                        inoutres2801 = Utils.tryGetValue(dict0_, mf.normal_case, wrapres2800)
+                        res = wrapres2800.value
+                        if (inoutres2801): 
                             return res
                     if (mf.normal_full is not None and mf.normal_case != mf.normal_full): 
-                        wrapres2707 = RefOutArgWrapper(None)
-                        inoutres2708 = Utils.tryGetValue(dict0_, mf.normal_full, wrapres2707)
-                        res = wrapres2707.value
-                        if (inoutres2708): 
+                        wrapres2802 = RefOutArgWrapper(None)
+                        inoutres2803 = Utils.tryGetValue(dict0_, mf.normal_full, wrapres2802)
+                        res = wrapres2802.value
+                        if (inoutres2803): 
                             return res
         return None
     
-    def getSourceText(self) -> str:
-        return super().getSourceText()
+    def get_source_text(self) -> str:
+        return super().get_source_text()
     
-    def isValue(self, term_ : str, termua : str=None) -> bool:
-        if (termua is not None and self.morph.language.is_ua): 
-            if (self.isValue(termua, None)): 
+    def is_value(self, term_ : str, termua : str=None) -> bool:
+        if (termua is not None and self.morph.language.is_ua0): 
+            if (self.is_value(termua, None)): 
                 return True
         if (term_ is None): 
             return False
@@ -132,14 +132,14 @@ class TextToken(Token):
     @property
     def is_and(self) -> bool:
         """ Это соединительный союз И (на всех языках) """
-        if (not self.morph.class0_.is_conjunction): 
-            if (self.length_char == 1 and self.isChar('&')): 
+        if (not self.morph.class0_.is_conjunction0): 
+            if (self.length_char == 1 and self.is_char('&')): 
                 return True
             return False
         val = self.term
         if (val == "И" or val == "AND" or val == "UND"): 
             return True
-        if (self.morph.language.is_ua): 
+        if (self.morph.language.is_ua0): 
             if (val == "І" or val == "ТА"): 
                 return True
         return False
@@ -147,12 +147,12 @@ class TextToken(Token):
     @property
     def is_or(self) -> bool:
         """ Это соединительный союз ИЛИ (на всех языках) """
-        if (not self.morph.class0_.is_conjunction): 
+        if (not self.morph.class0_.is_conjunction0): 
             return False
         val = self.term
-        if (val == "ИЛИ" or val == "OR"): 
+        if (val == "ИЛИ" or val == "ЛИБО" or val == "OR"): 
             return True
-        if (self.morph.language.is_ua): 
+        if (self.morph.language.is_ua0): 
             if (val == "АБО"): 
                 return True
         return False
@@ -161,22 +161,24 @@ class TextToken(Token):
     def is_letters(self) -> bool:
         return str.isalpha(self.term[0])
     
-    def getMorphClassInDictionary(self) -> 'MorphClass':
+    def get_morph_class_in_dictionary(self) -> 'MorphClass':
         res = MorphClass()
         for wf in self.morph.items: 
-            if ((isinstance(wf, MorphWordForm)) and (wf).is_in_dictionary): 
+            if ((isinstance(wf, MorphWordForm)) and (wf).is_in_dictionary0): 
                 res |= wf.class0_
         return res
     
-    def getNormalCaseText(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         empty = True
+        if (mc is not None and mc.is_preposition0): 
+            return LanguageHelper.normalize_preposition(self.term)
         for it in self.morph.items: 
-            if (mc is not None and not mc.is_undefined): 
+            if (mc is not None and not mc.is_undefined0): 
                 cc = (it.class0_.value) & (mc.value)
                 if (cc == 0): 
                     continue
-                if (MorphClass.isMiscInt(cc) and not MorphClass.isProperInt(cc) and mc.value != it.class0_.value): 
+                if (MorphClass.is_misc_int(cc) and not MorphClass.is_proper_int(cc) and mc.value != it.class0_.value): 
                     continue
             wf = Utils.asObjectOrNull(it, MorphWordForm)
             normal_full = False
@@ -184,11 +186,11 @@ class TextToken(Token):
                 if ((((it.gender) & (gender))) == (MorphGender.UNDEFINED)): 
                     if ((gender == MorphGender.MASCULINE and ((it.gender != MorphGender.UNDEFINED or it.number == MorphNumber.PLURAL)) and wf is not None) and wf.normal_full is not None): 
                         normal_full = True
-                    elif (gender == MorphGender.MASCULINE and it.class0_.is_personal_pronoun): 
+                    elif (gender == MorphGender.MASCULINE and it.class0_.is_personal_pronoun0): 
                         pass
                     else: 
                         continue
-            if (not it.case_.is_undefined): 
+            if (not it.case_.is_undefined0): 
                 empty = False
             if (wf is not None): 
                 if (single_number and it.number == MorphNumber.PLURAL and wf.normal_full is not None): 
@@ -203,37 +205,37 @@ class TextToken(Token):
                     if (res == "ДЕТИ"): 
                         res = "РЕБЕНОК"
                 if (keep_chars): 
-                    if (self.chars.is_all_lower): 
+                    if (self.chars.is_all_lower0): 
                         res = res.lower()
-                    elif (self.chars.is_capital_upper): 
-                        res = MiscHelper.convertFirstCharUpperAndOtherLower(res)
+                    elif (self.chars.is_capital_upper0): 
+                        res = MiscHelper.convert_first_char_upper_and_other_lower(res)
                 return res
         if (not empty): 
             return None
         te = None
         if (single_number and mc is not None): 
-            bi = MorphBaseInfo._new514(MorphClass(mc), gender, MorphNumber.SINGULAR, self.morph.language)
-            vars0_ = Morphology.getWordform(self.term, bi)
+            bi = MorphBaseInfo._new560(MorphClass(mc), gender, MorphNumber.SINGULAR, self.morph.language)
+            vars0_ = Morphology.get_wordform(self.term, bi)
             if (vars0_ is not None): 
                 te = vars0_
-        if (self.chars.is_cyrillic_letter and te is None and len(self.term) > 3): 
+        if (self.chars.is_cyrillic_letter0 and te is None and len(self.term) > 3): 
             ch0 = self.term[len(self.term) - 1]
             ch1 = self.term[len(self.term) - 2]
             if (ch0 == 'М' and ((ch1 == 'О' or ch1 == 'А'))): 
                 te = self.term[0:0+len(self.term) - 2]
-            elif (not LanguageHelper.isCyrillicVowel(ch1) and LanguageHelper.isCyrillicVowel(ch0)): 
+            elif (not LanguageHelper.is_cyrillic_vowel(ch1) and LanguageHelper.is_cyrillic_vowel(ch0)): 
                 te = self.term[0:0+len(self.term) - 1]
         if (te is None): 
             te = self.term
         if (keep_chars): 
-            if (self.chars.is_all_lower): 
+            if (self.chars.is_all_lower0): 
                 return te.lower()
-            elif (self.chars.is_capital_upper): 
-                return MiscHelper.convertFirstCharUpperAndOtherLower(te)
+            elif (self.chars.is_capital_upper0): 
+                return MiscHelper.convert_first_char_upper_and_other_lower(te)
         return te
     
     @staticmethod
-    def getSourceTextTokens(begin : 'Token', end : 'Token') -> typing.List['TextToken']:
+    def get_source_text_tokens(begin : 'Token', end : 'Token') -> typing.List['TextToken']:
         from pullenti.ner.MetaToken import MetaToken
         res = list()
         t = begin
@@ -241,31 +243,31 @@ class TextToken(Token):
             if (isinstance(t, TextToken)): 
                 res.append(Utils.asObjectOrNull(t, TextToken))
             elif (isinstance(t, MetaToken)): 
-                res.extend(TextToken.getSourceTextTokens((t).begin_token, (t).end_token))
+                res.extend(TextToken.get_source_text_tokens((t).begin_token, (t).end_token))
             t = t.next0_
         return res
     
     @property
-    def is_pure_verb(self) -> bool:
+    def is_pure_verb0(self) -> bool:
         """ Признак того, что это чистый глагол """
         ret = False
-        if ((self.isValue("МОЖНО", None) or self.isValue("МОЖЕТ", None) or self.isValue("ДОЛЖНЫЙ", None)) or self.isValue("НУЖНО", None)): 
+        if ((self.is_value("МОЖНО", None) or self.is_value("МОЖЕТ", None) or self.is_value("ДОЛЖНЫЙ", None)) or self.is_value("НУЖНО", None)): 
             return True
         for it in self.morph.items: 
-            if ((isinstance(it, MorphWordForm)) and (it).is_in_dictionary): 
-                if (it.class0_.is_verb and it.case_.is_undefined): 
+            if ((isinstance(it, MorphWordForm)) and (it).is_in_dictionary0): 
+                if (it.class0_.is_verb0 and it.case_.is_undefined0): 
                     ret = True
-                elif (not it.class0_.is_verb): 
-                    if (it.class0_.is_adjective and it.containsAttr("к.ф.", None)): 
+                elif (not it.class0_.is_verb0): 
+                    if (it.class0_.is_adjective0 and it.contains_attr("к.ф.", None)): 
                         pass
                     else: 
                         return False
         return ret
     
     @property
-    def is_verb_be(self) -> bool:
+    def is_verb_be0(self) -> bool:
         """ Проверка, что это глагол типа БЫТЬ, ЯВЛЯТЬСЯ и т.п. """
-        if ((self.isValue("БЫТЬ", None) or self.isValue("ЕСТЬ", None) or self.isValue("ЯВЛЯТЬ", None)) or self.isValue("BE", None)): 
+        if ((self.is_value("БЫТЬ", None) or self.is_value("ЕСТЬ", None) or self.is_value("ЯВЛЯТЬ", None)) or self.is_value("BE", None)): 
             return True
         if (self.term == "IS" or self.term == "WAS" or self.term == "BECAME"): 
             return True
@@ -276,27 +278,27 @@ class TextToken(Token):
     def _serialize(self, stream : io.IOBase) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         super()._serialize(stream)
-        SerializerHelper.serializeString(stream, self.term)
-        SerializerHelper.serializeString(stream, self.lemma)
-        SerializerHelper.serializeShort(stream, self.invariant_prefix_length)
-        SerializerHelper.serializeShort(stream, self.max_length)
+        SerializerHelper.serialize_string(stream, self.term)
+        SerializerHelper.serialize_string(stream, self.lemma)
+        SerializerHelper.serialize_short(stream, self.invariant_prefix_length)
+        SerializerHelper.serialize_short(stream, self.max_length)
     
-    def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit') -> None:
+    def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit', vers : int) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
-        super()._deserialize(stream, kit_)
-        self.term = SerializerHelper.deserializeString(stream)
-        self.lemma = SerializerHelper.deserializeString(stream)
-        self.invariant_prefix_length = SerializerHelper.deserializeShort(stream)
-        self.max_length = SerializerHelper.deserializeShort(stream)
+        super()._deserialize(stream, kit_, vers)
+        self.term = SerializerHelper.deserialize_string(stream)
+        self.lemma = SerializerHelper.deserialize_string(stream)
+        self.invariant_prefix_length = SerializerHelper.deserialize_short(stream)
+        self.max_length = SerializerHelper.deserialize_short(stream)
     
     @staticmethod
-    def _new503(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : str) -> 'TextToken':
+    def _new540(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : str) -> 'TextToken':
         res = TextToken(_arg1, _arg2)
         res.term0 = _arg3
         return res
     
     @staticmethod
-    def _new506(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : 'CharsInfo', _arg4 : int, _arg5 : int, _arg6 : str) -> 'TextToken':
+    def _new543(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : 'CharsInfo', _arg4 : int, _arg5 : int, _arg6 : str) -> 'TextToken':
         res = TextToken(_arg1, _arg2)
         res.chars = _arg3
         res.begin_char = _arg4

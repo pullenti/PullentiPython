@@ -7,8 +7,11 @@ from enum import IntEnum
 class MorphNumber(IntEnum):
     """ Число (единственное-множественное) """
     UNDEFINED = 0
+    """ Неопределено """
     SINGULAR = 1
+    """ Единственное """
     PLURAL = 2
+    """ Множественное """
     
     @classmethod
     def has_value(cls, value):

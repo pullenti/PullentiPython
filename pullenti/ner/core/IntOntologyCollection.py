@@ -21,7 +21,7 @@ class IntOntologyCollection:
             self.owner = None;
         
         @staticmethod
-        def _new511(_arg1 : 'IntOntologyItem', _arg2 : object) -> 'OntologyTermin':
+        def _new557(_arg1 : 'IntOntologyItem', _arg2 : object) -> 'OntologyTermin':
             res = IntOntologyCollection.OntologyTermin()
             res.owner = _arg1
             res.tag = _arg2
@@ -37,7 +37,7 @@ class IntOntologyCollection:
         """ Список элементов онтологии """
         return self.__m_items
     
-    def addItem(self, di : 'IntOntologyItem') -> None:
+    def add_item(self, di : 'IntOntologyItem') -> None:
         """ Добавить элемент (внимание, после добавления нельзя менять термины у элемента)
         
         Args:
@@ -51,13 +51,13 @@ class IntOntologyCollection:
                 (di.termins[i]).owner = di
                 self.__m_termins.add(di.termins[i])
             else: 
-                nt = IntOntologyCollection.OntologyTermin._new511(di, di.termins[i].tag)
-                di.termins[i].copyTo(nt)
+                nt = IntOntologyCollection.OntologyTermin._new557(di, di.termins[i].tag)
+                di.termins[i].copy_to(nt)
                 self.__m_termins.add(nt)
                 di.termins[i] = (nt)
             i += 1
     
-    def addReferent(self, referent : 'Referent') -> bool:
+    def add_referent(self, referent : 'Referent') -> bool:
         """ Добавить в онтологию сущность
         
         Args:
@@ -68,7 +68,7 @@ class IntOntologyCollection:
             return False
         oi = None
         if (referent._int_ontology_item is not None and referent._int_ontology_item.owner == self): 
-            oi1 = referent.createOntologyItem()
+            oi1 = referent.create_ontology_item()
             if (oi1 is None or len(oi1.termins) == len(referent._int_ontology_item.termins)): 
                 return True
             for t in referent._int_ontology_item.termins: 
@@ -78,23 +78,23 @@ class IntOntologyCollection:
                 del self.__m_items[i]
             oi = oi1
         else: 
-            oi = referent.createOntologyItem()
+            oi = referent.create_ontology_item()
         if (oi is None): 
             return False
         oi.referent = referent
         referent._int_ontology_item = oi
-        self.addItem(oi)
+        self.add_item(oi)
         return True
     
-    def addTermin(self, di : 'IntOntologyItem', t : 'Termin') -> None:
+    def add_termin(self, di : 'IntOntologyItem', t : 'Termin') -> None:
         """ Добавить термин в существующий элемент
         
         Args:
             di(IntOntologyItem): 
             t(Termin): 
         """
-        nt = IntOntologyCollection.OntologyTermin._new511(di, t.tag)
-        t.copyTo(nt)
+        nt = IntOntologyCollection.OntologyTermin._new557(di, t.tag)
+        t.copy_to(nt)
         self.__m_termins.add(nt)
     
     def add(self, t : 'Termin') -> None:
@@ -105,10 +105,10 @@ class IntOntologyCollection:
         """
         self.__m_termins.add(t)
     
-    def findTerminByCanonicText(self, text : str) -> typing.List['Termin']:
-        return self.__m_termins.findTerminByCanonicText(text)
+    def find_termin_by_canonic_text(self, text : str) -> typing.List['Termin']:
+        return self.__m_termins.find_termin_by_canonic_text(text)
     
-    def tryAttach(self, t : 'Token', referent_type_name : str=None, can_be_geo_object : bool=False) -> typing.List['IntOntologyToken']:
+    def try_attach(self, t : 'Token', referent_type_name : str=None, can_be_geo_object : bool=False) -> typing.List['IntOntologyToken']:
         """ Привязать с указанной позиции
         
         Args:
@@ -116,7 +116,7 @@ class IntOntologyCollection:
             can_be_geo_object(bool): при True внутри может быть географический объект (Министерство РФ по делам ...)
         
         """
-        tts = self.__m_termins.tryParseAll(t, (TerminParseAttr.CANBEGEOOBJECT if can_be_geo_object else TerminParseAttr.NO))
+        tts = self.__m_termins.try_parse_all(t, (TerminParseAttr.CANBEGEOOBJECT if can_be_geo_object else TerminParseAttr.NO))
         if (tts is None): 
             return None
         res = list()
@@ -132,10 +132,10 @@ class IntOntologyCollection:
                 if (di in dis): 
                     continue
                 dis.append(di)
-            res.append(IntOntologyToken._new513(tt.begin_token, tt.end_token, di, tt.termin, tt.morph))
+            res.append(IntOntologyToken._new559(tt.begin_token, tt.end_token, di, tt.termin, tt.morph))
         return (None if len(res) == 0 else res)
     
-    def tryAttachByItem(self, item : 'IntOntologyItem') -> typing.List['IntOntologyItem']:
+    def try_attach_by_item(self, item : 'IntOntologyItem') -> typing.List['IntOntologyItem']:
         """ Найти похожие онтологические объекты
         
         Args:
@@ -146,7 +146,7 @@ class IntOntologyCollection:
             return None
         res = None
         for t in item.termins: 
-            li = self.__m_termins.tryAttach(t)
+            li = self.__m_termins.try_attach(t)
             if (li is not None): 
                 for tt in li: 
                     if (isinstance(tt, IntOntologyCollection.OntologyTermin)): 
@@ -157,7 +157,7 @@ class IntOntologyCollection:
                             res.append(oi)
         return res
     
-    def tryAttachByReferent(self, referent : 'Referent', item : 'IntOntologyItem'=None, must_be_single : bool=False) -> typing.List['Referent']:
+    def try_attach_by_referent(self, referent : 'Referent', item : 'IntOntologyItem'=None, must_be_single : bool=False) -> typing.List['Referent']:
         """ Найти эквивалентные сущности через онтологические объекты
         
         Args:
@@ -168,17 +168,17 @@ class IntOntologyCollection:
         if (referent is None): 
             return None
         if (item is None): 
-            item = referent.createOntologyItem()
+            item = referent.create_ontology_item()
         if (item is None): 
             return None
-        li = self.tryAttachByItem(item)
+        li = self.try_attach_by_item(item)
         if (li is None): 
             return None
         res = None
         for oi in li: 
             r = Utils.ifNotNull(oi.referent, (Utils.asObjectOrNull(oi.tag, Referent)))
             if (r is not None): 
-                if (referent.canBeEquals(r, Referent.EqualType.WITHINONETEXT)): 
+                if (referent.can_be_equals(r, Referent.EqualType.WITHINONETEXT)): 
                     if (res is None): 
                         res = list()
                     if (not r in res): 
@@ -189,7 +189,7 @@ class IntOntologyCollection:
                 while i < (len(res) - 1): 
                     j = i + 1
                     while j < len(res): 
-                        if (not res[i].canBeEquals(res[j], Referent.EqualType.FORMERGING)): 
+                        if (not res[i].can_be_equals(res[j], Referent.EqualType.FORMERGING)): 
                             return None
                         j += 1
                     i += 1
@@ -218,7 +218,7 @@ class IntOntologyCollection:
             i += 1
     
     @staticmethod
-    def _new2661(_arg1 : bool) -> 'IntOntologyCollection':
+    def _new2754(_arg1 : bool) -> 'IntOntologyCollection':
         res = IntOntologyCollection()
         res.is_ext_ontology = _arg1
         return res

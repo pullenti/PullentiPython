@@ -33,22 +33,22 @@ class ReferentToken(MetaToken):
     def is_referent(self) -> bool:
         return True
     
-    def getReferent(self) -> 'Referent':
+    def get_referent(self) -> 'Referent':
         return self.referent
     
-    def getReferents(self) -> typing.List['Referent']:
+    def get_referents(self) -> typing.List['Referent']:
         res = list()
         if (self.referent is not None): 
             res.append(self.referent)
-        ri = super().getReferents()
+        ri = super().get_referents()
         if (ri is not None): 
             res.extend(ri)
         return res
     
-    def saveToLocalOntology(self) -> None:
+    def save_to_local_ontology(self) -> None:
         if (self.data is None): 
             return
-        r = self.data.registerReferent(self.referent)
+        r = self.data.register_referent(self.referent)
         self.data = (None)
         if (r is not None): 
             self.referent = r
@@ -57,17 +57,17 @@ class ReferentToken(MetaToken):
             anno.occurence_of = self.referent
             anno.begin_char = self.begin_char
             anno.end_char = self.end_char
-            self.referent.addOccurence(anno)
+            self.referent.add_occurence(anno)
     
-    def setDefaultLocalOnto(self, proc : 'Processor') -> None:
+    def set_default_local_onto(self, proc : 'Processor') -> None:
         if (self.referent is None or self.kit is None or proc is None): 
             return
         for a in proc.analyzers: 
-            if (a.createReferent(self.referent.type_name) is not None): 
-                self.data = self.kit.getAnalyzerData(a)
+            if (a.create_referent(self.referent.type_name) is not None): 
+                self.data = self.kit.get_analyzer_data(a)
                 break
     
-    def _replaceReferent(self, old_referent : 'Referent', new_referent : 'Referent') -> None:
+    def _replace_referent(self, old_referent : 'Referent', new_referent : 'Referent') -> None:
         if (self.referent == old_referent): 
             self.referent = new_referent
         if (self.end_token is None): 
@@ -77,7 +77,7 @@ class ReferentToken(MetaToken):
             if (t.end_char > self.end_char): 
                 break
             if (isinstance(t, ReferentToken)): 
-                (t)._replaceReferent(old_referent, new_referent)
+                (t)._replace_referent(old_referent, new_referent)
             if (t == self.end_token): 
                 break
             t = t.next0_
@@ -87,54 +87,54 @@ class ReferentToken(MetaToken):
         id0_ = 0
         if (self.referent is not None and (isinstance(self.referent.tag, int))): 
             id0_ = (self.referent.tag)
-        SerializerHelper.serializeInt(stream, id0_)
+        SerializerHelper.serialize_int(stream, id0_)
     
-    def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit') -> None:
-        super()._deserialize(stream, kit_)
-        id0_ = SerializerHelper.deserializeInt(stream)
+    def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit', vers : int) -> None:
+        super()._deserialize(stream, kit_, vers)
+        id0_ = SerializerHelper.deserialize_int(stream)
         if (id0_ > 0): 
             self.referent = kit_.entities[id0_ - 1]
     
     @staticmethod
-    def _new115(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'AnalyzerData') -> 'ReferentToken':
+    def _new116(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'AnalyzerData') -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.data = _arg4
         return res
     
     @staticmethod
-    def _new746(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection') -> 'ReferentToken':
+    def _new738(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection') -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         return res
     
     @staticmethod
-    def _new748(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : object) -> 'ReferentToken':
+    def _new740(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : object) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.tag = _arg4
         return res
     
     @staticmethod
-    def _new1252(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : 'AnalyzerData') -> 'ReferentToken':
+    def _new1257(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : 'AnalyzerData') -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         res.data = _arg5
         return res
     
     @staticmethod
-    def _new2341(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : int) -> 'ReferentToken':
+    def _new2423(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : int) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         res.misc_attrs = _arg5
         return res
     
     @staticmethod
-    def _new2440(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : int) -> 'ReferentToken':
+    def _new2523(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : int) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.misc_attrs = _arg4
         return res
     
     @staticmethod
-    def _new2450(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : object) -> 'ReferentToken':
+    def _new2533(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : object) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         res.tag = _arg5

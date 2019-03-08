@@ -15,7 +15,7 @@ class ResumeToken(MetaToken):
         self.refs = list()
     
     @staticmethod
-    def tryParse(t : 'Token', prev : 'ResumeToken'=None) -> 'ResumeToken':
+    def try_parse(t : 'Token', prev : 'ResumeToken'=None) -> 'ResumeToken':
         if (t is None): 
             return None
         return None

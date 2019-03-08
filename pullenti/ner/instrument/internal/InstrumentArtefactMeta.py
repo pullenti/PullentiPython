@@ -12,9 +12,9 @@ class InstrumentArtefactMeta(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.instrument.InstrumentArtefact import InstrumentArtefact
         InstrumentArtefactMeta.GLOBAL_META = InstrumentArtefactMeta()
-        InstrumentArtefactMeta.GLOBAL_META.addFeature(InstrumentArtefact.ATTR_TYPE, "Тип", 0, 1)
-        InstrumentArtefactMeta.GLOBAL_META.addFeature(InstrumentArtefact.ATTR_VALUE, "Значение", 0, 1)
-        InstrumentArtefactMeta.GLOBAL_META.addFeature(InstrumentArtefact.ATTR_REF, "Ссылка на объект", 0, 1).show_as_parent = True
+        InstrumentArtefactMeta.GLOBAL_META.add_feature(InstrumentArtefact.ATTR_TYPE, "Тип", 0, 1)
+        InstrumentArtefactMeta.GLOBAL_META.add_feature(InstrumentArtefact.ATTR_VALUE, "Значение", 0, 1)
+        InstrumentArtefactMeta.GLOBAL_META.add_feature(InstrumentArtefact.ATTR_REF, "Ссылка на объект", 0, 1).show_as_parent = True
     
     @property
     def name(self) -> str:
@@ -26,7 +26,7 @@ class InstrumentArtefactMeta(ReferentClass):
     
     IMAGE_ID = "artefact"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         return InstrumentArtefactMeta.IMAGE_ID
     
     GLOBAL_META = None

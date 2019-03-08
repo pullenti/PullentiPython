@@ -12,13 +12,13 @@ class MetaGeo(ReferentClass):
     def initialize() -> None:
         from pullenti.ner.geo.GeoReferent import GeoReferent
         MetaGeo._global_meta = MetaGeo()
-        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_NAME, "Наименование", 1, 0)
-        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_TYPE, "Тип", 1, 0)
-        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_ALPHA2, "Код страны", 0, 1)
-        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_HIGHER, "Вышестоящий объект", 0, 1)
-        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_REF, "Ссылка на объект", 0, 1)
-        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_FIAS, "Объект ФИАС", 0, 1)
-        MetaGeo._global_meta.addFeature(GeoReferent.ATTR_BTI, "Код БТИ", 0, 1)
+        MetaGeo._global_meta.add_feature(GeoReferent.ATTR_NAME, "Наименование", 1, 0)
+        MetaGeo._global_meta.add_feature(GeoReferent.ATTR_TYPE, "Тип", 1, 0)
+        MetaGeo._global_meta.add_feature(GeoReferent.ATTR_ALPHA2, "Код страны", 0, 1)
+        MetaGeo._global_meta.add_feature(GeoReferent.ATTR_HIGHER, "Вышестоящий объект", 0, 1)
+        MetaGeo._global_meta.add_feature(GeoReferent.ATTR_REF, "Ссылка на объект", 0, 1)
+        MetaGeo._global_meta.add_feature(GeoReferent.ATTR_FIAS, "Объект ФИАС", 0, 1)
+        MetaGeo._global_meta.add_feature(GeoReferent.ATTR_BTI, "Код БТИ", 0, 1)
     
     @property
     def name(self) -> str:
@@ -43,21 +43,21 @@ class MetaGeo(ReferentClass):
     
     UNION_IMAGE_ID = "union"
     
-    def getImageId(self, obj : 'Referent'=None) -> str:
+    def get_image_id(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.geo.GeoReferent import GeoReferent
         ter = Utils.asObjectOrNull(obj, GeoReferent)
         if (ter is not None): 
-            if (ter.is_union): 
+            if (ter.is_union0): 
                 return MetaGeo.UNION_IMAGE_ID
-            if (ter.is_city and ((ter.is_state or ter.is_region))): 
+            if (ter.is_city0 and ((ter.is_state0 or ter.is_region0))): 
                 return MetaGeo.COUNTRY_CITY_IMAGE_ID
-            if (ter.is_state): 
+            if (ter.is_state0): 
                 return MetaGeo.COUNTRY_IMAGE_ID
-            if (ter.is_city): 
+            if (ter.is_city0): 
                 return MetaGeo.CITY_IMAGE_ID
-            if (ter.is_region and ter.higher is not None and ter.higher.is_city): 
+            if (ter.is_region0 and ter.higher is not None and ter.higher.is_city0): 
                 return MetaGeo.DISTRICT_IMAGE_ID
-            if (ter.is_territory): 
+            if (ter.is_territory0): 
                 return MetaGeo.TERR_IMAGE_ID
         return MetaGeo.REGION_IMAGE_ID
     

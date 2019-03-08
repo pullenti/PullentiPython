@@ -11,17 +11,18 @@ from pullenti.morph.DerivateGroup import DerivateGroup
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.morph.internal.ExplanTreeNode import ExplanTreeNode
+from pullenti.morph.internal.DeserializeHelper import DeserializeHelper
 
 class DerivateDictionary:
     
     def __init__(self) -> None:
         self.lang = None;
         self.__m_inited = False
+        self.__m_buf = None;
         self._m_root = ExplanTreeNode()
         self._m_all_groups = list()
     
     def init(self, lang_ : 'MorphLang') -> bool:
-        from pullenti.morph.internal.ExplanSerializeHelper import ExplanSerializeHelper
         if (self.__m_inited): 
             return True
         # ignored: assembly = 
@@ -35,7 +36,7 @@ class DerivateDictionary:
                 with Utils.getResourceStream('pullenti.morph.properties', n) as stream: 
                     stream.seek(0, io.SEEK_SET)
                     self._m_all_groups.clear()
-                    ExplanSerializeHelper.deserializeDD(stream, self, True)
+                    self.__m_buf = DeserializeHelper.deserializedd(stream, self, True)
                     self.lang = lang_
                 self.__m_inited = True
                 return True
@@ -66,7 +67,7 @@ class DerivateDictionary:
                     tn.nodes[k] = tn1
                 tn = tn1
                 i += 1
-            tn._addGroup(dg)
+            tn._add_group(dg)
     
     def find(self, word : str, try_create : bool, lang_ : 'MorphLang') -> typing.List['DerivateGroup']:
         if (Utils.isNullOrEmpty(word)): 
@@ -84,8 +85,10 @@ class DerivateDictionary:
             if (not inoutres4): 
                 break
             tn = tn1
-            if (tn._lazy is not None): 
-                tn._load()
+            if (tn.lazy_pos > 0): 
+                self.__m_buf.seek(tn.lazy_pos)
+                DeserializeHelper.deserialize_tree_node(self.__m_buf, self, tn, True)
+                tn.lazy_pos = 0
             i += 1
         res = (None if i < len(word) else tn.groups)
         li = None
@@ -106,9 +109,9 @@ class DerivateDictionary:
         elif (isinstance(res, DerivateGroup)): 
             li = list()
             li.append(Utils.asObjectOrNull(res, DerivateGroup))
-        if (li is not None and lang_ is not None and not lang_.is_undefined): 
+        if (li is not None and lang_ is not None and not lang_.is_undefined0): 
             for i in range(len(li) - 1, -1, -1):
-                if (not li[i].containsWord(word, lang_)): 
+                if (not li[i].contains_word(word, lang_)): 
                     del li[i]
             else: i = -1
         if (li is not None and len(li) > 0): 
@@ -146,7 +149,7 @@ class DerivateDictionary:
             ch3 = word[len(word) - 4]
             word1 = None
             if (ch3 != 'Н'): 
-                if (LanguageHelper.isCyrillicVowel(ch3)): 
+                if (LanguageHelper.is_cyrillic_vowel(ch3)): 
                     word1 = (word[0:0+len(word) - 3] + "Н" + word[len(word) - 3:])
             else: 
                 word1 = (word[0:0+len(word) - 4] + word[len(word) - 3:])
@@ -166,9 +169,9 @@ class DerivateDictionary:
             return None
         len0_ = len(word) - 4
         i = 1
-        first_pass2716 = True
+        first_pass2813 = True
         while True:
-            if first_pass2716: first_pass2716 = False
+            if first_pass2813: first_pass2813 = False
             else: i += 1
             if (not (i <= len0_)): break
             rest = word[i:]
@@ -182,7 +185,7 @@ class DerivateDictionary:
                     if (dg.not_generate): 
                         if (len(rest) < 5): 
                             continue
-                    gg = dg.createByPrefix(pref, lang_)
+                    gg = dg.create_by_prefix(pref, lang_)
                     if (gg is not None): 
                         gen.append(gg)
                         self.add(gg)

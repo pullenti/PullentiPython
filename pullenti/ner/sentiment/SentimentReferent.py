@@ -30,60 +30,60 @@ class SentimentReferent(Referent):
     
     ATTR_SPELLING = "SPELLING"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
+    def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         res = io.StringIO()
-        print(MetaSentiment.FTYP.convertInnerValueToOuterValue(self.getStringValue(SentimentReferent.ATTR_KIND), lang), end="", file=res)
+        print(MetaSentiment.FTYP.convert_inner_value_to_outer_value(self.get_string_value(SentimentReferent.ATTR_KIND), lang), end="", file=res)
         print(" {0}".format(Utils.ifNotNull(self.spelling, "")), end="", file=res, flush=True)
         if (self.coef > 0): 
             print(" (coef={0})".format(self.coef), end="", file=res, flush=True)
-        r = self.getSlotValue(SentimentReferent.ATTR_REF)
+        r = self.get_slot_value(SentimentReferent.ATTR_REF)
         if (r is not None and not short_variant): 
             print(" -> {0}".format(r), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
     @property
     def kind(self) -> 'SentimentKind':
-        s = self.getStringValue(SentimentReferent.ATTR_KIND)
+        s = self.get_string_value(SentimentReferent.ATTR_KIND)
         if (s is None): 
             return SentimentKind.UNDEFINED
         try: 
             res = Utils.valToEnum(s, SentimentKind)
             if (isinstance(res, SentimentKind)): 
                 return Utils.valToEnum(res, SentimentKind)
-        except Exception as ex2509: 
+        except Exception as ex2592: 
             pass
         return SentimentKind.UNDEFINED
     @kind.setter
     def kind(self, value) -> 'SentimentKind':
         if (value != SentimentKind.UNDEFINED): 
-            self.addSlot(SentimentReferent.ATTR_KIND, Utils.enumToString(value), True, 0)
+            self.add_slot(SentimentReferent.ATTR_KIND, Utils.enumToString(value), True, 0)
         return value
     
     @property
     def spelling(self) -> str:
-        return self.getStringValue(SentimentReferent.ATTR_SPELLING)
+        return self.get_string_value(SentimentReferent.ATTR_SPELLING)
     @spelling.setter
     def spelling(self, value) -> str:
-        self.addSlot(SentimentReferent.ATTR_SPELLING, value, True, 0)
+        self.add_slot(SentimentReferent.ATTR_SPELLING, value, True, 0)
         return value
     
     @property
     def coef(self) -> int:
-        val = self.getStringValue(SentimentReferent.ATTR_COEF)
+        val = self.get_string_value(SentimentReferent.ATTR_COEF)
         if (val is None): 
             return 0
-        wrapi2510 = RefOutArgWrapper(0)
-        inoutres2511 = Utils.tryParseInt(val, wrapi2510)
-        i = wrapi2510.value
-        if (not inoutres2511): 
+        wrapi2593 = RefOutArgWrapper(0)
+        inoutres2594 = Utils.tryParseInt(val, wrapi2593)
+        i = wrapi2593.value
+        if (not inoutres2594): 
             return 0
         return i
     @coef.setter
     def coef(self, value) -> int:
-        self.addSlot(SentimentReferent.ATTR_COEF, str(value), True, 0)
+        self.add_slot(SentimentReferent.ATTR_COEF, str(value), True, 0)
         return value
     
-    def canBeEquals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
         sr = Utils.asObjectOrNull(obj, SentimentReferent)
         if (sr is None): 
             return False
@@ -93,10 +93,10 @@ class SentimentReferent(Referent):
             return False
         return True
     
-    def canBeGeneralFor(self, obj : 'Referent') -> bool:
+    def can_be_general_for(self, obj : 'Referent') -> bool:
         return False
     
-    def createOntologyItem(self) -> 'IntOntologyItem':
+    def create_ontology_item(self) -> 'IntOntologyItem':
         oi = IntOntologyItem(self)
         oi.termins.append(Termin(self.spelling))
         return oi

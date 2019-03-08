@@ -15,4 +15,4 @@ class TableRowToken(MetaToken):
         self._last_row = False
     
     def __str__(self) -> str:
-        return "ROW ({0} cells) : {1}".format(len(self.cells), self.getSourceText())
+        return "ROW ({0} cells) : {1}".format(len(self.cells), self.get_source_text())

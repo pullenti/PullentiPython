@@ -13,35 +13,35 @@ class AnalyzerDataWithOntology(AnalyzerData):
         super().__init__()
         self.local_ontology = IntOntologyCollection()
     
-    def registerReferent(self, referent : 'Referent') -> 'Referent':
-        li = self.local_ontology.tryAttachByReferent(referent, None, True)
+    def register_referent(self, referent : 'Referent') -> 'Referent':
+        li = self.local_ontology.try_attach_by_referent(referent, None, True)
         if (li is not None): 
             for i in range(len(li) - 1, -1, -1):
-                if (li[i].canBeGeneralFor(referent) or referent.canBeGeneralFor(li[i])): 
+                if (li[i].can_be_general_for(referent) or referent.can_be_general_for(li[i])): 
                     del li[i]
         if (li is not None and len(li) > 0): 
             res = li[0]
             if (res != referent): 
-                res.mergeSlots(referent, True)
+                res.merge_slots(referent, True)
             if (len(li) > 1 and self.kit is not None): 
                 i = 1
                 while i < len(li): 
-                    li[0].mergeSlots(li[i], True)
+                    li[0].merge_slots(li[i], True)
                     for ta in li[i].occurrence: 
-                        li[0].addOccurence(ta)
-                    self.kit.replaceReferent(li[i], li[0])
+                        li[0].add_occurence(ta)
+                    self.kit.replace_referent(li[i], li[0])
                     self.local_ontology.remove(li[i])
                     i += 1
             if (res._m_ext_referents is not None): 
-                res = super().registerReferent(res)
-            self.local_ontology.addReferent(res)
+                res = super().register_referent(res)
+            self.local_ontology.add_referent(res)
             return res
-        res = super().registerReferent(referent)
+        res = super().register_referent(referent)
         if (res is None): 
             return None
-        self.local_ontology.addReferent(res)
+        self.local_ontology.add_referent(res)
         return res
     
-    def removeReferent(self, r : 'Referent') -> None:
+    def remove_referent(self, r : 'Referent') -> None:
         self.local_ontology.remove(r)
-        super().removeReferent(r)
+        super().remove_referent(r)

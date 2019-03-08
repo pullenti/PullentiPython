@@ -29,7 +29,7 @@ class DecreeChangeValueReferent(Referent):
     
     ATTR_NEWITEM = "NEWITEM"
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
+    def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         nws = self.new_items
         if (len(nws) > 0): 
@@ -37,12 +37,12 @@ class DecreeChangeValueReferent(Referent):
                 dpr = DecreePartReferent()
                 ii = p.find(' ')
                 if (ii < 0): 
-                    dpr.addSlot(p, "", False, 0)
+                    dpr.add_slot(p, "", False, 0)
                 else: 
-                    dpr.addSlot(p[0:0+ii], p[ii + 1:], False, 0)
-                print(" новый '{0}'".format(dpr.toString(True, None, 0)), end="", file=res, flush=True)
+                    dpr.add_slot(p[0:0+ii], p[ii + 1:], False, 0)
+                print(" новый '{0}'".format(dpr.to_string(True, None, 0)), end="", file=res, flush=True)
         if (self.kind != DecreeChangeValueKind.UNDEFINED): 
-            print(" {0}".format(str(MetaDecreeChangeValue.KIND_FEATURE.convertInnerValueToOuterValue(self.kind, lang)).lower()), end="", file=res, flush=True)
+            print(" {0}".format(str(MetaDecreeChangeValue.KIND_FEATURE.convert_inner_value_to_outer_value(self.kind, lang)).lower()), end="", file=res, flush=True)
         if (self.number is not None): 
             print(" {0}".format(self.number), end="", file=res, flush=True)
         val = self.value
@@ -57,38 +57,38 @@ class DecreeChangeValueReferent(Referent):
     @property
     def kind(self) -> 'DecreeChangeValueKind':
         """ Тип значение """
-        s = self.getStringValue(DecreeChangeValueReferent.ATTR_KIND)
+        s = self.get_string_value(DecreeChangeValueReferent.ATTR_KIND)
         if (s is None): 
             return DecreeChangeValueKind.UNDEFINED
         try: 
             res = Utils.valToEnum(s, DecreeChangeValueKind)
             if (isinstance(res, DecreeChangeValueKind)): 
                 return Utils.valToEnum(res, DecreeChangeValueKind)
-        except Exception as ex1100: 
+        except Exception as ex1102: 
             pass
         return DecreeChangeValueKind.UNDEFINED
     @kind.setter
     def kind(self, value_) -> 'DecreeChangeValueKind':
         if (value_ != DecreeChangeValueKind.UNDEFINED): 
-            self.addSlot(DecreeChangeValueReferent.ATTR_KIND, Utils.enumToString(value_), True, 0)
+            self.add_slot(DecreeChangeValueReferent.ATTR_KIND, Utils.enumToString(value_), True, 0)
         return value_
     
     @property
     def value(self) -> str:
         """ Значение """
-        return self.getStringValue(DecreeChangeValueReferent.ATTR_VALUE)
+        return self.get_string_value(DecreeChangeValueReferent.ATTR_VALUE)
     @value.setter
     def value(self, value_) -> str:
-        self.addSlot(DecreeChangeValueReferent.ATTR_VALUE, value_, True, 0)
+        self.add_slot(DecreeChangeValueReferent.ATTR_VALUE, value_, True, 0)
         return value_
     
     @property
     def number(self) -> str:
         """ Номер (для предложений и сносок) """
-        return self.getStringValue(DecreeChangeValueReferent.ATTR_NUMBER)
+        return self.get_string_value(DecreeChangeValueReferent.ATTR_NUMBER)
     @number.setter
     def number(self, value_) -> str:
-        self.addSlot(DecreeChangeValueReferent.ATTR_NUMBER, value_, True, 0)
+        self.add_slot(DecreeChangeValueReferent.ATTR_NUMBER, value_, True, 0)
         return value_
     
     @property
@@ -101,11 +101,11 @@ class DecreeChangeValueReferent(Referent):
                 res.append(Utils.asObjectOrNull(s.value, str))
         return res
     
-    def canBeEquals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
         return obj == self
     
     @staticmethod
-    def _new802(_arg1 : 'DecreeChangeValueKind') -> 'DecreeChangeValueReferent':
+    def _new794(_arg1 : 'DecreeChangeValueKind') -> 'DecreeChangeValueReferent':
         res = DecreeChangeValueReferent()
         res.kind = _arg1
         return res

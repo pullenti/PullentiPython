@@ -8,6 +8,7 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphVoice import MorphVoice
+from pullenti.morph.MorphClass import MorphClass
 
 class VerbPhraseToken(MetaToken):
     """ Глагольная группа """
@@ -15,6 +16,7 @@ class VerbPhraseToken(MetaToken):
     def __init__(self, begin : 'Token', end : 'Token') -> None:
         super().__init__(begin, end, None)
         self.items = list()
+        self.preposition = None;
     
     @property
     def first_verb(self) -> 'VerbPhraseItemToken':
@@ -33,7 +35,7 @@ class VerbPhraseToken(MetaToken):
         return None
     
     @property
-    def is_verb_passive(self) -> bool:
+    def is_verb_passive0(self) -> bool:
         """ Признак того, что вся группа в пассивном залоге (по первому глаголу) """
         fi = self.first_verb
         if (fi is None or fi.verb_morph is None): 
@@ -51,5 +53,5 @@ class VerbPhraseToken(MetaToken):
         print(", {0}".format(str(self.morph)), end="", file=tmp, flush=True)
         return Utils.toStringStringIO(tmp)
     
-    def getNormalCaseText(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
-        return super().getNormalCaseText(mc, single_number, gender, keep_chars)
+    def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+        return super().get_normal_case_text(MorphClass.VERB, single_number, gender, keep_chars)

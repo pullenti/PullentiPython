@@ -4,15 +4,19 @@
 
 from enum import IntEnum
 
-class VerbType(IntEnum):
-    """ Тип глагольной формы """
+class ConjunctionType(IntEnum):
     UNDEFINED = 0
-    BE = 1
-    HAVE = 2
-    CAN = 3
-    MUST = 4
-    SAY = 5
-    CALL = 6
+    COMMA = 1
+    AND = 2
+    OR = 3
+    NOT = 4
+    BUT = 5
+    IF = 6
+    THEN = 7
+    ELSE = 8
+    LET = 9
+    WHEN = 10
+    BECAUSE = 11
     
     @classmethod
     def has_value(cls, value):

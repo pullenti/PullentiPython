@@ -25,43 +25,43 @@ class DateRangeReferent(Referent):
     @property
     def date_from(self) -> 'DateReferent':
         """ Начало диапазона """
-        return Utils.asObjectOrNull(self.getSlotValue(DateRangeReferent.ATTR_FROM), DateReferent)
+        return Utils.asObjectOrNull(self.get_slot_value(DateRangeReferent.ATTR_FROM), DateReferent)
     @date_from.setter
     def date_from(self, value) -> 'DateReferent':
-        self.addSlot(DateRangeReferent.ATTR_FROM, value, True, 0)
+        self.add_slot(DateRangeReferent.ATTR_FROM, value, True, 0)
         return value
     
     @property
     def date_to(self) -> 'DateReferent':
         """ Конец диапазона """
-        return Utils.asObjectOrNull(self.getSlotValue(DateRangeReferent.ATTR_TO), DateReferent)
+        return Utils.asObjectOrNull(self.get_slot_value(DateRangeReferent.ATTR_TO), DateReferent)
     @date_to.setter
     def date_to(self, value) -> 'DateReferent':
-        self.addSlot(DateRangeReferent.ATTR_TO, value, True, 0)
+        self.add_slot(DateRangeReferent.ATTR_TO, value, True, 0)
         return value
     
-    def toString(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
-        fr = (None if self.date_from is None else self.date_from._ToString(short_variant, lang, lev, 1))
-        to = (None if self.date_to is None else self.date_to._ToString(short_variant, lang, lev, 2))
+    def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
+        fr = (None if self.date_from is None else self.date_from._to_string(short_variant, lang, lev, 1))
+        to = (None if self.date_to is None else self.date_to._to_string(short_variant, lang, lev, 2))
         if (fr is not None and to is not None): 
             return "{0} {1}".format(fr, (to if self.date_to.century > 0 and self.date_to.year == 0 else to.lower()))
         if (fr is not None): 
             return str(fr)
         if (to is not None): 
             return to
-        return "{0} ? по ?".format(('з' if lang.is_ua else 'с'))
+        return "{0} ? по ?".format(('з' if lang.is_ua0 else 'с'))
     
-    def canBeEquals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
         dr = Utils.asObjectOrNull(obj, DateRangeReferent)
         if (dr is None): 
             return False
         if (self.date_from is not None): 
-            if (not self.date_from.canBeEquals(dr.date_from, typ)): 
+            if (not self.date_from.can_be_equals(dr.date_from, typ)): 
                 return False
         elif (dr.date_from is not None): 
             return False
         if (self.date_to is not None): 
-            if (not self.date_to.canBeEquals(dr.date_to, typ)): 
+            if (not self.date_to.can_be_equals(dr.date_to, typ)): 
                 return False
         elif (dr.date_to is not None): 
             return False
@@ -98,14 +98,14 @@ class DateRangeReferent(Referent):
         return 0
     
     @staticmethod
-    def _new728(_arg1 : 'DateReferent', _arg2 : 'DateReferent') -> 'DateRangeReferent':
+    def _new720(_arg1 : 'DateReferent', _arg2 : 'DateReferent') -> 'DateRangeReferent':
         res = DateRangeReferent()
         res.date_from = _arg1
         res.date_to = _arg2
         return res
     
     @staticmethod
-    def _new733(_arg1 : 'DateReferent') -> 'DateRangeReferent':
+    def _new725(_arg1 : 'DateReferent') -> 'DateRangeReferent':
         res = DateRangeReferent()
         res.date_to = _arg1
         return res

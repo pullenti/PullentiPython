@@ -25,6 +25,7 @@ from pullenti.ner.named.NamedEntityReferent import NamedEntityReferent
 from pullenti.ner.geo.GeoReferent import GeoReferent
 
 class NamedEntityAnalyzer(Analyzer):
+    """ Анализатор мелких именованных сущностей (планеты, памятники, здания, местоположения, планеты и пр.) """
     
     ANALYZER_NAME = "NAMEDENTITY"
     
@@ -50,13 +51,13 @@ class NamedEntityAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[Utils.enumToString(NamedEntityKind.MONUMENT)] = EpNerCoreInternalResourceHelper.getBytes("monument.png")
-        res[Utils.enumToString(NamedEntityKind.PLANET)] = EpNerCoreInternalResourceHelper.getBytes("planet.png")
-        res[Utils.enumToString(NamedEntityKind.LOCATION)] = EpNerCoreInternalResourceHelper.getBytes("location.png")
-        res[Utils.enumToString(NamedEntityKind.BUILDING)] = EpNerCoreInternalResourceHelper.getBytes("building.png")
+        res[Utils.enumToString(NamedEntityKind.MONUMENT)] = EpNerCoreInternalResourceHelper.get_bytes("monument.png")
+        res[Utils.enumToString(NamedEntityKind.PLANET)] = EpNerCoreInternalResourceHelper.get_bytes("planet.png")
+        res[Utils.enumToString(NamedEntityKind.LOCATION)] = EpNerCoreInternalResourceHelper.get_bytes("location.png")
+        res[Utils.enumToString(NamedEntityKind.BUILDING)] = EpNerCoreInternalResourceHelper.get_bytes("building.png")
         return res
     
-    def createReferent(self, type0_ : str) -> 'Referent':
+    def create_referent(self, type0_ : str) -> 'Referent':
         if (type0_ == NamedEntityReferent.OBJ_TYPENAME): 
             return NamedEntityReferent()
         return None
@@ -69,39 +70,39 @@ class NamedEntityAnalyzer(Analyzer):
     def progress_weight(self) -> int:
         return 3
     
-    def createAnalyzerData(self) -> 'AnalyzerData':
+    def create_analyzer_data(self) -> 'AnalyzerData':
         return AnalyzerDataWithOntology()
     
     def process(self, kit : 'AnalysisKit') -> None:
-        ad = Utils.asObjectOrNull(kit.getAnalyzerData(self), AnalyzerDataWithOntology)
+        ad = Utils.asObjectOrNull(kit.get_analyzer_data(self), AnalyzerDataWithOntology)
         t = kit.first_token
-        first_pass3054 = True
+        first_pass3154 = True
         while True:
-            if first_pass3054: first_pass3054 = False
+            if first_pass3154: first_pass3154 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            li = NamedItemToken.tryParseList(t, ad.local_ontology)
+            li = NamedItemToken.try_parse_list(t, ad.local_ontology)
             if (li is None or len(li) == 0): 
                 continue
-            rt = NamedEntityAnalyzer.__tryAttach(li)
+            rt = NamedEntityAnalyzer.__try_attach(li)
             if (rt is not None): 
-                rt.referent = ad.registerReferent(rt.referent)
-                kit.embedToken(rt)
+                rt.referent = ad.register_referent(rt.referent)
+                kit.embed_token(rt)
                 t = (rt)
                 continue
     
-    def _processReferent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        li = NamedItemToken.tryParseList(begin, None)
+    def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
+        li = NamedItemToken.try_parse_list(begin, None)
         if (li is None or len(li) == 0): 
             return None
-        rt = NamedEntityAnalyzer.__tryAttach(li)
+        rt = NamedEntityAnalyzer.__try_attach(li)
         if (rt is None): 
             return None
-        rt.data = begin.kit.getAnalyzerData(self)
+        rt.data = begin.kit.get_analyzer_data(self)
         return rt
     
     @staticmethod
-    def __canBeRef(ki : 'NamedEntityKind', re : 'Referent') -> bool:
+    def __can_be_ref(ki : 'NamedEntityKind', re : 'Referent') -> bool:
         if (re is None): 
             return False
         if (ki == NamedEntityKind.MONUMENT): 
@@ -110,7 +111,7 @@ class NamedEntityAnalyzer(Analyzer):
         elif (ki == NamedEntityKind.LOCATION): 
             if (isinstance(re, GeoReferent)): 
                 geo_ = Utils.asObjectOrNull(re, GeoReferent)
-                if (geo_.is_region or geo_.is_state): 
+                if (geo_.is_region0 or geo_.is_state0): 
                     return True
         elif (ki == NamedEntityKind.BUILDING): 
             if (re.type_name == "ORGANIZATION"): 
@@ -118,7 +119,7 @@ class NamedEntityAnalyzer(Analyzer):
         return False
     
     @staticmethod
-    def __tryAttach(toks : typing.List['NamedItemToken']) -> 'ReferentToken':
+    def __try_attach(toks : typing.List['NamedItemToken']) -> 'ReferentToken':
         typ = None
         re = None
         nams = None
@@ -145,11 +146,11 @@ class NamedEntityAnalyzer(Analyzer):
                 nams.append(toks[i])
             if (toks[i].type_value is None and toks[i].name_value is None): 
                 break
-            if (re is None and NamedEntityAnalyzer.__canBeRef(ki, toks[i].ref)): 
+            if (re is None and NamedEntityAnalyzer.__can_be_ref(ki, toks[i].ref)): 
                 re = toks[i]
             i += 1
         if ((i < len(toks)) and toks[i].ref is not None): 
-            if (NamedEntityAnalyzer.__canBeRef(ki, toks[i].ref)): 
+            if (NamedEntityAnalyzer.__can_be_ref(ki, toks[i].ref)): 
                 re = toks[i]
                 i += 1
         ok = False
@@ -162,34 +163,34 @@ class NamedEntityAnalyzer(Analyzer):
             elif ((nams[0].begin_char < typ.end_char) and not nams[0].is_wellknown): 
                 if (re is not None): 
                     ok = True
-                elif ((nams[0].chars.is_capital_upper and not MiscHelper.canBeStartOfSentence(nams[0].begin_token) and typ.morph.number != MorphNumber.PLURAL) and typ.morph.case_.is_nominative): 
+                elif ((nams[0].chars.is_capital_upper0 and not MiscHelper.can_be_start_of_sentence(nams[0].begin_token) and typ.morph.number != MorphNumber.PLURAL) and typ.morph.case_.is_nominative0): 
                     ok = True
             else: 
                 ok = True
         elif (nams is not None): 
-            if (len(nams) == 1 and nams[0].chars.is_all_lower): 
+            if (len(nams) == 1 and nams[0].chars.is_all_lower0): 
                 pass
             elif (nams[0].is_wellknown): 
                 ok = True
         if (not ok or ki == NamedEntityKind.UNDEFINED): 
             return None
-        nam = NamedEntityReferent._new1654(ki)
+        nam = NamedEntityReferent._new1728(ki)
         if (typ is not None): 
-            nam.addSlot(NamedEntityReferent.ATTR_TYPE, typ.type_value.lower(), False, 0)
+            nam.add_slot(NamedEntityReferent.ATTR_TYPE, typ.type_value.lower(), False, 0)
         if (nams is not None): 
             if (len(nams) == 1 and nams[0].is_wellknown and nams[0].type_value is not None): 
-                nam.addSlot(NamedEntityReferent.ATTR_TYPE, nams[0].type_value.lower(), False, 0)
+                nam.add_slot(NamedEntityReferent.ATTR_TYPE, nams[0].type_value.lower(), False, 0)
             if (typ is not None and (typ.end_char < nams[0].begin_char)): 
-                str0_ = MiscHelper.getTextValue(nams[0].begin_token, nams[len(nams) - 1].end_token, GetTextAttr.NO)
-                nam.addSlot(NamedEntityReferent.ATTR_NAME, str0_, False, 0)
+                str0_ = MiscHelper.get_text_value(nams[0].begin_token, nams[len(nams) - 1].end_token, GetTextAttr.NO)
+                nam.add_slot(NamedEntityReferent.ATTR_NAME, str0_, False, 0)
             tmp = io.StringIO()
             for n in nams: 
                 if (tmp.tell() > 0): 
                     print(' ', end="", file=tmp)
                 print(n.name_value, end="", file=tmp)
-            nam.addSlot(NamedEntityReferent.ATTR_NAME, Utils.toStringStringIO(tmp), False, 0)
+            nam.add_slot(NamedEntityReferent.ATTR_NAME, Utils.toStringStringIO(tmp), False, 0)
         if (re is not None): 
-            nam.addSlot(NamedEntityReferent.ATTR_REF, re.ref, False, 0)
+            nam.add_slot(NamedEntityReferent.ATTR_REF, re.ref, False, 0)
         return ReferentToken(nam, toks[0].begin_token, toks[i - 1].end_token)
     
     __m_inited = None
@@ -206,4 +207,4 @@ class NamedEntityAnalyzer(Analyzer):
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False
         except Exception as ex: 
             raise Utils.newException(ex.__str__(), ex)
-        ProcessorService.registerAnalyzer(NamedEntityAnalyzer())
+        ProcessorService.register_analyzer(NamedEntityAnalyzer())
