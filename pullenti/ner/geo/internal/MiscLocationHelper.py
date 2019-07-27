@@ -31,12 +31,12 @@ class MiscLocationHelper:
         if (t is None): 
             return False
         tt = t.previous
-        first_pass3002 = True
+        first_pass3030 = True
         while True:
-            if first_pass3002: first_pass3002 = False
+            if first_pass3030: first_pass3030 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
-            if ((tt.is_char_of(",.;:") or tt.is_hiphen0 or tt.is_and0) or tt.morph.class0_.is_conjunction0 or tt.morph.class0_.is_preposition0): 
+            if ((tt.is_char_of(",.;:") or tt.is_hiphen or tt.is_and) or tt.morph.class0_.is_conjunction or tt.morph.class0_.is_preposition): 
                 continue
             if (tt.is_value("ТЕРРИТОРИЯ", "ТЕРИТОРІЯ")): 
                 continue
@@ -71,12 +71,12 @@ class MiscLocationHelper:
             return False
         cou = 0
         tt = t.next0_
-        first_pass3003 = True
+        first_pass3031 = True
         while True:
-            if first_pass3003: first_pass3003 = False
+            if first_pass3031: first_pass3031 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
-            if ((tt.is_char_of(",.;") or tt.is_hiphen0 or tt.morph.class0_.is_conjunction0) or tt.morph.class0_.is_preposition0): 
+            if ((tt.is_char_of(",.;") or tt.is_hiphen or tt.morph.class0_.is_conjunction) or tt.morph.class0_.is_preposition): 
                 continue
             if (tt.is_value("ТЕРРИТОРИЯ", "ТЕРИТОРІЯ")): 
                 continue
@@ -94,7 +94,7 @@ class MiscLocationHelper:
     
     @staticmethod
     def check_near_before(t : 'Token') -> 'Token':
-        if (t is None or not t.morph.class0_.is_preposition0): 
+        if (t is None or not t.morph.class0_.is_preposition): 
             return None
         if (t.is_value("У", None) or t.is_value("ОКОЛО", None) or t.is_value("ВБЛИЗИ", None)): 
             return t
@@ -294,10 +294,10 @@ class MiscLocationHelper:
         """
         from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         res = None
-        wrapres1157 = RefOutArgWrapper(None)
-        inoutres1158 = Utils.tryGetValue(MiscLocationHelper.__m_geo_ref_by_name, name, wrapres1157)
-        res = wrapres1157.value
-        if (inoutres1158): 
+        wrapres1164 = RefOutArgWrapper(None)
+        inoutres1165 = Utils.tryGetValue(MiscLocationHelper.__m_geo_ref_by_name, name, wrapres1164)
+        res = wrapres1164.value
+        if (inoutres1165): 
             return res
         for r in TerrItemToken._m_all_states: 
             if (r.find_slot(None, name, True) is not None): 
@@ -321,11 +321,11 @@ class MiscLocationHelper:
         tok = MiscLocationHelper.__m_nords.try_parse(t, TerminParseAttr.NO)
         if (tok is None): 
             return None
-        res = MetaToken._new572(t, t, t.morph)
+        res = MetaToken._new573(t, t, t.morph)
         t1 = None
-        if ((t.next0_ is not None and t.next0_.is_hiphen0 and not t.is_whitespace_after0) and not t.is_whitespace_after0): 
+        if ((t.next0_ is not None and t.next0_.is_hiphen and not t.is_whitespace_after) and not t.is_whitespace_after): 
             t1 = t.next0_.next0_
-        elif (t.morph.class0_.is_adjective0 and (t.whitespaces_after_count < 2)): 
+        elif (t.morph.class0_.is_adjective and (t.whitespaces_after_count < 2)): 
             t1 = t.next0_
         if (t1 is not None): 
             tok = MiscLocationHelper.__m_nords.try_parse(t1, TerminParseAttr.NO)

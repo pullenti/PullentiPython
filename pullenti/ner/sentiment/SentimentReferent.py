@@ -50,7 +50,7 @@ class SentimentReferent(Referent):
             res = Utils.valToEnum(s, SentimentKind)
             if (isinstance(res, SentimentKind)): 
                 return Utils.valToEnum(res, SentimentKind)
-        except Exception as ex2592: 
+        except Exception as ex2620: 
             pass
         return SentimentKind.UNDEFINED
     @kind.setter
@@ -72,10 +72,10 @@ class SentimentReferent(Referent):
         val = self.get_string_value(SentimentReferent.ATTR_COEF)
         if (val is None): 
             return 0
-        wrapi2593 = RefOutArgWrapper(0)
-        inoutres2594 = Utils.tryParseInt(val, wrapi2593)
-        i = wrapi2593.value
-        if (not inoutres2594): 
+        wrapi2621 = RefOutArgWrapper(0)
+        inoutres2622 = Utils.tryParseInt(val, wrapi2621)
+        i = wrapi2621.value
+        if (not inoutres2622): 
             return 0
         return i
     @coef.setter

@@ -107,40 +107,40 @@ class Token:
             self.__m_attrs &= (~ ((1 << i)))
     
     @property
-    def is_whitespace_before0(self) -> bool:
+    def is_whitespace_before(self) -> bool:
         """ Наличие пробельных символов перед """
         return self.__get_attr(1)
-    @is_whitespace_before0.setter
-    def is_whitespace_before0(self, value) -> bool:
+    @is_whitespace_before.setter
+    def is_whitespace_before(self, value) -> bool:
         self._set_attr(1, value)
         return value
     
     @property
-    def is_whitespace_after0(self) -> bool:
+    def is_whitespace_after(self) -> bool:
         """ Наличие пробельных символов после """
         return self.__get_attr(2)
-    @is_whitespace_after0.setter
-    def is_whitespace_after0(self, value) -> bool:
+    @is_whitespace_after.setter
+    def is_whitespace_after(self, value) -> bool:
         self._set_attr(2, value)
         return value
     
     @property
-    def is_newline_before0(self) -> bool:
+    def is_newline_before(self) -> bool:
         """ Элемент начинается с новой строки.
          Для 1-го элемента всегда true. """
         return self.__get_attr(3)
-    @is_newline_before0.setter
-    def is_newline_before0(self, value) -> bool:
+    @is_newline_before.setter
+    def is_newline_before(self, value) -> bool:
         self._set_attr(3, value)
         return value
     
     @property
-    def is_newline_after0(self) -> bool:
+    def is_newline_after(self) -> bool:
         """ Элемент заканчивает строку.
          Для последнего элемента всегда true. """
         return self.__get_attr(4)
-    @is_newline_after0.setter
-    def is_newline_after0(self, value) -> bool:
+    @is_newline_after.setter
+    def is_newline_after(self, value) -> bool:
         self._set_attr(4, value)
         return value
     
@@ -245,36 +245,36 @@ class Token:
         return res
     
     @property
-    def is_hiphen0(self) -> bool:
+    def is_hiphen(self) -> bool:
         """ Это символ переноса """
         ch = self.kit.sofa.text[self.begin_char]
         return LanguageHelper.is_hiphen(ch)
     
     @property
-    def is_table_control_char0(self) -> bool:
+    def is_table_control_char(self) -> bool:
         """ Это спец-символы для табличных элементов (7h, 1Eh, 1Fh) """
         ch = self.kit.sofa.text[self.begin_char]
         return (ord(ch)) == 7 or (ord(ch)) == 0x1F or (ord(ch)) == 0x1E
     
     @property
-    def is_and0(self) -> bool:
+    def is_and(self) -> bool:
         """ Это соединительный союз И (на всех языках) """
         return False
     
     @property
-    def is_or0(self) -> bool:
+    def is_or(self) -> bool:
         """ Это соединительный союз ИЛИ (на всех языках) """
         return False
     
     @property
-    def is_comma0(self) -> bool:
+    def is_comma(self) -> bool:
         """ Это запятая """
         return self.is_char(',')
     
     @property
-    def is_comma_and0(self) -> bool:
+    def is_comma_and(self) -> bool:
         """ Это запятая или союз И """
-        return self.is_comma0 or self.is_and0
+        return self.is_comma or self.is_and
     
     def is_char(self, ch : 'char') -> bool:
         """ Токен состоит из символа
@@ -302,17 +302,17 @@ class Token:
         return False
     
     @property
-    def is_letters0(self) -> bool:
+    def is_letters(self) -> bool:
         """ Признак того, что это буквенный текстовой токен (TextToken) """
         return False
     
     @property
-    def is_number0(self) -> bool:
+    def is_number(self) -> bool:
         """ Это число (в различных вариантах задания) """
         return False
     
     @property
-    def is_referent0(self) -> bool:
+    def is_referent(self) -> bool:
         """ Это сущность (Referent) """
         return False
     
@@ -373,6 +373,6 @@ class Token:
         self.begin_char = SerializerHelper.deserialize_int(stream)
         self.end_char = SerializerHelper.deserialize_int(stream)
         self.__m_attrs = (SerializerHelper.deserialize_int(stream))
-        self.chars = CharsInfo._new2761(SerializerHelper.deserialize_int(stream))
+        self.chars = CharsInfo._new2790(SerializerHelper.deserialize_int(stream))
         self.__m_morph = MorphCollection()
         self.__m_morph._deserialize(stream)

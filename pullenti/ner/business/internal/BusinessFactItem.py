@@ -31,12 +31,12 @@ class BusinessFactItem(MetaToken):
         if (res is None): 
             return None
         tt = res.end_token.next0_
-        first_pass2870 = True
+        first_pass2898 = True
         while True:
-            if first_pass2870: first_pass2870 = False
+            if first_pass2898: first_pass2898 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
-            if (tt.morph.class0_.is_preposition0): 
+            if (tt.morph.class0_.is_preposition): 
                 continue
             if (not ((isinstance(tt, TextToken)))): 
                 break
@@ -63,19 +63,19 @@ class BusinessFactItem(MetaToken):
     @staticmethod
     def __try_parse(t : 'Token') -> 'BusinessFactItem':
         tok = BusinessFactItem.__m_base_onto.try_parse(t, TerminParseAttr.NO)
-        if (tok is None and t.morph.class0_.is_verb0 and t.next0_ is not None): 
+        if (tok is None and t.morph.class0_.is_verb and t.next0_ is not None): 
             tok = BusinessFactItem.__m_base_onto.try_parse(t.next0_, TerminParseAttr.NO)
         if (tok is not None): 
             ki = Utils.valToEnum(tok.termin.tag, BusinessFactKind)
             if (ki != BusinessFactKind.UNDEFINED): 
                 return BusinessFactItem._new404(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph, tok.termin.tag2 is not None)
             tt = tok.end_token.next0_
-            first_pass2871 = True
+            first_pass2899 = True
             while True:
-                if first_pass2871: first_pass2871 = False
+                if first_pass2899: first_pass2899 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
-                if (tt.morph.class0_.is_preposition0): 
+                if (tt.morph.class0_.is_preposition): 
                     continue
                 tok = BusinessFactItem.__m_base_onto.try_parse(tt, TerminParseAttr.NO)
                 if (tok is None): 

@@ -56,22 +56,22 @@ class MailLine(MetaToken):
         cou = 0
         t = self.begin_token
         while t is not None and t.end_char <= self.end_char: 
-            if ((isinstance(t, TextToken)) and t.chars.is_letter0 and t.length_char > 2): 
+            if ((isinstance(t, TextToken)) and t.chars.is_letter and t.length_char > 2): 
                 if (t.tag is None): 
                     cou += 1
             t = t.next0_
         return cou
     
     @property
-    def is_pure_en0(self) -> bool:
+    def is_pure_en(self) -> bool:
         en = 0
         ru = 0
         t = self.begin_token
         while t is not None and t.end_char <= self.end_char: 
-            if ((isinstance(t, TextToken)) and t.chars.is_letter0): 
-                if (t.chars.is_cyrillic_letter0): 
+            if ((isinstance(t, TextToken)) and t.chars.is_letter): 
+                if (t.chars.is_cyrillic_letter): 
                     ru += 1
-                elif (t.chars.is_latin_letter0): 
+                elif (t.chars.is_latin_letter): 
                     en += 1
             t = t.next0_
         if (en > 0 and ru == 0): 
@@ -79,15 +79,15 @@ class MailLine(MetaToken):
         return False
     
     @property
-    def is_pure_ru0(self) -> bool:
+    def is_pure_ru(self) -> bool:
         en = 0
         ru = 0
         t = self.begin_token
         while t is not None and t.end_char <= self.end_char: 
-            if ((isinstance(t, TextToken)) and t.chars.is_letter0): 
-                if (t.chars.is_cyrillic_letter0): 
+            if ((isinstance(t, TextToken)) and t.chars.is_letter): 
+                if (t.chars.is_cyrillic_letter): 
                     ru += 1
-                elif (t.chars.is_latin_letter0): 
+                elif (t.chars.is_latin_letter): 
                     en += 1
             t = t.next0_
         if (ru > 0 and en == 0): 
@@ -105,7 +105,7 @@ class MailLine(MetaToken):
         return None
     
     @property
-    def is_real_from0(self) -> bool:
+    def is_real_from(self) -> bool:
         tt = Utils.asObjectOrNull(self.begin_token, TextToken)
         if (tt is None): 
             return False
@@ -121,15 +121,15 @@ class MailLine(MetaToken):
         res = MailLine(t0, t0)
         pr = True
         t = t0
-        first_pass3139 = True
+        first_pass3167 = True
         while True:
-            if first_pass3139: first_pass3139 = False
+            if first_pass3167: first_pass3167 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (t.is_newline_before0 and t0 != t): 
+            if (t.is_newline_before and t0 != t): 
                 break
             res.end_token = t
-            if (t.is_table_control_char0 or t.is_hiphen0): 
+            if (t.is_table_control_char or t.is_hiphen): 
                 continue
             if (pr): 
                 if ((isinstance(t, TextToken)) and t.is_char_of(">|")): 
@@ -149,23 +149,23 @@ class MailLine(MetaToken):
         if (res.typ == MailLine.Types.UNDEFINED): 
             t = t0
             while t is not None and (t.end_char < res.end_char): 
-                if (not t.is_hiphen0 and t.chars.is_letter0): 
+                if (not t.is_hiphen and t.chars.is_letter): 
                     break
                 t = t.next0_
             ok = 0
             nams = 0
             oth = 0
             last_comma = None
-            first_pass3140 = True
+            first_pass3168 = True
             while True:
-                if first_pass3140: first_pass3140 = False
+                if first_pass3168: first_pass3168 = False
                 else: t = t.next0_
                 if (not (t is not None and (t.end_char < res.end_char))): break
                 if (isinstance(t.get_referent(), PersonReferent)): 
                     nams += 1
                     continue
                 if (isinstance(t, TextToken)): 
-                    if (not t.chars.is_letter0): 
+                    if (not t.chars.is_letter): 
                         last_comma = t
                         continue
                     tok = MailLine.M_HELLO_WORDS.try_parse(t, TerminParseAttr.NO)
@@ -194,9 +194,9 @@ class MailLine(MetaToken):
             if (t0.is_value("HAVE", None)): 
                 pass
             t = t0
-            first_pass3141 = True
+            first_pass3169 = True
             while True:
-                if first_pass3141: first_pass3141 = False
+                if first_pass3169: first_pass3169 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= res.end_char)): break
                 if (not ((isinstance(t, TextToken)))): 
@@ -206,7 +206,7 @@ class MailLine(MetaToken):
                     if (br is not None): 
                         t = br.end_token
                         continue
-                if (not t.is_letters0 or t.is_table_control_char0): 
+                if (not t.is_letters or t.is_table_control_char): 
                     continue
                 tok = MailLine.M_REGARD_WORDS.try_parse(t, TerminParseAttr.NO)
                 if (tok is not None): 
@@ -215,28 +215,28 @@ class MailLine(MetaToken):
                         t.tag = (tok.termin)
                         t = t.next0_
                     t = tok.end_token
-                    if ((isinstance(t.next0_, TextToken)) and t.next0_.morph.case_.is_genitive0): 
+                    if ((isinstance(t.next0_, TextToken)) and t.next0_.morph.case_.is_genitive): 
                         t = t.next0_
-                        first_pass3142 = True
+                        first_pass3170 = True
                         while True:
-                            if first_pass3142: first_pass3142 = False
+                            if first_pass3170: first_pass3170 = False
                             else: t = t.next0_
                             if (not (t.end_char <= res.end_char)): break
-                            if (t.morph.class0_.is_conjunction0): 
+                            if (t.morph.class0_.is_conjunction): 
                                 continue
                             npt1 = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
                             if (npt1 is None): 
                                 break
-                            if (not npt1.morph.case_.is_genitive0): 
+                            if (not npt1.morph.case_.is_genitive): 
                                 break
                             while t.end_char < npt1.end_char: 
                                 t.tag = (t)
                                 t = t.next0_
                             t.tag = (t)
                     continue
-                if ((t.morph.class0_.is_preposition0 or t.morph.class0_.is_conjunction0 or t.morph.class0_.is_misc0) or t.is_value("C", None)): 
+                if ((t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction or t.morph.class0_.is_misc) or t.is_value("C", None)): 
                     continue
-                if ((ok_words > 0 and t.previous is not None and t.previous.is_comma0) and t.previous.begin_char > t0.begin_char and not t.chars.is_all_lower0): 
+                if ((ok_words > 0 and t.previous is not None and t.previous.is_comma) and t.previous.begin_char > t0.begin_char and not t.chars.is_all_lower): 
                     res.end_token = t.previous
                     break
                 npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
@@ -269,7 +269,7 @@ class MailLine(MetaToken):
             while t is not None and (t.end_char < res.end_char): 
                 if (not ((isinstance(t, TextToken)))): 
                     break
-                elif (not t.is_hiphen0 and t.chars.is_letter0): 
+                elif (not t.is_hiphen and t.chars.is_letter): 
                     break
                 t = t.next0_
             if (t is not None): 
@@ -290,7 +290,7 @@ class MailLine(MetaToken):
                 elif (((t.get_referent() is not None and t.get_referent().type_name == "DATE")) or ((t.is_value("IL", None) and t.next0_ is not None and t.next0_.is_value("GIORNO", None))) or ((t.is_value("ON", None) and (isinstance(t.next0_, ReferentToken)) and t.next0_.get_referent().type_name == "DATE"))): 
                     has_from = False
                     has_date = t.get_referent() is not None and t.get_referent().type_name == "DATE"
-                    if (t.is_newline_after0 and (lev_ < 5)): 
+                    if (t.is_newline_after and (lev_ < 5)): 
                         res1 = MailLine.parse(t.next0_, lev_ + 1)
                         if (res1 is not None and res1.typ == MailLine.Types.HELLO): 
                             res.typ = MailLine.Types.FROM
@@ -314,7 +314,7 @@ class MailLine(MetaToken):
                                     t = t.next0_
                                     if (t.next0_ is not None and t.next0_.is_char(':')): 
                                         t = t.next0_
-                                    if (t.is_newline_after0): 
+                                    if (t.is_newline_after): 
                                         has_from = True
                                         next0__ = (None)
                             t = t.next0_

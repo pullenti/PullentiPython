@@ -23,16 +23,16 @@ class PrepositionToken(MetaToken):
     def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         res = self.normal
         if (keep_chars): 
-            if (self.chars.is_all_lower0): 
+            if (self.chars.is_all_lower): 
                 res = res.lower()
-            elif (self.chars.is_all_upper0): 
+            elif (self.chars.is_all_upper): 
                 pass
-            elif (self.chars.is_capital_upper0): 
+            elif (self.chars.is_capital_upper): 
                 res = MiscHelper.convert_first_char_upper_and_other_lower(res)
         return res
     
     @staticmethod
-    def _new592(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'MorphCase') -> 'PrepositionToken':
+    def _new593(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'MorphCase') -> 'PrepositionToken':
         res = PrepositionToken(_arg1, _arg2)
         res.normal = _arg3
         res.next_case = _arg4

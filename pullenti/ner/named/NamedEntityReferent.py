@@ -59,7 +59,7 @@ class NamedEntityReferent(Referent):
             return NamedEntityKind.UNDEFINED
         try: 
             return Utils.valToEnum(str0_, NamedEntityKind)
-        except Exception as ex1729: 
+        except Exception as ex1747: 
             pass
         return NamedEntityKind.UNDEFINED
     @kind.setter
@@ -170,7 +170,7 @@ class NamedEntityReferent(Referent):
         return oi
     
     @staticmethod
-    def _new1728(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
+    def _new1746(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
         res = NamedEntityReferent()
         res.kind = _arg1
         return res

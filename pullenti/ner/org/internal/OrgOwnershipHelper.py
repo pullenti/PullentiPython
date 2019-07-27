@@ -89,15 +89,17 @@ class OrgOwnershipHelper:
             if (OrgOwnershipHelper.__contains(ltyps, "school", None) or OrgOwnershipHelper.__contains(ltyps, "college", None)): 
                 return True
         hr = OrgOwnershipHelper.__military_rank(htyps)
+        lr = OrgOwnershipHelper.__military_rank(ltyps)
         if (hr > 0): 
-            lr = OrgOwnershipHelper.__military_rank(ltyps)
             if (lr > 0): 
                 return hr < lr
             elif (hr == 3 and (("войсковая часть" in ltyps or "військова частина" in ltyps))): 
                 return True
         elif ("войсковая часть" in htyps or "військова частина" in htyps): 
-            lr = OrgOwnershipHelper.__military_rank(ltyps)
             if (lr >= 6): 
+                return True
+        if (lr >= 6): 
+            if (higher.contains_profile(OrgProfile.POLICY) or higher.contains_profile(OrgProfile.UNION)): 
                 return True
         if (hk == OrganizationKind.STUDY or OrgOwnershipHelper.__contains(htyps, "институт", "інститут") or OrgOwnershipHelper.__contains(htyps, "академия", "академія")): 
             if (((OrgOwnershipHelper.__contains(ltyps, "магистратура", "магістратура") or OrgOwnershipHelper.__contains(ltyps, "аспирантура", "аспірантура") or OrgOwnershipHelper.__contains(ltyps, "докторантура", None)) or OrgOwnershipHelper.__contains(ltyps, "факультет", None) or OrgOwnershipHelper.__contains(ltyps, "кафедра", None)) or OrgOwnershipHelper.__contains(ltyps, "курс", None)): 
@@ -149,8 +151,11 @@ class OrgOwnershipHelper:
         if (lk == OrganizationKind.DEPARTMENT): 
             if (hk == OrganizationKind.DEPARTMENT and higher.higher is not None and len(htyps) == 0): 
                 if (OrgOwnershipHelper.can_be_higher(higher.higher, lower, False)): 
-                    if (OrgOwnershipHelper.__contains(ltyps, "управление", "управління")): 
+                    if (OrgOwnershipHelper.__contains(ltyps, "управление", "управління") or OrgOwnershipHelper.__contains(ltyps, "отдел", "відділ")): 
                         return True
+            if (OrgOwnershipHelper.__contains(ltyps, "офис", "офіс")): 
+                if (OrgOwnershipHelper.__contains(htyps, "филиал", "філіал") or OrgOwnershipHelper.__contains(htyps, "отделение", "відділення")): 
+                    return True
         return False
     
     @staticmethod

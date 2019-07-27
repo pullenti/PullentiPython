@@ -28,28 +28,28 @@ class ConjunctionHelper:
         """
         if (not ((isinstance(t, TextToken)))): 
             return None
-        if (t.is_comma0): 
+        if (t.is_comma): 
             ne = ConjunctionHelper.try_parse(t.next0_)
             if (ne is not None): 
                 ne.begin_token = t
                 return ne
-            return ConjunctionToken._new548(t, t, ConjunctionType.COMMA, ",")
+            return ConjunctionToken._new549(t, t, ConjunctionType.COMMA, ",")
         tok = ConjunctionHelper.__m_ontology.try_parse(t, TerminParseAttr.NO)
         if (tok is not None): 
             if (t.is_value("ТО", None)): 
                 npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.PARSEADVERBS, 0)
                 if (npt is not None and npt.end_char > tok.end_token.end_char): 
                     return None
-            return ConjunctionToken._new549(t, tok.end_token, tok.termin.canonic_text, Utils.valToEnum(tok.termin.tag, ConjunctionType))
-        if (not t.get_morph_class_in_dictionary().is_conjunction0): 
+            return ConjunctionToken._new550(t, tok.end_token, tok.termin.canonic_text, Utils.valToEnum(tok.termin.tag, ConjunctionType))
+        if (not t.get_morph_class_in_dictionary().is_conjunction): 
             return None
-        if (t.is_and0 or t.is_or0): 
-            return ConjunctionToken._new549(t, t, (t).term, (ConjunctionType.OR if t.is_or0 else ConjunctionType.AND))
+        if (t.is_and or t.is_or): 
+            return ConjunctionToken._new550(t, t, (t).term, (ConjunctionType.OR if t.is_or else ConjunctionType.AND))
         term = (t).term
         if (term == "НИ"): 
-            return ConjunctionToken._new549(t, t, term, ConjunctionType.NOT)
+            return ConjunctionToken._new550(t, t, term, ConjunctionType.NOT)
         if ((term == "А" or term == "НО" or term == "ЗАТО") or term == "ОДНАКО"): 
-            return ConjunctionToken._new549(t, t, term, ConjunctionType.BUT)
+            return ConjunctionToken._new550(t, t, term, ConjunctionType.BUT)
         return None
     
     __m_ontology = None

@@ -42,7 +42,7 @@ class UnitReferent(Referent):
                 if (((s.type_name == UnitReferent.ATTR_NAME and short_variant)) or ((s.type_name == UnitReferent.ATTR_FULLNAME and not short_variant))): 
                     val = Utils.asObjectOrNull(s.value, str)
                     if (lang is not None and l_ == 0): 
-                        if (lang.is_ru0 != LanguageHelper.is_cyrillic(val)): 
+                        if (lang.is_ru != LanguageHelper.is_cyrillic(val)): 
                             continue
                     nam = val
                     break
@@ -54,16 +54,16 @@ class UnitReferent(Referent):
         if (Utils.isNullOrEmpty(pow0_) or lev > 0): 
             return Utils.ifNotNull(nam, "?")
         res = ("{0}{1}".format(nam, pow0_) if (pow0_[0] != '-') else "{0}<{1}>".format(nam, pow0_))
-        if (not short_variant and self.is_unknown0): 
+        if (not short_variant and self.is_unknown): 
             res = ("(?)" + res)
         return res
     
     @property
-    def is_unknown0(self) -> bool:
+    def is_unknown(self) -> bool:
         """ Признак того, что это неизвестная метрика """
         return self.get_string_value(UnitReferent.ATTR_UNKNOWN) == "true"
-    @is_unknown0.setter
-    def is_unknown0(self, value) -> bool:
+    @is_unknown.setter
+    def is_unknown(self, value) -> bool:
         self.add_slot(UnitReferent.ATTR_UNKNOWN, ("true" if value else None), True, 0)
         return value
     

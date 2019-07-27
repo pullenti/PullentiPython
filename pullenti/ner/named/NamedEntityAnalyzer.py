@@ -76,9 +76,9 @@ class NamedEntityAnalyzer(Analyzer):
     def process(self, kit : 'AnalysisKit') -> None:
         ad = Utils.asObjectOrNull(kit.get_analyzer_data(self), AnalyzerDataWithOntology)
         t = kit.first_token
-        first_pass3154 = True
+        first_pass3183 = True
         while True:
-            if first_pass3154: first_pass3154 = False
+            if first_pass3183: first_pass3183 = False
             else: t = t.next0_
             if (not (t is not None)): break
             li = NamedItemToken.try_parse_list(t, ad.local_ontology)
@@ -111,7 +111,7 @@ class NamedEntityAnalyzer(Analyzer):
         elif (ki == NamedEntityKind.LOCATION): 
             if (isinstance(re, GeoReferent)): 
                 geo_ = Utils.asObjectOrNull(re, GeoReferent)
-                if (geo_.is_region0 or geo_.is_state0): 
+                if (geo_.is_region or geo_.is_state): 
                     return True
         elif (ki == NamedEntityKind.BUILDING): 
             if (re.type_name == "ORGANIZATION"): 
@@ -163,18 +163,18 @@ class NamedEntityAnalyzer(Analyzer):
             elif ((nams[0].begin_char < typ.end_char) and not nams[0].is_wellknown): 
                 if (re is not None): 
                     ok = True
-                elif ((nams[0].chars.is_capital_upper0 and not MiscHelper.can_be_start_of_sentence(nams[0].begin_token) and typ.morph.number != MorphNumber.PLURAL) and typ.morph.case_.is_nominative0): 
+                elif ((nams[0].chars.is_capital_upper and not MiscHelper.can_be_start_of_sentence(nams[0].begin_token) and typ.morph.number != MorphNumber.PLURAL) and typ.morph.case_.is_nominative): 
                     ok = True
             else: 
                 ok = True
         elif (nams is not None): 
-            if (len(nams) == 1 and nams[0].chars.is_all_lower0): 
+            if (len(nams) == 1 and nams[0].chars.is_all_lower): 
                 pass
             elif (nams[0].is_wellknown): 
                 ok = True
         if (not ok or ki == NamedEntityKind.UNDEFINED): 
             return None
-        nam = NamedEntityReferent._new1728(ki)
+        nam = NamedEntityReferent._new1746(ki)
         if (typ is not None): 
             nam.add_slot(NamedEntityReferent.ATTR_TYPE, typ.type_value.lower(), False, 0)
         if (nams is not None): 

@@ -47,17 +47,17 @@ class MetaGeo(ReferentClass):
         from pullenti.ner.geo.GeoReferent import GeoReferent
         ter = Utils.asObjectOrNull(obj, GeoReferent)
         if (ter is not None): 
-            if (ter.is_union0): 
+            if (ter.is_union): 
                 return MetaGeo.UNION_IMAGE_ID
-            if (ter.is_city0 and ((ter.is_state0 or ter.is_region0))): 
+            if (ter.is_city and ((ter.is_state or ter.is_region))): 
                 return MetaGeo.COUNTRY_CITY_IMAGE_ID
-            if (ter.is_state0): 
+            if (ter.is_state): 
                 return MetaGeo.COUNTRY_IMAGE_ID
-            if (ter.is_city0): 
+            if (ter.is_city): 
                 return MetaGeo.CITY_IMAGE_ID
-            if (ter.is_region0 and ter.higher is not None and ter.higher.is_city0): 
+            if (ter.is_region and ter.higher is not None and ter.higher.is_city): 
                 return MetaGeo.DISTRICT_IMAGE_ID
-            if (ter.is_territory0): 
+            if (ter.is_territory): 
                 return MetaGeo.TERR_IMAGE_ID
         return MetaGeo.REGION_IMAGE_ID
     

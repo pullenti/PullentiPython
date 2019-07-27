@@ -65,10 +65,10 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_VALUE)
         if (val is None): 
             return 0
-        wrapv1713 = RefOutArgWrapper(0)
-        inoutres1714 = Utils.tryParseFloat(val, wrapv1713)
-        v = wrapv1713.value
-        if (not inoutres1714): 
+        wrapv1731 = RefOutArgWrapper(0)
+        inoutres1732 = Utils.tryParseFloat(val, wrapv1731)
+        v = wrapv1731.value
+        if (not inoutres1732): 
             return 0
         return v
     
@@ -79,10 +79,10 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_ALTVALUE)
         if (val is None): 
             return None
-        wrapv1715 = RefOutArgWrapper(0)
-        inoutres1716 = Utils.tryParseFloat(val, wrapv1715)
-        v = wrapv1715.value
-        if (not inoutres1716): 
+        wrapv1733 = RefOutArgWrapper(0)
+        inoutres1734 = Utils.tryParseFloat(val, wrapv1733)
+        v = wrapv1733.value
+        if (not inoutres1734): 
             return None
         return v
     
@@ -92,10 +92,10 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_REST)
         if (val is None): 
             return 0
-        wrapv1717 = RefOutArgWrapper(0)
-        inoutres1718 = Utils.tryParseInt(val, wrapv1717)
-        v = wrapv1717.value
-        if (not inoutres1718): 
+        wrapv1735 = RefOutArgWrapper(0)
+        inoutres1736 = Utils.tryParseInt(val, wrapv1735)
+        v = wrapv1735.value
+        if (not inoutres1736): 
             return 0
         return v
     
@@ -105,10 +105,10 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_ALTREST)
         if (val is None): 
             return None
-        wrapv1719 = RefOutArgWrapper(0)
-        inoutres1720 = Utils.tryParseInt(val, wrapv1719)
-        v = wrapv1719.value
-        if (not inoutres1720): 
+        wrapv1737 = RefOutArgWrapper(0)
+        inoutres1738 = Utils.tryParseInt(val, wrapv1737)
+        v = wrapv1737.value
+        if (not inoutres1738): 
             return None
         return v
     
@@ -144,7 +144,7 @@ class MoneyReferent(Referent):
         return True
     
     @staticmethod
-    def _new830(_arg1 : str, _arg2 : float) -> 'MoneyReferent':
+    def _new837(_arg1 : str, _arg2 : float) -> 'MoneyReferent':
         res = MoneyReferent()
         res.currency = _arg1
         res.real_value = _arg2

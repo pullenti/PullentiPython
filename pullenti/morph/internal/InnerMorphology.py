@@ -64,27 +64,27 @@ class InnerMorphology:
     
     @staticmethod
     def _load_languages(langs : 'MorphLang') -> None:
-        if (langs.is_ru0 and not InnerMorphology.M_ENGINE_RU.language.is_ru0): 
+        if (langs.is_ru and not InnerMorphology.M_ENGINE_RU.language.is_ru): 
             with InnerMorphology.M_LOCK: 
-                if (not InnerMorphology.M_ENGINE_RU.language.is_ru0): 
+                if (not InnerMorphology.M_ENGINE_RU.language.is_ru): 
                     if (not InnerMorphology.M_ENGINE_RU.initialize(MorphLang.RU)): 
                         raise Utils.newException("Not found resource file m_ru.dat in Morphology", None)
-        if (langs.is_en0 and not InnerMorphology.M_ENGINE_EN.language.is_en0): 
+        if (langs.is_en and not InnerMorphology.M_ENGINE_EN.language.is_en): 
             with InnerMorphology.M_LOCK: 
-                if (not InnerMorphology.M_ENGINE_EN.language.is_en0): 
+                if (not InnerMorphology.M_ENGINE_EN.language.is_en): 
                     if (not InnerMorphology.M_ENGINE_EN.initialize(MorphLang.EN)): 
                         raise Utils.newException("Not found resource file m_en.dat in Morphology", None)
-        if (langs.is_ua0 and not InnerMorphology.M_ENGINE_UA.language.is_ua0): 
+        if (langs.is_ua and not InnerMorphology.M_ENGINE_UA.language.is_ua): 
             with InnerMorphology.M_LOCK: 
-                if (not InnerMorphology.M_ENGINE_UA.language.is_ua0): 
+                if (not InnerMorphology.M_ENGINE_UA.language.is_ua): 
                     InnerMorphology.M_ENGINE_UA.initialize(MorphLang.UA)
-        if (langs.is_by0 and not InnerMorphology.M_ENGINE_BY.language.is_by0): 
+        if (langs.is_by and not InnerMorphology.M_ENGINE_BY.language.is_by): 
             with InnerMorphology.M_LOCK: 
-                if (not InnerMorphology.M_ENGINE_BY.language.is_by0): 
+                if (not InnerMorphology.M_ENGINE_BY.language.is_by): 
                     InnerMorphology.M_ENGINE_BY.initialize(MorphLang.BY)
-        if (langs.is_kz0 and not InnerMorphology.M_ENGINE_KZ.language.is_kz0): 
+        if (langs.is_kz and not InnerMorphology.M_ENGINE_KZ.language.is_kz): 
             with InnerMorphology.M_LOCK: 
-                if (not InnerMorphology.M_ENGINE_KZ.language.is_kz0): 
+                if (not InnerMorphology.M_ENGINE_KZ.language.is_kz): 
                     InnerMorphology.M_ENGINE_KZ.initialize(MorphLang.KZ)
     
     @staticmethod
@@ -94,15 +94,15 @@ class InnerMorphology:
         Args:
             langs(MorphLang): 
         """
-        if (langs.is_ru0 and InnerMorphology.M_ENGINE_RU.language.is_ru0): 
+        if (langs.is_ru and InnerMorphology.M_ENGINE_RU.language.is_ru): 
             InnerMorphology.M_ENGINE_RU._reset()
-        if (langs.is_en0 and InnerMorphology.M_ENGINE_EN.language.is_en0): 
+        if (langs.is_en and InnerMorphology.M_ENGINE_EN.language.is_en): 
             InnerMorphology.M_ENGINE_EN._reset()
-        if (langs.is_ua0 and InnerMorphology.M_ENGINE_UA.language.is_ua0): 
+        if (langs.is_ua and InnerMorphology.M_ENGINE_UA.language.is_ua): 
             InnerMorphology.M_ENGINE_UA._reset()
-        if (langs.is_by0 and InnerMorphology.M_ENGINE_BY.language.is_by0): 
+        if (langs.is_by and InnerMorphology.M_ENGINE_BY.language.is_by): 
             InnerMorphology.M_ENGINE_BY._reset()
-        if (langs.is_kz0 and InnerMorphology.M_ENGINE_KZ.language.is_kz0): 
+        if (langs.is_kz and InnerMorphology.M_ENGINE_KZ.language.is_kz): 
             InnerMorphology.M_ENGINE_KZ._reset()
         gc.collect()
     
@@ -142,9 +142,9 @@ class InnerMorphology:
         tot_by_words = 0
         tot_kz_words = 0
         i = 0
-        first_pass2814 = True
+        first_pass2842 = True
         while True:
-            if first_pass2814: first_pass2814 = False
+            if first_pass2842: first_pass2842 = False
             else: i += 1
             if (not (i < twr.length)): break
             ty = InnerMorphology._get_char_typ(twrch[i])
@@ -224,8 +224,8 @@ class InnerMorphology:
                 def_lang = MorphLang.BY
             elif (tot_rus_words == 0 or tot_by_words >= (tot_rus_words * 2)): 
                 def_lang = MorphLang.BY
-        if (((def_lang.is_undefined0 or def_lang.is_ua0)) and tot_rus_words > 0): 
-            if (((tot_ukr_words > tot_rus_words and InnerMorphology.M_ENGINE_UA.language.is_ua0)) or ((tot_by_words > tot_rus_words and InnerMorphology.M_ENGINE_BY.language.is_by0)) or ((tot_kz_words > tot_rus_words and InnerMorphology.M_ENGINE_KZ.language.is_kz0))): 
+        if (((def_lang.is_undefined or def_lang.is_ua)) and tot_rus_words > 0): 
+            if (((tot_ukr_words > tot_rus_words and InnerMorphology.M_ENGINE_UA.language.is_ua)) or ((tot_by_words > tot_rus_words and InnerMorphology.M_ENGINE_BY.language.is_by)) or ((tot_kz_words > tot_rus_words and InnerMorphology.M_ENGINE_KZ.language.is_kz))): 
                 cou0 = 0
                 tot_kz_words = 0
                 tot_ukr_words = tot_kz_words
@@ -240,15 +240,15 @@ class InnerMorphology:
                         for wf in kp[1].word_forms: 
                             lang |= wf.language
                     kp[1].lang = lang
-                    if (lang.is_ru0): 
+                    if (lang.is_ru): 
                         tot_rus_words += 1
-                    if (lang.is_ua0): 
+                    if (lang.is_ua): 
                         tot_ukr_words += 1
-                    if (lang.is_by0): 
+                    if (lang.is_by): 
                         tot_by_words += 1
-                    if (lang.is_kz0): 
+                    if (lang.is_kz): 
                         tot_kz_words += 1
-                    if (lang.is_cyrillic0): 
+                    if (lang.is_cyrillic): 
                         cou0 += 1
                     if (cou0 >= 100): 
                         break
@@ -258,7 +258,7 @@ class InnerMorphology:
                     def_lang = MorphLang.UA
                 elif (tot_by_words > ((math.floor(tot_rus_words / 2))) and tot_by_words > ((math.floor(tot_ukr_words / 2)))): 
                     def_lang = MorphLang.BY
-            elif (def_lang.is_undefined0): 
+            elif (def_lang.is_undefined): 
                 def_lang = MorphLang.RU
         cou = 0
         tot_kz_words = 0
@@ -267,7 +267,7 @@ class InnerMorphology:
         tot_rus_words = tot_by_words
         for kp in uni_lex.items(): 
             lang = def_lang
-            if (lang.is_undefined0): 
+            if (lang.is_undefined): 
                 if (tot_rus_words > tot_by_words and tot_rus_words > tot_ukr_words and tot_rus_words > tot_kz_words): 
                     lang = MorphLang.RU
                 elif (tot_ukr_words > tot_rus_words and tot_ukr_words > tot_by_words and tot_ukr_words > tot_kz_words): 
@@ -308,25 +308,25 @@ class InnerMorphology:
                 debug_token = r
         if (not good_text): 
             i = 0
-            first_pass2815 = True
+            first_pass2843 = True
             while True:
-                if first_pass2815: first_pass2815 = False
+                if first_pass2843: first_pass2843 = False
                 else: i += 1
                 if (not (i < (len(res) - 2))): break
                 ui0 = twrch[res[i].begin_char]
                 ui1 = twrch[res[i + 1].begin_char]
                 ui2 = twrch[res[i + 2].begin_char]
-                if (ui1.is_quot0): 
+                if (ui1.is_quot): 
                     p = res[i + 1].begin_char
                     if ((p >= 2 and "БбТт".find(text[p - 1]) >= 0 and ((p + 3) < len(text))) and "ЕеЯяЁё".find(text[p + 1]) >= 0): 
                         wstr = LanguageHelper.transliteral_correction(LanguageHelper.correct_word("{0}Ъ{1}".format(res[i].get_source_text(text), res[i + 2].get_source_text(text))), None, False)
                         li = self.__process_one_word0(wstr)
-                        if (li is not None and len(li) > 0 and li[0].is_in_dictionary0): 
+                        if (li is not None and len(li) > 0 and li[0].is_in_dictionary): 
                             res[i].end_char = res[i + 2].end_char
                             res[i].term = wstr
                             res[i].word_forms = li
                             del res[i + 1:i + 1+2]
-                    elif ((ui1.is_apos0 and p > 0 and str.isalpha(text[p - 1])) and ((p + 1) < len(text)) and str.isalpha(text[p + 1])): 
+                    elif ((ui1.is_apos and p > 0 and str.isalpha(text[p - 1])) and ((p + 1) < len(text)) and str.isalpha(text[p + 1])): 
                         if (def_lang == MorphLang.UA or (((res[i].language) & MorphLang.UA)) != MorphLang.UNKNOWN or (((res[i + 2].language) & MorphLang.UA)) != MorphLang.UNKNOWN): 
                             wstr = LanguageHelper.transliteral_correction(LanguageHelper.correct_word("{0}{1}".format(res[i].get_source_text(text), res[i + 2].get_source_text(text))), None, False)
                             li = self.__process_one_word0(wstr)
@@ -343,22 +343,22 @@ class InnerMorphology:
                 elif (((ui1.uni_char == '3' or ui1.uni_char == '4')) and res[i + 1].length == 1): 
                     src = ("З" if ui1.uni_char == '3' else "Ч")
                     i0 = i + 1
-                    if ((res[i].end_char + 1) == res[i + 1].begin_char and ui0.is_cyrillic0): 
+                    if ((res[i].end_char + 1) == res[i + 1].begin_char and ui0.is_cyrillic): 
                         i0 -= 1
                         src = (res[i0].get_source_text(text) + src)
                     i1 = i + 1
-                    if ((res[i + 1].end_char + 1) == res[i + 2].begin_char and ui2.is_cyrillic0): 
+                    if ((res[i + 1].end_char + 1) == res[i + 2].begin_char and ui2.is_cyrillic): 
                         i1 += 1
                         src += res[i1].get_source_text(text)
                     if (len(src) > 2): 
                         wstr = LanguageHelper.transliteral_correction(LanguageHelper.correct_word(src), None, False)
                         li = self.__process_one_word0(wstr)
-                        if (li is not None and len(li) > 0 and li[0].is_in_dictionary0): 
+                        if (li is not None and len(li) > 0 and li[0].is_in_dictionary): 
                             res[i0].end_char = res[i1].end_char
                             res[i0].term = wstr
                             res[i0].word_forms = li
                             del res[i0 + 1:i0 + 1+i1 - i0]
-                elif ((ui1.is_hiphen0 and ui0.is_letter0 and ui2.is_letter0) and res[i].end_char > res[i].begin_char and res[i + 2].end_char > res[i + 2].begin_char): 
+                elif ((ui1.is_hiphen and ui0.is_letter and ui2.is_letter) and res[i].end_char > res[i].begin_char and res[i + 2].end_char > res[i + 2].begin_char): 
                     newline = False
                     sps = 0
                     j = (res[i + 1].end_char + 1)
@@ -377,33 +377,33 @@ class InnerMorphology:
                             newline = True
                         elif (text[res[i + 1].begin_char] == (chr(0x00AD))): 
                             newline = True
-                        elif (LanguageHelper.ends_with_ex(res[i].get_source_text(text), "О", "о", None, None) and len(res[i + 2].word_forms) > 0 and res[i + 2].word_forms[0].is_in_dictionary0): 
+                        elif (LanguageHelper.ends_with_ex(res[i].get_source_text(text), "О", "о", None, None) and len(res[i + 2].word_forms) > 0 and res[i + 2].word_forms[0].is_in_dictionary): 
                             if (text[res[i + 1].begin_char] == '¬'): 
                                 li = self.__process_one_word0(full_word)
-                                if (li is not None and len(li) > 0 and li[0].is_in_dictionary0): 
+                                if (li is not None and len(li) > 0 and li[0].is_in_dictionary): 
                                     newline = True
                         elif ((res[i].end_char + 2) == res[i + 2].begin_char): 
                             if (not str.isupper(text[res[i + 2].begin_char]) and (sps < 2) and len(full_word) > 4): 
                                 newline = True
                                 if ((i + 3) < len(res)): 
                                     ui3 = twrch[res[i + 3].begin_char]
-                                    if (ui3.is_hiphen0): 
+                                    if (ui3.is_hiphen): 
                                         newline = False
                         elif (((res[i].end_char + 1) == res[i + 1].begin_char and sps > 0 and (sps < 3)) and len(full_word) > 4): 
                             newline = True
                     if (newline): 
                         li = self.__process_one_word0(full_word)
-                        if (li is not None and len(li) > 0 and ((li[0].is_in_dictionary0 or full_word in uni_lex))): 
+                        if (li is not None and len(li) > 0 and ((li[0].is_in_dictionary or full_word in uni_lex))): 
                             res[i].end_char = res[i + 2].end_char
                             res[i].term = full_word
                             res[i].word_forms = li
                             del res[i + 1:i + 1+2]
                     else: 
                         pass
-                elif ((ui1.is_letter0 and ui0.is_letter0 and res[i].length > 2) and res[i + 1].length > 1): 
-                    if (ui0.is_upper0 != ui1.is_upper0): 
+                elif ((ui1.is_letter and ui0.is_letter and res[i].length > 2) and res[i + 1].length > 1): 
+                    if (ui0.is_upper != ui1.is_upper): 
                         continue
-                    if (not ui0.is_cyrillic0 or not ui1.is_cyrillic0): 
+                    if (not ui0.is_cyrillic or not ui1.is_cyrillic): 
                         continue
                     newline = False
                     j = (res[i].end_char + 1)
@@ -418,15 +418,15 @@ class InnerMorphology:
                     if (not full_word in uni_lex): 
                         continue
                     li = self.__process_one_word0(full_word)
-                    if (li is not None and len(li) > 0 and li[0].is_in_dictionary0): 
+                    if (li is not None and len(li) > 0 and li[0].is_in_dictionary): 
                         res[i].end_char = res[i + 1].end_char
                         res[i].term = full_word
                         res[i].word_forms = li
                         del res[i + 1]
         i = 0
-        first_pass2816 = True
+        first_pass2844 = True
         while True:
-            if first_pass2816: first_pass2816 = False
+            if first_pass2844: first_pass2844 = False
             else: i += 1
             if (not (i < len(res))): break
             mt = res[i]
@@ -435,55 +435,55 @@ class InnerMorphology:
             ui00 = UnicodeInfo.ALL_CHARS[ord((res[i].term[0]))]
             j = (mt.begin_char + 1)
             while j <= mt.end_char: 
-                if (ui0.is_letter0): 
+                if (ui0.is_letter): 
                     break
                 ui0 = twrch[j]
                 j += 1
-            if (ui0.is_letter0): 
-                res[i].char_info.is_letter0 = True
-                if (ui00.is_latin0): 
-                    res[i].char_info.is_latin_letter0 = True
-                elif (ui00.is_cyrillic0): 
-                    res[i].char_info.is_cyrillic_letter0 = True
+            if (ui0.is_letter): 
+                res[i].char_info.is_letter = True
+                if (ui00.is_latin): 
+                    res[i].char_info.is_latin_letter = True
+                elif (ui00.is_cyrillic): 
+                    res[i].char_info.is_cyrillic_letter = True
                 if (res[i].language == MorphLang.UNKNOWN): 
                     if (LanguageHelper.is_cyrillic(mt.term)): 
-                        res[i].language = (MorphLang.RU if def_lang.is_undefined0 else def_lang)
+                        res[i].language = (MorphLang.RU if def_lang.is_undefined else def_lang)
                 if (good_text): 
                     continue
                 all_up = True
                 all_lo = True
                 j = mt.begin_char
                 while j <= mt.end_char: 
-                    if (twrch[j].is_upper0 or twrch[j].is_digit0): 
+                    if (twrch[j].is_upper or twrch[j].is_digit): 
                         all_lo = False
                     else: 
                         all_up = False
                     j += 1
                 if (all_up): 
-                    mt.char_info.is_all_upper0 = True
+                    mt.char_info.is_all_upper = True
                 elif (all_lo): 
-                    mt.char_info.is_all_lower0 = True
-                elif (((ui0.is_upper0 or twrch[mt.begin_char].is_digit0)) and mt.end_char > mt.begin_char): 
+                    mt.char_info.is_all_lower = True
+                elif (((ui0.is_upper or twrch[mt.begin_char].is_digit)) and mt.end_char > mt.begin_char): 
                     all_lo = True
                     j = (mt.begin_char + 1)
                     while j <= mt.end_char: 
-                        if (twrch[j].is_upper0 or twrch[j].is_digit0): 
+                        if (twrch[j].is_upper or twrch[j].is_digit): 
                             all_lo = False
                             break
                         j += 1
                     if (all_lo): 
-                        mt.char_info.is_capital_upper0 = True
-                    elif (twrch[mt.end_char].is_lower0 and (mt.end_char - mt.begin_char) > 1): 
+                        mt.char_info.is_capital_upper = True
+                    elif (twrch[mt.end_char].is_lower and (mt.end_char - mt.begin_char) > 1): 
                         all_up = True
                         j = mt.begin_char
                         while j < mt.end_char: 
-                            if (twrch[j].is_lower0): 
+                            if (twrch[j].is_lower): 
                                 all_up = False
                                 break
                             j += 1
                         if (all_up): 
-                            mt.char_info.is_last_lower0 = True
-            if (mt.char_info.is_last_lower0 and mt.length > 2 and mt.char_info.is_cyrillic_letter0): 
+                            mt.char_info.is_last_lower = True
+            if (mt.char_info.is_last_lower and mt.length > 2 and mt.char_info.is_cyrillic_letter): 
                 pref = text[mt.begin_char:mt.begin_char+mt.end_char - mt.begin_char]
                 ok = False
                 for wf in mt.word_forms: 
@@ -496,12 +496,12 @@ class InnerMorphology:
         if (good_text or only_tokenizing): 
             return res
         i = 0
-        first_pass2817 = True
+        first_pass2845 = True
         while True:
-            if first_pass2817: first_pass2817 = False
+            if first_pass2845: first_pass2845 = False
             else: i += 1
             if (not (i < len(res))): break
-            if (res[i].length == 1 and res[i].char_info.is_latin_letter0): 
+            if (res[i].length == 1 and res[i].char_info.is_latin_letter): 
                 ch = res[i].term[0]
                 if (ch == 'C' or ch == 'A' or ch == 'P'): 
                     pass
@@ -511,28 +511,28 @@ class InnerMorphology:
                 for ii in range(i - 1, -1, -1):
                     if ((res[ii].end_char + 1) != res[ii + 1].begin_char): 
                         break
-                    elif (res[ii].char_info.is_letter0): 
-                        is_rus = res[ii].char_info.is_cyrillic_letter0
+                    elif (res[ii].char_info.is_letter): 
+                        is_rus = res[ii].char_info.is_cyrillic_letter
                         break
                 if (not is_rus): 
                     ii = i + 1
                     while ii < len(res): 
                         if ((res[ii - 1].end_char + 1) != res[ii].begin_char): 
                             break
-                        elif (res[ii].char_info.is_letter0): 
-                            is_rus = res[ii].char_info.is_cyrillic_letter0
+                        elif (res[ii].char_info.is_letter): 
+                            is_rus = res[ii].char_info.is_cyrillic_letter
                             break
                         ii += 1
                 if (is_rus): 
                     res[i].term = LanguageHelper.transliteral_correction(res[i].term, None, True)
-                    res[i].char_info.is_cyrillic_letter0 = True
-                    res[i].char_info.is_latin_letter0 = True
+                    res[i].char_info.is_cyrillic_letter = True
+                    res[i].char_info.is_latin_letter = True
         for r in res: 
-            if (r.char_info.is_all_upper0 or r.char_info.is_capital_upper0): 
-                if (r.language.is_cyrillic0): 
+            if (r.char_info.is_all_upper or r.char_info.is_capital_upper): 
+                if (r.language.is_cyrillic): 
                     ok = False
                     for wf in r.word_forms: 
-                        if (wf.class0_.is_proper_surname0): 
+                        if (wf.class0_.is_proper_surname): 
                             ok = True
                             break
                     if (not ok): 
@@ -544,8 +544,8 @@ class InnerMorphology:
                     mv.normal_case = r.term
         i = 0
         while i < (len(res) - 2): 
-            if (res[i].char_info.is_latin_letter0 and res[i].char_info.is_all_upper0 and res[i].length == 1): 
-                if (twrch[res[i + 1].begin_char].is_quot0 and res[i + 2].char_info.is_latin_letter0 and res[i + 2].length > 2): 
+            if (res[i].char_info.is_latin_letter and res[i].char_info.is_all_upper and res[i].length == 1): 
+                if (twrch[res[i + 1].begin_char].is_quot and res[i + 2].char_info.is_latin_letter and res[i + 2].length > 2): 
                     if ((res[i].end_char + 1) == res[i + 1].begin_char and (res[i + 1].end_char + 1) == res[i + 2].begin_char): 
                         wstr = "{0}{1}".format(res[i].term, res[i + 2].term)
                         li = self.__process_one_word0(wstr)
@@ -553,26 +553,26 @@ class InnerMorphology:
                             res[i].word_forms = li
                         res[i].end_char = res[i + 2].end_char
                         res[i].term = wstr
-                        if (res[i + 2].char_info.is_all_lower0): 
-                            res[i].char_info.is_all_upper0 = False
-                            res[i].char_info.is_capital_upper0 = True
-                        elif (not res[i + 2].char_info.is_all_upper0): 
-                            res[i].char_info.is_all_upper0 = False
+                        if (res[i + 2].char_info.is_all_lower): 
+                            res[i].char_info.is_all_upper = False
+                            res[i].char_info.is_capital_upper = True
+                        elif (not res[i + 2].char_info.is_all_upper): 
+                            res[i].char_info.is_all_upper = False
                         del res[i + 1:i + 1+2]
             i += 1
         i = 0
-        first_pass2818 = True
+        first_pass2846 = True
         while True:
-            if first_pass2818: first_pass2818 = False
+            if first_pass2846: first_pass2846 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
-            if (not res[i].char_info.is_letter0 and not res[i + 1].char_info.is_letter0 and (res[i].end_char + 1) == res[i + 1].begin_char): 
-                if (twrch[res[i].begin_char].is_hiphen0 and twrch[res[i + 1].begin_char].is_hiphen0): 
-                    if (i == 0 or not twrch[res[i - 1].begin_char].is_hiphen0): 
+            if (not res[i].char_info.is_letter and not res[i + 1].char_info.is_letter and (res[i].end_char + 1) == res[i + 1].begin_char): 
+                if (twrch[res[i].begin_char].is_hiphen and twrch[res[i + 1].begin_char].is_hiphen): 
+                    if (i == 0 or not twrch[res[i - 1].begin_char].is_hiphen): 
                         pass
                     else: 
                         continue
-                    if ((i + 2) == len(res) or not twrch[res[i + 2].begin_char].is_hiphen0): 
+                    if ((i + 2) == len(res) or not twrch[res[i + 2].begin_char].is_hiphen): 
                         pass
                     else: 
                         continue
@@ -582,13 +582,13 @@ class InnerMorphology:
     
     @staticmethod
     def _get_char_typ(ui : 'UnicodeInfo') -> int:
-        if (ui.is_letter0): 
+        if (ui.is_letter): 
             return 1
-        if (ui.is_digit0): 
+        if (ui.is_digit): 
             return 2
-        if (ui.is_whitespace0): 
+        if (ui.is_whitespace): 
             return 0
-        if (ui.is_udaren0): 
+        if (ui.is_udaren): 
             return 1
         return ui.code
     
@@ -607,10 +607,10 @@ class InnerMorphology:
             i = begin
             while i <= end: 
                 ui = wr.chars[i]
-                if (ui.is_letter0): 
-                    if (ui.is_cyrillic0): 
+                if (ui.is_letter): 
+                    if (ui.is_cyrillic): 
                         cyr += 1
-                    elif (ui.is_latin0): 
+                    elif (ui.is_latin): 
                         lat += 1
                     else: 
                         undef += 1
@@ -618,10 +618,10 @@ class InnerMorphology:
         else: 
             for ch in word: 
                 ui = UnicodeInfo.ALL_CHARS[ord(ch)]
-                if (ui.is_letter0): 
-                    if (ui.is_cyrillic0): 
+                if (ui.is_letter): 
+                    if (ui.is_cyrillic): 
                         cyr += 1
-                    elif (ui.is_latin0): 
+                    elif (ui.is_latin): 
                         lat += 1
                     else: 
                         undef += 1
@@ -636,44 +636,44 @@ class InnerMorphology:
         lang = ((MorphLang.UA) | MorphLang.RU | MorphLang.BY) | MorphLang.KZ
         for ch in word: 
             ui = UnicodeInfo.ALL_CHARS[ord(ch)]
-            if (ui.is_letter0): 
+            if (ui.is_letter): 
                 if (ch == 'Ґ' or ch == 'Є' or ch == 'Ї'): 
-                    lang.is_ru0 = False
-                    lang.is_by0 = False
+                    lang.is_ru = False
+                    lang.is_by = False
                 elif (ch == 'І'): 
-                    lang.is_ru0 = False
+                    lang.is_ru = False
                 elif (ch == 'Ё' or ch == 'Э'): 
-                    lang.is_ua0 = False
-                    lang.is_kz0 = False
+                    lang.is_ua = False
+                    lang.is_kz = False
                 elif (ch == 'Ы'): 
-                    lang.is_ua0 = False
+                    lang.is_ua = False
                 elif (ch == 'Ў'): 
-                    lang.is_ru0 = False
-                    lang.is_ua0 = False
+                    lang.is_ru = False
+                    lang.is_ua = False
                 elif (ch == 'Щ'): 
-                    lang.is_by0 = False
+                    lang.is_by = False
                 elif (ch == 'Ъ'): 
-                    lang.is_by0 = False
-                    lang.is_ua0 = False
-                    lang.is_kz0 = False
+                    lang.is_by = False
+                    lang.is_ua = False
+                    lang.is_kz = False
                 elif ((((ch == 'Ә' or ch == 'Ғ' or ch == 'Қ') or ch == 'Ң' or ch == 'Ө') or ((ch == 'Ұ' and len(word) > 1)) or ch == 'Ү') or ch == 'Һ'): 
-                    lang.is_by0 = False
-                    lang.is_ua0 = False
-                    lang.is_ru0 = False
+                    lang.is_by = False
+                    lang.is_ua = False
+                    lang.is_ru = False
                 elif ((ch == 'В' or ch == 'Ф' or ch == 'Ц') or ch == 'Ч' or ch == 'Ь'): 
-                    lang.is_kz0 = False
+                    lang.is_kz = False
         return lang
     
     def get_all_wordforms(self, word : str, lang : 'MorphLang') -> typing.List['MorphWordForm']:
         if (LanguageHelper.is_cyrillic_char(word[0])): 
             if (lang is not None): 
-                if (InnerMorphology.M_ENGINE_RU.language.is_ru0 and lang.is_ru0): 
+                if (InnerMorphology.M_ENGINE_RU.language.is_ru and lang.is_ru): 
                     return InnerMorphology.M_ENGINE_RU.get_all_wordforms(word)
-                if (InnerMorphology.M_ENGINE_UA.language.is_ua0 and lang.is_ua0): 
+                if (InnerMorphology.M_ENGINE_UA.language.is_ua and lang.is_ua): 
                     return InnerMorphology.M_ENGINE_UA.get_all_wordforms(word)
-                if (InnerMorphology.M_ENGINE_BY.language.is_by0 and lang.is_by0): 
+                if (InnerMorphology.M_ENGINE_BY.language.is_by and lang.is_by): 
                     return InnerMorphology.M_ENGINE_BY.get_all_wordforms(word)
-                if (InnerMorphology.M_ENGINE_KZ.language.is_kz0 and lang.is_kz0): 
+                if (InnerMorphology.M_ENGINE_KZ.language.is_kz and lang.is_kz): 
                     return InnerMorphology.M_ENGINE_KZ.get_all_wordforms(word)
             return InnerMorphology.M_ENGINE_RU.get_all_wordforms(word)
         else: 
@@ -681,13 +681,13 @@ class InnerMorphology:
     
     def get_wordform(self, word : str, cla : 'MorphClass', gender : 'MorphGender', cas : 'MorphCase', num : 'MorphNumber', lang : 'MorphLang', add_info : 'MorphWordForm') -> str:
         if (LanguageHelper.is_cyrillic_char(word[0])): 
-            if (InnerMorphology.M_ENGINE_RU.language.is_ru0 and lang.is_ru0): 
+            if (InnerMorphology.M_ENGINE_RU.language.is_ru and lang.is_ru): 
                 return InnerMorphology.M_ENGINE_RU.get_wordform(word, cla, gender, cas, num, add_info)
-            if (InnerMorphology.M_ENGINE_UA.language.is_ua0 and lang.is_ua0): 
+            if (InnerMorphology.M_ENGINE_UA.language.is_ua and lang.is_ua): 
                 return InnerMorphology.M_ENGINE_UA.get_wordform(word, cla, gender, cas, num, add_info)
-            if (InnerMorphology.M_ENGINE_BY.language.is_by0 and lang.is_by0): 
+            if (InnerMorphology.M_ENGINE_BY.language.is_by and lang.is_by): 
                 return InnerMorphology.M_ENGINE_BY.get_wordform(word, cla, gender, cas, num, add_info)
-            if (InnerMorphology.M_ENGINE_KZ.language.is_kz0 and lang.is_kz0): 
+            if (InnerMorphology.M_ENGINE_KZ.language.is_kz and lang.is_kz): 
                 return InnerMorphology.M_ENGINE_KZ.get_wordform(word, cla, gender, cas, num, add_info)
             return InnerMorphology.M_ENGINE_RU.get_wordform(word, cla, gender, cas, num, add_info)
         else: 
@@ -696,13 +696,13 @@ class InnerMorphology:
     def correct_word_by_morph(self, word : str, lang : 'MorphLang') -> str:
         if (LanguageHelper.is_cyrillic_char(word[0])): 
             if (lang is not None): 
-                if (InnerMorphology.M_ENGINE_RU.language.is_ru0 and lang.is_ru0): 
+                if (InnerMorphology.M_ENGINE_RU.language.is_ru and lang.is_ru): 
                     return InnerMorphology.M_ENGINE_RU.correct_word_by_morph(word)
-                if (InnerMorphology.M_ENGINE_UA.language.is_ua0 and lang.is_ua0): 
+                if (InnerMorphology.M_ENGINE_UA.language.is_ua and lang.is_ua): 
                     return InnerMorphology.M_ENGINE_UA.correct_word_by_morph(word)
-                if (InnerMorphology.M_ENGINE_BY.language.is_by0 and lang.is_by0): 
+                if (InnerMorphology.M_ENGINE_BY.language.is_by and lang.is_by): 
                     return InnerMorphology.M_ENGINE_BY.correct_word_by_morph(word)
-                if (InnerMorphology.M_ENGINE_KZ.language.is_kz0 and lang.is_kz0): 
+                if (InnerMorphology.M_ENGINE_KZ.language.is_kz and lang.is_kz): 
                     return InnerMorphology.M_ENGINE_KZ.correct_word_by_morph(word)
             return InnerMorphology.M_ENGINE_RU.correct_word_by_morph(word)
         else: 
@@ -723,40 +723,40 @@ class InnerMorphology:
         if (lang == MorphLang.EN): 
             return InnerMorphology.M_ENGINE_EN.process(wstr)
         if (def_lang.value == MorphLang.RU): 
-            if (lang.is_ru0): 
+            if (lang.is_ru): 
                 return InnerMorphology.M_ENGINE_RU.process(wstr)
         if (lang == MorphLang.RU): 
             def_lang.value = lang
             return InnerMorphology.M_ENGINE_RU.process(wstr)
         if (def_lang.value == MorphLang.UA): 
-            if (lang.is_ua0): 
+            if (lang.is_ua): 
                 return InnerMorphology.M_ENGINE_UA.process(wstr)
         if (lang == MorphLang.UA): 
             def_lang.value = lang
             return InnerMorphology.M_ENGINE_UA.process(wstr)
         if (def_lang.value == MorphLang.BY): 
-            if (lang.is_by0): 
+            if (lang.is_by): 
                 return InnerMorphology.M_ENGINE_BY.process(wstr)
         if (lang == MorphLang.BY): 
             def_lang.value = lang
             return InnerMorphology.M_ENGINE_BY.process(wstr)
         if (def_lang.value == MorphLang.KZ): 
-            if (lang.is_kz0): 
+            if (lang.is_kz): 
                 return InnerMorphology.M_ENGINE_KZ.process(wstr)
         if (lang == MorphLang.KZ): 
             def_lang.value = lang
             return InnerMorphology.M_ENGINE_KZ.process(wstr)
         ru = None
-        if (lang.is_ru0): 
+        if (lang.is_ru): 
             ru = InnerMorphology.M_ENGINE_RU.process(wstr)
         ua = None
-        if (lang.is_ua0): 
+        if (lang.is_ua): 
             ua = InnerMorphology.M_ENGINE_UA.process(wstr)
         by = None
-        if (lang.is_by0): 
+        if (lang.is_by): 
             by = InnerMorphology.M_ENGINE_BY.process(wstr)
         kz = None
-        if (lang.is_kz0): 
+        if (lang.is_kz): 
             kz = InnerMorphology.M_ENGINE_KZ.process(wstr)
         has_ru = False
         has_ua = False
@@ -764,19 +764,19 @@ class InnerMorphology:
         has_kz = False
         if (ru is not None): 
             for wf in ru: 
-                if (wf.is_in_dictionary0): 
+                if (wf.is_in_dictionary): 
                     has_ru = True
         if (ua is not None): 
             for wf in ua: 
-                if (wf.is_in_dictionary0): 
+                if (wf.is_in_dictionary): 
                     has_ua = True
         if (by is not None): 
             for wf in by: 
-                if (wf.is_in_dictionary0): 
+                if (wf.is_in_dictionary): 
                     has_by = True
         if (kz is not None): 
             for wf in kz: 
-                if (wf.is_in_dictionary0): 
+                if (wf.is_in_dictionary): 
                     has_kz = True
         if ((has_ru and not has_ua and not has_by) and not has_kz): 
             def_lang.value = MorphLang.RU

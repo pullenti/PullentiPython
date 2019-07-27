@@ -110,9 +110,9 @@ class BookLinkAnalyzer(Analyzer):
         refs_by_num = dict()
         rts = [ ]
         t = kit.first_token
-        first_pass2860 = True
+        first_pass2888 = True
         while True:
-            if first_pass2860: first_pass2860 = False
+            if first_pass2888: first_pass2888 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char('(')): 
@@ -136,7 +136,7 @@ class BookLinkAnalyzer(Analyzer):
                             kit.embed_token(rts[0])
                             t = (rts[0])
                             continue
-            if (not t.is_newline_before0): 
+            if (not t.is_newline_before): 
                 continue
             if (is_lit_block <= 0): 
                 tt = BookLinkToken.parse_start_of_lit_block(t)
@@ -176,9 +176,9 @@ class BookLinkAnalyzer(Analyzer):
                     refs_by_num[re.number] = li
                 li.append(re)
         t = kit.first_token
-        first_pass2861 = True
+        first_pass2889 = True
         while True:
-            if first_pass2861: first_pass2861 = False
+            if first_pass2889: first_pass2889 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -213,7 +213,7 @@ class BookLinkAnalyzer(Analyzer):
     def __try_parse_short_inline(t : 'Token') -> 'ReferentToken':
         if (t is None): 
             return None
-        if (t.is_char('[') and not t.is_newline_before0): 
+        if (t.is_char('[') and not t.is_newline_before): 
             bb = BookLinkToken.try_parse(t, 0)
             if (bb is not None and bb.typ == BookLinkTyp.NUMBER): 
                 re = BookLinkRefReferent()
@@ -225,9 +225,9 @@ class BookLinkAnalyzer(Analyzer):
                 return None
             if (bbb.typ == BookLinkTyp.SEE): 
                 tt = bbb.end_token.next0_
-                first_pass2862 = True
+                first_pass2890 = True
                 while True:
-                    if first_pass2862: first_pass2862 = False
+                    if first_pass2890: first_pass2890 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_char_of(",:.")): 
@@ -245,7 +245,7 @@ class BookLinkAnalyzer(Analyzer):
                 return None
             if (bbb.typ == BookLinkTyp.NUMBER): 
                 tt1 = bbb.end_token.next0_
-                if (tt1 is not None and tt1.is_comma0): 
+                if (tt1 is not None and tt1.is_comma): 
                     tt1 = tt1.next0_
                 bbb2 = BookLinkToken.try_parse(tt1, 0)
                 if ((bbb2 is not None and bbb2.typ == BookLinkTyp.PAGERANGE and bbb2.end_token.next0_ is not None) and bbb2.end_token.next0_.is_char(')')): 
@@ -284,16 +284,16 @@ class BookLinkAnalyzer(Analyzer):
         elif (blt.typ == BookLinkTyp.NUMBER): 
             num = blt.value
             t = blt.end_token.next0_
-            if (t is None or t.is_newline_before0): 
+            if (t is None or t.is_newline_before): 
                 return None
-            if (not t.is_whitespace_before0): 
+            if (not t.is_whitespace_before): 
                 if (isinstance(t, NumberToken)): 
                     n = (t).value
-                    if ((((n == "3" or n == "0")) and not t.is_whitespace_after0 and (isinstance(t.next0_, TextToken))) and t.next0_.chars.is_all_lower0): 
+                    if ((((n == "3" or n == "0")) and not t.is_whitespace_after and (isinstance(t.next0_, TextToken))) and t.next0_.chars.is_all_lower): 
                         pass
                     else: 
                         return None
-                elif (not ((isinstance(t, TextToken))) or t.chars.is_all_lower0): 
+                elif (not ((isinstance(t, TextToken))) or t.chars.is_all_lower): 
                     r = t.get_referent()
                     if (isinstance(r, PersonReferent)): 
                         pass
@@ -301,9 +301,9 @@ class BookLinkAnalyzer(Analyzer):
                         pass
                     else: 
                         return None
-            first_pass2863 = True
+            first_pass2891 = True
             while True:
-                if first_pass2863: first_pass2863 = False
+                if first_pass2891: first_pass2891 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (isinstance(t, NumberToken)): 
@@ -312,7 +312,7 @@ class BookLinkAnalyzer(Analyzer):
                     break
                 if (BracketHelper.can_be_start_of_sequence(t, True, False)): 
                     break
-                if (not t.chars.is_letter0): 
+                if (not t.chars.is_letter): 
                     continue
                 bbb = BookLinkToken.try_parse(t, 0)
                 if (bbb is not None): 
@@ -339,12 +339,12 @@ class BookLinkAnalyzer(Analyzer):
             else: 
                 ok = False
                 tt = t
-                first_pass2864 = True
+                first_pass2892 = True
                 while True:
-                    if first_pass2864: first_pass2864 = False
+                    if first_pass2892: first_pass2892 = False
                     else: tt = (None if tt is None else tt.next0_)
                     if (not (tt is not None)): break
-                    if (tt.is_newline_before0): 
+                    if (tt.is_newline_before): 
                         break
                     if (is_in_lit and tt.get_referent() is not None and tt.get_referent().type_name == "DECREE"): 
                         ok = True
@@ -382,14 +382,14 @@ class BookLinkAnalyzer(Analyzer):
         start_of_name = None
         prev_pers_templ = FioTemplateType.UNDEFINED
         if (regtyp == BookLinkAnalyzer.RegionTyp.AUTHORS): 
-            first_pass2865 = True
+            first_pass2893 = True
             while True:
-                if first_pass2865: first_pass2865 = False
+                if first_pass2893: first_pass2893 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (max_char > 0 and t.begin_char >= max_char): 
                     break
-                if (t.is_char_of(".;") or t.is_comma_and0): 
+                if (t.is_char_of(".;") or t.is_comma_and): 
                     continue
                 if (t.is_char('/')): 
                     break
@@ -397,7 +397,7 @@ class BookLinkAnalyzer(Analyzer):
                     t = t.next0_.next0_.next0_
                     break
                 blt = BookLinkToken.try_parse_author(t, prev_pers_templ)
-                if (blt is None and t.previous is not None and t.previous.is_and0): 
+                if (blt is None and t.previous is not None and t.previous.is_and): 
                     blt = BookLinkToken.try_parse_author(t.previous, FioTemplateType.UNDEFINED)
                 if (blt is None): 
                     if ((isinstance(t.get_referent(), OrganizationReferent)) and blt00 is not None): 
@@ -432,7 +432,7 @@ class BookLinkAnalyzer(Analyzer):
                                 break
                             if ((str(blt).find('.') < 0) and str(blt00).find('.') > 0): 
                                 break
-                            if ((isinstance(tt11, TextToken)) and tt11.chars.is_all_lower0): 
+                            if ((isinstance(tt11, TextToken)) and tt11.chars.is_all_lower): 
                                 break
                             if (tt11.is_char_of(",.;") and tt11.next0_ is not None): 
                                 tt11 = tt11.next0_
@@ -440,7 +440,7 @@ class BookLinkAnalyzer(Analyzer):
                             if (nex is not None and nex.typ != BookLinkTyp.PERSON and nex.typ != BookLinkTyp.ANDOTHERS): 
                                 break
                     elif ((blt00 is not None and blt00.person_template != FioTemplateType.UNDEFINED and blt.person_template != blt00.person_template) and blt.person_template == FioTemplateType.NAMESURNAME): 
-                        if (blt.end_token.next0_ is None or not blt.end_token.next0_.is_comma_and0): 
+                        if (blt.end_token.next0_ is None or not blt.end_token.next0_.is_comma_and): 
                             break
                         if (BookLinkToken.try_parse_author(blt.end_token.next0_.next0_, FioTemplateType.UNDEFINED) is not None): 
                             pass
@@ -448,7 +448,7 @@ class BookLinkAnalyzer(Analyzer):
                             break
                     if (blt00 is None and blt.person_template == FioTemplateType.NAMESURNAME): 
                         tt = blt.end_token.next0_
-                        if (tt is not None and tt.is_hiphen0): 
+                        if (tt is not None and tt.is_hiphen): 
                             tt = tt.next0_
                         if (isinstance(tt, NumberToken)): 
                             break
@@ -472,12 +472,12 @@ class BookLinkAnalyzer(Analyzer):
                 break
         if (t is None): 
             return None
-        if ((t.is_newline_before0 and t != t0 and num is None) and res.find_slot(BookLinkReferent.ATTR_AUTHOR, None, True) is None): 
+        if ((t.is_newline_before and t != t0 and num is None) and res.find_slot(BookLinkReferent.ATTR_AUTHOR, None, True) is None): 
             return None
         if (start_of_name is None): 
-            if (t.chars.is_all_lower0): 
+            if (t.chars.is_all_lower): 
                 coef -= (1)
-            if (t.chars.is_latin_letter0 and not is_electr_res and num is None): 
+            if (t.chars.is_latin_letter and not is_electr_res and num is None): 
                 if (res.get_slot_value(BookLinkReferent.ATTR_AUTHOR) is None): 
                     return None
         tn0 = t
@@ -493,9 +493,9 @@ class BookLinkAnalyzer(Analyzer):
         if (br is not None): 
             t = t.next0_
         pages = None
-        first_pass2866 = True
+        first_pass2894 = True
         while True:
-            if first_pass2866: first_pass2866 = False
+            if first_pass2894: first_pass2894 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char > 0 and t.begin_char >= max_char): 
@@ -516,7 +516,7 @@ class BookLinkAnalyzer(Analyzer):
                         res.typ = tit.value.lower()
                         t = br.end_token.next0_
                         break
-            if (t.is_newline_before0 and t != tn0): 
+            if (t.is_newline_before and t != tn0): 
                 if (br is not None and (t.end_char < br.end_char)): 
                     pass
                 elif (not MiscHelper.can_be_start_of_sentence(t)): 
@@ -544,16 +544,16 @@ class BookLinkAnalyzer(Analyzer):
                 words = 0
                 notwords = 0
                 tt = t.next0_
-                first_pass2867 = True
+                first_pass2895 = True
                 while True:
-                    if first_pass2867: first_pass2867 = False
+                    if first_pass2895: first_pass2895 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     blt0 = BookLinkToken.try_parse(tt, 0)
                     if (blt0 is None): 
-                        if (tt.is_newline_before0): 
+                        if (tt.is_newline_before): 
                             break
-                        if ((isinstance(tt, TextToken)) and not tt.get_morph_class_in_dictionary().is_undefined0): 
+                        if ((isinstance(tt, TextToken)) and not tt.get_morph_class_in_dictionary().is_undefined): 
                             words += 1
                         else: 
                             notwords += 1
@@ -581,10 +581,10 @@ class BookLinkAnalyzer(Analyzer):
                 coef += 1
                 break
             if (blt.typ == BookLinkTyp.GEO or blt.typ == BookLinkTyp.PRESS): 
-                if (t.previous.is_hiphen0 or t.previous.is_char_of(".;") or blt.add_coef > 0): 
+                if (t.previous.is_hiphen or t.previous.is_char_of(".;") or blt.add_coef > 0): 
                     break
             if (blt.typ == BookLinkTyp.YEAR): 
-                if (t.previous is not None and t.previous.is_comma0): 
+                if (t.previous is not None and t.previous.is_comma): 
                     break
             if (blt.typ == BookLinkTyp.ELECTRONRES): 
                 is_electr_res = True
@@ -605,7 +605,7 @@ class BookLinkAnalyzer(Analyzer):
                 rt01 = ReferentToken(bref0, t0, rt0.end_token)
                 ok = False
                 while t is not None: 
-                    if (t.is_newline_before0): 
+                    if (t.is_newline_before): 
                         break
                     blt0 = BookLinkToken.try_parse(t, 0)
                     if (blt0 is not None): 
@@ -627,10 +627,10 @@ class BookLinkAnalyzer(Analyzer):
                 rt01 = ReferentToken(bref0, t0, decree)
                 t = decree.next0_
                 while t is not None: 
-                    if (t.is_newline_before0): 
+                    if (t.is_newline_before): 
                         break
                     if (isinstance(t, TextToken)): 
-                        if ((t).is_pure_verb0): 
+                        if ((t).is_pure_verb): 
                             return None
                     rt01.end_token = t
                     t = t.next0_
@@ -638,7 +638,7 @@ class BookLinkAnalyzer(Analyzer):
                 return rts0
             if (book_prev is not None): 
                 tt = t
-                while tt is not None and ((tt.is_char_of(",.") or tt.is_hiphen0)):
+                while tt is not None and ((tt.is_char_of(",.") or tt.is_hiphen)):
                     tt = tt.next0_
                 blt0 = BookLinkToken.try_parse(tt, 0)
                 if (blt0 is not None and blt0.typ == BookLinkTyp.PAGERANGE): 
@@ -661,7 +661,7 @@ class BookLinkAnalyzer(Analyzer):
                 else: 
                     break
         while tn1 is not None and tn1.begin_char > tn0.begin_char: 
-            if (tn1.is_char_of(".;,:(~") or tn1.is_hiphen0 or tn1.is_value("РЕД", None)): 
+            if (tn1.is_char_of(".;,:(~") or tn1.is_hiphen or tn1.is_value("РЕД", None)): 
                 pass
             else: 
                 break
@@ -671,7 +671,7 @@ class BookLinkAnalyzer(Analyzer):
             if (nam is None or (len(nam) < 3)): 
                 nam = start_of_name
             else: 
-                nam = "{0}{1}{2}".format(start_of_name, (" " if tn0.is_whitespace_before0 else ""), nam)
+                nam = "{0}{1}{2}".format(start_of_name, (" " if tn0.is_whitespace_before else ""), nam)
         if (nam is None): 
             return None
         res.name = nam
@@ -704,12 +704,12 @@ class BookLinkAnalyzer(Analyzer):
             tn1 = t.previous
         tt = lt0
         while tt is not None and tt.end_char <= lt1.end_char: 
-            if ((isinstance(tt, TextToken)) and tt.chars.is_letter0): 
-                if (tt.chars.is_latin_letter0): 
+            if ((isinstance(tt, TextToken)) and tt.chars.is_letter): 
+                if (tt.chars.is_latin_letter): 
                     en += 1
-                elif (tt.morph.language.is_ua0): 
+                elif (tt.morph.language.is_ua): 
                     ua += 1
-                elif (tt.morph.language.is_ru0): 
+                elif (tt.morph.language.is_ru): 
                     ru += 1
                 if (tt.length_char > 2): 
                     cha += 1
@@ -728,13 +728,13 @@ class BookLinkAnalyzer(Analyzer):
                 coef -= (2)
         if (res.lang == "EN"): 
             tt = tn0.next0_
-            first_pass2868 = True
+            first_pass2896 = True
             while True:
-                if first_pass2868: first_pass2868 = False
+                if first_pass2896: first_pass2896 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and (tt.end_char < tn1.end_char))): break
-                if (tt.is_comma0 and tt.next0_ is not None and ((not tt.next0_.chars.is_all_lower0 or (isinstance(tt.next0_, ReferentToken))))): 
-                    if (tt.next0_.next0_ is not None and tt.next0_.next0_.is_comma_and0): 
+                if (tt.is_comma and tt.next0_ is not None and ((not tt.next0_.chars.is_all_lower or (isinstance(tt.next0_, ReferentToken))))): 
+                    if (tt.next0_.next0_ is not None and tt.next0_.next0_.is_comma_and): 
                         if (isinstance(tt.next0_, ReferentToken)): 
                             pass
                         else: 
@@ -747,9 +747,9 @@ class BookLinkAnalyzer(Analyzer):
         authors = True
         edits = False
         br = (None)
-        first_pass2869 = True
+        first_pass2897 = True
         while True:
-            if first_pass2869: first_pass2869 = False
+            if first_pass2897: first_pass2897 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char > 0 and t.begin_char >= max_char): 
@@ -759,7 +759,7 @@ class BookLinkAnalyzer(Analyzer):
                 if (br is not None and br.length_char > 300): 
                     br = (None)
             blt = BookLinkToken.try_parse(t, 0)
-            if (t.is_newline_before0 and not t.is_char('/') and not t.previous.is_char('/')): 
+            if (t.is_newline_before and not t.is_char('/') and not t.previous.is_char('/')): 
                 if (blt is not None and blt.typ == BookLinkTyp.NUMBER): 
                     break
                 if (t.previous.is_char_of(":")): 
@@ -777,7 +777,7 @@ class BookLinkAnalyzer(Analyzer):
                     mmm = 50
                     tt = t.next0_
                     while tt is not None and mmm > 0: 
-                        if (tt.is_newline_before0): 
+                        if (tt.is_newline_before): 
                             blt2 = BookLinkToken.try_parse(tt, 0)
                             if (blt2 is not None and blt2.typ == BookLinkTyp.NUMBER and blt2.value == next_num): 
                                 ok = True
@@ -796,7 +796,7 @@ class BookLinkAnalyzer(Analyzer):
             rt.end_token = t
             if (blt is not None): 
                 rt.end_token = blt.end_token
-            if (t.is_char_of(".,") or t.is_hiphen0): 
+            if (t.is_char_of(".,") or t.is_hiphen): 
                 continue
             if (t.is_value("С", None)): 
                 pass

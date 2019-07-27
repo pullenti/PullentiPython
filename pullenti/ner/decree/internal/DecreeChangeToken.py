@@ -80,7 +80,7 @@ class DecreeChangeToken(MetaToken):
         return Utils.toStringStringIO(tmp)
     
     @property
-    def is_start0(self) -> bool:
+    def is_start(self) -> bool:
         return self.typ == DecreeChangeTokenTyp.STARTSINGLE or self.typ == DecreeChangeTokenTyp.STARTMULTU or self.typ == DecreeChangeTokenTyp.SINGLE
     
     @staticmethod
@@ -88,11 +88,11 @@ class DecreeChangeToken(MetaToken):
         if (t is None): 
             return None
         tt = t
-        if (t.is_newline_before0 and not ignore_newlines): 
+        if (t.is_newline_before and not ignore_newlines): 
             tt = t
-            first_pass2930 = True
+            first_pass2958 = True
             while True:
-                if first_pass2930: first_pass2930 = False
+                if first_pass2958: first_pass2958 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt == t and BracketHelper.is_bracket(tt, False) and not tt.is_char('(')): 
@@ -101,9 +101,9 @@ class DecreeChangeToken(MetaToken):
                     tt1 = tt.next0_.next0_
                     if (tt1 is not None and tt1.is_char('.')): 
                         tt1 = tt1.next0_
-                        if (tt1 is not None and not tt1.is_newline_before0 and tt1.is_value("ВНЕСТИ", "УНЕСТИ")): 
+                        if (tt1 is not None and not tt1.is_newline_before and tt1.is_value("ВНЕСТИ", "УНЕСТИ")): 
                             continue
-                        if (tt1 is not None and tt1.is_newline_before0): 
+                        if (tt1 is not None and tt1.is_newline_before): 
                             return None
                         tt = tt1
                     break
@@ -111,30 +111,30 @@ class DecreeChangeToken(MetaToken):
                     break
                 elif ((isinstance(tt, NumberToken)) and (tt).typ == NumberSpellingType.DIGIT): 
                     pass
-                elif (tt.is_hiphen0): 
+                elif (tt.is_hiphen): 
                     pass
-                elif ((isinstance(tt, TextToken)) and not tt.chars.is_letter0 and not tt.is_whitespace_before0): 
+                elif ((isinstance(tt, TextToken)) and not tt.chars.is_letter and not tt.is_whitespace_before): 
                     pass
-                elif (((isinstance(tt, TextToken)) and tt.length_char == 1 and (isinstance(tt.next0_, TextToken))) and not tt.next0_.chars.is_letter0): 
+                elif (((isinstance(tt, TextToken)) and tt.length_char == 1 and (isinstance(tt.next0_, TextToken))) and not tt.next0_.chars.is_letter): 
                     pass
                 else: 
                     break
         if (tt is None): 
             return None
         res = None
-        if (((isinstance(tt, TextToken)) and t.is_newline_before0 and not ignore_newlines) and tt.is_value("ВНЕСТИ", "УНЕСТИ") and ((((tt.next0_ is not None and tt.next0_.is_value("В", "ДО"))) or (tt).term == "ВНЕСТИ" or (tt).term == "УНЕСТИ"))): 
-            res = DecreeChangeToken._new785(tt, tt, DecreeChangeTokenTyp.STARTMULTU)
+        if (((isinstance(tt, TextToken)) and t.is_newline_before and not ignore_newlines) and tt.is_value("ВНЕСТИ", "УНЕСТИ") and ((((tt.next0_ is not None and tt.next0_.is_value("В", "ДО"))) or (tt).term == "ВНЕСТИ" or (tt).term == "УНЕСТИ"))): 
+            res = DecreeChangeToken._new792(tt, tt, DecreeChangeTokenTyp.STARTMULTU)
             if (tt.next0_ is not None and tt.next0_.is_value("В", "ДО")): 
                 tt = tt.next0_
                 res.end_token = tt
             has_change = False
             tt = tt.next0_
-            first_pass2931 = True
+            first_pass2959 = True
             while True:
-                if first_pass2931: first_pass2931 = False
+                if first_pass2959: first_pass2959 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
-                if (tt.is_newline_before0): 
+                if (tt.is_newline_before): 
                     break
                 if (isinstance(tt.get_referent(), DecreeReferent)): 
                     if (res.decree is not None and tt.get_referent() != res.decree): 
@@ -153,7 +153,7 @@ class DecreeChangeToken(MetaToken):
                     if (br is not None): 
                         tt = br.end_token
                         continue
-                if (tt.is_newline_before0): 
+                if (tt.is_newline_before): 
                     break
                 res.end_token = tt
                 if (tt.is_char(',') and has_change): 
@@ -173,7 +173,7 @@ class DecreeChangeToken(MetaToken):
             if (res.typ == DecreeChangeTokenTyp.STARTSINGLE and res.parts is None and tt is not None): 
                 if ((tt.is_value("ИЗЛОЖИВ", "ВИКЛАВШИ") or tt.is_value("ДОПОЛНИВ", "ДОПОВНИВШИ") or tt.is_value("ИСКЛЮЧИВ", "ВИКЛЮЧИВШИ")) or tt.is_value("ЗАМЕНИВ", "ЗАМІНИВШИ")): 
                     tt = tt.next0_
-                    if (tt is not None and tt.morph.class0_.is_preposition0): 
+                    if (tt is not None and tt.morph.class0_.is_preposition): 
                         tt = tt.next0_
                     res.parts = PartToken.try_attach_list(tt, False, 40)
                     if (res.parts is not None): 
@@ -188,12 +188,12 @@ class DecreeChangeToken(MetaToken):
                             res.act_kind = DecreeChangeKind.EXCHANGE
                         res.end_token = res.parts[len(res.parts) - 1]
             return res
-        if (((not ignore_newlines and t.is_newline_before0 and ((tt.is_value("ПРИЗНАТЬ", "ВИЗНАТИ") or tt.is_value("СЧИТАТЬ", "ВВАЖАТИ")))) and tt.next0_ is not None and tt.next0_.is_value("УТРАТИТЬ", "ВТРАТИТИ")) and tt.next0_.next0_ is not None and tt.next0_.next0_.is_value("СИЛА", "ЧИННІСТЬ")): 
-            res = DecreeChangeToken._new786(tt, tt.next0_.next0_, DecreeChangeTokenTyp.ACTION, DecreeChangeKind.EXPIRE)
+        if (((not ignore_newlines and t.is_newline_before and ((tt.is_value("ПРИЗНАТЬ", "ВИЗНАТИ") or tt.is_value("СЧИТАТЬ", "ВВАЖАТИ")))) and tt.next0_ is not None and tt.next0_.is_value("УТРАТИТЬ", "ВТРАТИТИ")) and tt.next0_.next0_ is not None and tt.next0_.next0_.is_value("СИЛА", "ЧИННІСТЬ")): 
+            res = DecreeChangeToken._new793(tt, tt.next0_.next0_, DecreeChangeTokenTyp.ACTION, DecreeChangeKind.EXPIRE)
             tt = tt.next0_.next0_.next0_
-            first_pass2932 = True
+            first_pass2960 = True
             while True:
-                if first_pass2932: first_pass2932 = False
+                if first_pass2960: first_pass2960 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_char(':')): 
@@ -221,28 +221,28 @@ class DecreeChangeToken(MetaToken):
                     if (br is not None): 
                         tt = br.end_token
                         continue
-                if (tt.is_newline_before0): 
+                if (tt.is_newline_before): 
                     break
             return res
-        if ((not ignore_newlines and ((t.is_newline_before0 or tt == t)) and tt.is_value("УТРАТИТЬ", "ВТРАТИТИ")) and tt.next0_ is not None and tt.next0_.is_value("СИЛА", "ЧИННІСТЬ")): 
-            res = DecreeChangeToken._new785(tt, tt.next0_, DecreeChangeTokenTyp.UNDEFINED)
+        if ((not ignore_newlines and ((t.is_newline_before or tt == t)) and tt.is_value("УТРАТИТЬ", "ВТРАТИТИ")) and tt.next0_ is not None and tt.next0_.is_value("СИЛА", "ЧИННІСТЬ")): 
+            res = DecreeChangeToken._new792(tt, tt.next0_, DecreeChangeTokenTyp.UNDEFINED)
             tt = tt.next0_
             while tt is not None: 
                 res.end_token = tt
-                if (tt.is_newline_after0): 
+                if (tt.is_newline_after): 
                     break
                 tt = tt.next0_
             return res
-        if (not ignore_newlines and t.is_newline_before0): 
+        if (not ignore_newlines and t.is_newline_before): 
             if (tt.is_value("СЛОВО", None)): 
                 pass
-            res = DecreeChangeToken._new785(tt, tt, DecreeChangeTokenTyp.STARTSINGLE)
-            first_pass2933 = True
+            res = DecreeChangeToken._new792(tt, tt, DecreeChangeTokenTyp.STARTSINGLE)
+            first_pass2961 = True
             while True:
-                if first_pass2933: first_pass2933 = False
+                if first_pass2961: first_pass2961 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
-                if (tt != t and tt.is_newline_before0): 
+                if (tt != t and tt.is_newline_before): 
                     break
                 if (tt.is_value("К", None) or tt.is_value("В", None) or tt.is_value("ИЗ", None)): 
                     continue
@@ -260,7 +260,7 @@ class DecreeChangeToken(MetaToken):
                     continue
                 if (tt.is_value("НАИМЕНОВАНИЕ", "НАЙМЕНУВАННЯ") or tt.is_value("НАЗВАНИЕ", "НАЗВА")): 
                     res.end_token = tt
-                    if ((tt.next0_ is not None and tt.next0_.is_and0 and tt.next0_.next0_ is not None) and tt.next0_.next0_.is_value("ТЕКСТ", None)): 
+                    if ((tt.next0_ is not None and tt.next0_.is_and and tt.next0_.next0_ is not None) and tt.next0_.next0_.is_value("ТЕКСТ", None)): 
                         res.has_text = True
                         tt = tt.next0_.next0_
                         res.end_token = tt
@@ -279,13 +279,13 @@ class DecreeChangeToken(MetaToken):
                 if ((res.parts is None and not res.has_name and tt.is_value("ДОПОЛНИТЬ", "ДОПОВНИТИ")) and tt.next0_ is not None): 
                     res.act_kind = DecreeChangeKind.APPEND
                     tt1 = DecreeToken.is_keyword(tt.next0_, False)
-                    if (tt1 is None or tt1.morph.case_.is_instrumental0): 
+                    if (tt1 is None or tt1.morph.case_.is_instrumental): 
                         tt1 = tt.next0_
                     else: 
                         tt1 = tt1.next0_
                     if (tt1 is not None and tt1.is_value("НОВЫЙ", "НОВИЙ")): 
                         tt1 = tt1.next0_
-                    if (tt1 is not None and tt1.morph.case_.is_instrumental0): 
+                    if (tt1 is not None and tt1.morph.case_.is_instrumental): 
                         pt = PartToken.try_attach(tt1, None, False, False)
                         if (pt is None): 
                             pt = PartToken.try_attach(tt1, None, False, True)
@@ -296,7 +296,7 @@ class DecreeChangeToken(MetaToken):
                             if (res.new_parts is None): 
                                 res.new_parts = list()
                             res.new_parts.append(pt)
-                            if (tt.next0_ is not None and tt.next0_.is_and0): 
+                            if (tt.next0_ is not None and tt.next0_.is_and): 
                                 pt = PartToken.try_attach(tt.next0_.next0_, None, False, False)
                                 if (pt is None): 
                                     pt = PartToken.try_attach(tt.next0_.next0_, None, False, True)
@@ -308,7 +308,7 @@ class DecreeChangeToken(MetaToken):
                 li = PartToken.try_attach_list(tt, False, 40)
                 if (li is None and tt.is_value("ПРИМЕЧАНИЕ", "ПРИМІТКА")): 
                     li = list()
-                    li.append(PartToken._new789(tt, tt, PartToken.ItemType.NOTICE))
+                    li.append(PartToken._new796(tt, tt, PartToken.ItemType.NOTICE))
                 if (li is not None and len(li) > 0 and li[0].typ == PartToken.ItemType.PREFIX): 
                     li = (None)
                 if (li is not None and len(li) > 0): 
@@ -324,7 +324,7 @@ class DecreeChangeToken(MetaToken):
                     res.end_token = li[len(li) - 1].end_token
                     tt = res.end_token
                     continue
-                if ((tt.morph.class0_.is_noun0 and change_stack is not None and len(change_stack) > 0) and (isinstance(change_stack[0], DecreePartReferent))): 
+                if ((tt.morph.class0_.is_noun and change_stack is not None and len(change_stack) > 0) and (isinstance(change_stack[0], DecreePartReferent))): 
                     pa = PartToken.try_attach(tt, None, False, True)
                     if (pa is not None): 
                         if (change_stack[0].get_string_value(PartToken._get_attr_name_by_typ(pa.typ)) is not None): 
@@ -410,7 +410,7 @@ class DecreeChangeToken(MetaToken):
                     if (npt is not None): 
                         tt1 = npt.end_token.next0_
                         if ((tt1 is not None and tt1.is_value("ИЗЛОЖИТЬ", "ВИКЛАСТИ") and tt1.next0_ is not None) and tt1.next0_.is_value("В", None)): 
-                            pt = PartToken._new789(tt, npt.end_token, PartToken.ItemType.APPENDIX)
+                            pt = PartToken._new796(tt, npt.end_token, PartToken.ItemType.APPENDIX)
                             pt.name = npt.get_normal_case_text(None, False, MorphGender.UNDEFINED, False)
                             res.parts = list()
                             res.parts.append(pt)
@@ -423,7 +423,7 @@ class DecreeChangeToken(MetaToken):
                         if (MiscHelper.can_be_start_of_sentence(ttt)): 
                             break
                         if (ttt.is_char('(') and ttt.next0_ is not None and ttt.next0_.is_value("ПРИЛОЖЕНИЕ", "ДОДАТОК")): 
-                            if (ttt.is_newline_before0): 
+                            if (ttt.is_newline_before): 
                                 break
                             br = BracketHelper.try_parse(ttt, BracketParseAttr.NO, 100)
                             if (br is None): 
@@ -448,7 +448,7 @@ class DecreeChangeToken(MetaToken):
                     continue
                 break
             if (((res.has_name or res.parts is not None or res.decree is not None) or res.real_part is not None or res.act_kind != DecreeChangeKind.UNDEFINED) or res.change_val is not None): 
-                if (res.end_token.next0_ is not None and res.end_token.next0_.is_char(':') and res.end_token.next0_.is_newline_after0): 
+                if (res.end_token.next0_ is not None and res.end_token.next0_.is_char(':') and res.end_token.next0_.is_newline_after): 
                     res.typ = DecreeChangeTokenTyp.SINGLE
                     res.end_token = res.end_token.next0_
                 return res
@@ -461,7 +461,7 @@ class DecreeChangeToken(MetaToken):
             else: 
                 return None
         tok = DecreeChangeToken.__m_terms.try_parse(tt, TerminParseAttr.NO)
-        if (tt.morph.class0_.is_adjective0 and (((isinstance(tt, NumberToken)) or tt.is_value("ПОСЛЕДНИЙ", "ОСТАННІЙ") or tt.is_value("ПРЕДПОСЛЕДНИЙ", "ПЕРЕДОСТАННІЙ")))): 
+        if (tt.morph.class0_.is_adjective and (((isinstance(tt, NumberToken)) or tt.is_value("ПОСЛЕДНИЙ", "ОСТАННІЙ") or tt.is_value("ПРЕДПОСЛЕДНИЙ", "ПЕРЕДОСТАННІЙ")))): 
             tok = DecreeChangeToken.__m_terms.try_parse(tt.next0_, TerminParseAttr.NO)
             if (tok is not None and (isinstance(tok.termin.tag, DecreeChangeValueKind))): 
                 pass
@@ -469,8 +469,8 @@ class DecreeChangeToken(MetaToken):
                 tok = (None)
         if (tok is not None): 
             if (isinstance(tok.termin.tag, DecreeChangeKind)): 
-                res = DecreeChangeToken._new786(tt, tok.end_token, DecreeChangeTokenTyp.ACTION, Utils.valToEnum(tok.termin.tag, DecreeChangeKind))
-                if (((res.act_kind == DecreeChangeKind.APPEND or res.act_kind == DecreeChangeKind.CONSIDER)) and tok.end_token.next0_ is not None and tok.end_token.next0_.morph.case_.is_instrumental0): 
+                res = DecreeChangeToken._new793(tt, tok.end_token, DecreeChangeTokenTyp.ACTION, Utils.valToEnum(tok.termin.tag, DecreeChangeKind))
+                if (((res.act_kind == DecreeChangeKind.APPEND or res.act_kind == DecreeChangeKind.CONSIDER)) and tok.end_token.next0_ is not None and tok.end_token.next0_.morph.case_.is_instrumental): 
                     pt = PartToken.try_attach(tok.end_token.next0_, None, False, False)
                     if (pt is None): 
                         pt = PartToken.try_attach(tok.end_token.next0_, None, False, True)
@@ -485,7 +485,7 @@ class DecreeChangeToken(MetaToken):
                             res.change_val.value = pt.get_source_text()
                         res.end_token = pt.end_token
                         tt = res.end_token
-                        if (tt.next0_ is not None and tt.next0_.is_and0 and res.act_kind == DecreeChangeKind.APPEND): 
+                        if (tt.next0_ is not None and tt.next0_.is_and and res.act_kind == DecreeChangeKind.APPEND): 
                             pt = PartToken.try_attach(tt.next0_.next0_, None, False, False)
                             if (pt is None): 
                                 pt = PartToken.try_attach(tt.next0_.next0_, None, False, True)
@@ -495,7 +495,7 @@ class DecreeChangeToken(MetaToken):
                                 tt = res.end_token
                 return res
             if (isinstance(tok.termin.tag, DecreeChangeValueKind)): 
-                res = DecreeChangeToken._new785(tt, tok.end_token, DecreeChangeTokenTyp.VALUE)
+                res = DecreeChangeToken._new792(tt, tok.end_token, DecreeChangeTokenTyp.VALUE)
                 res.change_val = DecreeChangeValueReferent()
                 res.change_val.kind = Utils.valToEnum(tok.termin.tag, DecreeChangeValueKind)
                 tt = tok.end_token.next0_
@@ -508,7 +508,7 @@ class DecreeChangeToken(MetaToken):
                         tt = tt.next0_
                     elif (isinstance(res.begin_token, NumberToken)): 
                         res.change_val.number = str((res.begin_token).value)
-                    elif (res.begin_token.morph.class0_.is_adjective0): 
+                    elif (res.begin_token.morph.class0_.is_adjective): 
                         res.change_val.number = res.begin_token.get_normal_case_text(None, False, MorphGender.UNDEFINED, False)
                     elif (BracketHelper.can_be_start_of_sequence(tt, False, False) and (isinstance(tt.next0_, NumberToken)) and BracketHelper.can_be_end_of_sequence(tt.next0_.next0_, False, None, False)): 
                         res.change_val.number = str((tt.next0_).value)
@@ -531,17 +531,17 @@ class DecreeChangeToken(MetaToken):
                     can_be_start = True
                 elif ((isinstance(tt, MetaToken)) and BracketHelper.can_be_start_of_sequence((tt).begin_token, True, False)): 
                     can_be_start = True
-                elif (tt is not None and tt.is_newline_before0 and tt.is_value("ПРИЛОЖЕНИЕ", "ДОДАТОК")): 
+                elif (tt is not None and tt.is_newline_before and tt.is_value("ПРИЛОЖЕНИЕ", "ДОДАТОК")): 
                     if ((tt.previous is not None and tt.previous.is_char(':') and tt.previous.previous is not None) and tt.previous.previous.is_value("РЕДАКЦИЯ", "РЕДАКЦІЯ")): 
                         can_be_start = True
                 if (can_be_start): 
                     ttt = (tt.next0_ if BracketHelper.can_be_start_of_sequence(tt, True, False) else tt)
-                    first_pass2934 = True
+                    first_pass2962 = True
                     while True:
-                        if first_pass2934: first_pass2934 = False
+                        if first_pass2962: first_pass2962 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
-                        if (ttt.is_char_of(".;") and ttt.is_newline_after0): 
+                        if (ttt.is_char_of(".;") and ttt.is_newline_after): 
                             res.change_val.value = (MetaToken(tt.next0_, ttt.previous)).get_source_text()
                             res.end_token = ttt
                             break
@@ -551,11 +551,11 @@ class DecreeChangeToken(MetaToken):
                             pass
                         else: 
                             continue
-                        if (ttt.next0_ is None or ttt.is_newline_after0): 
+                        if (ttt.next0_ is None or ttt.is_newline_after): 
                             pass
-                        elif (ttt.next0_.is_char_of(".;") and ttt.next0_.is_newline_after0): 
+                        elif (ttt.next0_.is_char_of(".;") and ttt.next0_.is_newline_after): 
                             pass
-                        elif (ttt.next0_.is_comma_and0 and DecreeChangeToken.try_attach(ttt.next0_.next0_, main, False, change_stack, True) is not None): 
+                        elif (ttt.next0_.is_comma_and and DecreeChangeToken.try_attach(ttt.next0_.next0_, main, False, change_stack, True) is not None): 
                             pass
                         elif (DecreeChangeToken.try_attach(ttt.next0_, main, False, change_stack, True) is not None or DecreeChangeToken.__m_terms.try_parse(ttt.next0_, TerminParseAttr.NO) is not None): 
                             pass
@@ -596,20 +596,20 @@ class DecreeChangeToken(MetaToken):
         if ((t == tt and t.previous is not None and t.previous.is_char(':')) and BracketHelper.is_bracket(t, False) and not t.is_char('(')): 
             is_nex_change = 1
         if (((is_nex_change > 0 and BracketHelper.is_bracket(t, True))) or ((is_nex_change > 1 and t.is_value("ПРИЛОЖЕНИЕ", "ДОДАТОК")))): 
-            res = DecreeChangeToken._new785(t, t, DecreeChangeTokenTyp.VALUE)
-            res.change_val = DecreeChangeValueReferent._new794(DecreeChangeValueKind.TEXT)
+            res = DecreeChangeToken._new792(t, t, DecreeChangeTokenTyp.VALUE)
+            res.change_val = DecreeChangeValueReferent._new801(DecreeChangeValueKind.TEXT)
             if (is_in_edition): 
                 return res
             t0 = (t.next0_ if BracketHelper.is_bracket(t, True) else t)
             doubt1 = None
             clause_last = None
             tt = t.next0_
-            first_pass2935 = True
+            first_pass2963 = True
             while True:
-                if first_pass2935: first_pass2935 = False
+                if first_pass2963: first_pass2963 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
-                if (not tt.is_newline_after0): 
+                if (not tt.is_newline_after): 
                     continue
                 is_doubt = False
                 instr = InstrToken1.parse(tt.next0_, True, None, 0, None, False, 0, False)
@@ -618,7 +618,7 @@ class DecreeChangeToken(MetaToken):
                     dc_next = DecreeChangeToken.try_attach(tt.next0_, None, True, None, True)
                 if (tt.next0_ is None): 
                     pass
-                elif (dc_next is not None and ((dc_next.is_start0 or dc_next.change_val is not None or dc_next.typ == DecreeChangeTokenTyp.UNDEFINED))): 
+                elif (dc_next is not None and ((dc_next.is_start or dc_next.change_val is not None or dc_next.typ == DecreeChangeTokenTyp.UNDEFINED))): 
                     pass
                 else: 
                     is_doubt = True
@@ -672,7 +672,7 @@ class DecreeChangeToken(MetaToken):
     
     @staticmethod
     def __try_attach_list(t : 'Token') -> typing.List['DecreeChangeToken']:
-        if (t is None or t.is_newline_before0): 
+        if (t is None or t.is_newline_before): 
             return None
         d0 = DecreeChangeToken.try_attach(t, None, False, None, False)
         if (d0 is None): 
@@ -680,31 +680,31 @@ class DecreeChangeToken(MetaToken):
         res = list()
         res.append(d0)
         t = d0.end_token.next0_
-        first_pass2936 = True
+        first_pass2964 = True
         while True:
-            if first_pass2936: first_pass2936 = False
+            if first_pass2964: first_pass2964 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (t.is_newline_before0): 
+            if (t.is_newline_before): 
                 if ((t.is_value("ПРИЛОЖЕНИЕ", "ДОДАТОК") and t.previous is not None and t.previous.is_char(':')) and t.previous.previous is not None and t.previous.previous.is_value("РЕДАКЦИЯ", "РЕДАКЦІЯ")): 
                     pass
                 else: 
                     break
             d = DecreeChangeToken.try_attach(t, None, False, None, False)
-            if (d is None and t.is_char('.') and not t.is_newline_after0): 
+            if (d is None and t.is_char('.') and not t.is_newline_after): 
                 continue
             if (d is None): 
                 if (t.is_value("НОВЫЙ", "НОВИЙ")): 
                     continue
                 if (t.is_value("НА", None)): 
                     continue
-                if (t.is_char(':') and ((not t.is_newline_after0 or res[len(res) - 1].act_kind == DecreeChangeKind.NEW))): 
+                if (t.is_char(':') and ((not t.is_newline_after or res[len(res) - 1].act_kind == DecreeChangeKind.NEW))): 
                     continue
                 if ((isinstance(t, TextToken)) and (t).term == "ТЕКСТОМ"): 
                     continue
                 pts = PartToken.try_attach_list(t, False, 40)
                 if (pts is not None): 
-                    d = DecreeChangeToken._new795(pts[0].begin_token, pts[len(pts) - 1].end_token, DecreeChangeTokenTyp.UNDEFINED, pts)
+                    d = DecreeChangeToken._new802(pts[0].begin_token, pts[len(pts) - 1].end_token, DecreeChangeTokenTyp.UNDEFINED, pts)
                 else: 
                     pt = PartToken.try_attach(t, None, True, False)
                     if (pt is None): 
@@ -805,7 +805,7 @@ class DecreeChangeToken(MetaToken):
         if (dpr is None or tok0 is None): 
             return None
         tt0 = tok0.end_token.next0_
-        if (tt0 is not None and tt0.is_comma_and0 and tok0.act_kind == DecreeChangeKind.UNDEFINED): 
+        if (tt0 is not None and tt0.is_comma_and and tok0.act_kind == DecreeChangeKind.UNDEFINED): 
             tt0 = tt0.next0_
         if (tt0 is not None and tt0.is_char(':')): 
             tt0 = tt0.next0_
@@ -821,18 +821,18 @@ class DecreeChangeToken(MetaToken):
         new_items = None
         while True:
             i = 0
-            first_pass2937 = True
+            first_pass2965 = True
             while True:
-                if first_pass2937: first_pass2937 = False
+                if first_pass2965: first_pass2965 = False
                 else: i += 1
                 if (not (i < len(toks))): break
                 tok = toks[i]
                 if (tok.has_text and tok.has_name): 
-                    dcr.is_owner_name_and_text0 = True
+                    dcr.is_owner_name_and_text = True
                 elif (tok.has_name): 
-                    dcr.is_owner_name0 = True
+                    dcr.is_owner_name = True
                 elif (tok.has_text): 
-                    dcr.is_only_text0 = True
+                    dcr.is_only_text = True
                 rt.end_token = tok.end_token
                 if (tok.typ == DecreeChangeTokenTyp.AFTERVALUE): 
                     if (tok.change_val is not None): 
@@ -894,14 +894,14 @@ class DecreeChangeToken(MetaToken):
                             if (eq_lev_val is None): 
                                 new_items.append(nam)
                             else: 
-                                wrapn818 = RefOutArgWrapper(0)
-                                inoutres819 = Utils.tryParseInt(eq_lev_val, wrapn818)
-                                n = wrapn818.value
-                                if (inoutres819): 
+                                wrapn825 = RefOutArgWrapper(0)
+                                inoutres826 = Utils.tryParseInt(eq_lev_val, wrapn825)
+                                n = wrapn825.value
+                                if (inoutres826): 
                                     new_items.append("{0} {1}".format(nam, n + 1))
                                 else: 
                                     new_items.append(nam)
-                        elif (len(np.values) == 2 and np.values[0].end_token.next0_.is_hiphen0): 
+                        elif (len(np.values) == 2 and np.values[0].end_token.next0_.is_hiphen): 
                             vv = NumberingHelper.create_diap(np.values[0].value, np.values[1].value)
                             if (vv is not None): 
                                 for v in vv: 
@@ -915,7 +915,7 @@ class DecreeChangeToken(MetaToken):
                 for v in new_items: 
                     dcr.value.add_slot(DecreeChangeValueReferent.ATTR_NEWITEM, v, False, 0)
             new_items = (None)
-            if (rt.end_token.next0_ is None or not rt.end_token.next0_.is_comma0): 
+            if (rt.end_token.next0_ is None or not rt.end_token.next0_.is_comma): 
                 break
             toks = DecreeChangeToken.__try_attach_list(rt.end_token.next0_.next0_)
             if (toks is None): 
@@ -929,20 +929,20 @@ class DecreeChangeToken(MetaToken):
         return res
     
     @staticmethod
-    def _new785(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DecreeChangeTokenTyp') -> 'DecreeChangeToken':
+    def _new792(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DecreeChangeTokenTyp') -> 'DecreeChangeToken':
         res = DecreeChangeToken(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new786(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DecreeChangeTokenTyp', _arg4 : 'DecreeChangeKind') -> 'DecreeChangeToken':
+    def _new793(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DecreeChangeTokenTyp', _arg4 : 'DecreeChangeKind') -> 'DecreeChangeToken':
         res = DecreeChangeToken(_arg1, _arg2)
         res.typ = _arg3
         res.act_kind = _arg4
         return res
     
     @staticmethod
-    def _new795(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DecreeChangeTokenTyp', _arg4 : typing.List['PartToken']) -> 'DecreeChangeToken':
+    def _new802(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DecreeChangeTokenTyp', _arg4 : typing.List['PartToken']) -> 'DecreeChangeToken':
         res = DecreeChangeToken(_arg1, _arg2)
         res.typ = _arg3
         res.parts = _arg4

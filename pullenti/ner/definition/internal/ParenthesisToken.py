@@ -33,9 +33,9 @@ class ParenthesisToken(MetaToken):
             return None
         mc = t.get_morph_class_in_dictionary()
         ok = False
-        if (mc.is_adverb0): 
+        if (mc.is_adverb): 
             ok = True
-        elif (mc.is_adjective0): 
+        elif (mc.is_adjective): 
             if (t.morph.contains_attr("сравн.", None) and t.morph.contains_attr("кач.прил.", None)): 
                 ok = True
         if (ok and t.next0_ is not None): 
@@ -46,14 +46,14 @@ class ParenthesisToken(MetaToken):
                 if (t1.morph.contains_attr("н.вр.", None) and t1.morph.contains_attr("нес.в.", None) and t1.morph.contains_attr("дейст.з.", None)): 
                     return ParenthesisToken(t, t1)
         t1 = (None)
-        if ((t.is_value("В", None) and t.next0_ is not None and t.next0_.is_value("СООТВЕТСТВИЕ", None)) and t.next0_.next0_ is not None and t.next0_.next0_.morph.class0_.is_preposition0): 
+        if ((t.is_value("В", None) and t.next0_ is not None and t.next0_.is_value("СООТВЕТСТВИЕ", None)) and t.next0_.next0_ is not None and t.next0_.next0_.morph.class0_.is_preposition): 
             t1 = t.next0_.next0_.next0_
         elif (t.is_value("СОГЛАСНО", None)): 
             t1 = t.next0_
         elif (t.is_value("В", None) and t.next0_ is not None): 
             if (t.next0_.is_value("СИЛА", None)): 
                 t1 = t.next0_.next0_
-            elif (t.next0_.morph.class0_.is_adjective0 or t.next0_.morph.class0_.is_pronoun0): 
+            elif (t.next0_.morph.class0_.is_adjective or t.next0_.morph.class0_.is_pronoun): 
                 npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
                 if (npt is not None): 
                     if (npt.noun.is_value("ВИД", None) or npt.noun.is_value("СЛУЧАЙ", None) or npt.noun.is_value("СФЕРА", None)): 
@@ -66,19 +66,19 @@ class ParenthesisToken(MetaToken):
                         t1 = npt1.end_token.next0_
             r = t1.get_referent()
             if (r is not None): 
-                res = ParenthesisToken._new1105(t, t1, r)
-                if (t1.next0_ is not None and t1.next0_.is_comma0): 
+                res = ParenthesisToken._new1112(t, t1, r)
+                if (t1.next0_ is not None and t1.next0_.is_comma): 
                     sila = False
                     ttt = t1.next0_.next0_
-                    first_pass2979 = True
+                    first_pass3007 = True
                     while True:
-                        if first_pass2979: first_pass2979 = False
+                        if first_pass3007: first_pass3007 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_value("СИЛА", None) or ttt.is_value("ДЕЙСТВИЕ", None)): 
                             sila = True
                             continue
-                        if (ttt.is_comma0): 
+                        if (ttt.is_comma): 
                             if (sila): 
                                 res.end_token = ttt.previous
                             break
@@ -91,12 +91,12 @@ class ParenthesisToken(MetaToken):
         tt = t
         if (tt.is_value("НЕ", None) and t is not None): 
             tt = tt.next0_
-        if (tt.morph.class0_.is_preposition0 and tt is not None): 
+        if (tt.morph.class0_.is_preposition and tt is not None): 
             tt = tt.next0_
             npt1 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
             if (npt1 is not None): 
                 tt = npt1.end_token
-                if (tt.next0_ is not None and tt.next0_.is_comma0): 
+                if (tt.next0_ is not None and tt.next0_.is_comma): 
                     return ParenthesisToken(t, tt.next0_)
                 if (npt1.noun.is_value("ОЧЕРЕДЬ", None)): 
                     return ParenthesisToken(t, tt)
@@ -115,7 +115,7 @@ class ParenthesisToken(MetaToken):
     __m_termins = None
     
     @staticmethod
-    def _new1105(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent') -> 'ParenthesisToken':
+    def _new1112(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent') -> 'ParenthesisToken':
         res = ParenthesisToken(_arg1, _arg2)
         res.ref = _arg3
         return res

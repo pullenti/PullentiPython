@@ -36,9 +36,9 @@ class VerbPhraseHelper:
         """
         if (not ((isinstance(t, TextToken)))): 
             return None
-        if (not t.chars.is_letter0): 
+        if (not t.chars.is_letter): 
             return None
-        if (t.chars.is_cyrillic_letter0): 
+        if (t.chars.is_cyrillic_letter): 
             return VerbPhraseHelper.__try_parse_ru(t, can_be_partition)
         return None
     
@@ -51,9 +51,9 @@ class VerbPhraseHelper:
         verb_be_before = False
         norm = None
         prep = None
-        first_pass2920 = True
+        first_pass2948 = True
         while True:
-            if first_pass2920: first_pass2920 = False
+            if first_pass2948: first_pass2948 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -69,9 +69,9 @@ class VerbPhraseHelper:
                 if (has_verb): 
                     break
                 ty = 1
-            elif (mc.is_adverb0): 
+            elif (mc.is_adverb and not mc.is_verb): 
                 ty = 2
-            elif (tt.is_pure_verb0 or tt.is_verb_be0): 
+            elif (tt.is_pure_verb or tt.is_verb_be): 
                 ty = 1
                 if (has_verb): 
                     if (not tt.morph.contains_attr("инф.", None)): 
@@ -79,31 +79,31 @@ class VerbPhraseHelper:
                             pass
                         else: 
                             break
-            elif (mc.is_verb0): 
-                if (mc.is_preposition0 or mc.is_misc0 or mc.is_pronoun0): 
+            elif (mc.is_verb): 
+                if (mc.is_preposition or mc.is_misc or mc.is_pronoun): 
                     pass
-                elif (mc.is_noun0): 
+                elif (mc.is_noun): 
                     if (tt.term == "СТАЛИ" or tt.term == "СТЕКЛО" or tt.term == "БЫЛИ"): 
                         ty = 1
-                    elif (not tt.chars.is_all_lower0 and not MiscHelper.can_be_start_of_sentence(tt)): 
+                    elif (not tt.chars.is_all_lower and not MiscHelper.can_be_start_of_sentence(tt)): 
                         ty = 1
-                    elif (mc.is_adjective0 and can_be_partition): 
+                    elif (mc.is_adjective and can_be_partition): 
                         ty = 1
-                elif (mc.is_proper0): 
-                    if (tt.chars.is_all_lower0): 
+                elif (mc.is_proper): 
+                    if (tt.chars.is_all_lower): 
                         ty = 1
                 else: 
                     ty = 1
-                if (mc.is_adjective0): 
+                if (mc.is_adjective): 
                     is_participle = True
-                if (not tt.morph.case_.is_undefined0): 
+                if (not tt.morph.case_.is_undefined): 
                     is_participle = True
                 if (not can_be_partition and is_participle): 
                     break
                 if (has_verb): 
                     if (not tt.morph.contains_attr("инф.", None) or is_participle): 
                         break
-            elif (mc.is_adjective0 and can_be_partition): 
+            elif (mc.is_adjective and can_be_partition): 
                 if (tt.morph.contains_attr("к.ф.", None)): 
                     break
                 norm = tt.get_normal_case_text(MorphClass.ADJECTIVE, True, MorphGender.MASCULINE, False)
@@ -116,10 +116,10 @@ class VerbPhraseHelper:
                         hpart = False
                         for gr in grs: 
                             for w in gr.words: 
-                                if (w.class0_.is_adjective0 and w.class0_.is_verb0): 
+                                if (w.class0_.is_adjective and w.class0_.is_verb): 
                                     if (w.spelling == norm): 
                                         hpart = True
-                                elif (w.class0_.is_verb0): 
+                                elif (w.class0_.is_verb): 
                                     hverb = True
                         if (hpart and hverb): 
                             ty = 3
@@ -131,10 +131,10 @@ class VerbPhraseHelper:
                             if (grs is not None and len(grs) > 0): 
                                 for gr in grs: 
                                     for w in gr.words: 
-                                        if (w.class0_.is_adjective0 and w.class0_.is_verb0): 
+                                        if (w.class0_.is_adjective and w.class0_.is_verb): 
                                             if (w.spelling == norm1): 
                                                 hpart = True
-                                        elif (w.class0_.is_verb0): 
+                                        elif (w.class0_.is_verb): 
                                             hverb = True
                             if (hpart and hverb): 
                                 ty = 3
@@ -148,21 +148,21 @@ class VerbPhraseHelper:
             if (res is None): 
                 res = VerbPhraseToken(t0, t)
             res.end_token = t
-            it = VerbPhraseItemToken._new656(t, t, MorphCollection(t.morph))
+            it = VerbPhraseItemToken._new663(t, t, MorphCollection(t.morph))
             if (not0_ is not None): 
                 it.begin_token = not0_
                 it.not0_ = True
                 not0_ = (None)
             it.is_adverb = ty == 2
-            if (prep is not None and not t.morph.case_.is_undefined0 and len(res.items) == 0): 
-                if (((prep.next_case) & t.morph.case_).is_undefined0): 
+            if (prep is not None and not t.morph.case_.is_undefined and len(res.items) == 0): 
+                if (((prep.next_case) & t.morph.case_).is_undefined): 
                     return None
                 it.morph.remove_items(prep.next_case, False)
                 res.preposition = prep
             if (norm is None): 
                 norm = t.get_normal_case_text((MorphClass.ADJECTIVE if ty == 3 else (MorphClass.ADVERB if ty == 2 else MorphClass.VERB)), True, MorphGender.MASCULINE, False)
-                if (ty == 1 and not tt.morph.case_.is_undefined0): 
-                    mi = MorphWordForm._new657(MorphCase.NOMINATIVE, MorphNumber.SINGULAR, MorphGender.MASCULINE)
+                if (ty == 1 and not tt.morph.case_.is_undefined): 
+                    mi = MorphWordForm._new664(MorphCase.NOMINATIVE, MorphNumber.SINGULAR, MorphGender.MASCULINE)
                     for mit in tt.morph.items: 
                         if (isinstance(mit, MorphWordForm)): 
                             mi.misc = (mit).misc
@@ -176,7 +176,7 @@ class VerbPhraseHelper:
                 res.morph = it.morph
                 has_verb = True
             if (ty == 1 or ty == 3): 
-                if (ty == 1 and tt.is_verb_be0): 
+                if (ty == 1 and tt.is_verb_be): 
                     verb_be_before = True
                 else: 
                     verb_be_before = False

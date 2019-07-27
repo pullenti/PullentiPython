@@ -89,9 +89,9 @@ class StreetReferent(Referent):
     def city(self) -> 'GeoReferent':
         """ Город """
         for g in self.geos: 
-            if (g.is_city0): 
+            if (g.is_city): 
                 return g
-            elif (g.higher is not None and g.higher.is_city0): 
+            elif (g.higher is not None and g.higher.is_city): 
                 return g.higher
         return None
     
@@ -105,9 +105,9 @@ class StreetReferent(Referent):
         typs_ = self.typs
         if (len(typs_) > 0): 
             i = 0
-            first_pass2854 = True
+            first_pass2882 = True
             while True:
-                if first_pass2854: first_pass2854 = False
+                if first_pass2882: first_pass2882 = False
                 else: i += 1
                 if (not (i < len(typs_))): break
                 if (nam is not None and typs_[i].upper() in nam): 
@@ -116,7 +116,7 @@ class StreetReferent(Referent):
                     print('/', end="", file=tmp)
                 print(typs_[i], end="", file=tmp)
         else: 
-            print(("вулиця" if lang.is_ua0 else "улица"), end="", file=tmp)
+            print(("вулиця" if lang.is_ua else "улица"), end="", file=tmp)
         if (self.number is not None): 
             print(" {0}".format(self.number), end="", file=tmp, flush=True)
             if (self.sec_number is not None): 

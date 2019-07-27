@@ -130,7 +130,7 @@ class TransportReferent(Referent):
             res = Utils.valToEnum(s, TransportKind)
             if (isinstance(res, TransportKind)): 
                 return Utils.valToEnum(res, TransportKind)
-        except Exception as ex2646: 
+        except Exception as ex2674: 
             pass
         return TransportKind.UNDEFINED
     
@@ -180,7 +180,6 @@ class TransportReferent(Referent):
                             return False
                     elif (s1 != s2): 
                         return False
-                return True
         s1 = self.get_string_value(TransportReferent.ATTR_BRAND)
         s2 = tr.get_string_value(TransportReferent.ATTR_BRAND)
         if (s1 is not None or s2 is not None): 

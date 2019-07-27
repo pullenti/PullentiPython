@@ -28,11 +28,11 @@ class MetaToken(Token):
         if (begin != end): 
             t = begin.next0_
             while t is not None: 
-                if (t.chars.is_letter0): 
-                    if (self.chars.is_capital_upper0 and t.chars.is_all_lower0): 
+                if (t.chars.is_letter): 
+                    if (self.chars.is_capital_upper and t.chars.is_all_lower): 
                         pass
                     else: 
-                        self.chars = CharsInfo._new2761(((self.chars.value) & (t.chars.value)))
+                        self.chars = CharsInfo._new2790(((self.chars.value) & (t.chars.value)))
                 if (t == end): 
                     break
                 t = t.next0_
@@ -50,8 +50,8 @@ class MetaToken(Token):
                     break
                 if (t.end_char > self._m_end_token.end_char): 
                     break
-                if (t.chars.is_letter0): 
-                    self.chars = CharsInfo._new2761(((self.chars.value) & (t.chars.value)))
+                if (t.chars.is_letter): 
+                    self.chars = CharsInfo._new2790(((self.chars.value) & (t.chars.value)))
                 if (t == self._m_end_token): 
                     break
                 t = t.next0_
@@ -102,19 +102,19 @@ class MetaToken(Token):
     
     @property
     def is_whitespace_before(self) -> bool:
-        return self._m_begin_token.is_whitespace_before0
+        return self._m_begin_token.is_whitespace_before
     
     @property
     def is_whitespace_after(self) -> bool:
-        return self._m_end_token.is_whitespace_after0
+        return self._m_end_token.is_whitespace_after
     
     @property
     def is_newline_before(self) -> bool:
-        return self._m_begin_token.is_newline_before0
+        return self._m_begin_token.is_newline_before
     
     @property
     def is_newline_after(self) -> bool:
-        return self._m_end_token.is_newline_after0
+        return self._m_end_token.is_newline_after
     
     @property
     def whitespaces_before_count(self) -> int:
@@ -128,7 +128,7 @@ class MetaToken(Token):
         res = io.StringIO()
         t = self._m_begin_token
         while t is not None: 
-            if (res.tell() > 0 and t.is_whitespace_before0): 
+            if (res.tell() > 0 and t.is_whitespace_before): 
                 print(' ', end="", file=res)
             print(t.get_source_text(), end="", file=res)
             if (t == self._m_end_token): 
@@ -142,9 +142,9 @@ class MetaToken(Token):
     def get_referents(self) -> typing.List['Referent']:
         res = None
         t = self.begin_token
-        first_pass3277 = True
+        first_pass3307 = True
         while True:
-            if first_pass3277: first_pass3277 = False
+            if first_pass3307: first_pass3307 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= self.end_char)): break
             li = t.get_referents()
@@ -188,19 +188,19 @@ class MetaToken(Token):
             return MiscHelper.get_text_value(self.begin_token, self.end_token, attr)
     
     @staticmethod
-    def _new572(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'MetaToken':
+    def _new573(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.morph = _arg3
         return res
     
     @staticmethod
-    def _new828(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object) -> 'MetaToken':
+    def _new835(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object) -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.tag = _arg3
         return res
     
     @staticmethod
-    def _new2286(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
+    def _new2314(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.tag = _arg3
         res.morph = _arg4

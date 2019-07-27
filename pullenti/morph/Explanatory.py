@@ -23,7 +23,7 @@ class Explanatory:
         Args:
             langs(MorphLang): по умолчанию, русский с украинским
         """
-        if (langs is None or langs.is_undefined0): 
+        if (langs is None or langs.is_undefined): 
             langs = MorphLang.RU
         NextModelHelper.initialize()
         Explanatory.load_languages(langs)
@@ -44,10 +44,10 @@ class Explanatory:
         Args:
             langs(MorphLang): 
         """
-        if (langs.is_ru0 or langs.is_ua0): 
+        if (langs.is_ru or langs.is_ua): 
             if (not Explanatory.__m_der_ru.init(MorphLang.RU)): 
                 raise Utils.newException("Not found resource file e_ru.dat in Enplanatory", None)
-        if (langs.is_ua0): 
+        if (langs.is_ua): 
             pass
     
     @staticmethod
@@ -57,8 +57,8 @@ class Explanatory:
         Args:
             langs(MorphLang): 
         """
-        if (langs.is_ru0 or langs.is_ua0): 
-            if (langs.is_ru0 and langs.is_ua0): 
+        if (langs.is_ru or langs.is_ua): 
+            if (langs.is_ru and langs.is_ua): 
                 Explanatory.__m_der_ru.unload()
         gc.collect()
     
@@ -133,7 +133,7 @@ class Explanatory:
         for g in grs: 
             for w in g.words: 
                 if (w.spelling == word): 
-                    if (w.attrs.is_animated0): 
+                    if (w.attrs.is_animated): 
                         return True
         return False
     
@@ -152,7 +152,7 @@ class Explanatory:
         for g in grs: 
             for w in g.words: 
                 if (w.spelling == word): 
-                    if (w.attrs.is_named0): 
+                    if (w.attrs.is_named): 
                         return True
         return False
     

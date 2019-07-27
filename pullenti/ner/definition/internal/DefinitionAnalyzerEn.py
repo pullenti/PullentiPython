@@ -24,9 +24,9 @@ class DefinitionAnalyzerEn:
     @staticmethod
     def process(kit : 'AnalysisKit', ad : 'AnalyzerData') -> None:
         t = kit.first_token
-        first_pass2976 = True
+        first_pass3004 = True
         while True:
-            if first_pass2976: first_pass2976 = False
+            if first_pass3004: first_pass3004 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not MiscHelper.can_be_start_of_sentence(t)): 
@@ -46,19 +46,19 @@ class DefinitionAnalyzerEn:
         tt = t
         mc = tt.get_morph_class_in_dictionary()
         preamb = None
-        if (mc.is_conjunction0): 
+        if (mc.is_conjunction): 
             return None
         if (t.is_value("LET", None)): 
             return None
-        if (mc.is_preposition0 or mc.is_misc0 or mc.is_adverb0): 
+        if (mc.is_preposition or mc.is_misc or mc.is_adverb): 
             if (not MiscHelper.is_eng_article(tt)): 
                 tt = tt.next0_
-                first_pass2977 = True
+                first_pass3005 = True
                 while True:
-                    if first_pass2977: first_pass2977 = False
+                    if first_pass3005: first_pass3005 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
-                    if (tt.is_comma0): 
+                    if (tt.is_comma): 
                         break
                     if (tt.is_char('(')): 
                         br = BracketHelper.try_parse(tt, BracketParseAttr.NO, 100)
@@ -71,9 +71,9 @@ class DefinitionAnalyzerEn:
                     if (npt0 is not None): 
                         tt = npt0.end_token
                         continue
-                    if (tt.get_morph_class_in_dictionary().is_verb0): 
+                    if (tt.get_morph_class_in_dictionary().is_verb): 
                         break
-                if (tt is None or not tt.is_comma0 or tt.next0_ is None): 
+                if (tt is None or not tt.is_comma or tt.next0_ is None): 
                     return None
                 preamb = MetaToken(t0, tt.previous)
                 tt = tt.next0_
@@ -81,29 +81,29 @@ class DefinitionAnalyzerEn:
         mc = tt.get_morph_class_in_dictionary()
         npt = NounPhraseHelper.try_parse(tt, Utils.valToEnum((NounPhraseParseAttr.PARSENUMERICASADJECTIVE) | (NounPhraseParseAttr.REFERENTCANBENOUN) | (NounPhraseParseAttr.PARSEADVERBS), NounPhraseParseAttr), 0)
         if (npt is None and (isinstance(tt, TextToken))): 
-            if (tt.chars.is_all_upper0): 
+            if (tt.chars.is_all_upper): 
                 npt = NounPhraseToken(tt, tt)
-            elif (not tt.chars.is_all_lower0): 
-                if (mc.is_proper0 or preamb is not None): 
+            elif (not tt.chars.is_all_lower): 
+                if (mc.is_proper or preamb is not None): 
                     npt = NounPhraseToken(tt, tt)
         if (npt is None): 
             return None
-        if (mc.is_personal_pronoun0): 
+        if (mc.is_personal_pronoun): 
             return None
         t2 = npt.end_token.next0_
         if (t2 is None or MiscHelper.can_be_start_of_sentence(t2) or not ((isinstance(t2, TextToken)))): 
             return None
-        if (not t2.get_morph_class_in_dictionary().is_verb0): 
+        if (not t2.get_morph_class_in_dictionary().is_verb): 
             return None
         t3 = t2
         tt = t2.next0_
         while tt is not None: 
-            if (not tt.get_morph_class_in_dictionary().is_verb0): 
+            if (not tt.get_morph_class_in_dictionary().is_verb): 
                 break
             tt = tt.next0_
-        first_pass2978 = True
+        first_pass3006 = True
         while True:
-            if first_pass2978: first_pass2978 = False
+            if first_pass3006: first_pass3006 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.next0_ is None): 
@@ -128,11 +128,11 @@ class DefinitionAnalyzerEn:
             return None
         if (t0 != t1): 
             tt = t1.previous
-            if (tt.is_comma0): 
+            if (tt.is_comma): 
                 tt = tt.previous
             txt0 = MiscHelper.get_text_value(t0, tt, Utils.valToEnum((GetTextAttr.KEEPREGISTER) | (GetTextAttr.KEEPQUOTES), GetTextAttr))
             if (txt0 is not None and len(txt0) > 10): 
-                if (t0.chars.is_capital_upper0): 
+                if (t0.chars.is_capital_upper): 
                     txt0 = ((str.lower(txt0[0])) + txt0[1:])
                 txt = "{0}, {1}".format(txt, txt0)
         tt = t1

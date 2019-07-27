@@ -58,12 +58,12 @@ class NumberHelper:
             val = term
         if (val is not None): 
             hiph = False
-            if ((isinstance(et.next0_, TextToken)) and et.next0_.is_hiphen0): 
+            if ((isinstance(et.next0_, TextToken)) and et.next0_.is_hiphen): 
                 if ((et.whitespaces_after_count < 2) and (et.next0_.whitespaces_after_count < 2)): 
                     et = (Utils.asObjectOrNull(et.next0_, TextToken))
                     hiph = True
             mc = None
-            if (hiph or not et.is_whitespace_after0): 
+            if (hiph or not et.is_whitespace_after): 
                 rr = NumberHelper.__analize_number_tail(Utils.asObjectOrNull(et.next0_, TextToken), val)
                 if (rr is None): 
                     et = tt
@@ -76,7 +76,7 @@ class NumberHelper:
                 num2 = NumberHelper._try_parse_number(et.next0_.next0_)
                 if ((num2 is not None and num2.value == val and num2.end_token.next0_ is not None) and num2.end_token.next0_.is_char(')')): 
                     et = (Utils.asObjectOrNull(num2.end_token.next0_, TextToken))
-            while (isinstance(et.next0_, TextToken)) and not ((isinstance(et.previous, NumberToken))) and et.is_whitespace_before0:
+            while (isinstance(et.next0_, TextToken)) and not ((isinstance(et.previous, NumberToken))) and et.is_whitespace_before:
                 if (et.whitespaces_after_count != 1): 
                     break
                 sss = (et.next0_).term
@@ -87,29 +87,29 @@ class NumberHelper:
                 if (str.isdigit(sss[0]) and len(sss) == 3): 
                     val2 = val
                     ttt = et.next0_
-                    first_pass2912 = True
+                    first_pass2940 = True
                     while True:
-                        if first_pass2912: first_pass2912 = False
+                        if first_pass2940: first_pass2940 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         ss = ttt.get_source_text()
                         if (ttt.whitespaces_before_count == 1 and ttt.length_char == 3 and str.isdigit(ss[0])): 
-                            wrapii565 = RefOutArgWrapper(0)
-                            inoutres566 = Utils.tryParseInt(ss, wrapii565)
-                            ii = wrapii565.value
-                            if (not inoutres566): 
+                            wrapii566 = RefOutArgWrapper(0)
+                            inoutres567 = Utils.tryParseInt(ss, wrapii566)
+                            ii = wrapii566.value
+                            if (not inoutres567): 
                                 break
                             val2 += ss
                             continue
-                        if ((ttt.is_char_of(".,") and not ttt.is_whitespace_before0 and not ttt.is_whitespace_after0) and ttt.next0_ is not None and str.isdigit(ttt.next0_.get_source_text()[0])): 
-                            if (ttt.next0_.is_whitespace_after0 and (isinstance(ttt.previous, TextToken))): 
+                        if ((ttt.is_char_of(".,") and not ttt.is_whitespace_before and not ttt.is_whitespace_after) and ttt.next0_ is not None and str.isdigit(ttt.next0_.get_source_text()[0])): 
+                            if (ttt.next0_.is_whitespace_after and (isinstance(ttt.previous, TextToken))): 
                                 et = (Utils.asObjectOrNull(ttt.previous, TextToken))
                                 val = val2
                                 break
                         break
                 break
             for k in range(3):
-                if ((isinstance(et.next0_, TextToken)) and et.next0_.chars.is_letter0): 
+                if ((isinstance(et.next0_, TextToken)) and et.next0_.chars.is_letter): 
                     tt = (Utils.asObjectOrNull(et.next0_, TextToken))
                     t0 = et
                     coef = None
@@ -155,7 +155,7 @@ class NumberHelper:
                                 et = (Utils.asObjectOrNull(et.next0_, TextToken))
                         else: 
                             break
-                    if (((t0 == token and t0.length_char <= 3 and t0.previous is not None) and not t0.is_whitespace_before0 and t0.previous.is_char_of(",.")) and not t0.previous.is_whitespace_before0 and (((isinstance(t0.previous.previous, NumberToken)) or prev_val is not None))): 
+                    if (((t0 == token and t0.length_char <= 3 and t0.previous is not None) and not t0.is_whitespace_before and t0.previous.is_char_of(",.")) and not t0.previous.is_whitespace_before and (((isinstance(t0.previous.previous, NumberToken)) or prev_val is not None))): 
                         if (t0.length_char == 1): 
                             val = val[0:0+len(val) - 1]
                         elif (t0.length_char == 2): 
@@ -173,7 +173,7 @@ class NumberHelper:
                     if (next0_ is None or len(next0_.value) > len(coef)): 
                         break
                     tt1 = next0_.end_token
-                    if (((isinstance(tt1.next0_, TextToken)) and not tt1.is_whitespace_after0 and tt1.next0_.is_char_of(".,")) and not tt1.next0_.is_whitespace_after0): 
+                    if (((isinstance(tt1.next0_, TextToken)) and not tt1.is_whitespace_after and tt1.next0_.is_char_of(".,")) and not tt1.next0_.is_whitespace_after): 
                         re1 = NumberHelper.__try_parse(tt1.next0_.next0_, next0_)
                         if (re1 is not None and re1.begin_token == next0_.begin_token): 
                             next0_ = re1
@@ -182,12 +182,12 @@ class NumberHelper:
                     val += next0_.value
                     et = (Utils.asObjectOrNull(next0_.end_token, TextToken))
                     break
-            res = NumberToken._new567(token, et, val, typ, mc)
-            if (et.next0_ is not None and (len(res.value) < 4) and ((et.next0_.is_hiphen0 or et.next0_.is_value("ДО", None)))): 
+            res = NumberToken._new568(token, et, val, typ, mc)
+            if (et.next0_ is not None and (len(res.value) < 4) and ((et.next0_.is_hiphen or et.next0_.is_value("ДО", None)))): 
                 tt1 = et.next0_.next0_
-                first_pass2913 = True
+                first_pass2941 = True
                 while True:
-                    if first_pass2913: first_pass2913 = False
+                    if first_pass2941: first_pass2941 = False
                     else: tt1 = tt1.next0_
                     if (not (tt1 is not None)): break
                     if (not ((isinstance(tt1, TextToken)))): 
@@ -257,9 +257,9 @@ class NumberHelper:
                     break
             if (not is_adj): 
                 nt.morph.remove_items((MorphClass.ADJECTIVE) | MorphClass.NOUN, False)
-                if (nt.morph.class0_.is_undefined0): 
+                if (nt.morph.class0_.is_undefined): 
                     nt.morph.class0_ = MorphClass.NOUN
-            if (et.chars.is_latin_letter0 and is_adj): 
+            if (et.chars.is_latin_letter and is_adj): 
                 nt.morph.class0_ = MorphClass.ADJECTIVE
         return nt
     
@@ -274,19 +274,19 @@ class NumberHelper:
         if (isinstance(t, NumberToken)): 
             return Utils.asObjectOrNull(t, NumberToken)
         tt = Utils.asObjectOrNull(t, TextToken)
-        if (tt is None or not t.chars.is_letter0): 
+        if (tt is None or not t.chars.is_letter): 
             return None
         term = tt.term
         if (not NumberHelper.__is_rom_val(term)): 
             return None
-        if (tt.morph.class0_.is_preposition0): 
-            if (tt.chars.is_all_lower0): 
+        if (tt.morph.class0_.is_preposition): 
+            if (tt.chars.is_all_lower): 
                 return None
         res = NumberToken(t, t, "", NumberSpellingType.ROMAN)
         nums = list()
         val = 0
         while t is not None: 
-            if (t != res.begin_token and t.is_whitespace_before0): 
+            if (t != res.begin_token and t.is_whitespace_before): 
                 break
             if (not ((isinstance(t, TextToken)))): 
                 break
@@ -326,15 +326,15 @@ class NumberHelper:
         et = res.end_token.next0_
         if (et is None): 
             return res
-        if (et.next0_ is not None and et.next0_.is_hiphen0): 
+        if (et.next0_ is not None and et.next0_.is_hiphen): 
             et = et.next0_
             hiph = True
-        if (hiph or not et.is_whitespace_after0): 
+        if (hiph or not et.is_whitespace_after): 
             mc = NumberHelper.__analize_number_tail(Utils.asObjectOrNull(et.next0_, TextToken), res.value)
             if (mc is not None): 
                 res.end_token = mc.end_token
                 res.morph = mc.morph
-        if ((res.begin_token == res.end_token and val == 1 and res.begin_token.chars.is_all_lower0) and res.begin_token.morph.language.is_ua0): 
+        if ((res.begin_token == res.end_token and val == 1 and res.begin_token.chars.is_all_lower) and res.begin_token.morph.language.is_ua): 
             return None
         return res
     
@@ -370,7 +370,7 @@ class NumberHelper:
         t = token
         if (t is None): 
             return None
-        if ((t.chars.is_all_lower0 and t.previous is not None and t.previous.is_hiphen0) and t.previous.previous is not None): 
+        if ((t.chars.is_all_lower and t.previous is not None and t.previous.is_hiphen) and t.previous.previous is not None): 
             t = token.previous.previous
         res = None
         while t is not None: 
@@ -380,7 +380,7 @@ class NumberHelper:
                     res = nt
                 else: 
                     break
-            if (t.is_whitespace_after0): 
+            if (t.is_whitespace_after): 
                 break
             t = t.previous
         return res
@@ -408,15 +408,15 @@ class NumberHelper:
         if (nt is not None): 
             if (nt_next is not None): 
                 t1 = nt_next
-                if (t1.is_hiphen0): 
+                if (t1.is_hiphen): 
                     t1 = t1.next0_
                 if (isinstance(t1, TextToken)): 
                     v = (t1).term
                     if ((v == "ЛЕТ" or v == "ЛЕТИЯ" or v == "ЛЕТИЕ") or v == "РІЧЧЯ"): 
-                        return NumberToken._new567(t, t1, nt.value, NumberSpellingType.AGE, t1.morph)
+                        return NumberToken._new568(t, t1, nt.value, NumberSpellingType.AGE, t1.morph)
                     if (t1.is_value("ЛЕТНИЙ", "РІЧНИЙ")): 
-                        return NumberToken._new567(t, t1, nt.value, NumberSpellingType.AGE, t1.morph)
-                    if (v == "Л" or ((v == "Р" and nt.morph.language.is_ua0))): 
+                        return NumberToken._new568(t, t1, nt.value, NumberSpellingType.AGE, t1.morph)
+                    if (v == "Л" or ((v == "Р" and nt.morph.language.is_ua))): 
                         return NumberToken(t, (t1.next0_ if t1.next0_ is not None and t1.next0_.is_char('.') else t1), nt.value, NumberSpellingType.AGE)
             return None
         tt = Utils.asObjectOrNull(t, TextToken)
@@ -426,12 +426,12 @@ class NumberHelper:
         if (LanguageHelper.ends_with_ex(s, "ЛЕТИЕ", "ЛЕТИЯ", "РІЧЧЯ", None)): 
             term = NumberHelper._m_nums.find(s[0:0+len(s) - 5])
             if (term is not None): 
-                return NumberToken._new567(tt, tt, str(term.tag), NumberSpellingType.AGE, tt.morph)
+                return NumberToken._new568(tt, tt, str(term.tag), NumberSpellingType.AGE, tt.morph)
         s = tt.lemma
         if (LanguageHelper.ends_with_ex(s, "ЛЕТНИЙ", "РІЧНИЙ", None, None)): 
             term = NumberHelper._m_nums.find(s[0:0+len(s) - 6])
             if (term is not None): 
-                return NumberToken._new567(tt, tt, str(term.tag), NumberSpellingType.AGE, tt.morph)
+                return NumberToken._new568(tt, tt, str(term.tag), NumberSpellingType.AGE, tt.morph)
         return None
     
     @staticmethod
@@ -456,13 +456,13 @@ class NumberHelper:
             t1 = nt.end_token.next0_
         if (t1 is None): 
             return None
-        if (t1.is_hiphen0): 
+        if (t1.is_hiphen): 
             t1 = t1.next0_
         if (isinstance(t1, TextToken)): 
             v = (t1).term
             if ((v == "ЛЕТ" or v == "ЛЕТИЯ" or v == "ЛЕТИЕ") or t1.is_value("ГОДОВЩИНА", None)): 
                 return NumberToken(t, t1, nt.value, NumberSpellingType.AGE)
-            if (t1.morph.language.is_ua0): 
+            if (t1.morph.language.is_ua): 
                 if (v == "РОКІВ" or v == "РІЧЧЯ" or t1.is_value("РІЧНИЦЯ", None)): 
                     return NumberToken(t, t1, nt.value, NumberSpellingType.AGE)
         return None
@@ -475,7 +475,7 @@ class NumberHelper:
             return None
         s = tt.term
         mc = None
-        if (not tt.chars.is_letter0): 
+        if (not tt.chars.is_letter): 
             if (((s == "<" or s == "(")) and (isinstance(tt.next0_, TextToken))): 
                 s = (tt.next0_).term
                 if ((s == "TH" or s == "ST" or s == "RD") or s == "ND"): 
@@ -483,21 +483,21 @@ class NumberHelper:
                         mc = MorphCollection()
                         mc.class0_ = MorphClass.ADJECTIVE
                         mc.language = MorphLang.EN
-                        return MetaToken._new572(tt, tt.next0_.next0_, mc)
+                        return MetaToken._new573(tt, tt.next0_.next0_, mc)
             return None
         if ((s == "TH" or s == "ST" or s == "RD") or s == "ND"): 
             mc = MorphCollection()
             mc.class0_ = MorphClass.ADJECTIVE
             mc.language = MorphLang.EN
-            return MetaToken._new572(tt, tt, mc)
-        if (not tt.chars.is_cyrillic_letter0): 
+            return MetaToken._new573(tt, tt, mc)
+        if (not tt.chars.is_cyrillic_letter): 
             return None
-        if (not tt.is_whitespace_after0): 
-            if (tt.next0_ is not None and tt.next0_.chars.is_letter0): 
+        if (not tt.is_whitespace_after): 
+            if (tt.next0_ is not None and tt.next0_.chars.is_letter): 
                 return None
             if (tt.length_char == 1 and ((tt.is_value("X", None) or tt.is_value("Х", None)))): 
                 return None
-        if (not tt.chars.is_all_lower0): 
+        if (not tt.chars.is_all_lower): 
             ss = (tt).term
             if (ss == "Я" or ss == "Й" or ss == "Е"): 
                 pass
@@ -506,7 +506,7 @@ class NumberHelper:
             else: 
                 return None
         if ((tt).term == "М"): 
-            if (tt.previous is None or not tt.previous.is_hiphen0): 
+            if (tt.previous is None or not tt.previous.is_hiphen): 
                 return None
         if (Utils.isNullOrEmpty(val)): 
             return None
@@ -517,7 +517,7 @@ class NumberHelper:
         if (vars0_ is None or len(vars0_) == 0): 
             return None
         for v in vars0_: 
-            if (v.class0_.is_adjective0 and LanguageHelper.ends_with(v.normal_case, s) and v.number != MorphNumber.UNDEFINED): 
+            if (v.class0_.is_adjective and LanguageHelper.ends_with(v.normal_case, s) and v.number != MorphNumber.UNDEFINED): 
                 if (mc is None): 
                     mc = MorphCollection()
                 ok = False
@@ -528,33 +528,33 @@ class NumberHelper:
                         break
                 if (not ok): 
                     mc.add_item(MorphBaseInfo(v))
-        if (tt.morph.language.is_ua0 and mc is None and s == "Ї"): 
+        if (tt.morph.language.is_ua and mc is None and s == "Ї"): 
             mc = MorphCollection()
-            mc.add_item(MorphBaseInfo._new574(MorphClass.ADJECTIVE))
+            mc.add_item(MorphBaseInfo._new575(MorphClass.ADJECTIVE))
         if (mc is not None): 
-            return MetaToken._new572(tt, tt, mc)
-        if ((((len(s) < 3) and not tt.is_whitespace_before0 and tt.previous is not None) and tt.previous.is_hiphen0 and not tt.previous.is_whitespace_before0) and tt.whitespaces_after_count == 1 and s != "А"): 
-            return MetaToken._new572(tt, tt, MorphCollection._new576(MorphClass.ADJECTIVE))
+            return MetaToken._new573(tt, tt, mc)
+        if ((((len(s) < 3) and not tt.is_whitespace_before and tt.previous is not None) and tt.previous.is_hiphen and not tt.previous.is_whitespace_before) and tt.whitespaces_after_count == 1 and s != "А"): 
+            return MetaToken._new573(tt, tt, MorphCollection._new577(MorphClass.ADJECTIVE))
         return None
     
     @staticmethod
-    def __try_parse_float(t : 'NumberToken', d : float) -> 'Token':
+    def __try_parse_float(t : 'NumberToken', d : float, no_ws : bool) -> 'Token':
         from pullenti.ner.core.internal.NumberExHelper import NumberExHelper
         d.value = (0)
         if (t is None or t.next0_ is None or t.typ != NumberSpellingType.DIGIT): 
             return None
         tt = t.begin_token
         while tt is not None and tt.end_char <= t.end_char: 
-            if ((isinstance(tt, TextToken)) and tt.chars.is_letter0): 
+            if ((isinstance(tt, TextToken)) and tt.chars.is_letter): 
                 return None
             tt = tt.next0_
         kit = t.kit
         ns = None
         sps = None
         t1 = t
-        first_pass2914 = True
+        first_pass2942 = True
         while True:
-            if first_pass2914: first_pass2914 = False
+            if first_pass2942: first_pass2942 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
             if (t1.next0_ is None): 
@@ -570,11 +570,14 @@ class NumberHelper:
                 sps.append(' ')
                 continue
             if ((t1.next0_.is_char_of(",.") and (isinstance(t1.next0_.next0_, NumberToken)) and (t1.next0_.next0_).typ == NumberSpellingType.DIGIT) and (t1.whitespaces_after_count < 2) and (t1.next0_.whitespaces_after_count < 2)): 
+                if (no_ws): 
+                    if (t1.is_whitespace_after or t1.next0_.is_whitespace_after): 
+                        break
                 if (ns is None): 
                     ns = list()
                     ns.append(t)
                     sps = list()
-                elif (t1.next0_.is_whitespace_after0 and t1.next0_.next0_.length_char != 3 and ((('.' if t1.next0_.is_char('.') else ','))) == sps[len(sps) - 1]): 
+                elif (t1.next0_.is_whitespace_after and t1.next0_.next0_.length_char != 3 and ((('.' if t1.next0_.is_char('.') else ','))) == sps[len(sps) - 1]): 
                     break
                 ns.append(Utils.asObjectOrNull(t1.next0_.next0_, NumberToken))
                 sps.append(('.' if t1.next0_.is_char('.') else ','))
@@ -593,9 +596,9 @@ class NumberHelper:
             elif (ns[1].length_char != 3): 
                 is_last_drob = True
                 if (len(ns) == 2): 
-                    if (ns[1].end_token.chars.is_letter0): 
+                    if (ns[1].end_token.chars.is_letter): 
                         merge = True
-                    elif (ns[1].end_token.is_char('.') and ns[1].end_token.previous is not None and ns[1].end_token.previous.chars.is_letter0): 
+                    elif (ns[1].end_token.is_char('.') and ns[1].end_token.previous is not None and ns[1].end_token.previous.chars.is_letter): 
                         merge = True
                     if (ns[1].is_whitespace_before): 
                         if ((isinstance(ns[1].end_token, TextToken)) and (ns[1].end_token).term.endswith("000")): 
@@ -639,6 +642,8 @@ class NumberHelper:
             if (sps[0] != last): 
                 is_last_drob = True
             elif (ns[len(ns) - 1].length_char != 3): 
+                return None
+            if (ns[0].length_char > 3): 
                 return None
         i = 0
         while i < len(ns): 
@@ -684,7 +689,7 @@ class NumberHelper:
         return ns[len(ns) - 1]
     
     @staticmethod
-    def try_parse_real_number(t : 'Token', can_be_integer : bool=False) -> 'NumberToken':
+    def try_parse_real_number(t : 'Token', can_be_integer : bool=False, no_whitespace : bool=False) -> 'NumberToken':
         """ Это разделитель дроби по-умолчанию, используется для случаев, когда невозможно принять однозначного решения.
          Устанавливается на основе последнего успешного анализа.
         Выделить действительное число, знак также выделяется,
@@ -694,6 +699,7 @@ class NumberHelper:
         Args:
             t(Token): начальный токен
             can_be_integer(bool): число должно быть целым
+            no_whitespace(bool): не должно быть пробелов
         
         Returns:
             NumberToken: результат или null
@@ -701,7 +707,7 @@ class NumberHelper:
         is_not = False
         t0 = t
         if (t is not None): 
-            if (t.is_hiphen0 or t.is_value("МИНУС", None)): 
+            if (t.is_hiphen or t.is_value("МИНУС", None)): 
                 t = t.next0_
                 is_not = True
             elif (t.is_char('+') or t.is_value("ПЛЮС", None)): 
@@ -759,33 +765,36 @@ class NumberHelper:
             if (res0.real_value == 0): 
                 str0_ = "0.{0}".format(val)
                 dd = 0
-                wrapdd580 = RefOutArgWrapper(0)
-                inoutres581 = Utils.tryParseFloat(str0_, wrapdd580)
-                dd = wrapdd580.value
-                if (inoutres581): 
+                wrapdd581 = RefOutArgWrapper(0)
+                inoutres582 = Utils.tryParseFloat(str0_, wrapdd581)
+                dd = wrapdd581.value
+                if (inoutres582): 
                     pass
                 else: 
-                    wrapdd578 = RefOutArgWrapper(0)
-                    inoutres579 = Utils.tryParseFloat(str0_.replace('.', ','), wrapdd578)
-                    dd = wrapdd578.value
-                    if (inoutres579): 
+                    wrapdd579 = RefOutArgWrapper(0)
+                    inoutres580 = Utils.tryParseFloat(str0_.replace('.', ','), wrapdd579)
+                    dd = wrapdd579.value
+                    if (inoutres580): 
                         pass
                     else: 
                         return None
                 res0.real_value = dd + res0.real_value
             return res0
-        wrapd583 = RefOutArgWrapper(0)
-        tt = NumberHelper.__try_parse_float(Utils.asObjectOrNull(t, NumberToken), wrapd583)
-        d = wrapd583.value
+        wrapd584 = RefOutArgWrapper(0)
+        tt = NumberHelper.__try_parse_float(Utils.asObjectOrNull(t, NumberToken), wrapd584, no_whitespace)
+        d = wrapd584.value
         if (tt is None): 
-            if ((t.next0_ is None or t.is_whitespace_after0 or t.next0_.chars.is_letter0) or can_be_integer): 
+            if ((t.next0_ is None or t.is_whitespace_after or t.next0_.chars.is_letter) or can_be_integer): 
                 tt = t
                 d = (t).real_value
             else: 
                 return None
         if (is_not): 
             d = (- d)
-        return NumberExToken._new582(t0, tt, "", NumberSpellingType.DIGIT, NumberExType.UNDEFINED, d)
+        if (tt.next0_ is not None and tt.next0_.is_value("ДЕСЯТОК", None)): 
+            d *= (10)
+            tt = tt.next0_
+        return NumberExToken._new583(t0, tt, "", NumberSpellingType.DIGIT, NumberExType.UNDEFINED, d)
     
     @staticmethod
     def get_number_adjective(value : int, gender : 'MorphGender', num : 'MorphNumber') -> str:
@@ -952,15 +961,15 @@ class NumberHelper:
         """
         if (str0_ == "NaN"): 
             return math.nan
-        wrapres586 = RefOutArgWrapper(0)
-        inoutres587 = Utils.tryParseFloat(str0_, wrapres586)
-        res = wrapres586.value
-        if (inoutres587): 
+        wrapres587 = RefOutArgWrapper(0)
+        inoutres588 = Utils.tryParseFloat(str0_, wrapres587)
+        res = wrapres587.value
+        if (inoutres588): 
             return res
-        wrapres584 = RefOutArgWrapper(0)
-        inoutres585 = Utils.tryParseFloat(str0_.replace('.', ','), wrapres584)
-        res = wrapres584.value
-        if (inoutres585): 
+        wrapres585 = RefOutArgWrapper(0)
+        inoutres586 = Utils.tryParseFloat(str0_.replace('.', ','), wrapres585)
+        res = wrapres585.value
+        if (inoutres586): 
             return res
         return None
     

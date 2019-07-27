@@ -103,16 +103,16 @@ class FragToken(MetaToken):
                         ok = True
                         break
             if (t.is_value("ОТВЕТ", None)): 
-                if (t.is_newline_after0): 
+                if (t.is_newline_after): 
                     ok = True
                 elif (t.next0_ is not None and t.next0_.is_value("НА", None)): 
                     ok = True
             if (ok): 
-                res = FragToken._new1326(t0, li.end_token, InstrumentKind.HEAD)
+                res = FragToken._new1333(t0, li.end_token, InstrumentKind.HEAD)
                 if (li.begin_token != t0): 
-                    hh = FragToken._new1326(t0, li.begin_token.previous, InstrumentKind.APPROVED)
+                    hh = FragToken._new1333(t0, li.begin_token.previous, InstrumentKind.APPROVED)
                     res.children.append(hh)
-                res.children.append(FragToken._new1348(li.begin_token, li.end_token, InstrumentKind.KEYWORD, True))
+                res.children.append(FragToken._new1355(li.begin_token, li.end_token, InstrumentKind.KEYWORD, True))
                 return res
             t = li.end_token
             t = t.next0_; cou += 1
@@ -127,7 +127,7 @@ class FragToken(MetaToken):
             return None
         is_contract = False
         while (isinstance(t0, TextToken)) and t0.next0_ is not None:
-            if (t0.is_table_control_char0 or not t0.chars.is_letter0): 
+            if (t0.is_table_control_char or not t0.chars.is_letter): 
                 t0 = t0.next0_
             else: 
                 break
@@ -159,19 +159,19 @@ class FragToken(MetaToken):
         newlines = 0
         types = 0
         t = t0
-        first_pass3048 = True
+        first_pass3076 = True
         while True:
-            if first_pass3048: first_pass3048 = False
+            if first_pass3076: first_pass3076 = False
             else: t = t.next0_; cou += 1
             if (not (t is not None and (cou < 300))): break
             if (t.is_char('_')): 
                 cou -= 1
                 continue
-            if (t.is_newline_before0): 
+            if (t.is_newline_before): 
                 newlines += 1
                 if (newlines > 10): 
                     break
-                while t.is_table_control_char0 and t.next0_ is not None:
+                while t.is_table_control_char and t.next0_ is not None:
                     t = t.next0_
                 dt = DecreeToken.try_attach(t, None, False)
                 if (dt is not None and dt.typ == DecreeToken.ItemType.TYP): 
@@ -184,7 +184,7 @@ class FragToken(MetaToken):
                         return None
             if (t.is_value("ДАЛЕЕ", None)): 
                 pass
-            if (t.is_newline_after0): 
+            if (t.is_newline_after): 
                 continue
             par1 = ParticipantToken.try_attach(t, None, None, is_contract)
             if (par1 is not None and ((par1.kind == ParticipantToken.Kinds.NAMEDAS or par1.kind == ParticipantToken.Kinds.NAMEDASPARTS))): 
@@ -195,9 +195,9 @@ class FragToken(MetaToken):
             return None
         par2 = None
         cou = 0
-        first_pass3049 = True
+        first_pass3077 = True
         while True:
-            if first_pass3049: first_pass3049 = False
+            if first_pass3077: first_pass3077 = False
             else: t = t.next0_; cou += 1
             if (not (t is not None and (cou < 100))): break
             if (par1.kind == ParticipantToken.Kinds.NAMEDASPARTS): 
@@ -210,23 +210,23 @@ class FragToken(MetaToken):
                 if (br2 is not None): 
                     t = br2.end_token
                     continue
-            if (t.is_and0): 
+            if (t.is_and): 
                 pass
             par2 = ParticipantToken.try_attach(t, None, None, True)
             if (par2 is not None): 
                 if (par2.kind == ParticipantToken.Kinds.NAMEDAS and par2.typ != par1.typ): 
                     break
                 if (par2.kind == ParticipantToken.Kinds.PURE and par2.typ != par1.typ): 
-                    if (t.previous.is_and0): 
+                    if (t.previous.is_and): 
                         break
                 t = par2.end_token
             par2 = (None)
         if (par1 is not None and par2 is not None and ((par1.typ is None or par2.typ is None))): 
             stat = dict()
             tt = t
-            first_pass3050 = True
+            first_pass3078 = True
             while True:
-                if first_pass3050: first_pass3050 = False
+                if first_pass3078: first_pass3078 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 ttt = tt
@@ -256,25 +256,25 @@ class FragToken(MetaToken):
         contr_typs = ParticipantToken.get_doc_types(par1.typ, (None if par2 is None else par2.typ))
         t1 = par1.begin_token.previous
         lastt1 = None
-        first_pass3051 = True
+        first_pass3079 = True
         while True:
-            if first_pass3051: first_pass3051 = False
+            if first_pass3079: first_pass3079 = False
             else: t1 = t1.previous
             if (not (t1 is not None and t1.begin_char >= t0.begin_char)): break
-            if (t1.is_newline_after0): 
+            if (t1.is_newline_after): 
                 lastt1 = t1
                 if (t1.is_char(',')): 
                     continue
                 if (t1.next0_ is None): 
                     break
-                if (t1.next0_.chars.is_letter0 and t1.next0_.chars.is_all_lower0): 
+                if (t1.next0_.chars.is_letter and t1.next0_.chars.is_all_lower): 
                     continue
                 break
         if (t1 is None): 
             t1 = lastt1
         if (t1 is None): 
             return None
-        p1 = InstrumentParticipant._new1374(par1.typ)
+        p1 = InstrumentParticipant._new1381(par1.typ)
         if (par1.parts is not None): 
             for p in par1.parts: 
                 p1.add_slot(InstrumentParticipant.ATTR_REF, p, False, 0)
@@ -286,7 +286,7 @@ class FragToken(MetaToken):
             p1.add_slot(InstrumentParticipant.ATTR_REF, par1.parts[0], False, 0)
             ii = 1
             while ii < len(par1.parts): 
-                pp = InstrumentParticipant._new1374("СТОРОНА {0}".format(ii + 1))
+                pp = InstrumentParticipant._new1381("СТОРОНА {0}".format(ii + 1))
                 pp.add_slot(InstrumentParticipant.ATTR_REF, par1.parts[ii], False, 0)
                 if (ii == 1): 
                     p2 = pp
@@ -294,7 +294,7 @@ class FragToken(MetaToken):
                 ii += 1
             for pp in par1.parts: 
                 doc.add_slot(InstrumentReferent.ATTR_SOURCE, pp, False, 0)
-        title = FragToken._new1326(t0, t0, InstrumentKind.HEAD)
+        title = FragToken._new1333(t0, t0, InstrumentKind.HEAD)
         add = False
         nam_beg = None
         nam_end = None
@@ -303,16 +303,16 @@ class FragToken(MetaToken):
         nam_beg2 = None
         nam_end2 = None
         t = t0
-        first_pass3052 = True
+        first_pass3080 = True
         while True:
-            if first_pass3052: first_pass3052 = False
+            if first_pass3080: first_pass3080 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= t1.end_char)): break
             if (isinstance(t.get_referent(), DecreeReferent)): 
-                if (t.is_newline_before0 or ((t.previous is not None and t.previous.is_table_control_char0))): 
+                if (t.is_newline_before or ((t.previous is not None and t.previous.is_table_control_char))): 
                     t = t.kit.debed_token(t)
-            new_line_bef = t.is_newline_before0
-            if (t.previous is not None and t.previous.is_table_control_char0): 
+            new_line_bef = t.is_newline_before
+            if (t.previous is not None and t.previous.is_table_control_char): 
                 new_line_bef = True
             dt = DecreeToken.try_attach(t, dt00, False)
             if (dt is not None): 
@@ -372,13 +372,13 @@ class FragToken(MetaToken):
                         nam_end = t.previous
                     if (nam_beg2 is not None and nam_end2 is None): 
                         nam_end2 = t.previous
-            if ((dttyp is not None and nam_beg is None and t.chars.is_cyrillic_letter0) and (isinstance(t, TextToken))): 
+            if ((dttyp is not None and nam_beg is None and t.chars.is_cyrillic_letter) and (isinstance(t, TextToken))): 
                 if (t.is_value("МЕЖДУ", "МІЖ")): 
                     pp = ParticipantToken.try_attach_to_exist(t.next0_, p1, p2)
-                    if (pp is not None and pp.end_token.next0_ is not None and pp.end_token.next0_.is_and0): 
+                    if (pp is not None and pp.end_token.next0_ is not None and pp.end_token.next0_.is_and): 
                         pp2 = ParticipantToken.try_attach_to_exist(pp.end_token.next0_.next0_, p1, p2)
                         if (pp2 is not None): 
-                            fr = FragToken._new1326(t, pp2.end_token, InstrumentKind.PLACE)
+                            fr = FragToken._new1333(t, pp2.end_token, InstrumentKind.PLACE)
                             if (fr.referents is None): 
                                 fr.referents = list()
                             fr.referents.append(pp.referent)
@@ -399,7 +399,7 @@ class FragToken(MetaToken):
                     nam_end = t.previous
                 if (nam_beg2 is not None and nam_end2 is None): 
                     nam_end2 = t.previous
-            if (((new_line_bef and t.whitespaces_before_count > 15)) or t.is_table_control_char0): 
+            if (((new_line_bef and t.whitespaces_before_count > 15)) or t.is_table_control_char): 
                 if (nam_beg is not None and nam_end is None and nam_beg != t): 
                     nam_end = t.previous
                 if (nam_beg2 is not None and nam_end2 is None and nam_beg2 != t): 
@@ -411,7 +411,7 @@ class FragToken(MetaToken):
         if (nam_end is not None and nam_beg is not None): 
             val = MiscHelper.get_text_value(nam_beg, nam_end, GetTextAttr.KEEPQUOTES)
             if (val is not None and len(val) > 3): 
-                nam = FragToken._new1378(nam_beg, nam_end, InstrumentKind.NAME, val)
+                nam = FragToken._new1385(nam_beg, nam_end, InstrumentKind.NAME, val)
                 title.children.append(nam)
                 title.sort_children()
                 if (nam_end.end_char > title.end_char): 
@@ -421,7 +421,7 @@ class FragToken(MetaToken):
                 if (nam_beg2 is not None and nam_end2 is not None): 
                     val2 = MiscHelper.get_text_value(nam_beg2, nam_end2, GetTextAttr.KEEPQUOTES)
                     if (val2 is not None and len(val2) > 3): 
-                        nam = FragToken._new1378(nam_beg2, nam_end2, InstrumentKind.NAME, val2)
+                        nam = FragToken._new1385(nam_beg2, nam_end2, InstrumentKind.NAME, val2)
                         title.children.append(nam)
                         title.sort_children()
                         if (nam_end2.end_char > title.end_char): 
@@ -429,19 +429,19 @@ class FragToken(MetaToken):
                         val = "{0} {1}".format(val, val2)
                 doc.name = val
         if (len(title.children) > 0 and title.children[0].begin_char > title.begin_char): 
-            title.children.insert(0, FragToken._new1326(title.begin_token, title.children[0].begin_token.previous, InstrumentKind.UNDEFINED))
+            title.children.insert(0, FragToken._new1333(title.begin_token, title.children[0].begin_token.previous, InstrumentKind.UNDEFINED))
         if (((doc.typ == "ДОГОВОР" or doc.typ == "ДОГОВІР")) and par1.kind != ParticipantToken.Kinds.NAMEDASPARTS): 
             if (len(title.children) > 0 and title.children[0].kind == InstrumentKind.TYP): 
                 addi = None
                 for ch in title.children: 
                     if (ch.kind == InstrumentKind.NAME): 
-                        if (ch.begin_token.morph.class0_.is_preposition0): 
+                        if (ch.begin_token.morph.class0_.is_preposition): 
                             npt = NounPhraseHelper.try_parse(ch.begin_token.next0_, NounPhraseParseAttr.NO, 0)
                             if (npt is not None): 
                                 addi = npt.noun.get_source_text().upper()
                                 vvv = Morphology.get_all_wordforms(addi, None)
                                 for fi in vvv: 
-                                    if (fi.case_.is_genitive0): 
+                                    if (fi.case_.is_genitive): 
                                         addi = fi.normal_case
                                         if (addi.endswith("НЬЯ")): 
                                             addi = (addi[0:0+len(addi) - 2] + "ИЯ")
@@ -484,14 +484,14 @@ class FragToken(MetaToken):
                 return None
             tt2 = None
             ttt = rt.end_token.next0_
-            first_pass3053 = True
+            first_pass3081 = True
             while True:
-                if first_pass3053: first_pass3053 = False
+                if first_pass3081: first_pass3081 = False
                 else: ttt = ttt.next0_
                 if (not (ttt is not None)): break
-                if (ttt.is_comma0 or ttt.is_and0): 
+                if (ttt.is_comma or ttt.is_and): 
                     continue
-                if (ttt.morph.class0_.is_preposition0): 
+                if (ttt.morph.class0_.is_preposition): 
                     continue
                 npt = NounPhraseHelper.try_parse(ttt, NounPhraseParseAttr.PARSENUMERICASADJECTIVE, 0)
                 if (npt is not None): 
@@ -504,9 +504,9 @@ class FragToken(MetaToken):
                 stat = dict()
                 cou1 = 0
                 ttt = tt2
-                first_pass3054 = True
+                first_pass3082 = True
                 while True:
-                    if first_pass3054: first_pass3054 = False
+                    if first_pass3082: first_pass3082 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if (ttt.is_value(par1.typ, None)): 
@@ -527,12 +527,12 @@ class FragToken(MetaToken):
                             typ2 = kp[0]
                             break
                 if (typ2 is not None): 
-                    par2 = ParticipantToken._new1381(tt2, tt2, typ2)
+                    par2 = ParticipantToken._new1388(tt2, tt2, typ2)
         p1 = Utils.asObjectOrNull(ad.register_referent(p1), InstrumentParticipant)
         rt.referent = p1
         t0.kit.embed_token(rt)
         if (par2 is not None): 
-            p2 = InstrumentParticipant._new1374(par2.typ)
+            p2 = InstrumentParticipant._new1381(par2.typ)
             if (par2.parts is not None): 
                 for p in par2.parts: 
                     p2.add_slot(InstrumentParticipant.ATTR_REF, p, False, 0)
@@ -550,20 +550,20 @@ class FragToken(MetaToken):
                     p2 = ppp
         req_regim = 0
         t = rt.next0_
-        first_pass3055 = True
+        first_pass3083 = True
         while True:
-            if first_pass3055: first_pass3055 = False
+            if first_pass3083: first_pass3083 = False
             else: t = (((None if t is None else t.next0_)))
             if (not (t is not None)): break
             if (t.begin_char >= 712 and (t.begin_char < 740)): 
                 pass
-            if (t.is_newline_before0): 
+            if (t.is_newline_before): 
                 ii = InstrToken1.parse(t, True, None, 0, None, False, 0, True)
                 if (ii is not None and ii.title_typ == InstrToken1.StdTitleType.REQUISITES): 
                     req_regim = 5
                     t = ii.end_token
                     continue
-            if (t.is_value("ПРИЛОЖЕНИЕ", None) and t.is_newline_before0): 
+            if (t.is_value("ПРИЛОЖЕНИЕ", None) and t.is_newline_before): 
                 pass
             if (req_regim == 5 and t.is_char(chr(0x1E))): 
                 rows = TableHelper.try_parse_rows(t, 0, True)
@@ -589,13 +589,13 @@ class FragToken(MetaToken):
             if (rt is None and req_regim > 0): 
                 tt = t
                 while tt is not None: 
-                    if (tt.is_table_control_char0): 
+                    if (tt.is_table_control_char): 
                         pass
                     elif (tt.is_char_of(".)") or (isinstance(tt, NumberToken))): 
                         pass
                     else: 
                         rt = ParticipantToken.try_attach_to_exist(tt, p1, p2)
-                        if (rt is not None and not t.is_table_control_char0): 
+                        if (rt is not None and not t.is_table_control_char): 
                             rt.begin_token = t
                         break
                     tt = tt.next0_
@@ -611,18 +611,18 @@ class FragToken(MetaToken):
             t0.kit.embed_token(rt)
             t = (rt)
             if (req_regim <= 0): 
-                if (t.is_newline_before0): 
+                if (t.is_newline_before): 
                     pass
-                elif (t.previous is not None and t.previous.is_table_control_char0): 
+                elif (t.previous is not None and t.previous.is_table_control_char): 
                     pass
                 else: 
                     continue
             else: 
                 pass
-            if (rt.end_token.next0_ is not None and rt.end_token.next0_.is_table_control_char0 and not rt.end_token.next0_.is_char(chr(0x1E))): 
+            if (rt.end_token.next0_ is not None and rt.end_token.next0_.is_table_control_char and not rt.end_token.next0_.is_char(chr(0x1E))): 
                 tt = rt.end_token.next0_
                 while tt is not None: 
-                    if (tt.is_table_control_char0): 
+                    if (tt.is_table_control_char): 
                         pass
                     elif (tt.is_char_of(".)") or (isinstance(tt, NumberToken))): 
                         pass
@@ -637,15 +637,15 @@ class FragToken(MetaToken):
             t = t.next0_
             if (t is None): 
                 break
-            while t.is_table_control_char0 and t.next0_ is not None:
+            while t.is_table_control_char and t.next0_ is not None:
                 t = t.next0_
             cur = 0
-            first_pass3056 = True
+            first_pass3084 = True
             while True:
-                if first_pass3056: first_pass3056 = False
+                if first_pass3084: first_pass3084 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
-                if (t.is_table_control_char0 and t.is_char(chr(0x1F))): 
+                if (t.is_table_control_char and t.is_char(chr(0x1F))): 
                     req_regim = 0
                     break
                 rt = ParticipantToken.try_attach_requisites(t, ps[cur], (p2 if p1 == ps[cur] else p1), req_regim <= 0)
@@ -656,16 +656,16 @@ class FragToken(MetaToken):
                 else: 
                     t = t.previous
                     break
-                if (len(ps) == 2 and t.next0_.is_table_control_char0): 
+                if (len(ps) == 2 and t.next0_.is_table_control_char): 
                     tt = t.next0_
-                    first_pass3057 = True
+                    first_pass3085 = True
                     while True:
-                        if first_pass3057: first_pass3057 = False
+                        if first_pass3085: first_pass3085 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
-                        if (tt.is_table_control_char0 and tt.is_char(chr(0x1F))): 
+                        if (tt.is_table_control_char and tt.is_char(chr(0x1F))): 
                             break
-                        if (tt.is_table_control_char0): 
+                        if (tt.is_table_control_char): 
                             cur = (1 - cur)
                             if (TableHelper.is_cell_end(tt) and TableHelper.is_row_end(tt.next0_)): 
                                 tt = tt.next0_
@@ -673,12 +673,12 @@ class FragToken(MetaToken):
                             continue
                         break
                     continue
-                if (t.is_table_control_char0 and len(ps) == 2): 
+                if (t.is_table_control_char and len(ps) == 2): 
                     if (TableHelper.is_cell_end(t) and TableHelper.is_row_end(t.next0_)): 
                         t = t.next0_
                     cur = (1 - cur)
                     continue
-                if (not t.is_newline_after0): 
+                if (not t.is_newline_after): 
                     continue
                 it1 = InstrToken1.parse(t.next0_, True, None, 0, None, False, 0, False)
                 if (it1 is not None): 
@@ -694,16 +694,16 @@ class FragToken(MetaToken):
         is_project = False
         is_entered = False
         is_typ = False
-        if (t0.is_table_control_char0 and t0.next0_ is not None): 
+        if (t0.is_table_control_char and t0.next0_ is not None): 
             t0 = t0.next0_
-        title = FragToken._new1326(t0, t0, InstrumentKind.HEAD)
+        title = FragToken._new1333(t0, t0, InstrumentKind.HEAD)
         t = t0
-        first_pass3058 = True
+        first_pass3086 = True
         while True:
-            if first_pass3058: first_pass3058 = False
+            if first_pass3086: first_pass3086 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (t.is_table_control_char0): 
+            if (t.is_table_control_char): 
                 continue
             if (isinstance(t.get_referent(), DecreeReferent)): 
                 t = t.kit.debed_token(t)
@@ -711,21 +711,21 @@ class FragToken(MetaToken):
                 if ((t.is_value("ПРОЕКТ", None) and t == t0 and (isinstance(t.next0_, ReferentToken))) and (isinstance(t.next0_.get_referent(), OrganizationReferent))): 
                     return None
                 is_project = True
-                title.children.append(FragToken._new1345(t, t, InstrumentKind.KEYWORD, True))
+                title.children.append(FragToken._new1352(t, t, InstrumentKind.KEYWORD, True))
                 doc.add_slot(InstrumentReferent.ATTR_TYPE, "ПРОЕКТ", False, 0)
                 continue
             tt = FragToken.__attach_project_enter(t)
             if (tt is not None): 
                 is_entered = True
-                title.children.append(FragToken._new1326(t, tt, InstrumentKind.APPROVED))
+                title.children.append(FragToken._new1333(t, tt, InstrumentKind.APPROVED))
                 t = tt
                 continue
             tt = FragToken.__attach_project_misc(t)
             if (tt is not None): 
-                title.children.append(FragToken._new1326(t, tt, (InstrumentKind.EDITIONS if tt.is_value("ЧТЕНИЕ", "ЧИТАННЯ") else InstrumentKind.UNDEFINED)))
+                title.children.append(FragToken._new1333(t, tt, (InstrumentKind.EDITIONS if tt.is_value("ЧТЕНИЕ", "ЧИТАННЯ") else InstrumentKind.UNDEFINED)))
                 t = tt
                 continue
-            if (t.is_newline_before0 and (isinstance(t.get_referent(), DecreeReferent)) and ((is_project or is_entered))): 
+            if (t.is_newline_before and (isinstance(t.get_referent(), DecreeReferent)) and ((is_project or is_entered))): 
                 t = t.kit.debed_token(t)
             dt = DecreeToken.try_attach(t, None, False)
             if (dt is not None): 
@@ -747,28 +747,28 @@ class FragToken(MetaToken):
         t11 = None
         is_br = BracketHelper.can_be_start_of_sequence(t00, False, False)
         t = t00
-        first_pass3059 = True
+        first_pass3087 = True
         while True:
-            if first_pass3059: first_pass3059 = False
+            if first_pass3087: first_pass3087 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (t.is_newline_after0): 
-                if (t.next0_ is not None and t.next0_.chars.is_all_lower0): 
+            if (t.is_newline_after): 
+                if (t.next0_ is not None and t.next0_.chars.is_all_lower): 
                     continue
             if (t.whitespaces_after_count > 15): 
                 t11 = t
                 break
-            elif (t.is_newline_after0 and t.next0_ is not None): 
+            elif (t.is_newline_after and t.next0_ is not None): 
                 if (t.next0_.get_morph_class_in_dictionary() == MorphClass.VERB): 
                     t11 = t
                     break
-                if (t.next0_.chars.is_capital_upper0 and t.next0_.morph.class0_.is_verb0): 
+                if (t.next0_.chars.is_capital_upper and t.next0_.morph.class0_.is_verb): 
                     t11 = t
                     break
-            if (t.is_whitespace_after0 and is_br and BracketHelper.can_be_end_of_sequence(t, False, None, False)): 
+            if (t.is_whitespace_after and is_br and BracketHelper.can_be_end_of_sequence(t, False, None, False)): 
                 t11 = t
                 break
-            if (not t.is_newline_before0): 
+            if (not t.is_newline_before): 
                 continue
             it = InstrToken1.parse(t, True, None, 0, None, False, 0, False)
             if (it is not None and len(it.numbers) > 0 and it.last_number == 1): 
@@ -776,7 +776,7 @@ class FragToken(MetaToken):
                 break
         if (t11 is None): 
             return None
-        nam = FragToken._new1345(t00, t11, InstrumentKind.NAME, True)
+        nam = FragToken._new1352(t00, t11, InstrumentKind.NAME, True)
         doc.add_slot(InstrumentBlockReferent.ATTR_NAME, nam.value, False, 0)
         title.children.append(nam)
         title.end_token = t11
@@ -794,7 +794,7 @@ class FragToken(MetaToken):
         if (t.is_char('(') and t.next0_ is not None): 
             br = True
             t = t.next0_
-        if (t.morph.class0_.is_preposition0): 
+        if (t.morph.class0_.is_preposition): 
             t = t.next0_
         if ((isinstance(t, NumberToken)) and t.next0_ is not None and t.next0_.is_value("ЧТЕНИЕ", "ЧИТАННЯ")): 
             t = t.next0_
@@ -813,25 +813,25 @@ class FragToken(MetaToken):
             return None
         cou = 0
         t = t.next0_
-        first_pass3060 = True
+        first_pass3088 = True
         while True:
-            if first_pass3060: first_pass3060 = False
+            if first_pass3088: first_pass3088 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (t.morph.class0_.is_preposition0 or t.morph.class0_.is_conjunction0): 
+            if (t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction): 
                 continue
             if (((t.is_value("ПЕРИОД", "ПЕРІОД") or t.is_value("РАССМОТРЕНИЕ", "РОЗГЛЯД") or t.is_value("ДЕПУТАТ", None)) or t.is_value("ПОЛНОМОЧИЕ", "ПОВНОВАЖЕННЯ") or t.is_value("ПЕРЕДАЧА", None)) or t.is_value("ИСПОЛНЕНИЕ", "ВИКОНАННЯ")): 
                 continue
             r = t.get_referent()
             if (isinstance(r, OrganizationReferent)): 
-                if (cou > 0 and t.is_newline_before0): 
+                if (cou > 0 and t.is_newline_before): 
                     return t.previous
                 cou += 1
                 continue
             if ((isinstance(r, PersonReferent)) or (isinstance(r, PersonPropertyReferent))): 
                 cou += 1
                 continue
-            if (t.is_newline_before0): 
+            if (t.is_newline_before): 
                 return t.previous
         return None
     
@@ -852,18 +852,18 @@ class FragToken(MetaToken):
         cou = 0
         tmp = io.StringIO()
         t = title.begin_token
-        first_pass3061 = True
+        first_pass3089 = True
         while True:
-            if first_pass3061: first_pass3061 = False
+            if first_pass3089: first_pass3089 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= title.end_char)): break
-            if (t.is_newline_before0): 
+            if (t.is_newline_before): 
                 pass
-            elif (t.previous is not None and t.previous.is_table_control_char0): 
+            elif (t.previous is not None and t.previous.is_table_control_char): 
                 pass
             else: 
                 continue
-            if (t.next0_ is not None and ((t.next0_.is_char(':') or t.next0_.is_table_control_char0))): 
+            if (t.next0_ is not None and ((t.next0_.is_char(':') or t.next0_.is_table_control_char))): 
                 if (t.is_value("ЗАЯВИТЕЛЬ", "ЗАЯВНИК")): 
                     pzayav = FragToken.__create_just_participant(t.next0_, None)
                     if (pzayav is not None): 
@@ -880,9 +880,9 @@ class FragToken(MetaToken):
                         potv.begin_token = t
                         (potv.referent).typ = "ОТВЕТЧИК"
         t = title.end_token.next0_
-        first_pass3062 = True
+        first_pass3090 = True
         while True:
-            if first_pass3062: first_pass3062 = False
+            if first_pass3090: first_pass3090 = False
             else: t = t.next0_
             if (not (t is not None)): break
             cou += 1
@@ -890,7 +890,7 @@ class FragToken(MetaToken):
                 break
             if (t.is_value("ЗАЯВЛЕНИЕ", "ЗАЯВА")): 
                 pass
-            elif (t.is_value("ИСК", "ПОЗОВ") and t.previous is not None and t.previous.morph.class0_.is_preposition0): 
+            elif (t.is_value("ИСК", "ПОЗОВ") and t.previous is not None and t.previous.morph.class0_.is_preposition): 
                 pass
             else: 
                 continue
@@ -900,7 +900,7 @@ class FragToken(MetaToken):
                     t = br.end_token
             if (pist is not None): 
                 break
-            pist = FragToken.__create_just_participant(t.next0_, ("ПОЗИВАЧ" if t.next0_.morph.language.is_ua0 else "ИСТЕЦ"))
+            pist = FragToken.__create_just_participant(t.next0_, ("ПОЗИВАЧ" if t.next0_.morph.language.is_ua else "ИСТЕЦ"))
             if (pist is None): 
                 break
             t = pist.end_token.next0_
@@ -911,32 +911,32 @@ class FragToken(MetaToken):
             if (potv is not None): 
                 break
             if (t.is_value("О", "ПРО") and t.next0_ is not None and t.next0_.is_value("ПРИВЛЕЧЕНИЕ", "ЗАЛУЧЕННЯ")): 
-                if (t.next0_.morph.language.is_ua0): 
+                if (t.next0_.morph.language.is_ua): 
                     print("ПРО ПРИТЯГНЕННЯ", end="", file=tmp)
                 else: 
                     print("О ПРИВЛЕЧЕНИИ", end="", file=tmp)
                 t = t.next0_.next0_
-                potv = FragToken.__create_just_participant(t, ("ВІДПОВІДАЧ" if t.next0_.morph.language.is_ua0 else "ОТВЕТЧИК"))
+                potv = FragToken.__create_just_participant(t, ("ВІДПОВІДАЧ" if t.next0_.morph.language.is_ua else "ОТВЕТЧИК"))
             elif (t.is_value("О", "ПРО") and t.next0_ is not None and t.next0_.is_value("ПРИЗНАНИЕ", "ВИЗНАННЯ")): 
-                if (t.next0_.morph.language.is_ua0): 
+                if (t.next0_.morph.language.is_ua): 
                     print("ПРО ВИЗНАННЯ", end="", file=tmp)
                 else: 
                     print("О ПРИЗНАНИИ", end="", file=tmp)
                 t = t.next0_.next0_
-                potv = FragToken.__create_just_participant(t, ("ВІДПОВІДАЧ" if t.next0_.morph.language.is_ua0 else "ОТВЕТЧИК"))
+                potv = FragToken.__create_just_participant(t, ("ВІДПОВІДАЧ" if t.next0_.morph.language.is_ua else "ОТВЕТЧИК"))
             elif (t.is_value("О", "ПРО") and t.next0_ is not None and t.next0_.is_value("ВЗЫСКАНИЕ", "СТЯГНЕННЯ")): 
-                if (t.next0_.morph.language.is_ua0): 
+                if (t.next0_.morph.language.is_ua): 
                     print("ПРО СТЯГНЕННЯ", end="", file=tmp)
                 else: 
                     print("О ВЗЫСКАНИИ", end="", file=tmp)
                 t = t.next0_.next0_
-                if (t is not None and t.morph.class0_.is_preposition0): 
+                if (t is not None and t.morph.class0_.is_preposition): 
                     t = t.next0_
-                potv = FragToken.__create_just_participant(t, ("ВІДПОВІДАЧ" if t.next0_.morph.language.is_ua0 else "ОТВЕТЧИК"))
+                potv = FragToken.__create_just_participant(t, ("ВІДПОВІДАЧ" if t.next0_.morph.language.is_ua else "ОТВЕТЧИК"))
             else: 
                 if (t is None or not t.is_value("К", "ПРО")): 
                     break
-                potv = FragToken.__create_just_participant(t.next0_, ("ВІДПОВІДАЧ" if t.next0_.morph.language.is_ua0 else "ОТВЕТЧИК"))
+                potv = FragToken.__create_just_participant(t.next0_, ("ВІДПОВІДАЧ" if t.next0_.morph.language.is_ua else "ОТВЕТЧИК"))
             if (potv is not None): 
                 t = potv.end_token.next0_
             break
@@ -964,14 +964,14 @@ class FragToken(MetaToken):
             t = npt.end_token.next0_
             if (t is not None and t.is_char(':')): 
                 t = t.next0_
-            first_pass3063 = True
+            first_pass3091 = True
             while True:
-                if first_pass3063: first_pass3063 = False
+                if first_pass3091: first_pass3091 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_char(',')): 
                     continue
-                tret = FragToken.__create_just_participant(t, ("ТРЕТЯ ОСОБА" if t.morph.language.is_ua0 else "ТРЕТЬЕ ЛИЦО"))
+                tret = FragToken.__create_just_participant(t, ("ТРЕТЯ ОСОБА" if t.morph.language.is_ua else "ТРЕТЬЕ ЛИЦО"))
                 if (tret is None): 
                     break
                 tret.referent = ad.register_referent(tret.referent)
@@ -992,7 +992,7 @@ class FragToken(MetaToken):
                         if (tt.is_value("ЗАЯВЛЕНИЕ", "ЗАЯВА") or tt.is_value("ИСК", "ПОЗОВ")): 
                             cou2 = 0
                             has_isk = True
-                        if ((has_isk and ((tt.is_value("О", "ПРО") or tt.is_value("ОБ", None))) and tt.next0_.get_morph_class_in_dictionary().is_noun0) and tt.next0_.morph.case_.is_prepositional0): 
+                        if ((has_isk and ((tt.is_value("О", "ПРО") or tt.is_value("ОБ", None))) and tt.next0_.get_morph_class_in_dictionary().is_noun) and tt.next0_.morph.case_.is_prepositional): 
                             print(MiscHelper.get_text_value(tt, tt.next0_, GetTextAttr.NO), end="", file=tmp)
                             t0 = tt
                             t = tt.next0_.next0_
@@ -1002,12 +1002,12 @@ class FragToken(MetaToken):
                         break
             arefs = list()
             t1 = None
-            first_pass3064 = True
+            first_pass3092 = True
             while True:
-                if first_pass3064: first_pass3064 = False
+                if first_pass3092: first_pass3092 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
-                if (t.is_newline_before0 and t != t0): 
+                if (t.is_newline_before and t != t0): 
                     if (t.whitespaces_before_count > 15): 
                         break
                 if (t.is_value("ПРИ", "ЗА") and t.next0_ is not None and t.next0_.is_value("УЧАСТИЕ", "УЧАСТЬ")): 
@@ -1030,12 +1030,12 @@ class FragToken(MetaToken):
                             Utils.setLengthStringIO(tmp, tmp.tell() - 3)
                         t1 = t
                         tt = t.next0_
-                        first_pass3065 = True
+                        first_pass3093 = True
                         while True:
-                            if first_pass3065: first_pass3065 = False
+                            if first_pass3093: first_pass3093 = False
                             else: tt = tt.next0_
                             if (not (tt is not None)): break
-                            if (tt.is_comma_and0): 
+                            if (tt.is_comma_and): 
                                 continue
                             r = tt.get_referent()
                             if ((isinstance(r, DecreePartReferent)) or (isinstance(r, DecreeReferent))): 
@@ -1048,31 +1048,31 @@ class FragToken(MetaToken):
                     if (isinstance(r, PersonReferent)): 
                         continue
                     break
-                if (t.is_char_of(",.") or t.is_hiphen0): 
+                if (t.is_char_of(",.") or t.is_hiphen): 
                     break
                 if (isinstance(t, TextToken)): 
                     term = (t).term
                     if (term == "ИП"): 
                         continue
-                if (t.is_and0): 
+                if (t.is_and): 
                     if (t.next0_ is None): 
                         break
                     if (t.next0_.is_value("О", "ПРО") or t.next0_.is_value("ОБ", None)): 
                         t = t.next0_
                         break
-                if (t.is_newline_after0): 
+                if (t.is_newline_after): 
                     if (t.next0_ is None): 
                         pass
-                    elif (t.next0_.chars.is_all_lower0): 
+                    elif (t.next0_.chars.is_all_lower): 
                         pass
                     else: 
                         break
-                if (t.is_whitespace_before0 and tmp.tell() > 0): 
+                if (t.is_whitespace_before and tmp.tell() > 0): 
                     print(' ', end="", file=tmp)
                 print(MiscHelper.get_text_value(t, t, GetTextAttr.NO), end="", file=tmp)
                 t1 = t
             if (tmp.tell() > 10 and t1 is not None): 
-                art = InstrumentArtefact._new1388("предмет")
+                art = InstrumentArtefact._new1395("предмет")
                 str0_ = Utils.toStringStringIO(tmp)
                 str0_ = str0_.replace("В РАЗМЕРЕ СУММЫ", "СУММЫ").strip()
                 if (str0_.endswith("В РАЗМЕРЕ")): 
@@ -1090,9 +1090,9 @@ class FragToken(MetaToken):
             else: 
                 break
         t = (t if potv is None else potv.next0_)
-        first_pass3066 = True
+        first_pass3094 = True
         while True:
-            if first_pass3066: first_pass3066 = False
+            if first_pass3094: first_pass3094 = False
             else: t = t.next0_
             if (not (t is not None)): break
             rt = None
@@ -1120,11 +1120,11 @@ class FragToken(MetaToken):
                 continue
             if (check_del and t.previous is not None and t.previous.is_value("ОТ", None)): 
                 tt = t.previous
-                if (tt.previous is not None and tt.previous.is_hiphen0): 
+                if (tt.previous is not None and tt.previous.is_hiphen): 
                     tt = tt.previous
-                if (tt.is_whitespace_before0): 
+                if (tt.is_whitespace_before): 
                     tt1 = t.next0_
-                    if (tt1 is not None and ((tt1.is_hiphen0 or tt1.is_char(':')))): 
+                    if (tt1 is not None and ((tt1.is_hiphen or tt1.is_char(':')))): 
                         tt1 = tt1.next0_
                     if (isinstance(tt1.get_referent(), PersonReferent)): 
                         rt.begin_token = tt
@@ -1165,15 +1165,15 @@ class FragToken(MetaToken):
         ok = False
         br = False
         refs = list()
-        first_pass3067 = True
+        first_pass3095 = True
         while True:
-            if first_pass3067: first_pass3067 = False
+            if first_pass3095: first_pass3095 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (t.is_newline_before0 and t != t0): 
+            if (t.is_newline_before and t != t0): 
                 if (t.whitespaces_before_count > 15): 
                     break
-            if (t.is_hiphen0 or t.is_char_of(":,") or t.is_table_control_char0): 
+            if (t.is_hiphen or t.is_char_of(":,") or t.is_table_control_char): 
                 continue
             if (not br): 
                 if (t.is_value("К", None) or t.is_value("О", "ПРО")): 
@@ -1218,9 +1218,9 @@ class FragToken(MetaToken):
                     t = brr.end_token
                     t1 = t
                     continue
-            if (t.previous.is_comma0 and not br): 
+            if (t.previous.is_comma and not br): 
                 break
-            if (t.previous.morph.class0_.is_preposition0 and t.is_value("УЧАСТИЕ", "УЧАСТЬ")): 
+            if (t.previous.morph.class0_.is_preposition and t.is_value("УЧАСТИЕ", "УЧАСТЬ")): 
                 break
             if ((isinstance(t.previous, NumberToken)) and t.is_value("ЛИЦО", "ОСОБА")): 
                 break
@@ -1237,18 +1237,18 @@ class FragToken(MetaToken):
                 t1 = t
                 ok = True
                 continue
-            if ((isinstance(t, TextToken)) and t.chars.is_cyrillic_letter0 and t.chars.is_all_lower0): 
+            if ((isinstance(t, TextToken)) and t.chars.is_cyrillic_letter and t.chars.is_all_lower): 
                 if (t.morph.class0_ == MorphClass.VERB or t.morph.class0_ == MorphClass.ADVERB): 
                     break
-            if (t.is_newline_before0 and typ is None): 
+            if (t.is_newline_before and typ is None): 
                 break
-            elif (not t.morph.class0_.is_preposition0 and not t.morph.class0_.is_conjunction0): 
+            elif (not t.morph.class0_.is_preposition and not t.morph.class0_.is_conjunction): 
                 t1 = t
-            elif (t.is_newline_before0): 
+            elif (t.is_newline_before): 
                 break
         if (not ok): 
             return None
-        pat = InstrumentParticipant._new1374(typ)
+        pat = InstrumentParticipant._new1381(typ)
         for r in refs: 
             pat.add_slot(InstrumentParticipant.ATTR_REF, r, False, 0)
         return ReferentToken(pat, t0, t1)
@@ -1261,18 +1261,18 @@ class FragToken(MetaToken):
         if (res is None): 
             return
         t = res.begin_token
-        first_pass3068 = True
+        first_pass3096 = True
         while True:
-            if first_pass3068: first_pass3068 = False
+            if first_pass3096: first_pass3096 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= res.end_char)): break
             if (t == res.begin_token): 
                 pass
-            elif (t.previous is not None and t.previous.is_char('.') and t.is_whitespace_before0): 
+            elif (t.previous is not None and t.previous.is_char('.') and t.is_whitespace_before): 
                 pass
             elif (not t.is_value("ПРИЗНАТЬ", "ВИЗНАТИ")): 
                 continue
-            if (t.morph.class0_.is_preposition0 and t.next0_ is not None): 
+            if (t.morph.class0_.is_preposition and t.next0_ is not None): 
                 t = t.next0_
             arts = list()
             tt = None
@@ -1282,12 +1282,12 @@ class FragToken(MetaToken):
                 sum0_ = None
                 te = (None)
                 tt = t.next0_
-                first_pass3069 = True
+                first_pass3097 = True
                 while True:
-                    if first_pass3069: first_pass3069 = False
+                    if first_pass3097: first_pass3097 = False
                     else: tt = tt.next0_
                     if (not (tt is not None and tt.end_char <= res.end_char)): break
-                    if (tt.morph.class0_.is_preposition0): 
+                    if (tt.morph.class0_.is_preposition): 
                         continue
                     if (tt.is_char('.')): 
                         break
@@ -1301,7 +1301,7 @@ class FragToken(MetaToken):
                         te = tt
                         sum0_ = (Utils.asObjectOrNull(tt.get_referent(), MoneyReferent))
                 if (sum0_ is not None): 
-                    art = InstrumentArtefact._new1388("РЕЗОЛЮЦИЯ")
+                    art = InstrumentArtefact._new1395("РЕЗОЛЮЦИЯ")
                     if (gosposh): 
                         art.value = "ВЗЫСКАТЬ ГОСПОШЛИНУ"
                     else: 
@@ -1310,15 +1310,15 @@ class FragToken(MetaToken):
                     arts.append(ReferentToken(art, t, te))
             if ((t.is_value("ЗАЯВЛЕНИЕ", "ЗАЯВА") or t.is_value("ИСК", "ПОЗОВ") or t.is_value("ТРЕБОВАНИЕ", "ВИМОГА")) or t.is_value("ЗАЯВЛЕННЫЙ", "ЗАЯВЛЕНИЙ") or t.is_value("УДОВЛЕТВОРЕНИЕ", "ЗАДОВОЛЕННЯ")): 
                 tt = t.next0_
-                first_pass3070 = True
+                first_pass3098 = True
                 while True:
-                    if first_pass3070: first_pass3070 = False
+                    if first_pass3098: first_pass3098 = False
                     else: tt = tt.next0_
                     if (not (tt is not None and tt.end_char <= res.end_char)): break
-                    if (tt.morph.class0_.is_preposition0): 
+                    if (tt.morph.class0_.is_preposition): 
                         continue
                     if (tt.is_char('.')): 
-                        if (tt.is_whitespace_after0): 
+                        if (tt.is_whitespace_after): 
                             break
                     if (tt.is_value("УДОВЛЕТВОРИТЬ", "ЗАДОВОЛЬНИТИ")): 
                         val = "УДОВЛЕТВОРИТЬ"
@@ -1328,12 +1328,12 @@ class FragToken(MetaToken):
                             te = tt.next0_
                         elif (tt.previous is not None and tt.previous.is_value("ПОЛНОСТЬЮ", "ПОВНІСТЮ")): 
                             val += " ПОЛНОСТЬЮ"
-                        art = InstrumentArtefact._new1388("РЕЗОЛЮЦИЯ")
+                        art = InstrumentArtefact._new1395("РЕЗОЛЮЦИЯ")
                         art.value = val
                         arts.append(ReferentToken(art, t, te))
                         break
                     if (tt.is_value("ОТКАЗАТЬ", "ВІДМОВИТИ")): 
-                        art = InstrumentArtefact._new1388("РЕЗОЛЮЦИЯ")
+                        art = InstrumentArtefact._new1395("РЕЗОЛЮЦИЯ")
                         art.value = "ОТКАЗАТЬ"
                         te = tt
                         arts.append(ReferentToken(art, t, te))
@@ -1342,12 +1342,12 @@ class FragToken(MetaToken):
                 zak = -1
                 otm = -1
                 tt = t.next0_
-                first_pass3071 = True
+                first_pass3099 = True
                 while True:
-                    if first_pass3071: first_pass3071 = False
+                    if first_pass3099: first_pass3099 = False
                     else: tt = tt.next0_
                     if (not (tt is not None and tt.end_char <= res.end_char)): break
-                    if (tt.morph.class0_.is_preposition0): 
+                    if (tt.morph.class0_.is_preposition): 
                         continue
                     if (tt.is_char('.')): 
                         break
@@ -1364,7 +1364,7 @@ class FragToken(MetaToken):
                     val = "ПРИЗНАТЬ {0}".format(("ЗАКОННЫМ" if zak > 0 else "НЕЗАКОННЫМ"))
                     if (otm > 0): 
                         val += " И ОТМЕНИТЬ"
-                    art = InstrumentArtefact._new1388("РЕЗОЛЮЦИЯ")
+                    art = InstrumentArtefact._new1395("РЕЗОЛЮЦИЯ")
                     art.value = val
                     arts.append(ReferentToken(art, t, te))
                 else: 
@@ -1384,9 +1384,9 @@ class FragToken(MetaToken):
             return None
         dir0_ = False
         i = 0
-        first_pass3072 = True
+        first_pass3100 = True
         while True:
-            if first_pass3072: first_pass3072 = False
+            if first_pass3100: first_pass3100 = False
             else: i += 1
             if (not (i < len(self.children))): break
             if (self.children[i].kind == InstrumentKind.DIRECTIVE and ((i + 1) < len(self.children))): 
@@ -1403,7 +1403,7 @@ class FragToken(MetaToken):
                     if (ii == (i + 1)): 
                         return self.children[i + 1]
                     else: 
-                        return FragToken._new1326(self.children[i + 1].begin_token, self.children[ii].end_token, InstrumentKind.CONTENT)
+                        return FragToken._new1333(self.children[i + 1].begin_token, self.children[ii].end_token, InstrumentKind.CONTENT)
                 dir0_ = True
         if (dir0_): 
             return None
@@ -1437,12 +1437,12 @@ class FragToken(MetaToken):
         li2 = list()
         ok = False
         tt = t1.next0_
-        first_pass3073 = True
+        first_pass3101 = True
         while True:
-            if first_pass3073: first_pass3073 = False
+            if first_pass3101: first_pass3101 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
-            if (not tt.is_newline_before0): 
+            if (not tt.is_newline_before): 
                 continue
             it = InstrToken.parse(tt, max_char, None)
             if (it is None): 
@@ -1468,14 +1468,14 @@ class FragToken(MetaToken):
         res = FragToken.create_document(t2, max_char, InstrumentKind.UNDEFINED)
         if (res is None): 
             return None
-        ques = FragToken._new1326(t, t2.previous, InstrumentKind.QUESTION)
+        ques = FragToken._new1333(t, t2.previous, InstrumentKind.QUESTION)
         res.children.insert(0, ques)
-        ques.children.append(FragToken._new1326(li[len(li) - 1].begin_token, li[len(li) - 1].end_token, InstrumentKind.KEYWORD))
-        content = FragToken._new1326(li[len(li) - 1].end_token.next0_, t2.previous, InstrumentKind.CONTENT)
+        ques.children.append(FragToken._new1333(li[len(li) - 1].begin_token, li[len(li) - 1].end_token, InstrumentKind.KEYWORD))
+        content = FragToken._new1333(li[len(li) - 1].end_token.next0_, t2.previous, InstrumentKind.CONTENT)
         ques.children.append(content)
         content._analize_content(res, max_char > 0, InstrumentKind.UNDEFINED)
         if (len(li) > 1): 
-            fr = FragToken._new1348(t, li[len(li) - 2].end_token, InstrumentKind.NAME, True)
+            fr = FragToken._new1355(t, li[len(li) - 2].end_token, InstrumentKind.NAME, True)
             ques.children.insert(0, fr)
         res.begin_token = t
         return res
@@ -1485,13 +1485,13 @@ class FragToken(MetaToken):
         if (t0 is None): 
             return None
         ok = False
-        if (t0.is_table_control_char0 and t0.next0_ is not None): 
+        if (t0.is_table_control_char and t0.next0_ is not None): 
             t0 = t0.next0_
         cou = 0
         t = t0
-        first_pass3074 = True
+        first_pass3102 = True
         while True:
-            if first_pass3074: first_pass3074 = False
+            if first_pass3102: first_pass3102 = False
             else: t = t.next0_; cou += 1
             if (not (t is not None and (cou < 300))): break
             dr = Utils.asObjectOrNull(t.get_referent(), DecreeReferent)
@@ -1502,9 +1502,9 @@ class FragToken(MetaToken):
                         t0 = t
                     ok = True
                 break
-            if (t.is_table_control_char0): 
+            if (t.is_table_control_char): 
                 continue
-            if (t.is_newline_before0 or ((t.previous is not None and t.previous.is_table_control_char0))): 
+            if (t.is_newline_before or ((t.previous is not None and t.previous.is_table_control_char))): 
                 if (FragToken.__is_start_of_body(t, False)): 
                     break
                 dt = DecreeToken.try_attach(t, None, False)
@@ -1515,16 +1515,16 @@ class FragToken(MetaToken):
                         break
         if (not ok): 
             return None
-        title = FragToken._new1326(t0, t0, InstrumentKind.HEAD)
+        title = FragToken._new1333(t0, t0, InstrumentKind.HEAD)
         cou = 0
         has_num = False
         t = t0
-        first_pass3075 = True
+        first_pass3103 = True
         while True:
-            if first_pass3075: first_pass3075 = False
+            if first_pass3103: first_pass3103 = False
             else: t = t.next0_
             if (not (t is not None and (cou < 100))): break
-            if (t.is_newline_before0 and t != t0): 
+            if (t.is_newline_before and t != t0): 
                 title.end_token = t.previous
                 if (t.is_value("ЧАСТЬ", None)): 
                     t = t.next0_
@@ -1536,11 +1536,11 @@ class FragToken(MetaToken):
                         while t is not None: 
                             if (isinstance(t, NumberToken)): 
                                 print((t).value, end="", file=tmp)
-                            elif (((t.is_hiphen0 or t.is_char('.'))) and not t.is_whitespace_after0 and (isinstance(t.next0_, NumberToken))): 
+                            elif (((t.is_hiphen or t.is_char('.'))) and not t.is_whitespace_after and (isinstance(t.next0_, NumberToken))): 
                                 print((t).term, end="", file=tmp)
                             else: 
                                 break
-                            if (t.is_whitespace_after0): 
+                            if (t.is_whitespace_after): 
                                 break
                             t = t.next0_
                         doc.add_slot(InstrumentReferent.ATTR_PART, Utils.toStringStringIO(tmp), True, 0)
@@ -1606,12 +1606,12 @@ class FragToken(MetaToken):
     def __create_doc_title_(t0 : 'Token', doc : 'InstrumentReferent') -> 'FragToken':
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         while t0 is not None: 
-            if (not t0.is_table_control_char0): 
+            if (not t0.is_table_control_char): 
                 break
             t0 = t0.next0_
         if (t0 is None): 
             return None
-        title = FragToken._new1326(t0, t0, InstrumentKind.HEAD)
+        title = FragToken._new1333(t0, t0, InstrumentKind.HEAD)
         dt0 = None
         t1 = None
         name_ = None
@@ -1650,21 +1650,21 @@ class FragToken(MetaToken):
             dt = DecreeToken.try_attach(t.next0_, None, False)
             if (dt is not None and dt.typ == DecreeToken.ItemType.NUMBER): 
                 dt.begin_token = t
-                title.children.append(FragToken._new1378(t, t, InstrumentKind.KEYWORD, "ДЕЛО"))
+                title.children.append(FragToken._new1385(t, t, InstrumentKind.KEYWORD, "ДЕЛО"))
                 FragToken.__add_title_attr(doc, title, dt)
                 t = dt.end_token.next0_
                 if (t is not None and t.is_value("КОПИЯ", "КОПІЯ")): 
                     t = t.next0_
                 elif ((t.is_char('(') and t.next0_ is not None and t.next0_.is_value("КОПИЯ", "КОПІЯ")) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
                     t = t.next0_.next0_
-        first_pass3076 = True
+        first_pass3104 = True
         while True:
-            if first_pass3076: first_pass3076 = False
+            if first_pass3104: first_pass3104 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (t.is_table_control_char0): 
+            if (t.is_table_control_char): 
                 continue
-            if (t.is_newline_before0 or ((t.previous is not None and t.previous.is_table_control_char0))): 
+            if (t.is_newline_before or ((t.previous is not None and t.previous.is_table_control_char))): 
                 if ((isinstance(t.get_referent(), DecreeReferent)) and (t.get_referent()).kind != DecreeKind.PUBLISHER): 
                     t = t.kit.debed_token(t)
                 if (t.is_value("О", "ПРО") or t.is_value("ОБ", None) or t.is_value("ПО", None)): 
@@ -1675,33 +1675,33 @@ class FragToken(MetaToken):
                     break
                 iii = InstrToken1.parse(t, True, None, 0, None, False, 0, False)
                 if (iii is not None and iii.typ == InstrToken1.Types.COMMENT): 
-                    cmt = FragToken._new1326(iii.begin_token, iii.end_token, InstrumentKind.COMMENT)
+                    cmt = FragToken._new1333(iii.begin_token, iii.end_token, InstrumentKind.COMMENT)
                     title.children.append(cmt)
                     title.end_token = iii.end_token
                     t1 = title.end_token
                     t = t1
                     continue
                 if (iii is not None and iii.end_token.is_char('?')): 
-                    cmt = FragToken._new1326(iii.begin_token, iii.end_token, InstrumentKind.NAME)
+                    cmt = FragToken._new1333(iii.begin_token, iii.end_token, InstrumentKind.NAME)
                     cmt.value = (FragToken._get_restored_namemt(iii, False))
                     title.children.append(cmt)
                     title.end_token = iii.end_token
                     t1 = title.end_token
                     t = t1
                     break
-                if ((((t.is_value("ЗАЯВИТЕЛЬ", "ЗАЯВНИК") or t.is_value("ИСТЕЦ", "ПОЗИВАЧ") or t.is_value("ОТВЕТЧИК", "ВІДПОВІДАЧ")) or t.is_value("ДОЛЖНИК", "БОРЖНИК") or t.is_value("КОПИЯ", "КОПІЯ"))) and t.next0_ is not None and ((t.next0_.is_char(':') or t.next0_.is_table_control_char0))): 
+                if ((((t.is_value("ЗАЯВИТЕЛЬ", "ЗАЯВНИК") or t.is_value("ИСТЕЦ", "ПОЗИВАЧ") or t.is_value("ОТВЕТЧИК", "ВІДПОВІДАЧ")) or t.is_value("ДОЛЖНИК", "БОРЖНИК") or t.is_value("КОПИЯ", "КОПІЯ"))) and t.next0_ is not None and ((t.next0_.is_char(':') or t.next0_.is_table_control_char))): 
                     ptt = FragToken.__create_just_participant(t.next0_.next0_, None)
                     if (ptt is not None): 
                         if (t.is_value("КОПИЯ", None)): 
                             pass
                         t1 = ptt.end_token
-                        while t1.next0_ is not None and t1.next0_.is_table_control_char0:
+                        while t1.next0_ is not None and t1.next0_.is_table_control_char:
                             t1 = t1.next0_
                         if (t1.next0_ is not None and t1.next0_.is_char('(')): 
                             br = BracketHelper.try_parse(t1.next0_, BracketParseAttr.NO, 100)
                             if (br is not None): 
                                 t1 = br.end_token
-                        ft = FragToken._new1326(t, t1, InstrumentKind.INITIATOR)
+                        ft = FragToken._new1333(t, t1, InstrumentKind.INITIATOR)
                         title.children.append(ft)
                         title.end_token = t1
                         t = title.end_token
@@ -1712,47 +1712,47 @@ class FragToken(MetaToken):
                     while tt is not None: 
                         if (isinstance(tt.get_referent(), MoneyReferent)): 
                             has_money = True
-                        if (tt.is_newline_after0): 
+                        if (tt.is_newline_after): 
                             break
                         tt = tt.next0_
                     if (tt is not None and has_money): 
-                        while tt.next0_ is not None and tt.next0_.is_table_control_char0:
+                        while tt.next0_ is not None and tt.next0_.is_table_control_char:
                             tt = tt.next0_
                         if (tt.next0_ is not None and tt.next0_.is_char('(')): 
                             br = BracketHelper.try_parse(tt.next0_, BracketParseAttr.NO, 100)
                             if (br is not None): 
                                 tt = br.end_token
-                        title.children.append(FragToken._new1326(t, tt, InstrumentKind.CASEINFO))
+                        title.children.append(FragToken._new1333(t, tt, InstrumentKind.CASEINFO))
                         t1 = tt
                         title.end_token = t1
                         t = title.end_token
                         continue
                 if (t.is_value("В", "У")): 
                     tt = t.next0_
-                    if (tt is not None and tt.is_table_control_char0): 
+                    if (tt is not None and tt.is_table_control_char): 
                         tt = tt.next0_
                     if (tt is not None and (isinstance(tt.get_referent(), OrganizationReferent))): 
                         r = tt.get_referent()
-                        while tt.next0_ is not None and tt.next0_.is_table_control_char0:
+                        while tt.next0_ is not None and tt.next0_.is_table_control_char:
                             tt = tt.next0_
                         t1 = tt
                         if (t1.next0_ is not None and t1.next0_.is_char('(')): 
                             br = BracketHelper.try_parse(t1.next0_, BracketParseAttr.NO, 100)
                             if (br is not None): 
                                 t1 = br.end_token
-                        ooo = FragToken._new1326(t, t1, InstrumentKind.ORGANIZATION)
+                        ooo = FragToken._new1333(t, t1, InstrumentKind.ORGANIZATION)
                         ooo.referents = list()
                         ooo.referents.append(r)
                         title.children.append(ooo)
                         title.end_token = t1
                         t = title.end_token
                         continue
-                if (t.length_char == 1 and t.chars.is_letter0 and t.is_whitespace_after0): 
+                if (t.length_char == 1 and t.chars.is_letter and t.is_whitespace_after): 
                     ii = 0
                     while ii < len(InstrToken._m_directives_norm): 
                         ee = MiscHelper.try_attach_word_by_letters(InstrToken._m_directives_norm[ii], t, False)
-                        if (ee is not None and ee.is_newline_after0): 
-                            ooo = FragToken._new1378(t, ee, InstrumentKind.KEYWORD, InstrToken._m_directives_norm[ii])
+                        if (ee is not None and ee.is_newline_after): 
+                            ooo = FragToken._new1385(t, ee, InstrumentKind.KEYWORD, InstrToken._m_directives_norm[ii])
                             title.children.append(ooo)
                             doc.typ = InstrToken._m_directives_norm[ii]
                             title.end_token = ee
@@ -1761,7 +1761,7 @@ class FragToken(MetaToken):
                         ii += 1
                     if (ii < len(InstrToken._m_directives_norm)): 
                         continue
-            if (t.is_hiphen0 or t.is_char('_')): 
+            if (t.is_hiphen or t.is_char('_')): 
                 ch = t.get_source_text()[0]
                 while t is not None: 
                     if (not t.is_char(ch)): 
@@ -1781,7 +1781,7 @@ class FragToken(MetaToken):
                 if (dpr is not None): 
                     if (((dpr.part is None and dpr.doc_part is None)) or len(dpr.slots) != 2): 
                         break
-                    if ((isinstance(t.next0_, TextToken)) and (t.next0_).is_pure_verb0): 
+                    if ((isinstance(t.next0_, TextToken)) and (t.next0_).is_pure_verb): 
                         break
                     dr0 = dpr.owner
             if (dr0 is not None): 
@@ -1796,7 +1796,7 @@ class FragToken(MetaToken):
                             nt0 = ttt.next0_
                             name_ = FragToken._get_restored_name(ttt.next0_, (t).end_token, False)
                         t1 = t
-                        if (name_ is not None and t1.is_newline_after0): 
+                        if (name_ is not None and t1.is_newline_after): 
                             t = t.next0_
                             break
                         if (doc.typ == "КОДЕКС"): 
@@ -1806,7 +1806,7 @@ class FragToken(MetaToken):
                                     pt = (None)
                             if (pt is not None and len(pt.values) > 0): 
                                 doc.add_slot(InstrumentReferent.ATTR_PART, pt.values[0].value, False, 0)
-                                title.children.append(FragToken._new1378(pt.begin_token, pt.end_token, InstrumentKind.DOCPART, pt.values[0].value))
+                                title.children.append(FragToken._new1385(pt.begin_token, pt.end_token, InstrumentKind.DOCPART, pt.values[0].value))
                                 t = pt.end_token
                                 continue
                         if (doc.name is not None): 
@@ -1826,9 +1826,9 @@ class FragToken(MetaToken):
                     if (geo_ is not None): 
                         doc.add_slot(InstrumentReferent.ATTR_GEO, geo_, False, 0)
                     t1 = t
-                    title.children.append(FragToken._new1378(t, t, InstrumentKind.NAME, nam))
+                    title.children.append(FragToken._new1385(t, t, InstrumentKind.NAME, nam))
                     if (pt is not None and len(pt.values) > 0): 
-                        title.children.append(FragToken._new1378(pt.begin_token, pt.end_token, InstrumentKind.DOCPART, pt.values[0].value))
+                        title.children.append(FragToken._new1385(pt.begin_token, pt.end_token, InstrumentKind.DOCPART, pt.values[0].value))
                         t1 = pt.end_token
                     t = t1
                     continue
@@ -1838,21 +1838,21 @@ class FragToken(MetaToken):
                 continue
             if (FragToken.__is_start_of_body(t, False)): 
                 break
-            if (t.is_value("ПРОЕКТ", None) and t.is_newline_after0): 
+            if (t.is_value("ПРОЕКТ", None) and t.is_newline_after): 
                 continue
             if (doc.typ is None): 
                 ttt1 = DecreeToken.is_keyword(t, False)
-                if (ttt1 is not None and ttt1.is_newline_after0): 
+                if (ttt1 is not None and ttt1.is_newline_after): 
                     typ = MiscHelper.get_text_value(t, ttt1, GetTextAttr.KEEPQUOTES)
                     if (doc.typ is None): 
                         doc.typ = typ
-                    title.children.append(FragToken._new1378(t, ttt1, InstrumentKind.TYP, typ))
-                    dt0 = DecreeToken._new837(t, ttt1, DecreeToken.ItemType.TYP, typ)
+                    title.children.append(FragToken._new1385(t, ttt1, InstrumentKind.TYP, typ))
+                    dt0 = DecreeToken._new844(t, ttt1, DecreeToken.ItemType.TYP, typ)
                     can_be_orgs = False
                     t = ttt1
                     t1 = t
                     continue
-                if (t.is_newline_before0 and ttt1 is not None and DecreeToken.try_attach(t, None, False) is None): 
+                if (t.is_newline_before and ttt1 is not None and DecreeToken.try_attach(t, None, False) is None): 
                     start_of_name = True
                     break
             appr = FragToken.__create_approved(t)
@@ -1878,22 +1878,22 @@ class FragToken(MetaToken):
                     if (dt.length_char < 4): 
                         dt = (None)
             if (dt is None and dt0 is not None and ((dt0.typ == DecreeToken.ItemType.OWNER or dt0.typ == DecreeToken.ItemType.ORG))): 
-                if ((isinstance(t, NumberToken)) and t.is_newline_after0 and t.is_newline_before0): 
-                    dt = DecreeToken._new837(t, t, DecreeToken.ItemType.NUMBER, str((t).value))
+                if ((isinstance(t, NumberToken)) and t.is_newline_after and t.is_newline_before): 
+                    dt = DecreeToken._new844(t, t, DecreeToken.ItemType.NUMBER, str((t).value))
             if (dt is not None and dt.typ == DecreeToken.ItemType.UNKNOWN): 
                 dt = (None)
-            if ((dt is None and (isinstance(t, NumberToken)) and t.is_newline_before0) and t.is_newline_after0): 
+            if ((dt is None and (isinstance(t, NumberToken)) and t.is_newline_before) and t.is_newline_after): 
                 if (dt0 is not None and dt0.typ == DecreeToken.ItemType.ORG and (((t).typ == NumberSpellingType.DIGIT))): 
-                    dt = DecreeToken._new837(t, t, DecreeToken.ItemType.NUMBER, str((t).value))
+                    dt = DecreeToken._new844(t, t, DecreeToken.ItemType.NUMBER, str((t).value))
             if (dt is not None and ((dt.typ == DecreeToken.ItemType.TYP or dt.typ == DecreeToken.ItemType.OWNER or dt.typ == DecreeToken.ItemType.ORG))): 
-                if (not t.is_newline_before0): 
+                if (not t.is_newline_before and not t.previous.is_table_control_char): 
                     dt = (None)
                 else: 
                     ttt = dt.end_token.next0_
                     while ttt is not None: 
-                        if (ttt.is_newline_before0): 
+                        if (ttt.is_newline_before or ttt.is_table_control_char): 
                             break
-                        elif ((isinstance(ttt, TextToken)) and (ttt).is_pure_verb0): 
+                        elif ((isinstance(ttt, TextToken)) and (ttt).is_pure_verb): 
                             dt = (None)
                             break
                         ttt = ttt.next0_
@@ -1910,18 +1910,18 @@ class FragToken(MetaToken):
                 if (t.is_value("ДАТА", None)): 
                     ok = False
                     tt = t.next0_
-                    first_pass3077 = True
+                    first_pass3105 = True
                     while True:
-                        if first_pass3077: first_pass3077 = False
+                        if first_pass3105: first_pass3105 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
-                        if ((tt.is_value("ПОДПИСАНИЕ", "ПІДПИСАННЯ") or tt.is_value("ВВЕДЕНИЕ", "ВВЕДЕННЯ") or tt.is_value("ПРИНЯТИЕ", "ПРИЙНЯТТЯ")) or tt.is_value("ДЕЙСТВИЕ", "ДІЮ") or tt.morph.class0_.is_preposition0): 
+                        if ((tt.is_value("ПОДПИСАНИЕ", "ПІДПИСАННЯ") or tt.is_value("ВВЕДЕНИЕ", "ВВЕДЕННЯ") or tt.is_value("ПРИНЯТИЕ", "ПРИЙНЯТТЯ")) or tt.is_value("ДЕЙСТВИЕ", "ДІЮ") or tt.morph.class0_.is_preposition): 
                             continue
-                        if ((isinstance(tt, TextToken)) and not tt.chars.is_letter0): 
+                        if ((isinstance(tt, TextToken)) and not tt.chars.is_letter): 
                             continue
                         da = Utils.asObjectOrNull(tt.get_referent(), DateReferent)
                         if (da is not None): 
-                            frdt = FragToken._new1326(t, tt, InstrumentKind.DATE)
+                            frdt = FragToken._new1333(t, tt, InstrumentKind.DATE)
                             title.children.append(frdt)
                             t = tt
                             ok = True
@@ -1931,11 +1931,11 @@ class FragToken(MetaToken):
                     if (ok): 
                         continue
                 r = t.get_referent()
-                if ((r is None and t.length_char == 1 and not t.chars.is_letter0) and (isinstance(t.next0_, ReferentToken)) and not t.is_newline_after0): 
+                if ((r is None and t.length_char == 1 and not t.chars.is_letter) and (isinstance(t.next0_, ReferentToken)) and not t.is_newline_after): 
                     t = t.next0_
                     r = t.get_referent()
                 if (((isinstance(r, AddressReferent)) or (isinstance(r, UriReferent)) or (isinstance(r, PhoneReferent))) or (isinstance(r, PersonIdentityReferent)) or (isinstance(r, BankDataReferent))): 
-                    cnt = FragToken._new1326(t, t, InstrumentKind.CONTACT)
+                    cnt = FragToken._new1333(t, t, InstrumentKind.CONTACT)
                     cnt.referents = list()
                     cnt.referents.append(r)
                     title.children.append(cnt)
@@ -1948,11 +1948,11 @@ class FragToken(MetaToken):
                         if (((isinstance(r, AddressReferent)) or (isinstance(r, UriReferent)) or (isinstance(r, PhoneReferent))) or (isinstance(r, PersonIdentityReferent)) or (isinstance(r, BankDataReferent))): 
                             cnt.referents.append(r)
                             cnt.end_token = t.next0_
-                        elif (t.is_newline_after0): 
+                        elif (t.is_newline_after): 
                             break
                         t = t.next0_
                     continue
-                pt = (PartToken.try_attach(t, None, False, False) if t.is_newline_before0 else None)
+                pt = (PartToken.try_attach(t, None, False, False) if t.is_newline_before else None)
                 if ((pt is not None and ((pt.typ == PartToken.ItemType.PART or pt.typ == PartToken.ItemType.DOCPART)) and len(pt.values) == 1) and pt.is_newline_after): 
                     ok = False
                     if (dt0 is not None and dt0.typ == DecreeToken.ItemType.TYP): 
@@ -1964,7 +1964,7 @@ class FragToken(MetaToken):
                         elif (FragToken.__create_approved(pt.end_token.next0_) is not None): 
                             ok = True
                     if (ok): 
-                        title.children.append(FragToken._new1378(pt.begin_token, pt.end_token, InstrumentKind.DOCPART, pt.values[0].value))
+                        title.children.append(FragToken._new1385(pt.begin_token, pt.end_token, InstrumentKind.DOCPART, pt.values[0].value))
                         doc.add_slot(InstrumentReferent.ATTR_PART, pt.values[0].value, False, 0)
                         t = pt.end_token
                         continue
@@ -1986,9 +1986,9 @@ class FragToken(MetaToken):
                         t0 = stok.end_token.next0_
                     t = stok.end_token
                     continue
-                if ((t.is_newline_before0 and doc.typ is not None and (isinstance(t, TextToken))) and NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0) is not None): 
+                if ((t.is_newline_before and doc.typ is not None and (isinstance(t, TextToken))) and NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0) is not None): 
                     break
-                if (t.is_newline_before0 and t.is_value("К", "ДО")): 
+                if (t.is_newline_before and t.is_value("К", "ДО")): 
                     break
                 if (((not ignore_empty_lines and stok is not None and stok.typ == ILTypes.UNDEFINED) and not stok.has_verb and ((dt0 is None or dt0.typ == DecreeToken.ItemType.NUMBER))) and (empty_lines < 3)): 
                     if (stok.is_newline_after): 
@@ -2020,7 +2020,7 @@ class FragToken(MetaToken):
                         if ((dt1.typ == DecreeToken.ItemType.NUMBER or dt1.typ == DecreeToken.ItemType.TYP or dt1.typ == DecreeToken.ItemType.NAME) or dt1.typ == DecreeToken.ItemType.DATE or dt1.typ == DecreeToken.ItemType.ORG): 
                             break
                         dt.end_token = dt1.end_token
-                    elif (ttt.chars != dt.begin_token.chars and ttt.is_newline_before0): 
+                    elif (ttt.chars != dt.begin_token.chars and ttt.is_newline_before): 
                         break
                     else: 
                         dt.end_token = ttt
@@ -2031,7 +2031,7 @@ class FragToken(MetaToken):
                 typ = DecreeToken.get_kind(dt.value)
                 if (typ == DecreeKind.PUBLISHER): 
                     while t is not None: 
-                        if (t.is_newline_after0): 
+                        if (t.is_newline_after): 
                             break
                         t = t.next0_
                     if (t is None): 
@@ -2045,7 +2045,7 @@ class FragToken(MetaToken):
                         t = dt.end_token.next0_
                         while t is not None: 
                             dt.end_token = t
-                            if (t.is_newline_after0): 
+                            if (t.is_newline_after): 
                                 break
                             t = t.next0_
                 can_be_orgs = False
@@ -2070,23 +2070,23 @@ class FragToken(MetaToken):
                     if (not Utils.isNullOrEmpty(name_)): 
                         t1 = nam.end_token
                         doc.add_slot(InstrumentBlockReferent.ATTR_NAME, name_.strip(), True, 0)
-                        title.children.append(FragToken._new1378(t0, t1, InstrumentKind.NAME, name_.strip()))
+                        title.children.append(FragToken._new1385(t0, t1, InstrumentKind.NAME, name_.strip()))
                         while t1.next0_ is not None: 
-                            if (t1.is_table_control_char0 and not t1.is_char(chr(0x1F))): 
+                            if (t1.is_table_control_char and not t1.is_char(chr(0x1F))): 
                                 pass
                             else: 
                                 break
                             t1 = t1.next0_
                         title.end_token = t1
                         t = t1.next0_
-                        first_pass3078 = True
+                        first_pass3106 = True
                         while True:
-                            if first_pass3078: first_pass3078 = False
+                            if first_pass3106: first_pass3106 = False
                             else: t = t.next0_
                             if (not (t is not None)): break
                             if (FragToken.__is_start_of_body(t, False)): 
                                 break
-                            if (t.is_table_control_char0): 
+                            if (t.is_table_control_char): 
                                 continue
                             appr1 = FragToken.__create_approved(t)
                             if (appr1 is not None): 
@@ -2127,14 +2127,14 @@ class FragToken(MetaToken):
         if (end_empty_lines is not None and doc.find_slot(InstrumentReferent.ATTR_SOURCE, None, True) is None): 
             val = MiscHelper.get_text_value(t0, end_empty_lines, GetTextAttr.NO)
             doc.add_slot(InstrumentReferent.ATTR_SOURCE, val, False, 0)
-            title.children.insert(0, FragToken._new1378(t0, end_empty_lines, InstrumentKind.ORGANIZATION, val))
+            title.children.insert(0, FragToken._new1385(t0, end_empty_lines, InstrumentKind.ORGANIZATION, val))
         is_case = False
         for ch in title.children: 
             if (ch.value is None and ch.kind != InstrumentKind.APPROVED and ch.kind != InstrumentKind.EDITIONS): 
                 ch.value = (MiscHelper.get_text_value(ch.begin_token, ch.end_token, GetTextAttr.NO))
             if (ch.kind == InstrumentKind.CASENUMBER): 
                 is_case = True
-        if ((((name_ is not None or t.is_newline_before0 or ((t.previous is not None and t.previous.is_table_control_char0))) or ((not t.is_newline_before0 and len(title.children) > 0 and title.children[len(title.children) - 1].kind == InstrumentKind.TYP)))) and not is_case): 
+        if ((((name_ is not None or t.is_newline_before or ((t.previous is not None and t.previous.is_table_control_char))) or ((not t.is_newline_before and len(title.children) > 0 and title.children[len(title.children) - 1].kind == InstrumentKind.TYP)))) and not is_case): 
             tt0 = t
             first_line = None
             po_delu = False
@@ -2143,19 +2143,21 @@ class FragToken(MetaToken):
             while t is not None: 
                 if (FragToken.__is_start_of_body(t, False)): 
                     break
-                if ((name_ is not None and t == tt0 and t.is_newline_before0) and t.whitespaces_before_count > 15): 
+                if ((name_ is not None and t == tt0 and t.is_newline_before) and t.whitespaces_before_count > 15): 
                     break
-                if (t.is_newline_before0): 
+                if (t.is_table_control_char): 
+                    break
+                if (t.is_newline_before): 
                     pt = PartToken.try_attach(t, None, False, False)
                     if (pt is not None and pt.typ != PartToken.ItemType.PREFIX): 
                         break
-                    ltt = InstrToken1.parse(t, False, None, 0, None, False, 0, False)
+                    ltt = InstrToken1.parse(t, False, None, 0, None, False, 0, True)
                     if (ltt is None): 
                         break
                     if (t != tt0 and t.whitespaces_before_count > 15): 
                         if (t.newlines_before_count > 2): 
                             break
-                        if (t.newlines_before_count > 1 and not t.chars.is_all_upper0): 
+                        if (t.newlines_before_count > 1 and not t.chars.is_all_upper): 
                             break
                         if (t.is_value("О", "ПРО") or t.is_value("ОБ", None)): 
                             pass
@@ -2174,12 +2176,12 @@ class FragToken(MetaToken):
                     if (FragToken._create_editions(t) is not None or FragToken.__create_case_info(t) is not None): 
                         break
                     if (isinstance(t.get_referent(), GeoReferent)): 
-                        if (t.is_newline_after0): 
+                        if (t.is_newline_after): 
                             break
                         if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), DateReferent))): 
                             break
                     if (isinstance(t.get_referent(), DateReferent)): 
-                        if (t.is_newline_after0): 
+                        if (t.is_newline_after): 
                             break
                         if (t.next0_ is not None and (isinstance(t.next0_.get_referent(), GeoReferent))): 
                             break
@@ -2215,6 +2217,10 @@ class FragToken(MetaToken):
                         break
                     t = ltt.end_token
                     t1 = t
+                    if (t1.is_table_control_char): 
+                        t = t1.previous
+                        t1 = t
+                        break
                 else: 
                     t1 = t
                 t = t.next0_
@@ -2228,7 +2234,7 @@ class FragToken(MetaToken):
             if (name_ is None and len(title.children) > 0 and title.children[len(title.children) - 1].kind == InstrumentKind.TYP): 
                 npt = NounPhraseHelper.try_parse(tt0, NounPhraseParseAttr.NO, 0)
                 if (npt is not None): 
-                    if (npt.morph.case_.is_genitive0): 
+                    if (npt.morph.case_.is_genitive): 
                         name_ = (Utils.asObjectOrNull(title.children[len(title.children) - 1].value, str))
                         if (DecreeToken.try_attach(title.children[len(title.children) - 1].begin_token, None, False) is None): 
                             tt0 = title.children[len(title.children) - 1].begin_token
@@ -2244,7 +2250,7 @@ class FragToken(MetaToken):
                 if (val.startswith("[") and val.endswith("]")): 
                     val = val[1:1+len(val) - 2].strip()
                 doc.add_slot(InstrumentBlockReferent.ATTR_NAME, val.strip(), True, 0)
-                title.children.append(FragToken._new1378(tt0, t1, InstrumentKind.NAME, val.strip()))
+                title.children.append(FragToken._new1385(tt0, t1, InstrumentKind.NAME, val.strip()))
                 if ("КОДЕКС" in val): 
                     npt = NounPhraseHelper.try_parse(tt0, NounPhraseParseAttr.NO, 0)
                     if (npt is not None and npt.noun.is_value("КОДЕКС", None)): 
@@ -2253,12 +2259,12 @@ class FragToken(MetaToken):
             return None
         title.end_token = t1
         t1 = t1.next0_
-        first_pass3079 = True
+        first_pass3107 = True
         while True:
-            if first_pass3079: first_pass3079 = False
+            if first_pass3107: first_pass3107 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
-            if (t1.is_newline_before0 and t1.is_value("ЧАСТЬ", "ЧАСТИНА")): 
+            if (t1.is_newline_before and t1.is_value("ЧАСТЬ", "ЧАСТИНА")): 
                 pt = PartToken.try_attach(t1, None, False, False)
                 if (pt is not None and pt.is_newline_after): 
                     pt2 = PartToken.try_attach(pt.end_token.next0_, None, False, False)
@@ -2266,7 +2272,7 @@ class FragToken(MetaToken):
                         pass
                     else: 
                         doc.add_slot(InstrumentReferent.ATTR_PART, pt.values[0].value, False, 0)
-                        title.children.append(FragToken._new1378(t1, pt.end_token, InstrumentKind.DOCPART, pt.values[0].value))
+                        title.children.append(FragToken._new1385(t1, pt.end_token, InstrumentKind.DOCPART, pt.values[0].value))
                         title.end_token = pt.end_token
                         t1 = title.end_token
                         continue
@@ -2294,8 +2300,8 @@ class FragToken(MetaToken):
                 t1 = eds.end_token
                 title.end_token = t1
                 continue
-            if ((isinstance(t1.get_referent(), DecreeReferent)) and (t1.get_referent()).kind == DecreeKind.PUBLISHER and t1.is_newline_after0): 
-                pub = FragToken._new1326(t1, t1, InstrumentKind.APPROVED)
+            if ((isinstance(t1.get_referent(), DecreeReferent)) and (t1.get_referent()).kind == DecreeKind.PUBLISHER and t1.is_newline_after): 
+                pub = FragToken._new1333(t1, t1, InstrumentKind.APPROVED)
                 pub.referents = list()
                 pub.referents.append(t1.get_referent())
                 title.children.append(pub)
@@ -2305,13 +2311,13 @@ class FragToken(MetaToken):
             if (tt.next0_ is not None and tt.is_char(',')): 
                 tt = tt.next0_
             dt = DecreeToken.try_attach(tt, None, False)
-            if (dt is not None and ((dt.typ == DecreeToken.ItemType.DATE or dt.typ == DecreeToken.ItemType.TERR or ((dt.typ == DecreeToken.ItemType.NUMBER and ((dt.is_delo0 or MiscHelper.check_number_prefix(tt) is not None))))))): 
+            if (dt is not None and ((dt.typ == DecreeToken.ItemType.DATE or dt.typ == DecreeToken.ItemType.TERR or ((dt.typ == DecreeToken.ItemType.NUMBER and ((dt.is_delo or MiscHelper.check_number_prefix(tt) is not None))))))): 
                 if (dt.typ == DecreeToken.ItemType.DATE): 
                     if (doc.date is not None): 
                         break
                     if (not dt.is_newline_after and not MiscHelper.can_be_start_of_sentence(dt.end_token.next0_)): 
                         ttt = dt.end_token.next0_
-                        if (ttt is not None and (((isinstance(ttt.get_referent(), GeoReferent)) or ttt.is_comma0))): 
+                        if (ttt is not None and (((isinstance(ttt.get_referent(), GeoReferent)) or ttt.is_comma))): 
                             pass
                         else: 
                             break
@@ -2323,22 +2329,25 @@ class FragToken(MetaToken):
                 title.end_token = dt.end_token
                 t1 = title.end_token
                 continue
-            if (tt.is_char_of("([") and tt.is_newline_before0): 
+            if (tt.is_char_of("([") and tt.is_newline_before): 
                 br = BracketHelper.try_parse(tt, Utils.valToEnum((BracketParseAttr.CANBEMANYLINES) | (BracketParseAttr.CANCONTAINSVERBS), BracketParseAttr), 100)
                 if (br is not None): 
                     title.end_token = br.end_token
                     t1 = title.end_token
-                    title.children.append(FragToken._new1326(br.begin_token, br.end_token, (InstrumentKind.NAME if tt.is_char('[') else InstrumentKind.COMMENT)))
+                    title.children.append(FragToken._new1333(br.begin_token, br.end_token, (InstrumentKind.NAME if tt.is_char('[') else InstrumentKind.COMMENT)))
                     continue
+            if (tt.is_table_control_char): 
+                title.end_token = tt
+                continue
             break
         t1 = title.end_token.next0_
-        if (t1 is not None and t1.is_newline_before0 and doc.typ == "КОДЕКС"): 
+        if (t1 is not None and t1.is_newline_before and doc.typ == "КОДЕКС"): 
             pt = PartToken.try_attach(t1, None, False, False)
             if (pt is not None and ((pt.typ == PartToken.ItemType.PART or pt.typ == PartToken.ItemType.DOCPART)) and len(pt.values) > 0): 
                 cou = 0
                 t = pt.end_token
                 while t is not None: 
-                    if (t.is_newline_before0): 
+                    if (t.is_newline_before): 
                         cou += 1
                         if ((cou) > 4): 
                             break
@@ -2347,7 +2356,7 @@ class FragToken(MetaToken):
                             title.children.append(eds)
                             t1 = eds.end_token
                             title.end_token = t1
-                            title.children.append(FragToken._new1378(pt.begin_token, pt.end_token, InstrumentKind.DOCPART, pt.values[0].value))
+                            title.children.append(FragToken._new1385(pt.begin_token, pt.end_token, InstrumentKind.DOCPART, pt.values[0].value))
                             if (doc.name is not None and "КОДЕКС" in doc.name): 
                                 doc.add_slot(InstrumentReferent.ATTR_PART, pt.values[0].value, False, 0)
                             break
@@ -2358,7 +2367,7 @@ class FragToken(MetaToken):
                     cou = 0
                     t = t1.next0_
                     while t is not None: 
-                        if (t.is_newline_before0): 
+                        if (t.is_newline_before): 
                             cou += 1
                             if ((cou) > 4): 
                                 break
@@ -2386,26 +2395,35 @@ class FragToken(MetaToken):
         if (rr is not None): 
             if (rr.type_name == "PERSON"): 
                 return None
-        title = FragToken._new1326(t0, t, InstrumentKind.HEAD)
+        title = FragToken._new1333(t0, t, InstrumentKind.HEAD)
         has_app_keyword = False
         appr0 = FragToken.__create_approved(t0)
         if (appr0 is not None): 
             title.end_token = appr0.end_token
             title.children.append(appr0)
             t = appr0.end_token.next0_
-        first_pass3080 = True
+        first_pass3108 = True
         while True:
-            if first_pass3080: first_pass3080 = False
+            if first_pass3108: first_pass3108 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            fr = InstrToken1.parse(t, True, None, 0, None, False, 0, False)
+            fr = InstrToken1.parse(t, True, None, 0, None, False, 0, True)
             if (fr is None): 
                 break
             if (fr.typ != InstrToken1.Types.APPENDIX and fr.typ != InstrToken1.Types.APPROVED): 
                 if (fr.has_many_spec_chars): 
                     t = fr.end_token
                     continue
-                break
+                if (isinstance(t.get_referent(), OrganizationReferent)): 
+                    t = fr.end_token
+                    continue
+                if ((isinstance(t.get_referent(), DecreePartReferent)) and (t.get_referent()).appendix is not None): 
+                    t = t.kit.debed_token(t)
+                    fr = InstrToken1.parse(t, True, None, 0, None, False, 0, True)
+                    if (fr.typ != InstrToken1.Types.APPENDIX): 
+                        break
+                else: 
+                    break
             if (fr.typ == InstrToken1.Types.APPENDIX): 
                 has_app_keyword = True
                 app.kind = InstrumentKind.APPENDIX
@@ -2413,19 +2431,25 @@ class FragToken(MetaToken):
             if (t.is_value("ОСОБЫЙ", "ОСОБЛИВИЙ") and t.next0_ is not None): 
                 t2 = t.next0_
             if (isinstance(t, TextToken)): 
-                title.children.append(FragToken._new1345(t, t2, InstrumentKind.KEYWORD, True))
+                title.children.append(FragToken._new1352(t, t2, InstrumentKind.KEYWORD, True))
             t = fr.end_token
             title.end_token = t
             if (fr.typ == InstrToken1.Types.APPENDIX and fr.num_begin_token is None): 
                 fr1 = InstrToken1.parse(t.next0_, True, None, 0, None, False, 0, False)
                 if (fr1 is not None and fr1.typ == InstrToken1.Types.APPROVED): 
                     t = fr1.begin_token
-                    title.children.append(FragToken._new1378(t, t, InstrumentKind.KEYWORD, t.get_source_text().upper()))
+                    title.children.append(FragToken._new1385(t, t, InstrumentKind.KEYWORD, t.get_source_text().upper()))
                     t = fr1.end_token
                     title.end_token = t
                     fr = fr1
+            appr0 = FragToken.__create_approved(t)
+            if (appr0 is not None): 
+                title.end_token = appr0.end_token
+                t = title.end_token
+                title.children.append(appr0)
+                continue
             if (fr.num_begin_token is not None and fr.num_end_token is not None): 
-                num = FragToken._new1378(fr.num_begin_token, fr.num_end_token, InstrumentKind.NUMBER, MiscHelper.get_text_value(fr.num_begin_token, fr.num_end_token, GetTextAttr.KEEPREGISTER))
+                num = FragToken._new1385(fr.num_begin_token, fr.num_end_token, InstrumentKind.NUMBER, MiscHelper.get_text_value(fr.num_begin_token, fr.num_end_token, GetTextAttr.KEEPREGISTER))
                 title.children.append(num)
                 if (len(fr.numbers) > 0): 
                     app.number = PartToken.get_number(fr.numbers[0])
@@ -2437,25 +2461,25 @@ class FragToken(MetaToken):
                     doc.add_slot(InstrumentReferent.ATTR_APPENDIX, Utils.ifNotNull(num.value, "1"), False, 0)
             elif (isinstance(t.get_referent(), DecreeReferent)): 
                 if ((t.get_referent()).kind == DecreeKind.PUBLISHER): 
-                    ff = FragToken._new1326(t, t, InstrumentKind.APPROVED)
+                    ff = FragToken._new1333(t, t, InstrumentKind.APPROVED)
                     ff.referents = list()
                     ff.referents.append(t.get_referent())
                     title.children.append(ff)
                 elif (fr.typ == InstrToken1.Types.APPROVED and len(title.children) > 0 and title.children[len(title.children) - 1].kind == InstrumentKind.KEYWORD): 
                     kw = title.children[len(title.children) - 1]
-                    appr = FragToken._new1326(kw.begin_token, t, InstrumentKind.APPROVED)
+                    appr = FragToken._new1333(kw.begin_token, t, InstrumentKind.APPROVED)
                     del title.children[len(title.children) - 1]
                     appr.children.append(kw)
-                    appr.children.append(FragToken._new1326(t, t, InstrumentKind.DOCREFERENCE))
+                    appr.children.append(FragToken._new1333(t, t, InstrumentKind.DOCREFERENCE))
                     title.children.append(appr)
                 else: 
-                    title.children.append(FragToken._new1326(t, t, InstrumentKind.DOCREFERENCE))
+                    title.children.append(FragToken._new1333(t, t, InstrumentKind.DOCREFERENCE))
             elif (fr.typ == InstrToken1.Types.APPROVED and fr.length_char > 15 and fr.begin_token != fr.end_token): 
-                title.children.append(FragToken._new1326(fr.begin_token.next0_, t, InstrumentKind.DOCREFERENCE))
+                title.children.append(FragToken._new1333(fr.begin_token.next0_, t, InstrumentKind.DOCREFERENCE))
             else: 
                 dts = DecreeToken.try_attach_list(t.next0_, None, 10, False)
                 if (dts is not None and len(dts) > 0 and dts[0].typ == DecreeToken.ItemType.TYP): 
-                    dref = FragToken._new1326(dts[0].begin_token, dts[0].end_token, InstrumentKind.DOCREFERENCE)
+                    dref = FragToken._new1333(dts[0].begin_token, dts[0].end_token, InstrumentKind.DOCREFERENCE)
                     i = 1
                     while i < len(dts): 
                         if (dts[i].typ == DecreeToken.ItemType.TYP): 
@@ -2483,21 +2507,24 @@ class FragToken(MetaToken):
         has_for_npa = False
         if (t.is_value("К", "ДО")): 
             has_for_npa = True
+            to_decr = None
             toks = list()
             tt = t.next0_
             while tt is not None: 
-                if (tt != t.next0_ and tt.is_table_control_char0): 
+                if (tt != t.next0_ and tt.is_table_control_char): 
                     break
-                if (tt.is_newline_before0): 
+                if (tt.is_newline_before): 
                     if (tt.newlines_before_count > 1): 
                         break
                     it1 = InstrToken1.parse(tt, False, None, 0, None, False, 0, False)
                     if (it1 is not None and len(it1.numbers) > 0): 
                         break
-                    if (tt.chars.is_all_lower0): 
+                    if (tt.chars.is_all_lower): 
                         pass
                     elif (tt.length_char > 2): 
                         break
+                if (isinstance(tt.get_referent(), DecreeReferent)): 
+                    to_decr = (Utils.asObjectOrNull(tt.get_referent(), DecreeReferent))
                 tok = InstrToken.parse(tt, 0, None)
                 if (tok is None): 
                     break
@@ -2514,7 +2541,7 @@ class FragToken(MetaToken):
                 if (dtt is not None and dtt.typ == DecreeToken.ItemType.DATE): 
                     tok.end_token = dtt.end_token
                     tt = tok.end_token
-                if (tok.typ == ILTypes.TYP and not tt.is_newline_after0): 
+                if (tok.typ == ILTypes.TYP and not tt.is_newline_after): 
                     nn = DecreeToken.try_attach_name(tt.next0_, None, False, True)
                     if (nn is not None): 
                         tok.end_token = nn.end_token
@@ -2562,14 +2589,17 @@ class FragToken(MetaToken):
             te = None
             if (max_ind >= 0): 
                 te = toks[max_ind].end_token
-                if (not te.is_newline_after0): 
+                if (not te.is_newline_after): 
                     nn = DecreeToken.try_attach_name(te.next0_, None, False, True)
                     if (nn is not None): 
                         te = nn.end_token
             elif (t.next0_ is not None and (isinstance(t.next0_.get_referent(), DecreeReferent))): 
                 te = t.next0_
             if (te is not None): 
-                dr = FragToken._new1326(t, te, InstrumentKind.DOCREFERENCE)
+                dr = FragToken._new1333(t, te, InstrumentKind.DOCREFERENCE)
+                if (to_decr is not None): 
+                    dr.referents = list()
+                    dr.referents.append(to_decr)
                 title.children.append(dr)
                 title.end_token = te
                 t = te.next0_
@@ -2609,7 +2639,7 @@ class FragToken(MetaToken):
                 continue
             break
         tt0 = t
-        if ((start and has_for_npa and has_app_keyword) and tt0.is_newline_before0): 
+        if ((start and has_for_npa and has_app_keyword) and tt0.is_newline_before): 
             dty = DecreeToken.try_attach(tt0, None, False)
             if (dty is not None and dty.typ == DecreeToken.ItemType.TYP): 
                 sub = FragToken.create_document(tt0, 0, InstrumentKind.UNDEFINED)
@@ -2618,12 +2648,12 @@ class FragToken(MetaToken):
                         title.tag = (sub)
                         return title
         nt0 = None
-        first_pass3081 = True
+        first_pass3109 = True
         while True:
-            if first_pass3081: first_pass3081 = False
+            if first_pass3109: first_pass3109 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (t.is_table_control_char0): 
+            if (t.is_table_control_char): 
                 if (t == tt0): 
                     if (t.is_char(chr(0x1E))): 
                         rows = TableHelper.try_parse_rows(t, 0, True)
@@ -2633,8 +2663,12 @@ class FragToken(MetaToken):
                     tt0 = t.next0_
                     continue
                 break
-            if (t.is_newline_before0): 
+            if (t.is_newline_before or t.previous.is_table_control_char): 
                 if (FragToken.__is_start_of_body(t, t == tt0)): 
+                    break
+                if (FragToken.__create_approved(t) is not None): 
+                    break
+                if (FragToken._create_editions(t) is not None): 
                     break
                 if (t != tt0 and t.whitespaces_before_count > 15): 
                     if (DecreeToken.is_keyword(t.previous, False) is None): 
@@ -2652,29 +2686,29 @@ class FragToken(MetaToken):
                     npt0 = None
                     if (dd.typ == DecreeToken.ItemType.TERR and (isinstance(t, ReferentToken))): 
                         npt0 = NounPhraseHelper.try_parse((t).begin_token, NounPhraseParseAttr.NO, 0)
-                    if (npt0 is not None and not npt0.morph.case_.is_undefined0 and not npt0.morph.case_.is_nominative0): 
+                    if (npt0 is not None and not npt0.morph.case_.is_undefined and not npt0.morph.case_.is_nominative): 
                         pass
                     else: 
                         FragToken.__add_title_attr(None, title, dd)
                         title.end_token = dd.end_token
                         t = title.end_token
                         continue
-                ltt = InstrToken1.parse(t, True, None, 0, None, False, 0, False)
+                ltt = InstrToken1.parse(t, True, None, 0, None, False, 0, True)
                 if (ltt is None): 
                     break
                 if (len(ltt.numbers) > 0): 
                     break
                 if (ltt.typ == InstrToken1.Types.APPROVED): 
-                    title.children.append(FragToken._new1326(ltt.begin_token, ltt.begin_token, InstrumentKind.APPROVED))
+                    title.children.append(FragToken._new1333(ltt.begin_token, ltt.begin_token, InstrumentKind.APPROVED))
                     if (ltt.begin_token != ltt.end_token): 
-                        title.children.append(FragToken._new1326(ltt.begin_token.next0_, ltt.end_token, InstrumentKind.DOCREFERENCE))
+                        title.children.append(FragToken._new1333(ltt.begin_token.next0_, ltt.end_token, InstrumentKind.DOCREFERENCE))
                     t = ltt.end_token
                     if (ltt.begin_token == tt0): 
                         tt0 = t.next0_
                         continue
                     break
                 if (ltt.has_verb and not ltt.all_upper): 
-                    if (t.chars.is_letter0 and t.chars.is_all_lower0): 
+                    if (t.chars.is_letter and t.chars.is_all_lower): 
                         pass
                     elif (isinstance(t.get_referent(), DecreeChangeReferent)): 
                         dch = Utils.asObjectOrNull(t.get_referent(), DecreeChangeReferent)
@@ -2690,12 +2724,12 @@ class FragToken(MetaToken):
                         break
                 if (ltt.typ == InstrToken1.Types.DIRECTIVE): 
                     break
-                if (t.chars.is_letter0 and t != tt0): 
-                    if (not t.chars.is_all_lower0 and not t.chars.is_all_upper0): 
+                if (t.chars.is_letter and t != tt0): 
+                    if (not t.chars.is_all_lower and not t.chars.is_all_upper): 
                         if (not ((isinstance(t.get_referent(), OrganizationReferent))) and not ((isinstance(t.get_referent(), GeoReferent)))): 
                             if (DecreeToken.is_keyword(t.previous, False) is None): 
                                 npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
-                                if (npt is not None and npt.morph.case_.is_genitive0): 
+                                if (npt is not None and npt.morph.case_.is_genitive): 
                                     pass
                                 else: 
                                     break
@@ -2704,7 +2738,7 @@ class FragToken(MetaToken):
                 while ttt is not None: 
                     if (ttt.begin_char > ltt.end_char): 
                         break
-                    if (ttt.chars.is_cyrillic_letter0): 
+                    if (ttt.chars.is_cyrillic_letter): 
                         has_words = True
                         break
                     r = ttt.get_referent()
@@ -2732,14 +2766,21 @@ class FragToken(MetaToken):
         if (val is not None): 
             if (nt0 is not None): 
                 tt0 = nt0
-            title.children.append(FragToken._new1378(tt0, t1, InstrumentKind.NAME, val.strip()))
+            title.children.append(FragToken._new1385(tt0, t1, InstrumentKind.NAME, val.strip()))
             title.end_token = t1
             title.name = val
-        if (title.end_token.next0_ is not None): 
+        while title.end_token.next0_ is not None:
             eds = FragToken._create_editions(title.end_token.next0_)
             if (eds is not None): 
                 title.children.append(eds)
                 title.end_token = eds.end_token
+                continue
+            appr = FragToken.__create_approved(title.end_token.next0_)
+            if (appr is not None): 
+                title.children.append(appr)
+                title.end_token = appr.end_token
+                continue
+            break
         if (is_app): 
             if (doc.find_slot(InstrumentReferent.ATTR_APPENDIX, None, True) is None): 
                 doc.add_slot(InstrumentReferent.ATTR_APPENDIX, "", False, 0)
@@ -2769,9 +2810,9 @@ class FragToken(MetaToken):
         if (len(title.children) == 0 and title.end_token == title.begin_token): 
             return None
         t1 = title.end_token.next0_
-        first_pass3082 = True
+        first_pass3110 = True
         while True:
-            if first_pass3082: first_pass3082 = False
+            if first_pass3110: first_pass3110 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
             dt = DecreeToken.try_attach(t1, None, False)
@@ -2782,12 +2823,17 @@ class FragToken(MetaToken):
                     t1 = title.end_token
                     continue
             break
+        while title.end_token.next0_ is not None:
+            if (title.end_token.next0_.is_table_control_char and ((not title.end_token.next0_.is_newline_before or title.end_token.next0_.is_newline_after or ((title.end_token.next0_.next0_ is not None and title.end_token.next0_.next0_.is_char(chr(0x1F))))))): 
+                title.end_token = title.end_token.next0_
+            else: 
+                break
         return title
     
     @staticmethod
     def __is_start_of_body(t : 'Token', is_app_title : bool=False) -> bool:
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
-        if (t is None or not t.is_newline_before0): 
+        if (t is None or not t.is_newline_before): 
             return False
         if (not is_app_title): 
             bl = BlockTitleToken.try_attach(t, False, None)
@@ -2808,13 +2854,13 @@ class FragToken(MetaToken):
         elif (t.is_value("ОБЩИЙ", "ЗАГАЛЬНИЙ") and t.next0_ is not None and t.next0_.is_value("ПОЛОЖЕНИЕ", "ПОЛОЖЕННЯ")): 
             t = t.next0_
             ok = True
-        elif ((t.next0_ is not None and t.next0_.chars.is_all_lower0 and t.morph.class0_.is_preposition0) and ((t.next0_.is_value("СВЯЗЬ", "ЗВЯЗОК") or t.next0_.is_value("ЦЕЛЬ", "МЕТА") or t.next0_.is_value("СООТВЕТСТВИЕ", "ВІДПОВІДНІСТЬ")))): 
+        elif ((t.next0_ is not None and t.next0_.chars.is_all_lower and t.morph.class0_.is_preposition) and ((t.next0_.is_value("СВЯЗЬ", "ЗВЯЗОК") or t.next0_.is_value("ЦЕЛЬ", "МЕТА") or t.next0_.is_value("СООТВЕТСТВИЕ", "ВІДПОВІДНІСТЬ")))): 
             return True
         if (ok): 
             t1 = t.next0_
             if (t1 is not None and t1.is_char(':')): 
                 t1 = t1.next0_
-            if (t1 is None or t1.is_newline_before0): 
+            if (t1 is None or t1.is_newline_before): 
                 return True
             return False
         it = InstrToken1.parse(t, False, None, 0, None, False, 0, False)
@@ -2850,15 +2896,15 @@ class FragToken(MetaToken):
                 if (dt.full_value is not None and dt.full_value != dt.value and doc.name is None): 
                     doc.name = dt.full_value
             if (title is not None): 
-                title.children.append(FragToken._new1378(dt.begin_token, dt.end_token, InstrumentKind.TYP, Utils.ifNotNull(dt.full_value, dt.value)))
+                title.children.append(FragToken._new1385(dt.begin_token, dt.end_token, InstrumentKind.TYP, Utils.ifNotNull(dt.full_value, dt.value)))
         elif (dt.typ == DecreeToken.ItemType.NUMBER): 
-            if (dt.is_delo0): 
+            if (dt.is_delo): 
                 if (doc is not None): 
                     doc.add_slot(InstrumentReferent.ATTR_CASENUMBER, dt.value, False, 0)
                     if (doc.reg_number == dt.value): 
                         doc.reg_number = None
                 if (title is not None): 
-                    title.children.append(FragToken._new1378(dt.begin_token, dt.end_token, InstrumentKind.CASENUMBER, dt.value))
+                    title.children.append(FragToken._new1385(dt.begin_token, dt.end_token, InstrumentKind.CASENUMBER, dt.value))
             else: 
                 if (dt.value != "?" and doc is not None): 
                     if (doc.get_string_value(InstrumentReferent.ATTR_CASENUMBER) == dt.value): 
@@ -2866,7 +2912,7 @@ class FragToken(MetaToken):
                     else: 
                         doc.add_slot(InstrumentBlockReferent.ATTR_NUMBER, dt.value, False, 0)
                 if (title is not None): 
-                    title.children.append(FragToken._new1378(dt.begin_token, dt.end_token, InstrumentKind.NUMBER, dt.value))
+                    title.children.append(FragToken._new1385(dt.begin_token, dt.end_token, InstrumentKind.NUMBER, dt.value))
                 if (doc is not None and doc.typ is None and dt.value is not None): 
                     if (LanguageHelper.ends_with(dt.value, "ФКЗ")): 
                         doc.typ = "ФЕДЕРАЛЬНЫЙ КОНСТИТУЦИОННЫЙ ЗАКОН"
@@ -2876,14 +2922,14 @@ class FragToken(MetaToken):
             if (doc is not None): 
                 doc.add_slot(InstrumentBlockReferent.ATTR_NAME, dt.value, False, 0)
             if (title is not None): 
-                title.children.append(FragToken._new1378(dt.begin_token, dt.end_token, InstrumentKind.NAME, dt.value))
+                title.children.append(FragToken._new1385(dt.begin_token, dt.end_token, InstrumentKind.NAME, dt.value))
         elif (dt.typ == DecreeToken.ItemType.DATE): 
             if (doc is None or doc._add_date(dt)): 
                 if (title is not None): 
-                    title.children.append(FragToken._new1378(dt.begin_token, dt.end_token, InstrumentKind.DATE, dt))
+                    title.children.append(FragToken._new1385(dt.begin_token, dt.end_token, InstrumentKind.DATE, dt))
         elif (dt.typ == DecreeToken.ItemType.TERR): 
             if (title is not None): 
-                title.children.append(FragToken._new1378(dt.begin_token, dt.end_token, InstrumentKind.PLACE, dt))
+                title.children.append(FragToken._new1385(dt.begin_token, dt.end_token, InstrumentKind.PLACE, dt))
             if (doc is not None and dt.ref is not None): 
                 geo_ = doc.get_string_value(InstrumentReferent.ATTR_GEO)
                 if (geo_ == "Россия"): 
@@ -2893,7 +2939,7 @@ class FragToken(MetaToken):
                     doc.add_slot(InstrumentReferent.ATTR_GEO, str(dt.ref.referent), False, 0)
         elif (dt.typ == DecreeToken.ItemType.OWNER or dt.typ == DecreeToken.ItemType.ORG): 
             if (title is not None): 
-                title.children.append(FragToken._new1378(dt.begin_token, dt.end_token, (InstrumentKind.ORGANIZATION if dt.typ == DecreeToken.ItemType.ORG else InstrumentKind.INITIATOR), dt))
+                title.children.append(FragToken._new1385(dt.begin_token, dt.end_token, (InstrumentKind.ORGANIZATION if dt.typ == DecreeToken.ItemType.ORG else InstrumentKind.INITIATOR), dt))
             if (doc is not None): 
                 if (dt.ref is not None): 
                     doc.add_slot(DecreeReferent.ATTR_SOURCE, dt.ref.referent, False, 0).tag = dt.get_source_text()
@@ -3026,22 +3072,22 @@ class FragToken(MetaToken):
     def _get_restored_name(b : 'Token', e0_ : 'Token', index_item : bool=False) -> str:
         e0 = e0_
         while e0_ is not None and e0_.begin_char > b.end_char: 
-            if (e0_.is_char_of("*<") or e0_.is_table_control_char0): 
+            if (e0_.is_char_of("*<") or e0_.is_table_control_char): 
                 pass
             elif ((e0_.is_char_of(">") and (isinstance(e0_.previous, NumberToken)) and e0_.previous.previous is not None) and e0_.previous.previous.is_char('<')): 
                 e0_ = e0_.previous
             elif (e0_.is_char_of(">") and e0_.previous.is_char('*')): 
                 pass
-            elif ((isinstance(e0_, NumberToken)) and ((e0_ == e0 or e0_.next0_.is_table_control_char0)) and index_item): 
+            elif ((isinstance(e0_, NumberToken)) and ((e0_ == e0 or e0_.next0_.is_table_control_char)) and index_item): 
                 pass
-            elif (((e0_.is_char('.') or e0_.is_hiphen0)) and index_item): 
+            elif (((e0_.is_char('.') or e0_.is_hiphen)) and index_item): 
                 pass
             else: 
                 break
             e0_ = e0_.previous
         b0 = b
         while b is not None and b.end_char <= e0_.end_char: 
-            if (b.is_table_control_char0): 
+            if (b.is_table_control_char): 
                 pass
             else: 
                 b0 = b
@@ -3106,7 +3152,7 @@ class FragToken(MetaToken):
             if (self.sub_number3 > 0): 
                 res.sub_number3 = self.sub_number3
             if (self.is_expired): 
-                res.is_expired0 = True
+                res.is_expired = True
             if (self.name is not None and self.kind != InstrumentKind.HEAD): 
                 s = res.add_slot(InstrumentBlockReferent.ATTR_NAME, self.name.upper(), False, 0)
                 s.tag = self.name
@@ -3160,17 +3206,17 @@ class FragToken(MetaToken):
     def fill_by_content_children(self) -> None:
         self.sort_children()
         if (len(self.children) == 0): 
-            self.children.append(FragToken._new1326(self.begin_token, self.end_token, InstrumentKind.CONTENT))
+            self.children.append(FragToken._new1333(self.begin_token, self.end_token, InstrumentKind.CONTENT))
             return
         if (self.begin_char < self.children[0].begin_char): 
-            self.children.insert(0, FragToken._new1326(self.begin_token, self.children[0].begin_token.previous, InstrumentKind.CONTENT))
+            self.children.insert(0, FragToken._new1333(self.begin_token, self.children[0].begin_token.previous, InstrumentKind.CONTENT))
         i = 0
         while i < (len(self.children) - 1): 
             if (self.children[i].end_token.next0_ != self.children[i + 1].begin_token and (self.children[i].end_token.next0_.end_char < self.children[i + 1].begin_char)): 
-                self.children.insert(i + 1, FragToken._new1326(self.children[i].end_token.next0_, self.children[i + 1].begin_token.previous, InstrumentKind.CONTENT))
+                self.children.insert(i + 1, FragToken._new1333(self.children[i].end_token.next0_, self.children[i + 1].begin_token.previous, InstrumentKind.CONTENT))
             i += 1
         if (self.children[len(self.children) - 1].end_char < self.end_char): 
-            self.children.append(FragToken._new1326(self.children[len(self.children) - 1].end_token.next0_, self.end_token, InstrumentKind.CONTENT))
+            self.children.append(FragToken._new1333(self.children[len(self.children) - 1].end_token.next0_, self.end_token, InstrumentKind.CONTENT))
     
     @staticmethod
     def create_document(t : 'Token', max_char : int, root_kind : 'InstrumentKind'=InstrumentKind.UNDEFINED) -> 'FragToken':
@@ -3178,7 +3224,7 @@ class FragToken(MetaToken):
         if (t is None): 
             return None
         while (isinstance(t, TextToken)) and t.next0_ is not None:
-            if (t.is_table_control_char0 or not t.chars.is_letter0): 
+            if (t.is_table_control_char or not t.chars.is_letter): 
                 t = t.next0_
             else: 
                 break
@@ -3199,11 +3245,24 @@ class FragToken(MetaToken):
         res = FragToken.__create_action_question(t, max_char)
         if (res is not None): 
             return res
-        res = FragToken._new1326(t, t, InstrumentKind.DOCUMENT)
+        res = FragToken._new1333(t, t, InstrumentKind.DOCUMENT)
         res._m_doc = InstrumentReferent()
         is_app = False
-        if (t.is_value("ПРИЛОЖЕНИЕ", "ДОДАТОК")): 
-            is_app = True
+        cou = 0
+        ttt = t
+        while ttt is not None and (cou < 5): 
+            if (ttt.is_newline_before or ttt.previous.is_table_control_char): 
+                if (ttt.is_value("ПРИЛОЖЕНИЕ", "ДОДАТОК")): 
+                    is_app = True
+                    break
+                if (isinstance(ttt.get_referent(), DecreeReferent)): 
+                    break
+                dtt = DecreeToken.try_attach(ttt, None, False)
+                if (dtt is not None and ((dtt.typ == DecreeToken.ItemType.TYP or dtt.typ == DecreeToken.ItemType.NUMBER or dtt.typ == DecreeToken.ItemType.TERR))): 
+                    break
+                if (isinstance(ttt, NumberToken)): 
+                    break
+            ttt = ttt.next0_; cou += 1
         head = (None if is_app or max_char > 0 else FragToken.__create_doc_title(t, res._m_doc))
         head_kind = DecreeKind.UNDEFINED
         if (head is not None and (isinstance(head.tag, DecreeKind))): 
@@ -3296,9 +3355,9 @@ class FragToken(MetaToken):
             i += 1
         has_app = False
         i = 0
-        first_pass3083 = True
+        first_pass3111 = True
         while True:
-            if first_pass3083: first_pass3083 = False
+            if first_pass3111: first_pass3111 = False
             else: i += 1
             if (not (i < len(li))): break
             if (li[i].typ == ILTypes.APPENDIX or li[i].typ == ILTypes.APPROVED): 
@@ -3331,7 +3390,7 @@ class FragToken(MetaToken):
                             num = True
                         elif (li[j].typ == ILTypes.DATE): 
                             dat = True
-                        elif (li[j].typ == ILTypes.PERSON and li[j].is_pure_person0): 
+                        elif (li[j].typ == ILTypes.PERSON and li[j].is_pure_person): 
                             if (((li[j].is_newline_before or ((li[j - 1].typ == ILTypes.PERSON or li[j - 1].typ == ILTypes.DATE)))) and ((li[j].is_newline_after or ((((j + 1) < len(li)) and ((li[j + 1].typ == ILTypes.PERSON or li[j + 1].typ == ILTypes.DATE))))))): 
                                 pers += 1
                             else: 
@@ -3348,7 +3407,7 @@ class FragToken(MetaToken):
                         k += 1
                     if ((j < len(li)) and ((li[j].typ == ILTypes.APPENDIX or li[j].typ == ILTypes.APPROVED))): 
                         k += 2
-                    elif ((li[i].is_pure_person0 and li[i].begin_token.previous is not None and li[i].begin_token.previous.is_char('.')) and li[i].is_newline_after): 
+                    elif ((li[i].is_pure_person and li[i].begin_token.previous is not None and li[i].begin_token.previous.is_char('.')) and li[i].is_newline_after): 
                         itt = InstrToken1.parse(li[i].end_token.next0_, True, None, 0, None, False, 0, False)
                         if (itt is not None and len(itt.numbers) > 0 and li[i + 1].typ == ILTypes.UNDEFINED): 
                             pass
@@ -3394,16 +3453,16 @@ class FragToken(MetaToken):
                     if ((lii.ref).referent in pers_list): 
                         if (not lii.is_newline_before): 
                             break
-                if (not lii.is_newline_before and not lii.begin_token.is_table_control_char0 and ((lii.typ == ILTypes.GEO or li[i].typ == ILTypes.PERSON))): 
-                    if (i > 0 and ((li[i - 1].typ == ILTypes.UNDEFINED and not li[i - 1].end_token.is_table_control_char0))): 
+                if (not lii.is_newline_before and not lii.begin_token.is_table_control_char and ((lii.typ == ILTypes.GEO or li[i].typ == ILTypes.PERSON))): 
+                    if (i > 0 and ((li[i - 1].typ == ILTypes.UNDEFINED and not li[i - 1].end_token.is_table_control_char))): 
                         break
                     if (lii.end_token.is_char_of(";.")): 
                         break
                     if (not lii.is_newline_after): 
-                        if (lii.end_token.next0_ is not None and not lii.end_token.next0_.is_table_control_char0): 
+                        if (lii.end_token.next0_ is not None and not lii.end_token.next0_.is_table_control_char): 
                             break
                 if (tail is None): 
-                    tail = FragToken._new1326(li[i].begin_token, li[i1 - 1].end_token, InstrumentKind.TAIL)
+                    tail = FragToken._new1333(li[i].begin_token, li[i1 - 1].end_token, InstrumentKind.TAIL)
                     if ((i1 - 1) > i): 
                         pass
                 tail.begin_token = lii.begin_token
@@ -3442,9 +3501,9 @@ class FragToken(MetaToken):
                     continue
                 if (ss[len(ss) - 1] == ':'): 
                     ss = ss[0:0+len(ss) - 1]
-                if (li[i].is_podpis_storon0 and tail is not None): 
+                if (li[i].is_podpis_storon and tail is not None): 
                     tail.begin_token = li[i].begin_token
-                    tail.children.insert(0, FragToken._new1378(li[i].begin_token, li[i].end_token, InstrumentKind.NAME, ss))
+                    tail.children.insert(0, FragToken._new1385(li[i].begin_token, li[i].end_token, InstrumentKind.NAME, ss))
                     cmax = (i - 1)
                     break
                 jj = 0
@@ -3462,7 +3521,7 @@ class FragToken(MetaToken):
             if (i1 > 0): 
                 return None
         else: 
-            content = FragToken._new1326(li[0].begin_token, li[cmax].end_token, InstrumentKind.CONTENT)
+            content = FragToken._new1333(li[0].begin_token, li[cmax].end_token, InstrumentKind.CONTENT)
             res.children.append(content)
             content._analize_content(res, max_char > 0, root_kind)
             if (max_char > 0 and cmax == (len(li) - 1) and head is None): 
@@ -3471,7 +3530,7 @@ class FragToken(MetaToken):
             res.children.append(tail)
             while i1 < len(li): 
                 if (li[i1].begin_token == li[i1].end_token and (isinstance(li[i1].begin_token.get_referent(), DecreeReferent)) and (li[i1].begin_token.get_referent()).kind == DecreeKind.PUBLISHER): 
-                    ap = FragToken._new1326(li[i1].begin_token, li[i1].end_token, InstrumentKind.APPROVED)
+                    ap = FragToken._new1333(li[i1].begin_token, li[i1].end_token, InstrumentKind.APPROVED)
                     ap.referents = list()
                     ap.referents.append(Utils.asObjectOrNull(li[i1].begin_token.get_referent(), DecreeReferent))
                     tail.children.append(ap)
@@ -3480,7 +3539,7 @@ class FragToken(MetaToken):
                     break
                 i1 += 1
             if (len(tail.children) > 0 and (tail.children[len(tail.children) - 1].end_char < tail.end_char)): 
-                unkw = FragToken._new1326(tail.children[len(tail.children) - 1].end_token.next0_, tail.end_token, InstrumentKind.UNDEFINED)
+                unkw = FragToken._new1333(tail.children[len(tail.children) - 1].end_token.next0_, tail.end_token, InstrumentKind.UNDEFINED)
                 tail.end_token = unkw.begin_token.previous
                 res.children.append(unkw)
         is_all_apps = is_app
@@ -3490,9 +3549,9 @@ class FragToken(MetaToken):
             app = FragToken(li[i].begin_token, li[i].end_token)
             title = FragToken.__create_appendix_title(app.begin_token, app, res._m_doc, is_all_apps, False)
             j = (i + 1)
-            first_pass3084 = True
+            first_pass3112 = True
             while True:
-                if first_pass3084: first_pass3084 = False
+                if first_pass3112: first_pass3112 = False
                 else: j += 1
                 if (not (j < len(li))): break
                 if (title is not None and li[j].end_char <= title.end_char): 
@@ -3509,12 +3568,12 @@ class FragToken(MetaToken):
             app.end_token = li[j - 1].end_token
             tail = (None)
             if (li[j - 1].typ == ILTypes.PERSON and li[j - 1].is_newline_before and li[j - 1].is_newline_after): 
-                tail = FragToken._new1326(li[j - 1].begin_token, li[j - 1].end_token, InstrumentKind.TAIL)
+                tail = FragToken._new1333(li[j - 1].begin_token, li[j - 1].end_token, InstrumentKind.TAIL)
                 for jj in range(j - 1, i, -1):
                     if (li[jj].typ != ILTypes.PERSON or not li[jj].is_newline_before or not li[jj].is_newline_after): 
                         break
                     else: 
-                        fr = FragToken._new1326(li[jj].begin_token, li[jj].end_token, InstrumentKind.SIGNER)
+                        fr = FragToken._new1333(li[jj].begin_token, li[jj].end_token, InstrumentKind.SIGNER)
                         if (isinstance(li[jj].ref, ReferentToken)): 
                             fr.value = li[jj].ref
                         tail.children.insert(0, fr)
@@ -3542,7 +3601,7 @@ class FragToken(MetaToken):
                 if (is_app and app.kind == InstrumentKind.APPENDIX): 
                     if (len(res.children) > 0): 
                         res.end_token = res.children[len(res.children) - 1].end_token
-                    res0 = FragToken._new1458(res.begin_token, res.end_token, res._m_doc, InstrumentKind.DOCUMENT)
+                    res0 = FragToken._new1465(res.begin_token, res.end_token, res._m_doc, InstrumentKind.DOCUMENT)
                     res._m_doc = (None)
                     res.kind = InstrumentKind.APPENDIX
                     res0.children.insert(0, res)
@@ -3562,7 +3621,7 @@ class FragToken(MetaToken):
                     app.end_token = title.end_token
                 if (title.end_token.next0_ is not None): 
                     if (title.end_token.end_char < app.end_token.begin_char): 
-                        acontent = FragToken._new1326(title.end_token.next0_, app.end_token, InstrumentKind.CONTENT)
+                        acontent = FragToken._new1333(title.end_token.next0_, app.end_token, InstrumentKind.CONTENT)
                         app.children.append(acontent)
                         acontent._analize_content(app, False, InstrumentKind.UNDEFINED)
                     else: 
@@ -3583,9 +3642,9 @@ class FragToken(MetaToken):
             if (ch.kind == InstrumentKind.APPENDIX): 
                 appendixes.append(ch)
         i = 1
-        first_pass3085 = True
+        first_pass3113 = True
         while True:
-            if first_pass3085: first_pass3085 = False
+            if first_pass3113: first_pass3113 = False
             else: i += 1
             if (not (i < len(appendixes))): break
             max_coef = 0
@@ -3643,7 +3702,7 @@ class FragToken(MetaToken):
     def __create_case_info(t : 'Token') -> 'FragToken':
         if (t is None): 
             return None
-        if (not t.is_newline_before0): 
+        if (not t.is_newline_before): 
             return None
         rez = False
         t1 = None
@@ -3662,16 +3721,16 @@ class FragToken(MetaToken):
                 t1 = dt.end_token
         if (not rez): 
             if ((t.is_value("ПОСТАНОВЛЕНИЕ", "ПОСТАНОВА") or t.is_value("РЕШЕНИЕ", "РІШЕННЯ") or t.is_value("ОПРЕДЕЛЕНИЕ", "ВИЗНАЧЕННЯ")) or t.is_value("ПРИГОВОР", "ВИРОК")): 
-                if (t.is_newline_after0 and t.chars.is_all_upper0): 
+                if (t.is_newline_after and t.chars.is_all_upper): 
                     return None
                 t1 = t
         if (t1 is None): 
             return None
-        if (t1.next0_ is not None and t1.next0_.morph.class0_.is_preposition0): 
+        if (t1.next0_ is not None and t1.next0_.morph.class0_.is_preposition): 
             npt = NounPhraseHelper.try_parse(t1.next0_.next0_, NounPhraseParseAttr.NO, 0)
             if (npt is not None): 
                 t1 = npt.end_token
-        if (t1.next0_ is not None and t1.next0_.morph.class0_.is_verb0): 
+        if (t1.next0_ is not None and t1.next0_.morph.class0_.is_verb): 
             pass
         else: 
             return None
@@ -3685,34 +3744,39 @@ class FragToken(MetaToken):
                 if (isinstance(t1.get_referent(), DateReferent)): 
                     has_date = True
             tt = tt.next0_
-        if ((not has_date and t1.next0_ is not None and (isinstance(t1.next0_.get_referent(), DateReferent))) and t1.next0_.is_newline_after0): 
+        if ((not has_date and t1.next0_ is not None and (isinstance(t1.next0_.get_referent(), DateReferent))) and t1.next0_.is_newline_after): 
             t1 = t1.next0_
-        return FragToken._new1326(t, t1, InstrumentKind.CASEINFO)
+        return FragToken._new1333(t, t1, InstrumentKind.CASEINFO)
     
     @staticmethod
     def __create_approved(t : 'Token') -> 'FragToken':
         if (t is None): 
             return None
         res = None
+        if (((isinstance(t, ReferentToken)) and (t).begin_token.is_char('(') and (t).end_token.is_char(')')) and (t).begin_token.next0_.is_value("ПРОТОКОЛ", None)): 
+            res = FragToken._new1333(t, t, InstrumentKind.APPROVED)
+            res.referents = list()
+            res.referents.append(t.get_referent())
+            return res
         tt = InstrToken._check_approved(t)
         if (tt is not None): 
-            res = FragToken._new1326(t, tt, InstrumentKind.APPROVED)
+            res = FragToken._new1333(t, tt, InstrumentKind.APPROVED)
         elif ((t.is_value("ОДОБРИТЬ", "СХВАЛИТИ") or t.is_value("ПРИНЯТЬ", "ПРИЙНЯТИ") or t.is_value("УТВЕРДИТЬ", "ЗАТВЕРДИТИ")) or t.is_value("СОГЛАСОВАТЬ", None)): 
             if (t.morph.contains_attr("инф.", None) and t.morph.contains_attr("сов.в.", None)): 
                 pass
             else: 
-                res = FragToken._new1326(t, t, InstrumentKind.APPROVED)
+                res = FragToken._new1333(t, t, InstrumentKind.APPROVED)
         elif ((isinstance(t, TextToken)) and (((t).term == "ИМЕНЕМ" or (t).term == "ІМЕНЕМ"))): 
-            res = FragToken._new1326(t, t, InstrumentKind.APPROVED)
+            res = FragToken._new1333(t, t, InstrumentKind.APPROVED)
         if (res is None): 
             return None
         t = res.end_token
         if (t.next0_ is None): 
             return res
-        if (not t.is_newline_after0 and t.next0_.get_normal_case_text(None, False, MorphGender.UNDEFINED, False) == res.begin_token.get_normal_case_text(None, False, MorphGender.UNDEFINED, False)): 
+        if (not t.is_newline_after and t.next0_.get_normal_case_text(None, False, MorphGender.UNDEFINED, False) == res.begin_token.get_normal_case_text(None, False, MorphGender.UNDEFINED, False)): 
             t = t.next0_
             while t is not None: 
-                if (t.is_newline_before0 or t.get_normal_case_text(None, False, MorphGender.UNDEFINED, False) != res.begin_token.get_normal_case_text(None, False, MorphGender.UNDEFINED, False)): 
+                if (t.is_newline_before or t.get_normal_case_text(None, False, MorphGender.UNDEFINED, False) != res.begin_token.get_normal_case_text(None, False, MorphGender.UNDEFINED, False)): 
                     break
                 else: 
                     res.end_token = t
@@ -3721,14 +3785,14 @@ class FragToken(MetaToken):
                 return res
             tt0 = t.next0_
             t = t.next0_
-            first_pass3086 = True
+            first_pass3114 = True
             while True:
-                if first_pass3086: first_pass3086 = False
+                if first_pass3114: first_pass3114 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 dtt = DecreeToken.try_attach(t, None, False)
                 if (dtt is not None): 
-                    if (dtt.typ == DecreeToken.ItemType.TYP and t != tt0 and t.is_newline_before0): 
+                    if (dtt.typ == DecreeToken.ItemType.TYP and t != tt0 and t.is_newline_before): 
                         break
                     t = dtt.end_token
                     res.end_token = t
@@ -3738,12 +3802,12 @@ class FragToken(MetaToken):
                 res.end_token = t
             return res
         t = t.next0_
-        first_pass3087 = True
+        first_pass3115 = True
         while True:
-            if first_pass3087: first_pass3087 = False
+            if first_pass3115: first_pass3115 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (t.is_and0 or t.morph.class0_.is_preposition0): 
+            if (t.is_and or t.morph.class0_.is_preposition): 
                 continue
             if (t.is_value("ВВЕСТИ", None) or t.is_value("ДЕЙСТВИЕ", "ДІЯ")): 
                 res.end_token = t
@@ -3762,31 +3826,34 @@ class FragToken(MetaToken):
             while i < len(dts): 
                 dt = dts[i]
                 if (dt.typ == DecreeToken.ItemType.ORG): 
-                    res.children.append(FragToken._new1378(dt.begin_token, dt.end_token, InstrumentKind.ORGANIZATION, dt))
+                    res.children.append(FragToken._new1385(dt.begin_token, dt.end_token, InstrumentKind.ORGANIZATION, dt))
                 elif (dt.typ == DecreeToken.ItemType.OWNER): 
-                    res.children.append(FragToken._new1378(dt.begin_token, dt.end_token, InstrumentKind.INITIATOR, dt))
+                    res.children.append(FragToken._new1385(dt.begin_token, dt.end_token, InstrumentKind.INITIATOR, dt))
                 elif (dt.typ == DecreeToken.ItemType.DATE): 
-                    res.children.append(FragToken._new1378(dt.begin_token, dt.end_token, InstrumentKind.DATE, dt))
+                    res.children.append(FragToken._new1385(dt.begin_token, dt.end_token, InstrumentKind.DATE, dt))
                 elif (dt.typ == DecreeToken.ItemType.NUMBER and i > 0 and dts[i - 1].typ == DecreeToken.ItemType.DATE): 
-                    res.children.append(FragToken._new1378(dt.begin_token, dt.end_token, InstrumentKind.NUMBER, dt))
+                    res.children.append(FragToken._new1385(dt.begin_token, dt.end_token, InstrumentKind.NUMBER, dt))
                 elif (dt.typ == DecreeToken.ItemType.TYP and i == 0): 
                     if (((i + 1) < len(dts)) and dts[i + 1].typ == DecreeToken.ItemType.TERR): 
                         i += 1
                         dt = dts[i]
                 elif (dt.typ == DecreeToken.ItemType.TERR and res.begin_token.is_value("ИМЕНЕМ", "ІМЕНЕМ")): 
-                    res.children.append(FragToken._new1378(dt.begin_token, dt.end_token, InstrumentKind.PLACE, dt))
+                    res.children.append(FragToken._new1385(dt.begin_token, dt.end_token, InstrumentKind.PLACE, dt))
                 else: 
                     break
                 res.end_token = dt.end_token
                 i += 1
         elif (isinstance(t.get_referent(), DecreeReferent)): 
             res.referents = list()
-            first_pass3088 = True
+            first_pass3116 = True
             while True:
-                if first_pass3088: first_pass3088 = False
+                if first_pass3116: first_pass3116 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
-                if (t.is_comma_and0): 
+                if (t.is_comma_and): 
+                    continue
+                if (t.is_char('.')): 
+                    res.end_token = t
                     continue
                 dr = Utils.asObjectOrNull(t.get_referent(), DecreeReferent)
                 if (dr is None): 
@@ -3797,12 +3864,12 @@ class FragToken(MetaToken):
                 res.end_token = t
         elif ((isinstance(t.get_referent(), PersonReferent)) or (isinstance(t.get_referent(), PersonPropertyReferent))): 
             res.referents = list()
-            first_pass3089 = True
+            first_pass3117 = True
             while True:
-                if first_pass3089: first_pass3089 = False
+                if first_pass3117: first_pass3117 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
-                if (t.is_comma_and0): 
+                if (t.is_comma_and): 
                     continue
                 if ((isinstance(t.get_referent(), PersonReferent)) or (isinstance(t.get_referent(), PersonPropertyReferent))): 
                     res.referents.append(t.get_referent())
@@ -3810,19 +3877,19 @@ class FragToken(MetaToken):
                 else: 
                     break
         if (len(res.children) == 0): 
-            if (not res.begin_token.is_newline_before0 or not res.end_token.is_newline_after0): 
+            if (((not res.begin_token.is_newline_before and not res.begin_token.previous.is_table_control_char)) or ((not res.end_token.is_newline_after and not res.end_token.next0_.is_table_control_char))): 
                 return None
         if (res.end_token.next0_ is not None and (isinstance(res.end_token.next0_.get_referent(), DateReferent))): 
             dt = DecreeToken.try_attach(res.end_token.next0_, None, False)
             if (dt is not None): 
-                res.children.append(FragToken._new1378(dt.begin_token, dt.end_token, InstrumentKind.DATE, dt))
+                res.children.append(FragToken._new1385(dt.begin_token, dt.end_token, InstrumentKind.DATE, dt))
                 res.end_token = dt.end_token
                 dt = DecreeToken.try_attach(res.end_token.next0_, None, False)
                 if (dt is not None and dt.typ == DecreeToken.ItemType.NUMBER): 
-                    res.children.append(FragToken._new1378(dt.begin_token, dt.end_token, InstrumentKind.NUMBER, dt))
+                    res.children.append(FragToken._new1385(dt.begin_token, dt.end_token, InstrumentKind.NUMBER, dt))
                     res.end_token = dt.end_token
         t = res.end_token.next0_
-        if (t is not None and t.is_comma0): 
+        if (t is not None and t.is_comma): 
             t = t.next0_
         if (t is not None and t.is_value("ПРОТОКОЛ", None)): 
             dts = DecreeToken.try_attach_list(t, None, 10, False)
@@ -3842,23 +3909,23 @@ class FragToken(MetaToken):
         if (t.is_value("ФОРМА", None) and t.next0_.is_value("ДОКУМЕНТА", None)): 
             num = DecreeToken.try_attach(t.next0_.next0_, None, False)
             if (num is not None and num.typ == DecreeToken.ItemType.NUMBER): 
-                return FragToken._new1326(t, num.end_token, InstrumentKind.UNDEFINED)
-            if ((isinstance(t.next0_.next0_, NumberToken)) and t.next0_.next0_.is_newline_after0): 
-                return FragToken._new1326(t, t.next0_.next0_, InstrumentKind.UNDEFINED)
+                return FragToken._new1333(t, num.end_token, InstrumentKind.UNDEFINED)
+            if ((isinstance(t.next0_.next0_, NumberToken)) and t.next0_.next0_.is_newline_after): 
+                return FragToken._new1333(t, t.next0_.next0_, InstrumentKind.UNDEFINED)
         if (t.is_value("С", None) and t.next0_.is_value("ИЗМЕНЕНИЕ", None) and t.next0_.next0_ is not None): 
             tt = t.next0_.next0_
-            if (tt.morph.class0_.is_preposition0 and tt.next0_ is not None): 
+            if (tt.morph.class0_.is_preposition and tt.next0_ is not None): 
                 tt = tt.next0_
             if (isinstance(tt.get_referent(), DateReferent)): 
                 if (tt.next0_ is not None and tt.next0_.is_char('.')): 
                     tt = tt.next0_
-                return FragToken._new1326(t, tt, InstrumentKind.UNDEFINED)
+                return FragToken._new1333(t, tt, InstrumentKind.UNDEFINED)
         while (isinstance(t, TextToken)) and t.length_char == 1 and t.next0_ is not None:
             t = t.next0_
         if (t.is_value("ЗАКАЗ", None)): 
             itt = InstrToken1.parse(t, False, None, 0, None, False, 0, False)
             if (itt is not None): 
-                return FragToken._new1326(t, itt.end_token, InstrumentKind.UNDEFINED)
+                return FragToken._new1333(t, itt.end_token, InstrumentKind.UNDEFINED)
         return None
     
     @staticmethod
@@ -3882,7 +3949,7 @@ class FragToken(MetaToken):
             elif (t.is_value("РЕДАКЦИЯ", "РЕДАКЦІЯ")): 
                 dtt0 = DecreeToken.try_attach(t.next0_, None, False)
                 if (dtt0 is not None): 
-                    return FragToken._new1326(t, dtt0.end_token, InstrumentKind.EDITIONS)
+                    return FragToken._new1333(t, dtt0.end_token, InstrumentKind.EDITIONS)
             else: 
                 return None
         else: 
@@ -3901,7 +3968,7 @@ class FragToken(MetaToken):
         if (t is None): 
             return None
         is_doubt = False
-        while ((t.morph.class0_.is_preposition0 or t.morph.class0_.is_adverb0)) and t.next0_ is not None:
+        while ((t.morph.class0_.is_preposition or t.morph.class0_.is_adverb)) and t.next0_ is not None:
             t = t.next0_
         if (t.is_value("РЕДАКЦИЯ", "РЕДАКЦІЯ")): 
             ok = True
@@ -3914,9 +3981,9 @@ class FragToken(MetaToken):
                 is_doubt = True
             ok = True
             t = t.next0_
-            first_pass3090 = True
+            first_pass3118 = True
             while True:
-                if first_pass3090: first_pass3090 = False
+                if first_pass3118: first_pass3118 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.next0_ is None): 
@@ -3940,9 +4007,9 @@ class FragToken(MetaToken):
             return None
         decrs = list()
         t = t.next0_
-        first_pass3091 = True
+        first_pass3119 = True
         while True:
-            if first_pass3091: first_pass3091 = False
+            if first_pass3119: first_pass3119 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (is_in_bracks): 
@@ -3957,9 +4024,9 @@ class FragToken(MetaToken):
             if (dr is not None): 
                 decrs.append(dr)
                 continue
-            if (t.is_comma_and0): 
+            if (t.is_comma_and): 
                 continue
-            if (t.is_newline_before0 and not is_in_bracks): 
+            if (t.is_newline_before and not is_in_bracks): 
                 t = t.previous
                 break
         if (t is None): 
@@ -3967,17 +4034,17 @@ class FragToken(MetaToken):
         ok = False
         if (is_in_bracks): 
             ok = t.is_char(')')
-            if (not t.is_newline_after0): 
-                if ((isinstance(t.next0_, TextToken)) and t.next0_.is_newline_after0 and not t.next0_.chars.is_letter0): 
+            if (not t.is_newline_after): 
+                if ((isinstance(t.next0_, TextToken)) and t.next0_.is_newline_after and not t.next0_.chars.is_letter): 
                     pass
                 else: 
                     is_doubt = True
-        elif (t.is_char('.') or t.is_newline_after0): 
+        elif (t.is_char('.') or t.is_newline_after): 
             ok = True
         if (len(decrs) > 0): 
             is_doubt = False
         if (ok and not is_doubt): 
-            eds = FragToken._new1326(t0, t, InstrumentKind.EDITIONS)
+            eds = FragToken._new1333(t0, t, InstrumentKind.EDITIONS)
             eds.referents = list()
             for d in decrs: 
                 eds.referents.append(d)
@@ -3986,21 +4053,21 @@ class FragToken(MetaToken):
     
     @staticmethod
     def __create_owner(t : 'Token') -> 'FragToken':
-        if (t is None or not t.is_newline_before0): 
+        if (t is None or not t.is_newline_before): 
             return None
-        if (not t.chars.is_cyrillic_letter0 or t.chars.is_all_lower0): 
+        if (not t.chars.is_cyrillic_letter or t.chars.is_all_lower): 
             return None
         t1 = None
         t11 = None
         ignore_cur_line = False
         keyword = False
         tt = t
-        first_pass3092 = True
+        first_pass3120 = True
         while True:
-            if first_pass3092: first_pass3092 = False
+            if first_pass3120: first_pass3120 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
-            if (tt.is_newline_before0): 
+            if (tt.is_newline_before): 
                 t11 = t1
             r = tt.get_referent()
             if ((isinstance(r, DecreeReferent)) and keyword): 
@@ -4014,7 +4081,7 @@ class FragToken(MetaToken):
                 t1 = tt
                 continue
             if (tt != t and tt.whitespaces_before_count > 15): 
-                if (tt.previous is not None and tt.previous.is_hiphen0): 
+                if (tt.previous is not None and tt.previous.is_hiphen): 
                     pass
                 else: 
                     break
@@ -4026,7 +4093,7 @@ class FragToken(MetaToken):
                 ignore_cur_line = True
                 t1 = t11
                 break
-            if ((isinstance(r, GeoReferent)) and tt.is_newline_before0): 
+            if ((isinstance(r, GeoReferent)) and tt.is_newline_before): 
                 break
             t1 = tt
             oo = tt.kit.process_referent("ORGANIZATION", tt)
@@ -4047,7 +4114,7 @@ class FragToken(MetaToken):
                 t1 = tt
         if (t1 is None): 
             return None
-        fr = FragToken._new1345(t, t1, InstrumentKind.ORGANIZATION, True)
+        fr = FragToken._new1352(t, t1, InstrumentKind.ORGANIZATION, True)
         return fr
     
     def __calc_owner_coef(self, owner : 'FragToken') -> int:
@@ -4067,7 +4134,7 @@ class FragToken(MetaToken):
                 for chh in ch.children: 
                     if (chh.kind == InstrumentKind.DOCREFERENCE): 
                         t = chh.begin_token
-                        if (t.morph.class0_.is_preposition0): 
+                        if (t.morph.class0_.is_preposition): 
                             t = t.next0_
                         tt = DecreeToken.is_keyword(t, False)
                         if (isinstance(tt, TextToken)): 
@@ -4111,9 +4178,9 @@ class FragToken(MetaToken):
             if (isinstance(t.get_referent(), DecreeChangeReferent)): 
                 dcr = Utils.asObjectOrNull(t.get_referent(), DecreeChangeReferent)
                 tt = (t).begin_token
-                first_pass3093 = True
+                first_pass3121 = True
                 while True:
-                    if first_pass3093: first_pass3093 = False
+                    if first_pass3121: first_pass3121 = False
                     else: tt = tt.next0_
                     if (not (tt is not None and tt.end_char <= t.end_char)): break
                     dval = Utils.asObjectOrNull(tt.get_referent(), DecreeChangeValueReferent)
@@ -4122,15 +4189,15 @@ class FragToken(MetaToken):
                     val = dval.value
                     if (val is None or (len(val) < 100)): 
                         continue
-                    if ((val.find('\r') < 0) and (val.find('\n') < 0) and not tt.is_newline_before0): 
+                    if ((val.find('\r') < 0) and (val.find('\n') < 0) and not tt.is_newline_before): 
                         continue
                     t0 = None
                     t = (tt).begin_token
                     while t is not None and t.end_char <= tt.end_char: 
-                        if (BracketHelper.is_bracket(t, True) and ((t.is_whitespace_before0 or t.previous.is_char(':')))): 
+                        if (BracketHelper.is_bracket(t, True) and ((t.is_whitespace_before or t.previous.is_char(':')))): 
                             t0 = t.next0_
                             break
-                        elif (t.previous is not None and t.previous.is_char(':') and t.is_newline_before0): 
+                        elif (t.previous is not None and t.previous.is_char(':') and t.is_newline_before): 
                             t0 = t
                             break
                         t = t.next0_
@@ -4138,7 +4205,7 @@ class FragToken(MetaToken):
                     if (BracketHelper.is_bracket(t1, True)): 
                         t1 = t1.previous
                     if (t0 is not None and ((t0.end_char + 50) < t1.end_char)): 
-                        return MetaToken._new828(t0, t1, dcr)
+                        return MetaToken._new835(t0, t1, dcr)
                     return None
             if (t.end_char > self.end_char): 
                 break
@@ -4195,12 +4262,12 @@ class FragToken(MetaToken):
         t0 = self.begin_token
         tabs = False
         tt = self.begin_token
-        first_pass3094 = True
+        first_pass3122 = True
         while True:
-            if first_pass3094: first_pass3094 = False
+            if first_pass3122: first_pass3122 = False
             else: tt = tt.next0_
             if (not (tt is not None and tt.end_char <= end_char_)): break
-            if (not tt.is_newline_before0): 
+            if (not tt.is_newline_before): 
                 continue
             if (tt.is_char(chr(0x1E))): 
                 pass
@@ -4215,19 +4282,19 @@ class FragToken(MetaToken):
                 tt = rows[len(rows) - 1].end_token
                 continue
             if (t0.end_char < rows[0].begin_char): 
-                self.children.append(FragToken._new1326(t0, rows[0].begin_token.previous, InstrumentKind.CONTENT))
-            tab = FragToken._new1326(rows[0].begin_token, rows[len(rows) - 1].end_token, InstrumentKind.TABLE)
+                self.children.append(FragToken._new1333(t0, rows[0].begin_token.previous, InstrumentKind.CONTENT))
+            tab = FragToken._new1333(rows[0].begin_token, rows[len(rows) - 1].end_token, InstrumentKind.TABLE)
             self.children.append(tab)
             i = 0
             while i < len(rows): 
-                rr = FragToken._new1343(rows[i].begin_token, rows[i].end_token, InstrumentKind.TABLEROW, i + 1)
+                rr = FragToken._new1350(rows[i].begin_token, rows[i].end_token, InstrumentKind.TABLEROW, i + 1)
                 tab.children.append(rr)
                 tabs = True
                 no = 0
                 cols = 0
                 for ce in rows[i].cells: 
                     no += 1
-                    cell = FragToken._new1343(ce.begin_token, ce.end_token, InstrumentKind.TABLECELL, no)
+                    cell = FragToken._new1350(ce.begin_token, ce.end_token, InstrumentKind.TABLECELL, no)
                     if (ce.col_span > 1): 
                         cell.sub_number = ce.col_span
                         cols += (cell.sub_number)
@@ -4246,9 +4313,9 @@ class FragToken(MetaToken):
                 for r in tab.children: 
                     no = 0
                     ii = 0
-                    first_pass3095 = True
+                    first_pass3123 = True
                     while True:
-                        if first_pass3095: first_pass3095 = False
+                        if first_pass3123: first_pass3123 = False
                         else: ii += 1
                         if (not (ii < len(r.children))): break
                         if ((no < len(rnums)) and rnums[no] > 0): 
@@ -4263,7 +4330,7 @@ class FragToken(MetaToken):
                         no += (1 if r.children[ii].sub_number == 0 else r.children[ii].sub_number)
             t0 = tt.next0_
         if ((t0 is not None and (t0.end_char < self.end_char) and tabs) and t0 != self.end_token): 
-            self.children.append(FragToken._new1326(t0, self.end_token, InstrumentKind.CONTENT))
+            self.children.append(FragToken._new1333(t0, self.end_token, InstrumentKind.CONTENT))
         return tabs
     
     @staticmethod
@@ -4271,15 +4338,15 @@ class FragToken(MetaToken):
         tz = None
         cou = 0
         t = t0
-        first_pass3096 = True
+        first_pass3124 = True
         while True:
-            if first_pass3096: first_pass3096 = False
+            if first_pass3124: first_pass3124 = False
             else: t = t.next0_
             if (not (t is not None and (cou < 300))): break
             if ((isinstance(t, TextToken)) and t.length_char > 1): 
                 cou += 1
-            if (not t.is_newline_before0): 
-                if (t.previous is not None and t.previous.is_table_control_char0): 
+            if (not t.is_newline_before): 
+                if (t.previous is not None and t.previous.is_table_control_char): 
                     pass
                 else: 
                     continue
@@ -4290,14 +4357,14 @@ class FragToken(MetaToken):
                 break
         if (tz is None): 
             return None
-        title = FragToken._new1326(t0, tz.end_token, InstrumentKind.HEAD)
+        title = FragToken._new1333(t0, tz.end_token, InstrumentKind.HEAD)
         t = t0
-        first_pass3097 = True
+        first_pass3125 = True
         while True:
-            if first_pass3097: first_pass3097 = False
+            if first_pass3125: first_pass3125 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (not t.is_newline_before0): 
+            if (not t.is_newline_before): 
                 title.end_token = t
                 continue
             if (FragToken.__is_start_of_body(t, False)): 
@@ -4313,7 +4380,7 @@ class FragToken(MetaToken):
                     continue
                 br = BracketHelper.try_parse(t.next0_, BracketParseAttr.CANBEMANYLINES, 100)
                 if (br is not None and BracketHelper.is_bracket(t.next0_, True)): 
-                    nam = FragToken._new1348(br.begin_token, br.end_token, InstrumentKind.NAME, True)
+                    nam = FragToken._new1355(br.begin_token, br.end_token, InstrumentKind.NAME, True)
                     title.children.append(nam)
                     t = br.end_token
                     title.end_token = t
@@ -4321,12 +4388,12 @@ class FragToken(MetaToken):
                 if (t.next0_ is not None and t.next0_.is_value("НА", None)): 
                     t1 = t.next0_
                     tt = t1.next0_
-                    first_pass3098 = True
+                    first_pass3126 = True
                     while True:
-                        if first_pass3098: first_pass3098 = False
+                        if first_pass3126: first_pass3126 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
-                        if (tt.is_newline_before0): 
+                        if (tt.is_newline_before): 
                             if (MiscHelper.can_be_start_of_sentence(tt)): 
                                 break
                             if (tt.is_value("СОДЕРЖИМОЕ", None) or tt.is_value("СОДЕРЖАНИЕ", None) or tt.is_value("ОГЛАВЛЕНИЕ", None)): 
@@ -4340,7 +4407,7 @@ class FragToken(MetaToken):
                         if (npt is not None): 
                             tt = npt.end_token
                         t1 = tt
-                    nam = FragToken._new1348(t.next0_, t1, InstrumentKind.NAME, True)
+                    nam = FragToken._new1355(t.next0_, t1, InstrumentKind.NAME, True)
                     title.children.append(nam)
                     t = t1
                     title.end_token = t
@@ -4366,20 +4433,20 @@ class FragToken(MetaToken):
         return title
     
     @staticmethod
-    def _new1326(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind') -> 'FragToken':
+    def _new1333(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind') -> 'FragToken':
         res = FragToken(_arg1, _arg2)
         res.kind = _arg3
         return res
     
     @staticmethod
-    def _new1327(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrToken1', _arg4 : bool) -> 'FragToken':
+    def _new1334(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrToken1', _arg4 : bool) -> 'FragToken':
         res = FragToken(_arg1, _arg2)
         res._itok = _arg3
         res.is_expired = _arg4
         return res
     
     @staticmethod
-    def _new1328(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : bool, _arg5 : 'InstrToken1') -> 'FragToken':
+    def _new1335(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : bool, _arg5 : 'InstrToken1') -> 'FragToken':
         res = FragToken(_arg1, _arg2)
         res.kind = _arg3
         res._def_val2 = _arg4
@@ -4387,41 +4454,41 @@ class FragToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1335(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrToken1') -> 'FragToken':
+    def _new1342(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrToken1') -> 'FragToken':
         res = FragToken(_arg1, _arg2)
         res._itok = _arg3
         return res
     
     @staticmethod
-    def _new1336(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : 'InstrToken1') -> 'FragToken':
+    def _new1343(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : 'InstrToken1') -> 'FragToken':
         res = FragToken(_arg1, _arg2)
         res.kind = _arg3
         res._itok = _arg4
         return res
     
     @staticmethod
-    def _new1343(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : int) -> 'FragToken':
+    def _new1350(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : int) -> 'FragToken':
         res = FragToken(_arg1, _arg2)
         res.kind = _arg3
         res.number = _arg4
         return res
     
     @staticmethod
-    def _new1345(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : bool) -> 'FragToken':
+    def _new1352(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : bool) -> 'FragToken':
         res = FragToken(_arg1, _arg2)
         res.kind = _arg3
         res._def_val2 = _arg4
         return res
     
     @staticmethod
-    def _new1348(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : bool) -> 'FragToken':
+    def _new1355(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : bool) -> 'FragToken':
         res = FragToken(_arg1, _arg2)
         res.kind = _arg3
         res._def_val = _arg4
         return res
     
     @staticmethod
-    def _new1360(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : object, _arg5 : 'InstrToken1') -> 'FragToken':
+    def _new1367(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : object, _arg5 : 'InstrToken1') -> 'FragToken':
         res = FragToken(_arg1, _arg2)
         res.kind = _arg3
         res.value = _arg4
@@ -4429,7 +4496,7 @@ class FragToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1365(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : int, _arg5 : bool, _arg6 : typing.List['Referent']) -> 'FragToken':
+    def _new1372(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : int, _arg5 : bool, _arg6 : typing.List['Referent']) -> 'FragToken':
         res = FragToken(_arg1, _arg2)
         res.kind = _arg3
         res.number = _arg4
@@ -4438,21 +4505,21 @@ class FragToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1378(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : object) -> 'FragToken':
+    def _new1385(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : object) -> 'FragToken':
         res = FragToken(_arg1, _arg2)
         res.kind = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new1458(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentReferent', _arg4 : 'InstrumentKind') -> 'FragToken':
+    def _new1465(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentReferent', _arg4 : 'InstrumentKind') -> 'FragToken':
         res = FragToken(_arg1, _arg2)
         res._m_doc = _arg3
         res.kind = _arg4
         return res
     
     @staticmethod
-    def _new1540(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : bool, _arg5 : 'InstrToken1') -> 'FragToken':
+    def _new1548(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'InstrumentKind', _arg4 : bool, _arg5 : 'InstrToken1') -> 'FragToken':
         res = FragToken(_arg1, _arg2)
         res.kind = _arg3
         res._def_val = _arg4

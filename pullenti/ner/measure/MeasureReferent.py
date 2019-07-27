@@ -50,10 +50,10 @@ class MeasureReferent(Referent):
         res = list()
         for s in self.slots: 
             if (s.type_name == MeasureReferent.ATTR_VALUE and (isinstance(s.value, str))): 
-                wrapd1710 = RefOutArgWrapper(0)
-                inoutres1711 = MeasureHelper.try_parse_double(Utils.asObjectOrNull(s.value, str), wrapd1710)
-                d = wrapd1710.value
-                if (inoutres1711): 
+                wrapd1728 = RefOutArgWrapper(0)
+                inoutres1729 = MeasureHelper.try_parse_double(Utils.asObjectOrNull(s.value, str), wrapd1728)
+                d = wrapd1728.value
+                if (inoutres1729): 
                     res.append(d)
         return res
     
@@ -75,7 +75,7 @@ class MeasureReferent(Referent):
             return MeasureKind.UNDEFINED
         try: 
             return Utils.valToEnum(str0_, MeasureKind)
-        except Exception as ex1712: 
+        except Exception as ex1730: 
             pass
         return MeasureKind.UNDEFINED
     @kind.setter

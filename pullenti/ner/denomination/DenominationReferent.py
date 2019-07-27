@@ -38,9 +38,9 @@ class DenominationReferent(Referent):
     def _add_value(self, begin : 'Token', end : 'Token') -> None:
         tmp = io.StringIO()
         t = begin
-        first_pass2995 = True
+        first_pass3023 = True
         while True:
-            if first_pass2995: first_pass2995 = False
+            if first_pass3023: first_pass3023 = False
             else: t = t.next0_
             if (not (t is not None and t.previous != end)): break
             if (isinstance(t, NumberToken)): 
@@ -147,10 +147,10 @@ class DenominationReferent(Referent):
             tmp = io.StringIO()
             i = 0
             while i < len(str0_): 
-                wrapv1112 = RefOutArgWrapper(None)
-                inoutres1113 = Utils.tryGetValue(DenominationReferent.__m_var_chars, str0_[i], wrapv1112)
-                v = wrapv1112.value
-                if (not inoutres1113): 
+                wrapv1119 = RefOutArgWrapper(None)
+                inoutres1120 = Utils.tryGetValue(DenominationReferent.__m_var_chars, str0_[i], wrapv1119)
+                v = wrapv1119.value
+                if (not inoutres1120): 
                     break
                 if ((len(v) < 2) or v[k] == '-'): 
                     break

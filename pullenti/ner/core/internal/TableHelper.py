@@ -7,6 +7,7 @@ from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.internal.TableCellToken import TableCellToken
 from pullenti.ner.core.internal.TableRowToken import TableRowToken
 
@@ -87,18 +88,18 @@ class TableHelper:
             if (not t.is_char(chr(0x1E))): 
                 return None
             is_tab = True
-        wrapis_tab532 = RefOutArgWrapper(is_tab)
-        rw = TableHelper.__parse(t, max_char, None, wrapis_tab532)
-        is_tab = wrapis_tab532.value
+        wrapis_tab533 = RefOutArgWrapper(is_tab)
+        rw = TableHelper.__parse(t, max_char, None, wrapis_tab533)
+        is_tab = wrapis_tab533.value
         if (rw is None): 
             return None
         res = list()
         res.append(rw)
         t = rw.end_token.next0_
         while t is not None: 
-            wrapis_tab531 = RefOutArgWrapper(is_tab)
-            rw0 = TableHelper.__parse(t, max_char, rw, wrapis_tab531)
-            is_tab = wrapis_tab531.value
+            wrapis_tab532 = RefOutArgWrapper(is_tab)
+            rw0 = TableHelper.__parse(t, max_char, rw, wrapis_tab532)
+            is_tab = wrapis_tab532.value
             if (rw0 is None): 
                 break
             rw = rw0
@@ -127,7 +128,22 @@ class TableHelper:
         for re in res: 
             if (len(re.cells) > 1): 
                 return res
+            if (len(re.cells) == 1): 
+                if (TableHelper.__contains_table_char(re.cells[0])): 
+                    return res
         return None
+    
+    @staticmethod
+    def __contains_table_char(mt : 'MetaToken') -> bool:
+        tt = mt.begin_token
+        while tt is not None and tt.end_char <= mt.end_char: 
+            if (isinstance(tt, MetaToken)): 
+                if (TableHelper.__contains_table_char(Utils.asObjectOrNull(tt, MetaToken))): 
+                    return True
+            elif (((tt.is_table_control_char and tt.previous is not None and not tt.previous.is_table_control_char) and tt.next0_ is not None and not tt.next0_.is_table_control_char) and tt.previous.begin_char >= mt.begin_char and tt.next0_.end_char <= mt.end_char): 
+                return True
+            tt = tt.next0_
+        return False
     
     @staticmethod
     def __parse(t : 'Token', max_char : int, prev : 'TableRowToken', is_tab : bool) -> 'TableRowToken':
@@ -141,12 +157,12 @@ class TableHelper:
         cell_info = None
         tt = t
         while tt is not None and ((tt.end_char <= max_char or max_char == 0)): 
-            if (tt.is_table_control_char0): 
+            if (tt.is_table_control_char): 
                 cell_info = TableHelper.TableInfo(tt)
                 if (cell_info.typ != TableHelper.TableTypes.CELLEND): 
                     cell_info = (None)
                 break
-            elif (tt.is_newline_after0): 
+            elif (tt.is_newline_after): 
                 if (not is_tab.value and prev is None): 
                     break
                 if ((tt.end_char - t.begin_char) > 100): 
@@ -161,16 +177,16 @@ class TableHelper:
         if (cell_info is None): 
             return None
         res = TableRowToken(t0, tt)
-        res.cells.append(TableCellToken._new533(t, tt, cell_info.row_span, cell_info.col_span))
+        res.cells.append(TableCellToken._new534(t, tt, cell_info.row_span, cell_info.col_span))
         tt = tt.next0_
         while tt is not None and ((tt.end_char <= max_char or max_char == 0)): 
             t0 = tt
             cell_info = (None)
             while tt is not None and ((tt.end_char <= max_char or max_char == 0)): 
-                if (tt.is_table_control_char0): 
+                if (tt.is_table_control_char): 
                     cell_info = TableHelper.TableInfo(tt)
                     break
-                elif (tt.is_newline_after0): 
+                elif (tt.is_newline_after): 
                     if (not is_tab.value and prev is None): 
                         break
                     if ((tt.end_char - t0.begin_char) > 400): 
@@ -190,7 +206,7 @@ class TableHelper:
                 break
             if (cell_info.typ != TableHelper.TableTypes.CELLEND): 
                 break
-            res.cells.append(TableCellToken._new533(t0, tt, cell_info.row_span, cell_info.col_span))
+            res.cells.append(TableCellToken._new534(t0, tt, cell_info.row_span, cell_info.col_span))
             res.end_token = tt
             tt = tt.next0_
         if ((len(res.cells) < 2) and not res._eor): 

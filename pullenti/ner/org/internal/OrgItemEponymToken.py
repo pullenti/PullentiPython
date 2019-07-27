@@ -46,12 +46,12 @@ class OrgItemEponymToken(MetaToken):
         def try_attach(t : 'Token') -> typing.List['PersonItemToken']:
             from pullenti.ner.TextToken import TextToken
             res = list()
-            first_pass3156 = True
+            first_pass3185 = True
             while True:
-                if first_pass3156: first_pass3156 = False
+                if first_pass3185: first_pass3185 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
-                if (t.is_newline_before0 and len(res) > 0): 
+                if (t.is_newline_before and len(res) > 0): 
                     break
                 tt = Utils.asObjectOrNull(t, TextToken)
                 if (tt is None): 
@@ -59,46 +59,46 @@ class OrgItemEponymToken(MetaToken):
                 s = tt.term
                 if (not str.isalpha(s[0])): 
                     break
-                if (((len(s) == 1 or s == "ДЖ")) and not tt.chars.is_all_lower0): 
+                if (((len(s) == 1 or s == "ДЖ")) and not tt.chars.is_all_lower): 
                     t1 = t
                     if (t1.next0_ is not None and t1.next0_.is_char('.')): 
                         t1 = t1.next0_
-                    res.append(OrgItemEponymToken.PersonItemToken._new1764(t, t1, OrgItemEponymToken.PersonItemType.INITIAL, s))
+                    res.append(OrgItemEponymToken.PersonItemToken._new1782(t, t1, OrgItemEponymToken.PersonItemType.INITIAL, s))
                     t = t1
                     continue
                 if (tt.is_and): 
-                    res.append(OrgItemEponymToken.PersonItemToken._new1765(t, t, OrgItemEponymToken.PersonItemType.AND))
+                    res.append(OrgItemEponymToken.PersonItemToken._new1783(t, t, OrgItemEponymToken.PersonItemType.AND))
                     continue
-                if (tt.morph.class0_.is_pronoun0 or tt.morph.class0_.is_personal_pronoun0): 
+                if (tt.morph.class0_.is_pronoun or tt.morph.class0_.is_personal_pronoun): 
                     break
-                if (tt.chars.is_all_lower0): 
+                if (tt.chars.is_all_lower): 
                     mc = tt.get_morph_class_in_dictionary()
-                    if (mc.is_preposition0 or mc.is_verb0 or mc.is_adverb0): 
+                    if (mc.is_preposition or mc.is_verb or mc.is_adverb): 
                         break
                     t1 = t
-                    if (t1.next0_ is not None and not t1.is_whitespace_after0 and t1.next0_.is_char('.')): 
+                    if (t1.next0_ is not None and not t1.is_whitespace_after and t1.next0_.is_char('.')): 
                         t1 = t1.next0_
-                    res.append(OrgItemEponymToken.PersonItemToken._new1764(t, t1, OrgItemEponymToken.PersonItemType.LOCASEWORD, s))
+                    res.append(OrgItemEponymToken.PersonItemToken._new1782(t, t1, OrgItemEponymToken.PersonItemType.LOCASEWORD, s))
                     t = t1
                     continue
-                if (tt.morph.class0_.is_proper_name0): 
-                    res.append(OrgItemEponymToken.PersonItemToken._new1764(t, t, OrgItemEponymToken.PersonItemType.NAME, s))
-                elif ((t.next0_ is not None and t.next0_.is_hiphen0 and (isinstance(t.next0_.next0_, TextToken))) and not t.next0_.is_whitespace_after0): 
-                    res.append(OrgItemEponymToken.PersonItemToken._new1764(t, t.next0_.next0_, OrgItemEponymToken.PersonItemType.SURNAME, "{0}-{1}".format(s, (t.next0_.next0_).term)))
+                if (tt.morph.class0_.is_proper_name): 
+                    res.append(OrgItemEponymToken.PersonItemToken._new1782(t, t, OrgItemEponymToken.PersonItemType.NAME, s))
+                elif ((t.next0_ is not None and t.next0_.is_hiphen and (isinstance(t.next0_.next0_, TextToken))) and not t.next0_.is_whitespace_after): 
+                    res.append(OrgItemEponymToken.PersonItemToken._new1782(t, t.next0_.next0_, OrgItemEponymToken.PersonItemType.SURNAME, "{0}-{1}".format(s, (t.next0_.next0_).term)))
                     t = t.next0_.next0_
                 else: 
-                    res.append(OrgItemEponymToken.PersonItemToken._new1764(t, t, OrgItemEponymToken.PersonItemType.SURNAME, s))
+                    res.append(OrgItemEponymToken.PersonItemToken._new1782(t, t, OrgItemEponymToken.PersonItemType.SURNAME, s))
             return (res if len(res) > 0 else None)
         
         @staticmethod
-        def _new1764(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonItemType', _arg4 : str) -> 'PersonItemToken':
+        def _new1782(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonItemType', _arg4 : str) -> 'PersonItemToken':
             res = OrgItemEponymToken.PersonItemToken(_arg1, _arg2)
             res.typ = _arg3
             res.value = _arg4
             return res
         
         @staticmethod
-        def _new1765(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonItemType') -> 'PersonItemToken':
+        def _new1783(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonItemType') -> 'PersonItemToken':
             res = OrgItemEponymToken.PersonItemToken(_arg1, _arg2)
             res.typ = _arg3
             return res
@@ -125,12 +125,12 @@ class OrgItemEponymToken(MetaToken):
             if (r1 is not None and r1.type_name == "DATE"): 
                 str0_ = str(r1).upper()
                 if ((str0_ == "1 МАЯ" or str0_ == "7 ОКТЯБРЯ" or str0_ == "9 МАЯ") or str0_ == "8 МАРТА"): 
-                    dt = OrgItemEponymToken._new1760(t, t, list())
+                    dt = OrgItemEponymToken._new1778(t, t, list())
                     dt.eponyms.append(str0_)
                     return dt
             age = NumberHelper.try_parse_age(t)
-            if ((age is not None and (((isinstance(age.end_token.next0_, TextToken)) or (isinstance(age.end_token.next0_, ReferentToken)))) and (age.whitespaces_after_count < 3)) and not age.end_token.next0_.chars.is_all_lower0 and age.end_token.next0_.chars.is_cyrillic_letter0): 
-                dt = OrgItemEponymToken._new1760(t, age.end_token.next0_, list())
+            if ((age is not None and (((isinstance(age.end_token.next0_, TextToken)) or (isinstance(age.end_token.next0_, ReferentToken)))) and (age.whitespaces_after_count < 3)) and not age.end_token.next0_.chars.is_all_lower and age.end_token.next0_.chars.is_cyrillic_letter): 
+                dt = OrgItemEponymToken._new1778(t, age.end_token.next0_, list())
                 dt.eponyms.append("{0} {1}".format(age.value, dt.end_token.get_source_text().upper()))
                 return dt
             return None
@@ -145,17 +145,17 @@ class OrgItemEponymToken(MetaToken):
             if (tt.next0_.is_char('.')): 
                 t1 = tt.next0_.next0_
                 full = True
-            elif ((isinstance(tt.next0_, TextToken)) and tt.chars.is_all_lower0 and not tt.next0_.chars.is_all_lower0): 
+            elif ((isinstance(tt.next0_, TextToken)) and tt.chars.is_all_lower and not tt.next0_.chars.is_all_lower): 
                 t1 = tt.next0_
             has_name = True
         elif (tt.previous is not None and ((tt.previous.is_value("ФОНД", None) or tt.previous.is_value("ХРАМ", None) or tt.previous.is_value("ЦЕРКОВЬ", "ЦЕРКВА")))): 
-            if ((not tt.chars.is_cyrillic_letter0 or tt.morph.class0_.is_preposition0 or tt.morph.class0_.is_conjunction0) or not tt.chars.is_letter0): 
+            if ((not tt.chars.is_cyrillic_letter or tt.morph.class0_.is_preposition or tt.morph.class0_.is_conjunction) or not tt.chars.is_letter): 
                 return None
             if (tt.whitespaces_before_count != 1): 
                 return None
-            if (tt.chars.is_all_lower0): 
+            if (tt.chars.is_all_lower): 
                 return None
-            if (tt.morph.class0_.is_adjective0): 
+            if (tt.morph.class0_.is_adjective): 
                 npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
                 if (npt is not None and npt.begin_token != npt.end_token): 
                     return None
@@ -164,15 +164,15 @@ class OrgItemEponymToken(MetaToken):
                 if (na.is_empty_word or na.is_std_name or na.is_std_tail): 
                     return None
             t1 = (tt)
-        if (t1 is None or ((t1.is_newline_before0 and not full))): 
+        if (t1 is None or ((t1.is_newline_before and not full))): 
             return None
-        if (tt.previous is not None and tt.previous.morph.class0_.is_preposition0): 
+        if (tt.previous is not None and tt.previous.morph.class0_.is_preposition): 
             return None
         if (must_has_prefix and not has_name): 
             return None
         r = t1.get_referent()
         if ((r is not None and r.type_name == "DATE" and full) and r.find_slot("DAY", None, True) is not None and r.find_slot("YEAR", None, True) is None): 
-            dt = OrgItemEponymToken._new1760(t, t1, list())
+            dt = OrgItemEponymToken._new1778(t, t1, list())
             dt.eponyms.append(str(r).upper())
             return dt
         holy = False
@@ -184,7 +184,7 @@ class OrgItemEponymToken(MetaToken):
         if (t1 is None): 
             return None
         cl = t1.get_morph_class_in_dictionary()
-        if (cl.is_noun0 or cl.is_adjective0): 
+        if (cl.is_noun or cl.is_adjective): 
             rt = t1.kit.process_referent("PERSON", t1)
             if (rt is not None and rt.referent.type_name == "PERSON" and rt.begin_token != rt.end_token): 
                 e0_ = rt.referent.get_string_value("LASTNAME")
@@ -197,7 +197,7 @@ class OrgItemEponymToken(MetaToken):
         if (nt is not None and nt.typ == NumberSpellingType.AGE): 
             npt = NounPhraseHelper.try_parse(nt.end_token.next0_, NounPhraseParseAttr.NO, 0)
             if (npt is not None): 
-                s = "{0}-{1} {2}".format(nt.value, ("РОКІВ" if t.kit.base_language.is_ua0 else "ЛЕТ"), MiscHelper.get_text_value(npt.begin_token, npt.end_token, GetTextAttr.NO))
+                s = "{0}-{1} {2}".format(nt.value, ("РОКІВ" if t.kit.base_language.is_ua else "ЛЕТ"), MiscHelper.get_text_value(npt.begin_token, npt.end_token, GetTextAttr.NO))
                 res = OrgItemEponymToken(t, npt.end_token)
                 res.eponyms.append(s)
                 return res
@@ -216,7 +216,7 @@ class OrgItemEponymToken(MetaToken):
         if (i >= len(its)): 
             return None
         if (not full): 
-            if (its[i].begin_token.morph.class0_.is_adjective0 and not its[i].begin_token.morph.class0_.is_proper_surname0): 
+            if (its[i].begin_token.morph.class0_.is_adjective and not its[i].begin_token.morph.class0_.is_proper_surname): 
                 return None
         if (its[i].typ == OrgItemEponymToken.PersonItemType.INITIAL): 
             i += 1
@@ -256,7 +256,7 @@ class OrgItemEponymToken(MetaToken):
             elif (((i + 2) < len(its)) and its[i + 1].typ == OrgItemEponymToken.PersonItemType.AND and its[i + 2].typ == OrgItemEponymToken.PersonItemType.SURNAME): 
                 ok = True
                 npt = NounPhraseHelper.try_parse(its[i + 2].begin_token, NounPhraseParseAttr.NO, 0)
-                if (npt is not None and not npt.morph.case_.is_genitive0 and not npt.morph.case_.is_undefined0): 
+                if (npt is not None and not npt.morph.case_.is_genitive and not npt.morph.case_.is_undefined): 
                     ok = False
                 if (ok): 
                     eponims.append(its[i + 2].value)
@@ -281,10 +281,10 @@ class OrgItemEponymToken(MetaToken):
             i += 2
         if (len(eponims) == 0): 
             return None
-        return OrgItemEponymToken._new1760(t, t1, eponims)
+        return OrgItemEponymToken._new1778(t, t1, eponims)
     
     @staticmethod
-    def _new1760(_arg1 : 'Token', _arg2 : 'Token', _arg3 : typing.List[str]) -> 'OrgItemEponymToken':
+    def _new1778(_arg1 : 'Token', _arg2 : 'Token', _arg3 : typing.List[str]) -> 'OrgItemEponymToken':
         res = OrgItemEponymToken(_arg1, _arg2)
         res.eponyms = _arg3
         return res

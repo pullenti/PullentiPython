@@ -49,7 +49,7 @@ class DateRangeReferent(Referent):
             return str(fr)
         if (to is not None): 
             return to
-        return "{0} ? по ?".format(('з' if lang.is_ua0 else 'с'))
+        return "{0} ? по ?".format(('з' if lang.is_ua else 'с'))
     
     def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
         dr = Utils.asObjectOrNull(obj, DateRangeReferent)
@@ -98,14 +98,14 @@ class DateRangeReferent(Referent):
         return 0
     
     @staticmethod
-    def _new720(_arg1 : 'DateReferent', _arg2 : 'DateReferent') -> 'DateRangeReferent':
+    def _new727(_arg1 : 'DateReferent', _arg2 : 'DateReferent') -> 'DateRangeReferent':
         res = DateRangeReferent()
         res.date_from = _arg1
         res.date_to = _arg2
         return res
     
     @staticmethod
-    def _new725(_arg1 : 'DateReferent') -> 'DateRangeReferent':
+    def _new732(_arg1 : 'DateReferent') -> 'DateRangeReferent':
         res = DateRangeReferent()
         res.date_to = _arg1
         return res

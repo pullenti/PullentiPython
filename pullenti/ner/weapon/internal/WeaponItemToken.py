@@ -7,26 +7,26 @@ import io
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.TextToken import TextToken
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
 from pullenti.ner.transport.internal.TransItemToken import TransItemToken
 
 class WeaponItemToken(MetaToken):
@@ -77,15 +77,15 @@ class WeaponItemToken(MetaToken):
         t = tr.end_token.next0_
         if (tr.typ == WeaponItemToken.Typs.NOUN): 
             while t is not None: 
-                if (t.is_char(':') or t.is_hiphen0): 
+                if (t.is_char(':') or t.is_hiphen): 
                     pass
                 else: 
                     break
                 t = t.next0_
         and_conj = False
-        first_pass3269 = True
+        first_pass3299 = True
         while True:
-            if first_pass3269: first_pass3269 = False
+            if first_pass3299: first_pass3299 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_count > 0 and len(res) >= max_count): 
@@ -93,14 +93,14 @@ class WeaponItemToken(MetaToken):
             if (t.is_char(':')): 
                 continue
             if (tr0.typ == WeaponItemToken.Typs.NOUN): 
-                if (t.is_hiphen0 and t.next0_ is not None): 
+                if (t.is_hiphen and t.next0_ is not None): 
                     t = t.next0_
             tr = WeaponItemToken.try_parse(t, tr0, False, False)
             if (tr is None): 
                 if (BracketHelper.can_be_end_of_sequence(t, True, None, False) and t.next0_ is not None): 
                     if (tr0.typ == WeaponItemToken.Typs.MODEL or tr0.typ == WeaponItemToken.Typs.BRAND): 
                         tt1 = t.next0_
-                        if (tt1 is not None and tt1.is_comma0): 
+                        if (tt1 is not None and tt1.is_comma): 
                             tt1 = tt1.next0_
                         tr = WeaponItemToken.try_parse(tt1, tr0, False, False)
             if (tr is None and (isinstance(t, ReferentToken))): 
@@ -113,17 +113,17 @@ class WeaponItemToken(MetaToken):
                 br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
                 if (br is not None): 
                     tt = br.end_token.next0_
-                    if (tt is not None and tt.is_comma0): 
+                    if (tt is not None and tt.is_comma): 
                         tt = tt.next0_
                     tr = WeaponItemToken.try_parse(tt, tr0, False, False)
                     if (tr is not None and tr.typ == WeaponItemToken.Typs.NUMBER): 
                         pass
                     else: 
                         tr = (None)
-            if (tr is None and t.is_hiphen0): 
+            if (tr is None and t.is_hiphen): 
                 if (tr0.typ == WeaponItemToken.Typs.BRAND or tr0.typ == WeaponItemToken.Typs.MODEL): 
                     tr = WeaponItemToken.try_parse(t.next0_, tr0, False, False)
-            if (tr is None and t.is_comma0): 
+            if (tr is None and t.is_comma): 
                 if ((tr0.typ == WeaponItemToken.Typs.NAME or tr0.typ == WeaponItemToken.Typs.BRAND or tr0.typ == WeaponItemToken.Typs.MODEL) or tr0.typ == WeaponItemToken.Typs.CLASS or tr0.typ == WeaponItemToken.Typs.DATE): 
                     tr = WeaponItemToken.try_parse(t.next0_, tr0, True, False)
                     if (tr is not None): 
@@ -133,7 +133,7 @@ class WeaponItemToken(MetaToken):
                             tr = (None)
             if (tr is None): 
                 break
-            if (t.is_newline_before0): 
+            if (t.is_newline_before): 
                 if (tr.typ != WeaponItemToken.Typs.NUMBER): 
                     break
             if (len(tr.__inner_tokens) > 0): 
@@ -147,7 +147,7 @@ class WeaponItemToken(MetaToken):
         while i < (len(res) - 1): 
             if (res[i].typ == WeaponItemToken.Typs.MODEL and res[i + 1].typ == WeaponItemToken.Typs.MODEL): 
                 res[i].end_token = res[i + 1].end_token
-                res[i].value = "{0}{1}{2}".format(res[i].value, ('-' if res[i].end_token.next0_ is not None and res[i].end_token.next0_.is_hiphen0 else ' '), res[i + 1].value)
+                res[i].value = "{0}{1}{2}".format(res[i].value, ('-' if res[i].end_token.next0_ is not None and res[i].end_token.next0_.is_hiphen else ' '), res[i + 1].value)
                 del res[i + 1]
                 i -= 1
             i += 1
@@ -206,9 +206,9 @@ class WeaponItemToken(MetaToken):
                 if (tok.termin.tag2 is not None): 
                     res.is_doubt = True
                 tt = res.end_token.next0_
-                first_pass3270 = True
+                first_pass3300 = True
                 while True:
-                    if first_pass3270: first_pass3270 = False
+                    if first_pass3300: first_pass3300 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.whitespaces_before_count > 2): 
@@ -242,7 +242,7 @@ class WeaponItemToken(MetaToken):
                 if (isinstance(tok.termin.tag2, list)): 
                     li = Utils.asObjectOrNull(tok.termin.tag2, list)
                     for to in li: 
-                        wit = WeaponItemToken._new2699(t, tok.end_token, Utils.valToEnum(to.tag, WeaponItemToken.Typs), to.canonic_text, tok.begin_token == tok.end_token)
+                        wit = WeaponItemToken._new2727(t, tok.end_token, Utils.valToEnum(to.tag, WeaponItemToken.Typs), to.canonic_text, tok.begin_token == tok.end_token)
                         res.__inner_tokens.append(wit)
                         if (to.additional_vars is not None and len(to.additional_vars) > 0): 
                             wit.alt_value = to.additional_vars[0].canonic_text
@@ -252,46 +252,46 @@ class WeaponItemToken(MetaToken):
         if (nnn is not None): 
             tit = TransItemToken._attach_number(nnn, True)
             if (tit is not None): 
-                res = WeaponItemToken._new2700(t, tit.end_token, WeaponItemToken.Typs.NUMBER)
+                res = WeaponItemToken._new2728(t, tit.end_token, WeaponItemToken.Typs.NUMBER)
                 res.value = tit.value
                 res.alt_value = tit.alt_value
                 return res
-        if (((isinstance(t, TextToken)) and t.chars.is_letter0 and t.chars.is_all_upper0) and (t.length_char < 4)): 
-            if ((t.next0_ is not None and ((t.next0_.is_hiphen0 or t.next0_.is_char('.'))) and (t.next0_.whitespaces_after_count < 2)) and (isinstance(t.next0_.next0_, NumberToken))): 
-                res = WeaponItemToken._new2701(t, t.next0_, WeaponItemToken.Typs.MODEL, True)
+        if (((isinstance(t, TextToken)) and t.chars.is_letter and t.chars.is_all_upper) and (t.length_char < 4)): 
+            if ((t.next0_ is not None and ((t.next0_.is_hiphen or t.next0_.is_char('.'))) and (t.next0_.whitespaces_after_count < 2)) and (isinstance(t.next0_.next0_, NumberToken))): 
+                res = WeaponItemToken._new2729(t, t.next0_, WeaponItemToken.Typs.MODEL, True)
                 res.value = (t).term
                 res.__correct_model()
                 return res
-            if ((isinstance(t.next0_, NumberToken)) and not t.is_whitespace_after0): 
-                res = WeaponItemToken._new2701(t, t, WeaponItemToken.Typs.MODEL, True)
+            if ((isinstance(t.next0_, NumberToken)) and not t.is_whitespace_after): 
+                res = WeaponItemToken._new2729(t, t, WeaponItemToken.Typs.MODEL, True)
                 res.value = (t).term
                 res.__correct_model()
                 return res
             if ((t).term == "СП" and (t.whitespaces_after_count < 3) and (isinstance(t.next0_, TextToken))): 
                 pp = WeaponItemToken.__try_parse(t.next0_, None, False, False)
                 if (pp is not None and ((pp.typ == WeaponItemToken.Typs.MODEL or pp.typ == WeaponItemToken.Typs.BRAND))): 
-                    res = WeaponItemToken._new2700(t, t, WeaponItemToken.Typs.NOUN)
+                    res = WeaponItemToken._new2728(t, t, WeaponItemToken.Typs.NOUN)
                     res.value = "ПИСТОЛЕТ"
                     res.alt_value = "СЛУЖЕБНЫЙ ПИСТОЛЕТ"
                     return res
-        if (((isinstance(t, TextToken)) and t.chars.is_letter0 and not t.chars.is_all_lower0) and t.length_char > 2): 
+        if (((isinstance(t, TextToken)) and t.chars.is_letter and not t.chars.is_all_lower) and t.length_char > 2): 
             ok = False
             if (prev is not None and ((prev.typ == WeaponItemToken.Typs.NOUN or prev.typ == WeaponItemToken.Typs.MODEL or prev.typ == WeaponItemToken.Typs.BRAND))): 
                 ok = True
-            elif (prev is None and t.previous is not None and t.previous.is_comma_and0): 
+            elif (prev is None and t.previous is not None and t.previous.is_comma_and): 
                 ok = True
             if (ok): 
-                res = WeaponItemToken._new2701(t, t, WeaponItemToken.Typs.NAME, True)
+                res = WeaponItemToken._new2729(t, t, WeaponItemToken.Typs.NAME, True)
                 res.value = (t).term
-                if ((t.next0_ is not None and t.next0_.is_hiphen0 and (isinstance(t.next0_.next0_, TextToken))) and t.next0_.next0_.chars == t.chars): 
+                if ((t.next0_ is not None and t.next0_.is_hiphen and (isinstance(t.next0_.next0_, TextToken))) and t.next0_.next0_.chars == t.chars): 
                     res.value = "{0}-{1}".format(res.value, (t.next0_.next0_).term)
                     res.end_token = t.next0_.next0_
                 if (prev is not None and prev.typ == WeaponItemToken.Typs.NOUN): 
                     res.typ = WeaponItemToken.Typs.BRAND
-                if (res.end_token.next0_ is not None and res.end_token.next0_.is_hiphen0 and (isinstance(res.end_token.next0_.next0_, NumberToken))): 
+                if (res.end_token.next0_ is not None and res.end_token.next0_.is_hiphen and (isinstance(res.end_token.next0_.next0_, NumberToken))): 
                     res.typ = WeaponItemToken.Typs.MODEL
                     res.__correct_model()
-                elif (not res.end_token.is_whitespace_after0 and (isinstance(res.end_token.next0_, NumberToken))): 
+                elif (not res.end_token.is_whitespace_after and (isinstance(res.end_token.next0_, NumberToken))): 
                     res.typ = WeaponItemToken.Typs.MODEL
                     res.__correct_model()
                 return res
@@ -303,37 +303,37 @@ class WeaponItemToken(MetaToken):
             if (BracketHelper.can_be_start_of_sequence(t.next0_, True, False)): 
                 br = BracketHelper.try_parse(t.next0_, BracketParseAttr.NO, 100)
                 if (br is not None): 
-                    return WeaponItemToken._new2705(t, br.end_token, WeaponItemToken.Typs.BRAND, MiscHelper.get_text_value(br.begin_token, br.end_token, GetTextAttr.NO))
-            if ((isinstance(t.next0_, TextToken)) and t.next0_.length_char > 1 and not t.next0_.chars.is_all_lower0): 
-                return WeaponItemToken._new2705(t, t.next0_, WeaponItemToken.Typs.BRAND, (t).term)
+                    return WeaponItemToken._new2733(t, br.end_token, WeaponItemToken.Typs.BRAND, MiscHelper.get_text_value(br.begin_token, br.end_token, GetTextAttr.NO))
+            if (((isinstance(t, TextToken)) and (isinstance(t.next0_, TextToken)) and t.next0_.length_char > 1) and not t.next0_.chars.is_all_lower): 
+                return WeaponItemToken._new2733(t, t.next0_, WeaponItemToken.Typs.BRAND, (t).term)
         if (t.is_value("КАЛИБР", "КАЛІБР")): 
             tt1 = t.next0_
-            if (tt1 is not None and ((tt1.is_hiphen0 or tt1.is_char(':')))): 
+            if (tt1 is not None and ((tt1.is_hiphen or tt1.is_char(':')))): 
                 tt1 = tt1.next0_
-            num = NumbersWithUnitToken.try_parse(tt1, None, False, False, False)
+            num = NumbersWithUnitToken.try_parse(tt1, None, False, False, False, False)
             if (num is not None and num.single_val is not None): 
-                return WeaponItemToken._new2705(t, num.end_token, WeaponItemToken.Typs.CALIBER, NumberHelper.double_to_string(num.single_val))
+                return WeaponItemToken._new2733(t, num.end_token, WeaponItemToken.Typs.CALIBER, NumberHelper.double_to_string(num.single_val))
         if (isinstance(t, NumberToken)): 
-            num = NumbersWithUnitToken.try_parse(t, None, False, False, False)
+            num = NumbersWithUnitToken.try_parse(t, None, False, False, False, False)
             if (num is not None and num.single_val is not None): 
                 if (len(num.units) == 1 and num.units[0].unit is not None and num.units[0].unit.name_cyr == "мм"): 
-                    return WeaponItemToken._new2705(t, num.end_token, WeaponItemToken.Typs.CALIBER, NumberHelper.double_to_string(num.single_val))
+                    return WeaponItemToken._new2733(t, num.end_token, WeaponItemToken.Typs.CALIBER, NumberHelper.double_to_string(num.single_val))
                 if (num.end_token.next0_ is not None and num.end_token.next0_.is_value("КАЛИБР", "КАЛІБР")): 
-                    return WeaponItemToken._new2705(t, num.end_token.next0_, WeaponItemToken.Typs.CALIBER, NumberHelper.double_to_string(num.single_val))
+                    return WeaponItemToken._new2733(t, num.end_token.next0_, WeaponItemToken.Typs.CALIBER, NumberHelper.double_to_string(num.single_val))
         if (t.is_value("ПРОИЗВОДСТВО", "ВИРОБНИЦТВО")): 
             tt1 = t.next0_
-            if (tt1 is not None and ((tt1.is_hiphen0 or tt1.is_char(':')))): 
+            if (tt1 is not None and ((tt1.is_hiphen or tt1.is_char(':')))): 
                 tt1 = tt1.next0_
             if (isinstance(tt1, ReferentToken)): 
                 if ((isinstance(tt1.get_referent(), OrganizationReferent)) or (isinstance(tt1.get_referent(), GeoReferent))): 
-                    return WeaponItemToken._new2710(t, tt1, WeaponItemToken.Typs.DEVELOPER, tt1.get_referent())
+                    return WeaponItemToken._new2738(t, tt1, WeaponItemToken.Typs.DEVELOPER, tt1.get_referent())
         return None
     
     def __correct_model(self) -> None:
         tt = self.end_token.next0_
         if (tt is None or tt.whitespaces_before_count > 2): 
             return
-        if (tt.is_value(":\\/.", None) or tt.is_hiphen0): 
+        if (tt.is_value(":\\/.", None) or tt.is_hiphen): 
             tt = tt.next0_
         if (isinstance(tt, NumberToken)): 
             tmp = io.StringIO()
@@ -341,13 +341,13 @@ class WeaponItemToken(MetaToken):
             is_lat = LanguageHelper.is_latin_char(self.value[0])
             self.end_token = tt
             tt = tt.next0_
-            first_pass3271 = True
+            first_pass3301 = True
             while True:
-                if first_pass3271: first_pass3271 = False
+                if first_pass3301: first_pass3301 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
-                if ((isinstance(tt, TextToken)) and tt.length_char == 1 and tt.chars.is_letter0): 
-                    if (not tt.is_whitespace_before0 or ((tt.previous is not None and tt.previous.is_hiphen0))): 
+                if ((isinstance(tt, TextToken)) and tt.length_char == 1 and tt.chars.is_letter): 
+                    if (not tt.is_whitespace_before or ((tt.previous is not None and tt.previous.is_hiphen))): 
                         ch = (tt).term[0]
                         self.end_token = tt
                         ch2 = chr(0)
@@ -364,8 +364,8 @@ class WeaponItemToken(MetaToken):
                 break
             self.value = "{0}-{1}".format(self.value, Utils.toStringStringIO(tmp))
             self.alt_value = MiscHelper.create_cyr_lat_alternative(self.value)
-        if (not self.end_token.is_whitespace_after0 and self.end_token.next0_ is not None and ((self.end_token.next0_.is_hiphen0 or self.end_token.next0_.is_char_of("\\/")))): 
-            if (not self.end_token.next0_.is_whitespace_after0 and (isinstance(self.end_token.next0_.next0_, NumberToken))): 
+        if (not self.end_token.is_whitespace_after and self.end_token.next0_ is not None and ((self.end_token.next0_.is_hiphen or self.end_token.next0_.is_char_of("\\/")))): 
+            if (not self.end_token.next0_.is_whitespace_after and (isinstance(self.end_token.next0_.next0_, NumberToken))): 
                 self.end_token = self.end_token.next0_.next0_
                 self.value = "{0}-{1}".format(self.value, (self.end_token).value)
                 if (self.alt_value is not None): 
@@ -402,9 +402,9 @@ class WeaponItemToken(MetaToken):
         WeaponItemToken.M_ONTOLOGY.add(t)
         t = Termin._new119("МИНОМЕТ", WeaponItemToken.Typs.NOUN)
         WeaponItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new2722("ПЕРЕНОСНОЙ ЗЕНИТНО РАКЕТНЫЙ КОМПЛЕКС", "ПЗРК", WeaponItemToken.Typs.NOUN)
+        t = Termin._new2750("ПЕРЕНОСНОЙ ЗЕНИТНО РАКЕТНЫЙ КОМПЛЕКС", "ПЗРК", WeaponItemToken.Typs.NOUN)
         WeaponItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new2722("ПРОТИВОТАНКОВЫЙ РАКЕТНЫЙ КОМПЛЕКС", "ПТРК", WeaponItemToken.Typs.NOUN)
+        t = Termin._new2750("ПРОТИВОТАНКОВЫЙ РАКЕТНЫЙ КОМПЛЕКС", "ПТРК", WeaponItemToken.Typs.NOUN)
         WeaponItemToken.M_ONTOLOGY.add(t)
         t = Termin._new119("НАРУЧНИКИ", WeaponItemToken.Typs.NOUN)
         WeaponItemToken.M_ONTOLOGY.add(t)
@@ -416,23 +416,25 @@ class WeaponItemToken(MetaToken):
         WeaponItemToken.M_ONTOLOGY.add(t)
         t = Termin._new119("НОЖ", WeaponItemToken.Typs.NOUN)
         WeaponItemToken.M_ONTOLOGY.add(t)
+        t = Termin._new119("ВЗРЫВАТЕЛЬ", WeaponItemToken.Typs.NOUN)
+        WeaponItemToken.M_ONTOLOGY.add(t)
         for s in ["МАКАРОВ", "КАЛАШНИКОВ", "СИМОНОВ", "СТЕЧКИН", "ШМАЙСЕР", "МОСИН", "СЛОСТИН", "НАГАН", "МАКСИМ", "ДРАГУНОВ", "СЕРДЮКОВ", "ЯРЫГИН", "НИКОНОВ", "МАУЗЕР", "БРАУНИНГ", "КОЛЬТ", "ВИНЧЕСТЕР"]: 
             WeaponItemToken.M_ONTOLOGY.add(Termin._new119(s, WeaponItemToken.Typs.BRAND))
         for s in ["УЗИ"]: 
             WeaponItemToken.M_ONTOLOGY.add(Termin._new119(s, WeaponItemToken.Typs.NAME))
-        t = Termin._new2731("ТУЛЬСКИЙ ТОКАРЕВА", "ТТ", "ТТ", WeaponItemToken.Typs.MODEL)
+        t = Termin._new2760("ТУЛЬСКИЙ ТОКАРЕВА", "ТТ", "ТТ", WeaponItemToken.Typs.MODEL)
         li = list()
         li.append(Termin._new119("ПИСТОЛЕТ", WeaponItemToken.Typs.NOUN))
         li.append(Termin._new119("ТОКАРЕВ", WeaponItemToken.Typs.BRAND))
         t.tag2 = (li)
         WeaponItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new2731("ПИСТОЛЕТ МАКАРОВА", "ПМ", "ПМ", WeaponItemToken.Typs.MODEL)
+        t = Termin._new2760("ПИСТОЛЕТ МАКАРОВА", "ПМ", "ПМ", WeaponItemToken.Typs.MODEL)
         li = list()
         li.append(Termin._new119("ПИСТОЛЕТ", WeaponItemToken.Typs.NOUN))
         li.append(Termin._new119("МАКАРОВ", WeaponItemToken.Typs.BRAND))
         t.tag2 = (li)
         WeaponItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new2731("ПИСТОЛЕТ МАКАРОВА МОДЕРНИЗИРОВАННЫЙ", "ПММ", "ПММ", WeaponItemToken.Typs.MODEL)
+        t = Termin._new2760("ПИСТОЛЕТ МАКАРОВА МОДЕРНИЗИРОВАННЫЙ", "ПММ", "ПММ", WeaponItemToken.Typs.MODEL)
         li = list()
         tt = Termin._new119("ПИСТОЛЕТ", WeaponItemToken.Typs.NOUN)
         li.append(tt)
@@ -440,7 +442,7 @@ class WeaponItemToken(MetaToken):
         li.append(Termin._new119("МАКАРОВ", WeaponItemToken.Typs.BRAND))
         t.tag2 = (li)
         WeaponItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new2731("АВТОМАТ КАЛАШНИКОВА", "АК", "АК", WeaponItemToken.Typs.MODEL)
+        t = Termin._new2760("АВТОМАТ КАЛАШНИКОВА", "АК", "АК", WeaponItemToken.Typs.MODEL)
         li = list()
         li.append(Termin._new119("АВТОМАТ", WeaponItemToken.Typs.NOUN))
         li.append(Termin._new119("КАЛАШНИКОВ", WeaponItemToken.Typs.BRAND))
@@ -448,7 +450,7 @@ class WeaponItemToken(MetaToken):
         WeaponItemToken.M_ONTOLOGY.add(t)
     
     @staticmethod
-    def _new2699(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str, _arg5 : bool) -> 'WeaponItemToken':
+    def _new2727(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str, _arg5 : bool) -> 'WeaponItemToken':
         res = WeaponItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
@@ -456,27 +458,27 @@ class WeaponItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2700(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs') -> 'WeaponItemToken':
+    def _new2728(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs') -> 'WeaponItemToken':
         res = WeaponItemToken(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new2701(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : bool) -> 'WeaponItemToken':
+    def _new2729(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : bool) -> 'WeaponItemToken':
         res = WeaponItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.is_doubt = _arg4
         return res
     
     @staticmethod
-    def _new2705(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str) -> 'WeaponItemToken':
+    def _new2733(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str) -> 'WeaponItemToken':
         res = WeaponItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new2710(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent') -> 'WeaponItemToken':
+    def _new2738(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent') -> 'WeaponItemToken':
         res = WeaponItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.ref = _arg4

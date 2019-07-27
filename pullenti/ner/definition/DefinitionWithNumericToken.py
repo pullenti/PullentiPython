@@ -43,9 +43,9 @@ class DefinitionWithNumericToken(MetaToken):
         tt = t
         noun_ = None
         num = None
-        first_pass2992 = True
+        first_pass3020 = True
         while True:
-            if first_pass2992: first_pass2992 = False
+            if first_pass3020: first_pass3020 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt != t and MiscHelper.can_be_start_of_sentence(tt)): 
@@ -54,7 +54,7 @@ class DefinitionWithNumericToken(MetaToken):
                 continue
             if (tt.whitespaces_after_count > 2 or tt == t): 
                 continue
-            if (tt.morph.class0_.is_adjective0): 
+            if (tt.morph.class0_.is_adjective): 
                 continue
             nn = NounPhraseHelper.try_parse(tt.next0_, NounPhraseParseAttr.NO, 0)
             if (nn is None): 

@@ -37,7 +37,7 @@ class BlockLine(MetaToken):
         res = BlockLine(t, t)
         tt = t
         while tt is not None: 
-            if (tt != t and tt.is_newline_before0): 
+            if (tt != t and tt.is_newline_before): 
                 break
             else: 
                 res.end_token = tt
@@ -54,7 +54,7 @@ class BlockLine(MetaToken):
                     break
             if (t.next0_.is_char('.')): 
                 pass
-            elif ((isinstance(t.next0_, TextToken)) and not t.next0_.chars.is_all_lower0): 
+            elif ((isinstance(t.next0_, TextToken)) and not t.next0_.chars.is_all_lower): 
                 pass
             else: 
                 break
@@ -63,7 +63,7 @@ class BlockLine(MetaToken):
             if (t.is_char('.') and t.next0_ is not None): 
                 res.number_end = t
                 t = t.next0_
-            if (t.is_newline_before0): 
+            if (t.is_newline_before): 
                 return res
             nums += 1
         tok = BlockLine.__m_ontology.try_parse(t, TerminParseAttr.NO)
@@ -77,9 +77,9 @@ class BlockLine(MetaToken):
         if (tok is not None): 
             typ_ = Utils.valToEnum(tok.termin.tag, BlkTyps)
             if (typ_ == BlkTyps.CONSLUSION): 
-                if (t.is_newline_after0): 
+                if (t.is_newline_after): 
                     pass
-                elif (t.next0_ is not None and t.next0_.morph.class0_.is_preposition0 and t.next0_.next0_ is not None): 
+                elif (t.next0_ is not None and t.next0_.morph.class0_.is_preposition and t.next0_.next0_ is not None): 
                     tok2 = BlockLine.__m_ontology.try_parse(t.next0_.next0_, TerminParseAttr.NO)
                     if (tok2 is not None and (Utils.valToEnum(tok2.termin.tag, BlkTyps)) == BlkTyps.CHAPTER): 
                         pass
@@ -90,15 +90,15 @@ class BlockLine(MetaToken):
             if (t.kit.base_language != t.morph.language): 
                 tok = (None)
             if (typ_ == BlkTyps.INDEX and not t.is_value("ОГЛАВЛЕНИЕ", None)): 
-                if (not t.is_newline_after0 and t.next0_ is not None): 
+                if (not t.is_newline_after and t.next0_ is not None): 
                     npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
-                    if (npt is not None and npt.is_newline_after and npt.morph.case_.is_genitive0): 
+                    if (npt is not None and npt.is_newline_after and npt.morph.case_.is_genitive): 
                         tok = (None)
                     elif (npt is None): 
                         tok = (None)
             if ((typ_ == BlkTyps.INTRO and tok is not None and not tok.is_newline_after) and t.is_value("ВВЕДЕНИЕ", None)): 
                 npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
-                if (npt is not None and npt.morph.case_.is_genitive0): 
+                if (npt is not None and npt.morph.case_.is_genitive): 
                     tok = (None)
             if (tok is not None): 
                 if (res.number_end is None): 
@@ -110,7 +110,7 @@ class BlockLine(MetaToken):
                 if (t.next0_ is not None and t.next0_.is_char_of(":.")): 
                     t = t.next0_
                     res.end_token = t
-                if (t.is_newline_after0 or t.next0_ is None): 
+                if (t.is_newline_after or t.next0_ is None): 
                     return res
                 t = t.next0_
         if (t.is_char('§') and (isinstance(t.next0_, NumberToken))): 
@@ -119,7 +119,7 @@ class BlockLine(MetaToken):
             t = t.next0_
         if (names is not None): 
             tok2 = names.try_parse(t, TerminParseAttr.NO)
-            if (tok2 is not None and tok2.end_token.is_newline_after0): 
+            if (tok2 is not None and tok2.end_token.is_newline_after): 
                 res.end_token = tok2.end_token
                 res.is_exist_name = True
                 if (res.typ == BlkTyps.UNDEFINED): 
@@ -140,17 +140,17 @@ class BlockLine(MetaToken):
                     t1 = t1.previous
         res.is_all_upper = True
         while t is not None and t.end_char <= t1.end_char: 
-            if (not ((isinstance(t, TextToken))) or not t.chars.is_letter0): 
+            if (not ((isinstance(t, TextToken))) or not t.chars.is_letter): 
                 res.not_words += 1
             else: 
                 mc = t.get_morph_class_in_dictionary()
-                if (mc.is_undefined0): 
+                if (mc.is_undefined): 
                     res.not_words += 1
                 elif (t.length_char > 2): 
                     res.words += 1
-                if (not t.chars.is_all_upper0): 
+                if (not t.chars.is_all_upper): 
                     res.is_all_upper = False
-                if ((t).is_pure_verb0): 
+                if ((t).is_pure_verb): 
                     if (not (t).term.endswith("ING")): 
                         res.has_verb = True
             t = t.next0_
@@ -160,23 +160,23 @@ class BlockLine(MetaToken):
                 if (npt.noun.is_value("ХАРАКТЕРИСТИКА", None) or npt.noun.is_value("СОДЕРЖАНИЕ", "ЗМІСТ")): 
                     ok = True
                     tt = npt.end_token.next0_
-                    first_pass2885 = True
+                    first_pass2913 = True
                     while True:
-                        if first_pass2885: first_pass2885 = False
+                        if first_pass2913: first_pass2913 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.end_char <= res.end_char)): break
                         if (tt.is_char('.')): 
                             continue
                         npt2 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
-                        if (npt2 is None or not npt2.morph.case_.is_genitive0): 
+                        if (npt2 is None or not npt2.morph.case_.is_genitive): 
                             ok = False
                             break
                         tt = npt2.end_token
                         if (tt.end_char > res.end_char): 
                             res.end_token = tt
-                            if (not tt.is_newline_after0): 
+                            if (not tt.is_newline_after): 
                                 while res.end_token.next0_ is not None: 
-                                    if (res.end_token.is_newline_after0): 
+                                    if (res.end_token.is_newline_after): 
                                         break
                                     res.end_token = res.end_token.next0_
                     if (ok): 
@@ -185,12 +185,12 @@ class BlockLine(MetaToken):
                 elif (npt.noun.is_value("ВЫВОД", "ВИСНОВОК") or npt.noun.is_value("РЕЗУЛЬТАТ", "ДОСЛІДЖЕННЯ")): 
                     ok = True
                     tt = npt.end_token.next0_
-                    first_pass2886 = True
+                    first_pass2914 = True
                     while True:
-                        if first_pass2886: first_pass2886 = False
+                        if first_pass2914: first_pass2914 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.end_char <= res.end_char)): break
-                        if (tt.is_char_of(",.") or tt.is_and0): 
+                        if (tt.is_char_of(",.") or tt.is_and): 
                             continue
                         npt1 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
                         if (npt1 is not None): 
@@ -198,9 +198,9 @@ class BlockLine(MetaToken):
                                 tt = npt1.end_token
                                 if (tt.end_char > res.end_char): 
                                     res.end_token = tt
-                                    if (not tt.is_newline_after0): 
+                                    if (not tt.is_newline_after): 
                                         while res.end_token.next0_ is not None: 
-                                            if (res.end_token.is_newline_after0): 
+                                            if (res.end_token.is_newline_after): 
                                                 break
                                             res.end_token = res.end_token.next0_
                                 continue
@@ -223,12 +223,12 @@ class BlockLine(MetaToken):
                         if (npt.begin_token == npt.end_token and npt.noun.is_value("СПИСОК", None) and npt.end_char == res.end_char): 
                             ok = False
                         tt = npt.end_token.next0_
-                        first_pass2887 = True
+                        first_pass2915 = True
                         while True:
-                            if first_pass2887: first_pass2887 = False
+                            if first_pass2915: first_pass2915 = False
                             else: tt = tt.next0_
                             if (not (tt is not None and tt.end_char <= res.end_char)): break
-                            if (tt.is_char_of(",.:") or tt.is_and0 or tt.morph.class0_.is_preposition0): 
+                            if (tt.is_char_of(",.:") or tt.is_and or tt.morph.class0_.is_preposition): 
                                 continue
                             if (tt.is_value("ОТРАЖЕНЫ", "ВІДОБРАЖЕНІ")): 
                                 continue
@@ -242,9 +242,9 @@ class BlockLine(MetaToken):
                                     publ += 1
                                 if (tt.end_char > res.end_char): 
                                     res.end_token = tt
-                                    if (not tt.is_newline_after0): 
+                                    if (not tt.is_newline_after): 
                                         while res.end_token.next0_ is not None: 
-                                            if (res.end_token.is_newline_after0): 
+                                            if (res.end_token.is_newline_after): 
                                                 break
                                             res.end_token = res.end_token.next0_
                                 continue

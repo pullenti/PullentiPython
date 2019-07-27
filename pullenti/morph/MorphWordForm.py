@@ -17,7 +17,7 @@ class MorphWordForm(MorphBaseInfo):
     """ Словоформа (вариант морфанализа лексемы) """
     
     @property
-    def is_in_dictionary0(self) -> bool:
+    def is_in_dictionary(self) -> bool:
         """ Находится ли словоформа в словаре (если false, то восстановлена по аналогии) """
         return self.undef_coef == (0)
     
@@ -64,11 +64,16 @@ class MorphWordForm(MorphBaseInfo):
                 self.normal_full = word_begin
     
     def __str__(self) -> str:
-        res = Utils.newStringIO(Utils.ifNotNull(self.normal_case, ""))
-        if (self.normal_full is not None and self.normal_full != self.normal_case): 
-            print("\\{0}".format(self.normal_full), end="", file=res, flush=True)
-        if (res.tell() > 0): 
-            print(' ', end="", file=res)
+        return self.to_string(False)
+    
+    def to_string(self, ignore_normals : bool) -> str:
+        res = io.StringIO()
+        if (not ignore_normals): 
+            print(Utils.ifNotNull(self.normal_case, ""), end="", file=res)
+            if (self.normal_full is not None and self.normal_full != self.normal_case): 
+                print("\\{0}".format(self.normal_full), end="", file=res, flush=True)
+            if (res.tell() > 0): 
+                print(' ', end="", file=res)
         print(super().__str__(), end="", file=res)
         s = (None if self.misc is None else str(self.misc))
         if (not Utils.isNullOrEmpty(s)): 
@@ -111,7 +116,7 @@ class MorphWordForm(MorphBaseInfo):
         return res
     
     @staticmethod
-    def _new657(_arg1 : 'MorphCase', _arg2 : 'MorphNumber', _arg3 : 'MorphGender') -> 'MorphWordForm':
+    def _new664(_arg1 : 'MorphCase', _arg2 : 'MorphNumber', _arg3 : 'MorphGender') -> 'MorphWordForm':
         res = MorphWordForm()
         res.case_ = _arg1
         res.number = _arg2

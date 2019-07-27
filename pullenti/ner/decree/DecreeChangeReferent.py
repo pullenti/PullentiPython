@@ -38,11 +38,11 @@ class DecreeChangeReferent(Referent):
         res = io.StringIO()
         if (self.kind != DecreeChangeKind.UNDEFINED): 
             print("{0} ".format(MetaDecreeChange.KIND_FEATURE.convert_inner_value_to_outer_value(self.kind, lang)), end="", file=res, flush=True)
-        if (self.is_owner_name_and_text0): 
+        if (self.is_owner_name_and_text): 
             print("наименование и текст ", end="", file=res)
-        elif (self.is_owner_name0): 
+        elif (self.is_owner_name): 
             print("наименование ", end="", file=res)
-        elif (self.is_only_text0): 
+        elif (self.is_only_text): 
             print("текст ", end="", file=res)
         for o in self.owners: 
             print("'{0}' ".format(o.to_string(True, lang, 0)), end="", file=res, flush=True)
@@ -72,7 +72,7 @@ class DecreeChangeReferent(Referent):
             res = Utils.valToEnum(s, DecreeChangeKind)
             if (isinstance(res, DecreeChangeKind)): 
                 return Utils.valToEnum(res, DecreeChangeKind)
-        except Exception as ex1101: 
+        except Exception as ex1108: 
             pass
         return DecreeChangeKind.UNDEFINED
     @kind.setter
@@ -118,31 +118,31 @@ class DecreeChangeReferent(Referent):
         return value_
     
     @property
-    def is_owner_name0(self) -> bool:
+    def is_owner_name(self) -> bool:
         """ Признак того, что изменения касаются наименования структурного элемента """
         return self.find_slot(DecreeChangeReferent.ATTR_MISC, "NAME", True) is not None
-    @is_owner_name0.setter
-    def is_owner_name0(self, value_) -> bool:
+    @is_owner_name.setter
+    def is_owner_name(self, value_) -> bool:
         if (value_): 
             self.add_slot(DecreeChangeReferent.ATTR_MISC, "NAME", False, 0)
         return value_
     
     @property
-    def is_only_text0(self) -> bool:
+    def is_only_text(self) -> bool:
         """ Признак того, что изменения касаются только текста (без заголовка) """
         return self.find_slot(DecreeChangeReferent.ATTR_MISC, "TEXT", True) is not None
-    @is_only_text0.setter
-    def is_only_text0(self, value_) -> bool:
+    @is_only_text.setter
+    def is_only_text(self, value_) -> bool:
         if (value_): 
             self.add_slot(DecreeChangeReferent.ATTR_MISC, "TEXT", False, 0)
         return value_
     
     @property
-    def is_owner_name_and_text0(self) -> bool:
+    def is_owner_name_and_text(self) -> bool:
         """ Признак того, что изменения касаются наименования и текста структурного элемента """
         return self.find_slot(DecreeChangeReferent.ATTR_MISC, "NAMETEXT", True) is not None
-    @is_owner_name_and_text0.setter
-    def is_owner_name_and_text0(self, value_) -> bool:
+    @is_owner_name_and_text.setter
+    def is_owner_name_and_text(self, value_) -> bool:
         if (value_): 
             self.add_slot(DecreeChangeReferent.ATTR_MISC, "NAMETEXT", False, 0)
         return value_
@@ -166,7 +166,7 @@ class DecreeChangeReferent(Referent):
         return True
     
     @staticmethod
-    def _new1088(_arg1 : 'DecreeChangeKind') -> 'DecreeChangeReferent':
+    def _new1095(_arg1 : 'DecreeChangeKind') -> 'DecreeChangeReferent':
         res = DecreeChangeReferent()
         res.kind = _arg1
         return res

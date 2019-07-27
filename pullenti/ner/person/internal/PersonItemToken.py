@@ -78,7 +78,7 @@ class PersonItemToken(MetaToken):
             return "{0}: {1}".format(Utils.ifNotNull(self.value, "?"), super().__str__())
         
         @staticmethod
-        def _new2515(_arg1 : str, _arg2 : 'MorphBaseInfo', _arg3 : bool, _arg4 : str) -> 'MorphPersonItemVariant':
+        def _new2543(_arg1 : str, _arg2 : 'MorphBaseInfo', _arg3 : bool, _arg4 : str) -> 'MorphPersonItemVariant':
             res = PersonItemToken.MorphPersonItemVariant(_arg1, _arg2, _arg3)
             res.short_value = _arg4
             return res
@@ -108,7 +108,7 @@ class PersonItemToken(MetaToken):
             return self.__m_morph
         
         @property
-        def is_china_surname0(self) -> bool:
+        def is_china_surname(self) -> bool:
             from pullenti.ner.person.PersonReferent import PersonReferent
             term_ = self.term
             if (term_ is None and len(self.vars0_) > 0): 
@@ -141,7 +141,7 @@ class PersonItemToken(MetaToken):
                 print(" - IsLastnameHasStdTail", end="", file=res)
             if (self.is_has_std_postfix): 
                 print(" - IsHasStdPostfix", end="", file=res)
-            if (self.is_china_surname0): 
+            if (self.is_china_surname): 
                 print(" - IsChinaSurname", end="", file=res)
             return Utils.toStringStringIO(res)
         
@@ -314,26 +314,26 @@ class PersonItemToken(MetaToken):
             return PersonItemToken.MorphPersonItem.__find_tail(val) is not None
         
         @staticmethod
-        def _new2463(_arg1 : bool) -> 'MorphPersonItem':
+        def _new2491(_arg1 : bool) -> 'MorphPersonItem':
             res = PersonItemToken.MorphPersonItem()
             res.is_has_std_postfix = _arg1
             return res
         
         @staticmethod
-        def _new2471(_arg1 : str) -> 'MorphPersonItem':
+        def _new2499(_arg1 : str) -> 'MorphPersonItem':
             res = PersonItemToken.MorphPersonItem()
             res.term = _arg1
             return res
         
         @staticmethod
-        def _new2474(_arg1 : str, _arg2 : bool) -> 'MorphPersonItem':
+        def _new2502(_arg1 : str, _arg2 : bool) -> 'MorphPersonItem':
             res = PersonItemToken.MorphPersonItem()
             res.term = _arg1
             res.is_in_ontology = _arg2
             return res
         
         @staticmethod
-        def _new2505(_arg1 : bool) -> 'MorphPersonItem':
+        def _new2533(_arg1 : bool) -> 'MorphPersonItem':
             res = PersonItemToken.MorphPersonItem()
             res.is_in_ontology = _arg1
             return res
@@ -365,9 +365,9 @@ class PersonItemToken(MetaToken):
     def is_asian_item(self, last : bool) -> bool:
         if (self.value is None or self.typ != PersonItemToken.ItemType.VALUE): 
             return False
-        if (self.chars.is_all_lower0): 
+        if (self.chars.is_all_lower): 
             return False
-        if (self.chars.is_all_upper0 and self.length_char > 1): 
+        if (self.chars.is_all_upper and self.length_char > 1): 
             return False
         sogl = 0
         gl = 0
@@ -400,9 +400,9 @@ class PersonItemToken(MetaToken):
         if (sogl > 4): 
             return False
         if (len(self.value) == 1): 
-            if (not self.chars.is_all_upper0): 
+            if (not self.chars.is_all_upper): 
                 return False
-        elif (not self.chars.is_capital_upper0): 
+        elif (not self.chars.is_capital_upper): 
             return False
         return True
     
@@ -429,13 +429,13 @@ class PersonItemToken(MetaToken):
         elif (self.lastname is not None): 
             self.firstname = self.lastname
         else: 
-            self.firstname = PersonItemToken.MorphPersonItem._new2463(True)
-            self.firstname.vars0_.append(PersonItemToken.MorphPersonItemVariant(self.value, MorphBaseInfo._new2464(gen), False))
+            self.firstname = PersonItemToken.MorphPersonItem._new2491(True)
+            self.firstname.vars0_.append(PersonItemToken.MorphPersonItemVariant(self.value, MorphBaseInfo._new2492(gen), False))
             if (self.lastname is None): 
                 self.lastname = self.firstname
         if (self.middlename is not None): 
             self.middlename.add_postfix(postfix, gen)
-        elif (self.firstname is not None and not self.chars.is_latin_letter0): 
+        elif (self.firstname is not None and not self.chars.is_latin_letter): 
             self.middlename = self.firstname
         self.is_in_dictionary = False
     
@@ -480,7 +480,7 @@ class PersonItemToken(MetaToken):
                     res00.begin_token = res00.end_token = t
                     return res00
             return None
-        if (not tt.chars.is_letter0): 
+        if (not tt.chars.is_letter): 
             return None
         if (tt.term == "THE"): 
             return None
@@ -488,34 +488,34 @@ class PersonItemToken(MetaToken):
             t1 = tt
             if (tt.next0_ is not None and tt.next0_.is_char('.')): 
                 t1 = tt.next0_
-            return PersonItemToken._new2465(tt, t1, PersonItemToken.ItemType.SUFFIX, "JUNIOR")
+            return PersonItemToken._new2493(tt, t1, PersonItemToken.ItemType.SUFFIX, "JUNIOR")
         if ((tt.term == "SR" or tt.term == "SNR" or tt.term == "SENIOR") or tt.term == "FITZ" or tt.term == "FILS"): 
             t1 = tt
             if (tt.next0_ is not None and tt.next0_.is_char('.')): 
                 t1 = tt.next0_
-            return PersonItemToken._new2465(tt, t1, PersonItemToken.ItemType.SUFFIX, "SENIOR")
+            return PersonItemToken._new2493(tt, t1, PersonItemToken.ItemType.SUFFIX, "SENIOR")
         initials = (tt.term == "YU" or tt.term == "YA" or tt.term == "CH") or tt.term == "SH"
-        if (not initials and len(tt.term) == 2 and tt.chars.is_capital_upper0): 
+        if (not initials and len(tt.term) == 2 and tt.chars.is_capital_upper): 
             if (not LanguageHelper.is_latin_vowel(tt.term[0]) and not LanguageHelper.is_latin_vowel(tt.term[1])): 
                 initials = True
         if (initials): 
-            rii = PersonItemToken._new2467(tt, tt, PersonItemToken.ItemType.INITIAL, tt.term, tt.chars)
+            rii = PersonItemToken._new2495(tt, tt, PersonItemToken.ItemType.INITIAL, tt.term, tt.chars)
             if (tt.next0_ is not None and tt.next0_.is_char('.')): 
                 rii.end_token = tt.next0_
             return rii
-        if (tt.chars.is_all_lower0): 
+        if (tt.chars.is_all_lower): 
             if (not tt.term in PersonItemToken.M_SUR_PREFIXES_LAT): 
                 return None
-        if (tt.chars.is_cyrillic_letter0): 
+        if (tt.chars.is_cyrillic_letter): 
             return None
         if (tt.length_char == 1): 
             if (tt.next0_ is None): 
                 return None
             if (tt.next0_.is_char('.')): 
-                return PersonItemToken._new2467(tt, tt.next0_, PersonItemToken.ItemType.INITIAL, tt.term, tt.chars)
-            if (not tt.next0_.is_whitespace_after0 and not tt.is_whitespace_after0 and ((tt.term == "D" or tt.term == "O" or tt.term == "M"))): 
+                return PersonItemToken._new2495(tt, tt.next0_, PersonItemToken.ItemType.INITIAL, tt.term, tt.chars)
+            if (not tt.next0_.is_whitespace_after and not tt.is_whitespace_after and ((tt.term == "D" or tt.term == "O" or tt.term == "M"))): 
                 if (BracketHelper.is_bracket(tt.next0_, False) and (isinstance(tt.next0_.next0_, TextToken))): 
-                    if (tt.next0_.next0_.chars.is_latin_letter0): 
+                    if (tt.next0_.next0_.chars.is_latin_letter): 
                         pit0 = PersonItemToken.try_attach_latin(tt.next0_.next0_)
                         if (pit0 is not None and pit0.typ == PersonItemToken.ItemType.VALUE): 
                             pit0.begin_token = tt
@@ -535,22 +535,22 @@ class PersonItemToken(MetaToken):
                                 pit0.lastname.is_in_dictionary = True
                             pit0.middlename = None
                             pit0.firstname = pit0.middlename
-                            if (not pit0.chars.is_all_upper0 and not pit0.chars.is_capital_upper0): 
-                                pit0.chars.is_capital_upper0 = True
+                            if (not pit0.chars.is_all_upper and not pit0.chars.is_capital_upper): 
+                                pit0.chars.is_capital_upper = True
                             return pit0
             if (not LanguageHelper.is_latin_vowel(tt.term[0]) or tt.whitespaces_after_count != 1): 
                 nex = PersonItemToken.try_attach_latin(tt.next0_)
                 if (nex is not None and nex.typ == PersonItemToken.ItemType.VALUE): 
-                    return PersonItemToken._new2467(tt, tt, PersonItemToken.ItemType.INITIAL, tt.term, tt.chars)
+                    return PersonItemToken._new2495(tt, tt, PersonItemToken.ItemType.INITIAL, tt.term, tt.chars)
                 return None
             if (tt.term == "I"): 
                 return None
-            return PersonItemToken._new2467(tt, tt, PersonItemToken.ItemType.VALUE, tt.term, tt.chars)
+            return PersonItemToken._new2495(tt, tt, PersonItemToken.ItemType.VALUE, tt.term, tt.chars)
         if (not MiscHelper.has_vowel(tt)): 
             return None
         if (tt.term in PersonItemToken.M_SUR_PREFIXES_LAT): 
             te = tt.next0_
-            if (te is not None and te.is_hiphen0): 
+            if (te is not None and te.is_hiphen): 
                 te = te.next0_
             res = PersonItemToken.try_attach_latin(te)
             if (res is not None): 
@@ -565,25 +565,25 @@ class PersonItemToken(MetaToken):
         res = PersonItemToken(tt, tt)
         res.value = tt.term
         cla = tt.get_morph_class_in_dictionary()
-        if (cla.is_proper_name0 or ((cla.is_proper0 and ((tt.morph.gender == MorphGender.MASCULINE or tt.morph.gender == MorphGender.FEMINIE))))): 
-            res.firstname = PersonItemToken.MorphPersonItem._new2471(res.value)
+        if (cla.is_proper_name or ((cla.is_proper and ((tt.morph.gender == MorphGender.MASCULINE or tt.morph.gender == MorphGender.FEMINIE))))): 
+            res.firstname = PersonItemToken.MorphPersonItem._new2499(res.value)
             for wf in tt.morph.items: 
-                if ((wf).is_in_dictionary0): 
-                    if (wf.class0_.is_proper_name0): 
+                if ((wf).is_in_dictionary): 
+                    if (wf.class0_.is_proper_name): 
                         res.firstname.vars0_.append(PersonItemToken.MorphPersonItemVariant(res.value, wf, False))
             if (len(res.firstname.vars0_) == 0): 
                 res.firstname.vars0_.append(PersonItemToken.MorphPersonItemVariant(res.value, None, False))
             res.firstname.is_in_dictionary = True
-        if (cla.is_proper_surname0): 
-            res.lastname = PersonItemToken.MorphPersonItem._new2471(res.value)
+        if (cla.is_proper_surname): 
+            res.lastname = PersonItemToken.MorphPersonItem._new2499(res.value)
             for wf in tt.morph.items: 
-                if ((wf).is_in_dictionary0): 
-                    if (wf.class0_.is_proper_surname0): 
+                if ((wf).is_in_dictionary): 
+                    if (wf.class0_.is_proper_surname): 
                         res.lastname.vars0_.append(PersonItemToken.MorphPersonItemVariant(res.value, wf, False))
             if (len(res.lastname.vars0_) == 0): 
                 res.lastname.vars0_.append(PersonItemToken.MorphPersonItemVariant(res.value, None, False))
             res.lastname.is_in_dictionary = True
-        if ((not cla.is_proper_name0 and not cla.is_proper0 and not cla.is_proper_surname0) and not cla.is_undefined0): 
+        if ((not cla.is_proper_name and not cla.is_proper and not cla.is_proper_surname) and not cla.is_undefined): 
             res.is_in_dictionary = True
         res.morph = tt.morph
         ots = None
@@ -591,20 +591,20 @@ class PersonItemToken(MetaToken):
             ots = t.kit.ontology.attach_token(PersonReferent.OBJ_TYPENAME, t)
         if (ots is not None): 
             if (ots[0].termin.ignore_terms_order): 
-                return PersonItemToken._new2473(ots[0].begin_token, ots[0].end_token, PersonItemToken.ItemType.REFERENT, Utils.asObjectOrNull(ots[0].item.tag, PersonReferent), ots[0].morph)
-            res.lastname = PersonItemToken.MorphPersonItem._new2474(ots[0].termin.canonic_text, True)
+                return PersonItemToken._new2501(ots[0].begin_token, ots[0].end_token, PersonItemToken.ItemType.REFERENT, Utils.asObjectOrNull(ots[0].item.tag, PersonReferent), ots[0].morph)
+            res.lastname = PersonItemToken.MorphPersonItem._new2502(ots[0].termin.canonic_text, True)
             for ot in ots: 
                 if (ot.termin is not None): 
                     mi = ot.morph
                     if (ot.termin.gender == MorphGender.MASCULINE or ot.termin.gender == MorphGender.FEMINIE): 
-                        mi = MorphBaseInfo._new2464(ot.termin.gender)
+                        mi = MorphBaseInfo._new2492(ot.termin.gender)
                     res.lastname.vars0_.append(PersonItemToken.MorphPersonItemVariant(ot.termin.canonic_text, mi, True))
         if (res.value.startswith("MC")): 
             res.value = ("MAC" + res.value[2:])
         if (res.value.startswith("MAC")): 
             res.middlename = None
             res.firstname = res.middlename
-            res.lastname = PersonItemToken.MorphPersonItem._new2463(True)
+            res.lastname = PersonItemToken.MorphPersonItem._new2491(True)
             res.lastname.vars0_.append(PersonItemToken.MorphPersonItemVariant(res.value, MorphBaseInfo(), True))
         return res
     
@@ -615,41 +615,41 @@ class PersonItemToken(MetaToken):
             return None
         if (isinstance(t, TextToken)): 
             mc = t.get_morph_class_in_dictionary()
-            if (mc.is_preposition0 or mc.is_conjunction0 or mc.is_misc0): 
+            if (mc.is_preposition or mc.is_conjunction or mc.is_misc): 
                 if (t.next0_ is not None and (isinstance(t.next0_, ReferentToken))): 
-                    if ((((attrs) & (PersonItemToken.ParseAttr.MUSTBEITEMALWAYS))) != (PersonItemToken.ParseAttr.NO) and not t.chars.is_all_lower0): 
+                    if ((((attrs) & (PersonItemToken.ParseAttr.MUSTBEITEMALWAYS))) != (PersonItemToken.ParseAttr.NO) and not t.chars.is_all_lower): 
                         pass
                     else: 
                         return None
         if (isinstance(t, NumberToken)): 
             nt = Utils.asObjectOrNull(t, NumberToken)
-            if (nt.begin_token == nt.end_token and nt.typ == NumberSpellingType.WORDS and ((not nt.begin_token.chars.is_all_lower0 or (((attrs) & (PersonItemToken.ParseAttr.MUSTBEITEMALWAYS))) != (PersonItemToken.ParseAttr.NO)))): 
+            if (nt.begin_token == nt.end_token and nt.typ == NumberSpellingType.WORDS and ((not nt.begin_token.chars.is_all_lower or (((attrs) & (PersonItemToken.ParseAttr.MUSTBEITEMALWAYS))) != (PersonItemToken.ParseAttr.NO)))): 
                 res00 = PersonItemToken.try_attach(nt.begin_token, loc_ont, attrs, prev_list)
                 if (res00 is not None): 
                     res00.begin_token = res00.end_token = t
                     return res00
-        if ((((isinstance(t, TextToken)) and t.length_char == 2 and (t).term == "JI") and t.chars.is_all_upper0 and not t.is_whitespace_after0) and t.next0_ is not None and t.next0_.is_char('.')): 
-            re1 = PersonItemToken._new2465(t, t.next0_, PersonItemToken.ItemType.INITIAL, "Л")
-            re1.chars.is_cyrillic_letter0 = True
-            re1.chars.is_all_upper0 = True
+        if ((((isinstance(t, TextToken)) and t.length_char == 2 and (t).term == "JI") and t.chars.is_all_upper and not t.is_whitespace_after) and t.next0_ is not None and t.next0_.is_char('.')): 
+            re1 = PersonItemToken._new2493(t, t.next0_, PersonItemToken.ItemType.INITIAL, "Л")
+            re1.chars.is_cyrillic_letter = True
+            re1.chars.is_all_upper = True
             return re1
-        if ((((((isinstance(t, TextToken)) and t.length_char == 1 and (t).term == "J") and t.chars.is_all_upper0 and not t.is_whitespace_after0) and (isinstance(t.next0_, NumberToken)) and (t.next0_).value == "1") and (t.next0_).typ == NumberSpellingType.DIGIT and t.next0_.next0_ is not None) and t.next0_.next0_.is_char('.')): 
-            re1 = PersonItemToken._new2465(t, t.next0_.next0_, PersonItemToken.ItemType.INITIAL, "Л")
-            re1.chars.is_cyrillic_letter0 = True
-            re1.chars.is_all_upper0 = True
+        if ((((((isinstance(t, TextToken)) and t.length_char == 1 and (t).term == "J") and t.chars.is_all_upper and not t.is_whitespace_after) and (isinstance(t.next0_, NumberToken)) and (t.next0_).value == "1") and (t.next0_).typ == NumberSpellingType.DIGIT and t.next0_.next0_ is not None) and t.next0_.next0_.is_char('.')): 
+            re1 = PersonItemToken._new2493(t, t.next0_.next0_, PersonItemToken.ItemType.INITIAL, "Л")
+            re1.chars.is_cyrillic_letter = True
+            re1.chars.is_all_upper = True
             return re1
-        if ((((((isinstance(t, TextToken)) and t.length_char == 1 and (t).term == "I") and t.chars.is_all_upper0 and not t.is_whitespace_after0) and (isinstance(t.next0_, NumberToken)) and (t.next0_).value == "1") and (t.next0_).typ == NumberSpellingType.DIGIT and t.next0_.next0_ is not None) and t.next0_.next0_.is_char('.')): 
-            if (prev_list is not None and prev_list[0].chars.is_cyrillic_letter0): 
-                re1 = PersonItemToken._new2465(t, t.next0_.next0_, PersonItemToken.ItemType.INITIAL, "П")
-                re1.chars.is_cyrillic_letter0 = True
-                re1.chars.is_all_upper0 = True
+        if ((((((isinstance(t, TextToken)) and t.length_char == 1 and (t).term == "I") and t.chars.is_all_upper and not t.is_whitespace_after) and (isinstance(t.next0_, NumberToken)) and (t.next0_).value == "1") and (t.next0_).typ == NumberSpellingType.DIGIT and t.next0_.next0_ is not None) and t.next0_.next0_.is_char('.')): 
+            if (prev_list is not None and prev_list[0].chars.is_cyrillic_letter): 
+                re1 = PersonItemToken._new2493(t, t.next0_.next0_, PersonItemToken.ItemType.INITIAL, "П")
+                re1.chars.is_cyrillic_letter = True
+                re1.chars.is_all_upper = True
                 return re1
         if (loc_ont is not None and len(loc_ont.items) > 1000): 
             loc_ont = (None)
         res = PersonItemToken.__try_attach(t, loc_ont, attrs, prev_list)
         if (res is not None): 
             return res
-        if (t.chars.is_latin_letter0 and (((attrs) & (PersonItemToken.ParseAttr.CANBELATIN))) != (PersonItemToken.ParseAttr.NO)): 
+        if (t.chars.is_latin_letter and (((attrs) & (PersonItemToken.ParseAttr.CANBELATIN))) != (PersonItemToken.ParseAttr.NO)): 
             ots = None
             if (loc_ont is not None): 
                 ots = loc_ont.try_attach(t, PersonReferent.OBJ_TYPENAME, False)
@@ -657,14 +657,14 @@ class PersonItemToken(MetaToken):
                 ots = t.kit.ontology.attach_token(PersonReferent.OBJ_TYPENAME, t)
             if (ots is not None and (isinstance(t, TextToken))): 
                 if (ots[0].termin.ignore_terms_order): 
-                    return PersonItemToken._new2473(ots[0].begin_token, ots[0].end_token, PersonItemToken.ItemType.REFERENT, Utils.asObjectOrNull(ots[0].item.tag, PersonReferent), ots[0].morph)
-                res = PersonItemToken._new2481(ots[0].begin_token, ots[0].end_token, (t).term, ots[0].chars)
-                res.lastname = PersonItemToken.MorphPersonItem._new2474(ots[0].termin.canonic_text, True)
+                    return PersonItemToken._new2501(ots[0].begin_token, ots[0].end_token, PersonItemToken.ItemType.REFERENT, Utils.asObjectOrNull(ots[0].item.tag, PersonReferent), ots[0].morph)
+                res = PersonItemToken._new2509(ots[0].begin_token, ots[0].end_token, (t).term, ots[0].chars)
+                res.lastname = PersonItemToken.MorphPersonItem._new2502(ots[0].termin.canonic_text, True)
                 for ot in ots: 
                     if (ot.termin is not None): 
                         mi = ot.morph
                         if (ot.termin.gender == MorphGender.MASCULINE or ot.termin.gender == MorphGender.FEMINIE): 
-                            mi = MorphBaseInfo._new2464(ot.termin.gender)
+                            mi = MorphBaseInfo._new2492(ot.termin.gender)
                         res.lastname.vars0_.append(PersonItemToken.MorphPersonItemVariant(ot.termin.canonic_text, mi, True))
                 return res
             res = PersonItemToken.try_attach_latin(t)
@@ -672,24 +672,24 @@ class PersonItemToken(MetaToken):
                 return res
         if (((isinstance(t, NumberToken)) and t.length_char == 1 and (((attrs) & (PersonItemToken.ParseAttr.CANINITIALBEDIGIT))) != (PersonItemToken.ParseAttr.NO)) and t.next0_ is not None and t.next0_.is_char_of(".„")): 
             if ((t).value == "1"): 
-                return PersonItemToken._new2467(t, t.next0_, PersonItemToken.ItemType.INITIAL, "І", CharsInfo._new2484(True))
+                return PersonItemToken._new2495(t, t.next0_, PersonItemToken.ItemType.INITIAL, "І", CharsInfo._new2512(True))
             if ((t).value == "0"): 
-                return PersonItemToken._new2467(t, t.next0_, PersonItemToken.ItemType.INITIAL, "О", CharsInfo._new2484(True))
+                return PersonItemToken._new2495(t, t.next0_, PersonItemToken.ItemType.INITIAL, "О", CharsInfo._new2512(True))
             if ((t).value == "3"): 
-                return PersonItemToken._new2467(t, t.next0_, PersonItemToken.ItemType.INITIAL, "З", CharsInfo._new2484(True))
-        if ((((isinstance(t, NumberToken)) and t.length_char == 1 and (((attrs) & (PersonItemToken.ParseAttr.CANINITIALBEDIGIT))) != (PersonItemToken.ParseAttr.NO)) and t.next0_ is not None and t.next0_.chars.is_all_lower0) and not t.is_whitespace_after0 and t.next0_.length_char > 2): 
+                return PersonItemToken._new2495(t, t.next0_, PersonItemToken.ItemType.INITIAL, "З", CharsInfo._new2512(True))
+        if ((((isinstance(t, NumberToken)) and t.length_char == 1 and (((attrs) & (PersonItemToken.ParseAttr.CANINITIALBEDIGIT))) != (PersonItemToken.ParseAttr.NO)) and t.next0_ is not None and t.next0_.chars.is_all_lower) and not t.is_whitespace_after and t.next0_.length_char > 2): 
             num = (t).value
-            if (num == "3" and t.next0_.chars.is_cyrillic_letter0): 
-                return PersonItemToken._new2467(t, t.next0_, PersonItemToken.ItemType.VALUE, "З" + (t.next0_).term, CharsInfo._new2490(True, True))
-            if (num == "0" and t.next0_.chars.is_cyrillic_letter0): 
-                return PersonItemToken._new2467(t, t.next0_, PersonItemToken.ItemType.VALUE, "О" + (t.next0_).term, CharsInfo._new2490(True, True))
-        if (((((isinstance(t, TextToken)) and t.length_char == 1 and t.chars.is_letter0) and t.chars.is_all_upper0 and (t.whitespaces_after_count < 2)) and (isinstance(t.next0_, TextToken)) and t.next0_.length_char == 1) and t.next0_.chars.is_all_lower0): 
+            if (num == "3" and t.next0_.chars.is_cyrillic_letter): 
+                return PersonItemToken._new2495(t, t.next0_, PersonItemToken.ItemType.VALUE, "З" + (t.next0_).term, CharsInfo._new2518(True, True))
+            if (num == "0" and t.next0_.chars.is_cyrillic_letter): 
+                return PersonItemToken._new2495(t, t.next0_, PersonItemToken.ItemType.VALUE, "О" + (t.next0_).term, CharsInfo._new2518(True, True))
+        if (((((isinstance(t, TextToken)) and t.length_char == 1 and t.chars.is_letter) and t.chars.is_all_upper and (t.whitespaces_after_count < 2)) and (isinstance(t.next0_, TextToken)) and t.next0_.length_char == 1) and t.next0_.chars.is_all_lower): 
             cou = 0
             t1 = None
             lat = 0
             cyr = 0
             ch = (t).get_source_text()[0]
-            if (t.chars.is_cyrillic_letter0): 
+            if (t.chars.is_cyrillic_letter): 
                 cyr += 1
                 if ((ord(LanguageHelper.get_lat_for_cyr(ch))) != 0): 
                     lat += 1
@@ -701,12 +701,12 @@ class PersonItemToken(MetaToken):
             while tt is not None: 
                 if (tt.whitespaces_before_count > 1): 
                     break
-                if (not ((isinstance(tt, TextToken))) or tt.length_char != 1 or not tt.chars.is_all_lower0): 
+                if (not ((isinstance(tt, TextToken))) or tt.length_char != 1 or not tt.chars.is_all_lower): 
                     break
                 t1 = tt
                 cou += 1
                 ch = (tt).get_source_text()[0]
-                if (tt.chars.is_cyrillic_letter0): 
+                if (tt.chars.is_cyrillic_letter): 
                     cyr += 1
                     if ((ord(LanguageHelper.get_lat_for_cyr(ch))) != 0): 
                         lat += 1
@@ -725,7 +725,7 @@ class PersonItemToken(MetaToken):
                     if (ne is None or ne.typ != PersonItemToken.ItemType.INITIAL): 
                         return None
             is_cyr = cyr >= lat
-            if (cyr == lat and t.chars.is_latin_letter0): 
+            if (cyr == lat and t.chars.is_latin_letter): 
                 is_cyr = False
             val = io.StringIO()
             tt = t
@@ -741,13 +741,13 @@ class PersonItemToken(MetaToken):
                         ch = chh
                 print(str.upper(ch), end="", file=val)
                 tt = tt.next0_
-            res = PersonItemToken._new2465(t, t1, PersonItemToken.ItemType.VALUE, Utils.toStringStringIO(val))
-            res.chars = CharsInfo._new2495(True, is_cyr, not is_cyr, True)
+            res = PersonItemToken._new2493(t, t1, PersonItemToken.ItemType.VALUE, Utils.toStringStringIO(val))
+            res.chars = CharsInfo._new2523(True, is_cyr, not is_cyr, True)
             return res
-        if ((((attrs) & (PersonItemToken.ParseAttr.MUSTBEITEMALWAYS))) != (PersonItemToken.ParseAttr.NO) and (isinstance(t, TextToken)) and not t.chars.is_all_lower0): 
-            res = PersonItemToken._new2496(t, t, (t).term)
+        if ((((attrs) & (PersonItemToken.ParseAttr.MUSTBEITEMALWAYS))) != (PersonItemToken.ParseAttr.NO) and (isinstance(t, TextToken)) and not t.chars.is_all_lower): 
+            res = PersonItemToken._new2524(t, t, (t).term)
             return res
-        if (((t.chars.is_all_upper0 and t.length_char == 1 and prev_list is not None) and len(prev_list) > 0 and (t.whitespaces_before_count < 2)) and prev_list[0].chars.is_capital_upper0): 
+        if (((t.chars.is_all_upper and t.length_char == 1 and prev_list is not None) and len(prev_list) > 0 and (t.whitespaces_before_count < 2)) and prev_list[0].chars.is_capital_upper): 
             last = prev_list[len(prev_list) - 1]
             ok = False
             if ((last.typ == PersonItemToken.ItemType.VALUE and last.lastname is not None and last.lastname.is_in_dictionary) and len(prev_list) == 1): 
@@ -755,7 +755,7 @@ class PersonItemToken(MetaToken):
             elif (len(prev_list) == 2 and last.typ == PersonItemToken.ItemType.INITIAL and prev_list[0].lastname is not None): 
                 ok = True
             if (ok): 
-                return PersonItemToken._new2497(t, t, (t).term, PersonItemToken.ItemType.INITIAL)
+                return PersonItemToken._new2525(t, t, (t).term, PersonItemToken.ItemType.INITIAL)
         return None
     
     @staticmethod
@@ -763,16 +763,16 @@ class PersonItemToken(MetaToken):
         from pullenti.ner.person.PersonReferent import PersonReferent
         tt = Utils.asObjectOrNull(t, TextToken)
         if (tt is None): 
-            if (t.chars.is_letter0 and t.chars.is_capital_upper0 and (isinstance(t, ReferentToken))): 
+            if (t.chars.is_letter and t.chars.is_capital_upper and (isinstance(t, ReferentToken))): 
                 rt = Utils.asObjectOrNull(t, ReferentToken)
                 if (rt.begin_token == rt.end_token and not ((isinstance(rt.referent, PersonReferent)))): 
                     res0 = PersonItemToken.__try_attach(rt.begin_token, loc_ont, attrs, None)
                     if (res0 is None): 
-                        res0 = PersonItemToken._new2498(rt, rt, rt.referent.to_string(True, t.kit.base_language, 0).upper(), rt.chars, rt.morph)
-                        res0.lastname = PersonItemToken.MorphPersonItem._new2471(res0.value)
+                        res0 = PersonItemToken._new2526(rt, rt, rt.referent.to_string(True, t.kit.base_language, 0).upper(), rt.chars, rt.morph)
+                        res0.lastname = PersonItemToken.MorphPersonItem._new2499(res0.value)
                     else: 
                         res0.begin_token = res0.end_token = rt
-                    if ((t.next0_ is not None and t.next0_.is_hiphen0 and (isinstance(t.next0_.next0_, TextToken))) and t.next0_.next0_.get_morph_class_in_dictionary().is_proper_secname0): 
+                    if ((t.next0_ is not None and t.next0_.is_hiphen and (isinstance(t.next0_.next0_, TextToken))) and t.next0_.next0_.get_morph_class_in_dictionary().is_proper_secname): 
                         res1 = PersonItemToken.try_attach(t.next0_.next0_, loc_ont, PersonItemToken.ParseAttr.NO, None)
                         if (res1 is not None and res1.middlename is not None): 
                             res1.middlename.add_prefix(res0.value + "-")
@@ -781,12 +781,43 @@ class PersonItemToken(MetaToken):
                             return res1
                     return res0
             return None
-        if (not tt.chars.is_letter0): 
+        if (not tt.chars.is_letter): 
             return None
-        if (tt.chars.is_all_lower0 and (((attrs) & (PersonItemToken.ParseAttr.CANBELOWER))) == (PersonItemToken.ParseAttr.NO)): 
+        can_be_all_lower = False
+        if (tt.chars.is_all_lower and (((attrs) & (PersonItemToken.ParseAttr.CANBELOWER))) == (PersonItemToken.ParseAttr.NO)): 
             if (not tt.term in PersonItemToken.M_SUR_PREFIXES): 
-                if (((tt.term == "Д" and not tt.is_whitespace_after0 and BracketHelper.is_bracket(tt.next0_, True)) and not tt.next0_.is_whitespace_after0 and (isinstance(tt.next0_.next0_, TextToken))) and tt.next0_.next0_.chars.is_capital_upper0): 
+                mc0 = tt.get_morph_class_in_dictionary()
+                if (((tt.term == "Д" and not tt.is_whitespace_after and BracketHelper.is_bracket(tt.next0_, True)) and not tt.next0_.is_whitespace_after and (isinstance(tt.next0_.next0_, TextToken))) and tt.next0_.next0_.chars.is_capital_upper): 
                     pass
+                elif (mc0.is_proper_surname): 
+                    if (tt.next0_ is not None and (tt.whitespaces_after_count < 3)): 
+                        mc1 = tt.next0_.get_morph_class_in_dictionary()
+                        if (mc1.is_proper_name): 
+                            can_be_all_lower = True
+                    if (tt.previous is not None and (tt.whitespaces_before_count < 3)): 
+                        mc1 = tt.previous.get_morph_class_in_dictionary()
+                        if (mc1.is_proper_name): 
+                            can_be_all_lower = True
+                    if (not can_be_all_lower): 
+                        return None
+                elif (mc0.is_proper_secname): 
+                    if (tt.previous is not None and (tt.whitespaces_before_count < 3)): 
+                        mc1 = tt.previous.get_morph_class_in_dictionary()
+                        if (mc1.is_proper_name): 
+                            can_be_all_lower = True
+                    if (not can_be_all_lower): 
+                        return None
+                elif (mc0.is_proper_name): 
+                    if (tt.next0_ is not None and (tt.whitespaces_after_count < 3)): 
+                        mc1 = tt.next0_.get_morph_class_in_dictionary()
+                        if (mc1.is_proper_surname or mc1.is_proper_secname): 
+                            can_be_all_lower = True
+                    if (tt.previous is not None and (tt.whitespaces_before_count < 3)): 
+                        mc1 = tt.previous.get_morph_class_in_dictionary()
+                        if (mc1.is_proper_surname): 
+                            can_be_all_lower = True
+                    if (not can_be_all_lower): 
+                        return None
                 else: 
                     return None
         if (tt.length_char == 1 or tt.term == "ДЖ"): 
@@ -794,20 +825,20 @@ class PersonItemToken(MetaToken):
                 return None
             ini = tt.term
             ci = CharsInfo(tt.chars)
-            if (not tt.chars.is_cyrillic_letter0): 
+            if (not tt.chars.is_cyrillic_letter): 
                 cyr = LanguageHelper.get_cyr_for_lat(ini[0])
                 if (cyr == (chr(0))): 
                     return None
                 ini = "{0}".format(cyr)
-                ci.is_latin_letter0 = False
-                ci.is_cyrillic_letter0 = True
+                ci.is_latin_letter = False
+                ci.is_cyrillic_letter = True
             if (tt.next0_.is_char('.')): 
-                return PersonItemToken._new2467(tt, tt.next0_, PersonItemToken.ItemType.INITIAL, ini, ci)
+                return PersonItemToken._new2495(tt, tt.next0_, PersonItemToken.ItemType.INITIAL, ini, ci)
             if ((tt.next0_.is_char_of(",;„") and prev_list is not None and len(prev_list) > 0) and prev_list[len(prev_list) - 1].typ == PersonItemToken.ItemType.INITIAL): 
-                return PersonItemToken._new2467(tt, tt, PersonItemToken.ItemType.INITIAL, ini, ci)
+                return PersonItemToken._new2495(tt, tt, PersonItemToken.ItemType.INITIAL, ini, ci)
             if ((tt.next0_.whitespaces_after_count < 2) and (tt.whitespaces_after_count < 2) and ((tt.term == "Д" or tt.term == "О" or tt.term == "Н"))): 
                 if (BracketHelper.is_bracket(tt.next0_, False) and (isinstance(tt.next0_.next0_, TextToken))): 
-                    if (tt.next0_.next0_.chars.is_cyrillic_letter0): 
+                    if (tt.next0_.next0_.chars.is_cyrillic_letter): 
                         pit0 = PersonItemToken.try_attach(tt.next0_.next0_, loc_ont, Utils.valToEnum((attrs) | (PersonItemToken.ParseAttr.CANBELOWER), PersonItemToken.ParseAttr), prev_list)
                         if (pit0 is not None): 
                             pit0.begin_token = tt
@@ -822,13 +853,13 @@ class PersonItemToken(MetaToken):
                                 pit0.lastname.is_in_dictionary = True
                             pit0.middlename = None
                             pit0.firstname = pit0.middlename
-                            if (not pit0.chars.is_all_upper0 and not pit0.chars.is_capital_upper0): 
-                                pit0.chars.is_capital_upper0 = True
+                            if (not pit0.chars.is_all_upper and not pit0.chars.is_capital_upper): 
+                                pit0.chars.is_capital_upper = True
                             return pit0
             if (not LanguageHelper.is_cyrillic_vowel(tt.term[0]) or tt.whitespaces_after_count != 1): 
                 return None
-            return PersonItemToken._new2467(tt, tt, PersonItemToken.ItemType.VALUE, tt.term, tt.chars)
-        if (not tt.chars.is_cyrillic_letter0): 
+            return PersonItemToken._new2495(tt, tt, PersonItemToken.ItemType.VALUE, tt.term, tt.chars)
+        if (not tt.chars.is_cyrillic_letter): 
             return None
         if (not MiscHelper.has_vowel(tt)): 
             return None
@@ -841,9 +872,13 @@ class PersonItemToken(MetaToken):
         res = None
         if (ots is not None): 
             if (ots[0].termin.ignore_terms_order): 
-                return PersonItemToken._new2473(ots[0].begin_token, ots[0].end_token, PersonItemToken.ItemType.REFERENT, Utils.asObjectOrNull(ots[0].item.tag, PersonReferent), ots[0].morph)
-            res = PersonItemToken._new2481(ots[0].begin_token, ots[0].end_token, tt.term, ots[0].chars)
-            res.lastname = PersonItemToken.MorphPersonItem._new2505(True)
+                return PersonItemToken._new2501(ots[0].begin_token, ots[0].end_token, PersonItemToken.ItemType.REFERENT, Utils.asObjectOrNull(ots[0].item.tag, PersonReferent), ots[0].morph)
+            mc = ots[0].begin_token.get_morph_class_in_dictionary()
+            if (ots[0].begin_token == ots[0].end_token and mc.is_proper_name and not mc.is_proper_surname): 
+                ots = (None)
+        if (ots is not None): 
+            res = PersonItemToken._new2509(ots[0].begin_token, ots[0].end_token, tt.term, ots[0].chars)
+            res.lastname = PersonItemToken.MorphPersonItem._new2533(True)
             res.lastname.term = ots[0].termin.canonic_text
             for ot in ots: 
                 if (ot.termin is not None): 
@@ -851,31 +886,31 @@ class PersonItemToken(MetaToken):
                     if (ot.termin.gender == MorphGender.MASCULINE): 
                         if ((((t.morph.gender) & (MorphGender.FEMINIE))) != (MorphGender.UNDEFINED)): 
                             continue
-                        mi = MorphBaseInfo._new2464(ot.termin.gender)
+                        mi = MorphBaseInfo._new2492(ot.termin.gender)
                     elif (ot.termin.gender == MorphGender.FEMINIE): 
                         if ((((t.morph.gender) & (MorphGender.MASCULINE))) != (MorphGender.UNDEFINED)): 
                             continue
-                        mi = MorphBaseInfo._new2464(ot.termin.gender)
+                        mi = MorphBaseInfo._new2492(ot.termin.gender)
                     else: 
                         continue
                     res.lastname.vars0_.append(PersonItemToken.MorphPersonItemVariant(ot.termin.canonic_text, mi, True))
             if ("-" in ots[0].termin.canonic_text): 
                 return res
         else: 
-            res = PersonItemToken._new2498(t, t, tt.term, tt.chars, tt.morph)
+            res = PersonItemToken._new2526(t, t, tt.term, tt.chars, tt.morph)
             if (tt.term in PersonItemToken.M_SUR_PREFIXES): 
-                if (((tt.is_value("БЕН", None) or tt.is_value("ВАН", None))) and (((attrs) & (PersonItemToken.ParseAttr.ALTVAR))) != (PersonItemToken.ParseAttr.NO) and ((tt.next0_ is None or not tt.next0_.is_hiphen0))): 
+                if (((tt.is_value("БЕН", None) or tt.is_value("ВАН", None))) and (((attrs) & (PersonItemToken.ParseAttr.ALTVAR))) != (PersonItemToken.ParseAttr.NO) and ((tt.next0_ is None or not tt.next0_.is_hiphen))): 
                     pass
                 else: 
                     if (tt.next0_ is not None): 
                         t1 = tt.next0_
-                        if (t1.is_hiphen0): 
+                        if (t1.is_hiphen): 
                             tt = (Utils.asObjectOrNull(t1.next0_, TextToken))
-                        elif ((((attrs) & (PersonItemToken.ParseAttr.SURNAMEPREFIXNOTMERGE))) != (PersonItemToken.ParseAttr.NO) and t1.chars.is_all_lower0): 
+                        elif ((((attrs) & (PersonItemToken.ParseAttr.SURNAMEPREFIXNOTMERGE))) != (PersonItemToken.ParseAttr.NO) and t1.chars.is_all_lower): 
                             tt = (None)
                         else: 
                             tt = (Utils.asObjectOrNull(t1, TextToken))
-                        if ((tt is None or tt.is_newline_before0 or tt.chars.is_all_lower0) or not tt.chars.is_cyrillic_letter0 or (tt.length_char < 3)): 
+                        if ((tt is None or tt.is_newline_before or tt.chars.is_all_lower) or not tt.chars.is_cyrillic_letter or (tt.length_char < 3)): 
                             pass
                         else: 
                             sur_prefix = res.value
@@ -884,16 +919,16 @@ class PersonItemToken(MetaToken):
                             res.chars = tt.chars
                             res.end_token = tt
                     if (sur_prefix is None): 
-                        if (t.chars.is_capital_upper0 or t.chars.is_all_upper0): 
+                        if (t.chars.is_capital_upper or t.chars.is_all_upper): 
                             return res
                         return None
         if (tt.is_value("ФАМИЛИЯ", "ПРІЗВИЩЕ") or tt.is_value("ИМЯ", "ІМЯ") or tt.is_value("ОТЧЕСТВО", "БАТЬКОВІ")): 
             return None
-        if (tt.morph.class0_.is_preposition0 or tt.morph.class0_.is_conjunction0): 
-            if (tt.get_morph_class_in_dictionary().is_proper_name0): 
+        if (tt.morph.class0_.is_preposition or tt.morph.class0_.is_conjunction): 
+            if (tt.get_morph_class_in_dictionary().is_proper_name): 
                 pass
             elif (tt.next0_ is None or not tt.next0_.is_char('.')): 
-                if (tt.length_char > 1 and tt.chars.is_capital_upper0 and not MiscHelper.can_be_start_of_sentence(tt)): 
+                if (tt.length_char > 1 and tt.chars.is_capital_upper and not MiscHelper.can_be_start_of_sentence(tt)): 
                     pass
                 else: 
                     return None
@@ -914,8 +949,8 @@ class PersonItemToken(MetaToken):
             if (tt.length_char > 6 and tt.term.startswith("ДО")): 
                 if (tt.is_value("ДОРОГОЙ", None)): 
                     return None
-        if (not tt.chars.is_all_upper0 and not tt.chars.is_capital_upper0): 
-            if ((((attrs) & (PersonItemToken.ParseAttr.CANINITIALBEDIGIT))) != (PersonItemToken.ParseAttr.NO) and not tt.chars.is_all_lower0): 
+        if (not tt.chars.is_all_upper and not tt.chars.is_capital_upper and not can_be_all_lower): 
+            if ((((attrs) & (PersonItemToken.ParseAttr.CANINITIALBEDIGIT))) != (PersonItemToken.ParseAttr.NO) and not tt.chars.is_all_lower): 
                 pass
             elif ((((attrs) & (PersonItemToken.ParseAttr.CANBELOWER))) == (PersonItemToken.ParseAttr.NO)): 
                 return None
@@ -924,32 +959,32 @@ class PersonItemToken(MetaToken):
             wf = Utils.asObjectOrNull(wff, MorphWordForm)
             if (wf is None): 
                 continue
-            if (wf.class0_.is_adjective0 and wf.contains_attr("к.ф.", None)): 
-                if (wf.is_in_dictionary0): 
-                    if (LanguageHelper.ends_with(tt.term, "НО") or ((tt.next0_ is not None and tt.next0_.is_hiphen0))): 
+            if (wf.class0_.is_adjective and wf.contains_attr("к.ф.", None)): 
+                if (wf.is_in_dictionary): 
+                    if (LanguageHelper.ends_with(tt.term, "НО") or ((tt.next0_ is not None and tt.next0_.is_hiphen))): 
                         res.is_in_dictionary = True
                 continue
-            elif (wf.class0_.is_adjective0 and adj is None and (((wf.is_in_dictionary0 or wf.normal_case.endswith("ЫЙ") or wf.normal_case.endswith("ИЙ")) or wf.normal_case.endswith("АЯ") or wf.normal_case.endswith("ЯЯ")))): 
+            elif (wf.class0_.is_adjective and adj is None and (((wf.is_in_dictionary or wf.normal_case.endswith("ЫЙ") or wf.normal_case.endswith("ИЙ")) or wf.normal_case.endswith("АЯ") or wf.normal_case.endswith("ЯЯ")))): 
                 adj = wf
-            if (wf.class0_.is_verb0): 
-                if (wf.is_in_dictionary0): 
+            if (wf.class0_.is_verb): 
+                if (wf.is_in_dictionary): 
                     res.is_in_dictionary = True
                 continue
-            if (wf.is_in_dictionary0): 
-                if ((wf.class0_.is_adverb0 or wf.class0_.is_preposition0 or wf.class0_.is_conjunction0) or wf.class0_.is_pronoun0 or wf.class0_.is_personal_pronoun0): 
+            if (wf.is_in_dictionary): 
+                if ((wf.class0_.is_adverb or wf.class0_.is_preposition or wf.class0_.is_conjunction) or wf.class0_.is_pronoun or wf.class0_.is_personal_pronoun): 
                     res.is_in_dictionary = True
-            if (wf.class0_.is_proper_surname0 or sur_prefix is not None): 
+            if (wf.class0_.is_proper_surname or sur_prefix is not None): 
                 if (res.lastname is None): 
-                    res.lastname = PersonItemToken.MorphPersonItem._new2471(tt.term)
+                    res.lastname = PersonItemToken.MorphPersonItem._new2499(tt.term)
                 if (adj is not None): 
-                    if (not wf.is_in_dictionary0 and adj.number == MorphNumber.SINGULAR): 
+                    if (not wf.is_in_dictionary and adj.number == MorphNumber.SINGULAR): 
                         val = adj.normal_case
                         res.lastname.vars0_.append(PersonItemToken.MorphPersonItemVariant(val, adj, True))
                         if (val == tt.term): 
                             break
                     adj = (None)
                 if ((((attrs) & (PersonItemToken.ParseAttr.NOMINATIVECASE))) != (PersonItemToken.ParseAttr.NO)): 
-                    if (not wf.case_.is_undefined0 and not wf.case_.is_nominative0): 
+                    if (not wf.case_.is_undefined and not wf.case_.is_nominative): 
                         continue
                 v = PersonItemToken.MorphPersonItemVariant(wf.normal_case, wf, True)
                 if (wf.normal_case != tt.term and LanguageHelper.ends_with(tt.term, "ОВ")): 
@@ -961,42 +996,42 @@ class PersonItemToken(MetaToken):
                     if (len(wf.normal_case) > len(tt.term)): 
                         v.value = tt.term
                 res.lastname.vars0_.append(v)
-                if (wf.is_in_dictionary0 and v.gender == MorphGender.UNDEFINED and wf.gender == MorphGender.UNDEFINED): 
+                if (wf.is_in_dictionary and v.gender == MorphGender.UNDEFINED and wf.gender == MorphGender.UNDEFINED): 
                     v.gender = MorphGender.MASCULINE
                     vv = PersonItemToken.MorphPersonItemVariant(wf.normal_case, wf, True)
                     vv.value = v.value
                     vv.short_value = v.short_value
                     vv.gender = MorphGender.FEMINIE
                     res.lastname.vars0_.append(vv)
-                if (wf.is_in_dictionary0): 
+                if (wf.is_in_dictionary): 
                     res.lastname.is_in_dictionary = True
                 if (tt.term.endswith("ИХ") or tt.term.endswith("ЫХ")): 
                     if (res.lastname.vars0_[0].value != tt.term): 
-                        res.lastname.vars0_.insert(0, PersonItemToken.MorphPersonItemVariant(tt.term, MorphBaseInfo._new2511(MorphCase.ALL_CASES, Utils.valToEnum((MorphGender.MASCULINE) | (MorphGender.FEMINIE), MorphGender), MorphClass._new2510(True)), True))
+                        res.lastname.vars0_.insert(0, PersonItemToken.MorphPersonItemVariant(tt.term, MorphBaseInfo._new2539(MorphCase.ALL_CASES, Utils.valToEnum((MorphGender.MASCULINE) | (MorphGender.FEMINIE), MorphGender), MorphClass._new2538(True)), True))
             if (sur_prefix is not None): 
                 continue
-            if (wf.class0_.is_proper_name0 and wf.number != MorphNumber.PLURAL): 
+            if (wf.class0_.is_proper_name and wf.number != MorphNumber.PLURAL): 
                 ok = True
-                if (t.morph.language.is_ua0): 
+                if (t.morph.language.is_ua): 
                     pass
                 elif (wf.normal_case is not None and (len(wf.normal_case) < 5)): 
                     pass
                 else: 
                     ok = (not LanguageHelper.ends_with(wf.normal_case, "ОВ") and wf.normal_case != "АЛЛ")
                     if (ok): 
-                        if (tt.chars.is_all_upper0 and (tt.length_char < 4)): 
+                        if (tt.chars.is_all_upper and (tt.length_char < 4)): 
                             ok = False
                 if (ok): 
                     if (res.firstname is None): 
-                        res.firstname = PersonItemToken.MorphPersonItem._new2471(tt.term)
+                        res.firstname = PersonItemToken.MorphPersonItem._new2499(tt.term)
                     res.firstname.vars0_.append(PersonItemToken.MorphPersonItemVariant(wf.normal_case, wf, False))
-                    if (wf.is_in_dictionary0): 
-                        if (not tt.chars.is_all_upper0 or tt.length_char > 4): 
+                    if (wf.is_in_dictionary): 
+                        if (not tt.chars.is_all_upper or tt.length_char > 4): 
                             res.firstname.is_in_dictionary = True
             if (not PersonItemToken.MorphPersonItem.ends_with_std_surname(tt.term)): 
-                if (wf.class0_.is_proper_secname0): 
+                if (wf.class0_.is_proper_secname): 
                     if (res.middlename is None): 
-                        res.middlename = PersonItemToken.MorphPersonItem._new2471(tt.term)
+                        res.middlename = PersonItemToken.MorphPersonItem._new2499(tt.term)
                     elif (wf.misc.form == MorphForm.SYNONYM): 
                         continue
                     iii = PersonItemToken.MorphPersonItemVariant(wf.normal_case, wf, False)
@@ -1004,11 +1039,11 @@ class PersonItemToken(MetaToken):
                         res.middlename.vars0_.insert(0, iii)
                     else: 
                         res.middlename.vars0_.append(iii)
-                    if (wf.is_in_dictionary0): 
+                    if (wf.is_in_dictionary): 
                         res.middlename.is_in_dictionary = True
-                if (not wf.class0_.is_proper0 and wf.is_in_dictionary0): 
+                if (not wf.class0_.is_proper and wf.is_in_dictionary): 
                     res.is_in_dictionary = True
-            elif (wf.is_in_dictionary0 and not wf.class0_.is_proper0 and LanguageHelper.ends_with(tt.term, "КО")): 
+            elif (wf.is_in_dictionary and not wf.class0_.is_proper and LanguageHelper.ends_with(tt.term, "КО")): 
                 res.is_in_dictionary = True
         if (res.lastname is not None): 
             for v in res.lastname.vars0_: 
@@ -1030,7 +1065,7 @@ class PersonItemToken(MetaToken):
                 res.lastname.term = "{0}-{1}".format(sur_prefix, res.lastname.term)
                 for v in res.lastname.vars0_: 
                     v.value = "{0}-{1}".format(sur_prefix, v.value)
-            if (tt.morph.class0_.is_adjective0 and not res.lastname.is_in_ontology): 
+            if (tt.morph.class0_.is_adjective and not res.lastname.is_in_ontology): 
                 std_end = False
                 for v in res.lastname.vars0_: 
                     if (PersonItemToken.MorphPersonItem.ends_with_std_surname(v.value)): 
@@ -1046,7 +1081,7 @@ class PersonItemToken(MetaToken):
         elif (tt.length_char > 2): 
             res.lastname = PersonItemToken.MorphPersonItem()
             for wf in tt.morph.items: 
-                if (not wf.class0_.is_verb0): 
+                if (not wf.class0_.is_verb): 
                     if (wf.contains_attr("к.ф.", None)): 
                         continue
                     res.lastname.vars0_.append(PersonItemToken.MorphPersonItemVariant((wf).normal_case, wf, True))
@@ -1059,11 +1094,11 @@ class PersonItemToken(MetaToken):
                 res.lastname.add_prefix(sur_prefix + "-")
                 res.lastname.is_lastname_has_hiphen = True
         if (res.begin_token == res.end_token): 
-            if (res.begin_token.get_morph_class_in_dictionary().is_verb0 and res.lastname is not None): 
+            if (res.begin_token.get_morph_class_in_dictionary().is_verb and res.lastname is not None): 
                 if (not res.lastname.is_lastname_has_std_tail and not res.lastname.is_in_dictionary): 
                     if (res.is_newline_before): 
                         pass
-                    elif (res.begin_token.chars.is_capital_upper0 and not MiscHelper.can_be_start_of_sentence(res.begin_token)): 
+                    elif (res.begin_token.chars.is_capital_upper and not MiscHelper.can_be_start_of_sentence(res.begin_token)): 
                         pass
                     else: 
                         res.lastname = (None)
@@ -1072,7 +1107,7 @@ class PersonItemToken(MetaToken):
             if (res.firstname is not None and (isinstance(res.begin_token, TextToken))): 
                 if ((res.begin_token).term == "ЛЮБОЙ"): 
                     res.firstname = (None)
-            if (res.begin_token.get_morph_class_in_dictionary().is_adjective0 and res.lastname is not None): 
+            if (res.begin_token.get_morph_class_in_dictionary().is_adjective and res.lastname is not None): 
                 npt = NounPhraseHelper.try_parse(res.begin_token, NounPhraseParseAttr.NO, 0)
                 if (npt is not None): 
                     if (npt.begin_token != npt.end_token): 
@@ -1080,9 +1115,9 @@ class PersonItemToken(MetaToken):
                             res.lastname = (None)
         if (res.firstname is not None): 
             i = 0
-            first_pass3219 = True
+            first_pass3249 = True
             while True:
-                if first_pass3219: first_pass3219 = False
+                if first_pass3249: first_pass3249 = False
                 else: i += 1
                 if (not (i < len(res.firstname.vars0_))): break
                 val = res.firstname.vars0_[i].value
@@ -1099,8 +1134,8 @@ class PersonItemToken(MetaToken):
                             res.firstname.vars0_[i].gender = kp.gender
                             fi = False
                         else: 
-                            mi = MorphBaseInfo._new2464(kp.gender)
-                            res.firstname.vars0_.append(PersonItemToken.MorphPersonItemVariant._new2515(kp.name, mi, False, val))
+                            mi = MorphBaseInfo._new2492(kp.gender)
+                            res.firstname.vars0_.append(PersonItemToken.MorphPersonItemVariant._new2543(kp.name, mi, False, val))
                 else: 
                     cou = 0
                     for kp in di: 
@@ -1110,15 +1145,15 @@ class PersonItemToken(MetaToken):
                                 res.firstname.vars0_[i].value = kp.name
                                 res.firstname.vars0_[i].short_value = val
                             else: 
-                                res.firstname.vars0_.insert(i + 1, PersonItemToken.MorphPersonItemVariant._new2515(kp.name, res.firstname.vars0_[i], False, val))
+                                res.firstname.vars0_.insert(i + 1, PersonItemToken.MorphPersonItemVariant._new2543(kp.name, res.firstname.vars0_[i], False, val))
         if (res is not None and res.is_in_dictionary and res.firstname is None): 
             wi = res.kit.statistics.get_word_info(res.begin_token)
             if (wi is not None and wi.lower_count > 0): 
-                if (((t.morph.class0_.is_preposition0 or t.morph.class0_.is_conjunction0 or t.morph.class0_.is_pronoun0)) and not MiscHelper.can_be_start_of_sentence(t)): 
+                if (((t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction or t.morph.class0_.is_pronoun)) and not MiscHelper.can_be_start_of_sentence(t)): 
                     pass
                 else: 
                     return None
-        if (res.end_token.next0_ is not None and res.end_token.next0_.is_hiphen0 and (isinstance(res.end_token.next0_.next0_, TextToken))): 
+        if (res.end_token.next0_ is not None and res.end_token.next0_.is_hiphen and (isinstance(res.end_token.next0_.next0_, TextToken))): 
             ter = (res.end_token.next0_.next0_).term
             if (ter in PersonItemToken.M_ARAB_POSTFIX or ter in PersonItemToken.M_ARAB_POSTFIX_FEM): 
                 res.end_token = res.end_token.next0_.next0_
@@ -1126,7 +1161,7 @@ class PersonItemToken(MetaToken):
                 if ((ter == "ОГЛЫ" or ter == "КЫЗЫ" or ter == "ГЫЗЫ") or ter == "УГЛИ" or ter == "КЗЫ"): 
                     if (res.firstname is not None and res.middlename is not None): 
                         res.firstname = (None)
-            elif ((not res.is_whitespace_after and not res.end_token.next0_.is_whitespace_after0 and res.end_token.next0_.next0_.chars == res.begin_token.chars) and res.begin_token == res.end_token): 
+            elif ((not res.is_whitespace_after and not res.end_token.next0_.is_whitespace_after and res.end_token.next0_.next0_.chars == res.begin_token.chars) and res.begin_token == res.end_token): 
                 res1 = PersonItemToken.try_attach(res.end_token.next0_.next0_, loc_ont, PersonItemToken.ParseAttr.NO, None)
                 if (res1 is not None and res1.begin_token == res1.end_token): 
                     if (res1.lastname is not None and res.lastname is not None and ((((res1.lastname.is_has_std_postfix or res1.lastname.is_in_dictionary or res1.lastname.is_in_ontology) or res.lastname.is_has_std_postfix or res.lastname.is_in_dictionary) or res.lastname.is_in_ontology))): 
@@ -1198,9 +1233,9 @@ class PersonItemToken(MetaToken):
                         res.end_token = res1.end_token
         while (res.end_token.whitespaces_after_count < 3) and (isinstance(res.end_token.next0_, TextToken)):
             ter = (res.end_token.next0_).term
-            if (((ter != "АЛИ" and ter != "ПАША")) or res.end_token.next0_.chars.is_all_lower0): 
+            if (((ter != "АЛИ" and ter != "ПАША")) or res.end_token.next0_.chars.is_all_lower): 
                 if (ter in PersonItemToken.M_ARAB_POSTFIX or ter in PersonItemToken.M_ARAB_POSTFIX_FEM): 
-                    if (res.end_token.next0_.next0_ is not None and res.end_token.next0_.next0_.is_hiphen0): 
+                    if (res.end_token.next0_.next0_ is not None and res.end_token.next0_.next0_.is_hiphen): 
                         pass
                     else: 
                         res.end_token = res.end_token.next0_
@@ -1225,19 +1260,19 @@ class PersonItemToken(MetaToken):
         from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
         if (t is None): 
             return None
-        if (((not ((isinstance(t, TextToken))) or not t.chars.is_letter0)) and (((attrs) & (PersonItemToken.ParseAttr.CANINITIALBEDIGIT))) == (PersonItemToken.ParseAttr.NO)): 
+        if (((not ((isinstance(t, TextToken))) or not t.chars.is_letter)) and (((attrs) & (PersonItemToken.ParseAttr.CANINITIALBEDIGIT))) == (PersonItemToken.ParseAttr.NO)): 
             if ((isinstance(t, ReferentToken)) and (isinstance(t.get_referent(), GeoReferent)) and (t).begin_token == (t).end_token): 
                 pass
             elif (isinstance(t, NumberToken)): 
                 nt = Utils.asObjectOrNull(t, NumberToken)
-                if (nt.begin_token == nt.end_token and nt.typ == NumberSpellingType.WORDS and not nt.begin_token.chars.is_all_lower0): 
+                if (nt.begin_token == nt.end_token and nt.typ == NumberSpellingType.WORDS and not nt.begin_token.chars.is_all_lower): 
                     pass
                 else: 
                     return None
             else: 
                 return None
         pit = PersonItemToken.try_attach(t, loc_ont, attrs, None)
-        if (pit is None and t.chars.is_latin_letter0): 
+        if (pit is None and t.chars.is_latin_letter): 
             pass
         if (pit is None): 
             return None
@@ -1258,7 +1293,7 @@ class PersonItemToken(MetaToken):
                     pit.lastname = None
                     pit.middlename = pit.lastname
                     pit.firstname = pit.middlename
-                    pit2 = PersonItemToken._new2465(t, t, PersonItemToken.ItemType.INITIAL, str0_[len(str0_) - 1:])
+                    pit2 = PersonItemToken._new2493(t, t, PersonItemToken.ItemType.INITIAL, str0_[len(str0_) - 1:])
                     res.append(pit2)
                     t = t.next0_
         zap = False
@@ -1266,10 +1301,10 @@ class PersonItemToken(MetaToken):
             if (t.whitespaces_before_count > 15): 
                 break
             tt = t
-            if (tt.is_hiphen0 and tt.next0_ is not None): 
-                if (not tt.is_whitespace_after0 and not tt.is_whitespace_before0): 
+            if (tt.is_hiphen and tt.next0_ is not None): 
+                if (not tt.is_whitespace_after and not tt.is_whitespace_before): 
                     tt = t.next0_
-                elif (tt.previous.chars == tt.next0_.chars and not tt.is_newline_after0): 
+                elif (tt.previous.chars == tt.next0_.chars and not tt.is_newline_after): 
                     tt = tt.next0_
             elif ((tt.is_char(',') and (tt.whitespaces_after_count < 2) and tt.next0_ is not None) and len(res) == 1): 
                 zap = True
@@ -1292,37 +1327,37 @@ class PersonItemToken(MetaToken):
             pit1 = PersonItemToken.try_attach(tt, loc_ont, attrs, res)
             if (pit1 is None): 
                 break
-            if (pit1.chars.is_cyrillic_letter0 != pit.chars.is_cyrillic_letter0): 
+            if (pit1.chars.is_cyrillic_letter != pit.chars.is_cyrillic_letter): 
                 ok = False
                 if (pit1.typ == PersonItemToken.ItemType.INITIAL): 
-                    if (pit1.chars.is_cyrillic_letter0): 
+                    if (pit1.chars.is_cyrillic_letter): 
                         v = LanguageHelper.get_lat_for_cyr(pit1.value[0])
                         if (v != (chr(0))): 
                             pit1.value = "{0}".format(v)
                             ok = True
-                            pit1.chars = CharsInfo._new2518(True)
+                            pit1.chars = CharsInfo._new2546(True)
                         elif (pit.typ == PersonItemToken.ItemType.INITIAL): 
                             v = LanguageHelper.get_cyr_for_lat(pit.value[0])
                             if (v != (chr(0))): 
                                 pit.value = "{0}".format(v)
                                 ok = True
-                                pit.chars = CharsInfo._new2484(True)
+                                pit.chars = CharsInfo._new2512(True)
                                 pit = pit1
                     else: 
                         v = LanguageHelper.get_cyr_for_lat(pit1.value[0])
                         if (v != (chr(0))): 
                             pit1.value = "{0}".format(v)
                             ok = True
-                            pit1.chars = CharsInfo._new2484(True)
+                            pit1.chars = CharsInfo._new2512(True)
                         elif (pit.typ == PersonItemToken.ItemType.INITIAL): 
                             v = LanguageHelper.get_lat_for_cyr(pit.value[0])
                             if (v != (chr(0))): 
                                 pit.value = "{0}".format(v)
                                 ok = True
-                                pit.chars = CharsInfo._new2518(True)
+                                pit.chars = CharsInfo._new2546(True)
                                 pit = pit1
                 elif (pit.typ == PersonItemToken.ItemType.INITIAL): 
-                    if (pit.chars.is_cyrillic_letter0): 
+                    if (pit.chars.is_cyrillic_letter): 
                         v = LanguageHelper.get_lat_for_cyr(pit.value[0])
                         if (v != (chr(0))): 
                             pit.value = "{0}".format(v)
@@ -1354,10 +1389,10 @@ class PersonItemToken(MetaToken):
                             break
                         if (pit1.lastname is None or not pit1.lastname.is_lastname_has_std_tail): 
                             ty = pit1.begin_token.get_morph_class_in_dictionary()
-                            if (ty.is_noun0): 
+                            if (ty.is_noun): 
                                 if (pit1.whitespaces_before_count > 1): 
                                     break
-                                if (pat.chars.is_capital_upper0 and pat.begin_token == pat.end_token): 
+                                if (pat.chars.is_capital_upper and pat.begin_token == pat.end_token): 
                                     pass
                                 else: 
                                     break
@@ -1405,9 +1440,9 @@ class PersonItemToken(MetaToken):
                                 res.append(res1[0])
                                 res.append(res2[0])
         i = 0
-        first_pass3220 = True
+        first_pass3250 = True
         while True:
-            if first_pass3220: first_pass3220 = False
+            if first_pass3250: first_pass3250 = False
             else: i += 1
             if (not (i < len(res))): break
             if (res[i].firstname is not None and res[i].begin_token.is_value("СВЕТА", None)): 
@@ -1422,24 +1457,24 @@ class PersonItemToken(MetaToken):
                 res[i].__add_postfix_info(res[i + 1].value, MorphGender.UNDEFINED)
                 res[i].end_token = res[i + 1].end_token
                 if (res[i].lastname is None): 
-                    res[i].lastname = PersonItemToken.MorphPersonItem._new2463(True)
+                    res[i].lastname = PersonItemToken.MorphPersonItem._new2491(True)
                     res[i].lastname.vars0_.append(PersonItemToken.MorphPersonItemVariant(res[i].value, MorphBaseInfo(), True))
                     res[i].firstname = (None)
                 del res[i + 1]
         if (len(res) > 1 and res[0].is_in_dictionary and (((attrs) & (PersonItemToken.ParseAttr.MUSTBEITEMALWAYS))) == (PersonItemToken.ParseAttr.NO)): 
             mc = res[0].begin_token.get_morph_class_in_dictionary()
-            if (mc.is_pronoun0 or mc.is_personal_pronoun0): 
+            if (mc.is_pronoun or mc.is_personal_pronoun): 
                 if (res[0].begin_token.is_value("ТОМ", None)): 
                     pass
                 else: 
                     return None
         i = 0
-        first_pass3221 = True
+        first_pass3251 = True
         while True:
-            if first_pass3221: first_pass3221 = False
+            if first_pass3251: first_pass3251 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
-            if (res[i].typ == PersonItemToken.ItemType.VALUE and res[i + 1].typ == PersonItemToken.ItemType.VALUE and res[i].end_token.next0_.is_hiphen0): 
+            if (res[i].typ == PersonItemToken.ItemType.VALUE and res[i + 1].typ == PersonItemToken.ItemType.VALUE and res[i].end_token.next0_.is_hiphen): 
                 ok = False
                 if (i > 0 and res[i - 1].typ == PersonItemToken.ItemType.INITIAL and (i + 2) == len(res)): 
                     ok = True
@@ -1474,26 +1509,26 @@ class PersonItemToken(MetaToken):
             rt = Utils.asObjectOrNull(t, ReferentToken)
             if (rt.begin_token == rt.end_token): 
                 tt1 = t.next0_
-                if (tt1 is not None and tt1.is_comma0): 
+                if (tt1 is not None and tt1.is_comma): 
                     tt1 = tt1.next0_
                 if (tt1 is not None and (tt1.whitespaces_before_count < 2)): 
                     pits0 = PersonItemToken.try_attach_list(tt1, None, PersonItemToken.ParseAttr.CANINITIALBEDIGIT, 10)
                     if (pits0 is not None and pits0[0].typ == PersonItemToken.ItemType.INITIAL): 
                         str0_ = rt.referent.get_string_value(PersonReferent.ATTR_FIRSTNAME)
                         if (str0_ is not None and str0_.startswith(pits0[0].value)): 
-                            res = ReferentToken._new2523(rt.referent, t, pits0[0].end_token, FioTemplateType.SURNAMEI)
+                            res = ReferentToken._new2551(rt.referent, t, pits0[0].end_token, FioTemplateType.SURNAMEI)
                             if (len(pits0) > 1 and pits0[1].typ == PersonItemToken.ItemType.INITIAL): 
                                 str0_ = rt.referent.get_string_value(PersonReferent.ATTR_MIDDLENAME)
                                 if (str0_ is not None and str0_.startswith(pits0[1].value)): 
                                     res.end_token = pits0[1].end_token
                                     res.misc_attrs = (FioTemplateType.SURNAMEII)
                             return res
-                    if (((((isinstance(tt1, TextToken)) and tt1.length_char == 1 and tt1.chars.is_all_upper0) and tt1.chars.is_cyrillic_letter0 and (isinstance(tt1.next0_, TextToken))) and (tt1.whitespaces_after_count < 2) and tt1.next0_.length_char == 1) and tt1.next0_.chars.is_all_upper0 and tt1.next0_.chars.is_cyrillic_letter0): 
+                    if (((((isinstance(tt1, TextToken)) and tt1.length_char == 1 and tt1.chars.is_all_upper) and tt1.chars.is_cyrillic_letter and (isinstance(tt1.next0_, TextToken))) and (tt1.whitespaces_after_count < 2) and tt1.next0_.length_char == 1) and tt1.next0_.chars.is_all_upper and tt1.next0_.chars.is_cyrillic_letter): 
                         str0_ = rt.referent.get_string_value(PersonReferent.ATTR_FIRSTNAME)
                         if (str0_ is not None and str0_.startswith((tt1).term)): 
                             str2 = rt.referent.get_string_value(PersonReferent.ATTR_MIDDLENAME)
                             if (str2 is None or str2.startswith((tt1.next0_).term)): 
-                                res = ReferentToken._new2523(rt.referent, t, tt1.next0_, FioTemplateType.NAMEISURNAME)
+                                res = ReferentToken._new2551(rt.referent, t, tt1.next0_, FioTemplateType.NAMEISURNAME)
                                 if (str2 is None): 
                                     rt.referent.add_slot(PersonReferent.ATTR_MIDDLENAME, (tt1.next0_).term, False, 0)
                                 if (res.end_token.next0_ is not None and res.end_token.next0_.is_char('.')): 
@@ -1507,11 +1542,11 @@ class PersonItemToken(MetaToken):
                 ppp.begin_token = ppp.end_token = rt
                 return ppp
         pits = PersonItemToken.try_attach_list(t, None, Utils.valToEnum((PersonItemToken.ParseAttr.CANINITIALBEDIGIT) | (PersonItemToken.ParseAttr.CANBELATIN), PersonItemToken.ParseAttr), 10)
-        if ((pits is None and (isinstance(t, TextToken)) and t.chars.is_all_lower0) and t.length_char > 3): 
+        if ((pits is None and (isinstance(t, TextToken)) and t.chars.is_all_lower) and t.length_char > 3): 
             pi0_ = PersonItemToken.try_attach(t, None, Utils.valToEnum((PersonItemToken.ParseAttr.CANINITIALBEDIGIT) | (PersonItemToken.ParseAttr.CANBELATIN) | (PersonItemToken.ParseAttr.CANBELOWER), PersonItemToken.ParseAttr), None)
             if (pi0_ is not None and pi0_.lastname is not None and ((pi0_.lastname.is_in_dictionary or pi0_.lastname.is_lastname_has_std_tail))): 
                 pits = PersonItemToken.try_attach_list(pi0_.end_token.next0_, None, Utils.valToEnum((PersonItemToken.ParseAttr.CANINITIALBEDIGIT) | (PersonItemToken.ParseAttr.CANBELATIN), PersonItemToken.ParseAttr), 10)
-                if (pits is not None and pits[0].typ == PersonItemToken.ItemType.INITIAL and pits[0].chars.is_latin_letter0 == pi0_.chars.is_latin_letter0): 
+                if (pits is not None and pits[0].typ == PersonItemToken.ItemType.INITIAL and pits[0].chars.is_latin_letter == pi0_.chars.is_latin_letter): 
                     pits.insert(0, pi0_)
                 else: 
                     pits = (None)
@@ -1519,10 +1554,10 @@ class PersonItemToken(MetaToken):
             tt1 = None
             if (len(pits) == 1 and prev_pers_template == FioTemplateType.SURNAMEI): 
                 tt1 = pits[0].end_token.next0_
-            if (tt1 is not None and tt1.is_comma0): 
+            if (tt1 is not None and tt1.is_comma): 
                 tt1 = tt1.next0_
-            if (((isinstance(tt1, TextToken)) and tt1.chars.is_letter0 and tt1.chars.is_all_upper0) and tt1.length_char == 1 and (tt1.whitespaces_before_count < 2)): 
-                ii = PersonItemToken._new2467(tt1, tt1, PersonItemToken.ItemType.INITIAL, (tt1).term, tt1.chars)
+            if (((isinstance(tt1, TextToken)) and tt1.chars.is_letter and tt1.chars.is_all_upper) and tt1.length_char == 1 and (tt1.whitespaces_before_count < 2)): 
+                ii = PersonItemToken._new2495(tt1, tt1, PersonItemToken.ItemType.INITIAL, (tt1).term, tt1.chars)
                 pits.append(ii)
             if (len(pits) == 1 and pits[0].is_newline_after and ((prev_pers_template == FioTemplateType.SURNAMEI or prev_pers_template == FioTemplateType.SURNAMEII))): 
                 ppp = PersonItemToken.try_attach_list(pits[0].end_token.next0_, None, PersonItemToken.ParseAttr.CANBELATIN, 10)
@@ -1556,7 +1591,7 @@ class PersonItemToken(MetaToken):
                 last = pits[2]
                 tmpls = FioTemplateType.IISURNAME
             if (len(pits) == 2 and pits[0].typ == PersonItemToken.ItemType.VALUE and pits[1].typ == PersonItemToken.ItemType.VALUE): 
-                if (pits[0].chars.is_latin_letter0 and ((not pits[0].is_in_dictionary or not pits[1].is_in_dictionary))): 
+                if (pits[0].chars.is_latin_letter and ((not pits[0].is_in_dictionary or not pits[1].is_in_dictionary))): 
                     if (not MiscHelper.is_eng_article(pits[0].begin_token)): 
                         first = pits[0]
                         last = pits[1]
@@ -1577,33 +1612,33 @@ class PersonItemToken(MetaToken):
                 if ((res.end_token.whitespaces_after_count < 2) and (isinstance(res.end_token.next0_, NumberToken))): 
                     num = Utils.asObjectOrNull(res.end_token.next0_, NumberToken)
                     if (num.value == "2" or num.value == "3"): 
-                        if (num.morph.class0_.is_adjective0): 
+                        if (num.morph.class0_.is_adjective): 
                             pers.add_slot(PersonReferent.ATTR_NICKNAME, str(num.value), False, 0)
                             res.end_token = res.end_token.next0_
                 return res
         if (pits is not None and len(pits) == 1 and pits[0].typ == PersonItemToken.ItemType.VALUE): 
             tt = pits[0].end_token.next0_
             comma = False
-            if (tt is not None and ((tt.is_comma0 or tt.is_char('.')))): 
+            if (tt is not None and ((tt.is_comma or tt.is_char('.')))): 
                 tt = tt.next0_
                 comma = True
-            if (((isinstance(tt, TextToken)) and tt.length_char == 2 and tt.chars.is_all_upper0) and tt.chars.is_cyrillic_letter0): 
+            if (((isinstance(tt, TextToken)) and tt.length_char == 2 and tt.chars.is_all_upper) and tt.chars.is_cyrillic_letter): 
                 pers = PersonReferent()
                 pers.add_slot(PersonReferent.ATTR_LASTNAME, pits[0].value, False, 0)
                 pers.add_slot(PersonReferent.ATTR_FIRSTNAME, (tt).term[0], False, 0)
                 pers.add_slot(PersonReferent.ATTR_MIDDLENAME, (tt).term[1], False, 0)
-                res = ReferentToken._new2523(pers, t, tt, FioTemplateType.SURNAMEII)
+                res = ReferentToken._new2551(pers, t, tt, FioTemplateType.SURNAMEII)
                 if (tt.next0_ is not None and tt.next0_.is_char('.')): 
                     tt = tt.next0_
                     res.end_token = tt
                 res.data = t.kit.get_analyzer_data_by_analyzer_name(PersonAnalyzer.ANALYZER_NAME)
                 return res
-            if ((((((isinstance(tt, TextToken)) and (tt.whitespaces_before_count < 2) and tt.length_char == 1) and tt.chars.is_all_upper0 and tt.chars.is_cyrillic_letter0) and (isinstance(tt.next0_, TextToken)) and (tt.whitespaces_after_count < 2)) and tt.next0_.length_char == 1 and tt.next0_.chars.is_all_upper0) and tt.next0_.chars.is_cyrillic_letter0): 
+            if ((((((isinstance(tt, TextToken)) and (tt.whitespaces_before_count < 2) and tt.length_char == 1) and tt.chars.is_all_upper and tt.chars.is_cyrillic_letter) and (isinstance(tt.next0_, TextToken)) and (tt.whitespaces_after_count < 2)) and tt.next0_.length_char == 1 and tt.next0_.chars.is_all_upper) and tt.next0_.chars.is_cyrillic_letter): 
                 pers = PersonReferent()
                 pers.add_slot(PersonReferent.ATTR_LASTNAME, pits[0].value, False, 0)
                 pers.add_slot(PersonReferent.ATTR_FIRSTNAME, (tt).term, False, 0)
                 pers.add_slot(PersonReferent.ATTR_MIDDLENAME, (tt.next0_).term, False, 0)
-                res = ReferentToken._new2523(pers, t, tt.next0_, FioTemplateType.SURNAMEII)
+                res = ReferentToken._new2551(pers, t, tt.next0_, FioTemplateType.SURNAMEII)
                 if (tt.next0_.next0_ is not None and tt.next0_.next0_.is_char('.')): 
                     res.end_token = tt.next0_.next0_
                 res.data = t.kit.get_analyzer_data_by_analyzer_name(PersonAnalyzer.ANALYZER_NAME)
@@ -1617,19 +1652,19 @@ class PersonItemToken(MetaToken):
                     pers = PersonReferent()
                     pers.add_slot(PersonReferent.ATTR_LASTNAME, pits[0].value, False, 0)
                     nam = pits1[0].value
-                    if (pits1[0].chars.is_cyrillic_letter0 != pits[0].chars.is_cyrillic_letter0): 
-                        if (pits[0].chars.is_cyrillic_letter0): 
+                    if (pits1[0].chars.is_cyrillic_letter != pits[0].chars.is_cyrillic_letter): 
+                        if (pits[0].chars.is_cyrillic_letter): 
                             ch = LanguageHelper.get_cyr_for_lat(nam[0])
                         else: 
                             ch = LanguageHelper.get_lat_for_cyr(nam[0])
                         if (ch != (chr(0))): 
                             nam = "{0}".format(ch)
                     pers.add_slot(PersonReferent.ATTR_FIRSTNAME, nam, False, 0)
-                    res = ReferentToken._new2523(pers, t, pits1[0].end_token, FioTemplateType.SURNAMEI)
+                    res = ReferentToken._new2551(pers, t, pits1[0].end_token, FioTemplateType.SURNAMEI)
                     if (len(pits1) > 1 and pits1[1].typ == PersonItemToken.ItemType.INITIAL): 
                         mid = pits1[1].value
-                        if (pits1[1].chars.is_cyrillic_letter0 != pits[0].chars.is_cyrillic_letter0): 
-                            if (pits[0].chars.is_cyrillic_letter0): 
+                        if (pits1[1].chars.is_cyrillic_letter != pits[0].chars.is_cyrillic_letter): 
+                            if (pits[0].chars.is_cyrillic_letter): 
                                 ch = LanguageHelper.get_cyr_for_lat(mid[0])
                             else: 
                                 ch = LanguageHelper.get_lat_for_cyr(mid[0])
@@ -1643,14 +1678,14 @@ class PersonItemToken(MetaToken):
         return None
     
     @staticmethod
-    def _new2465(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str) -> 'PersonItemToken':
+    def _new2493(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str) -> 'PersonItemToken':
         res = PersonItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new2467(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str, _arg5 : 'CharsInfo') -> 'PersonItemToken':
+    def _new2495(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : str, _arg5 : 'CharsInfo') -> 'PersonItemToken':
         res = PersonItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
@@ -1658,7 +1693,7 @@ class PersonItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2473(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : 'PersonReferent', _arg5 : 'MorphCollection') -> 'PersonItemToken':
+    def _new2501(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ItemType', _arg4 : 'PersonReferent', _arg5 : 'MorphCollection') -> 'PersonItemToken':
         res = PersonItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.referent = _arg4
@@ -1666,27 +1701,27 @@ class PersonItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2481(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'CharsInfo') -> 'PersonItemToken':
+    def _new2509(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'CharsInfo') -> 'PersonItemToken':
         res = PersonItemToken(_arg1, _arg2)
         res.value = _arg3
         res.chars = _arg4
         return res
     
     @staticmethod
-    def _new2496(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'PersonItemToken':
+    def _new2524(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'PersonItemToken':
         res = PersonItemToken(_arg1, _arg2)
         res.value = _arg3
         return res
     
     @staticmethod
-    def _new2497(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'ItemType') -> 'PersonItemToken':
+    def _new2525(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'ItemType') -> 'PersonItemToken':
         res = PersonItemToken(_arg1, _arg2)
         res.value = _arg3
         res.typ = _arg4
         return res
     
     @staticmethod
-    def _new2498(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'CharsInfo', _arg5 : 'MorphCollection') -> 'PersonItemToken':
+    def _new2526(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'CharsInfo', _arg5 : 'MorphCollection') -> 'PersonItemToken':
         res = PersonItemToken(_arg1, _arg2)
         res.value = _arg3
         res.chars = _arg4

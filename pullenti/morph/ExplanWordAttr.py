@@ -24,136 +24,136 @@ class ExplanWordAttr:
             self.value &= (~ ((1 << i)))
     
     @property
-    def is_undefined0(self) -> bool:
+    def is_undefined(self) -> bool:
         """ Неопределённый тип """
         return self.value == (0)
-    @is_undefined0.setter
-    def is_undefined0(self, value_) -> bool:
+    @is_undefined.setter
+    def is_undefined(self, value_) -> bool:
         self.value = (0)
         return value_
     
     @property
-    def is_animated0(self) -> bool:
+    def is_animated(self) -> bool:
         """ Одушевлённое """
         return self.__get_value(0)
-    @is_animated0.setter
-    def is_animated0(self, value_) -> bool:
+    @is_animated.setter
+    def is_animated(self, value_) -> bool:
         self.__set_value(0, value_)
         return value_
     
     @property
-    def is_named0(self) -> bool:
+    def is_named(self) -> bool:
         """ Может иметь собственное имя """
         return self.__get_value(1)
-    @is_named0.setter
-    def is_named0(self, value_) -> bool:
+    @is_named.setter
+    def is_named(self, value_) -> bool:
         self.__set_value(1, value_)
         return value_
     
     @property
-    def is_numbered0(self) -> bool:
+    def is_numbered(self) -> bool:
         """ Может иметь номер (например, Олимпиада 80) """
         return self.__get_value(2)
-    @is_numbered0.setter
-    def is_numbered0(self, value_) -> bool:
+    @is_numbered.setter
+    def is_numbered(self, value_) -> bool:
         self.__set_value(2, value_)
         return value_
     
     @property
-    def is_measured0(self) -> bool:
+    def is_measured(self) -> bool:
         """ Может ли иметь числовую характеристику (длина, количество, деньги ...) """
         return self.__get_value(3)
-    @is_measured0.setter
-    def is_measured0(self, value_) -> bool:
+    @is_measured.setter
+    def is_measured(self, value_) -> bool:
         self.__set_value(3, value_)
         return value_
     
     @property
-    def is_emo_positive0(self) -> bool:
+    def is_emo_positive(self) -> bool:
         """ Позитивная окраска """
         return self.__get_value(4)
-    @is_emo_positive0.setter
-    def is_emo_positive0(self, value_) -> bool:
+    @is_emo_positive.setter
+    def is_emo_positive(self, value_) -> bool:
         self.__set_value(4, value_)
         return value_
     
     @property
-    def is_emo_negative0(self) -> bool:
+    def is_emo_negative(self) -> bool:
         """ Негативная окраска """
         return self.__get_value(5)
-    @is_emo_negative0.setter
-    def is_emo_negative0(self, value_) -> bool:
+    @is_emo_negative.setter
+    def is_emo_negative(self, value_) -> bool:
         self.__set_value(5, value_)
         return value_
     
     @property
-    def is_animal0(self) -> bool:
+    def is_animal(self) -> bool:
         """ Это животное, а не человек (для IsAnimated = true) """
         return self.__get_value(6)
-    @is_animal0.setter
-    def is_animal0(self, value_) -> bool:
+    @is_animal.setter
+    def is_animal(self, value_) -> bool:
         self.__set_value(6, value_)
         return value_
     
     @property
-    def is_man0(self) -> bool:
+    def is_man(self) -> bool:
         """ Это человек, а не животное (для IsAnimated = true) """
         return self.__get_value(7)
-    @is_man0.setter
-    def is_man0(self, value_) -> bool:
+    @is_man.setter
+    def is_man(self, value_) -> bool:
         self.__set_value(7, value_)
         return value_
     
     @property
-    def is_can_person_after0(self) -> bool:
+    def is_can_person_after(self) -> bool:
         """ За словом может быть персона в родительном падеже (слуга Хозяина, отец Ивана ...) """
         return self.__get_value(8)
-    @is_can_person_after0.setter
-    def is_can_person_after0(self, value_) -> bool:
+    @is_can_person_after.setter
+    def is_can_person_after(self, value_) -> bool:
         self.__set_value(8, value_)
         return value_
     
     @property
-    def is_space_object0(self) -> bool:
+    def is_space_object(self) -> bool:
         """ Пространственный объект """
         return self.__get_value(9)
-    @is_space_object0.setter
-    def is_space_object0(self, value_) -> bool:
+    @is_space_object.setter
+    def is_space_object(self, value_) -> bool:
         self.__set_value(9, value_)
         return value_
     
     @property
-    def is_time_object0(self) -> bool:
+    def is_time_object(self) -> bool:
         """ Временной объект """
         return self.__get_value(10)
-    @is_time_object0.setter
-    def is_time_object0(self, value_) -> bool:
+    @is_time_object.setter
+    def is_time_object(self, value_) -> bool:
         self.__set_value(10, value_)
         return value_
     
     def __str__(self) -> str:
         tmp_str = io.StringIO()
-        if (self.is_animated0): 
+        if (self.is_animated): 
             print("одуш.", end="", file=tmp_str)
-        if (self.is_animal0): 
+        if (self.is_animal): 
             print("животн.", end="", file=tmp_str)
-        if (self.is_man0): 
+        if (self.is_man): 
             print("чел.", end="", file=tmp_str)
-        if (self.is_space_object0): 
+        if (self.is_space_object): 
             print("простр.", end="", file=tmp_str)
-        if (self.is_time_object0): 
+        if (self.is_time_object): 
             print("времен.", end="", file=tmp_str)
-        if (self.is_named0): 
+        if (self.is_named): 
             print("именов.", end="", file=tmp_str)
-        if (self.is_numbered0): 
+        if (self.is_numbered): 
             print("нумеруем.", end="", file=tmp_str)
-        if (self.is_measured0): 
+        if (self.is_measured): 
             print("измеряем.", end="", file=tmp_str)
-        if (self.is_emo_positive0): 
+        if (self.is_emo_positive): 
             print("позитив.", end="", file=tmp_str)
-        if (self.is_emo_negative0): 
+        if (self.is_emo_negative): 
             print("негатив.", end="", file=tmp_str)
-        if (self.is_can_person_after0): 
+        if (self.is_can_person_after): 
             print("персона_за_родит.", end="", file=tmp_str)
         return Utils.toStringStringIO(tmp_str)
     

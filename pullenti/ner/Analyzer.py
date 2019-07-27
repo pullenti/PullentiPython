@@ -60,7 +60,7 @@ class Analyzer:
         return None
     
     @property
-    def is_specific0(self) -> bool:
+    def is_specific(self) -> bool:
         """ Признак специфического анализатора (предназначенного для конкретной предметной области).
          Специфические анализаторы по умолчанию не добавляются в процессор (Processor) """
         return False

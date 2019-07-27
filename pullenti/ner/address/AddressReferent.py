@@ -296,10 +296,10 @@ class AddressReferent(Referent):
             return sr
         geos_ = self.geos
         for g in geos_: 
-            if (g.is_city0): 
+            if (g.is_city): 
                 return g
         for g in geos_: 
-            if (g.is_region0 and not g.is_state0): 
+            if (g.is_region and not g.is_state): 
                 return g
         if (len(geos_) > 0): 
             return geos_[0]
@@ -316,7 +316,7 @@ class AddressReferent(Referent):
                     if (geo0 is None): 
                         continue
                     if (GeoOwnerHelper.can_be_higher(geo0, geo)): 
-                        if (geo.higher == geo0 or geo.is_city0): 
+                        if (geo.higher == geo0 or geo.is_city): 
                             self.upload_slot(s, geo)
                             return
                     if (GeoOwnerHelper.can_be_higher(geo, geo0)): 
@@ -557,13 +557,13 @@ class AddressReferent(Referent):
             cit = None
             ii = 0
             while ii < len(geos_): 
-                if (geos_[ii].is_territory0 and geos_[ii].higher is not None): 
+                if (geos_[ii].is_territory and geos_[ii].higher is not None): 
                     geos_[ii] = geos_[ii].higher
                 ii += 1
-            if (geos_[0].is_city0 and geos_[1].is_region0): 
+            if (geos_[0].is_city and geos_[1].is_region): 
                 cit = geos_[0]
                 reg = geos_[1]
-            elif (geos_[1].is_city0 and geos_[0].is_region0): 
+            elif (geos_[1].is_city and geos_[0].is_region): 
                 cit = geos_[1]
                 reg = geos_[0]
             if (cit is not None and cit.higher is None and GeoOwnerHelper.can_be_higher(reg, cit)): 
@@ -575,10 +575,10 @@ class AddressReferent(Referent):
             else: 
                 stat = None
                 geo = None
-                if (geos_[0].is_state0 and not geos_[1].is_state0): 
+                if (geos_[0].is_state and not geos_[1].is_state): 
                     stat = geos_[0]
                     geo = geos_[1]
-                elif (geos_[1].is_state0 and not geos_[0].is_state0): 
+                elif (geos_[1].is_state and not geos_[0].is_state): 
                     stat = geos_[1]
                     geo = geos_[0]
                 if (stat is not None): 

@@ -55,6 +55,7 @@ class NumbersWithUnitToken(MetaToken):
         self.to_val = None
         self.about = False
         self.not0_ = False
+        self.whl = None;
         self.units = list()
         self.div_num = None;
     
@@ -83,6 +84,8 @@ class NumbersWithUnitToken(MetaToken):
         return Utils.toStringStringIO(res)
     
     def create_refenets_tokens_with_register(self, ad : 'AnalyzerData', name : str, regist : bool=True) -> typing.List['ReferentToken']:
+        if (name == "T ="): 
+            name = "ТЕМПЕРАТУРА"
         res = list()
         for u in self.units: 
             rt = ReferentToken(u.create_referent_with_register(ad), u.begin_token, u.end_token)
@@ -134,27 +137,50 @@ class NumbersWithUnitToken(MetaToken):
         return res
     
     @staticmethod
-    def try_parse_multi(t : 'Token', add_units : 'TerminCollection', can_omit_number : bool=False, not0__ : bool=False, can_be_non : bool=False) -> typing.List['NumbersWithUnitToken']:
+    def try_parse_multi(t : 'Token', add_units : 'TerminCollection', can_omit_number : bool=False, not0__ : bool=False, can_be_non : bool=False, is_resctriction : bool=False) -> typing.List['NumbersWithUnitToken']:
         if (t is None or (isinstance(t, ReferentToken))): 
             return None
-        if (t.is_char('(')): 
-            res0 = NumbersWithUnitToken.try_parse_multi(t.next0_, add_units, False, can_omit_number, can_be_non)
-            if (res0 is not None and res0[len(res0) - 1].end_token.next0_ is not None and res0[len(res0) - 1].end_token.next0_.is_char(')')): 
-                res0[len(res0) - 1].end_token = res0[len(res0) - 1].end_token.next0_
-                return res0
-        mt = NumbersWithUnitToken.try_parse(t, add_units, can_omit_number, not0__, can_be_non)
+        tt0 = t
+        if (tt0.is_char('(')): 
+            whd = NumbersWithUnitToken._try_parsewhl(tt0)
+            if (whd is not None): 
+                tt0 = whd.end_token
+            res0 = NumbersWithUnitToken.try_parse_multi(tt0.next0_, add_units, False, can_omit_number, can_be_non, False)
+            if (res0 is not None): 
+                res0[0].whl = whd
+                tt2 = res0[len(res0) - 1].end_token.next0_
+                if (tt2 is not None and tt2.is_char_of(",")): 
+                    tt2 = tt2.next0_
+                if (whd is not None): 
+                    return res0
+                if (tt2 is not None and tt2.is_char(')')): 
+                    res0[len(res0) - 1].end_token = tt2
+                    return res0
+        mt = NumbersWithUnitToken.try_parse(t, add_units, can_omit_number, not0__, can_be_non, is_resctriction)
         if (mt is None): 
             return None
         res = list()
-        if ((mt.whitespaces_after_count < 2) and MeasureHelper.is_mult_char(mt.end_token.next0_)): 
-            mt2 = NumbersWithUnitToken.try_parse(mt.end_token.next0_.next0_, add_units, not0__, False, False)
+        nnn = None
+        if (mt.whitespaces_after_count < 2): 
+            if (MeasureHelper.is_mult_char(mt.end_token.next0_)): 
+                nnn = mt.end_token.next0_.next0_
+            elif ((isinstance(mt.end_token, NumberToken)) and MeasureHelper.is_mult_char((mt.end_token).end_token)): 
+                nnn = mt.end_token.next0_
+        if (nnn is not None): 
+            mt2 = NumbersWithUnitToken.try_parse(nnn, add_units, not0__, False, False, False)
             if (mt2 is not None): 
                 mt3 = None
-                if ((mt2.whitespaces_after_count < 2) and MeasureHelper.is_mult_char(mt2.end_token.next0_)): 
-                    mt3 = NumbersWithUnitToken.try_parse(mt2.end_token.next0_.next0_, add_units, False, False, False)
+                nnn = (None)
+                if (mt2.whitespaces_after_count < 2): 
+                    if (MeasureHelper.is_mult_char(mt2.end_token.next0_)): 
+                        nnn = mt2.end_token.next0_.next0_
+                    elif ((isinstance(mt2.end_token, NumberToken)) and MeasureHelper.is_mult_char((mt2.end_token).end_token)): 
+                        nnn = mt2.end_token.next0_
+                if (nnn is not None): 
+                    mt3 = NumbersWithUnitToken.try_parse(nnn, add_units, False, False, False, False)
                 if (mt3 is None): 
                     tt2 = mt2.end_token.next0_
-                    if (tt2 is not None and not tt2.is_whitespace_before0): 
+                    if (tt2 is not None and not tt2.is_whitespace_before): 
                         if (not tt2.is_char_of(",.;")): 
                             return None
                 if (mt3 is not None and len(mt3.units) > 0): 
@@ -173,9 +199,9 @@ class NumbersWithUnitToken(MetaToken):
             utxt = utxt[0:0+len(utxt) - 1]
             terms = UnitsHelper.TERMINS.try_attach_str(utxt, None)
             if (terms is not None and len(terms) > 0): 
-                mt.units.append(UnitToken._new1602(mt.end_token.next0_, mt.end_token.next0_, Utils.asObjectOrNull(terms[0].tag, Unit)))
+                mt.units.append(UnitToken._new1612(mt.end_token.next0_, mt.end_token.next0_, Utils.asObjectOrNull(terms[0].tag, Unit)))
                 mt.end_token = mt.end_token.next0_
-                res1 = NumbersWithUnitToken.try_parse_multi(mt.end_token.next0_, add_units, False, False, False)
+                res1 = NumbersWithUnitToken.try_parse_multi(mt.end_token.next0_, add_units, False, False, False, False)
                 if (res1 is not None): 
                     res1.insert(0, mt)
                     return res1
@@ -183,7 +209,7 @@ class NumbersWithUnitToken(MetaToken):
         return res
     
     @staticmethod
-    def try_parse(t : 'Token', add_units : 'TerminCollection', can_omit_number : bool=False, not0__ : bool=False, can_be_nan : bool=False) -> 'NumbersWithUnitToken':
+    def try_parse(t : 'Token', add_units : 'TerminCollection', can_omit_number : bool=False, not0__ : bool=False, can_be_nan : bool=False, is_resctriction : bool=False) -> 'NumbersWithUnitToken':
         """ Попробовать выделить с указанной позиции
         
         Args:
@@ -192,7 +218,7 @@ class NumbersWithUnitToken(MetaToken):
         """
         if (t is None): 
             return None
-        res = NumbersWithUnitToken._try_parse(t, add_units, False, can_omit_number, can_be_nan)
+        res = NumbersWithUnitToken._try_parse(t, add_units, is_resctriction, can_omit_number, can_be_nan)
         if (res is not None): 
             res.not0_ = not0__
         return res
@@ -229,17 +255,18 @@ class NumbersWithUnitToken(MetaToken):
         if (t is None): 
             return None
         while t is not None:
-            if (t.is_comma_and0 or t.is_value("НО", None)): 
+            if (t.is_comma_and or t.is_value("НО", None)): 
                 t = t.next0_
             else: 
                 break
         t0 = t
         about_ = False
         has_keyw = False
+        is_diap_keyw = False
         min_max = 0
-        wrapmin_max1609 = RefOutArgWrapper(min_max)
-        ttt = NumbersWithUnitToken._is_min_or_max(t, wrapmin_max1609)
-        min_max = wrapmin_max1609.value
+        wrapmin_max1619 = RefOutArgWrapper(min_max)
+        ttt = NumbersWithUnitToken._is_min_or_max(t, wrapmin_max1619)
+        min_max = wrapmin_max1619.value
         if (ttt is not None): 
             t = ttt.next0_
             if (t is None): 
@@ -252,6 +279,12 @@ class NumbersWithUnitToken(MetaToken):
             has_keyw = True
             if (t is None): 
                 return None
+        if (t.is_value("В", None) and t.next0_ is not None): 
+            if (t.next0_.is_value("ПРЕДЕЛ", None) or t.is_value("ДИАПАЗОН", None)): 
+                t = t.next0_.next0_
+                if (t is None): 
+                    return None
+                is_diap_keyw = True
         if (t0.is_char('(')): 
             mt0 = NumbersWithUnitToken._try_parse(t.next0_, add_units, False, False, False)
             if (mt0 is not None and mt0.end_token.next0_ is not None and mt0.end_token.next0_.is_char(')')): 
@@ -270,6 +303,7 @@ class NumbersWithUnitToken(MetaToken):
         plusminus = False
         unit_before = False
         dty = NumbersWithUnitToken.DiapTyp.UNDEFINED
+        whd = None
         uni = None
         tok = NumbersWithUnitToken.M_TERMINS.try_parse(t, TerminParseAttr.NO)
         if (tok is not None): 
@@ -279,14 +313,15 @@ class NumbersWithUnitToken(MetaToken):
             if (not tok.is_whitespace_after): 
                 if (t is None): 
                     return None
-                if (t.is_char_of(":")): 
-                    pass
-                elif (isinstance(t, NumberToken)): 
-                    pass
-                elif (t.is_comma0 and t.next0_ is not None and t.next0_.is_value("ЧЕМ", None)): 
+                if (isinstance(t, NumberToken)): 
+                    if (tok.begin_token == tok.end_token and not tok.chars.is_all_lower): 
+                        return None
+                elif (t.is_comma and t.next0_ is not None and t.next0_.is_value("ЧЕМ", None)): 
                     t = t.next0_.next0_
-                    if (t is not None and t.morph.class0_.is_preposition0): 
+                    if (t is not None and t.morph.class0_.is_preposition): 
                         t = t.next0_
+                elif (t.is_char_of(":,(") or t.is_table_control_char): 
+                    pass
                 else: 
                     return None
             if (t is not None and t.is_char('(')): 
@@ -303,6 +338,15 @@ class NumbersWithUnitToken(MetaToken):
                         mt0.begin_token = t0
                         mt0.units = uni
                         return mt0
+                whd = NumbersWithUnitToken._try_parsewhl(t)
+                if (whd is not None): 
+                    t = whd.end_token.next0_
+            elif (t is not None and t.is_value("IP", None)): 
+                uni = UnitToken.try_parse_list(t, add_units, False)
+                if (uni is not None): 
+                    t = uni[len(uni) - 1].end_token.next0_
+            if ((t is not None and t.is_hiphen and t.is_whitespace_before) and t.is_whitespace_after): 
+                t = t.next0_
         elif (t.is_char('<')): 
             dty = NumbersWithUnitToken.DiapTyp.LS
             t = t.next0_
@@ -325,25 +369,29 @@ class NumbersWithUnitToken(MetaToken):
             dty = NumbersWithUnitToken.DiapTyp.GE
             has_keyw = True
             t = t.next0_
-        while t is not None and ((t.is_char(':') or t.is_value("ЧЕМ", None))):
+        elif (t.is_value("IP", None)): 
+            uni = UnitToken.try_parse_list(t, add_units, False)
+            if (uni is not None): 
+                t = uni[len(uni) - 1].end_token.next0_
+        while t is not None and ((t.is_char_of(":,") or t.is_value("ЧЕМ", None) or t.is_table_control_char)):
             t = t.next0_
         if (t is not None): 
             if (t.is_char('+') or t.is_value("ПЛЮС", None)): 
                 t = t.next0_
-                if (t is not None and not t.is_whitespace_before0): 
-                    if (t.is_hiphen0): 
+                if (t is not None and not t.is_whitespace_before): 
+                    if (t.is_hiphen): 
                         t = t.next0_
                         plusminus = True
-                    elif ((t.is_char_of("\\/") and t.next0_ is not None and not t.is_newline_after0) and t.next0_.is_hiphen0): 
+                    elif ((t.is_char_of("\\/") and t.next0_ is not None and not t.is_newline_after) and t.next0_.is_hiphen): 
                         t = t.next0_.next0_
                         plusminus = True
             elif (second and ((t.is_char_of("\\/÷…~")))): 
                 t = t.next0_
-            elif ((t.is_hiphen0 and t == t0 and not second) and NumbersWithUnitToken.M_TERMINS.try_parse(t.next0_, TerminParseAttr.NO) is not None): 
+            elif ((t.is_hiphen and t == t0 and not second) and NumbersWithUnitToken.M_TERMINS.try_parse(t.next0_, TerminParseAttr.NO) is not None): 
                 tok = NumbersWithUnitToken.M_TERMINS.try_parse(t.next0_, TerminParseAttr.NO)
                 t = tok.end_token.next0_
                 dty = (Utils.valToEnum(tok.termin.tag, NumbersWithUnitToken.DiapTyp))
-            elif (t.is_hiphen0 and t == t0 and ((t.is_whitespace_after0 or second))): 
+            elif (t.is_hiphen and t == t0 and ((t.is_whitespace_after or second))): 
                 t = t.next0_
             elif (t.is_char('±')): 
                 t = t.next0_
@@ -353,7 +401,7 @@ class NumbersWithUnitToken(MetaToken):
                 t = t.next0_.next0_
                 if (t is not None and t.is_char('.')): 
                     t = t.next0_
-        num = NumberHelper.try_parse_real_number(t, True)
+        num = NumberHelper.try_parse_real_number(t, True, False)
         if (num is None): 
             uni = UnitToken.try_parse_list(t, add_units, False)
             if (uni is not None): 
@@ -364,6 +412,9 @@ class NumbersWithUnitToken(MetaToken):
                     if (t.is_char_of(":,")): 
                         delim = True
                         t = t.next0_
+                    elif (t.is_hiphen and t.is_whitespace_after): 
+                        delim = True
+                        t = t.next0_
                     else: 
                         break
                 if (not delim): 
@@ -372,12 +423,12 @@ class NumbersWithUnitToken(MetaToken):
                             pass
                         else: 
                             return None
-                    elif (not t.is_whitespace_before0): 
+                    elif (not t.is_whitespace_before): 
                         return None
-                    if (t.next0_ is not None and t.is_hiphen0 and t.is_whitespace_after0): 
+                    if (t.next0_ is not None and t.is_hiphen and t.is_whitespace_after): 
                         delim = True
                         t = t.next0_
-                num = NumberHelper.try_parse_real_number(t, True)
+                num = NumberHelper.try_parse_real_number(t, True, False)
         res = None
         rval = 0
         if (num is None): 
@@ -388,22 +439,22 @@ class NumbersWithUnitToken(MetaToken):
                 for u in UnitsHelper.UNITS: 
                     if (u.fullname_cyr == unam): 
                         uni = list()
-                        uni.append(UnitToken._new1602(t, t, u))
+                        uni.append(UnitToken._new1612(t, t, u))
                         break
                 if (uni is None): 
                     return None
-                res = NumbersWithUnitToken._new1604(t0, tt.end_token, about_)
+                res = NumbersWithUnitToken._new1614(t0, tt.end_token, about_)
                 t = tt.end_token.next0_
             else: 
                 if (not can_omit_number and not has_keyw and not can_be_nan): 
                     return None
                 if ((uni is not None and len(uni) == 1 and uni[0].begin_token == uni[0].end_token) and uni[0].length_char > 3): 
                     rval = (1)
-                    res = NumbersWithUnitToken._new1604(t0, uni[len(uni) - 1].end_token, about_)
+                    res = NumbersWithUnitToken._new1614(t0, uni[len(uni) - 1].end_token, about_)
                     t = res.end_token.next0_
                 elif (has_keyw and can_be_nan): 
                     rval = math.nan
-                    res = NumbersWithUnitToken._new1604(t0, t0, about_)
+                    res = NumbersWithUnitToken._new1614(t0, t0, about_)
                     if (t is not None): 
                         res.end_token = t.previous
                     else: 
@@ -414,9 +465,9 @@ class NumbersWithUnitToken(MetaToken):
                 else: 
                     return None
         else: 
-            if ((t == t0 and t0.is_hiphen0 and not t.is_whitespace_before0) and not t.is_whitespace_after0 and (num.real_value < 0)): 
+            if ((t == t0 and t0.is_hiphen and not t.is_whitespace_before) and not t.is_whitespace_after and (num.real_value < 0)): 
                 return None
-            if (t == t0 and (isinstance(t, NumberToken)) and t.morph.class0_.is_adjective0): 
+            if (t == t0 and (isinstance(t, NumberToken)) and t.morph.class0_.is_adjective): 
                 nn = Utils.asObjectOrNull((t).end_token, TextToken)
                 if (nn is None): 
                     return None
@@ -425,16 +476,16 @@ class NumbersWithUnitToken(MetaToken):
                     pass
                 else: 
                     mi = Morphology.get_word_base_info("КОКО" + nn.term, None, False, False)
-                    if (mi.class0_.is_adjective0): 
+                    if (mi.class0_.is_adjective): 
                         return None
             t = num.end_token.next0_
-            res = NumbersWithUnitToken._new1604(t0, num.end_token, about_)
+            res = NumbersWithUnitToken._new1614(t0, num.end_token, about_)
             rval = num.real_value
         if (uni is None): 
             uni = UnitToken.try_parse_list(t, add_units, False)
             if (uni is not None): 
-                if ((plusminus and second and len(uni) == 1) and uni[0].unit == UnitsHelper.UPERCENT): 
-                    res.end_token = uni[len(uni) - 1].end_token
+                if ((plusminus and second and len(uni) >= 1) and uni[0].unit == UnitsHelper.UPERCENT): 
+                    res.end_token = uni[0].end_token
                     res.plus_minus_percent = True
                     tt1 = uni[0].end_token.next0_
                     uni = UnitToken.try_parse_list(tt1, add_units, False)
@@ -455,6 +506,7 @@ class NumbersWithUnitToken(MetaToken):
                         res.units = uni1
                         res.div_num = num2
                         res.end_token = num2.end_token
+        res.whl = whd
         if (dty != NumbersWithUnitToken.DiapTyp.UNDEFINED): 
             if (dty == NumbersWithUnitToken.DiapTyp.GE or dty == NumbersWithUnitToken.DiapTyp.FROM): 
                 res.from_include = True
@@ -471,15 +523,18 @@ class NumbersWithUnitToken(MetaToken):
         is_second_max = False
         if (not second): 
             iii = 0
-            wrapiii1608 = RefOutArgWrapper(iii)
-            ttt = NumbersWithUnitToken._is_min_or_max(t, wrapiii1608)
-            iii = wrapiii1608.value
+            wrapiii1618 = RefOutArgWrapper(iii)
+            ttt = NumbersWithUnitToken._is_min_or_max(t, wrapiii1618)
+            iii = wrapiii1618.value
             if (ttt is not None and iii > 0): 
                 is_second_max = True
                 t = ttt.next0_
-        next0__ = (None if second or plusminus or ((t is not None and t.is_newline_before0)) else NumbersWithUnitToken._try_parse(t, add_units, True, False, can_be_nan))
+        next0__ = (None if second or plusminus or ((t is not None and ((t.is_table_control_char or t.is_newline_before)))) else NumbersWithUnitToken._try_parse(t, add_units, True, False, can_be_nan))
+        if (next0__ is not None and (isinstance(t.previous, NumberToken))): 
+            if (MeasureHelper.is_mult_char((t.previous).end_token)): 
+                next0__ = (None)
         if (next0__ is not None and ((next0__.to_val is not None or next0__.single_val is not None)) and next0__.from_val is None): 
-            if ((((next0__.begin_token.is_char('+') and next0__.single_val is not None and not math.isnan(next0__.single_val)) and next0__.end_token.next0_ is not None and next0__.end_token.next0_.is_char_of("\\/")) and next0__.end_token.next0_.next0_ is not None and next0__.end_token.next0_.next0_.is_hiphen0) and not has_keyw and not math.isnan(rval)): 
+            if ((((next0__.begin_token.is_char('+') and next0__.single_val is not None and not math.isnan(next0__.single_val)) and next0__.end_token.next0_ is not None and next0__.end_token.next0_.is_char_of("\\/")) and next0__.end_token.next0_.next0_ is not None and next0__.end_token.next0_.next0_.is_hiphen) and not has_keyw and not math.isnan(rval)): 
                 next2 = NumbersWithUnitToken._try_parse(next0__.end_token.next0_.next0_.next0_, add_units, True, False, False)
                 if (next2 is not None and next2.single_val is not None and not math.isnan(next2.single_val)): 
                     res.from_val = (rval - next2.single_val)
@@ -574,36 +629,42 @@ class NumbersWithUnitToken(MetaToken):
                     return re0
         txt = (t).term
         nams = None
-        if (len(txt) == 5 and txt[1] == 'Х' and txt[3] == 'Х'): 
+        if (len(txt) == 5 and ((txt[1] == 'Х' or txt[1] == 'X')) and ((txt[3] == 'Х' or txt[3] == 'X'))): 
             nams = list()
             for i in range(3):
                 ch = txt[i * 2]
                 if (ch == 'Г'): 
                     nams.append("ГЛУБИНА")
-                elif (ch == 'В'): 
+                elif (ch == 'В' or ch == 'H' or ch == 'Н'): 
                     nams.append("ВЫСОТА")
-                elif (ch == 'Ш'): 
+                elif (ch == 'Ш' or ch == 'B' or ch == 'W'): 
                     nams.append("ШИРИНА")
-                elif (ch == 'Д'): 
+                elif (ch == 'Д' or ch == 'L'): 
                     nams.append("ДЛИНА")
+                elif (ch == 'D'): 
+                    nams.append("ДИАМЕТР")
                 else: 
                     return None
-            return MetaToken._new828(t, t, nams)
+            return MetaToken._new835(t, t, nams)
         t0 = t
         t1 = t
         while t is not None: 
             if (not ((isinstance(t, TextToken))) or ((t.whitespaces_before_count > 1 and t != t0))): 
                 break
             term = (t).term
+            if (term.endswith("X") or term.endswith("Х")): 
+                term = term[0:0+len(term) - 1]
             nam = None
-            if ((t.is_value("ДЛИНА", None) or t.is_value("ДЛИННА", None) or term == "Д") or term == "ДЛ" or term == "ДЛИН"): 
+            if (((t.is_value("ДЛИНА", None) or t.is_value("ДЛИННА", None) or term == "Д") or term == "ДЛ" or term == "ДЛИН") or term == "L"): 
                 nam = "ДЛИНА"
-            elif ((t.is_value("ШИРИНА", None) or t.is_value("ШИРОТА", None) or term == "Ш") or term == "ШИР" or term == "ШИРИН"): 
+            elif (((t.is_value("ШИРИНА", None) or t.is_value("ШИРОТА", None) or term == "Ш") or term == "ШИР" or term == "ШИРИН") or term == "W" or term == "B"): 
                 nam = "ШИРИНА"
             elif ((t.is_value("ГЛУБИНА", None) or term == "Г" or term == "ГЛ") or term == "ГЛУБ"): 
                 nam = "ГЛУБИНА"
-            elif (t.is_value("ВЫСОТА", None) or term == "В" or term == "ВЫС"): 
+            elif ((t.is_value("ВЫСОТА", None) or term == "В" or term == "ВЫС") or term == "H" or term == "Н"): 
                 nam = "ВЫСОТА"
+            elif (t.is_value("ДИАМЕТР", None) or term == "D" or term == "ДИАМ"): 
+                nam = "ДИАМЕТР"
             else: 
                 break
             if (nams is None): 
@@ -615,12 +676,12 @@ class NumbersWithUnitToken(MetaToken):
                 t1 = t
             if (t.next0_ is None): 
                 break
-            if (MeasureHelper.is_mult_char(t.next0_) or t.next0_.is_comma0 or t.next0_.is_char_of("\\/")): 
+            if (MeasureHelper.is_mult_char(t.next0_) or t.next0_.is_comma or t.next0_.is_char_of("\\/")): 
                 t = t.next0_
             t = t.next0_
         if (nams is None or (len(nams) < 2)): 
             return None
-        return MetaToken._new828(t0, t1, nams)
+        return MetaToken._new835(t0, t1, nams)
     
     M_TERMINS = None
     
@@ -651,6 +712,8 @@ class NumbersWithUnitToken(MetaToken):
         t.add_variant("НЕ ДЛИННЕЕ", False)
         t.add_variant("НЕ БЫСТРЕЕ", False)
         t.add_variant("НЕ ВЫШЕ", False)
+        t.add_variant("НЕ ПОЗДНЕЕ", False)
+        t.add_variant("НЕ ДОЛЬШЕ", False)
         NumbersWithUnitToken.M_TERMINS.add(t)
         t = Termin._new119("БОЛЕЕ", NumbersWithUnitToken.DiapTyp.GT)
         t.add_variant("БОЛЬШЕ", False)
@@ -689,13 +752,13 @@ class NumbersWithUnitToken(MetaToken):
         NumbersWithUnitToken.M_SPEC.add(t)
     
     @staticmethod
-    def _new1595(_arg1 : 'Token', _arg2 : 'Token', _arg3 : float) -> 'NumbersWithUnitToken':
+    def _new1605(_arg1 : 'Token', _arg2 : 'Token', _arg3 : float) -> 'NumbersWithUnitToken':
         res = NumbersWithUnitToken(_arg1, _arg2)
         res.single_val = _arg3
         return res
     
     @staticmethod
-    def _new1604(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'NumbersWithUnitToken':
+    def _new1614(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'NumbersWithUnitToken':
         res = NumbersWithUnitToken(_arg1, _arg2)
         res.about = _arg3
         return res

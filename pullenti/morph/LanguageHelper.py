@@ -38,9 +38,9 @@ class LanguageHelper:
         ru_chars = 0
         en_chars = 0
         i = 0
-        first_pass2826 = True
+        first_pass2854 = True
         while True:
-            if first_pass2826: first_pass2826 = False
+            if first_pass2854: first_pass2854 = False
             else: i += 1
             if (not (i < len(text))): break
             ch = text[i]
@@ -62,7 +62,7 @@ class LanguageHelper:
     @staticmethod
     def is_latin_char(ch : 'char') -> bool:
         ui = UnicodeInfo.ALL_CHARS[ord(ch)]
-        return ui.is_latin0
+        return ui.is_latin
     
     @staticmethod
     def is_latin(str0_ : str) -> bool:
@@ -79,7 +79,7 @@ class LanguageHelper:
     @staticmethod
     def is_cyrillic_char(ch : 'char') -> bool:
         ui = UnicodeInfo.ALL_CHARS[ord(ch)]
-        return ui.is_cyrillic0
+        return ui.is_cyrillic
     
     @staticmethod
     def is_cyrillic(str0_ : str) -> bool:
@@ -96,7 +96,7 @@ class LanguageHelper:
     @staticmethod
     def is_hiphen(ch : 'char') -> bool:
         ui = UnicodeInfo.ALL_CHARS[ord(ch)]
-        return ui.is_hiphen0
+        return ui.is_hiphen
     
     @staticmethod
     def is_cyrillic_vowel(ch : 'char') -> bool:
@@ -107,7 +107,7 @@ class LanguageHelper:
         
         """
         ui = UnicodeInfo.ALL_CHARS[ord(ch)]
-        return ui.is_cyrillic0 and ui.is_vowel0
+        return ui.is_cyrillic and ui.is_vowel
     
     @staticmethod
     def is_latin_vowel(ch : 'char') -> bool:
@@ -118,7 +118,7 @@ class LanguageHelper:
         
         """
         ui = UnicodeInfo.ALL_CHARS[ord(ch)]
-        return ui.is_latin0 and ui.is_vowel0
+        return ui.is_latin and ui.is_vowel
     
     @staticmethod
     def get_cyr_for_lat(lat : 'char') -> 'char':
@@ -174,26 +174,26 @@ class LanguageHelper:
         y = False
         udaren = False
         i = 0
-        first_pass2827 = True
+        first_pass2855 = True
         while True:
-            if first_pass2827: first_pass2827 = False
+            if first_pass2855: first_pass2855 = False
             else: i += 1
             if (not (i < len(value))): break
             ch = value[i]
             ui = UnicodeInfo.ALL_CHARS[ord(ch)]
-            if (not ui.is_letter0): 
-                if (ui.is_udaren0): 
+            if (not ui.is_letter): 
+                if (ui.is_udaren): 
                     udaren = True
                     continue
-                if (ui.is_apos0 and len(value) > 2): 
+                if (ui.is_apos and len(value) > 2): 
                     return LanguageHelper.transliteral_correction(value.replace("{0}".format(ch), ""), prev_value, False)
                 return value
-            if (ui.is_cyrillic0): 
+            if (ui.is_cyrillic): 
                 if (LanguageHelper._m_cyr_chars.find(ch) >= 0): 
                     ques_cyr += 1
                 else: 
                     pure_cyr += 1
-            elif (ui.is_latin0): 
+            elif (ui.is_latin): 
                 if (LanguageHelper._m_lat_chars.find(ch) >= 0): 
                     ques_lat += 1
                 else: 
@@ -229,9 +229,9 @@ class LanguageHelper:
                 return value
         tmp = Utils.newStringIO(value)
         i = 0
-        first_pass2828 = True
+        first_pass2856 = True
         while True:
-            if first_pass2828: first_pass2828 = False
+            if first_pass2856: first_pass2856 = False
             else: i += 1
             if (not (i < tmp.tell())): break
             if (Utils.getCharAtStringIO(tmp, i) == 'Ь' and ((i + 1) < tmp.tell()) and Utils.getCharAtStringIO(tmp, i + 1) == 'I'): 
@@ -275,12 +275,12 @@ class LanguageHelper:
     @staticmethod
     def is_quote(ch : 'char') -> bool:
         ui = UnicodeInfo.ALL_CHARS[ord(ch)]
-        return ui.is_quot0
+        return ui.is_quot
     
     @staticmethod
     def is_apos(ch : 'char') -> bool:
         ui = UnicodeInfo.ALL_CHARS[ord(ch)]
-        return ui.is_apos0
+        return ui.is_apos
     
     __m_preps = None
     
@@ -526,7 +526,7 @@ class LanguageHelper:
     @staticmethod
     def _static_ctor():
         LanguageHelper.__m_preps = [("БЕЗ;ДО;ИЗ;ИЗЗА;ОТ;У;ДЛЯ;РАДИ;ВОЗЛЕ;ПОЗАДИ;ВПЕРЕДИ;БЛИЗ;ВБЛИЗИ;ВГЛУБЬ;ВВИДУ;ВДОЛЬ;ВЗАМЕН;ВКРУГ;ВМЕСТО;" + "ВНЕ;ВНИЗУ;ВНУТРИ;ВНУТРЬ;ВОКРУГ;ВРОДЕ;ВСЛЕД;ВСЛЕДСТВИЕ;ЗАМЕСТО;ИЗНУТРИ;КАСАТЕЛЬНО;КРОМЕ;" + "МИМО;НАВРОДЕ;НАЗАД;НАКАНУНЕ;НАПОДОБИЕ;НАПРОТИВ;НАСЧЕТ;ОКОЛО;ОТНОСИТЕЛЬНО;") + "ПОВЕРХ;ПОДЛЕ;ПОМИМО;ПОПЕРЕК;ПОРЯДКА;ПОСЕРЕДИНЕ;ПОСРЕДИ;ПОСЛЕ;ПРЕВЫШЕ;ПРЕЖДЕ;ПРОТИВ;СВЕРХ;" + "СВЫШЕ;СНАРУЖИ;СРЕДИ;СУПРОТИВ", "К;БЛАГОДАРЯ;ВОПРЕКИ;НАВСТРЕЧУ;СОГЛАСНО;СООБРАЗНО;ПАРАЛЛЕЛЬНО;ПОДОБНО;СООТВЕТСТВЕННО;СОРАЗМЕРНО", "ПРО;ЧЕРЕЗ;СКВОЗЬ;СПУСТЯ", "НАД;ПЕРЕД;ПРЕД", "ПРИ", "В;НА;О;ВКЛЮЧАЯ", "МЕЖДУ", "ЗА;ПОД", "ПО", "С"]
-        LanguageHelper.__m_cases = [MorphCase.GENITIVE, MorphCase.DATIVE, MorphCase.ACCUSATIVE, MorphCase.INSTRUMENTAL, MorphCase.PREPOSITIONAL, (MorphCase.ACCUSATIVE) | MorphCase.PREPOSITIONAL, (MorphCase.GENITIVE) | MorphCase.ACCUSATIVE, (MorphCase.ACCUSATIVE) | MorphCase.INSTRUMENTAL, (MorphCase.DATIVE) | MorphCase.ACCUSATIVE | MorphCase.PREPOSITIONAL, (MorphCase.GENITIVE) | MorphCase.ACCUSATIVE | MorphCase.INSTRUMENTAL]
+        LanguageHelper.__m_cases = [MorphCase.GENITIVE, MorphCase.DATIVE, MorphCase.ACCUSATIVE, MorphCase.INSTRUMENTAL, MorphCase.PREPOSITIONAL, (MorphCase.ACCUSATIVE) | MorphCase.PREPOSITIONAL, (MorphCase.GENITIVE) | MorphCase.INSTRUMENTAL, (MorphCase.ACCUSATIVE) | MorphCase.INSTRUMENTAL, (MorphCase.DATIVE) | MorphCase.ACCUSATIVE | MorphCase.PREPOSITIONAL, (MorphCase.GENITIVE) | MorphCase.ACCUSATIVE | MorphCase.INSTRUMENTAL]
         LanguageHelper.__m_prep_norms_src = ["БЕЗ;БЕЗО", "ВБЛИЗИ;БЛИЗ", "В;ВО", "ВОКРУГ;ВКРУГ", "ВНУТРИ;ВНУТРЬ;ВОВНУТРЬ", "ВПЕРЕДИ;ВПЕРЕД", "ВСЛЕД;ВОСЛЕД", "ВМЕСТО;ЗАМЕСТО", "ИЗ;ИЗО", "К;КО", "МЕЖДУ;МЕЖ;ПРОМЕЖДУ;ПРОМЕЖ", "НАД;НАДО", "О;ОБ;ОБО", "ОТ;ОТО", "ПЕРЕД;ПРЕД;ПРЕДО;ПЕРЕДО", "ПОД;ПОДО", "ПОСЕРЕДИНЕ;ПОСРЕДИ;ПОСЕРЕДЬ", "С;СО", "СРЕДИ;СРЕДЬ;СЕРЕДЬ", "ЧЕРЕЗ;ЧРЕЗ"]
         LanguageHelper.__m_prep_cases = dict()
         i = 0

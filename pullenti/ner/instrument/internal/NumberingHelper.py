@@ -92,10 +92,10 @@ class NumberingHelper:
                 if (prev.numbers[i] != next0_.numbers[i]): 
                     return 0
                 i += 1
-            wrapn11534 = RefOutArgWrapper(0)
-            inoutres1535 = Utils.tryParseInt(prev.numbers[len(prev.numbers) - 2], wrapn11534)
-            n1 = wrapn11534.value
-            if (not inoutres1535): 
+            wrapn11542 = RefOutArgWrapper(0)
+            inoutres1543 = Utils.tryParseInt(prev.numbers[len(prev.numbers) - 2], wrapn11542)
+            n1 = wrapn11542.value
+            if (not inoutres1543): 
                 if (len(prev.numbers) == 2): 
                     n1 = prev.first_number
                 else: 
@@ -117,10 +117,10 @@ class NumberingHelper:
                 if (prev.numbers[i] != next0_.numbers[i]): 
                     return 0
                 i += 1
-            wrapn11536 = RefOutArgWrapper(0)
-            inoutres1537 = Utils.tryParseInt(prev.numbers[len(prev.numbers) - 3], wrapn11536)
-            n1 = wrapn11536.value
-            if (not inoutres1537): 
+            wrapn11544 = RefOutArgWrapper(0)
+            inoutres1545 = Utils.tryParseInt(prev.numbers[len(prev.numbers) - 3], wrapn11544)
+            n1 = wrapn11544.value
+            if (not inoutres1545): 
                 return 0
             if ((n1 + 1) != n2): 
                 return 0
@@ -137,10 +137,10 @@ class NumberingHelper:
                 if (prev.numbers[i] != next0_.numbers[i]): 
                     return 0
                 i += 1
-            wrapn11538 = RefOutArgWrapper(0)
-            inoutres1539 = Utils.tryParseInt(prev.numbers[len(prev.numbers) - 4], wrapn11538)
-            n1 = wrapn11538.value
-            if (not inoutres1539): 
+            wrapn11546 = RefOutArgWrapper(0)
+            inoutres1547 = Utils.tryParseInt(prev.numbers[len(prev.numbers) - 4], wrapn11546)
+            n1 = wrapn11546.value
+            if (not inoutres1547): 
                 return 0
             if ((n1 + 1) != n2): 
                 return 0
@@ -162,9 +162,9 @@ class NumberingHelper:
         res = None
         many_spec_char_lines = 0
         i = 0
-        first_pass3123 = True
+        first_pass3151 = True
         while True:
-            if first_pass3123: first_pass3123 = False
+            if first_pass3151: first_pass3151 = False
             else: i += 1
             if (not (i < len(lines))): break
             li = lines[i]
@@ -240,9 +240,9 @@ class NumberingHelper:
         while ch:
             ch = False
             i = 1
-            first_pass3124 = True
+            first_pass3152 = True
             while True:
-                if first_pass3124: first_pass3124 = False
+                if first_pass3152: first_pass3152 = False
                 else: i += 1
                 if (not (i < len(res))): break
                 d = NumberingHelper.calc_delta(res[i - 1], res[i], False)
@@ -400,7 +400,7 @@ class NumberingHelper:
         from pullenti.ner.instrument.internal.FragToken import FragToken
         if (itok.num_begin_token is None or itok.num_end_token is None): 
             return
-        num = FragToken._new1540(itok.num_begin_token, itok.num_end_token, InstrumentKind.NUMBER, True, itok)
+        num = FragToken._new1548(itok.num_begin_token, itok.num_end_token, InstrumentKind.NUMBER, True, itok)
         owner.children.append(num)
         if (itok.num_typ == NumberTypes.TWODIGITS): 
             owner.number = itok.first_number
@@ -428,7 +428,7 @@ class NumberingHelper:
             res(InstrToken1): 
         """
         NumberingHelper.__parse_number(t, res, prev)
-        if ((len(res.numbers) > 0 and res.num_end_token is not None and not res.is_newline_after) and res.num_end_token.next0_ is not None and res.num_end_token.next0_.is_hiphen0): 
+        if ((len(res.numbers) > 0 and res.num_end_token is not None and not res.is_newline_after) and res.num_end_token.next0_ is not None and res.num_end_token.next0_.is_hiphen): 
             res1 = InstrToken1(res.num_end_token.next0_.next0_, res.num_end_token.next0_.next0_)
             NumberingHelper.__parse_number(res1.begin_token, res1, res)
             if (len(res1.numbers) == len(res.numbers)): 
@@ -446,10 +446,10 @@ class NumberingHelper:
         if (len(res.numbers) > 0 and res.num_end_token is not None and res.typ == InstrToken1.Types.LINE): 
             tt = res.num_end_token
             ok = True
-            if (tt.next0_ is not None and tt.next0_.is_hiphen0): 
+            if (tt.next0_ is not None and tt.next0_.is_hiphen): 
                 ok = False
-            elif (not tt.is_whitespace_after0): 
-                if (tt.next0_ is not None and ((tt.next0_.chars.is_capital_upper0 or tt.next0_.chars.is_all_upper0 or (isinstance(tt.next0_, ReferentToken))))): 
+            elif (not tt.is_whitespace_after): 
+                if (tt.next0_ is not None and ((tt.next0_.chars.is_capital_upper or tt.next0_.chars.is_all_upper or (isinstance(tt.next0_, ReferentToken))))): 
                     pass
                 else: 
                     ok = False
@@ -463,16 +463,16 @@ class NumberingHelper:
         if (((isinstance(t, NumberToken)) and (t).int_value is not None and (t).typ == NumberSpellingType.DIGIT) and ((t).int_value < 3000)): 
             if (len(res.numbers) >= 4): 
                 pass
-            if (t.morph.class0_.is_adjective0 and res.typ_container_rank == 0): 
+            if (t.morph.class0_.is_adjective and res.typ_container_rank == 0): 
                 return
             nwp = NumberHelper.try_parse_number_with_postfix(t)
             if (nwp is not None): 
-                if (nwp.end_token.is_whitespace_before0): 
+                if (nwp.end_token.is_whitespace_before): 
                     pass
                 else: 
                     return
-            if ((t.next0_ is not None and (t.whitespaces_after_count < 3) and t.next0_.chars.is_letter0) and t.next0_.chars.is_all_lower0): 
-                if (not t.is_whitespace_after0 and t.next0_.length_char == 1): 
+            if ((t.next0_ is not None and (t.whitespaces_after_count < 3) and t.next0_.chars.is_letter) and t.next0_.chars.is_all_lower): 
+                if (not t.is_whitespace_after and t.next0_.length_char == 1): 
                     pass
                 elif (len(res.numbers) == 0): 
                     res.num_typ = NumberTypes.DIGIT
@@ -487,14 +487,14 @@ class NumberingHelper:
                 res.num_typ = NumberTypes.DIGIT
             else: 
                 res.num_typ = NumberTypes.COMBO
-            if (len(res.numbers) > 0 and t.is_whitespace_before0): 
+            if (len(res.numbers) > 0 and t.is_whitespace_before): 
                 return
             if (len(res.numbers) == 0): 
                 res.num_begin_token = t
-            if ((t.next0_ is not None and t.next0_.is_hiphen0 and (isinstance(t.next0_.next0_, NumberToken))) and (t.next0_.next0_).int_value is not None and (t.next0_.next0_).int_value > (t).int_value): 
+            if ((t.next0_ is not None and t.next0_.is_hiphen and (isinstance(t.next0_.next0_, NumberToken))) and (t.next0_.next0_).int_value is not None and (t.next0_.next0_).int_value > (t).int_value): 
                 res.min_number = str((t).value)
                 t = t.next0_.next0_
-            elif (((t.next0_ is not None and t.next0_.is_char_of(")") and t.next0_.next0_ is not None) and t.next0_.next0_.is_hiphen0 and (isinstance(t.next0_.next0_.next0_, NumberToken))) and (t.next0_.next0_.next0_).int_value is not None and (t.next0_.next0_.next0_).int_value > (t).int_value): 
+            elif (((t.next0_ is not None and t.next0_.is_char_of(")") and t.next0_.next0_ is not None) and t.next0_.next0_.is_hiphen and (isinstance(t.next0_.next0_.next0_, NumberToken))) and (t.next0_.next0_.next0_).int_value is not None and (t.next0_.next0_.next0_).int_value > (t).int_value): 
                 res.min_number = str((t).value)
                 t = t.next0_.next0_.next0_
             res.numbers.append(str((t).value))
@@ -502,14 +502,14 @@ class NumberingHelper:
             res.end_token = res.num_end_token
             res.num_suffix = (None)
             ttt = t.next0_
-            first_pass3125 = True
+            first_pass3153 = True
             while True:
-                if first_pass3125: first_pass3125 = False
+                if first_pass3153: first_pass3153 = False
                 else: ttt = ttt.next0_
                 if (not (ttt is not None and (len(res.numbers) < 4))): break
                 ok1 = False
                 ok2 = False
-                if ((ttt.is_char_of("._") and not ttt.is_whitespace_after0 and (isinstance(ttt.next0_, NumberToken))) and (((ttt.next0_).typ == NumberSpellingType.DIGIT or ((((ttt.next0_).typ == NumberSpellingType.WORDS)) and ttt.next0_.chars.is_latin_letter0 and not ttt.is_whitespace_after0)))): 
+                if ((ttt.is_char_of("._") and not ttt.is_whitespace_after and (isinstance(ttt.next0_, NumberToken))) and (((ttt.next0_).typ == NumberSpellingType.DIGIT or ((((ttt.next0_).typ == NumberSpellingType.WORDS)) and ttt.next0_.chars.is_latin_letter and not ttt.is_whitespace_after)))): 
                     ok1 = True
                 elif ((ttt.is_char_of("(<") and (isinstance(ttt.next0_, NumberToken)) and ttt.next0_.next0_ is not None) and ttt.next0_.next0_.is_char_of(")>")): 
                     ok2 = True
@@ -525,7 +525,7 @@ class NumberingHelper:
                     res.end_token = res.num_end_token
                     t = res.end_token
                     continue
-                if (((isinstance(ttt, TextToken)) and ttt.length_char == 1 and ttt.chars.is_letter0) and not ttt.is_whitespace_before0 and len(res.numbers) == 1): 
+                if (((isinstance(ttt, TextToken)) and ttt.length_char == 1 and ttt.chars.is_letter) and not ttt.is_whitespace_before and len(res.numbers) == 1): 
                     res.numbers.append((ttt).term)
                     res.num_typ = NumberTypes.COMBO
                     res.num_end_token = ttt
@@ -559,7 +559,7 @@ class NumberingHelper:
                 res.num_typ = NumberTypes.ROMAN
             else: 
                 res.num_typ = NumberTypes.COMBO
-            if (len(res.numbers) > 0 and t.is_whitespace_before0): 
+            if (len(res.numbers) > 0 and t.is_whitespace_before): 
                 return
             if (len(res.numbers) == 0): 
                 res.num_begin_token = t
@@ -590,8 +590,8 @@ class NumberingHelper:
                 res.end_token = res.num_end_token
                 t = res.end_token
             return
-        if (((isinstance(t, TextToken)) and t.length_char == 1 and t.chars.is_letter0) and t == res.begin_token): 
-            if ((not t.is_whitespace_after0 and (isinstance(t.next0_, NumberToken)) and t.next0_.next0_ is not None) and t.next0_.next0_.is_char('.')): 
+        if (((isinstance(t, TextToken)) and t.length_char == 1 and t.chars.is_letter) and t == res.begin_token): 
+            if ((not t.is_whitespace_after and (isinstance(t.next0_, NumberToken)) and t.next0_.next0_ is not None) and t.next0_.next0_.is_char('.')): 
                 res.num_begin_token = t
                 res.num_typ = NumberTypes.DIGIT
                 res.numbers.append(str((t.next0_).value))
@@ -601,7 +601,7 @@ class NumberingHelper:
                 t = res.end_token
                 return
             if (t.next0_ is not None and t.next0_.is_char_of(".)")): 
-                if (((t.next0_.is_char('.') and (isinstance(t.next0_.next0_, NumberToken)) and t.next0_.next0_.next0_ is not None) and t.next0_.next0_.next0_.is_char(')') and not t.next0_.is_whitespace_after0) and not t.next0_.next0_.is_whitespace_after0): 
+                if (((t.next0_.is_char('.') and (isinstance(t.next0_.next0_, NumberToken)) and t.next0_.next0_.next0_ is not None) and t.next0_.next0_.next0_.is_char(')') and not t.next0_.is_whitespace_after) and not t.next0_.next0_.is_whitespace_after): 
                     res.num_typ = NumberTypes.TWODIGITS
                     res.numbers.append((t).term)
                     res.numbers.append(str((t.next0_.next0_).value))
@@ -611,7 +611,7 @@ class NumberingHelper:
                     res.end_token = res.num_end_token
                     t = res.end_token
                     return
-                if (t.next0_.is_char('.') and ((t.chars.is_all_upper0 or (isinstance(t.next0_.next0_, NumberToken))))): 
+                if (t.next0_.is_char('.') and ((t.chars.is_all_upper or (isinstance(t.next0_.next0_, NumberToken))))): 
                     pass
                 else: 
                     tmp1 = InstrToken1(t, t.next0_)
@@ -698,10 +698,10 @@ class NumberingHelper:
         if (s2.startswith(s1)): 
             i = len(s1)
             if (((i + 1) < len(s2)) and s2[i] == '.' and str.isdigit(s2[i + 1])): 
-                wrapn21541 = RefOutArgWrapper(0)
-                inoutres1542 = Utils.tryParseInt(s2[i + 1:], wrapn21541)
-                n2 = wrapn21541.value
-                if (inoutres1542): 
+                wrapn21549 = RefOutArgWrapper(0)
+                inoutres1550 = Utils.tryParseInt(s2[i + 1:], wrapn21549)
+                n2 = wrapn21549.value
+                if (inoutres1550): 
                     res0 = list()
                     res0.append(s1)
                     i = 1
@@ -712,28 +712,28 @@ class NumberingHelper:
         i = s1.rfind('.')
         if (((i)) > 0): 
             pref = s1[0:0+i + 1]
-            wrapn11545 = RefOutArgWrapper(0)
-            inoutres1546 = Utils.tryParseInt(s1[i + 1:], wrapn11545)
-            n1 = wrapn11545.value
-            if (not inoutres1546): 
+            wrapn11553 = RefOutArgWrapper(0)
+            inoutres1554 = Utils.tryParseInt(s1[i + 1:], wrapn11553)
+            n1 = wrapn11553.value
+            if (not inoutres1554): 
                 return None
             if (not s2.startswith(pref)): 
                 return None
-            wrapn21543 = RefOutArgWrapper(0)
-            inoutres1544 = Utils.tryParseInt(s2[i + 1:], wrapn21543)
-            n2 = wrapn21543.value
-            if (not inoutres1544): 
+            wrapn21551 = RefOutArgWrapper(0)
+            inoutres1552 = Utils.tryParseInt(s2[i + 1:], wrapn21551)
+            n2 = wrapn21551.value
+            if (not inoutres1552): 
                 return None
         else: 
-            wrapn11549 = RefOutArgWrapper(0)
-            inoutres1550 = Utils.tryParseInt(s1, wrapn11549)
-            n1 = wrapn11549.value
-            if (not inoutres1550): 
+            wrapn11557 = RefOutArgWrapper(0)
+            inoutres1558 = Utils.tryParseInt(s1, wrapn11557)
+            n1 = wrapn11557.value
+            if (not inoutres1558): 
                 return None
-            wrapn21547 = RefOutArgWrapper(0)
-            inoutres1548 = Utils.tryParseInt(s2, wrapn21547)
-            n2 = wrapn21547.value
-            if (not inoutres1548): 
+            wrapn21555 = RefOutArgWrapper(0)
+            inoutres1556 = Utils.tryParseInt(s2, wrapn21555)
+            n2 = wrapn21555.value
+            if (not inoutres1556): 
                 return None
         if (n2 <= n1): 
             return None

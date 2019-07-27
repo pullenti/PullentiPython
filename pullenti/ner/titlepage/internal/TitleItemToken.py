@@ -66,7 +66,7 @@ class TitleItemToken(MetaToken):
                     t1 = tit.end_token
                     if (t1.next0_ is not None and t1.next0_.is_char(':')): 
                         t1 = t1.next0_
-                    return TitleItemToken._new2596(t, t1, TitleItemToken.Types.TYPANDTHEME, tit.value)
+                    return TitleItemToken._new2624(t, t1, TitleItemToken.Types.TYPANDTHEME, tit.value)
                 if (tt.next0_ is not None and tt.next0_.is_char(':')): 
                     t1 = tt.next0_
                 return TitleItemToken(tt, t1, TitleItemToken.Types.THEME)
@@ -94,7 +94,7 @@ class TitleItemToken(MetaToken):
                     t1 = br.end_token
                 elif (t1 != tt.next0_): 
                     while t1 is not None: 
-                        if (t1.is_newline_after0): 
+                        if (t1.is_newline_after): 
                             break
                         t1 = t1.next0_
                     if (t1 is None): 
@@ -104,12 +104,12 @@ class TitleItemToken(MetaToken):
             t1 = (None)
             if (tt.is_value("СПЕЦИАЛЬНОСТЬ", "СПЕЦІАЛЬНІСТЬ")): 
                 t1 = tt.next0_
-            elif (tt.morph.class0_.is_preposition0 and tt.next0_ is not None and tt.next0_.is_value("СПЕЦИАЛЬНОСТЬ", "СПЕЦІАЛЬНІСТЬ")): 
+            elif (tt.morph.class0_.is_preposition and tt.next0_ is not None and tt.next0_.is_value("СПЕЦИАЛЬНОСТЬ", "СПЕЦІАЛЬНІСТЬ")): 
                 t1 = tt.next0_.next0_
-            elif (tt.is_char('/') and tt.is_newline_before0): 
+            elif (tt.is_char('/') and tt.is_newline_before): 
                 t1 = tt.next0_
             if (t1 is not None): 
-                if (t1.is_char_of(":") or t1.is_hiphen0): 
+                if (t1.is_char_of(":") or t1.is_hiphen): 
                     t1 = t1.next0_
                 spec = TitleItemToken.__try_attach_speciality(t1, True)
                 if (spec is not None): 
@@ -129,19 +129,19 @@ class TitleItemToken(MetaToken):
                 if (ty == TitleItemToken.Types.TYP): 
                     tit = TitleItemToken.try_attach(tok.end_token.next0_)
                     if (tit is not None and tit.typ == TitleItemToken.Types.THEME): 
-                        return TitleItemToken._new2596(npt.begin_token, tit.end_token, TitleItemToken.Types.TYPANDTHEME, s)
+                        return TitleItemToken._new2624(npt.begin_token, tit.end_token, TitleItemToken.Types.TYPANDTHEME, s)
                     if (s == "РАБОТА" or s == "РОБОТА" or s == "ПРОЕКТ"): 
                         return None
                     t1 = tok.end_token
                     if (s == "ДИССЕРТАЦИЯ" or s == "ДИСЕРТАЦІЯ"): 
                         err = 0
                         ttt = t1.next0_
-                        first_pass3238 = True
+                        first_pass3268 = True
                         while True:
-                            if first_pass3238: first_pass3238 = False
+                            if first_pass3268: first_pass3268 = False
                             else: ttt = ttt.next0_
                             if (not (ttt is not None)): break
-                            if (ttt.morph.class0_.is_preposition0): 
+                            if (ttt.morph.class0_.is_preposition): 
                                 continue
                             if (ttt.is_value("СОИСКАНИЕ", "")): 
                                 continue
@@ -179,9 +179,9 @@ class TitleItemToken(MetaToken):
                         t1 = t1.next0_
                     if (s.endswith("ОТЧЕТ") and t1.next0_ is not None and t1.next0_.is_value("О", None)): 
                         npt1 = NounPhraseHelper.try_parse(t1.next0_, NounPhraseParseAttr.PARSEPREPOSITION, 0)
-                        if (npt1 is not None and npt1.morph.case_.is_prepositional0): 
+                        if (npt1 is not None and npt1.morph.case_.is_prepositional): 
                             t1 = npt1.end_token
-                    return TitleItemToken._new2596(npt.begin_token, t1, ty, s)
+                    return TitleItemToken._new2624(npt.begin_token, t1, ty, s)
         tok1 = TitleItemToken.M_TERMINS.try_parse(t, TerminParseAttr.NO)
         if (tok1 is not None): 
             t1 = tok1.end_token
@@ -200,7 +200,7 @@ class TitleItemToken(MetaToken):
             return None
         susp = False
         if (not key_word_before): 
-            if (not t.is_newline_before0): 
+            if (not t.is_newline_before): 
                 susp = True
         val = None
         t0 = t
@@ -209,7 +209,7 @@ class TitleItemToken(MetaToken):
             nt = Utils.asObjectOrNull(t, NumberToken)
             if (nt is None): 
                 break
-            if (nt.typ != NumberSpellingType.DIGIT or nt.morph.class0_.is_adjective0): 
+            if (nt.typ != NumberSpellingType.DIGIT or nt.morph.class0_.is_adjective): 
                 break
             if (val is None): 
                 val = io.StringIO()
@@ -221,9 +221,9 @@ class TitleItemToken(MetaToken):
             if (t.next0_ is None): 
                 break
             t = t.next0_
-            if (t.is_char_of(".,") or t.is_hiphen0): 
+            if (t.is_char_of(".,") or t.is_hiphen): 
                 if (susp and (i < 2)): 
-                    if (not t.is_char('.') or t.is_whitespace_after0 or t.is_whitespace_before0): 
+                    if (not t.is_char('.') or t.is_whitespace_after or t.is_whitespace_before): 
                         return None
                 if (t.next0_ is not None): 
                     t = t.next0_
@@ -236,12 +236,12 @@ class TitleItemToken(MetaToken):
             Utils.insertStringIO(val, 4, '.')
             Utils.insertStringIO(val, 2, '.')
         tt = t.next0_
-        first_pass3239 = True
+        first_pass3269 = True
         while True:
-            if first_pass3239: first_pass3239 = False
+            if first_pass3269: first_pass3269 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
-            if (tt.is_newline_before0): 
+            if (tt.is_newline_before): 
                 break
             br = BracketHelper.try_parse(tt, BracketParseAttr.NO, 100)
             if (br is not None): 
@@ -249,7 +249,7 @@ class TitleItemToken(MetaToken):
                 t = tt
                 continue
             t = tt
-        return TitleItemToken._new2596(t0, t, TitleItemToken.Types.SPECIALITY, Utils.toStringStringIO(val))
+        return TitleItemToken._new2624(t0, t, TitleItemToken.Types.SPECIALITY, Utils.toStringStringIO(val))
     
     M_TERMINS = None
     
@@ -284,7 +284,7 @@ class TitleItemToken(MetaToken):
             TitleItemToken.M_TERMINS.add(Termin._new119(s, TitleItemToken.Types.KEYWORDS))
     
     @staticmethod
-    def _new2596(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Types', _arg4 : str) -> 'TitleItemToken':
+    def _new2624(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Types', _arg4 : str) -> 'TitleItemToken':
         res = TitleItemToken(_arg1, _arg2, _arg3)
         res.value = _arg4
         return res

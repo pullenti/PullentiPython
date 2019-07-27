@@ -26,7 +26,7 @@ class NounPhraseItemTextVar(MorphBaseInfo):
             self.undef_coef = (wf.undef_coef)
         elif (t is not None): 
             self.normal_value = t.get_normal_case_text(None, False, MorphGender.UNDEFINED, False)
-        if (self.case_.is_undefined0 and src is not None): 
+        if (self.case_.is_undefined and src is not None): 
             if (src.contains_attr("неизм.", None)): 
                 self.case_ = MorphCase.ALL_CASES
     

@@ -40,7 +40,7 @@ class AutoannoSentToken(MetaToken):
                     has_verb = True
             elif (isinstance(t, TextToken)): 
                 mc = t.get_morph_class_in_dictionary()
-                if (mc.is_pronoun0 or mc.is_personal_pronoun0): 
+                if (mc.is_pronoun or mc.is_personal_pronoun): 
                     res.rank -= (1)
                 elif (t.length_char > 1): 
                     res.rank -= 0.1
@@ -55,9 +55,9 @@ class AutoannoSentToken(MetaToken):
     def create_annotation(kit_ : 'AnalysisKit', max_sents : int) -> 'KeywordReferent':
         sents = list()
         t = kit_.first_token
-        first_pass3135 = True
+        first_pass3163 = True
         while True:
-            if first_pass3135: first_pass3135 = False
+            if first_pass3163: first_pass3163 = False
             else: t = t.next0_
             if (not (t is not None)): break
             sent = AutoannoSentToken.__try_parse(t)
@@ -93,6 +93,6 @@ class AutoannoSentToken(MetaToken):
             if (tmp.tell() > 0): 
                 print(' ', end="", file=tmp)
             print(s.value, end="", file=tmp)
-            ano.occurrence.append(TextAnnotation._new1572(s.begin_char, s.end_char, ano, kit_.sofa))
+            ano.occurrence.append(TextAnnotation._new1580(s.begin_char, s.end_char, ano, kit_.sofa))
         ano.add_slot(KeywordReferent.ATTR_VALUE, Utils.toStringStringIO(tmp), True, 0)
         return ano

@@ -51,7 +51,7 @@ class MorphRule:
     
     def add(self, tail : str, var : 'MorphRuleVariant') -> None:
         tail = LanguageHelper.correct_word(tail)
-        if (var.class0_.is_undefined0): 
+        if (var.class0_.is_undefined): 
             pass
         li = [ ]
         wrapli34 = RefOutArgWrapper(None)

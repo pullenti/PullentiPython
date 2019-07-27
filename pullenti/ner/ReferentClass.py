@@ -44,7 +44,7 @@ class ReferentClass:
             up_bound(int): 
         
         """
-        res = Feature._new2797(attr_name, attr_caption, low_bound, up_bound)
+        res = Feature._new2826(attr_name, attr_caption, low_bound, up_bound)
         self.__m_features.append(res)
         if (not attr_name in self.__m_attrs): 
             self.__m_attrs[attr_name] = res
@@ -59,10 +59,10 @@ class ReferentClass:
             name_(str): 
         
         """
-        wrapres2798 = RefOutArgWrapper(None)
-        inoutres2799 = Utils.tryGetValue(self.__m_attrs, name_, wrapres2798)
-        res = wrapres2798.value
-        if (not inoutres2799): 
+        wrapres2827 = RefOutArgWrapper(None)
+        inoutres2828 = Utils.tryGetValue(self.__m_attrs, name_, wrapres2827)
+        res = wrapres2827.value
+        if (not inoutres2828): 
             return None
         else: 
             return res

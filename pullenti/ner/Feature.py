@@ -83,9 +83,9 @@ class Feature:
         while i < len(self.inner_values): 
             if (Utils.compareStrings(self.inner_values[i], val, True) == 0 and (i < len(self.outer_values))): 
                 if (lang is not None): 
-                    if (lang.is_ua0 and (i < len(self.outer_valuesua)) and self.outer_valuesua[i] is not None): 
+                    if (lang.is_ua and (i < len(self.outer_valuesua)) and self.outer_valuesua[i] is not None): 
                         return self.outer_valuesua[i]
-                    if (lang.is_en0 and (i < len(self.outer_valuesen)) and self.outer_valuesen[i] is not None): 
+                    if (lang.is_en and (i < len(self.outer_valuesen)) and self.outer_valuesen[i] is not None): 
                         return self.outer_valuesen[i]
                 return self.outer_values[i]
             i += 1
@@ -111,7 +111,7 @@ class Feature:
         self.outer_valuesen.append(ext_val_eng)
     
     @staticmethod
-    def _new2797(_arg1 : str, _arg2 : str, _arg3 : int, _arg4 : int) -> 'Feature':
+    def _new2826(_arg1 : str, _arg2 : str, _arg3 : int, _arg4 : int) -> 'Feature':
         res = Feature()
         res.name = _arg1
         res.caption = _arg2

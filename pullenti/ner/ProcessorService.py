@@ -20,12 +20,12 @@ class ProcessorService:
     @staticmethod
     def get_version() -> str:
         """ Версия системы """
-        return "3.17"
+        return "3.19"
     
     @staticmethod
     def get_version_date() -> datetime.datetime:
         """ Дата-время текущей версии """
-        return datetime.datetime(2019, 2, 21, 0, 0, 0)
+        return datetime.datetime(2019, 5, 7, 0, 0, 0)
     
     @staticmethod
     def initialize(lang : 'MorphLang'=None) -> None:
@@ -71,7 +71,7 @@ class ProcessorService:
         proc = Processor()
         for t in ProcessorService.__m_analizer_instances: 
             a = t.clone()
-            if (a is not None and not a.is_specific0): 
+            if (a is not None and not a.is_specific): 
                 proc.add_analyzer(a)
         return proc
     
@@ -93,7 +93,7 @@ class ProcessorService:
         for t in ProcessorService.__m_analizer_instances: 
             a = t.clone()
             if (a is not None): 
-                if (not a.is_specific0 or a.name in names): 
+                if (not a.is_specific or a.name in names): 
                     proc.add_analyzer(a)
         return proc
     
@@ -119,7 +119,7 @@ class ProcessorService:
             if (img is not None): 
                 for kp in img.items(): 
                     if (not kp[0] in ProcessorService.__m_images): 
-                        ProcessorService.__m_images[kp[0]] = ImageWrapper._new2786(kp[0], kp[1])
+                        ProcessorService.__m_images[kp[0]] = ImageWrapper._new2815(kp[0], kp[1])
         except Exception as ex: 
             pass
         ProcessorService.__reorder_cartridges()
@@ -133,9 +133,9 @@ class ProcessorService:
         k = 0
         while k < len(ProcessorService.__m_analizer_instances): 
             i = 0
-            first_pass3279 = True
+            first_pass3309 = True
             while True:
-                if first_pass3279: first_pass3279 = False
+                if first_pass3309: first_pass3309 = False
                 else: i += 1
                 if (not (i < (len(ProcessorService.__m_analizer_instances) - 1))): break
                 max_ind = -1
@@ -152,7 +152,7 @@ class ProcessorService:
                                         break
                             j += 1
                 if (max_ind <= i): 
-                    if (ProcessorService.__m_analizer_instances[i].is_specific0 and not ProcessorService.__m_analizer_instances[i + 1].is_specific0): 
+                    if (ProcessorService.__m_analizer_instances[i].is_specific and not ProcessorService.__m_analizer_instances[i + 1].is_specific): 
                         pass
                     else: 
                         continue
@@ -196,13 +196,13 @@ class ProcessorService:
         
         """
         if (image_id is not None): 
-            wrapres2787 = RefOutArgWrapper(None)
-            inoutres2788 = Utils.tryGetValue(ProcessorService.__m_images, image_id, wrapres2787)
-            res = wrapres2787.value
-            if (inoutres2788): 
+            wrapres2816 = RefOutArgWrapper(None)
+            inoutres2817 = Utils.tryGetValue(ProcessorService.__m_images, image_id, wrapres2816)
+            res = wrapres2816.value
+            if (inoutres2817): 
                 return res
         if (ProcessorService.__m_unknown_image is None): 
-            ProcessorService.__m_unknown_image = ImageWrapper._new2786("unknown", EpNerCoreInternalResourceHelper.get_bytes("unknown.png"))
+            ProcessorService.__m_unknown_image = ImageWrapper._new2815("unknown", EpNerCoreInternalResourceHelper.get_bytes("unknown.png"))
         return ProcessorService.__m_unknown_image
     
     @staticmethod
@@ -215,7 +215,7 @@ class ProcessorService:
         """
         if (image_id is None): 
             return
-        wr = ImageWrapper._new2786(image_id, content)
+        wr = ImageWrapper._new2815(image_id, content)
         if (image_id in ProcessorService.__m_images): 
             ProcessorService.__m_images[image_id] = wr
         else: 

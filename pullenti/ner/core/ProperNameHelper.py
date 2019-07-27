@@ -31,9 +31,9 @@ class ProperNameHelper:
     def __corr_chars(str0_ : str, ci : 'CharsInfo', keep_chars : bool) -> str:
         if (not keep_chars): 
             return str0_
-        if (ci.is_all_lower0): 
+        if (ci.is_all_lower): 
             return str0_.lower()
-        if (ci.is_capital_upper0): 
+        if (ci.is_capital_upper): 
             return MiscHelper.convert_first_char_upper_and_other_lower(str0_)
         return str0_
     
@@ -53,25 +53,25 @@ class ProperNameHelper:
         if (BracketHelper.can_be_start_of_sequence(begin, False, False) and BracketHelper.can_be_end_of_sequence(end, False, begin, False)): 
             begin = begin.next0_
             end = end.previous
-        if (normalize_first_noun_group and not begin.morph.class0_.is_preposition0): 
+        if (normalize_first_noun_group and not begin.morph.class0_.is_preposition): 
             npt = NounPhraseHelper.try_parse(begin, NounPhraseParseAttr.REFERENTCANBENOUN, 0)
             if (npt is not None): 
-                if (npt.noun.get_morph_class_in_dictionary().is_undefined0 and len(npt.adjectives) == 0): 
+                if (npt.noun.get_morph_class_in_dictionary().is_undefined and len(npt.adjectives) == 0): 
                     npt = (None)
             if (npt is not None and npt.end_token.end_char > end.end_char): 
                 npt = (None)
             if (npt is not None): 
                 res = npt.get_normal_case_text(None, normal_first_group_single, MorphGender.UNDEFINED, False)
                 te = npt.end_token.next0_
-                if (((te is not None and te.next0_ is not None and te.is_comma0) and (isinstance(te.next0_, TextToken)) and te.next0_.end_char <= end.end_char) and te.next0_.morph.class0_.is_verb0 and te.next0_.morph.class0_.is_adjective0): 
+                if (((te is not None and te.next0_ is not None and te.is_comma) and (isinstance(te.next0_, TextToken)) and te.next0_.end_char <= end.end_char) and te.next0_.morph.class0_.is_verb and te.next0_.morph.class0_.is_adjective): 
                     for it in te.next0_.morph.items: 
                         if (it.gender == npt.morph.gender or (((it.gender) & (npt.morph.gender))) != (MorphGender.UNDEFINED)): 
-                            if (not ((it.case_) & npt.morph.case_).is_undefined0): 
+                            if (not ((it.case_) & npt.morph.case_).is_undefined): 
                                 if (it.number == npt.morph.number or (((it.number) & (npt.morph.number))) != (MorphNumber.UNDEFINED)): 
                                     var = (te.next0_).term
                                     if (isinstance(it, MorphWordForm)): 
                                         var = (it).normal_case
-                                    bi = MorphBaseInfo._new560(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
+                                    bi = MorphBaseInfo._new561(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
                                     var = Morphology.get_wordform(var, bi)
                                     if (var is not None): 
                                         res = "{0}, {1}".format(res, var)
@@ -84,9 +84,9 @@ class ProperNameHelper:
                             res = "{0}{1}".format(res, s)
                         else: 
                             res = "{0} {1}".format(res, s)
-            elif ((isinstance(begin, TextToken)) and begin.chars.is_cyrillic_letter0): 
+            elif ((isinstance(begin, TextToken)) and begin.chars.is_cyrillic_letter): 
                 mm = begin.get_morph_class_in_dictionary()
-                if (not mm.is_undefined0): 
+                if (not mm.is_undefined): 
                     res = begin.get_normal_case_text(mm, False, MorphGender.UNDEFINED, False)
                     if (begin.end_char < end.end_char): 
                         res = "{0} {1}".format(res, ProperNameHelper.get_name_ex(begin.next0_, end, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, True, False))
@@ -128,14 +128,14 @@ class ProperNameHelper:
         res = io.StringIO()
         prefix = None
         t = begin
-        first_pass2915 = True
+        first_pass2943 = True
         while True:
-            if first_pass2915: first_pass2915 = False
+            if first_pass2943: first_pass2943 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             if (res.tell() > 1000): 
                 break
-            if (t.is_table_control_char0): 
+            if (t.is_table_control_char): 
                 continue
             if (ignore_brackets_and_hiphens): 
                 if (BracketHelper.is_bracket(t, False)): 
@@ -146,21 +146,21 @@ class ProperNameHelper:
                         if (br is not None and br.end_char <= end.end_char): 
                             tmp = ProperNameHelper.get_name_ex(br.begin_token.next0_, br.end_token.previous, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, ignore_brackets_and_hiphens, False)
                             if (tmp is not None): 
-                                if ((br.end_char == end.end_char and br.begin_token.next0_ == br.end_token.previous and not br.begin_token.next0_.chars.is_letter0) and not ((isinstance(br.begin_token.next0_, ReferentToken)))): 
+                                if ((br.end_char == end.end_char and br.begin_token.next0_ == br.end_token.previous and not br.begin_token.next0_.chars.is_letter) and not ((isinstance(br.begin_token.next0_, ReferentToken)))): 
                                     pass
                                 else: 
                                     print(" {0}{1}{2}".format(t.get_source_text(), tmp, br.end_token.get_source_text()), end="", file=res, flush=True)
                             t = br.end_token
                     continue
-                if (t.is_hiphen0): 
+                if (t.is_hiphen): 
                     if (t == end): 
                         break
-                    elif (t.is_whitespace_before0 or t.is_whitespace_after0): 
+                    elif (t.is_whitespace_before or t.is_whitespace_after): 
                         continue
             tt = Utils.asObjectOrNull(t, TextToken)
             if (tt is not None): 
                 if (not ignore_brackets_and_hiphens): 
-                    if ((tt.next0_ is not None and tt.next0_.is_hiphen0 and (isinstance(tt.next0_.next0_, TextToken))) and tt != end and tt.next0_ != end): 
+                    if ((tt.next0_ is not None and tt.next0_.is_hiphen and (isinstance(tt.next0_.next0_, TextToken))) and tt != end and tt.next0_ != end): 
                         if (prefix is None): 
                             prefix = tt.term
                         else: 
@@ -171,7 +171,7 @@ class ProperNameHelper:
                         else: 
                             continue
                 s = None
-                if (cla.value != (0) or not mc.is_undefined0 or gender != MorphGender.UNDEFINED): 
+                if (cla.value != (0) or not mc.is_undefined or gender != MorphGender.UNDEFINED): 
                     for wff in tt.morph.items: 
                         wf = Utils.asObjectOrNull(wff, MorphWordForm)
                         if (wf is None): 
@@ -179,8 +179,8 @@ class ProperNameHelper:
                         if (cla.value != (0)): 
                             if ((((wf.class0_.value) & (cla.value))) == 0): 
                                 continue
-                        if (not mc.is_undefined0): 
-                            if (((wf.case_) & mc).is_undefined0): 
+                        if (not mc.is_undefined): 
+                            if (((wf.case_) & mc).is_undefined): 
                                 continue
                         if (gender != MorphGender.UNDEFINED): 
                             if ((((wf.gender) & (gender))) == (MorphGender.UNDEFINED)): 
@@ -195,14 +195,14 @@ class ProperNameHelper:
                             if (cla.value != (0)): 
                                 if ((((wf.class0_.value) & (cla.value))) == 0): 
                                     continue
-                            if (not mc.is_undefined0): 
-                                if (((wf.case_) & mc).is_undefined0): 
+                            if (not mc.is_undefined): 
+                                if (((wf.case_) & mc).is_undefined): 
                                     continue
                             if (s is None or wf.normal_case == tt.term): 
                                 s = wf.normal_case
                 if (s is None): 
                     s = tt.term
-                    if (tt.chars.is_last_lower0 and tt.length_char > 2): 
+                    if (tt.chars.is_last_lower and tt.length_char > 2): 
                         s = tt.get_source_text()
                         for i in range(len(s) - 1, -1, -1):
                             if (str.isupper(s[i])): 
@@ -226,12 +226,12 @@ class ProperNameHelper:
                 print(s, end="", file=res)
             elif (isinstance(t, NumberToken)): 
                 if (res.tell() > 0): 
-                    if (not t.is_whitespace_before0 and Utils.getCharAtStringIO(res, res.tell() - 1) == '-'): 
+                    if (not t.is_whitespace_before and Utils.getCharAtStringIO(res, res.tell() - 1) == '-'): 
                         pass
                     else: 
                         print(' ', end="", file=res)
                 nt = Utils.asObjectOrNull(t, NumberToken)
-                if ((t.morph.class0_.is_adjective0 and nt.typ == NumberSpellingType.WORDS and nt.begin_token == nt.end_token) and (isinstance(nt.begin_token, TextToken))): 
+                if ((t.morph.class0_.is_adjective and nt.typ == NumberSpellingType.WORDS and nt.begin_token == nt.end_token) and (isinstance(nt.begin_token, TextToken))): 
                     print((nt.begin_token).term, end="", file=res)
                 else: 
                     print(nt.value, end="", file=res)
@@ -241,7 +241,7 @@ class ProperNameHelper:
                 s = ProperNameHelper.get_name_ex((t).begin_token, (t).end_token, cla, mc, gender, ignore_brackets_and_hiphens, ignore_geo_referent)
                 if (not Utils.isNullOrEmpty(s)): 
                     if (res.tell() > 0): 
-                        if (not t.is_whitespace_before0 and Utils.getCharAtStringIO(res, res.tell() - 1) == '-'): 
+                        if (not t.is_whitespace_before and Utils.getCharAtStringIO(res, res.tell() - 1) == '-'): 
                             pass
                         else: 
                             print(' ', end="", file=res)

@@ -79,19 +79,19 @@ class ContractHelper:
         t = fr1.end_token
         if (t.is_char_of(":;.")): 
             return 1
-        if ((isinstance(t, TextToken)) and ((t.morph.class0_.is_preposition0 or t.morph.class0_.is_conjunction0))): 
+        if ((isinstance(t, TextToken)) and ((t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction))): 
             return -1
         t1 = fr2.begin_token
         if (isinstance(t1, TextToken)): 
-            if (t1.chars.is_all_lower0): 
+            if (t1.chars.is_all_lower): 
                 return -1
             if (BracketHelper.can_be_start_of_sequence(t1, False, False)): 
-                if (t.chars.is_all_lower0): 
+                if (t.chars.is_all_lower): 
                     return -1
         elif (isinstance(t1, NumberToken)): 
-            if (t.chars.is_all_lower0): 
+            if (t.chars.is_all_lower): 
                 return -1
-        if (t.chars.is_all_lower0): 
+        if (t.chars.is_all_lower): 
             if (fr2.end_token.is_char(';')): 
                 return -1
         return 0

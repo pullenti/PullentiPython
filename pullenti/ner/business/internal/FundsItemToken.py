@@ -53,12 +53,12 @@ class FundsItemToken(MetaToken):
             return None
         typ0 = FundsItemTyp.UNDEFINED
         tt = t
-        first_pass2872 = True
+        first_pass2900 = True
         while True:
-            if first_pass2872: first_pass2872 = False
+            if first_pass2900: first_pass2900 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
-            if (tt.morph.class0_.is_preposition0 or tt.morph.class0_.is_adverb0): 
+            if (tt.morph.class0_.is_preposition or tt.morph.class0_.is_adverb): 
                 continue
             if ((tt.is_value("СУММА", None) or tt.is_value("ОКОЛО", None) or tt.is_value("БОЛЕЕ", None)) or tt.is_value("МЕНЕЕ", None) or tt.is_value("СВЫШЕ", None)): 
                 continue
@@ -115,9 +115,9 @@ class FundsItemToken(MetaToken):
                     cou = 0
                     ok = False
                     ttt = tt.previous
-                    first_pass2873 = True
+                    first_pass2901 = True
                     while True:
-                        if first_pass2873: first_pass2873 = False
+                        if first_pass2901: first_pass2901 = False
                         else: ttt = ttt.previous
                         if (not (ttt is not None)): break
                         cou += 1
@@ -159,7 +159,7 @@ class FundsItemToken(MetaToken):
                         if (t is not None and ((t.is_char('+') or t.is_value("ПЛЮС", None))) and (isinstance(t.next0_, NumberToken))): 
                             res.end_token = t.next0_
                             t = res.end_token.next0_
-                        if ((t is not None and t.is_hiphen0 and t.next0_ is not None) and t.next0_.chars.is_all_lower0 and not t.is_whitespace_after0): 
+                        if ((t is not None and t.is_hiphen and t.next0_ is not None) and t.next0_.chars.is_all_lower and not t.is_whitespace_after): 
                             t = t.next0_.next0_
                         if (t is not None and ((t.is_value("ДОЛЯ", None) or t.is_value("ЧАСТКА", None)))): 
                             res.end_token = t
@@ -188,12 +188,12 @@ class FundsItemToken(MetaToken):
         li.append(f)
         is_in_br = False
         tt = f.end_token.next0_
-        first_pass2874 = True
+        first_pass2902 = True
         while True:
-            if first_pass2874: first_pass2874 = False
+            if first_pass2902: first_pass2902 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
-            if ((tt.is_whitespace_before0 and tt.previous is not None and tt.previous.is_char('.')) and tt.chars.is_capital_upper0): 
+            if ((tt.is_whitespace_before and tt.previous is not None and tt.previous.is_char('.')) and tt.chars.is_capital_upper): 
                 break
             f0 = FundsItemToken.try_parse(tt, f)
             if (f0 is not None): 
@@ -214,7 +214,7 @@ class FundsItemToken(MetaToken):
                     is_in_br = False
                     li[len(li) - 1].end_token = tt
                     continue
-            if (tt.morph.class0_.is_verb0 or tt.morph.class0_.is_adverb0): 
+            if (tt.morph.class0_.is_verb or tt.morph.class0_.is_adverb): 
                 continue
             break
         funds = FundsReferent()
@@ -268,7 +268,7 @@ class FundsItemToken(MetaToken):
                 cou += 1
                 if ((cou) > 500): 
                     break
-                if (tt.is_newline_after0): 
+                if (tt.is_newline_after): 
                     cou += 10
                 fr = Utils.asObjectOrNull(tt.get_referent(), FundsReferent)
                 if (fr is not None and fr.source is not None): 
@@ -284,7 +284,7 @@ class FundsItemToken(MetaToken):
                 cou += 1
                 if ((cou) > 300): 
                     break
-                if (tt.is_newline_after0): 
+                if (tt.is_newline_after): 
                     cou += 10
                 refs = tt.get_referents()
                 if (refs is not None): 

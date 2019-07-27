@@ -15,10 +15,10 @@ class MorphCase:
             self.value = val.value
     
     @property
-    def is_undefined0(self) -> bool:
+    def is_undefined(self) -> bool:
         return self.value == (0)
-    @is_undefined0.setter
-    def is_undefined0(self, value_) -> bool:
+    @is_undefined.setter
+    def is_undefined(self, value_) -> bool:
         self.value = (0)
         return value_
     
@@ -67,92 +67,92 @@ class MorphCase:
     ALL_CASES = None
     
     @property
-    def is_nominative0(self) -> bool:
+    def is_nominative(self) -> bool:
         """ Именительный """
         return self.__get_value(0)
-    @is_nominative0.setter
-    def is_nominative0(self, value_) -> bool:
+    @is_nominative.setter
+    def is_nominative(self, value_) -> bool:
         self.__set_value(0, value_)
         return value_
     
     @property
-    def is_genitive0(self) -> bool:
+    def is_genitive(self) -> bool:
         """ Родительный """
         return self.__get_value(1)
-    @is_genitive0.setter
-    def is_genitive0(self, value_) -> bool:
+    @is_genitive.setter
+    def is_genitive(self, value_) -> bool:
         self.__set_value(1, value_)
         return value_
     
     @property
-    def is_dative0(self) -> bool:
+    def is_dative(self) -> bool:
         """ Дательный """
         return self.__get_value(2)
-    @is_dative0.setter
-    def is_dative0(self, value_) -> bool:
+    @is_dative.setter
+    def is_dative(self, value_) -> bool:
         self.__set_value(2, value_)
         return value_
     
     @property
-    def is_accusative0(self) -> bool:
+    def is_accusative(self) -> bool:
         """ Винительный """
         return self.__get_value(3)
-    @is_accusative0.setter
-    def is_accusative0(self, value_) -> bool:
+    @is_accusative.setter
+    def is_accusative(self, value_) -> bool:
         self.__set_value(3, value_)
         return value_
     
     @property
-    def is_instrumental0(self) -> bool:
+    def is_instrumental(self) -> bool:
         """ Творительный """
         return self.__get_value(4)
-    @is_instrumental0.setter
-    def is_instrumental0(self, value_) -> bool:
+    @is_instrumental.setter
+    def is_instrumental(self, value_) -> bool:
         self.__set_value(4, value_)
         return value_
     
     @property
-    def is_prepositional0(self) -> bool:
+    def is_prepositional(self) -> bool:
         """ Предложный """
         return self.__get_value(5)
-    @is_prepositional0.setter
-    def is_prepositional0(self, value_) -> bool:
+    @is_prepositional.setter
+    def is_prepositional(self, value_) -> bool:
         self.__set_value(5, value_)
         return value_
     
     @property
-    def is_vocative0(self) -> bool:
+    def is_vocative(self) -> bool:
         """ Звательный """
         return self.__get_value(6)
-    @is_vocative0.setter
-    def is_vocative0(self, value_) -> bool:
+    @is_vocative.setter
+    def is_vocative(self, value_) -> bool:
         self.__set_value(6, value_)
         return value_
     
     @property
-    def is_partial0(self) -> bool:
+    def is_partial(self) -> bool:
         """ Частичный """
         return self.__get_value(7)
-    @is_partial0.setter
-    def is_partial0(self, value_) -> bool:
+    @is_partial.setter
+    def is_partial(self, value_) -> bool:
         self.__set_value(7, value_)
         return value_
     
     @property
-    def is_common0(self) -> bool:
+    def is_common(self) -> bool:
         """ Общий (для английского) """
         return self.__get_value(8)
-    @is_common0.setter
-    def is_common0(self, value_) -> bool:
+    @is_common.setter
+    def is_common(self, value_) -> bool:
         self.__set_value(8, value_)
         return value_
     
     @property
-    def is_possessive0(self) -> bool:
+    def is_possessive(self) -> bool:
         """ Притяжательный (для английского) """
         return self.__get_value(9)
-    @is_possessive0.setter
-    def is_possessive0(self, value_) -> bool:
+    @is_possessive.setter
+    def is_possessive(self, value_) -> bool:
         self.__set_value(9, value_)
         return value_
     

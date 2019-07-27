@@ -6,32 +6,32 @@ import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.Token import Token
 from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.Token import Token
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.person.PersonReferent import PersonReferent
 from pullenti.ner.org.OrganizationKind import OrganizationKind
 from pullenti.ner.uri.UriReferent import UriReferent
-from pullenti.ner.org.OrganizationReferent import OrganizationReferent
 from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.person.PersonReferent import PersonReferent
 from pullenti.ner.titlepage.internal.PersonRelations import PersonRelations
-from pullenti.ner.Referent import Referent
-from pullenti.ner.titlepage.TitlePageReferent import TitlePageReferent
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.booklink.internal.EpNerBooklinkInternalResourceHelper import EpNerBooklinkInternalResourceHelper
 from pullenti.ner.TextAnnotation import TextAnnotation
-from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.booklink.internal.EpNerBooklinkInternalResourceHelper import EpNerBooklinkInternalResourceHelper
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
 from pullenti.ner.titlepage.internal.MetaTitleInfo import MetaTitleInfo
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.core.Termin import Termin
+from pullenti.ner.titlepage.TitlePageReferent import TitlePageReferent
 from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.date.DateAnalyzer import DateAnalyzer
+from pullenti.ner.titlepage.internal.TitleNameToken import TitleNameToken
 from pullenti.ner.ProcessorService import ProcessorService
 from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.date.DateAnalyzer import DateAnalyzer
 from pullenti.ner.titlepage.internal.Line import Line
-from pullenti.ner.titlepage.internal.TitleNameToken import TitleNameToken
 
 class TitlePageAnalyzer(Analyzer):
     """ Анализатор заголовочной информации """
@@ -78,18 +78,18 @@ class TitlePageAnalyzer(Analyzer):
         return None
     
     def process_referent1(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        wrapet2612 = RefOutArgWrapper(None)
-        tpr = TitlePageAnalyzer._process(begin, (0 if end is None else end.end_char), begin.kit, wrapet2612)
-        et = wrapet2612.value
+        wrapet2640 = RefOutArgWrapper(None)
+        tpr = TitlePageAnalyzer._process(begin, (0 if end is None else end.end_char), begin.kit, wrapet2640)
+        et = wrapet2640.value
         if (tpr is None): 
             return None
         return ReferentToken(tpr, begin, et)
     
     def process(self, kit : 'AnalysisKit') -> None:
         ad = kit.get_analyzer_data(self)
-        wrapet2613 = RefOutArgWrapper(None)
-        tpr = TitlePageAnalyzer._process(kit.first_token, 0, kit, wrapet2613)
-        et = wrapet2613.value
+        wrapet2641 = RefOutArgWrapper(None)
+        tpr = TitlePageAnalyzer._process(kit.first_token, 0, kit, wrapet2641)
+        et = wrapet2641.value
         if (tpr is not None): 
             ad.register_referent(tpr)
     
@@ -134,17 +134,17 @@ class TitlePageAnalyzer(Analyzer):
                 if (i == 6 and j == 8): 
                     pass
                 if (j > i): 
-                    if (lines[j - 1].is_pure_en0 and lines[j].is_pure_ru0): 
+                    if (lines[j - 1].is_pure_en and lines[j].is_pure_ru): 
                         break
-                    if (lines[j - 1].is_pure_ru0 and lines[j].is_pure_en0): 
+                    if (lines[j - 1].is_pure_ru and lines[j].is_pure_en): 
                         break
                     if (lines[j].newlines_before_count >= (min_newlines_count * 2)): 
                         break
                 ttt = TitleNameToken.try_parse(lines[i].begin_token, lines[j].end_token, min_newlines_count)
                 if (ttt is not None): 
-                    if (lines[i].is_pure_en0): 
+                    if (lines[i].is_pure_en): 
                         ttt.morph.language = MorphLang.EN
-                    elif (lines[i].is_pure_ru0): 
+                    elif (lines[i].is_pure_ru): 
                         ttt.morph.language = MorphLang.RU
                     names.append(ttt)
                 j += 1
@@ -153,10 +153,10 @@ class TitlePageAnalyzer(Analyzer):
         name_rt = None
         if (len(names) > 0): 
             i0 = 0
-            if (names[i0].morph.language.is_en0): 
+            if (names[i0].morph.language.is_en): 
                 ii = 1
                 while ii < len(names): 
-                    if (names[ii].morph.language.is_ru0 and names[ii].rank > 0): 
+                    if (names[ii].morph.language.is_ru and names[ii].rank > 0): 
                         i0 = ii
                         break
                     ii += 1
@@ -176,12 +176,12 @@ class TitlePageAnalyzer(Analyzer):
                 begin = (rt)
         if (term is not None and kit is not None): 
             t = kit.first_token
-            first_pass3241 = True
+            first_pass3271 = True
             while True:
-                if first_pass3241: first_pass3241 = False
+                if first_pass3271: first_pass3271 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
-                tok = term.try_parse(t, TerminParseAttr.NO)
+                tok = term.try_parse(t, TerminParseAttr.NO, 0)
                 if (tok is None): 
                     continue
                 t0 = t
@@ -198,9 +198,9 @@ class TitlePageAnalyzer(Analyzer):
         pers_typ = TitleItemToken.Types.UNDEFINED
         pers_types = pr.rel_types
         t = begin
-        first_pass3242 = True
+        first_pass3272 = True
         while True:
-            if first_pass3242: first_pass3242 = False
+            if first_pass3272: first_pass3272 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char_pos > 0 and t.begin_char > max_char_pos): 
@@ -251,7 +251,7 @@ class TitlePageAnalyzer(Analyzer):
             rli = t.get_referents()
             if (rli is None): 
                 continue
-            if (not t.is_newline_before0 and (isinstance(t.previous, TextToken))): 
+            if (not t.is_newline_before and (isinstance(t.previous, TextToken))): 
                 s = (t.previous).term
                 if (s == "ИМЕНИ" or s == "ИМ"): 
                     continue
@@ -276,9 +276,9 @@ class TitlePageAnalyzer(Analyzer):
                         pr.add(p, pers_typ, 1)
                     else: 
                         tt = t.next0_
-                        first_pass3243 = True
+                        first_pass3273 = True
                         while True:
-                            if first_pass3243: first_pass3243 = False
+                            if first_pass3273: first_pass3273 = False
                             else: tt = tt.next0_
                             if (not (tt is not None)): break
                             rr = tt.get_referent()
@@ -331,17 +331,17 @@ class TitlePageAnalyzer(Analyzer):
                         if (t.end_char > end_token.value.end_char): 
                             end_token.value = t
                 elif (isinstance(r, GeoReferent)): 
-                    if (res.city is None and (r).is_city0): 
+                    if (res.city is None and (r).is_city): 
                         res.city = Utils.asObjectOrNull(r, GeoReferent)
                         if (t.end_char > end_token.value.end_char): 
                             end_token.value = t
                 if (isinstance(r, OrganizationReferent)): 
                     org0_ = Utils.asObjectOrNull(r, OrganizationReferent)
                     if ("курс" in org0_.types and org0_.number is not None): 
-                        wrapi2614 = RefOutArgWrapper(0)
-                        inoutres2615 = Utils.tryParseInt(org0_.number, wrapi2614)
-                        i = wrapi2614.value
-                        if (inoutres2615): 
+                        wrapi2642 = RefOutArgWrapper(0)
+                        inoutres2643 = Utils.tryParseInt(org0_.number, wrapi2642)
+                        i = wrapi2642.value
+                        if (inoutres2643): 
                             if (i > 0 and (i < 8)): 
                                 res.student_year = i
                     while org0_.higher is not None: 
@@ -369,20 +369,20 @@ class TitlePageAnalyzer(Analyzer):
         if (res.city is None and res.org0_ is not None): 
             s = res.org0_.find_slot(OrganizationReferent.ATTR_GEO, None, True)
             if (s is not None and (isinstance(s.value, GeoReferent))): 
-                if ((s.value).is_city0): 
+                if ((s.value).is_city): 
                     res.city = Utils.asObjectOrNull(s.value, GeoReferent)
         if (res.date is None): 
             t = begin
-            first_pass3244 = True
+            first_pass3274 = True
             while True:
-                if first_pass3244: first_pass3244 = False
+                if first_pass3274: first_pass3274 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= end_char)): break
                 city = Utils.asObjectOrNull(t.get_referent(), GeoReferent)
                 if (city is None): 
                     continue
                 if (isinstance(t.next0_, TextToken)): 
-                    if (t.next0_.is_char_of(":,") or t.next0_.is_hiphen0): 
+                    if (t.next0_.is_char_of(":,") or t.next0_.is_hiphen): 
                         t = t.next0_
                 rt = t.kit.process_referent(DateAnalyzer.ANALYZER_NAME, t.next0_)
                 if (rt is not None): 

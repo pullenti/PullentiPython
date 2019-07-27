@@ -56,9 +56,9 @@ class MetaPerson(ReferentClass):
         if (pers is not None): 
             if (pers.find_slot("@GENERAL", None, True) is not None): 
                 return MetaPerson.GENERAL_IMAGE_ID
-            if (pers.is_male0): 
+            if (pers.is_male): 
                 return MetaPerson.MAN_IMAGE_ID
-            if (pers.is_female0): 
+            if (pers.is_female): 
                 return MetaPerson.WOMEN_IMAGE_ID
         return MetaPerson.PERSON_IMAGE_ID
     

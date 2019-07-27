@@ -29,7 +29,7 @@ class Morphology:
             langs(MorphLang): по умолчанию, русский и английский
         """
         UnicodeInfo.initialize()
-        if (langs is None or langs.is_undefined0): 
+        if (langs is None or langs.is_undefined): 
             langs = ((MorphLang.RU) | MorphLang.EN)
         InnerMorphology._load_languages(langs)
     
@@ -140,7 +140,7 @@ class Morphology:
         if (morph_info is None or Utils.isNullOrEmpty(word)): 
             return word
         cla = morph_info.class0_
-        if (cla.is_undefined0): 
+        if (cla.is_undefined): 
             mi0 = Morphology.get_word_base_info(word, None, False, False)
             if (mi0 is not None): 
                 cla = mi0.class0_
@@ -171,12 +171,12 @@ class Morphology:
                 ok = False
                 for wf in mt[0].word_forms: 
                     if (k == 0): 
-                        if (not wf.is_in_dictionary0): 
+                        if (not wf.is_in_dictionary): 
                             continue
-                    elif (wf.is_in_dictionary0): 
+                    elif (wf.is_in_dictionary): 
                         continue
                     if (is_case_nominative): 
-                        if (not wf.case_.is_nominative0 and not wf.case_.is_undefined0): 
+                        if (not wf.case_.is_nominative and not wf.case_.is_undefined): 
                             continue
                     cla.value |= wf.class0_.value
                     bi.gender = Utils.valToEnum((bi.gender) | (wf.gender), MorphGender)
@@ -224,7 +224,7 @@ class Morphology:
         bi1 = Morphology.get_word_base_info(var1, None, False, False)
         bi2 = Morphology.get_word_base_info(var2, None, False, False)
         var = var1
-        if (not bi1.class0_.is_adjective0 and bi2.class0_.is_adjective0): 
+        if (not bi1.class0_.is_adjective and bi2.class0_.is_adjective): 
             var = var2
         if (bi is None): 
             return var

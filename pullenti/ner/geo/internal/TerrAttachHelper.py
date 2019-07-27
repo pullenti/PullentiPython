@@ -76,7 +76,7 @@ class TerrAttachHelper:
                     if (aid is None): 
                         rt0 = TerrAttachHelper.try_attach_territory(tmp, ad, True, None, None)
             if (rt0 is not None): 
-                if ((rt0.referent).is_state0): 
+                if ((rt0.referent).is_state): 
                     return None
                 rt0.begin_token = li[0].begin_token
                 return rt0
@@ -140,7 +140,7 @@ class TerrAttachHelper:
                     if (k == 1): 
                         if (noun.termin_item.canonic_text == "РАЙОН" or noun.termin_item.canonic_text == "ОБЛАСТЬ" or noun.termin_item.canonic_text == "СОЮЗ"): 
                             if (isinstance(li[k].onto_item.referent, GeoReferent)): 
-                                if ((li[k].onto_item.referent).is_state0): 
+                                if ((li[k].onto_item.referent).is_state): 
                                     break
                             ok = False
                             tt = li[k].end_token.next0_
@@ -195,7 +195,7 @@ class TerrAttachHelper:
                     noun = li[k]
                     if (k == 0): 
                         tt = TerrItemToken.try_parse(li[k].begin_token.previous, None, True, False)
-                        if (tt is not None and tt.morph.class0_.is_adjective0): 
+                        if (tt is not None and tt.morph.class0_.is_adjective): 
                             adj_terr_before = True
             else: 
                 if (ex_obj is not None): 
@@ -209,10 +209,10 @@ class TerrAttachHelper:
         full_name = None
         morph_ = None
         if (ex_obj is not None): 
-            if (ex_obj.is_adjective and not ex_obj.morph.language.is_en0 and noun is None): 
+            if (ex_obj.is_adjective and not ex_obj.morph.language.is_en and noun is None): 
                 if (attach_always and ex_obj.end_token.next0_ is not None): 
                     npt = NounPhraseHelper.try_parse(ex_obj.begin_token, NounPhraseParseAttr.NO, 0)
-                    if (ex_obj.end_token.next0_.is_comma_and0): 
+                    if (ex_obj.end_token.next0_.is_comma_and): 
                         pass
                     elif (npt is None): 
                         pass
@@ -244,7 +244,7 @@ class TerrAttachHelper:
                 elif (not ex_obj.can_be_surname and not ex_obj.can_be_city): 
                     if ((ex_obj.end_token.next0_ is not None and ex_obj.end_token.next0_.is_char(')') and ex_obj.begin_token.previous is not None) and ex_obj.begin_token.previous.is_char('(')): 
                         ok2 = True
-                    elif (ex_obj.chars.is_latin_letter0 and ex_obj.begin_token.previous is not None): 
+                    elif (ex_obj.chars.is_latin_letter and ex_obj.begin_token.previous is not None): 
                         if (ex_obj.begin_token.previous.is_value("IN", None)): 
                             ok2 = True
                         elif (ex_obj.begin_token.previous.is_value("THE", None) and ex_obj.begin_token.previous.previous is not None and ex_obj.begin_token.previous.previous.is_value("IN", None)): 
@@ -279,7 +279,7 @@ class TerrAttachHelper:
                         return None
                 geo_before = None
                 tt0 = li[0].begin_token.previous
-                if (tt0 is not None and tt0.is_comma_and0): 
+                if (tt0 is not None and tt0.is_comma_and): 
                     tt0 = tt0.previous
                 if (not li[0].is_newline_before and tt0 is not None): 
                     geo_before = (Utils.asObjectOrNull(tt0.get_referent(), GeoReferent))
@@ -287,7 +287,7 @@ class TerrAttachHelper:
                     if (noun.termin_item.is_state): 
                         return None
                     if (new_name.can_be_surname and geo_before is None): 
-                        if (((noun.morph.case_) & new_name.morph.case_).is_undefined0): 
+                        if (((noun.morph.case_) & new_name.morph.case_).is_undefined): 
                             return None
                     if (MiscHelper.is_exists_in_dictionary(new_name.begin_token, new_name.end_token, (MorphClass.ADJECTIVE) | MorphClass.PRONOUN | MorphClass.VERB)): 
                         if (noun.begin_token != new_name.begin_token): 
@@ -298,7 +298,7 @@ class TerrAttachHelper:
                                     pass
                                 elif (new_name.is_geo_in_dictionary): 
                                     pass
-                                elif (new_name.end_token.is_newline_after0): 
+                                elif (new_name.end_token.is_newline_after): 
                                     pass
                                 else: 
                                     return None
@@ -331,7 +331,7 @@ class TerrAttachHelper:
                                 ok = True
                     elif (len(li) == 2): 
                         ok = TerrAttachHelper.__can_be_geo_after(li[len(li) - 1].end_token.next0_)
-                    if (not ok and not li[0].is_newline_before and not li[0].chars.is_all_lower0): 
+                    if (not ok and not li[0].is_newline_before and not li[0].chars.is_all_lower): 
                         rt00 = li[0].kit.process_referent("PERSONPROPERTY", li[0].begin_token.previous)
                         if (rt00 is not None): 
                             ok = True
@@ -352,18 +352,18 @@ class TerrAttachHelper:
                     full_name = "{0} {1}".format(ProperNameHelper.get_name_ex(li[0].begin_token, noun.begin_token.previous, MorphClass.ADJECTIVE, MorphCase.UNDEFINED, noun.termin_item.gender, False, False), noun.termin_item.canonic_text)
             else: 
                 if (not attach_always or ((noun.termin_item is not None and noun.termin_item.canonic_text == "ФЕДЕРАЦИЯ"))): 
-                    is_latin = noun.chars.is_latin_letter0 and new_name.chars.is_latin_letter0
+                    is_latin = noun.chars.is_latin_letter and new_name.chars.is_latin_letter
                     if (Utils.indexOfList(li, noun, 0) > Utils.indexOfList(li, new_name, 0)): 
                         if (not is_latin): 
                             return None
                     if (not new_name.is_district_name and not BracketHelper.can_be_start_of_sequence(new_name.begin_token, False, False)): 
                         if (len(adj_list) == 0 and MiscHelper.is_exists_in_dictionary(new_name.begin_token, new_name.end_token, (MorphClass.NOUN) | MorphClass.PRONOUN)): 
-                            if (len(li) == 2 and noun.is_city_region0 and (noun.whitespaces_after_count < 2)): 
+                            if (len(li) == 2 and noun.is_city_region and (noun.whitespaces_after_count < 2)): 
                                 pass
                             else: 
                                 return None
                         if (not is_latin): 
-                            if ((noun.termin_item.is_region and not attach_always and ((not adj_terr_before or new_name.is_doubt))) and not noun.is_city_region0 and not noun.termin_item.is_specific_prefix): 
+                            if ((noun.termin_item.is_region and not attach_always and ((not adj_terr_before or new_name.is_doubt))) and not noun.is_city_region and not noun.termin_item.is_specific_prefix): 
                                 if (not MiscLocationHelper.check_geo_object_before(noun.begin_token)): 
                                     if (not noun.is_doubt and noun.begin_token != noun.end_token): 
                                         pass
@@ -382,7 +382,7 @@ class TerrAttachHelper:
                 if (new_name.begin_token != new_name.end_token): 
                     ttt = new_name.begin_token.next0_
                     while ttt is not None and ttt.end_char <= new_name.end_char: 
-                        if (ttt.chars.is_letter0): 
+                        if (ttt.chars.is_letter): 
                             ty = TerrItemToken.try_parse(ttt, None, False, False)
                             if ((ty is not None and ty.termin_item is not None and noun is not None) and ((noun.termin_item.canonic_text in ty.termin_item.canonic_text or ty.termin_item.canonic_text in noun.termin_item.canonic_text))): 
                                 name = MiscHelper.get_text_value(new_name.begin_token, ttt.previous, GetTextAttr.NO)
@@ -403,19 +403,19 @@ class TerrAttachHelper:
                     elif (tyy.endswith("район") and g.find_slot(GeoReferent.ATTR_TYPE, "район", True) is not None): 
                         ooo = True
                     if (ooo): 
-                        return ReferentToken._new738(g, noun.begin_token, noun.end_token.next0_, noun.begin_token.morph)
+                        return ReferentToken._new745(g, noun.begin_token, noun.end_token.next0_, noun.begin_token.morph)
             if ((len(li) == 1 and noun == li[0] and li[0].termin_item is not None) and TerrItemToken.try_parse(li[0].end_token.next0_, None, True, False) is None and TerrItemToken.try_parse(li[0].begin_token.previous, None, True, False) is None): 
                 if (li[0].morph.number == MorphNumber.PLURAL): 
                     return None
                 cou = 0
                 str0_ = li[0].termin_item.canonic_text.lower()
                 tt = li[0].begin_token.previous
-                first_pass3004 = True
+                first_pass3032 = True
                 while True:
-                    if first_pass3004: first_pass3004 = False
+                    if first_pass3032: first_pass3032 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
-                    if (tt.is_newline_after0): 
+                    if (tt.is_newline_after): 
                         cou += 10
                     else: 
                         cou += 1
@@ -427,12 +427,12 @@ class TerrAttachHelper:
                     ok = True
                     cou = 0
                     tt = li[0].end_token.next0_
-                    first_pass3005 = True
+                    first_pass3033 = True
                     while True:
-                        if first_pass3005: first_pass3005 = False
+                        if first_pass3033: first_pass3033 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
-                        if (tt.is_newline_before0): 
+                        if (tt.is_newline_before): 
                             cou += 10
                         else: 
                             cou += 1
@@ -447,7 +447,7 @@ class TerrAttachHelper:
                         ii = 0
                         while g is not None and (ii < 3): 
                             if (g.find_slot(GeoReferent.ATTR_TYPE, str0_, True) is not None): 
-                                return ReferentToken._new738(g, li[0].begin_token, li[0].end_token, noun.begin_token.morph)
+                                return ReferentToken._new745(g, li[0].begin_token, li[0].end_token, noun.begin_token.morph)
                             g = g.higher; ii += 1
                     break
             return None
@@ -458,7 +458,7 @@ class TerrAttachHelper:
             ter = GeoReferent()
             if (ex_obj is not None): 
                 geo_ = Utils.asObjectOrNull(ex_obj.onto_item.referent, GeoReferent)
-                if (geo_ is not None and not geo_.is_city0): 
+                if (geo_ is not None and not geo_.is_city): 
                     ter._merge_slots2(geo_, li[0].kit.base_language)
                 else: 
                     ter._add_name(name)
@@ -472,27 +472,27 @@ class TerrAttachHelper:
                     ter._add_name(alt_name)
             if (noun is not None): 
                 if (noun.termin_item.canonic_text == "АО"): 
-                    ter._add_typ(("АВТОНОМНИЙ ОКРУГ" if li[0].kit.base_language.is_ua0 else "АВТОНОМНЫЙ ОКРУГ"))
+                    ter._add_typ(("АВТОНОМНИЙ ОКРУГ" if li[0].kit.base_language.is_ua else "АВТОНОМНЫЙ ОКРУГ"))
                 elif (noun.termin_item.canonic_text == "МУНИЦИПАЛЬНОЕ СОБРАНИЕ" or noun.termin_item.canonic_text == "МУНІЦИПАЛЬНЕ ЗБОРИ"): 
-                    ter._add_typ(("МУНІЦИПАЛЬНЕ УТВОРЕННЯ" if li[0].kit.base_language.is_ua0 else "МУНИЦИПАЛЬНОЕ ОБРАЗОВАНИЕ"))
+                    ter._add_typ(("МУНІЦИПАЛЬНЕ УТВОРЕННЯ" if li[0].kit.base_language.is_ua else "МУНИЦИПАЛЬНОЕ ОБРАЗОВАНИЕ"))
                 elif (noun.termin_item.acronym == "МО" and add_noun is not None): 
                     ter._add_typ(add_noun.termin_item.canonic_text)
                 else: 
                     if (noun.termin_item.canonic_text == "СОЮЗ" and ex_obj is not None and ex_obj.end_char > noun.end_char): 
-                        return ReferentToken._new738(ter, ex_obj.begin_token, ex_obj.end_token, ex_obj.morph)
+                        return ReferentToken._new745(ter, ex_obj.begin_token, ex_obj.end_token, ex_obj.morph)
                     ter._add_typ(noun.termin_item.canonic_text)
-                    if (noun.termin_item.is_region and ter.is_state0): 
+                    if (noun.termin_item.is_region and ter.is_state): 
                         ter._add_typ_reg(li[0].kit.base_language)
-            if (ter.is_state0 and ter.is_region0): 
+            if (ter.is_state and ter.is_region): 
                 for a in adj_list: 
                     if (a.termin_item.is_region): 
                         ter._add_typ_reg(li[0].kit.base_language)
                         break
-            if (ter.is_state0): 
+            if (ter.is_state): 
                 if (full_name is not None): 
                     ter._add_name(full_name)
         res = ReferentToken(ter, li[0].begin_token, li[k - 1].end_token)
-        if (noun is not None and noun.morph.class0_.is_noun0): 
+        if (noun is not None and noun.morph.class0_.is_noun): 
             res.morph = noun.morph
         else: 
             res.morph = MorphCollection()
@@ -501,7 +501,7 @@ class TerrAttachHelper:
                 for v in li[ii].morph.items: 
                     bi = MorphBaseInfo(v)
                     if (noun is not None): 
-                        if (bi.class0_.is_adjective0): 
+                        if (bi.class0_.is_adjective): 
                             bi.class0_ = MorphClass.NOUN
                     res.morph.add_item(bi)
                 ii += 1
@@ -520,7 +520,7 @@ class TerrAttachHelper:
     
     @staticmethod
     def __can_be_geo_after(tt : 'Token') -> bool:
-        while tt is not None and ((tt.is_comma0 or BracketHelper.is_bracket(tt, True))):
+        while tt is not None and ((tt.is_comma or BracketHelper.is_bracket(tt, True))):
             tt = tt.next0_
         if (tt is None): 
             return False
@@ -546,7 +546,7 @@ class TerrAttachHelper:
             t(Token): 
         
         """
-        if (t is None or not t.chars.is_latin_letter0): 
+        if (t is None or not t.chars.is_latin_letter): 
             return None
         tok = TerrItemToken._m_geo_abbrs.try_parse(t, TerminParseAttr.NO)
         if (tok is None): 

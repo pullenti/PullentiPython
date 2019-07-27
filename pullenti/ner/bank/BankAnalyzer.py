@@ -71,7 +71,7 @@ class BankAnalyzer(Analyzer):
         t = kit.first_token
         while t is not None: 
             rt = None
-            if (t.chars.is_letter0): 
+            if (t.chars.is_letter): 
                 tok = BankAnalyzer.__m_ontology.try_parse(t, TerminParseAttr.NO)
                 if (tok is not None): 
                     tt = tok.end_token.next0_
@@ -80,7 +80,7 @@ class BankAnalyzer(Analyzer):
                     rt = self.__try_attach(tt, True)
                     if (rt is not None): 
                         rt.begin_token = t
-            if (rt is None and (((isinstance(t, ReferentToken)) or t.is_newline_before0))): 
+            if (rt is None and (((isinstance(t, ReferentToken)) or t.is_newline_before))): 
                 rt = self.__try_attach(t, False)
             if (rt is not None): 
                 rt.referent = ad.register_referent(rt.referent)
@@ -107,14 +107,14 @@ class BankAnalyzer(Analyzer):
         org_is_bank = False
         empty = 0
         last_uri = None
-        first_pass2855 = True
+        first_pass2883 = True
         while True:
-            if first_pass2855: first_pass2855 = False
+            if first_pass2883: first_pass2883 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (t.is_table_control_char0 and t != t0): 
+            if (t.is_table_control_char and t != t0): 
                 break
-            if (t.is_comma0 or t.morph.class0_.is_preposition0 or t.is_char_of("/\\")): 
+            if (t.is_comma or t.morph.class0_.is_preposition or t.is_char_of("/\\")): 
                 continue
             bank_keyword = False
             if (t.is_value("ПОЛНЫЙ", None) and t.next0_ is not None and ((t.next0_.is_value("НАИМЕНОВАНИЕ", None) or t.next0_.is_value("НАЗВАНИЕ", None)))): 
@@ -167,7 +167,7 @@ class BankAnalyzer(Analyzer):
                 if (uris is None): 
                     if (not BankAnalyzer.__is_bank_req(u.scheme)): 
                         return None
-                    if (u.scheme == "ИНН" and t.is_newline_after0): 
+                    if (u.scheme == "ИНН" and t.is_newline_after): 
                         return None
                     uris = list()
                     uris_keys = list()
@@ -193,14 +193,14 @@ class BankAnalyzer(Analyzer):
             if (isinstance(t, TextToken)): 
                 if (t.is_value("ПОЛНЫЙ", None) or t.is_value("НАИМЕНОВАНИЕ", None) or t.is_value("НАЗВАНИЕ", None)): 
                     pass
-                elif (t.chars.is_letter0): 
+                elif (t.chars.is_letter): 
                     tok = BankAnalyzer.__m_ontology.try_parse(t, TerminParseAttr.NO)
                     if (tok is not None): 
                         t = tok.end_token
                         empty = 0
                     else: 
                         empty += 1
-                        if (t.is_newline_before0): 
+                        if (t.is_newline_before): 
                             nnn = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
                             if (nnn is not None and nnn.end_token.next0_ is not None and nnn.end_token.next0_.is_char(':')): 
                                 break
@@ -208,9 +208,9 @@ class BankAnalyzer(Analyzer):
                         break
             if (empty > 2): 
                 break
-            if (empty > 0 and t.is_char(':') and t.is_newline_after0): 
+            if (empty > 0 and t.is_char(':') and t.is_newline_after): 
                 break
-            if (((isinstance(t, NumberToken)) and t.is_newline_before0 and t.next0_ is not None) and not t.next0_.chars.is_letter0): 
+            if (((isinstance(t, NumberToken)) and t.is_newline_before and t.next0_ is not None) and not t.next0_.chars.is_letter): 
                 break
         if (uris is None): 
             return None

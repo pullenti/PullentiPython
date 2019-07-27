@@ -138,8 +138,8 @@ class MorphCollection(MorphBaseInfo):
         self.__m_number = MorphNumber.UNDEFINED
         n = self.__m_number == MorphNumber.UNDEFINED
         self.__m_case = MorphCase()
-        ca = self.__m_case.is_undefined0
-        la = self.__m_language is None or self.__m_language.is_undefined0
+        ca = self.__m_case.is_undefined
+        la = self.__m_language is None or self.__m_language.is_undefined
         self.__m_voice = MorphVoice.UNDEFINED
         verb_has_undef = False
         if (self.__m_items is not None): 
@@ -153,7 +153,7 @@ class MorphCollection(MorphBaseInfo):
                     self.__m_number = (Utils.valToEnum((self.__m_number) | (it.number), MorphNumber))
                 if (la): 
                     self.__m_language.value |= it.language.value
-                if (it.class0_.is_verb0): 
+                if (it.class0_.is_verb): 
                     if (isinstance(it, MorphWordForm)): 
                         v = (it).misc.voice
                         if (v == MorphVoice.UNDEFINED): 
@@ -266,7 +266,7 @@ class MorphCollection(MorphBaseInfo):
         if (len(self.__m_items) == 0): 
             self.__m_case = ((self.__m_case) & cas)
         for i in range(len(self.__m_items) - 1, -1, -1):
-            if (((self.__m_items[i].case_) & cas).is_undefined0): 
+            if (((self.__m_items[i].case_) & cas).is_undefined): 
                 del self.__m_items[i]
                 self.__m_need_recalc = True
             elif ((((self.__m_items[i].case_) & cas)) != self.__m_items[i].case_): 
@@ -297,7 +297,7 @@ class MorphCollection(MorphBaseInfo):
                 self.__m_gender = (Utils.valToEnum((self.__m_gender) & (inf.gender), MorphGender))
             if (inf.number != MorphNumber.UNDEFINED): 
                 self.__m_number = (Utils.valToEnum((self.__m_number) & (inf.number), MorphNumber))
-            if (not inf.case_.is_undefined0): 
+            if (not inf.case_.is_undefined): 
                 self.__m_case &= inf.case_
             return
         for i in range(len(self.__m_items) - 1, -1, -1):
@@ -311,14 +311,14 @@ class MorphCollection(MorphBaseInfo):
                 if ((((it.number) & (inf.number))) == (MorphNumber.UNDEFINED)): 
                     ok = False
                 ch_num = True
-            if (not inf.case_.is_undefined0): 
-                if (((inf.case_) & it.case_).is_undefined0): 
+            if (not inf.case_.is_undefined): 
+                if (((inf.case_) & it.case_).is_undefined): 
                     ok = False
             if (not ok): 
                 del self.__m_items[i]
                 self.__m_need_recalc = True
             else: 
-                if (not inf.case_.is_undefined0): 
+                if (not inf.case_.is_undefined): 
                     if (it.case_ != (((inf.case_) & it.case_))): 
                         it.case_ = ((inf.case_) & it.case_)
                         self.__m_need_recalc = True
@@ -341,7 +341,7 @@ class MorphCollection(MorphBaseInfo):
         if (not ((isinstance(prep, TextToken)))): 
             return
         mc = LanguageHelper.get_case_after_preposition((prep).lemma)
-        if (((mc) & self.case_).is_undefined0): 
+        if (((mc) & self.case_).is_undefined): 
             return
         self.remove_items(mc, False)
     
@@ -352,12 +352,12 @@ class MorphCollection(MorphBaseInfo):
             return
         has_in_dict = False
         for i in range(len(self.__m_items) - 1, -1, -1):
-            if ((isinstance(self.__m_items[i], MorphWordForm)) and (self.__m_items[i]).is_in_dictionary0): 
+            if ((isinstance(self.__m_items[i], MorphWordForm)) and (self.__m_items[i]).is_in_dictionary): 
                 has_in_dict = True
                 break
         if (has_in_dict): 
             for i in range(len(self.__m_items) - 1, -1, -1):
-                if ((isinstance(self.__m_items[i], MorphWordForm)) and not (self.__m_items[i]).is_in_dictionary0): 
+                if ((isinstance(self.__m_items[i], MorphWordForm)) and not (self.__m_items[i]).is_in_dictionary): 
                     del self.__m_items[i]
                     self.__m_need_recalc = True
     
@@ -365,7 +365,7 @@ class MorphCollection(MorphBaseInfo):
         if (self.__m_items is None): 
             return
         for i in range(len(self.__m_items) - 1, -1, -1):
-            if (self.__m_items[i].class0_.is_proper0): 
+            if (self.__m_items[i].class0_.is_proper): 
                 del self.__m_items[i]
                 self.__m_need_recalc = True
     
@@ -394,9 +394,9 @@ class MorphCollection(MorphBaseInfo):
         if (self.__m_items is None): 
             return
         for i in range(len(self.__m_items) - 1, -1, -1):
-            if (not cla.is_undefined0): 
+            if (not cla.is_undefined): 
                 if ((((self.__m_items[i].class0_.value) & (cla.value))) == 0): 
-                    if (((self.__m_items[i].class0_.is_proper0 or self.__m_items[i].class0_.is_noun0)) and ((cla.is_proper0 or cla.is_noun0))): 
+                    if (((self.__m_items[i].class0_.is_proper or self.__m_items[i].class0_.is_noun)) and ((cla.is_proper or cla.is_noun))): 
                         pass
                     else: 
                         del self.__m_items[i]
@@ -404,8 +404,8 @@ class MorphCollection(MorphBaseInfo):
                         continue
             ok = False
             for it in col.items: 
-                if (not it.case_.is_undefined0 and not self.__m_items[i].case_.is_undefined0): 
-                    if (((self.__m_items[i].case_) & it.case_).is_undefined0): 
+                if (not it.case_.is_undefined and not self.__m_items[i].case_.is_undefined): 
+                    if (((self.__m_items[i].case_) & it.case_).is_undefined): 
                         continue
                 if (it.gender != MorphGender.UNDEFINED and self.__m_items[i].gender != MorphGender.UNDEFINED): 
                     if ((((it.gender) & (self.__m_items[i].gender))) == (MorphGender.UNDEFINED)): 
@@ -425,8 +425,8 @@ class MorphCollection(MorphBaseInfo):
         res = None
         max_coef = 0
         for it in self.__m_items: 
-            if (not cas.is_undefined0): 
-                if (((it.case_) & cas).is_undefined0): 
+            if (not cas.is_undefined): 
+                if (((it.case_) & cas).is_undefined): 
                     continue
             if (num != MorphNumber.UNDEFINED): 
                 if ((((num) & (it.number))) == (MorphNumber.UNDEFINED)): 
@@ -522,19 +522,19 @@ class MorphCollection(MorphBaseInfo):
         return res
     
     @staticmethod
-    def _new576(_arg1 : 'MorphClass') -> 'MorphCollection':
+    def _new577(_arg1 : 'MorphClass') -> 'MorphCollection':
         res = MorphCollection()
         res.class0_ = _arg1
         return res
     
     @staticmethod
-    def _new2285(_arg1 : 'MorphGender') -> 'MorphCollection':
+    def _new2313(_arg1 : 'MorphGender') -> 'MorphCollection':
         res = MorphCollection()
         res.gender = _arg1
         return res
     
     @staticmethod
-    def _new2389(_arg1 : 'MorphCase') -> 'MorphCollection':
+    def _new2417(_arg1 : 'MorphCase') -> 'MorphCollection':
         res = MorphCollection()
         res.case_ = _arg1
         return res

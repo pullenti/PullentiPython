@@ -22,14 +22,14 @@ class TableCellToken(MetaToken):
         while t is not None and t.end_char <= self.end_char: 
             t0 = t
             t1 = t
-            first_pass2893 = True
+            first_pass2921 = True
             while True:
-                if first_pass2893: first_pass2893 = False
+                if first_pass2921: first_pass2921 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= self.end_char)): break
                 t1 = t
-                if (t.is_newline_after0): 
-                    if ((t.next0_ is not None and t.next0_.end_char <= self.end_char and t.next0_.chars.is_letter0) and t.next0_.chars.is_all_lower0 and not t0.chars.is_all_lower0): 
+                if (t.is_newline_after): 
+                    if ((t.next0_ is not None and t.next0_.end_char <= self.end_char and t.next0_.chars.is_letter) and t.next0_.chars.is_all_lower and not t0.chars.is_all_lower): 
                         continue
                     break
             res.append(TableCellToken(t0, t1))
@@ -38,7 +38,7 @@ class TableCellToken(MetaToken):
         return res
     
     @staticmethod
-    def _new533(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : int) -> 'TableCellToken':
+    def _new534(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : int) -> 'TableCellToken':
         res = TableCellToken(_arg1, _arg2)
         res.row_span = _arg3
         res.col_span = _arg4

@@ -60,7 +60,10 @@ class NounPhraseToken(MetaToken):
         if ((isinstance(self.noun.begin_token, ReferentToken)) and self.noun.begin_token == self.noun.end_token): 
             r = self.noun.begin_token.get_normal_case_text(None, single_number, gender, keep_chars)
         else: 
-            r = self.noun.get_normal_case_text((MorphClass.NOUN) | MorphClass.PRONOUN, single_number, gender, keep_chars)
+            cas = (MorphClass.NOUN) | MorphClass.PRONOUN
+            if (mc is not None and not mc.is_undefined): 
+                cas = mc
+            r = self.noun.get_normal_case_text(cas, single_number, gender, keep_chars)
         if (r is None or r == "?"): 
             r = self.noun.get_normal_case_text(None, single_number, MorphGender.UNDEFINED, False)
         print(Utils.ifNotNull(r, str(self.noun)), end="", file=res)
@@ -88,7 +91,7 @@ class NounPhraseToken(MetaToken):
             plural(bool): 
         
         """
-        mi = MorphBaseInfo._new562(cas, MorphLang.RU)
+        mi = MorphBaseInfo._new563(cas, MorphLang.RU)
         if (plural): 
             mi.number = MorphNumber.PLURAL
         else: 

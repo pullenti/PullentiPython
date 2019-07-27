@@ -35,7 +35,7 @@ class VerbPhraseToken(MetaToken):
         return None
     
     @property
-    def is_verb_passive0(self) -> bool:
+    def is_verb_passive(self) -> bool:
         """ Признак того, что вся группа в пассивном залоге (по первому глаголу) """
         fi = self.first_verb
         if (fi is None or fi.verb_morph is None): 

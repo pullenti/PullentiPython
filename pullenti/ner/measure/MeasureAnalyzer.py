@@ -93,14 +93,14 @@ class MeasureAnalyzer(Analyzer):
                     if (s.type_name == UnitReferent.ATTR_NAME or s.type_name == UnitReferent.ATTR_FULLNAME): 
                         addunits.add(Termin._new119(Utils.asObjectOrNull(s.value, str), uu))
         t = kit.first_token
-        first_pass3152 = True
+        first_pass3181 = True
         while True:
-            if first_pass3152: first_pass3152 = False
+            if first_pass3181: first_pass3181 = False
             else: t = t.next0_
             if (not (t is not None)): break
             mt = MeasureToken.try_parse_minimal(t, addunits, False)
             if (mt is None): 
-                mt = MeasureToken.try_parse(t, addunits, True, False)
+                mt = MeasureToken.try_parse(t, addunits, True, False, False, False)
             if (mt is None): 
                 continue
             rts = mt.create_refenets_tokens_with_register(ad, True)

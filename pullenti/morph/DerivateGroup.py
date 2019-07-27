@@ -49,9 +49,9 @@ class DerivateGroup:
         """
         for w in self.words: 
             if (w.spelling == word): 
-                if (lang is None or lang.is_undefined0 or w.lang is None): 
+                if (lang is None or lang.is_undefined or w.lang is None): 
                     return True
-                if (not ((lang) & w.lang).is_undefined0): 
+                if (not ((lang) & w.lang).is_undefined): 
                     return True
         return False
     
@@ -68,7 +68,7 @@ class DerivateGroup:
     def create_by_prefix(self, pref : str, lang : 'MorphLang') -> 'DerivateGroup':
         res = DerivateGroup._new41(True, pref)
         for w in self.words: 
-            if (lang is not None and not lang.is_undefined0 and ((w.lang) & lang).is_undefined0): 
+            if (lang is not None and not lang.is_undefined and ((w.lang) & lang).is_undefined): 
                 continue
             rw = DerivateWord._new42(res, pref + w.spelling, w.lang, w.class0_, w.aspect, w.reflexive, w.tense, w.voice, w.attrs)
             res.words.append(rw)

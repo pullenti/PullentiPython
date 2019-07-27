@@ -22,23 +22,23 @@ class ConjunctionToken(MetaToken):
     def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         res = self.normal
         if (keep_chars): 
-            if (self.chars.is_all_lower0): 
+            if (self.chars.is_all_lower): 
                 res = res.lower()
-            elif (self.chars.is_all_upper0): 
+            elif (self.chars.is_all_upper): 
                 pass
-            elif (self.chars.is_capital_upper0): 
+            elif (self.chars.is_capital_upper): 
                 res = MiscHelper.convert_first_char_upper_and_other_lower(res)
         return res
     
     @staticmethod
-    def _new548(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ConjunctionType', _arg4 : str) -> 'ConjunctionToken':
+    def _new549(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ConjunctionType', _arg4 : str) -> 'ConjunctionToken':
         res = ConjunctionToken(_arg1, _arg2)
         res.typ = _arg3
         res.normal = _arg4
         return res
     
     @staticmethod
-    def _new549(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'ConjunctionType') -> 'ConjunctionToken':
+    def _new550(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'ConjunctionType') -> 'ConjunctionToken':
         res = ConjunctionToken(_arg1, _arg2)
         res.normal = _arg3
         res.typ = _arg4

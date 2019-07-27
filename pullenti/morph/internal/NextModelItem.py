@@ -19,15 +19,15 @@ class NextModelItem(object):
         self.question = typ
         if (spel is not None): 
             return
-        if (cas.is_genitive0): 
+        if (cas.is_genitive): 
             spel = "{0} чего".format(prep.lower())
-        elif (cas.is_dative0): 
+        elif (cas.is_dative): 
             spel = "{0} чему".format(prep.lower())
-        elif (cas.is_accusative0): 
+        elif (cas.is_accusative): 
             spel = "{0} что".format(prep.lower())
-        elif (cas.is_instrumental0): 
+        elif (cas.is_instrumental): 
             spel = "{0} чем".format(prep.lower())
-        elif (cas.is_prepositional0): 
+        elif (cas.is_prepositional): 
             spel = "{0} чём".format(prep.lower())
         self.spelling = spel.strip()
     
@@ -45,14 +45,14 @@ class NextModelItem(object):
         return 0
     
     def __cas_rank(self) -> int:
-        if (self.case_.is_genitive0): 
+        if (self.case_.is_genitive): 
             return 1
-        if (self.case_.is_dative0): 
+        if (self.case_.is_dative): 
             return 2
-        if (self.case_.is_accusative0): 
+        if (self.case_.is_accusative): 
             return 3
-        if (self.case_.is_instrumental0): 
+        if (self.case_.is_instrumental): 
             return 4
-        if (self.case_.is_prepositional0): 
+        if (self.case_.is_prepositional): 
             return 5
         return 0

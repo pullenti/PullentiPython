@@ -65,17 +65,17 @@ class BracketHelper:
         if (BracketHelper.M_OPEN_CHARS.find(ch) < 0): 
             return False
         if (not ignore_whitespaces): 
-            if (t.is_whitespace_after0): 
-                if (not t.is_whitespace_before0): 
-                    if (t.previous is not None and t.previous.is_table_control_char0): 
+            if (t.is_whitespace_after): 
+                if (not t.is_whitespace_before): 
+                    if (t.previous is not None and t.previous.is_table_control_char): 
                         pass
                     else: 
                         return False
-                if (t.is_newline_after0): 
+                if (t.is_newline_after): 
                     return False
-            elif (not t.is_whitespace_before0): 
+            elif (not t.is_whitespace_before): 
                 if (str.isalnum(t.kit.get_text_character(t.begin_char - 1))): 
-                    if (t.next0_ is not None and ((t.next0_.chars.is_all_lower0 or not t.next0_.chars.is_letter0))): 
+                    if (t.next0_ is not None and ((t.next0_.chars.is_all_lower or not t.next0_.chars.is_letter))): 
                         if (ch != '('): 
                             return False
         return True
@@ -104,18 +104,18 @@ class BracketHelper:
             if (BracketHelper.M_QUOTES.find(ch) < 0): 
                 return False
         if (not ignore_whitespaces): 
-            if (not t.is_whitespace_after0): 
-                if (t.is_whitespace_before0): 
-                    if (t.next0_ is not None and t.next0_.is_table_control_char0): 
+            if (not t.is_whitespace_after): 
+                if (t.is_whitespace_before): 
+                    if (t.next0_ is not None and t.next0_.is_table_control_char): 
                         pass
                     else: 
                         return False
-                if (t.is_newline_before0): 
+                if (t.is_newline_before): 
                     return False
-            elif (t.is_whitespace_before0): 
+            elif (t.is_whitespace_before): 
                 if (str.isalnum(t.kit.get_text_character(t.end_char + 1))): 
                     return False
-                if (not t.is_whitespace_after0): 
+                if (not t.is_whitespace_after): 
                     return False
         if (isinstance(opent, TextToken)): 
             ch0 = (opent).term[0]
@@ -188,16 +188,16 @@ class BracketHelper:
         lev = 1
         is_assim = br_list[0].char0_ != '«' and BracketHelper.M_ASSYMOPEN_CHARS.find(br_list[0].char0_) >= 0
         t = t0.next0_
-        first_pass2908 = True
+        first_pass2936 = True
         while True:
-            if first_pass2908: first_pass2908 = False
+            if first_pass2936: first_pass2936 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (t.is_table_control_char0): 
+            if (t.is_table_control_char): 
                 break
             last = t
             if (t.is_char_of(BracketHelper.M_OPEN_CHARS) or t.is_char_of(BracketHelper.M_CLOSE_CHARS)): 
-                if (t.is_newline_before0 and (((typ) & (BracketParseAttr.CANBEMANYLINES))) == (BracketParseAttr.NO)): 
+                if (t.is_newline_before and (((typ) & (BracketParseAttr.CANBEMANYLINES))) == (BracketParseAttr.NO)): 
                     if (t.whitespaces_before_count > 10 or BracketHelper.can_be_start_of_sequence(t, False, False)): 
                         if (t.is_char('(') and not t0.is_char('(')): 
                             pass
@@ -212,14 +212,14 @@ class BracketHelper:
                     ok = False
                     tt = t.next0_
                     while tt is not None: 
-                        if (tt.is_newline_before0): 
+                        if (tt.is_newline_before): 
                             break
                         if (tt.is_char(',')): 
                             break
                         if (tt.is_char('.')): 
                             tt = tt.next0_
                             while tt is not None: 
-                                if (tt.is_newline_before0): 
+                                if (tt.is_newline_before): 
                                     break
                                 elif (tt.is_char_of(BracketHelper.M_OPEN_CHARS) or tt.is_char_of(BracketHelper.M_CLOSE_CHARS)): 
                                     bb2 = BracketHelper.Bracket(tt)
@@ -246,34 +246,34 @@ class BracketHelper:
                 if ((cou) > max_tokens): 
                     break
                 if ((((typ) & (BracketParseAttr.CANCONTAINSVERBS))) == (BracketParseAttr.NO)): 
-                    if (t.morph.language.is_cyrillic0): 
+                    if (t.morph.language.is_cyrillic): 
                         if (t.get_morph_class_in_dictionary() == MorphClass.VERB): 
-                            if (not t.morph.class0_.is_adjective0 and not t.morph.contains_attr("страд.з.", None)): 
-                                if (t.chars.is_all_lower0): 
+                            if (not t.morph.class0_.is_adjective and not t.morph.contains_attr("страд.з.", None)): 
+                                if (t.chars.is_all_lower): 
                                     norm = t.get_normal_case_text(None, False, MorphGender.UNDEFINED, False)
                                     if (not LanguageHelper.ends_with(norm, "СЯ")): 
                                         if (len(br_list) > 1): 
                                             break
                                         if (br_list[0].char0_ != '('): 
                                             break
-                    elif (t.morph.language.is_en0): 
-                        if (t.morph.class0_ == MorphClass.VERB and t.chars.is_all_lower0): 
+                    elif (t.morph.language.is_en): 
+                        if (t.morph.class0_ == MorphClass.VERB and t.chars.is_all_lower): 
                             break
                     r = t.get_referent()
                     if (r is not None and r.type_name == "ADDRESS"): 
                         if (not t0.is_char('(')): 
                             break
             if ((((typ) & (BracketParseAttr.CANBEMANYLINES))) != (BracketParseAttr.NO)): 
-                if (t.is_newline_before0): 
+                if (t.is_newline_before): 
                     if (t.newlines_before_count > 1): 
                         break
                     crlf += 1
                 continue
-            if (t.is_newline_before0): 
+            if (t.is_newline_before): 
                 if (t.whitespaces_before_count > 15): 
                     break
                 crlf += 1
-                if (not t.chars.is_all_lower0): 
+                if (not t.chars.is_all_lower): 
                     if (t.previous is not None and t.previous.is_char('.')): 
                         break
                 if ((isinstance(t.previous, MetaToken)) and BracketHelper.can_be_end_of_sequence((t.previous).end_token, False, None, False)): 
@@ -283,9 +283,9 @@ class BracketHelper:
                     break
                 if (crlf > 10): 
                     break
-            if (t.is_char(';') and t.is_newline_after0): 
+            if (t.is_char(';') and t.is_newline_after): 
                 break
-        if ((len(br_list) == 1 and br_list[0].can_be_open and (isinstance(last, MetaToken))) and last.is_newline_after0): 
+        if ((len(br_list) == 1 and br_list[0].can_be_open and (isinstance(last, MetaToken))) and last.is_newline_after): 
             if (BracketHelper.can_be_end_of_sequence((last).end_token, False, None, False)): 
                 return BracketSequenceToken(t0, last)
         if (len(br_list) < 1): 
@@ -341,10 +341,10 @@ class BracketHelper:
             if (BracketHelper.__can_be_close_char(br_list[2].char0_, br_list[0].char0_) and BracketHelper.__can_be_close_char(br_list[1].char0_, br_list[0].char0_) and br_list[1].can_be_close): 
                 t = br_list[1].source
                 while t != br_list[2].source and t is not None: 
-                    if (t.is_newline_before0): 
+                    if (t.is_newline_before): 
                         ok = False
                         break
-                    if (t.chars.is_letter0 and t.chars.is_all_lower0): 
+                    if (t.chars.is_letter and t.chars.is_all_lower): 
                         ok = False
                         break
                     npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
@@ -354,21 +354,21 @@ class BracketHelper:
                 if (ok): 
                     t = br_list[0].source.next0_
                     while t != br_list[1].source and t is not None: 
-                        if (t.is_newline_before0): 
+                        if (t.is_newline_before): 
                             return BracketSequenceToken(br_list[0].source, t.previous)
                         t = t.next0_
                 lev1 = 0
                 tt = br_list[0].source.previous
-                first_pass2909 = True
+                first_pass2937 = True
                 while True:
-                    if first_pass2909: first_pass2909 = False
+                    if first_pass2937: first_pass2937 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
-                    if (tt.is_newline_after0 or tt.is_table_control_char0): 
+                    if (tt.is_newline_after or tt.is_table_control_char): 
                         break
                     if (not ((isinstance(tt, TextToken)))): 
                         continue
-                    if (tt.chars.is_letter0 or tt.length_char > 1): 
+                    if (tt.chars.is_letter or tt.length_char > 1): 
                         continue
                     ch = (tt).term[0]
                     if (BracketHelper.__can_be_close_char(ch, br_list[0].char0_)): 
@@ -401,12 +401,12 @@ class BracketHelper:
         if (res is None): 
             cou = 0
             tt = t0.next0_
-            first_pass2910 = True
+            first_pass2938 = True
             while True:
-                if first_pass2910: first_pass2910 = False
+                if first_pass2938: first_pass2938 = False
                 else: tt = tt.next0_; cou += 1
                 if (not (tt is not None)): break
-                if (tt.is_table_control_char0): 
+                if (tt.is_table_control_char): 
                     break
                 if (MiscHelper.can_be_start_of_sentence(tt)): 
                     break

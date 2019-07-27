@@ -137,16 +137,16 @@ class MorphMiscInfo:
             return MorphForm.SHORT
         if ("синоним.форма" in self.__m_attrs): 
             return MorphForm.SYNONYM
-        if (self.is_synonym_form0): 
+        if (self.is_synonym_form): 
             return MorphForm.SYNONYM
         return MorphForm.UNDEFINED
     
     @property
-    def is_synonym_form0(self) -> bool:
+    def is_synonym_form(self) -> bool:
         """ Синонимическая форма """
         return self.__get_value(0)
-    @is_synonym_form0.setter
-    def is_synonym_form0(self, value) -> bool:
+    @is_synonym_form.setter
+    def is_synonym_form(self, value) -> bool:
         self.__set_value(0, value)
         return value
     
@@ -154,7 +154,7 @@ class MorphMiscInfo:
         if (len(self.__m_attrs) == 0 and self._m_value == (0)): 
             return ""
         res = io.StringIO()
-        if (self.is_synonym_form0): 
+        if (self.is_synonym_form): 
             print("синоним.форма ", end="", file=res)
         i = 0
         while i < len(self.__m_attrs): 

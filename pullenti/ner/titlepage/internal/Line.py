@@ -29,15 +29,15 @@ class Line(MetaToken):
         return cou
     
     @property
-    def is_pure_en0(self) -> bool:
+    def is_pure_en(self) -> bool:
         en = 0
         ru = 0
         t = self.begin_token
         while t is not None and t.end_char <= self.end_char: 
-            if ((isinstance(t, TextToken)) and t.chars.is_letter0): 
-                if (t.chars.is_cyrillic_letter0): 
+            if ((isinstance(t, TextToken)) and t.chars.is_letter): 
+                if (t.chars.is_cyrillic_letter): 
                     ru += 1
-                elif (t.chars.is_latin_letter0): 
+                elif (t.chars.is_latin_letter): 
                     en += 1
             t = t.next0_
         if (en > 0 and ru == 0): 
@@ -45,15 +45,15 @@ class Line(MetaToken):
         return False
     
     @property
-    def is_pure_ru0(self) -> bool:
+    def is_pure_ru(self) -> bool:
         en = 0
         ru = 0
         t = self.begin_token
         while t is not None and t.end_char <= self.end_char: 
-            if ((isinstance(t, TextToken)) and t.chars.is_letter0): 
-                if (t.chars.is_cyrillic_letter0): 
+            if ((isinstance(t, TextToken)) and t.chars.is_letter): 
+                if (t.chars.is_cyrillic_letter): 
                     ru += 1
-                elif (t.chars.is_latin_letter0): 
+                elif (t.chars.is_latin_letter): 
                     en += 1
             t = t.next0_
         if (ru > 0 and en == 0): 
@@ -70,18 +70,18 @@ class Line(MetaToken):
                 if (t.begin_char > max_end_char): 
                     break
             t1 = t
-            first_pass3237 = True
+            first_pass3267 = True
             while True:
-                if first_pass3237: first_pass3237 = False
+                if first_pass3267: first_pass3267 = False
                 else: t1 = t1.next0_
                 if (not (t1 is not None and t1.next0_ is not None)): break
-                if (t1.is_newline_after0): 
+                if (t1.is_newline_after): 
                     if (t1.next0_ is None or MiscHelper.can_be_start_of_sentence(t1.next0_)): 
                         break
-                if (t1 == t and t.is_newline_before0 and (isinstance(t.get_referent(), PersonReferent))): 
+                if (t1 == t and t.is_newline_before and (isinstance(t.get_referent(), PersonReferent))): 
                     if (t1.next0_ is None): 
                         continue
-                    if ((isinstance(t1.next0_, TextToken)) and t1.next0_.chars.is_letter0 and not t1.next0_.chars.is_all_lower0): 
+                    if ((isinstance(t1.next0_, TextToken)) and t1.next0_.chars.is_letter and not t1.next0_.chars.is_all_lower): 
                         break
             if (t1 is None): 
                 t1 = t

@@ -29,7 +29,7 @@ class DerivateWord:
     def __str__(self) -> str:
         tmp = io.StringIO()
         print(self.spelling, end="", file=tmp)
-        if (self.class0_ is not None and not self.class0_.is_undefined0): 
+        if (self.class0_ is not None and not self.class0_.is_undefined): 
             print(", {0}".format(str(self.class0_)), end="", file=tmp, flush=True)
         if (self.aspect != MorphAspect.UNDEFINED): 
             print(", {0}".format(("соверш." if self.aspect == MorphAspect.PERFECTIVE else "несоверш.")), end="", file=tmp, flush=True)

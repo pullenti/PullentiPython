@@ -109,7 +109,7 @@ class DerivateDictionary:
         elif (isinstance(res, DerivateGroup)): 
             li = list()
             li.append(Utils.asObjectOrNull(res, DerivateGroup))
-        if (li is not None and lang_ is not None and not lang_.is_undefined0): 
+        if (li is not None and lang_ is not None and not lang_.is_undefined): 
             for i in range(len(li) - 1, -1, -1):
                 if (not li[i].contains_word(word, lang_)): 
                     del li[i]
@@ -169,9 +169,9 @@ class DerivateDictionary:
             return None
         len0_ = len(word) - 4
         i = 1
-        first_pass2813 = True
+        first_pass2841 = True
         while True:
-            if first_pass2813: first_pass2813 = False
+            if first_pass2841: first_pass2841 = False
             else: i += 1
             if (not (i <= len0_)): break
             rest = word[i:]

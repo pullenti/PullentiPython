@@ -28,7 +28,7 @@ class Slot:
         return self.__typename
     
     @property
-    def is_internal0(self) -> bool:
+    def is_internal(self) -> bool:
         return self.type_name is not None and self.type_name[0] == '@'
     
     @property
@@ -130,7 +130,7 @@ class Slot:
             self.owner = None
     
     @staticmethod
-    def _new1097(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
+    def _new1104(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
         res = Slot()
         res.type_name = _arg1
         res.tag = _arg2
@@ -138,7 +138,7 @@ class Slot:
         return res
     
     @staticmethod
-    def _new2795(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
+    def _new2824(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
         res = Slot()
         res.type_name = _arg1
         res.value = _arg2

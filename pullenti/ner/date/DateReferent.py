@@ -186,7 +186,7 @@ class DateReferent(Referent):
             res = Utils.valToEnum(s, DatePointerType)
             if (isinstance(res, DatePointerType)): 
                 return Utils.valToEnum(res, DatePointerType)
-        except Exception as ex784: 
+        except Exception as ex791: 
             pass
         return DatePointerType.NO
     @pointer.setter
@@ -230,34 +230,34 @@ class DateReferent(Referent):
         if (lang is None): 
             lang = MorphLang.RU
         if (from_range == 1): 
-            print("{0} ".format(("з" if lang.is_ua0 else ("from" if lang.is_en0 else "с"))), end="", file=res, flush=True)
+            print("{0} ".format(("з" if lang.is_ua else ("from" if lang.is_en else "с"))), end="", file=res, flush=True)
         elif (from_range == 2): 
-            print(("to " if lang.is_en0 else "по ").format(), end="", file=res, flush=True)
+            print(("to " if lang.is_en else "по ").format(), end="", file=res, flush=True)
         if (p != DatePointerType.NO): 
             val = MetaDate.POINTER.convert_inner_value_to_outer_value(Utils.enumToString(p), lang)
-            if (from_range == 0 or lang.is_en0): 
+            if (from_range == 0 or lang.is_en): 
                 pass
             elif (from_range == 1): 
                 if (p == DatePointerType.BEGIN): 
-                    val = ("початку" if lang.is_ua0 else "начала")
+                    val = ("початку" if lang.is_ua else "начала")
                 elif (p == DatePointerType.CENTER): 
-                    val = ("середини" if lang.is_ua0 else "середины")
+                    val = ("середини" if lang.is_ua else "середины")
                 elif (p == DatePointerType.END): 
-                    val = ("кінця" if lang.is_ua0 else "конца")
+                    val = ("кінця" if lang.is_ua else "конца")
                 elif (p == DatePointerType.TODAY): 
-                    val = ("цього часу" if lang.is_ua0 else "настоящего времени")
+                    val = ("цього часу" if lang.is_ua else "настоящего времени")
             elif (from_range == 2): 
                 if (p == DatePointerType.BEGIN): 
-                    val = ("початок" if lang.is_ua0 else "начало")
+                    val = ("початок" if lang.is_ua else "начало")
                 elif (p == DatePointerType.CENTER): 
-                    val = ("середину" if lang.is_ua0 else "середину")
+                    val = ("середину" if lang.is_ua else "середину")
                 elif (p == DatePointerType.END): 
-                    val = ("кінець" if lang.is_ua0 else "конец")
+                    val = ("кінець" if lang.is_ua else "конец")
                 elif (p == DatePointerType.TODAY): 
-                    val = ("теперішній час" if lang.is_ua0 else "настоящее время")
+                    val = ("теперішній час" if lang.is_ua else "настоящее время")
             print("{0} ".format(val), end="", file=res, flush=True)
         if (self.day_of_week > 0): 
-            if (lang.is_en0): 
+            if (lang.is_en): 
                 print("{0}, ".format(DateReferent.__m_week_day_en[self.day_of_week - 1]), end="", file=res, flush=True)
             else: 
                 print("{0}, ".format(DateReferent.__m_week_day[self.day_of_week - 1]), end="", file=res, flush=True)
@@ -270,23 +270,23 @@ class DateReferent(Referent):
             if (cent < 0): 
                 cent = (- cent)
             print(NumberHelper.get_number_roman(cent), end="", file=res)
-            if (lang.is_ua0): 
+            if (lang.is_ua): 
                 print(" century", end="", file=res)
             elif (m > 0 or p != DatePointerType.NO or from_range == 1): 
-                print((" віка" if lang.is_ua0 else " века"), end="", file=res)
+                print((" віка" if lang.is_ua else " века"), end="", file=res)
             else: 
-                print((" вік" if lang.is_ua0 else " век"), end="", file=res)
+                print((" вік" if lang.is_ua else " век"), end="", file=res)
             if (is_bc): 
-                print((" до н.е." if lang.is_ua0 else " до н.э."), end="", file=res)
+                print((" до н.е." if lang.is_ua else " до н.э."), end="", file=res)
             return Utils.toStringStringIO(res)
         if (d > 0): 
             print(d, end="", file=res)
         if (m > 0 and m <= 12): 
             if (res.tell() > 0 and Utils.getCharAtStringIO(res, res.tell() - 1) != ' '): 
                 print(' ', end="", file=res)
-            if (lang.is_ua0): 
+            if (lang.is_ua): 
                 print((DateReferent.__m_monthua[m - 1] if d > 0 or p != DatePointerType.NO or from_range != 0 else DateReferent.__m_month0ua[m - 1]), end="", file=res)
-            elif (lang.is_en0): 
+            elif (lang.is_en): 
                 print(DateReferent.__m_monthen[m - 1], end="", file=res)
             else: 
                 print((DateReferent.__m_month[m - 1] if d > 0 or p != DatePointerType.NO or from_range != 0 else DateReferent.__m_month0[m - 1]), end="", file=res)
@@ -296,16 +296,16 @@ class DateReferent(Referent):
                 y = (- y)
             if (res.tell() > 0 and Utils.getCharAtStringIO(res, res.tell() - 1) != ' '): 
                 print(' ', end="", file=res)
-            if (lang is not None and lang.is_en0): 
+            if (lang is not None and lang.is_en): 
                 print("{0}".format(y), end="", file=res, flush=True)
             elif (short_variant): 
-                print("{0}{1}".format(y, ("р" if lang.is_ua0 else "г")), end="", file=res, flush=True)
+                print("{0}{1}".format(y, ("р" if lang.is_ua else "г")), end="", file=res, flush=True)
             elif (m > 0 or p != DatePointerType.NO or from_range == 1): 
-                print("{0} {1}".format(y, ("року" if lang.is_ua0 else "года")), end="", file=res, flush=True)
+                print("{0} {1}".format(y, ("року" if lang.is_ua else "года")), end="", file=res, flush=True)
             else: 
-                print("{0} {1}".format(y, ("рік" if lang.is_ua0 else "год")), end="", file=res, flush=True)
+                print("{0} {1}".format(y, ("рік" if lang.is_ua else "год")), end="", file=res, flush=True)
             if (is_bc): 
-                print((" до н.е." if lang.is_ua0 else ("BC" if lang.is_en0 else " до н.э.")), end="", file=res)
+                print((" до н.е." if lang.is_ua else ("BC" if lang.is_en else " до н.э.")), end="", file=res)
         h = self.hour
         mi = self.minute
         se = self.second
@@ -412,85 +412,85 @@ class DateReferent(Referent):
         return False
     
     @staticmethod
-    def _new721(_arg1 : 'DateReferent', _arg2 : int) -> 'DateReferent':
+    def _new728(_arg1 : 'DateReferent', _arg2 : int) -> 'DateReferent':
         res = DateReferent()
         res.higher = _arg1
         res.day = _arg2
         return res
     
     @staticmethod
-    def _new722(_arg1 : int, _arg2 : int) -> 'DateReferent':
+    def _new729(_arg1 : int, _arg2 : int) -> 'DateReferent':
         res = DateReferent()
         res.month = _arg1
         res.day = _arg2
         return res
     
     @staticmethod
-    def _new723(_arg1 : int) -> 'DateReferent':
+    def _new730(_arg1 : int) -> 'DateReferent':
         res = DateReferent()
         res.year = _arg1
         return res
     
     @staticmethod
-    def _new726(_arg1 : int, _arg2 : int) -> 'DateReferent':
+    def _new733(_arg1 : int, _arg2 : int) -> 'DateReferent':
         res = DateReferent()
         res.hour = _arg1
         res.minute = _arg2
         return res
     
     @staticmethod
-    def _new727(_arg1 : 'DatePointerType') -> 'DateReferent':
+    def _new734(_arg1 : 'DatePointerType') -> 'DateReferent':
         res = DateReferent()
         res.pointer = _arg1
         return res
     
     @staticmethod
-    def _new739(_arg1 : int, _arg2 : 'DateReferent') -> 'DateReferent':
+    def _new746(_arg1 : int, _arg2 : 'DateReferent') -> 'DateReferent':
         res = DateReferent()
         res.month = _arg1
         res.higher = _arg2
         return res
     
     @staticmethod
-    def _new744(_arg1 : int, _arg2 : 'DateReferent') -> 'DateReferent':
+    def _new751(_arg1 : int, _arg2 : 'DateReferent') -> 'DateReferent':
         res = DateReferent()
         res.day = _arg1
         res.higher = _arg2
-        return res
-    
-    @staticmethod
-    def _new760(_arg1 : int) -> 'DateReferent':
-        res = DateReferent()
-        res.month = _arg1
-        return res
-    
-    @staticmethod
-    def _new761(_arg1 : int) -> 'DateReferent':
-        res = DateReferent()
-        res.century = _arg1
         return res
     
     @staticmethod
     def _new767(_arg1 : int) -> 'DateReferent':
         res = DateReferent()
+        res.month = _arg1
+        return res
+    
+    @staticmethod
+    def _new768(_arg1 : int) -> 'DateReferent':
+        res = DateReferent()
+        res.century = _arg1
+        return res
+    
+    @staticmethod
+    def _new774(_arg1 : int) -> 'DateReferent':
+        res = DateReferent()
         res.day = _arg1
         return res
     
     @staticmethod
-    def _new769(_arg1 : 'DateReferent') -> 'DateReferent':
+    def _new776(_arg1 : 'DateReferent') -> 'DateReferent':
         res = DateReferent()
         res.higher = _arg1
         return res
     
     @staticmethod
-    def _new770(_arg1 : 'DateReferent', _arg2 : int) -> 'DateReferent':
+    def _new777(_arg1 : 'DateReferent', _arg2 : int) -> 'DateReferent':
         res = DateReferent()
         res.higher = _arg1
         res.month = _arg2
         return res
     
     @staticmethod
-    def _new779(_arg1 : int) -> 'DateReferent':
+    def _new786(_arg1 : int) -> 'DateReferent':
         res = DateReferent()
         res.day_of_week = _arg1
         return res

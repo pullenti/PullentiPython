@@ -19,6 +19,10 @@ class MeasureKind(IntEnum):
     """ Вес """
     SPEED = 6
     """ Скорость """
+    TEMPERATURE = 7
+    """ Температура """
+    IP = 8
+    """ Класс защиты """
     
     @classmethod
     def has_value(cls, value):

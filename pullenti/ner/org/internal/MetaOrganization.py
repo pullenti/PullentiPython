@@ -25,6 +25,7 @@ class MetaOrganization(ReferentClass):
         MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_KLADR, "Код КЛАДР", 0, 1)
         MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_MISC, "Разное", 0, 0)
         MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_PROFILE, "Профиль", 0, 0)
+        MetaOrganization._global_meta.add_feature(OrganizationReferent.ATTR_MARKER, "Маркер", 0, 0)
     
     @property
     def name(self) -> str:

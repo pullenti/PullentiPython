@@ -33,9 +33,9 @@ class NounPhraseHelper:
                 if (res is not None): 
                     res.preposition = prep
                     res.begin_token = t
-                    if (not ((prep.next_case) & res.morph.case_).is_undefined0): 
+                    if (not ((prep.next_case) & res.morph.case_).is_undefined): 
                         res.morph.remove_items(prep.next_case, False)
-                    elif (t.morph.class0_.is_adverb0): 
+                    elif (t.morph.class0_.is_adverb): 
                         return None
                     return res
         return None

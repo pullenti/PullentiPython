@@ -17,7 +17,7 @@ class BracketSequenceToken(MetaToken):
         self.internal = list()
     
     @property
-    def is_quote_type0(self) -> bool:
+    def is_quote_type(self) -> bool:
         """ Признак обрамления кавычками (если false, то м.б. [...], (...), {...}) """
         return "{([".find(self.open_char) < 0
     

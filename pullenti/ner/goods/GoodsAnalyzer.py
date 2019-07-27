@@ -91,19 +91,19 @@ class GoodsAnalyzer(Analyzer):
         next_pos = 0
         goods_ = list()
         t = kit.first_token
-        first_pass3026 = True
+        first_pass3054 = True
         while True:
-            if first_pass3026: first_pass3026 = False
+            if first_pass3054: first_pass3054 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (not t.is_newline_before0): 
+            if (not t.is_newline_before): 
                 continue
             if (t.begin_char > next_pos): 
                 next_pos += delta
                 cur += 1
                 if (not self._on_progress(cur, parts, kit)): 
                     break
-            if (not t.chars.is_letter0 and t.next0_ is not None): 
+            if (not t.chars.is_letter and t.next0_ is not None): 
                 t = t.next0_
             rts = GoodAttrToken.try_parse_list(t)
             if (rts is None or len(rts) == 0): 
@@ -125,7 +125,7 @@ class GoodsAnalyzer(Analyzer):
         if (begin is None): 
             return None
         ga = GoodAttributeReferent()
-        if (begin.chars.is_latin_letter0): 
+        if (begin.chars.is_latin_letter): 
             if (begin.is_value("KEYWORD", None)): 
                 ga.typ = GoodAttrType.KEYWORD
                 begin = begin.next0_
@@ -142,9 +142,9 @@ class GoodsAnalyzer(Analyzer):
                 return None
         res = ReferentToken(ga, begin, begin)
         t = begin
-        first_pass3027 = True
+        first_pass3055 = True
         while True:
-            if first_pass3027: first_pass3027 = False
+            if first_pass3055: first_pass3055 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char(';')): 
@@ -155,7 +155,7 @@ class GoodsAnalyzer(Analyzer):
         if (res.end_char > begin.begin_char): 
             ga.add_slot(GoodAttributeReferent.ATTR_VALUE, MiscHelper.get_text_value(begin, res.end_token, GetTextAttr.NO), False, 0)
         if (ga.typ == GoodAttrType.UNDEFINED): 
-            if (not begin.chars.is_all_lower0): 
+            if (not begin.chars.is_all_lower): 
                 ga.typ = GoodAttrType.PROPER
         return res
     

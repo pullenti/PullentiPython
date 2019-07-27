@@ -42,7 +42,7 @@ class GoodAttributeReferent(Referent):
             return GoodAttrType.UNDEFINED
         try: 
             return Utils.valToEnum(str0_, GoodAttrType)
-        except Exception as ex1325: 
+        except Exception as ex1332: 
             pass
         return GoodAttrType.UNDEFINED
     @typ.setter

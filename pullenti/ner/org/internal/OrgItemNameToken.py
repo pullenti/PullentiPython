@@ -84,24 +84,24 @@ class OrgItemNameToken(MetaToken):
                     npt = NounPhraseHelper.try_parse(t1.next0_, NounPhraseParseAttr.NO, 0)
                     if (npt is not None): 
                         t1 = npt.end_token
-                return OrgItemNameToken._new1770(t, t1, True)
-            if (t.next0_.get_morph_class_in_dictionary().is_proper_surname0): 
-                return OrgItemNameToken._new1770(t, t.next0_, True)
+                return OrgItemNameToken._new1788(t, t1, True)
+            if (t.next0_.get_morph_class_in_dictionary().is_proper_surname): 
+                return OrgItemNameToken._new1788(t, t.next0_, True)
             ppp = t.kit.process_referent("PERSON", t.next0_)
             if (ppp is not None): 
-                return OrgItemNameToken._new1770(t, ppp.end_token, True)
+                return OrgItemNameToken._new1788(t, ppp.end_token, True)
             if ((t.whitespaces_after_count < 2) and BracketHelper.can_be_start_of_sequence(t.next0_, True, False)): 
                 br = BracketHelper.try_parse(t.next0_, BracketParseAttr.NEARCLOSEBRACKET, 10)
                 if (br is not None and (br.length_char < 40)): 
-                    return OrgItemNameToken._new1770(t, br.end_token, True)
-        if (first and t.chars.is_cyrillic_letter0 and t.morph.class0_.is_preposition0): 
+                    return OrgItemNameToken._new1788(t, br.end_token, True)
+        if (first and t.chars.is_cyrillic_letter and t.morph.class0_.is_preposition): 
             if (not t.is_value("ПО", None) and not t.is_value("ПРИ", None)): 
                 return None
         res = OrgItemNameToken.__try_attach(t, prev, ext_onto)
         if (res is None): 
             if (ext_onto): 
                 if (((isinstance(t.get_referent(), GeoReferent))) or (((isinstance(t, TextToken)) and not t.is_char(';')))): 
-                    return OrgItemNameToken._new1774(t, t, t.get_source_text())
+                    return OrgItemNameToken._new1792(t, t, t.get_source_text())
             return None
         if (prev is None and not ext_onto): 
             if (t.kit.ontology is not None): 
@@ -111,25 +111,25 @@ class OrgItemNameToken(MetaToken):
                     if (tok is not None and tok.end_char > res.end_char): 
                         res.end_token = tok.end_token
         if (prev is not None and not ext_onto): 
-            if ((prev.chars.is_all_lower0 and not res.chars.is_all_lower0 and not res.is_std_tail) and not res.is_std_name): 
-                if (prev.chars.is_latin_letter0 and res.chars.is_latin_letter0): 
+            if ((prev.chars.is_all_lower and not res.chars.is_all_lower and not res.is_std_tail) and not res.is_std_name): 
+                if (prev.chars.is_latin_letter and res.chars.is_latin_letter): 
                     pass
                 elif (OrgItemNameToken.__m_std_nouns.try_parse(res.begin_token, TerminParseAttr.NO) is not None): 
                     pass
                 else: 
                     return None
-        if ((res.end_token.next0_ is not None and not res.end_token.is_whitespace_after0 and res.end_token.next0_.is_hiphen0) and not res.end_token.next0_.is_whitespace_after0): 
+        if ((res.end_token.next0_ is not None and not res.end_token.is_whitespace_after and res.end_token.next0_.is_hiphen) and not res.end_token.next0_.is_whitespace_after): 
             tt = Utils.asObjectOrNull(res.end_token.next0_.next0_, TextToken)
             if (tt is not None): 
-                if (tt.chars == res.chars or tt.chars.is_all_upper0): 
+                if (tt.chars == res.chars or tt.chars.is_all_upper): 
                     res.end_token = tt
                     res.value = "{0}-{1}".format(res.value, tt.term)
-        if ((res.end_token.next0_ is not None and res.end_token.next0_.is_and0 and res.end_token.whitespaces_after_count == 1) and res.end_token.next0_.whitespaces_after_count == 1): 
+        if ((res.end_token.next0_ is not None and res.end_token.next0_.is_and and res.end_token.whitespaces_after_count == 1) and res.end_token.next0_.whitespaces_after_count == 1): 
             res1 = OrgItemNameToken.__try_attach(res.end_token.next0_.next0_, prev, ext_onto)
             if (res1 is not None and res1.chars == res.chars and OrgItemTypeToken.try_attach(res.end_token.next0_.next0_, False, None) is None): 
-                if (not ((res1.morph.case_) & res.morph.case_).is_undefined0): 
+                if (not ((res1.morph.case_) & res.morph.case_).is_undefined): 
                     res.end_token = res1.end_token
-                    res.value = "{0} {1} {2}".format(res.value, ("ТА" if res.kit.base_language.is_ua0 else "И"), res1.value)
+                    res.value = "{0} {1} {2}".format(res.value, ("ТА" if res.kit.base_language.is_ua else "И"), res1.value)
         tt = res.begin_token
         while tt is not None and tt.end_char <= res.end_char: 
             if (OrgItemNameToken.__m_std_nouns.try_parse(tt, TerminParseAttr.NO) is not None): 
@@ -143,12 +143,12 @@ class OrgItemNameToken(MetaToken):
                 non = True
             br = False
             tt = res.end_token.next0_
-            first_pass3157 = True
+            first_pass3186 = True
             while True:
-                if first_pass3157: first_pass3157 = False
+                if first_pass3186: first_pass3186 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
-                if (tt.is_table_control_char0): 
+                if (tt.is_table_control_char): 
                     break
                 if (tt.is_char('(')): 
                     if (not non): 
@@ -166,10 +166,10 @@ class OrgItemNameToken(MetaToken):
                         break
                     if (tt.chars != res.end_token.chars): 
                         break
-                if (tt.morph.class0_.is_preposition0 or tt.is_comma_and0): 
+                if (tt.morph.class0_.is_preposition or tt.is_comma_and): 
                     continue
                 dd = tt.get_morph_class_in_dictionary()
-                if (not dd.is_noun0 and not dd.is_adjective0): 
+                if (not dd.is_noun and not dd.is_adjective): 
                     break
                 npt2 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
                 if (npt2 is None): 
@@ -216,10 +216,10 @@ class OrgItemNameToken(MetaToken):
         r = t.get_referent()
         if (r is not None): 
             if (r.type_name == "DENOMINATION"): 
-                return OrgItemNameToken._new1775(t, t, r.to_string(True, t.kit.base_language, 0), True)
-            if ((isinstance(r, GeoReferent)) and t.chars.is_latin_letter0): 
+                return OrgItemNameToken._new1793(t, t, r.to_string(True, t.kit.base_language, 0), True)
+            if ((isinstance(r, GeoReferent)) and t.chars.is_latin_letter): 
                 res2 = OrgItemNameToken.__try_attach(t.next0_, prev, ext_onto)
-                if (res2 is not None and res2.chars.is_latin_letter0): 
+                if (res2 is not None and res2.chars.is_latin_letter): 
                     res2.begin_token = t
                     res2.value = "{0} {1}".format(MiscHelper.get_text_value_of_meta_token(Utils.asObjectOrNull(t, MetaToken), GetTextAttr.NO), res2.value)
                     res2.is_in_dictionary = False
@@ -233,21 +233,21 @@ class OrgItemNameToken(MetaToken):
         if (tok is None and t.is_char(',')): 
             tok = OrgItemNameToken.__m_std_tails.try_parse(t.next0_, TerminParseAttr.NO)
         if (tok is not None): 
-            return OrgItemNameToken._new1776(t, tok.end_token, tok.termin.canonic_text, tok.termin.tag is None, tok.termin.tag is not None, tok.morph)
+            return OrgItemNameToken._new1794(t, tok.end_token, tok.termin.canonic_text, tok.termin.tag is None, tok.termin.tag is not None, tok.morph)
         tok = OrgItemNameToken.__m_std_names.try_parse(t, TerminParseAttr.NO)
         if ((tok) is not None): 
-            return OrgItemNameToken._new1777(t, tok.end_token, tok.termin.canonic_text, True)
+            return OrgItemNameToken._new1795(t, tok.end_token, tok.termin.canonic_text, True)
         eng = OrgItemEngItem.try_attach(t, False)
         if (eng is None and t.is_char(',')): 
             eng = OrgItemEngItem.try_attach(t.next0_, False)
         if (eng is not None): 
-            return OrgItemNameToken._new1778(t, eng.end_token, eng.full_value, True)
-        if (tt.chars.is_all_lower0 and prev is not None): 
-            if (not prev.chars.is_all_lower0 and not prev.chars.is_capital_upper0): 
+            return OrgItemNameToken._new1796(t, eng.end_token, eng.full_value, True)
+        if (tt.chars.is_all_lower and prev is not None): 
+            if (not prev.chars.is_all_lower and not prev.chars.is_capital_upper): 
                 return None
         if (tt.is_char(',') and prev is not None): 
             npt1 = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
-            if (npt1 is None or npt1.chars != prev.chars or ((npt1.morph.case_) & prev.morph.case_).is_undefined0): 
+            if (npt1 is None or npt1.chars != prev.chars or ((npt1.morph.case_) & prev.morph.case_).is_undefined): 
                 return None
             ty = OrgItemTypeToken.try_attach(t.next0_, False, None)
             if (ty is not None): 
@@ -256,20 +256,20 @@ class OrgItemNameToken(MetaToken):
                 return None
             t1 = npt1.end_token.next0_
             npt2 = NounPhraseHelper.try_parse(t1.next0_, NounPhraseParseAttr.NO, 0)
-            if (npt2 is None or npt2.chars != prev.chars or ((npt2.morph.case_) & npt1.morph.case_ & prev.morph.case_).is_undefined0): 
+            if (npt2 is None or npt2.chars != prev.chars or ((npt2.morph.case_) & npt1.morph.case_ & prev.morph.case_).is_undefined): 
                 return None
             ty = OrgItemTypeToken.try_attach(t1.next0_, False, None)
             if (ty is not None): 
                 return None
-            res = OrgItemNameToken._new1779(npt1.begin_token, npt1.end_token, npt1.morph, npt1.get_normal_case_text(None, False, MorphGender.UNDEFINED, False))
+            res = OrgItemNameToken._new1797(npt1.begin_token, npt1.end_token, npt1.morph, npt1.get_normal_case_text(None, False, MorphGender.UNDEFINED, False))
             res.is_noun_phrase = True
             res.is_after_conjunction = True
             if (prev.preposition is not None): 
                 res.preposition = prev.preposition
             return res
         if (((tt.is_char('&') or tt.is_value("AND", None) or tt.is_value("UND", None))) and prev is not None): 
-            if ((isinstance(tt.next0_, TextToken)) and tt.length_char == 1 and tt.next0_.chars.is_latin_letter0): 
-                res = OrgItemNameToken._new1780(tt, tt.next0_, tt.next0_.chars)
+            if ((isinstance(tt.next0_, TextToken)) and tt.length_char == 1 and tt.next0_.chars.is_latin_letter): 
+                res = OrgItemNameToken._new1798(tt, tt.next0_, tt.next0_.chars)
                 res.is_after_conjunction = True
                 res.value = ("& " + (tt.next0_).term)
                 return res
@@ -279,10 +279,10 @@ class OrgItemNameToken(MetaToken):
             res.is_after_conjunction = True
             res.value = ("& " + res.value)
             return res
-        if (not tt.chars.is_letter0): 
+        if (not tt.chars.is_letter): 
             return None
         expinf = None
-        if (prev is not None and prev.end_token.get_morph_class_in_dictionary().is_noun0): 
+        if (prev is not None and prev.end_token.get_morph_class_in_dictionary().is_noun): 
             wo = prev.end_token.get_normal_case_text(MorphClass.NOUN, True, MorphGender.UNDEFINED, False)
             expinf = Explanatory.find_derivates(wo, True, prev.end_token.morph.language)
         npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
@@ -293,59 +293,59 @@ class OrgItemNameToken(MetaToken):
             for ei in expinf: 
                 if (ei.nexts is not None and "" in ei.nexts): 
                     mc = ei.nexts[""]
-                    if (not ((mc) & npt.morph.case_).is_undefined0): 
+                    if (not ((mc) & npt.morph.case_).is_undefined): 
                         expl_ok = True
                         break
                 if (ei.transitive > 0): 
-                    if (npt.morph.case_.is_genitive0): 
+                    if (npt.morph.case_.is_genitive): 
                         expl_ok = True
                         break
-        if (npt is not None and ((expl_ok or npt.morph.case_.is_genitive0 or ((prev is not None and not ((prev.morph.case_) & npt.morph.case_).is_undefined0))))): 
+        if (npt is not None and ((expl_ok or npt.morph.case_.is_genitive or ((prev is not None and not ((prev.morph.case_) & npt.morph.case_).is_undefined))))): 
             mc = npt.begin_token.get_morph_class_in_dictionary()
-            if (mc.is_verb0 or mc.is_pronoun0): 
+            if (mc.is_verb or mc.is_pronoun): 
                 return None
-            if (mc.is_adverb0): 
-                if (npt.begin_token.next0_ is not None and npt.begin_token.next0_.is_hiphen0): 
+            if (mc.is_adverb): 
+                if (npt.begin_token.next0_ is not None and npt.begin_token.next0_.is_hiphen): 
                     pass
                 else: 
                     return None
-            if (mc.is_preposition0): 
+            if (mc.is_preposition): 
                 return None
-            if (mc.is_noun0 and npt.chars.is_all_lower0): 
+            if (mc.is_noun and npt.chars.is_all_lower): 
                 ca = npt.morph.case_
-                if ((not ca.is_dative0 and not ca.is_genitive0 and not ca.is_instrumental0) and not ca.is_prepositional0): 
+                if ((not ca.is_dative and not ca.is_genitive and not ca.is_instrumental) and not ca.is_prepositional): 
                     return None
-            res = OrgItemNameToken._new1779(npt.begin_token, npt.end_token, npt.morph, npt.get_normal_case_text(None, False, MorphGender.UNDEFINED, False))
+            res = OrgItemNameToken._new1797(npt.begin_token, npt.end_token, npt.morph, npt.get_normal_case_text(None, False, MorphGender.UNDEFINED, False))
             res.is_noun_phrase = True
             if ((npt.end_token.whitespaces_after_count < 2) and (isinstance(npt.end_token.next0_, TextToken))): 
                 npt2 = NounPhraseHelper.try_parse(npt.end_token.next0_, NounPhraseParseAttr.NO, 0)
-                if (npt2 is not None and npt2.morph.case_.is_genitive0 and npt2.chars.is_all_lower0): 
+                if (npt2 is not None and npt2.morph.case_.is_genitive and npt2.chars.is_all_lower): 
                     typ = OrgItemTypeToken.try_attach(npt.end_token.next0_, True, None)
                     epo = OrgItemEponymToken.try_attach(npt.end_token.next0_, False)
                     rtt = t.kit.process_referent("PERSONPROPERTY", npt.end_token.next0_)
                     if (typ is None and epo is None and ((rtt is None or rtt.morph.number == MorphNumber.PLURAL))): 
                         res.end_token = npt2.end_token
                         res.value = "{0} {1}".format(res.value, MiscHelper.get_text_value_of_meta_token(npt2, GetTextAttr.NO))
-                elif (npt.end_token.next0_.is_comma0 and (isinstance(npt.end_token.next0_.next0_, TextToken))): 
+                elif (npt.end_token.next0_.is_comma and (isinstance(npt.end_token.next0_.next0_, TextToken))): 
                     tt2 = npt.end_token.next0_.next0_
                     mv2 = tt2.get_morph_class_in_dictionary()
-                    if (mv2.is_adjective0 and mv2.is_verb0): 
-                        bi = MorphBaseInfo._new1782(npt.morph.case_, npt.morph.gender, npt.morph.number)
+                    if (mv2.is_adjective and mv2.is_verb): 
+                        bi = MorphBaseInfo._new1800(npt.morph.case_, npt.morph.gender, npt.morph.number)
                         if (tt2.morph.check_accord(bi, False, False)): 
                             npt2 = NounPhraseHelper.try_parse(tt2.next0_, NounPhraseParseAttr.NO, 0)
-                            if (npt2 is not None and ((npt2.morph.case_.is_dative0 or npt2.morph.case_.is_genitive0)) and npt2.chars.is_all_lower0): 
+                            if (npt2 is not None and ((npt2.morph.case_.is_dative or npt2.morph.case_.is_genitive)) and npt2.chars.is_all_lower): 
                                 res.end_token = npt2.end_token
                                 res.value = "{0} {1}".format(res.value, MiscHelper.get_text_value(npt.end_token.next0_, res.end_token, GetTextAttr.NO))
             if (expl_ok): 
                 res.is_after_conjunction = True
-        elif (npt is not None and ((((prev is not None and prev.is_noun_phrase and npt.morph.case_.is_instrumental0)) or ext_onto))): 
-            res = OrgItemNameToken._new1779(npt.begin_token, npt.end_token, npt.morph, npt.get_normal_case_text(None, False, MorphGender.UNDEFINED, False))
+        elif (npt is not None and ((((prev is not None and prev.is_noun_phrase and npt.morph.case_.is_instrumental)) or ext_onto))): 
+            res = OrgItemNameToken._new1797(npt.begin_token, npt.end_token, npt.morph, npt.get_normal_case_text(None, False, MorphGender.UNDEFINED, False))
             res.is_noun_phrase = True
         elif (tt.is_and): 
             res = OrgItemNameToken.try_attach(tt.next0_, prev, ext_onto, False)
             if (res is None or not res.is_noun_phrase or prev is None): 
                 return None
-            if (((prev.morph.case_) & res.morph.case_).is_undefined0): 
+            if (((prev.morph.case_) & res.morph.case_).is_undefined): 
                 return None
             if (prev.morph.number != MorphNumber.UNDEFINED and res.morph.number != MorphNumber.UNDEFINED): 
                 if ((((prev.morph.number) & (res.morph.number))) == (MorphNumber.UNDEFINED)): 
@@ -365,21 +365,21 @@ class OrgItemNameToken(MetaToken):
                     return None
                 ok = False
                 if (tt.term == "ПО"): 
-                    ok = npt.morph.case_.is_dative0
+                    ok = npt.morph.case_.is_dative
                 elif (tt.term == "С"): 
-                    ok = npt.morph.case_.is_instrumental0
+                    ok = npt.morph.case_.is_instrumental
                 elif (tt.term == "ЗА"): 
-                    ok = (npt.morph.case_.is_genitive0 | npt.morph.case_.is_instrumental0)
+                    ok = (npt.morph.case_.is_genitive | npt.morph.case_.is_instrumental)
                 elif (tt.term == "НА"): 
-                    ok = npt.morph.case_.is_prepositional0
+                    ok = npt.morph.case_.is_prepositional
                 elif (tt.term == "В"): 
-                    ok = (npt.morph.case_.is_dative0 | npt.morph.case_.is_prepositional0)
+                    ok = (npt.morph.case_.is_dative | npt.morph.case_.is_prepositional)
                     if (ok): 
                         ok = False
                         if (t.next0_.is_value("СФЕРА", None) or t.next0_.is_value("ОБЛАСТЬ", None)): 
                             ok = True
                 elif (tt.term == "ПРИ"): 
-                    ok = npt.morph.case_.is_prepositional0
+                    ok = npt.morph.case_.is_prepositional
                     if (ok): 
                         if (OrgItemTypeToken.try_attach(tt.next0_, True, None) is not None): 
                             ok = False
@@ -391,26 +391,26 @@ class OrgItemNameToken(MetaToken):
                     if (s == "ПОДДЕРЖКА" or s == "УЧАСТИЕ"): 
                         ok = False
                 else: 
-                    ok = npt.morph.case_.is_prepositional0
+                    ok = npt.morph.case_.is_prepositional
                 if (ok): 
-                    res = OrgItemNameToken._new1784(t, npt.end_token, npt.morph, npt.get_normal_case_text(None, True, MorphGender.UNDEFINED, False), npt.chars)
+                    res = OrgItemNameToken._new1802(t, npt.end_token, npt.morph, npt.get_normal_case_text(None, True, MorphGender.UNDEFINED, False), npt.chars)
                     res.is_noun_phrase = True
                     res.preposition = tt.term
                     if (((res.value == "ДЕЛО" or res.value == "ВОПРОС")) and not res.is_newline_after): 
                         res2 = OrgItemNameToken.__try_attach(res.end_token.next0_, res, ext_onto)
-                        if (res2 is not None and res2.morph.case_.is_genitive0): 
+                        if (res2 is not None and res2.morph.case_.is_genitive): 
                             res.value = "{0} {1}".format(res.value, res2.value)
                             res.end_token = res2.end_token
                             ttt = res2.end_token.next0_
                             while ttt is not None: 
-                                if (not ttt.is_comma_and0): 
+                                if (not ttt.is_comma_and): 
                                     break
                                 res3 = OrgItemNameToken.__try_attach(ttt.next0_, res2, ext_onto)
                                 if (res3 is None): 
                                     break
                                 res.value = "{0} {1}".format(res.value, res3.value)
                                 res.end_token = res3.end_token
-                                if (ttt.is_and0): 
+                                if (ttt.is_and): 
                                     break
                                 ttt = res.end_token
                                 ttt = ttt.next0_
@@ -420,12 +420,12 @@ class OrgItemNameToken(MetaToken):
             t1 = tt.next0_
             if (t1 is not None and MiscHelper.is_eng_article(t1)): 
                 t1 = t1.next0_
-            if (t1 is not None and t1.chars.is_latin_letter0 and not t1.chars.is_all_lower0): 
-                res = OrgItemNameToken._new1785(t, t1, t1.chars, t1.morph)
+            if (t1 is not None and t1.chars.is_latin_letter and not t1.chars.is_all_lower): 
+                res = OrgItemNameToken._new1803(t, t1, t1.chars, t1.morph)
                 ttt = t1.next0_
-                first_pass3158 = True
+                first_pass3187 = True
                 while True:
-                    if first_pass3158: first_pass3158 = False
+                    if first_pass3187: first_pass3187 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if (ttt.whitespaces_before_count > 2): 
@@ -433,9 +433,9 @@ class OrgItemNameToken(MetaToken):
                     if (MiscHelper.is_eng_adj_suffix(ttt)): 
                         ttt = ttt.next0_
                         continue
-                    if (not ttt.chars.is_latin_letter0): 
+                    if (not ttt.chars.is_latin_letter): 
                         break
-                    if (ttt.morph.class0_.is_preposition0): 
+                    if (ttt.morph.class0_.is_preposition): 
                         break
                     res.end_token = ttt
                     t1 = res.end_token
@@ -443,32 +443,32 @@ class OrgItemNameToken(MetaToken):
                 res.preposition = tt.term
                 return res
         if (res is None): 
-            if (tt.chars.is_latin_letter0 and tt.length_char == 1): 
+            if (tt.chars.is_latin_letter and tt.length_char == 1): 
                 pass
-            elif (tt.chars.is_all_lower0 or (tt.length_char < 2)): 
-                if (not tt.chars.is_latin_letter0 or prev is None or not prev.chars.is_latin_letter0): 
+            elif (tt.chars.is_all_lower or (tt.length_char < 2)): 
+                if (not tt.chars.is_latin_letter or prev is None or not prev.chars.is_latin_letter): 
                     return None
-            if (tt.chars.is_cyrillic_letter0): 
+            if (tt.chars.is_cyrillic_letter): 
                 mc = tt.get_morph_class_in_dictionary()
-                if (mc.is_verb0 or mc.is_adverb0): 
+                if (mc.is_verb or mc.is_adverb): 
                     return None
-            elif (tt.chars.is_latin_letter0 and not tt.is_whitespace_after0): 
-                if (not tt.is_whitespace_after0 and (tt.length_char < 5)): 
+            elif (tt.chars.is_latin_letter and not tt.is_whitespace_after): 
+                if (not tt.is_whitespace_after and (tt.length_char < 5)): 
                     if (isinstance(tt.next0_, NumberToken)): 
                         return None
-            res = OrgItemNameToken._new1786(tt, tt, tt.term, tt.morph)
+            res = OrgItemNameToken._new1804(tt, tt, tt.term, tt.morph)
             t = tt.next0_
             while t is not None: 
-                if ((((t.is_hiphen0 or t.is_char_of("\\/"))) and t.next0_ is not None and (isinstance(t.next0_, TextToken))) and not t.is_whitespace_before0 and not t.is_whitespace_after0): 
+                if ((((t.is_hiphen or t.is_char_of("\\/"))) and t.next0_ is not None and (isinstance(t.next0_, TextToken))) and not t.is_whitespace_before and not t.is_whitespace_after): 
                     t = t.next0_
                     res.end_token = t
                     res.value = "{0}{1}{2}".format(res.value, ('.' if t.previous.is_char('.') else '-'), (t).term)
                 elif (t.is_char('.')): 
-                    if (not t.is_whitespace_after0 and not t.is_whitespace_before0 and (isinstance(t.next0_, TextToken))): 
+                    if (not t.is_whitespace_after and not t.is_whitespace_before and (isinstance(t.next0_, TextToken))): 
                         res.end_token = t.next0_
                         t = t.next0_
                         res.value = "{0}.{1}".format(res.value, (t).term)
-                    elif ((t.next0_ is not None and not t.is_newline_after0 and t.next0_.chars.is_latin_letter0) and tt.chars.is_latin_letter0): 
+                    elif ((t.next0_ is not None and not t.is_newline_after and t.next0_.chars.is_latin_letter) and tt.chars.is_latin_letter): 
                         res.end_token = t
                     else: 
                         break
@@ -479,22 +479,22 @@ class OrgItemNameToken(MetaToken):
         while t0 is not None: 
             tt = Utils.asObjectOrNull(t0, TextToken)
             if ((tt) is not None and tt.is_letters): 
-                if (not tt.morph.class0_.is_conjunction0 and not tt.morph.class0_.is_preposition0): 
+                if (not tt.morph.class0_.is_conjunction and not tt.morph.class0_.is_preposition): 
                     for mf in tt.morph.items: 
-                        if ((mf).is_in_dictionary0): 
+                        if ((mf).is_in_dictionary): 
                             res.is_in_dictionary = True
             if (t0 == res.end_token): 
                 break
             t0 = t0.next0_
-        if (res.begin_token == res.end_token and res.begin_token.chars.is_all_upper0): 
-            if (res.end_token.next0_ is not None and not res.end_token.is_whitespace_after0): 
+        if (res.begin_token == res.end_token and res.begin_token.chars.is_all_upper): 
+            if (res.end_token.next0_ is not None and not res.end_token.is_whitespace_after): 
                 t1 = res.end_token.next0_
-                if (t1.next0_ is not None and not t1.is_whitespace_after0 and t1.is_hiphen0): 
+                if (t1.next0_ is not None and not t1.is_whitespace_after and t1.is_hiphen): 
                     t1 = t1.next0_
                 if (isinstance(t1, NumberToken)): 
                     res.value += str((t1).value)
                     res.end_token = t1
-        if (res.begin_token == res.end_token and res.begin_token.chars.is_last_lower0): 
+        if (res.begin_token == res.end_token and res.begin_token.chars.is_last_lower): 
             src = res.begin_token.get_source_text()
             for i in range(len(src) - 1, -1, -1):
                 if (str.isupper(src[i])): 
@@ -555,29 +555,29 @@ class OrgItemNameToken(MetaToken):
                 if (k == 0): 
                     OrgItemNameToken.__m_std_nouns.add(Termin(line))
                 else: 
-                    OrgItemNameToken.__m_std_nouns.add(Termin._new891(line, MorphLang.UA))
+                    OrgItemNameToken.__m_std_nouns.add(Termin._new898(line, MorphLang.UA))
     
     @staticmethod
-    def _new1770(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'OrgItemNameToken':
+    def _new1788(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.is_ignored_part = _arg3
         return res
     
     @staticmethod
-    def _new1774(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'OrgItemNameToken':
+    def _new1792(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.value = _arg3
         return res
     
     @staticmethod
-    def _new1775(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : bool) -> 'OrgItemNameToken':
+    def _new1793(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : bool) -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.value = _arg3
         res.is_denomination = _arg4
         return res
     
     @staticmethod
-    def _new1776(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : bool, _arg5 : bool, _arg6 : 'MorphCollection') -> 'OrgItemNameToken':
+    def _new1794(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : bool, _arg5 : bool, _arg6 : 'MorphCollection') -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.value = _arg3
         res.is_std_tail = _arg4
@@ -586,34 +586,34 @@ class OrgItemNameToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1777(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : bool) -> 'OrgItemNameToken':
+    def _new1795(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : bool) -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.value = _arg3
         res.is_std_name = _arg4
         return res
     
     @staticmethod
-    def _new1778(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : bool) -> 'OrgItemNameToken':
+    def _new1796(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : bool) -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.value = _arg3
         res.is_std_tail = _arg4
         return res
     
     @staticmethod
-    def _new1779(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : str) -> 'OrgItemNameToken':
+    def _new1797(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : str) -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.morph = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new1780(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'CharsInfo') -> 'OrgItemNameToken':
+    def _new1798(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'CharsInfo') -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.chars = _arg3
         return res
     
     @staticmethod
-    def _new1784(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : str, _arg5 : 'CharsInfo') -> 'OrgItemNameToken':
+    def _new1802(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : str, _arg5 : 'CharsInfo') -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.morph = _arg3
         res.value = _arg4
@@ -621,27 +621,27 @@ class OrgItemNameToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1785(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'CharsInfo', _arg4 : 'MorphCollection') -> 'OrgItemNameToken':
+    def _new1803(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'CharsInfo', _arg4 : 'MorphCollection') -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.chars = _arg3
         res.morph = _arg4
         return res
     
     @staticmethod
-    def _new1786(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'MorphCollection') -> 'OrgItemNameToken':
+    def _new1804(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'MorphCollection') -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.value = _arg3
         res.morph = _arg4
         return res
     
     @staticmethod
-    def _new2308(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'OrgItemNameToken':
+    def _new2336(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.is_std_name = _arg3
         return res
     
     @staticmethod
-    def _new2310(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'CharsInfo') -> 'OrgItemNameToken':
+    def _new2338(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'CharsInfo') -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.value = _arg3
         res.chars = _arg4

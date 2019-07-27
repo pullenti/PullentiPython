@@ -64,7 +64,7 @@ class InstrumentArtefact(Referent):
         return True
     
     @staticmethod
-    def _new1388(_arg1 : str) -> 'InstrumentArtefact':
+    def _new1395(_arg1 : str) -> 'InstrumentArtefact':
         res = InstrumentArtefact()
         res.typ = _arg1
         return res

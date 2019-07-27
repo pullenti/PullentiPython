@@ -189,10 +189,10 @@ class DecreeReferent(Referent):
                 i = str0_.find('.')
                 if (i == 4): 
                     str0_ = str0_[0:0+4]
-                wrapi1103 = RefOutArgWrapper(0)
-                inoutres1104 = Utils.tryParseInt(str0_, wrapi1103)
-                i = wrapi1103.value
-                if (inoutres1104): 
+                wrapi1110 = RefOutArgWrapper(0)
+                inoutres1111 = Utils.tryParseInt(str0_, wrapi1110)
+                i = wrapi1110.value
+                if (inoutres1111): 
                     res.append(i)
         return res
     
@@ -210,7 +210,7 @@ class DecreeReferent(Referent):
         return DecreeToken.get_kind(self.typ)
     
     @property
-    def is_law0(self) -> bool:
+    def is_law(self) -> bool:
         """ Признак того, что это именно закон, а не подзаконный акт.
          Для законов возможны несколько номеров и дат (редакций) """
         return DecreeToken.is_law(self.typ)
@@ -334,7 +334,7 @@ class DecreeReferent(Referent):
                     if (d1 in di2): 
                         num_eq = 1
                         break
-                if (num_eq == 0 and not self.is_law0): 
+                if (num_eq == 0 and not self.is_law): 
                     return False
                 for s in self.slots: 
                     if (s.type_name == DecreeReferent.ATTR_NUMBER): 
@@ -363,7 +363,7 @@ class DecreeReferent(Referent):
         date1 = self.get_string_value(DecreeReferent.ATTR_DATE)
         date2 = dr.get_string_value(DecreeReferent.ATTR_DATE)
         if (date1 is not None or date2 is not None): 
-            if (self.is_law0): 
+            if (self.is_law): 
                 ys1 = self.__all_years()
                 ys2 = dr.__all_years()
                 for y1 in ys1: 
@@ -411,7 +411,7 @@ class DecreeReferent(Referent):
                                 return True
             if (date_not_eq): 
                 return False
-            if (self.is_law0 and not date_is_equ): 
+            if (self.is_law and not date_is_equ): 
                 return False
             if (num_eq > 0): 
                 if (src_eq): 
@@ -421,7 +421,7 @@ class DecreeReferent(Referent):
                 elif ((not src_not_eq and num_eq > 1 and self.date is None) and dr.date is None): 
                     return True
                 return False
-        elif (self.is_law0 and date_not_eq): 
+        elif (self.is_law and date_not_eq): 
             return False
         if (date_not_eq): 
             return False
@@ -544,7 +544,7 @@ class DecreeReferent(Referent):
         return oi
     
     @staticmethod
-    def _new1087(_arg1 : str) -> 'DecreeReferent':
+    def _new1094(_arg1 : str) -> 'DecreeReferent':
         res = DecreeReferent()
         res.typ = _arg1
         return res

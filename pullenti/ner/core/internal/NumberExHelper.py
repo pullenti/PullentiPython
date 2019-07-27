@@ -43,13 +43,13 @@ class NumberExHelper:
                     res = NumberExToken._new473(t, toks1.end_token, nt0.value, nt0.typ, NumberExType.MONEY, nt0.real_value, toks1.begin_token.morph)
                     return NumberExHelper.__correct_money(res, toks1.begin_token)
             tt = Utils.asObjectOrNull(t, TextToken)
-            if (tt is None or not tt.morph.class0_.is_adjective0): 
+            if (tt is None or not tt.morph.class0_.is_adjective): 
                 return None
             val = tt.term
             i = 4
-            first_pass2891 = True
+            first_pass2919 = True
             while True:
-                if first_pass2891: first_pass2891 = False
+                if first_pass2919: first_pass2919 = False
                 else: i += 1
                 if (not (i < (len(val) - 5))): break
                 v = val[0:0+i]
@@ -67,9 +67,11 @@ class NumberExHelper:
         if (t.next0_ is None and is_dollar is None): 
             return None
         f = nt.real_value
+        if (math.isnan(f)): 
+            return None
         t1 = nt.next0_
         if (((t1 is not None and t1.is_char_of(",."))) or (((isinstance(t1, NumberToken)) and (t1.whitespaces_before_count < 3)))): 
-            tt11 = NumberHelper.try_parse_real_number(nt, False)
+            tt11 = NumberHelper.try_parse_real_number(nt, False, False)
             if (tt11 is not None): 
                 t1 = tt11.end_token.next0_
                 f = tt11.real_value
@@ -79,11 +81,11 @@ class NumberExHelper:
         elif ((t1.next0_ is not None and t1.next0_.is_value("С", "З") and t1.next0_.next0_ is not None) and t1.next0_.next0_.is_value("ПОЛОВИНА", None)): 
             f += 0.5
             t1 = t1.next0_.next0_
-        if (t1 is not None and t1.is_hiphen0 and t1.next0_ is not None): 
+        if (t1 is not None and t1.is_hiphen and t1.next0_ is not None): 
             t1 = t1.next0_
         det = False
         altf = f
-        if (((isinstance(t1, NumberToken)) and t1.previous is not None and t1.previous.is_hiphen0) and (t1).int_value == 0 and t1.length_char == 2): 
+        if (((isinstance(t1, NumberToken)) and t1.previous is not None and t1.previous.is_hiphen) and (t1).int_value == 0 and t1.length_char == 2): 
             t1 = t1.next0_
         if ((t1 is not None and t1.next0_ is not None and t1.is_char('(')) and (((isinstance(t1.next0_, NumberToken)) or t1.next0_.is_value("НОЛЬ", None))) and t1.next0_.next0_ is not None): 
             nt1 = Utils.asObjectOrNull(t1.next0_, NumberToken)
@@ -165,7 +167,7 @@ class NumberExHelper:
                     t1 = t1.next0_
             if (te is None): 
                 return None
-            if (te.is_hiphen0 and te.next0_ is not None): 
+            if (te.is_hiphen and te.next0_ is not None): 
                 if (te.next0_.is_value("МИЛЛИОННЫЙ", None)): 
                     f *= (1000000)
                     altf *= (1000000)
@@ -174,7 +176,7 @@ class NumberExHelper:
                     f *= (1000000000)
                     altf *= (1000000000)
                     te = te.next0_
-            if (not te.is_whitespace_after0 and (isinstance(te.next0_, TextToken))): 
+            if (not te.is_whitespace_after and (isinstance(te.next0_, TextToken))): 
                 if (te.next0_.is_value("M", None)): 
                     f *= (1000000)
                     altf *= (1000000)
@@ -184,7 +186,7 @@ class NumberExHelper:
                     altf *= (1000000000)
                     te = te.next0_
             return NumberExToken._new476(t0, te, "", nt.typ, NumberExType.MONEY, f, altf, is_dollar)
-        if (t1 is None or ((t1.is_newline_before0 and not det))): 
+        if (t1 is None or ((t1.is_newline_before and not det))): 
             return None
         toks = NumberExHelper._m_postfixes.try_parse(t1, TerminParseAttr.NO)
         if ((toks is None and det and (isinstance(t1, NumberToken))) and (t1).value == "0"): 
@@ -194,15 +196,15 @@ class NumberExHelper:
             if (not t1.is_char('.') and t1.next0_ is not None and t1.next0_.is_char('.')): 
                 if ((isinstance(t1, TextToken)) and t1.is_value(toks.termin.terms[0].canonical_text, None)): 
                     pass
-                elif (not t1.chars.is_letter0): 
+                elif (not t1.chars.is_letter): 
                     pass
                 else: 
                     t1 = t1.next0_
             if (toks.termin.canonic_text == "LTL"): 
                 return None
             if (toks.begin_token == t1): 
-                if (t1.morph.class0_.is_preposition0 or t1.morph.class0_.is_conjunction0): 
-                    if (t1.is_whitespace_before0 and t1.is_whitespace_after0): 
+                if (t1.morph.class0_.is_preposition or t1.morph.class0_.is_conjunction): 
+                    if (t1.is_whitespace_before and t1.is_whitespace_after): 
                         return None
             ty = Utils.valToEnum(toks.termin.tag, NumberExType)
             res = NumberExToken._new475(t, t1, nt.value, nt.typ, ty, f, altf, toks.begin_token.morph)
@@ -218,14 +220,14 @@ class NumberExHelper:
             pfx.real_value = f
             pfx.alt_real_value = altf
             return pfx
-        if (t1.next0_ is not None and ((t1.morph.class0_.is_preposition0 or t1.morph.class0_.is_conjunction0))): 
+        if (t1.next0_ is not None and ((t1.morph.class0_.is_preposition or t1.morph.class0_.is_conjunction))): 
             if (t1.is_value("НА", None)): 
                 pass
             else: 
                 nn = NumberExHelper.try_parse_number_with_postfix(t1.next0_)
                 if (nn is not None): 
                     return NumberExToken._new478(t, t, nt.value, nt.typ, nn.ex_typ, f, altf, nn.ex_typ2, nn.ex_typ_param)
-        if (not t1.is_whitespace_after0 and (isinstance(t1.next0_, NumberToken)) and (isinstance(t1, TextToken))): 
+        if (not t1.is_whitespace_after and (isinstance(t1.next0_, NumberToken)) and (isinstance(t1, TextToken))): 
             term = (t1).term
             ty = NumberExType.UNDEFINED
             if (term == "СМХ" or term == "CMX"): 
@@ -256,7 +258,7 @@ class NumberExHelper:
         tok = NumberExHelper._m_postfixes.try_parse(t, TerminParseAttr.NO)
         res = None
         if (tok is not None): 
-            res = NumberExToken(t, tok.end_token, "", NumberSpellingType.DIGIT, Utils.valToEnum(tok.termin.tag, NumberExType))
+            res = NumberExToken._new480(t, tok.end_token, "", NumberSpellingType.DIGIT, Utils.valToEnum(tok.termin.tag, NumberExType), tok.termin)
         else: 
             res = NumberExHelper.__attach_spec_postfix(t)
         if (res is not None): 
@@ -271,7 +273,7 @@ class NumberExHelper:
             return NumberExToken(t, t, "", NumberSpellingType.DIGIT, NumberExType.PERCENT)
         money = NumberHelper._is_money_char(t)
         if (money is not None): 
-            return NumberExToken._new480(t, t, "", NumberSpellingType.DIGIT, NumberExType.MONEY, money)
+            return NumberExToken._new481(t, t, "", NumberSpellingType.DIGIT, NumberExType.MONEY, money)
         return None
     
     @staticmethod
@@ -280,9 +282,9 @@ class NumberExHelper:
         if (t is None): 
             return
         ty = ex.ex_typ
-        wrapty482 = RefOutArgWrapper(ty)
-        tt = NumberExHelper.__corr_ex_typ2(t, wrapty482)
-        ty = wrapty482.value
+        wrapty483 = RefOutArgWrapper(ty)
+        tt = NumberExHelper.__corr_ex_typ2(t, wrapty483)
+        ty = wrapty483.value
         if (tt is not None): 
             ex.ex_typ = ty
             ex.end_token = tt
@@ -298,9 +300,9 @@ class NumberExHelper:
             ex.ex_typ2 = (Utils.valToEnum(tok.termin.tag, NumberExType))
             ex.end_token = tok.end_token
             ty = ex.ex_typ2
-            wrapty481 = RefOutArgWrapper(ty)
-            tt = NumberExHelper.__corr_ex_typ2(ex.end_token.next0_, wrapty481)
-            ty = wrapty481.value
+            wrapty482 = RefOutArgWrapper(ty)
+            tt = NumberExHelper.__corr_ex_typ2(ex.end_token.next0_, wrapty482)
+            ty = wrapty482.value
             if (tt is not None): 
                 ex.ex_typ2 = ty
                 ex.end_token = tt
@@ -316,7 +318,7 @@ class NumberExHelper:
             num = 3
         elif (t.is_char('²')): 
             num = 2
-        elif (not t.is_whitespace_before0 and (isinstance(t, NumberToken)) and (((t).value == "3" or (t).value == "2"))): 
+        elif (not t.is_whitespace_before and (isinstance(t, NumberToken)) and (((t).value == "3" or (t).value == "2"))): 
             num = (t).int_value
         elif ((t.is_char('<') and (isinstance(t.next0_, NumberToken)) and t.next0_.next0_ is not None) and t.next0_.next0_.is_char('>') and (t.next0_).int_value is not None): 
             num = (t.next0_).int_value
@@ -341,7 +343,7 @@ class NumberExHelper:
     def __correct_money(res : 'NumberExToken', t1 : 'Token') -> 'NumberExToken':
         if (t1 is None): 
             return None
-        toks = NumberExHelper._m_postfixes.try_parse_all(t1, TerminParseAttr.NO)
+        toks = NumberExHelper._m_postfixes.try_parse_all(t1, TerminParseAttr.NO, 0)
         if (toks is None or len(toks) == 0): 
             return None
         tt = toks[0].end_token.next0_
@@ -354,7 +356,7 @@ class NumberExHelper:
                 if (not toks[i].termin.canonic_text.startswith(alpha2)): 
                     del toks[i]
             if (len(toks) == 0): 
-                toks = NumberExHelper._m_postfixes.try_parse_all(t1, TerminParseAttr.NO)
+                toks = NumberExHelper._m_postfixes.try_parse_all(t1, TerminParseAttr.NO, 0)
         if (len(toks) > 1): 
             alpha2 = (None)
             str0_ = toks[0].termin.terms[0].canonical_text
@@ -375,7 +377,7 @@ class NumberExHelper:
         if (alpha2 is not None and tt is not None): 
             res.end_token = tt
         tt = res.end_token.next0_
-        if (tt is not None and tt.is_comma_and0): 
+        if (tt is not None and tt.is_comma_and): 
             tt = tt.next0_
         if ((isinstance(tt, NumberToken)) and tt.next0_ is not None and (tt.whitespaces_after_count < 4)): 
             tt1 = tt.next0_
@@ -415,139 +417,139 @@ class NumberExHelper:
         if (NumberExHelper._m_postfixes is not None): 
             return
         NumberExHelper._m_postfixes = TerminCollection()
-        t = Termin._new483("КВАДРАТНЫЙ МЕТР", MorphLang.RU, True, "кв.м.", NumberExType.METER2)
+        t = Termin._new484("КВАДРАТНЫЙ МЕТР", MorphLang.RU, True, "кв.м.", NumberExType.METER2)
         t.add_abridge("КВ.МЕТР")
         t.add_abridge("КВ.МЕТРА")
         t.add_abridge("КВ.М.")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("КВАДРАТНИЙ МЕТР", MorphLang.UA, True, "КВ.М.", NumberExType.METER2)
+        t = Termin._new484("КВАДРАТНИЙ МЕТР", MorphLang.UA, True, "КВ.М.", NumberExType.METER2)
         t.add_abridge("КВ.МЕТР")
         t.add_abridge("КВ.МЕТРА")
         t.add_abridge("КВ.М.")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("КВАДРАТНЫЙ КИЛОМЕТР", MorphLang.RU, True, "кв.км.", NumberExType.KILOMETER2)
+        t = Termin._new484("КВАДРАТНЫЙ КИЛОМЕТР", MorphLang.RU, True, "кв.км.", NumberExType.KILOMETER2)
         t.add_variant("КВАДРАТНИЙ КІЛОМЕТР", True)
         t.add_abridge("КВ.КМ.")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ГЕКТАР", MorphLang.RU, True, "га", NumberExType.GEKTAR)
+        t = Termin._new484("ГЕКТАР", MorphLang.RU, True, "га", NumberExType.GEKTAR)
         t.add_abridge("ГА")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("АР", MorphLang.RU, True, "ар", NumberExType.AR)
+        t = Termin._new484("АР", MorphLang.RU, True, "ар", NumberExType.AR)
         t.add_variant("СОТКА", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("КУБИЧЕСКИЙ МЕТР", MorphLang.RU, True, "куб.м.", NumberExType.METER3)
+        t = Termin._new484("КУБИЧЕСКИЙ МЕТР", MorphLang.RU, True, "куб.м.", NumberExType.METER3)
         t.add_variant("КУБІЧНИЙ МЕТР", True)
         t.add_abridge("КУБ.МЕТР")
         t.add_abridge("КУБ.М.")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("МЕТР", MorphLang.RU, True, "м.", NumberExType.METER)
+        t = Termin._new484("МЕТР", MorphLang.RU, True, "м.", NumberExType.METER)
         t.add_abridge("М.")
         t.add_abridge("M.")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("МЕТРОВЫЙ", MorphLang.RU, True, "м.", NumberExType.METER)
+        t = Termin._new484("МЕТРОВЫЙ", MorphLang.RU, True, "м.", NumberExType.METER)
         t.add_variant("МЕТРОВИЙ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("МИЛЛИМЕТР", MorphLang.RU, True, "мм.", NumberExType.MILLIMETER)
+        t = Termin._new484("МИЛЛИМЕТР", MorphLang.RU, True, "мм.", NumberExType.MILLIMETER)
         t.add_abridge("ММ")
         t.add_abridge("MM")
         t.add_variant("МІЛІМЕТР", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("МИЛЛИМЕТРОВЫЙ", MorphLang.RU, True, "мм.", NumberExType.MILLIMETER)
+        t = Termin._new484("МИЛЛИМЕТРОВЫЙ", MorphLang.RU, True, "мм.", NumberExType.MILLIMETER)
         t.add_variant("МІЛІМЕТРОВИЙ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("САНТИМЕТР", MorphLang.RU, True, "см.", NumberExType.SANTIMETER)
+        t = Termin._new484("САНТИМЕТР", MorphLang.RU, True, "см.", NumberExType.SANTIMETER)
         t.add_abridge("СМ")
         t.add_abridge("CM")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("САНТИМЕТРОВЫЙ", MorphLang.RU, True, "см.", NumberExType.SANTIMETER)
+        t = Termin._new484("САНТИМЕТРОВЫЙ", MorphLang.RU, True, "см.", NumberExType.SANTIMETER)
         t.add_variant("САНТИМЕТРОВИЙ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("КВАДРАТНЫЙ САНТИМЕТР", MorphLang.RU, True, "кв.см.", NumberExType.SANTIMETER2)
+        t = Termin._new484("КВАДРАТНЫЙ САНТИМЕТР", MorphLang.RU, True, "кв.см.", NumberExType.SANTIMETER2)
         t.add_variant("КВАДРАТНИЙ САНТИМЕТР", True)
         t.add_abridge("КВ.СМ.")
         t.add_abridge("СМ.КВ.")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("КУБИЧЕСКИЙ САНТИМЕТР", MorphLang.RU, True, "куб.см.", NumberExType.SANTIMETER3)
+        t = Termin._new484("КУБИЧЕСКИЙ САНТИМЕТР", MorphLang.RU, True, "куб.см.", NumberExType.SANTIMETER3)
         t.add_variant("КУБІЧНИЙ САНТИМЕТР", True)
         t.add_abridge("КУБ.САНТИМЕТР")
         t.add_abridge("КУБ.СМ.")
         t.add_abridge("СМ.КУБ.")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("КИЛОМЕТР", MorphLang.RU, True, "км.", NumberExType.KILOMETER)
+        t = Termin._new484("КИЛОМЕТР", MorphLang.RU, True, "км.", NumberExType.KILOMETER)
         t.add_abridge("КМ")
         t.add_abridge("KM")
         t.add_variant("КІЛОМЕТР", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("КИЛОМЕТРОВЫЙ", MorphLang.RU, True, "км.", NumberExType.KILOMETER)
+        t = Termin._new484("КИЛОМЕТРОВЫЙ", MorphLang.RU, True, "км.", NumberExType.KILOMETER)
         t.add_variant("КІЛОМЕТРОВИЙ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("МИЛЯ", MorphLang.RU, True, "миль", NumberExType.KILOMETER)
+        t = Termin._new484("МИЛЯ", MorphLang.RU, True, "миль", NumberExType.KILOMETER)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ГРАММ", MorphLang.RU, True, "гр.", NumberExType.GRAMM)
+        t = Termin._new484("ГРАММ", MorphLang.RU, True, "гр.", NumberExType.GRAMM)
         t.add_abridge("ГР")
         t.add_abridge("Г")
         t.add_variant("ГРАМ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ГРАММОВЫЙ", MorphLang.RU, True, "гр.", NumberExType.GRAMM)
+        t = Termin._new484("ГРАММОВЫЙ", MorphLang.RU, True, "гр.", NumberExType.GRAMM)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("КИЛОГРАММ", MorphLang.RU, True, "кг.", NumberExType.KILOGRAM)
+        t = Termin._new484("КИЛОГРАММ", MorphLang.RU, True, "кг.", NumberExType.KILOGRAM)
         t.add_abridge("КГ")
         t.add_variant("КІЛОГРАМ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("КИЛОГРАММОВЫЙ", MorphLang.RU, True, "кг.", NumberExType.KILOGRAM)
+        t = Termin._new484("КИЛОГРАММОВЫЙ", MorphLang.RU, True, "кг.", NumberExType.KILOGRAM)
         t.add_variant("КІЛОГРАМОВИЙ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("МИЛЛИГРАММ", MorphLang.RU, True, "мг.", NumberExType.MILLIGRAM)
+        t = Termin._new484("МИЛЛИГРАММ", MorphLang.RU, True, "мг.", NumberExType.MILLIGRAM)
         t.add_abridge("МГ")
         t.add_variant("МІЛІГРАМ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("МИЛЛИГРАММОВЫЙ", MorphLang.RU, True, "мг.", NumberExType.MILLIGRAM)
+        t = Termin._new484("МИЛЛИГРАММОВЫЙ", MorphLang.RU, True, "мг.", NumberExType.MILLIGRAM)
         t.add_variant("МИЛЛИГРАМОВЫЙ", True)
         t.add_variant("МІЛІГРАМОВИЙ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ТОННА", MorphLang.RU, True, "т.", NumberExType.TONNA)
+        t = Termin._new484("ТОННА", MorphLang.RU, True, "т.", NumberExType.TONNA)
         t.add_abridge("Т")
         t.add_abridge("T")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ТОННЫЙ", MorphLang.RU, True, "т.", NumberExType.TONNA)
+        t = Termin._new484("ТОННЫЙ", MorphLang.RU, True, "т.", NumberExType.TONNA)
         t.add_variant("ТОННИЙ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ЛИТР", MorphLang.RU, True, "л.", NumberExType.LITR)
+        t = Termin._new484("ЛИТР", MorphLang.RU, True, "л.", NumberExType.LITR)
         t.add_abridge("Л")
         t.add_variant("ЛІТР", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ЛИТРОВЫЙ", MorphLang.RU, True, "л.", NumberExType.LITR)
+        t = Termin._new484("ЛИТРОВЫЙ", MorphLang.RU, True, "л.", NumberExType.LITR)
         t.add_variant("ЛІТРОВИЙ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("МИЛЛИЛИТР", MorphLang.RU, True, "мл.", NumberExType.MILLILITR)
+        t = Termin._new484("МИЛЛИЛИТР", MorphLang.RU, True, "мл.", NumberExType.MILLILITR)
         t.add_abridge("МЛ")
         t.add_variant("МІЛІЛІТР", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("МИЛЛИЛИТРОВЫЙ", MorphLang.RU, True, "мл.", NumberExType.MILLILITR)
+        t = Termin._new484("МИЛЛИЛИТРОВЫЙ", MorphLang.RU, True, "мл.", NumberExType.MILLILITR)
         t.add_variant("МІЛІЛІТРОВИЙ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ЧАС", MorphLang.RU, True, "ч.", NumberExType.HOUR)
+        t = Termin._new484("ЧАС", MorphLang.RU, True, "ч.", NumberExType.HOUR)
         t.add_abridge("Ч.")
         t.add_variant("ГОДИНА", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("МИНУТА", MorphLang.RU, True, "мин.", NumberExType.MINUTE)
+        t = Termin._new484("МИНУТА", MorphLang.RU, True, "мин.", NumberExType.MINUTE)
         t.add_abridge("МИН.")
         t.add_variant("ХВИЛИНА", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("СЕКУНДА", MorphLang.RU, True, "сек.", NumberExType.SECOND)
+        t = Termin._new484("СЕКУНДА", MorphLang.RU, True, "сек.", NumberExType.SECOND)
         t.add_abridge("СЕК.")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ГОД", MorphLang.RU, True, "г.", NumberExType.YEAR)
+        t = Termin._new484("ГОД", MorphLang.RU, True, "г.", NumberExType.YEAR)
         t.add_abridge("Г.")
         t.add_abridge("ЛЕТ")
         t.add_variant("ЛЕТНИЙ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("МЕСЯЦ", MorphLang.RU, True, "мес.", NumberExType.MONTH)
+        t = Termin._new484("МЕСЯЦ", MorphLang.RU, True, "мес.", NumberExType.MONTH)
         t.add_abridge("МЕС.")
         t.add_variant("МЕСЯЧНЫЙ", True)
         t.add_variant("КАЛЕНДАРНЫЙ МЕСЯЦ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ДЕНЬ", MorphLang.RU, True, "дн.", NumberExType.DAY)
+        t = Termin._new484("ДЕНЬ", MorphLang.RU, True, "дн.", NumberExType.DAY)
         t.add_abridge("ДН.")
         t.add_variant("ДНЕВНЫЙ", True)
         t.add_variant("СУТКИ", True)
@@ -555,42 +557,42 @@ class NumberExHelper:
         t.add_variant("КАЛЕНДАРНЫЙ ДЕНЬ", True)
         t.add_variant("РАБОЧИЙ ДЕНЬ", True)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("НЕДЕЛЯ", MorphLang.RU, True, "нед.", NumberExType.WEEK)
+        t = Termin._new484("НЕДЕЛЯ", MorphLang.RU, True, "нед.", NumberExType.WEEK)
         t.add_variant("НЕДЕЛЬНЫЙ", True)
         t.add_variant("КАЛЕНДАРНАЯ НЕДЕЛЯ", False)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ПРОЦЕНТ", MorphLang.RU, True, "%", NumberExType.PERCENT)
+        t = Termin._new484("ПРОЦЕНТ", MorphLang.RU, True, "%", NumberExType.PERCENT)
         t.add_variant("%", False)
         t.add_variant("ПРОЦ", True)
         t.add_abridge("ПРОЦ.")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ШТУКА", MorphLang.RU, True, "шт.", NumberExType.SHUK)
+        t = Termin._new484("ШТУКА", MorphLang.RU, True, "шт.", NumberExType.SHUK)
         t.add_variant("ШТ", False)
         t.add_abridge("ШТ.")
         t.add_abridge("ШТ-К")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("УПАКОВКА", MorphLang.RU, True, "уп.", NumberExType.UPAK)
+        t = Termin._new484("УПАКОВКА", MorphLang.RU, True, "уп.", NumberExType.UPAK)
         t.add_variant("УПАК", True)
         t.add_variant("УП", True)
         t.add_abridge("УПАК.")
         t.add_abridge("УП.")
         t.add_abridge("УП-КА")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("РУЛОН", MorphLang.RU, True, "рулон", NumberExType.RULON)
+        t = Termin._new484("РУЛОН", MorphLang.RU, True, "рулон", NumberExType.RULON)
         t.add_variant("РУЛ", True)
         t.add_abridge("РУЛ.")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("НАБОР", MorphLang.RU, True, "набор", NumberExType.NABOR)
+        t = Termin._new484("НАБОР", MorphLang.RU, True, "набор", NumberExType.NABOR)
         t.add_variant("НАБ", True)
         t.add_abridge("НАБ.")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("КОМПЛЕКТ", MorphLang.RU, True, "компл.", NumberExType.KOMPLEKT)
+        t = Termin._new484("КОМПЛЕКТ", MorphLang.RU, True, "компл.", NumberExType.KOMPLEKT)
         t.add_variant("КОМПЛ", True)
         t.add_abridge("КОМПЛ.")
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ПАРА", MorphLang.RU, True, "пар", NumberExType.PARA)
+        t = Termin._new484("ПАРА", MorphLang.RU, True, "пар", NumberExType.PARA)
         NumberExHelper._m_postfixes.add(t)
-        t = Termin._new483("ФЛАКОН", MorphLang.RU, True, "флак.", NumberExType.FLAKON)
+        t = Termin._new484("ФЛАКОН", MorphLang.RU, True, "флак.", NumberExType.FLAKON)
         t.add_variant("ФЛ", True)
         t.add_abridge("ФЛ.")
         t.add_variant("ФЛАК", True)
@@ -648,10 +650,10 @@ class NumberExHelper:
                 i = parts[3].find(' ')
                 if (i < 2): 
                     continue
-                wrapnum528 = RefOutArgWrapper(0)
-                inoutres529 = Utils.tryParseInt(parts[3][0:0+i], wrapnum528)
-                num = wrapnum528.value
-                if (not inoutres529): 
+                wrapnum529 = RefOutArgWrapper(0)
+                inoutres530 = Utils.tryParseInt(parts[3][0:0+i], wrapnum529)
+                num = wrapnum529.value
+                if (not inoutres530): 
                     continue
                 vv = parts[3][i:].strip()
                 t = Termin()

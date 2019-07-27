@@ -64,7 +64,7 @@ class DecreeChangeValueReferent(Referent):
             res = Utils.valToEnum(s, DecreeChangeValueKind)
             if (isinstance(res, DecreeChangeValueKind)): 
                 return Utils.valToEnum(res, DecreeChangeValueKind)
-        except Exception as ex1102: 
+        except Exception as ex1109: 
             pass
         return DecreeChangeValueKind.UNDEFINED
     @kind.setter
@@ -105,7 +105,7 @@ class DecreeChangeValueReferent(Referent):
         return obj == self
     
     @staticmethod
-    def _new794(_arg1 : 'DecreeChangeValueKind') -> 'DecreeChangeValueReferent':
+    def _new801(_arg1 : 'DecreeChangeValueKind') -> 'DecreeChangeValueReferent':
         res = DecreeChangeValueReferent()
         res.kind = _arg1
         return res

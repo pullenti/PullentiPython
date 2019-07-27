@@ -178,9 +178,9 @@ class PersonPropertyReferent(Referent):
             eq = False
             noeq = False
             i = 0
-            first_pass3226 = True
+            first_pass3256 = True
             while True:
-                if first_pass3226: first_pass3226 = False
+                if first_pass3256: first_pass3256 = False
                 else: i += 1
                 if (not (i < len(refs1))): break
                 if (refs1[i] in refs2): 
@@ -195,9 +195,9 @@ class PersonPropertyReferent(Referent):
                                 eq = True
                                 break
             i = 0
-            first_pass3227 = True
+            first_pass3257 = True
             while True:
-                if first_pass3227: first_pass3227 = False
+                if first_pass3257: first_pass3257 = False
                 else: i += 1
                 if (not (i < len(refs2))): break
                 if (refs2[i] in refs1): 
@@ -287,9 +287,9 @@ class PersonPropertyReferent(Referent):
         if (isinstance(r, GeoReferent)): 
             g = Utils.asObjectOrNull(r, GeoReferent)
             if (LanguageHelper.ends_with_ex(nam, "президент", "губернатор", None, None)): 
-                return g.is_state0 or g.is_region0
+                return g.is_state or g.is_region
             if (nam == "мэр" or nam == "градоначальник"): 
-                return g.is_city0
+                return g.is_city
             if (nam == "глава"): 
                 return True
             return False
@@ -306,7 +306,7 @@ class PersonPropertyReferent(Referent):
         return False
     
     @staticmethod
-    def _new2385(_arg1 : str) -> 'PersonPropertyReferent':
+    def _new2413(_arg1 : str) -> 'PersonPropertyReferent':
         res = PersonPropertyReferent()
         res.name = _arg1
         return res

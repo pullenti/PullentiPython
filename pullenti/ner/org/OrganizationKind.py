@@ -35,7 +35,9 @@ class OrganizationKind(IntEnum):
     """ Военные """
     AIRPORT = 19
     """ Аэропорт """
-    FESTIVAL = 20
+    SEAPORT = 20
+    """ Морские порты """
+    FESTIVAL = 21
     """ События (фестиваль, чемпионат) """
     
     @classmethod

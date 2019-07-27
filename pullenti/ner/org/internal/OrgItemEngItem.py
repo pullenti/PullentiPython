@@ -30,7 +30,7 @@ class OrgItemEngItem(MetaToken):
         self.short_value = None;
     
     @property
-    def is_bank0(self) -> bool:
+    def is_bank(self) -> bool:
         return self.full_value == "bank"
     
     @staticmethod
@@ -38,8 +38,8 @@ class OrgItemEngItem(MetaToken):
         if (t is None or not ((isinstance(t, TextToken)))): 
             return None
         tok = (OrgItemEngItem.__m_ontology.try_parse(t, TerminParseAttr.NO) if can_be_cyr else None)
-        if (not t.chars.is_latin_letter0 and tok is None): 
-            if (not t.is_and0 or t.next0_ is None): 
+        if (not t.chars.is_latin_letter and tok is None): 
+            if (not t.is_and or t.next0_ is None): 
                 return None
             if (t.next0_.is_value("COMPANY", None) or t.next0_.is_value("CO", None)): 
                 res = OrgItemEngItem(t, t.next0_)
@@ -48,7 +48,7 @@ class OrgItemEngItem(MetaToken):
                     res.end_token = res.end_token.next0_
                 return res
             return None
-        if (t.chars.is_latin_letter0): 
+        if (t.chars.is_latin_letter): 
             tok = OrgItemEngItem.__m_ontology.try_parse(t, TerminParseAttr.NO)
         if (tok is not None): 
             if (not OrgItemEngItem.__check_tok(tok)): 
@@ -69,7 +69,7 @@ class OrgItemEngItem(MetaToken):
                 if ((tt0).term == "U"): 
                     return False
         elif (tok.begin_token.is_value("CO", None) and tok.begin_token == tok.end_token): 
-            if (tok.end_token.next0_ is not None and tok.end_token.next0_.is_hiphen0): 
+            if (tok.end_token.next0_ is not None and tok.end_token.next0_.is_hiphen): 
                 return False
         if (not tok.is_whitespace_after): 
             if (isinstance(tok.end_token.next0_, NumberToken)): 
@@ -86,17 +86,17 @@ class OrgItemEngItem(MetaToken):
             t = t.next0_
             br = True
         if (isinstance(t, NumberToken)): 
-            if ((t).typ == NumberSpellingType.WORDS and t.morph.class0_.is_adjective0 and t.chars.is_capital_upper0): 
+            if ((t).typ == NumberSpellingType.WORDS and t.morph.class0_.is_adjective and t.chars.is_capital_upper): 
                 pass
             else: 
                 return None
         else: 
-            if (t.chars.is_all_lower0): 
+            if (t.chars.is_all_lower): 
                 return None
-            if ((t.length_char < 3) and not t.chars.is_letter0): 
+            if ((t.length_char < 3) and not t.chars.is_letter): 
                 return None
-            if (not t.chars.is_latin_letter0): 
-                if (not can_be_cyr or not t.chars.is_cyrillic_letter0): 
+            if (not t.chars.is_latin_letter): 
+                if (not can_be_cyr or not t.chars.is_cyrillic_letter): 
                     return None
         t0 = t
         t1 = t0
@@ -104,9 +104,9 @@ class OrgItemEngItem(MetaToken):
         tok = None
         geo_ = None
         add_typ = None
-        first_pass3155 = True
+        first_pass3184 = True
         while True:
-            if first_pass3155: first_pass3155 = False
+            if first_pass3184: first_pass3184 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and t.whitespaces_before_count > 1): 
@@ -119,11 +119,11 @@ class OrgItemEngItem(MetaToken):
                     t = t.next0_.next0_
                     continue
                 typ = OrgItemTypeToken.try_attach(t.next0_, True, None)
-                if ((typ is not None and typ.end_token.next0_ is not None and typ.end_token.next0_.is_char(')')) and typ.chars.is_latin_letter0): 
+                if ((typ is not None and typ.end_token.next0_ is not None and typ.end_token.next0_.is_char(')')) and typ.chars.is_latin_letter): 
                     add_typ = typ
                     t = typ.end_token.next0_
                     continue
-                if (((isinstance(t.next0_, TextToken)) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')) and t.next0_.chars.is_capital_upper0): 
+                if (((isinstance(t.next0_, TextToken)) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')) and t.next0_.chars.is_capital_upper): 
                     t = t.next0_.next0_
                     t1 = t
                     continue
@@ -134,30 +134,30 @@ class OrgItemEngItem(MetaToken):
                 if (tok is None and t.next0_.is_char_of(",.")): 
                     tok = OrgItemEngItem.try_attach(t.next0_.next0_, can_be_cyr)
             if (tok is not None): 
-                if (tok.length_char == 1 and t0.chars.is_cyrillic_letter0): 
+                if (tok.length_char == 1 and t0.chars.is_cyrillic_letter): 
                     return None
                 break
-            if (t.is_hiphen0 and not t.is_whitespace_after0 and not t.is_whitespace_before0): 
+            if (t.is_hiphen and not t.is_whitespace_after and not t.is_whitespace_before): 
                 continue
-            if (t.is_char_of("&+") or t.is_and0): 
+            if (t.is_char_of("&+") or t.is_and): 
                 continue
             if (t.is_char('.')): 
                 if (t.previous is not None and t.previous.length_char == 1): 
                     continue
                 elif (MiscHelper.can_be_start_of_sentence(t.next0_)): 
                     break
-            if (not t.chars.is_latin_letter0): 
-                if (not can_be_cyr or not t.chars.is_cyrillic_letter0): 
+            if (not t.chars.is_latin_letter): 
+                if (not can_be_cyr or not t.chars.is_cyrillic_letter): 
                     break
-            if (t.chars.is_all_lower0): 
-                if (t.morph.class0_.is_preposition0 or t.morph.class0_.is_conjunction0): 
+            if (t.chars.is_all_lower): 
+                if (t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction): 
                     continue
                 if (br): 
                     continue
                 break
             mc = t.get_morph_class_in_dictionary()
-            if (mc.is_verb0): 
-                if (t.next0_ is not None and t.next0_.morph.class0_.is_preposition0): 
+            if (mc.is_verb): 
+                if (t.next0_ is not None and t.next0_.morph.class0_.is_preposition): 
                     break
             if (t.next0_ is not None and t.next0_.is_value("OF", None)): 
                 break
@@ -180,7 +180,7 @@ class OrgItemEngItem(MetaToken):
             return None
         org0_ = OrganizationReferent()
         te = tok.end_token
-        if (tok.is_bank0): 
+        if (tok.is_bank): 
             t1 = tok.end_token
         if (tok.full_value == "company" and (tok.whitespaces_after_count < 3)): 
             tok1 = OrgItemEngItem.try_attach(tok.end_token.next0_, can_be_cyr)
@@ -208,10 +208,10 @@ class OrgItemEngItem(MetaToken):
                 nam = nam[0:0+i1].strip()
                 if (tai is not None): 
                     nam = "{0} {1}".format(nam, tai)
-        if (tok.is_bank0): 
-            org0_.add_type_str(("bank" if tok.kit.base_language.is_en0 else "банк"))
+        if (tok.is_bank): 
+            org0_.add_type_str(("bank" if tok.kit.base_language.is_en else "банк"))
             org0_.add_profile(OrgProfile.FINANCE)
-            if ((t1.next0_ is not None and t1.next0_.is_value("OF", None) and t1.next0_.next0_ is not None) and t1.next0_.next0_.chars.is_latin_letter0): 
+            if ((t1.next0_ is not None and t1.next0_.is_value("OF", None) and t1.next0_.next0_ is not None) and t1.next0_.next0_.chars.is_latin_letter): 
                 nam0 = OrgItemNameToken.try_attach(t1.next0_, None, False, False)
                 if (nam0 is not None): 
                     te = nam0.end_token

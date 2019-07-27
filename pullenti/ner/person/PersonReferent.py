@@ -58,20 +58,20 @@ class PersonReferent(Referent):
     ATTR_IDDOC = "IDDOC"
     
     @property
-    def is_male0(self) -> bool:
+    def is_male(self) -> bool:
         """ Это мужчина """
         return self.get_string_value(PersonReferent.ATTR_SEX) == MetaPerson.ATTR_SEXMALE
-    @is_male0.setter
-    def is_male0(self, value) -> bool:
+    @is_male.setter
+    def is_male(self, value) -> bool:
         self.add_slot(PersonReferent.ATTR_SEX, MetaPerson.ATTR_SEXMALE, True, 0)
         return value
     
     @property
-    def is_female0(self) -> bool:
+    def is_female(self) -> bool:
         """ Это женщина """
         return self.get_string_value(PersonReferent.ATTR_SEX) == MetaPerson.ATTR_SEXFEMALE
-    @is_female0.setter
-    def is_female0(self, value) -> bool:
+    @is_female.setter
+    def is_female(self, value) -> bool:
         self.add_slot(PersonReferent.ATTR_SEX, MetaPerson.ATTR_SEXFEMALE, True, 0)
         return value
     
@@ -100,9 +100,9 @@ class PersonReferent(Referent):
         self.add_slot(PersonReferent.ATTR_CONTACT, contact, False, 0)
     
     def __get_prefix(self) -> str:
-        if (self.is_male0): 
+        if (self.is_male): 
             return "г-н "
-        if (self.is_female0): 
+        if (self.is_female): 
             return "г-жа "
         return ""
     
@@ -619,11 +619,11 @@ class PersonReferent(Referent):
                 PersonMorphCollection.set_gender(self.__m_sec_occurs, g)
                 PersonMorphCollection.set_gender(self.__m_ident_occurs, g)
         if (g != MorphGender.UNDEFINED): 
-            if (not self.is_female0 and not self.is_male0): 
+            if (not self.is_female and not self.is_male): 
                 if (g == MorphGender.MASCULINE): 
-                    self.is_male0 = True
+                    self.is_male = True
                 else: 
-                    self.is_female0 = True
+                    self.is_female = True
         self.__correct_surnames()
         self.__correct_identifiers()
         self.__correct_attrs()
@@ -635,7 +635,7 @@ class PersonReferent(Referent):
         self.__remove_initials(PersonReferent.ATTR_MIDDLENAME)
     
     def __correct_surnames(self) -> None:
-        if (not self.is_male0 and not self.is_female0): 
+        if (not self.is_male and not self.is_female): 
             return
         i = 0
         while i < len(self.slots): 
@@ -646,7 +646,7 @@ class PersonReferent(Referent):
                     if (self.slots[j].type_name == PersonReferent.ATTR_LASTNAME): 
                         s1 = str(self.slots[j].value)
                         if (s != s1 and PersonReferent._del_surname_end(s) == PersonReferent._del_surname_end(s1) and len(s1) != len(s)): 
-                            if (self.is_male0): 
+                            if (self.is_male): 
                                 s = PersonReferent._del_surname_end(s)
                                 self.upload_slot(self.slots[i], s)
                                 del self.slots[j]
@@ -659,7 +659,7 @@ class PersonReferent(Referent):
             i += 1
     
     def __correct_identifiers(self) -> None:
-        if (self.is_female0): 
+        if (self.is_female): 
             return
         i = 0
         while i < len(self.slots): 
@@ -674,7 +674,7 @@ class PersonReferent(Referent):
                             self.upload_slot(self.slots[i], s)
                             del self.slots[j]
                             j -= 1
-                            self.is_male0 = True
+                            self.is_male = True
                     j += 1
             i += 1
     
@@ -691,9 +691,9 @@ class PersonReferent(Referent):
                 v = str(self.slots[i].value)
                 if (not v in vars0_): 
                     j = 0
-                    first_pass3228 = True
+                    first_pass3258 = True
                     while True:
-                        if first_pass3228: first_pass3228 = False
+                        if first_pass3258: first_pass3258 = False
                         else: j += 1
                         if (not (j < len(self.slots))): break
                         if (j != i and self.slots[j].type_name == self.slots[i].type_name): 
@@ -753,21 +753,21 @@ class PersonReferent(Referent):
         tit = self.__find_shortest_king_titul(False)
         for a in self.slots: 
             if (a.type_name == PersonReferent.ATTR_IDENTITY): 
-                oi.termins.append(Termin._new2556(str(a.value), True))
+                oi.termins.append(Termin._new2584(str(a.value), True))
             elif (a.type_name == PersonReferent.ATTR_LASTNAME): 
                 t = Termin(str(a.value))
                 if (len(t.terms) > 20): 
                     pass
-                if (self.is_male0): 
+                if (self.is_male): 
                     t.gender = MorphGender.MASCULINE
-                elif (self.is_female0): 
+                elif (self.is_female): 
                     t.gender = MorphGender.FEMINIE
                 oi.termins.append(t)
             elif (a.type_name == PersonReferent.ATTR_FIRSTNAME and tit is not None): 
                 t = Termin("{0} {1}".format(tit, str(a.value)))
-                if (self.is_male0): 
+                if (self.is_male): 
                     t.gender = MorphGender.MASCULINE
-                elif (self.is_female0): 
+                elif (self.is_female): 
                     t.gender = MorphGender.FEMINIE
                 oi.termins.append(t)
         return oi

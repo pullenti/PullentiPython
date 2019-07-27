@@ -35,7 +35,7 @@ class BookLinkRefReferent(Referent):
         if (self.number is not None): 
             print("[{0}] ".format(self.number), end="", file=res, flush=True)
         if (self.pages is not None): 
-            print("{0} {1}; ".format(("pages" if lang is not None and lang.is_en0 else "стр."), self.pages), end="", file=res, flush=True)
+            print("{0} {1}; ".format(("pages" if lang is not None and lang.is_en else "стр."), self.pages), end="", file=res, flush=True)
         book_ = self.book
         if (book_ is None): 
             print("?", end="", file=res)

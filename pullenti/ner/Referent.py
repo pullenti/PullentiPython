@@ -35,6 +35,7 @@ class Referent:
         self.__instanceof = None;
         self.ontology_items = None;
         self.__m_slots = list()
+        self.__m_level = 0
         self.__m_occurrence = None;
         self.__tag = None;
         self._int_ontology_item = None;
@@ -121,19 +122,27 @@ class Referent:
             use_can_be_equals_for_referents(bool): 
         
         """
+        if (self.__m_level > 10): 
+            return None
         if (attr_name is None): 
             if (val is None): 
                 return None
+            self.__m_level += 1
             for r in self.slots: 
                 if (self.__compare_values(val, r.value, use_can_be_equals_for_referents)): 
+                    self.__m_level -= 1
                     return r
+            self.__m_level -= 1
             return None
         for r in self.slots: 
             if (r.type_name == attr_name): 
                 if (val is None): 
                     return r
+                self.__m_level += 1
                 if (self.__compare_values(val, r.value, use_can_be_equals_for_referents)): 
+                    self.__m_level -= 1
                     return r
+                self.__m_level -= 1
         return None
     
     def __compare_values(self, val1 : object, val2 : object, use_can_be_equals_for_referents : bool) -> bool:
@@ -210,10 +219,10 @@ class Referent:
         str0_ = self.get_string_value(attr_name)
         if (Utils.isNullOrEmpty(str0_)): 
             return def_value
-        wrapres2791 = RefOutArgWrapper(0)
-        inoutres2792 = Utils.tryParseInt(str0_, wrapres2791)
-        res = wrapres2791.value
-        if (not inoutres2792): 
+        wrapres2820 = RefOutArgWrapper(0)
+        inoutres2821 = Utils.tryParseInt(str0_, wrapres2820)
+        res = wrapres2820.value
+        if (not inoutres2821): 
             return def_value
         return res
     
@@ -238,7 +247,7 @@ class Referent:
         return res
     
     def add_occurence_of_ref_tok(self, rt : 'ReferentToken') -> None:
-        self.add_occurence(TextAnnotation._new719(rt.kit.sofa, rt.begin_char, rt.end_char, rt.referent))
+        self.add_occurence(TextAnnotation._new726(rt.kit.sofa, rt.begin_char, rt.end_char, rt.referent))
     
     def add_occurence(self, anno : 'TextAnnotation') -> None:
         """ Добавить аннотацию
@@ -256,7 +265,7 @@ class Referent:
                 l_._merge(anno)
                 return
         if (anno.occurence_of != self and anno.occurence_of is not None): 
-            anno = TextAnnotation._new2794(anno.begin_char, anno.end_char, anno.sofa)
+            anno = TextAnnotation._new2823(anno.begin_char, anno.end_char, anno.sofa)
         if (self.__m_occurrence is None): 
             self.__m_occurrence = list()
         anno.occurence_of = self
@@ -309,7 +318,7 @@ class Referent:
         res.occurrence.extend(self.occurrence)
         res.ontology_items = self.ontology_items
         for r in self.slots: 
-            rr = Slot._new2795(r.type_name, r.value, r.count)
+            rr = Slot._new2824(r.type_name, r.value, r.count)
             rr.owner = res
             res.slots.append(rr)
         return res
@@ -327,7 +336,7 @@ class Referent:
         if (obj is None or obj.type_name != self.type_name): 
             return False
         for r in self.slots: 
-            if (r.value is not None and obj.find_slot(r.type_name, r.value, True) is None): 
+            if (r.value is not None and obj.find_slot(r.type_name, r.value, False) is None): 
                 return False
         for r in obj.slots: 
             if (r.value is not None and self.find_slot(r.type_name, r.value, True) is None): 
@@ -419,6 +428,14 @@ class Referent:
         if (len(self._m_ext_referents) > 100): 
             pass
     
+    def move_ext_referent(self, target : 'Referent', r : 'Referent') -> None:
+        if (self._m_ext_referents is not None): 
+            for rt in self._m_ext_referents: 
+                if (rt.referent == r): 
+                    target.add_ext_referent(rt)
+                    self._m_ext_referents.remove(rt)
+                    break
+    
     def _merge_ext_referents(self, obj : 'Referent') -> None:
         if (obj._m_ext_referents is not None): 
             for rt in obj._m_ext_referents: 
@@ -470,7 +487,7 @@ class Referent:
         self.__m_occurrence = list()
         i = 0
         while i < cou: 
-            a = TextAnnotation._new2796(sofa, self)
+            a = TextAnnotation._new2825(sofa, self)
             self.__m_occurrence.append(a)
             a.begin_char = SerializerHelper.deserialize_int(stream)
             a.end_char = SerializerHelper.deserialize_int(stream)

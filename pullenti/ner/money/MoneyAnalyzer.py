@@ -73,9 +73,9 @@ class MoneyAnalyzer(Analyzer):
         """
         ad = kit.get_analyzer_data(self)
         t = kit.first_token
-        first_pass3153 = True
+        first_pass3182 = True
         while True:
-            if first_pass3153: first_pass3153 = False
+            if first_pass3182: first_pass3182 = False
             else: t = t.next0_
             if (not (t is not None)): break
             mon = MoneyAnalyzer.try_parse(t)
@@ -94,11 +94,11 @@ class MoneyAnalyzer(Analyzer):
         nex = NumberHelper.try_parse_number_with_postfix(t)
         if (nex is None or nex.ex_typ != NumberExType.MONEY): 
             if ((isinstance(t, NumberToken)) and (isinstance(t.next0_, TextToken)) and (isinstance(t.next0_.next0_, NumberToken))): 
-                if (t.next0_.is_hiphen0 or t.next0_.morph.class0_.is_preposition0): 
+                if (t.next0_.is_hiphen or t.next0_.morph.class0_.is_preposition): 
                     res1 = NumberHelper.try_parse_number_with_postfix(t.next0_.next0_)
                     if (res1 is not None and res1.ex_typ == NumberExType.MONEY): 
                         res0 = MoneyReferent()
-                        if ((t.next0_.is_hiphen0 and res1.real_value == 0 and res1.end_token.next0_ is not None) and res1.end_token.next0_.is_char('(')): 
+                        if ((t.next0_.is_hiphen and res1.real_value == 0 and res1.end_token.next0_ is not None) and res1.end_token.next0_.is_char('(')): 
                             nex2 = NumberHelper.try_parse_number_with_postfix(res1.end_token.next0_.next0_)
                             if ((nex2 is not None and nex2.ex_typ_param == res1.ex_typ_param and nex2.end_token.next0_ is not None) and nex2.end_token.next0_.is_char(')')): 
                                 if (nex2.value == (t).value): 
