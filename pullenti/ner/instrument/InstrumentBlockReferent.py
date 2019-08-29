@@ -103,7 +103,7 @@ class InstrumentBlockReferent(Referent):
             res = Utils.valToEnum(s, InstrumentKind)
             if (isinstance(res, InstrumentKind)): 
                 return Utils.valToEnum(res, InstrumentKind)
-        except Exception as ex1568: 
+        except Exception as ex1575: 
             pass
         return InstrumentKind.UNDEFINED
     @kind.setter
@@ -122,7 +122,7 @@ class InstrumentBlockReferent(Referent):
             res = Utils.valToEnum(s, InstrumentKind)
             if (isinstance(res, InstrumentKind)): 
                 return Utils.valToEnum(res, InstrumentKind)
-        except Exception as ex1569: 
+        except Exception as ex1576: 
             pass
         return InstrumentKind.UNDEFINED
     @kind2.setter
@@ -158,10 +158,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_NUMBER)
         if (str0_ is None): 
             return 0
-        wrapi1570 = RefOutArgWrapper(0)
-        inoutres1571 = Utils.tryParseInt(str0_, wrapi1570)
-        i = wrapi1570.value
-        if (inoutres1571): 
+        wrapi1577 = RefOutArgWrapper(0)
+        inoutres1578 = Utils.tryParseInt(str0_, wrapi1577)
+        i = wrapi1577.value
+        if (inoutres1578): 
             return i
         return 0
     @number.setter
@@ -175,10 +175,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_SUBNUMBER)
         if (str0_ is None): 
             return 0
-        wrapi1572 = RefOutArgWrapper(0)
-        inoutres1573 = Utils.tryParseInt(str0_, wrapi1572)
-        i = wrapi1572.value
-        if (inoutres1573): 
+        wrapi1579 = RefOutArgWrapper(0)
+        inoutres1580 = Utils.tryParseInt(str0_, wrapi1579)
+        i = wrapi1579.value
+        if (inoutres1580): 
             return i
         return 0
     @sub_number.setter
@@ -192,10 +192,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_SUB2NUMBER)
         if (str0_ is None): 
             return 0
-        wrapi1574 = RefOutArgWrapper(0)
-        inoutres1575 = Utils.tryParseInt(str0_, wrapi1574)
-        i = wrapi1574.value
-        if (inoutres1575): 
+        wrapi1581 = RefOutArgWrapper(0)
+        inoutres1582 = Utils.tryParseInt(str0_, wrapi1581)
+        i = wrapi1581.value
+        if (inoutres1582): 
             return i
         return 0
     @sub_number2.setter
@@ -209,10 +209,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_SUB3NUMBER)
         if (str0_ is None): 
             return 0
-        wrapi1576 = RefOutArgWrapper(0)
-        inoutres1577 = Utils.tryParseInt(str0_, wrapi1576)
-        i = wrapi1576.value
-        if (inoutres1577): 
+        wrapi1583 = RefOutArgWrapper(0)
+        inoutres1584 = Utils.tryParseInt(str0_, wrapi1583)
+        i = wrapi1583.value
+        if (inoutres1584): 
             return i
         return 0
     @sub_number3.setter
@@ -226,10 +226,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_MINNUMBER)
         if (str0_ is None): 
             return 0
-        wrapi1578 = RefOutArgWrapper(0)
-        inoutres1579 = Utils.tryParseInt(str0_, wrapi1578)
-        i = wrapi1578.value
-        if (inoutres1579): 
+        wrapi1585 = RefOutArgWrapper(0)
+        inoutres1586 = Utils.tryParseInt(str0_, wrapi1585)
+        i = wrapi1585.value
+        if (inoutres1586): 
             return i
         return 0
     @min_number.setter

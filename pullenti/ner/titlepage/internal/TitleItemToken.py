@@ -66,7 +66,7 @@ class TitleItemToken(MetaToken):
                     t1 = tit.end_token
                     if (t1.next0_ is not None and t1.next0_.is_char(':')): 
                         t1 = t1.next0_
-                    return TitleItemToken._new2624(t, t1, TitleItemToken.Types.TYPANDTHEME, tit.value)
+                    return TitleItemToken._new2633(t, t1, TitleItemToken.Types.TYPANDTHEME, tit.value)
                 if (tt.next0_ is not None and tt.next0_.is_char(':')): 
                     t1 = tt.next0_
                 return TitleItemToken(tt, t1, TitleItemToken.Types.THEME)
@@ -129,16 +129,16 @@ class TitleItemToken(MetaToken):
                 if (ty == TitleItemToken.Types.TYP): 
                     tit = TitleItemToken.try_attach(tok.end_token.next0_)
                     if (tit is not None and tit.typ == TitleItemToken.Types.THEME): 
-                        return TitleItemToken._new2624(npt.begin_token, tit.end_token, TitleItemToken.Types.TYPANDTHEME, s)
+                        return TitleItemToken._new2633(npt.begin_token, tit.end_token, TitleItemToken.Types.TYPANDTHEME, s)
                     if (s == "РАБОТА" or s == "РОБОТА" or s == "ПРОЕКТ"): 
                         return None
                     t1 = tok.end_token
                     if (s == "ДИССЕРТАЦИЯ" or s == "ДИСЕРТАЦІЯ"): 
                         err = 0
                         ttt = t1.next0_
-                        first_pass3268 = True
+                        first_pass3279 = True
                         while True:
-                            if first_pass3268: first_pass3268 = False
+                            if first_pass3279: first_pass3279 = False
                             else: ttt = ttt.next0_
                             if (not (ttt is not None)): break
                             if (ttt.morph.class0_.is_preposition): 
@@ -181,7 +181,7 @@ class TitleItemToken(MetaToken):
                         npt1 = NounPhraseHelper.try_parse(t1.next0_, NounPhraseParseAttr.PARSEPREPOSITION, 0)
                         if (npt1 is not None and npt1.morph.case_.is_prepositional): 
                             t1 = npt1.end_token
-                    return TitleItemToken._new2624(npt.begin_token, t1, ty, s)
+                    return TitleItemToken._new2633(npt.begin_token, t1, ty, s)
         tok1 = TitleItemToken.M_TERMINS.try_parse(t, TerminParseAttr.NO)
         if (tok1 is not None): 
             t1 = tok1.end_token
@@ -236,9 +236,9 @@ class TitleItemToken(MetaToken):
             Utils.insertStringIO(val, 4, '.')
             Utils.insertStringIO(val, 2, '.')
         tt = t.next0_
-        first_pass3269 = True
+        first_pass3280 = True
         while True:
-            if first_pass3269: first_pass3269 = False
+            if first_pass3280: first_pass3280 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 
@@ -249,7 +249,7 @@ class TitleItemToken(MetaToken):
                 t = tt
                 continue
             t = tt
-        return TitleItemToken._new2624(t0, t, TitleItemToken.Types.SPECIALITY, Utils.toStringStringIO(val))
+        return TitleItemToken._new2633(t0, t, TitleItemToken.Types.SPECIALITY, Utils.toStringStringIO(val))
     
     M_TERMINS = None
     
@@ -284,7 +284,7 @@ class TitleItemToken(MetaToken):
             TitleItemToken.M_TERMINS.add(Termin._new119(s, TitleItemToken.Types.KEYWORDS))
     
     @staticmethod
-    def _new2624(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Types', _arg4 : str) -> 'TitleItemToken':
+    def _new2633(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Types', _arg4 : str) -> 'TitleItemToken':
         res = TitleItemToken(_arg1, _arg2, _arg3)
         res.value = _arg4
         return res

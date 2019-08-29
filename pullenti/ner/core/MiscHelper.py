@@ -6,6 +6,7 @@ import io
 import typing
 import unicodedata
 from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphNumber import MorphNumber
@@ -1040,7 +1041,7 @@ class MiscHelper:
                                         var = (te.next0_).term
                                         if (isinstance(it, MorphWordForm)): 
                                             var = (it).normal_case
-                                        bi = MorphBaseInfo._new561(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
+                                        bi = MorphBaseInfo._new562(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
                                         var = Morphology.get_wordform(var, bi)
                                         if (var is not None): 
                                             var = MiscHelper.__corr_chars(var, te.next0_.chars, keep_chars, Utils.asObjectOrNull(te.next0_, TextToken))
@@ -1055,9 +1056,9 @@ class MiscHelper:
         if (begin is None or begin.end_char > end.end_char): 
             return Utils.toStringStringIO(res)
         t = begin
-        first_pass2939 = True
+        first_pass2950 = True
         while True:
-            if first_pass2939: first_pass2939 = False
+            if first_pass2950: first_pass2950 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             last = (Utils.getCharAtStringIO(res, res.tell() - 1) if res.tell() > 0 else ' ')
@@ -1363,7 +1364,7 @@ class MiscHelper:
                     elif ((t.next0_ is not None and t.next0_.is_hiphen and t.is_value("ГЕНЕРАЛ", None)) or t.is_value("КАПИТАН", None)): 
                         pass
                     else: 
-                        mbi = MorphBaseInfo._new562(npt.morph.gender, cas, MorphNumber.SINGULAR)
+                        mbi = MorphBaseInfo._new563(npt.morph.gender, cas, MorphNumber.SINGULAR)
                         if (plural_number): 
                             mbi.number = MorphNumber.PLURAL
                         wcas = Morphology.get_wordform(word, mbi)
@@ -1384,4 +1385,124 @@ class MiscHelper:
             if (t0.is_whitespace_before): 
                 print(' ', end="", file=res)
             print(txt[t0.begin_char:], end="", file=res)
+        return Utils.toStringStringIO(res)
+    
+    @staticmethod
+    def get_text_morph_var_by_case_and_number_ex(str0_ : str, cas : 'MorphCase'=None, num : 'MorphNumber'=MorphNumber.SINGULAR, num_val : str=None) -> str:
+        """ Корректировка числа и падежа строки
+        
+        Args:
+            str0_(str): исходная строка, изменяется только первая именная группа
+            cas(MorphCase): 
+            num(MorphNumber): 
+            num_val(str): 
+        
+        """
+        from pullenti.ner.core.NounPhraseToken import NounPhraseToken
+        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+        ar = ProcessorService.get_empty_processor().process(SourceOfAnalysis(str0_), None, None)
+        if (ar is None or ar.first_token is None): 
+            return str0_
+        npt = NounPhraseHelper.try_parse(ar.first_token, NounPhraseParseAttr.PARSENUMERICASADJECTIVE, 0)
+        if (npt is None and ((str0_ == "раз" or ar.first_token.get_morph_class_in_dictionary().is_proper_name))): 
+            npt = NounPhraseToken(ar.first_token, ar.first_token)
+            npt.noun = MetaToken(ar.first_token, ar.first_token)
+        if (npt is None): 
+            return str0_
+        if (num_val is None and num == MorphNumber.UNDEFINED): 
+            num = npt.morph.number
+        if (cas is None or cas.is_undefined): 
+            cas = MorphCase.NOMINATIVE
+        if (not Utils.isNullOrEmpty(num_val) and num == MorphNumber.UNDEFINED): 
+            if (cas is not None and not cas.is_nominative): 
+                if (num_val == "1"): 
+                    num = MorphNumber.SINGULAR
+                else: 
+                    num = MorphNumber.PLURAL
+        adj_bi = MorphBaseInfo._new564((MorphClass.ADJECTIVE) | MorphClass.NOUN, cas, num, npt.morph.gender)
+        noun_bi = MorphBaseInfo._new565(npt.noun.morph.class0_, cas, num)
+        if (npt.noun.morph.class0_.is_noun): 
+            noun_bi.class0_ = MorphClass.NOUN
+        year = None
+        pair = None
+        if (not Utils.isNullOrEmpty(num_val) and num == MorphNumber.UNDEFINED): 
+            ch = num_val[len(num_val) - 1]
+            n = 0
+            wrapn566 = RefOutArgWrapper(0)
+            Utils.tryParseInt(num_val, wrapn566)
+            n = wrapn566.value
+            if (num_val == "1" or ((ch == '1' and n > 20 and ((n % 100)) != 11))): 
+                adj_bi.number = noun_bi.number = MorphNumber.SINGULAR
+                if (str0_ == "год" or str0_ == "раз"): 
+                    year = str0_
+                elif (str0_ == "пар" or str0_ == "пара"): 
+                    pair = "пара"
+            elif (((ch == '2' or ch == '3' or ch == '4')) and (((n < 10) or n > 20))): 
+                noun_bi.number = MorphNumber.SINGULAR
+                noun_bi.case_ = MorphCase.GENITIVE
+                adj_bi.number = MorphNumber.PLURAL
+                adj_bi.case_ = MorphCase.NOMINATIVE
+                if (str0_ == "год"): 
+                    year = ("года" if ((n < 10) or n > 20) else "лет")
+                elif (str0_ == "раз"): 
+                    year = ("раза" if ((n < 10) or n > 20) else "раз")
+                elif (str0_ == "пар" or str0_ == "пара"): 
+                    pair = "пары"
+                elif (str0_ == "стул"): 
+                    pair = "стула"
+            else: 
+                noun_bi.number = MorphNumber.PLURAL
+                noun_bi.case_ = MorphCase.GENITIVE
+                adj_bi.number = MorphNumber.PLURAL
+                adj_bi.case_ = MorphCase.GENITIVE
+                if (str0_ == "год"): 
+                    year = ("год" if ch == '1' and n > 20 else "лет")
+                elif (str0_ == "раз"): 
+                    year = "раз"
+                elif (str0_ == "пар" or str0_ == "пара"): 
+                    pair = "пар"
+                elif (str0_ == "стул"): 
+                    year = "стульев"
+        res = io.StringIO()
+        for a in npt.adjectives: 
+            norm = a.get_normal_case_text(MorphClass.ADJECTIVE, False, MorphGender.UNDEFINED, False)
+            val = Morphology.get_wordform(norm, adj_bi)
+            if (val is None): 
+                val = a.get_source_text()
+            elif (a.chars.is_all_lower): 
+                val = val.lower()
+            elif (a.chars.is_capital_upper): 
+                val = MiscHelper.convert_first_char_upper_and_other_lower(val)
+            if (res.tell() > 0): 
+                print(' ', end="", file=res)
+            print(val, end="", file=res)
+        norm = npt.noun.get_normal_case_text(noun_bi.class0_, True, MorphGender.UNDEFINED, False)
+        if (year is not None): 
+            val = year
+        elif (pair is not None): 
+            val = pair
+        elif (str0_ == "мин" or str0_ == "мес"): 
+            val = str0_
+        else: 
+            val = Morphology.get_wordform(norm, noun_bi)
+            if (val == "РЕБЕНОК" and noun_bi.number == MorphNumber.PLURAL): 
+                val = Morphology.get_wordform("ДЕТИ", noun_bi)
+            if (val == "ЧЕЛОВЕКОВ"): 
+                val = "ЧЕЛОВЕК"
+            elif (val == "МОРОВ"): 
+                val = "МОРЕЙ"
+            elif (val == "ПАРОВ"): 
+                val = "ПАР"
+            if (val is None): 
+                val = npt.noun.get_source_text()
+            elif (npt.noun.chars.is_all_lower): 
+                val = val.lower()
+            elif (npt.noun.chars.is_capital_upper): 
+                val = MiscHelper.convert_first_char_upper_and_other_lower(val)
+        if (res.tell() > 0): 
+            print(' ', end="", file=res)
+        print(val, end="", file=res)
+        if (npt.end_token.next0_ is not None): 
+            print(" ", end="", file=res)
+            print(str0_[npt.end_token.next0_.begin_char:], end="", file=res)
         return Utils.toStringStringIO(res)

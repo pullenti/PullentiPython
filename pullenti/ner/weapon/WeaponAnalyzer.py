@@ -74,9 +74,9 @@ class WeaponAnalyzer(Analyzer):
         objs_by_model = dict()
         obj_by_names = TerminCollection()
         t = kit.first_token
-        first_pass3302 = True
+        first_pass3313 = True
         while True:
-            if first_pass3302: first_pass3302 = False
+            if first_pass3313: first_pass3313 = False
             else: t = t.next0_
             if (not (t is not None)): break
             its = WeaponItemToken.try_parse_list(t, 10)
@@ -94,10 +94,10 @@ class WeaponAnalyzer(Analyzer):
                             for k in range(2):
                                 if (not str.isdigit(mod[0])): 
                                     li = [ ]
-                                    wrapli2772 = RefOutArgWrapper(None)
-                                    inoutres2773 = Utils.tryGetValue(objs_by_model, mod, wrapli2772)
-                                    li = wrapli2772.value
-                                    if (not inoutres2773): 
+                                    wrapli2781 = RefOutArgWrapper(None)
+                                    inoutres2782 = Utils.tryGetValue(objs_by_model, mod, wrapli2781)
+                                    li = wrapli2781.value
+                                    if (not inoutres2782): 
                                         li = list()
                                         objs_by_model[mod] = li
                                     if (not rt.referent in li): 
@@ -114,9 +114,9 @@ class WeaponAnalyzer(Analyzer):
         if (len(objs_by_model) == 0 and len(obj_by_names.termins) == 0): 
             return
         t = kit.first_token
-        first_pass3303 = True
+        first_pass3314 = True
         while True:
-            if first_pass3303: first_pass3303 = False
+            if first_pass3314: first_pass3314 = False
             else: t = t.next0_
             if (not (t is not None)): break
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 10)
@@ -173,9 +173,9 @@ class WeaponAnalyzer(Analyzer):
         brand = None
         model = None
         i = 0
-        first_pass3304 = True
+        first_pass3315 = True
         while True:
-            if first_pass3304: first_pass3304 = False
+            if first_pass3315: first_pass3315 = False
             else: i += 1
             if (not (i < len(its))): break
             if (its[i].typ == WeaponItemToken.Typs.NOUN): 
@@ -272,9 +272,9 @@ class WeaponAnalyzer(Analyzer):
         if (noun is None and model is not None): 
             cou = 0
             tt = its[0].begin_token.previous
-            first_pass3305 = True
+            first_pass3316 = True
             while True:
-                if first_pass3305: first_pass3305 = False
+                if first_pass3316: first_pass3316 = False
                 else: tt = tt.previous; cou += 1
                 if (not (tt is not None and (cou < 100))): break
                 prev = Utils.asObjectOrNull(tt.get_referent(), WeaponReferent)

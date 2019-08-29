@@ -68,9 +68,9 @@ class _NounPraseHelperInt:
         internal_noun_prase = None
         conj_before = False
         t = first
-        first_pass2922 = True
+        first_pass2933 = True
         while True:
-            if first_pass2922: first_pass2922 = False
+            if first_pass2933: first_pass2933 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char_pos > 0 and t.begin_char > max_char_pos): 
@@ -165,9 +165,9 @@ class _NounPraseHelperInt:
         if (len(items) == 1 and items[0].can_be_adj): 
             and0_ = False
             tt1 = items[0].end_token.next0_
-            first_pass2923 = True
+            first_pass2934 = True
             while True:
-                if first_pass2923: first_pass2923 = False
+                if first_pass2934: first_pass2934 = False
                 else: tt1 = tt1.next0_
                 if (not (tt1 is not None)): break
                 if (tt1.is_and or tt1.is_or): 
@@ -345,9 +345,9 @@ class _NounPraseHelperInt:
                 if (not is_num_not): 
                     noun.morph = res.morph
         i = 0
-        first_pass2924 = True
+        first_pass2935 = True
         while True:
-            if first_pass2924: first_pass2924 = False
+            if first_pass2935: first_pass2935 = False
             else: i += 1
             if (not (i < len(items))): break
             for av in items[i].adj_morph: 
@@ -395,9 +395,9 @@ class _NounPraseHelperInt:
             if (items[i].end_char > res.end_char): 
                 res.end_token = items[i].end_token
         i = 0
-        first_pass2925 = True
+        first_pass2936 = True
         while True:
-            if first_pass2925: first_pass2925 = False
+            if first_pass2936: first_pass2936 = False
             else: i += 1
             if (not (i < (len(res.adjectives) - 1))): break
             if (res.adjectives[i].whitespaces_after_count > 5): 
@@ -471,12 +471,12 @@ class _NounPraseHelperInt:
                     l2 = w2.normal_value[len(w2.normal_value) - 1]
                     i1 = 0
                     i2 = 0
-                    wrapi1537 = RefOutArgWrapper(0)
-                    Utils.tryGetValue(stat, l1, wrapi1537)
-                    i1 = wrapi1537.value
-                    wrapi2536 = RefOutArgWrapper(0)
-                    Utils.tryGetValue(stat, l2, wrapi2536)
-                    i2 = wrapi2536.value
+                    wrapi1538 = RefOutArgWrapper(0)
+                    Utils.tryGetValue(stat, l1, wrapi1538)
+                    i1 = wrapi1538.value
+                    wrapi2537 = RefOutArgWrapper(0)
+                    Utils.tryGetValue(stat, l2, wrapi2537)
+                    i2 = wrapi2537.value
                     if (i1 < i2): 
                         adj.morph.remove_item(1)
                         adj.morph.insert_item(0, w2)
@@ -488,9 +488,9 @@ class _NounPraseHelperInt:
             else: 
                 comma = False
                 tt = res.begin_token.previous
-                first_pass2926 = True
+                first_pass2937 = True
                 while True:
-                    if first_pass2926: first_pass2926 = False
+                    if first_pass2937: first_pass2937 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.morph.class0_.is_adverb): 
@@ -515,10 +515,10 @@ class _NounPraseHelperInt:
                                                 if (res.morph.case_.is_genitive): 
                                                     return None
                                             if (ew.nexts is not None): 
-                                                wrapcm538 = RefOutArgWrapper(None)
-                                                inoutres539 = Utils.tryGetValue(ew.nexts, "", wrapcm538)
-                                                cm = wrapcm538.value
-                                                if (inoutres539): 
+                                                wrapcm539 = RefOutArgWrapper(None)
+                                                inoutres540 = Utils.tryGetValue(ew.nexts, "", wrapcm539)
+                                                cm = wrapcm539.value
+                                                if (inoutres540): 
                                                     if (not ((cm) & res.morph.case_).is_undefined): 
                                                         return None
                     break
@@ -546,9 +546,9 @@ class _NounPraseHelperInt:
         if (first.previous is not None and first.previous.morph.class0_.is_preposition and (first.whitespaces_before_count < 3)): 
             has_prop = True
         t = first
-        first_pass2927 = True
+        first_pass2938 = True
         while True:
-            if first_pass2927: first_pass2927 = False
+            if first_pass2938: first_pass2938 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char_pos > 0 and t.begin_char > max_char_pos): 

@@ -38,8 +38,9 @@ class OrganizationReferent(Referent):
         self.__m_name_single_normal_real = None;
         self.__m_name_vars = None;
         self.__m_name_hashs = None;
+        self.__m_level = 0
         self._m_temp_parent_org = None;
-        self._is_from_global_ontos = False
+        self.is_from_global_ontos = False
         self._ext_ontology_attached = False
         self.__m_kind = OrganizationKind.UNDEFINED
         self.__m_kind_calc = False
@@ -332,10 +333,10 @@ class OrganizationReferent(Referent):
         if (name is None or (len(name) < 1)): 
             return None
         if (str.isdigit(name[0]) and name.find(' ') > 0): 
-            wrapi2357 = RefOutArgWrapper(0)
-            inoutres2358 = Utils.tryParseInt(name[0:0+name.find(' ')], wrapi2357)
-            i = wrapi2357.value
-            if (inoutres2358): 
+            wrapi2366 = RefOutArgWrapper(0)
+            inoutres2367 = Utils.tryParseInt(name[0:0+name.find(' ')], wrapi2366)
+            i = wrapi2366.value
+            if (inoutres2367): 
                 if (i > 1): 
                     num.value = i
                     name = name[name.find(' '):].strip()
@@ -347,8 +348,8 @@ class OrganizationReferent(Referent):
             if (i >= 0 and name[i] == '.'): 
                 pass
             else: 
-                inoutres2359 = Utils.tryParseInt(name[i + 1:], num)
-                if (i > 0 and inoutres2359 and num.value > 0): 
+                inoutres2368 = Utils.tryParseInt(name[i + 1:], num)
+                if (i > 0 and inoutres2368 and num.value > 0): 
                     if (i < 1): 
                         return None
                     name = name[0:0+i].strip()
@@ -374,9 +375,9 @@ class OrganizationReferent(Referent):
         tmp = io.StringIO()
         not_empty = False
         i = 0
-        first_pass3226 = True
+        first_pass3237 = True
         while True:
-            if first_pass3226: first_pass3226 = False
+            if first_pass3237: first_pass3237 = False
             else: i += 1
             if (not (i < len(name))): break
             ch = name[i]
@@ -407,9 +408,9 @@ class OrganizationReferent(Referent):
         return Utils.toStringStringIO(tmp)
     
     def add_name(self, name : str, remove_long_gov_names : bool=True, t : 'Token'=None) -> None:
-        wrapnum2360 = RefOutArgWrapper(0)
-        s = self.__correct_name(name, wrapnum2360)
-        num = wrapnum2360.value
+        wrapnum2369 = RefOutArgWrapper(0)
+        s = self.__correct_name(name, wrapnum2369)
+        num = wrapnum2369.value
         if (s is None): 
             if (num > 0 and self.number is None): 
                 self.number = str(num)
@@ -479,9 +480,9 @@ class OrganizationReferent(Referent):
                 return
             if (typ.name is not None and Utils.compareStrings(typ.name, typ.typ, True) != 0 and ((len(typ.name) > len(typ.typ) or self.find_slot(OrganizationReferent.ATTR_NAME, None, True) is None))): 
                 num = 0
-                wrapnum2361 = RefOutArgWrapper(0)
-                s = self.__correct_name(typ.name, wrapnum2361)
-                num = wrapnum2361.value
+                wrapnum2370 = RefOutArgWrapper(0)
+                s = self.__correct_name(typ.name, wrapnum2370)
+                num = wrapnum2370.value
                 self.add_slot(OrganizationReferent.ATTR_NAME, s, False, cou)
                 if (num > 0 and typ.is_dep and self.number is None): 
                     self.number = str(num)
@@ -495,9 +496,9 @@ class OrganizationReferent(Referent):
                 self.add_slot(OrganizationReferent.ATTR_NAME, "{0} {1}".format(typ.typ.upper(), s), False, cou)
                 if (typ.name is not None): 
                     num = 0
-                    wrapnum2362 = RefOutArgWrapper(0)
-                    ss = self.__correct_name(typ.name, wrapnum2362)
-                    num = wrapnum2362.value
+                    wrapnum2371 = RefOutArgWrapper(0)
+                    ss = self.__correct_name(typ.name, wrapnum2371)
+                    num = wrapnum2371.value
                     if (ss is not None): 
                         self.add_type_str(ss)
                         self.add_slot(OrganizationReferent.ATTR_NAME, "{0} {1}".format(ss, s), False, cou)
@@ -522,7 +523,7 @@ class OrganizationReferent(Referent):
                         str0_ = "Unit"
                     v = Utils.valToEnum(str0_, OrgProfile)
                     res.append(v)
-                except Exception as ex2363: 
+                except Exception as ex2372: 
                     pass
         return res
     
@@ -636,9 +637,9 @@ class OrganizationReferent(Referent):
         res = list(self.types)
         res.sort()
         i = 0
-        first_pass3227 = True
+        first_pass3238 = True
         while True:
-            if first_pass3227: first_pass3227 = False
+            if first_pass3238: first_pass3238 = False
             else: i += 1
             if (not (i < len(res))): break
             if (str.islower(res[i][0])): 
@@ -869,7 +870,12 @@ class OrganizationReferent(Referent):
         return ret
     
     def can_be_general_for(self, obj : 'Referent') -> bool:
-        if (not self.can_be_equals_ex(obj, True, Referent.EqualType.DIFFERENTTEXTS)): 
+        if (self.__m_level > 10): 
+            return False
+        self.__m_level += 1
+        b = self.can_be_equals_ex(obj, True, Referent.EqualType.DIFFERENTTEXTS)
+        self.__m_level -= 1
+        if (not b): 
             return False
         geos1 = self._geo_objects
         geos2 = (obj)._geo_objects
@@ -881,7 +887,10 @@ class OrganizationReferent(Referent):
             if (self.__check_eq_eponyms(Utils.asObjectOrNull(obj, OrganizationReferent))): 
                 return False
             if (self.higher is not None and (obj).higher is not None): 
-                if (self.higher.can_be_general_for((obj).higher)): 
+                self.__m_level += 1
+                b = self.higher.can_be_general_for((obj).higher)
+                self.__m_level -= 1
+                if (b): 
                     return True
         return False
     
@@ -915,7 +924,11 @@ class OrganizationReferent(Referent):
         return False
     
     def can_be_equals_ex(self, obj : 'Referent', ignore_geo_objects : bool, typ : 'EqualType') -> bool:
+        if (self.__m_level > 10): 
+            return False
+        self.__m_level += 1
         ret = self.__can_be_equals(obj, ignore_geo_objects, typ, 0)
+        self.__m_level -= 1
         if (not ret): 
             pass
         return ret
@@ -1074,10 +1087,10 @@ class OrganizationReferent(Referent):
                 for v in self._name_vars.items(): 
                     if (typ == Referent.EqualType.DIFFERENTTEXTS and v[1]): 
                         continue
-                    wrapb2364 = RefOutArgWrapper(False)
-                    inoutres2365 = Utils.tryGetValue(org0_._name_vars, v[0], wrapb2364)
-                    b = wrapb2364.value
-                    if (not inoutres2365): 
+                    wrapb2373 = RefOutArgWrapper(False)
+                    inoutres2374 = Utils.tryGetValue(org0_._name_vars, v[0], wrapb2373)
+                    b = wrapb2373.value
+                    if (not inoutres2374): 
                         continue
                     if (typ == Referent.EqualType.DIFFERENTTEXTS and b): 
                         continue
@@ -1226,8 +1239,8 @@ class OrganizationReferent(Referent):
             own_this = own_obj
         if (own_this is not None): 
             self.higher = own_this
-        if ((obj)._is_from_global_ontos): 
-            self._is_from_global_ontos = True
+        if ((obj).is_from_global_ontos): 
+            self.is_from_global_ontos = True
         self._correct_data(True)
     
     def _correct_data(self, remove_long_gov_names : bool) -> None:

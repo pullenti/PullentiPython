@@ -31,14 +31,14 @@ class ConjunctionToken(MetaToken):
         return res
     
     @staticmethod
-    def _new549(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ConjunctionType', _arg4 : str) -> 'ConjunctionToken':
+    def _new550(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ConjunctionType', _arg4 : str) -> 'ConjunctionToken':
         res = ConjunctionToken(_arg1, _arg2)
         res.typ = _arg3
         res.normal = _arg4
         return res
     
     @staticmethod
-    def _new550(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'ConjunctionType') -> 'ConjunctionToken':
+    def _new551(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'ConjunctionType') -> 'ConjunctionToken':
         res = ConjunctionToken(_arg1, _arg2)
         res.normal = _arg3
         res.typ = _arg4

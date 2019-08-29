@@ -36,7 +36,7 @@ class MailReferent(Referent):
         try: 
             if (val is not None): 
                 return Utils.valToEnum(val, MailKind)
-        except Exception as ex1595: 
+        except Exception as ex1602: 
             pass
         return MailKind.UNDEFINED
     @kind.setter
@@ -79,7 +79,7 @@ class MailReferent(Referent):
                 self._add_ref(Utils.asObjectOrNull(s.value, Referent), lev + 1)
     
     @staticmethod
-    def _new1591(_arg1 : 'MailKind') -> 'MailReferent':
+    def _new1598(_arg1 : 'MailKind') -> 'MailReferent':
         res = MailReferent()
         res.kind = _arg1
         return res

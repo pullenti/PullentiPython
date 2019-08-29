@@ -279,18 +279,18 @@ class MorphEngine:
                 break
             i += 1
         i = 0
-        first_pass2847 = True
+        first_pass2858 = True
         while True:
-            if first_pass2847: first_pass2847 = False
+            if first_pass2858: first_pass2858 = False
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
             if (wf.contains_attr("инф.", None)): 
                 continue
             j = i + 1
-            first_pass2848 = True
+            first_pass2859 = True
             while True:
-                if first_pass2848: first_pass2848 = False
+                if first_pass2859: first_pass2859 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
@@ -301,18 +301,18 @@ class MorphEngine:
                     del res[j]
                     j -= 1
         i = 0
-        first_pass2849 = True
+        first_pass2860 = True
         while True:
-            if first_pass2849: first_pass2849 = False
+            if first_pass2860: first_pass2860 = False
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
             if (wf.contains_attr("инф.", None)): 
                 continue
             j = i + 1
-            first_pass2850 = True
+            first_pass2861 = True
             while True:
-                if first_pass2850: first_pass2850 = False
+                if first_pass2861: first_pass2861 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
@@ -364,7 +364,10 @@ class MorphEngine:
                                     find = True
                                     if (gender != MorphGender.UNDEFINED): 
                                         if ((((gender) & (v.gender))) == (MorphGender.UNDEFINED)): 
-                                            continue
+                                            if (num is not None and num == MorphNumber.PLURAL): 
+                                                pass
+                                            else: 
+                                                continue
                                     if (num != MorphNumber.UNDEFINED): 
                                         if ((((num) & (v.number))) == (MorphNumber.UNDEFINED)): 
                                             continue
@@ -500,9 +503,9 @@ class MorphEngine:
         return vars0_[0]
     
     def __check_corr_var(self, word : str, tn : 'MorphTreeNode', i : int) -> str:
-        first_pass2851 = True
+        first_pass2862 = True
         while True:
-            if first_pass2851: first_pass2851 = False
+            if first_pass2862: first_pass2862 = False
             else: i += 1
             if (not (i <= len(word))): break
             if (tn.lazy_pos > 0): 
@@ -700,9 +703,9 @@ class MorphEngine:
         i = 0
         while i < (len(res) - 1): 
             j = i + 1
-            first_pass2852 = True
+            first_pass2863 = True
             while True:
-                if first_pass2852: first_pass2852 = False
+                if first_pass2863: first_pass2863 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 if (MorphEngine.__comp1(res[i], res[j])): 

@@ -22,9 +22,9 @@ class TableCellToken(MetaToken):
         while t is not None and t.end_char <= self.end_char: 
             t0 = t
             t1 = t
-            first_pass2921 = True
+            first_pass2932 = True
             while True:
-                if first_pass2921: first_pass2921 = False
+                if first_pass2932: first_pass2932 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= self.end_char)): break
                 t1 = t

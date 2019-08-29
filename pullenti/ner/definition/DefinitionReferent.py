@@ -55,7 +55,7 @@ class DefinitionReferent(Referent):
             res = Utils.valToEnum(s, DefinitionKind)
             if (isinstance(res, DefinitionKind)): 
                 return Utils.valToEnum(res, DefinitionKind)
-        except Exception as ex1118: 
+        except Exception as ex1125: 
             pass
         return DefinitionKind.UNDEFINED
     @kind.setter
@@ -82,7 +82,7 @@ class DefinitionReferent(Referent):
         return True
     
     @staticmethod
-    def _new1114(_arg1 : 'DefinitionKind') -> 'DefinitionReferent':
+    def _new1121(_arg1 : 'DefinitionKind') -> 'DefinitionReferent':
         res = DefinitionReferent()
         res.kind = _arg1
         return res

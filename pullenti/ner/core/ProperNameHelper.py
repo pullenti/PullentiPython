@@ -71,7 +71,7 @@ class ProperNameHelper:
                                     var = (te.next0_).term
                                     if (isinstance(it, MorphWordForm)): 
                                         var = (it).normal_case
-                                    bi = MorphBaseInfo._new561(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
+                                    bi = MorphBaseInfo._new562(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
                                     var = Morphology.get_wordform(var, bi)
                                     if (var is not None): 
                                         res = "{0}, {1}".format(res, var)
@@ -128,9 +128,9 @@ class ProperNameHelper:
         res = io.StringIO()
         prefix = None
         t = begin
-        first_pass2943 = True
+        first_pass2954 = True
         while True:
-            if first_pass2943: first_pass2943 = False
+            if first_pass2954: first_pass2954 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             if (res.tell() > 1000): 

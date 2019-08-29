@@ -43,9 +43,9 @@ class DefinitionWithNumericToken(MetaToken):
         tt = t
         noun_ = None
         num = None
-        first_pass3020 = True
+        first_pass3031 = True
         while True:
-            if first_pass3020: first_pass3020 = False
+            if first_pass3031: first_pass3031 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt != t and MiscHelper.can_be_start_of_sentence(tt)): 

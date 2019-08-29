@@ -200,7 +200,9 @@ class TableHelper:
                 tt = tt.next0_
             if (cell_info is None): 
                 break
-            if (cell_info.typ == TableHelper.TableTypes.ROWEND and tt == t0): 
+            if (cell_info.typ == TableHelper.TableTypes.ROWEND): 
+                if (tt != t0): 
+                    res.cells.append(TableCellToken._new534(t0, tt, cell_info.row_span, cell_info.col_span))
                 res.end_token = tt
                 res._eor = True
                 break

@@ -43,10 +43,10 @@ class PhoneAnalyzer(Analyzer):
             if (len(key) >= 10): 
                 key = key[3:]
             ph_li = [ ]
-            wrapph_li2616 = RefOutArgWrapper(None)
-            inoutres2617 = Utils.tryGetValue(self.__m_phones_hash, key, wrapph_li2616)
-            ph_li = wrapph_li2616.value
-            if (not inoutres2617): 
+            wrapph_li2625 = RefOutArgWrapper(None)
+            inoutres2626 = Utils.tryGetValue(self.__m_phones_hash, key, wrapph_li2625)
+            ph_li = wrapph_li2625.value
+            if (not inoutres2626): 
                 ph_li = list()
                 self.__m_phones_hash[key] = ph_li
             for p in ph_li: 
@@ -106,9 +106,9 @@ class PhoneAnalyzer(Analyzer):
         """
         ad = Utils.asObjectOrNull(kit.get_analyzer_data(self), PhoneAnalyzer.PhoneAnalizerData)
         t = kit.first_token
-        first_pass3261 = True
+        first_pass3272 = True
         while True:
-            if first_pass3261: first_pass3261 = False
+            if first_pass3272: first_pass3272 = False
             else: t = t.next0_
             if (not (t is not None)): break
             pli = PhoneItemToken.try_attach_all(t)
@@ -252,9 +252,9 @@ class PhoneAnalyzer(Analyzer):
         if (prev_phone is not None and prev_phone._m_template is not None and pli[j].item_type == PhoneItemToken.PhoneItemType.NUMBER): 
             tmp = io.StringIO()
             jj = j
-            first_pass3262 = True
+            first_pass3273 = True
             while True:
-                if first_pass3262: first_pass3262 = False
+                if first_pass3273: first_pass3273 = False
                 else: jj += 1
                 if (not (jj < len(pli))): break
                 if (pli[jj].item_type == PhoneItemToken.PhoneItemType.NUMBER): 
@@ -352,9 +352,9 @@ class PhoneAnalyzer(Analyzer):
                     std = True
                     ok = True
                     j += 5
-        first_pass3263 = True
+        first_pass3274 = True
         while True:
-            if first_pass3263: first_pass3263 = False
+            if first_pass3274: first_pass3274 = False
             else: j += 1
             if (not (j < len(pli))): break
             if (std): 

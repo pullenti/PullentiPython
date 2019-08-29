@@ -169,9 +169,9 @@ class DerivateDictionary:
             return None
         len0_ = len(word) - 4
         i = 1
-        first_pass2841 = True
+        first_pass2852 = True
         while True:
-            if first_pass2841: first_pass2841 = False
+            if first_pass2852: first_pass2852 = False
             else: i += 1
             if (not (i <= len0_)): break
             rest = word[i:]

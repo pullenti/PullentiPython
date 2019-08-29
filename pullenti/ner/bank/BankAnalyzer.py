@@ -107,9 +107,9 @@ class BankAnalyzer(Analyzer):
         org_is_bank = False
         empty = 0
         last_uri = None
-        first_pass2883 = True
+        first_pass2894 = True
         while True:
-            if first_pass2883: first_pass2883 = False
+            if first_pass2894: first_pass2894 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char and t != t0): 

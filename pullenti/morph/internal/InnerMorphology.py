@@ -142,9 +142,9 @@ class InnerMorphology:
         tot_by_words = 0
         tot_kz_words = 0
         i = 0
-        first_pass2842 = True
+        first_pass2853 = True
         while True:
-            if first_pass2842: first_pass2842 = False
+            if first_pass2853: first_pass2853 = False
             else: i += 1
             if (not (i < twr.length)): break
             ty = InnerMorphology._get_char_typ(twrch[i])
@@ -308,9 +308,9 @@ class InnerMorphology:
                 debug_token = r
         if (not good_text): 
             i = 0
-            first_pass2843 = True
+            first_pass2854 = True
             while True:
-                if first_pass2843: first_pass2843 = False
+                if first_pass2854: first_pass2854 = False
                 else: i += 1
                 if (not (i < (len(res) - 2))): break
                 ui0 = twrch[res[i].begin_char]
@@ -424,9 +424,9 @@ class InnerMorphology:
                         res[i].word_forms = li
                         del res[i + 1]
         i = 0
-        first_pass2844 = True
+        first_pass2855 = True
         while True:
-            if first_pass2844: first_pass2844 = False
+            if first_pass2855: first_pass2855 = False
             else: i += 1
             if (not (i < len(res))): break
             mt = res[i]
@@ -496,9 +496,9 @@ class InnerMorphology:
         if (good_text or only_tokenizing): 
             return res
         i = 0
-        first_pass2845 = True
+        first_pass2856 = True
         while True:
-            if first_pass2845: first_pass2845 = False
+            if first_pass2856: first_pass2856 = False
             else: i += 1
             if (not (i < len(res))): break
             if (res[i].length == 1 and res[i].char_info.is_latin_letter): 
@@ -561,9 +561,9 @@ class InnerMorphology:
                         del res[i + 1:i + 1+2]
             i += 1
         i = 0
-        first_pass2846 = True
+        first_pass2857 = True
         while True:
-            if first_pass2846: first_pass2846 = False
+            if first_pass2857: first_pass2857 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (not res[i].char_info.is_letter and not res[i + 1].char_info.is_letter and (res[i].end_char + 1) == res[i + 1].begin_char): 

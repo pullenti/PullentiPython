@@ -107,7 +107,7 @@ class VerbPhraseItemToken(MetaToken):
         return ((("НЕ " if self.not0_ else ""))) + self.normal
     
     @staticmethod
-    def _new663(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'VerbPhraseItemToken':
+    def _new667(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'VerbPhraseItemToken':
         res = VerbPhraseItemToken(_arg1, _arg2)
         res.morph = _arg3
         return res

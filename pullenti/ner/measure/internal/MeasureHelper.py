@@ -13,11 +13,11 @@ class MeasureHelper:
         f.value = (0)
         if (Utils.isNullOrEmpty(val)): 
             return False
-        inoutres1597 = Utils.tryParseFloat(val.replace(',', '.'), f)
-        if (val.find(',') >= 0 and inoutres1597): 
+        inoutres1604 = Utils.tryParseFloat(val.replace(',', '.'), f)
+        if (val.find(',') >= 0 and inoutres1604): 
             return True
-        inoutres1596 = Utils.tryParseFloat(val, f)
-        if (inoutres1596): 
+        inoutres1603 = Utils.tryParseFloat(val, f)
+        if (inoutres1603): 
             return True
         return False
     

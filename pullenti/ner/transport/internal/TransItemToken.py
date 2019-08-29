@@ -58,34 +58,34 @@ class TransItemToken(MetaToken):
             self.init_by_normal_text(source, None)
         
         @staticmethod
-        def _new2659(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : 'TransportKind') -> 'TransTermin':
+        def _new2668(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : 'TransportKind') -> 'TransTermin':
             res = TransItemToken.TransTermin(_arg1, _arg2)
             res.typ = _arg3
             res.kind = _arg4
             return res
         
         @staticmethod
-        def _new2662(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : str) -> 'TransTermin':
+        def _new2671(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : str) -> 'TransTermin':
             res = TransItemToken.TransTermin(_arg1, _arg2)
             res.typ = _arg3
             res.acronym = _arg4
             return res
         
         @staticmethod
-        def _new2663(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : 'MorphLang') -> 'TransTermin':
+        def _new2672(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : 'MorphLang') -> 'TransTermin':
             res = TransItemToken.TransTermin(_arg1, _arg2)
             res.typ = _arg3
             res.lang = _arg4
             return res
         
         @staticmethod
-        def _new2664(_arg1 : str, _arg2 : bool, _arg3 : 'Typs') -> 'TransTermin':
+        def _new2673(_arg1 : str, _arg2 : bool, _arg3 : 'Typs') -> 'TransTermin':
             res = TransItemToken.TransTermin(_arg1, _arg2)
             res.typ = _arg3
             return res
         
         @staticmethod
-        def _new2666(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : 'MorphLang', _arg5 : 'TransportKind') -> 'TransTermin':
+        def _new2675(_arg1 : str, _arg2 : bool, _arg3 : 'Typs', _arg4 : 'MorphLang', _arg5 : 'TransportKind') -> 'TransTermin':
             res = TransItemToken.TransTermin(_arg1, _arg2)
             res.typ = _arg3
             res.lang = _arg4
@@ -127,9 +127,9 @@ class TransItemToken(MetaToken):
                 t = t.next0_
         and_conj = False
         brareg = False
-        first_pass3275 = True
+        first_pass3286 = True
         while True:
-            if first_pass3275: first_pass3275 = False
+            if first_pass3286: first_pass3286 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_count > 0 and len(res) >= max_count): 
@@ -263,7 +263,7 @@ class TransItemToken(MetaToken):
                 t1 = t1.next0_
         if (isinstance(t1, ReferentToken)): 
             if (t1.get_referent().type_name == "ORGANIZATION"): 
-                return TransItemToken._new2644(t, t1, TransItemToken.Typs.ORG, t1.get_referent(), t1.morph)
+                return TransItemToken._new2653(t, t1, TransItemToken.Typs.ORG, t1.get_referent(), t1.morph)
         if (t1 is not None and t1.is_value("ФЛАГ", None)): 
             tt = t1.next0_
             while tt is not None:
@@ -272,7 +272,7 @@ class TransItemToken(MetaToken):
                 else: 
                     break
             if ((isinstance(tt, ReferentToken)) and (isinstance(tt.get_referent(), GeoReferent))): 
-                return TransItemToken._new2645(t, tt, TransItemToken.Typs.GEO, tt.get_referent())
+                return TransItemToken._new2654(t, tt, TransItemToken.Typs.GEO, tt.get_referent())
         if (t1 is not None and t1.is_value("ПОРТ", None)): 
             tt = t1.next0_
             while tt is not None: 
@@ -282,7 +282,7 @@ class TransItemToken(MetaToken):
                     break
                 tt = tt.next0_
             if (tt is not None and (isinstance(tt.get_referent(), GeoReferent))): 
-                return TransItemToken._new2645(t, tt, TransItemToken.Typs.GEO, tt.get_referent())
+                return TransItemToken._new2654(t, tt, TransItemToken.Typs.GEO, tt.get_referent())
         route = False
         if (t1 is not None and ((t1.is_value("СЛЕДОВАТЬ", "СЛІДУВАТИ") or t1.is_value("ВЫПОЛНЯТЬ", "ВИКОНУВАТИ")))): 
             t1 = t1.next0_
@@ -296,12 +296,12 @@ class TransItemToken(MetaToken):
             if (isinstance(t1.get_referent(), GeoReferent)): 
                 geo_ = Utils.asObjectOrNull(t1.get_referent(), GeoReferent)
                 if (geo_.is_state or geo_.is_city): 
-                    tit = TransItemToken._new2647(t, t1, TransItemToken.Typs.ROUTE, list())
+                    tit = TransItemToken._new2656(t, t1, TransItemToken.Typs.ROUTE, list())
                     tit.route_items.append(geo_)
                     t1 = t1.next0_
-                    first_pass3276 = True
+                    first_pass3287 = True
                     while True:
-                        if first_pass3276: first_pass3276 = False
+                        if first_pass3287: first_pass3287 = False
                         else: t1 = t1.next0_
                         if (not (t1 is not None)): break
                         if (t1.is_hiphen): 
@@ -318,7 +318,7 @@ class TransItemToken(MetaToken):
                     if (len(tit.route_items) > 1 or route): 
                         return tit
             elif ((isinstance(t1.get_referent(), DateReferent)) and (t1.whitespaces_before_count < 3)): 
-                tit = TransItemToken._new2645(t, t1, TransItemToken.Typs.DATE, t1.get_referent())
+                tit = TransItemToken._new2654(t, t1, TransItemToken.Typs.DATE, t1.get_referent())
                 if (t1.next0_ is not None): 
                     if (t1.next0_.is_value("В", None) and t1.next0_.next0_ is not None and t1.next0_.next0_.is_char('.')): 
                         tit.end_token = t1.next0_.next0_
@@ -384,7 +384,7 @@ class TransItemToken(MetaToken):
                     if ((((tok.morph.number) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
                         if (not BracketHelper.can_be_start_of_sequence(tok.end_token.next0_, False, False)): 
                             return None
-                tit = TransItemToken._new2649(tok.begin_token, tok.end_token, tt.kind, tt.typ, tt.is_doubt and not is_br, tok.chars, tok.morph)
+                tit = TransItemToken._new2658(tok.begin_token, tok.end_token, tt.kind, tt.typ, tt.is_doubt and not is_br, tok.chars, tok.morph)
                 tit.value = tt.canonic_text
                 if (tit.typ == TransItemToken.Typs.NOUN): 
                     tit.value = tit.value.lower()
@@ -396,9 +396,9 @@ class TransItemToken(MetaToken):
                 if (npt is not None and len(npt.adjectives) > 0): 
                     state_ = None
                     tt = t
-                    first_pass3277 = True
+                    first_pass3288 = True
                     while True:
-                        if first_pass3277: first_pass3277 = False
+                        if first_pass3288: first_pass3288 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.previous != npt.end_token)): break
                         tok = TransItemToken.M_ONTOLOGY.try_parse(tt, TerminParseAttr.NO)
@@ -406,7 +406,7 @@ class TransItemToken(MetaToken):
                             state_ = tt.kit.process_referent("GEO", tt)
                         if (tok is not None and tok.end_token == npt.end_token): 
                             if ((tok.termin).typ == TransItemToken.Typs.NOUN): 
-                                tit = TransItemToken._new2649(t, tok.end_token, (tok.termin).kind, TransItemToken.Typs.NOUN, (tok.termin).is_doubt, tok.chars, npt.morph)
+                                tit = TransItemToken._new2658(t, tok.end_token, (tok.termin).kind, TransItemToken.Typs.NOUN, (tok.termin).is_doubt, tok.chars, npt.morph)
                                 tit.value = (tok.termin).canonic_text.lower()
                                 tit.alt_value = npt.get_normal_case_text(None, False, MorphGender.UNDEFINED, False).lower()
                                 if (LanguageHelper.ends_with_ex(tit.alt_value, "суд", "суда", None, None)): 
@@ -419,7 +419,7 @@ class TransItemToken(MetaToken):
         if (t is not None and t.is_value("КЛАСС", None) and t.next0_ is not None): 
             br = BracketHelper.try_parse(t.next0_, BracketParseAttr.NO, 100)
             if (br is not None): 
-                return TransItemToken._new2651(t, br.end_token, TransItemToken.Typs.CLASS, MiscHelper.get_text_value_of_meta_token(br, GetTextAttr.NO))
+                return TransItemToken._new2660(t, br.end_token, TransItemToken.Typs.CLASS, MiscHelper.get_text_value_of_meta_token(br, GetTextAttr.NO))
         nt = Utils.asObjectOrNull(t, NumberToken)
         if (nt is not None): 
             if (prev is None or nt.typ != NumberSpellingType.DIGIT): 
@@ -467,9 +467,9 @@ class TransItemToken(MetaToken):
                             else: 
                                 un += 1
                     if (((digs == 0 and un == 0 and t.next0_.chars.is_capital_upper)) or prev.kind == TransportKind.SHIP or prev.kind == TransportKind.SPACE): 
-                        return TransItemToken._new2651(br.begin_token, br.end_token, TransItemToken.Typs.NAME, s)
+                        return TransItemToken._new2660(br.begin_token, br.end_token, TransItemToken.Typs.NAME, s)
                     if (digs > 0 and (chars_ < 5)): 
-                        return TransItemToken._new2651(br.begin_token, br.end_token, TransItemToken.Typs.MODEL, s.replace(" ", ""))
+                        return TransItemToken._new2660(br.begin_token, br.end_token, TransItemToken.Typs.MODEL, s.replace(" ", ""))
         if (prev is not None and (((prev.typ == TransItemToken.Typs.NOUN or prev.typ == TransItemToken.Typs.BRAND or prev.typ == TransItemToken.Typs.NAME) or prev.typ == TransItemToken.Typs.MODEL))): 
             tit = TransItemToken.__attach_model(t, prev.typ != TransItemToken.Typs.NAME, prev)
             if (tit is not None): 
@@ -477,7 +477,7 @@ class TransItemToken(MetaToken):
         if (((prev is not None and prev.typ == TransItemToken.Typs.NOUN and prev.kind == TransportKind.AUTO) and (isinstance(t, TextToken)) and t.chars.is_letter) and not t.chars.is_all_lower and (t.whitespaces_before_count < 2)): 
             pt = t.kit.process_referent("PERSON", t)
             if (pt is None): 
-                tit = TransItemToken._new2654(t, t, TransItemToken.Typs.BRAND)
+                tit = TransItemToken._new2663(t, t, TransItemToken.Typs.BRAND)
                 tit.value = (t).term
                 mc = t.get_morph_class_in_dictionary()
                 if (mc.is_noun): 
@@ -511,7 +511,7 @@ class TransItemToken(MetaToken):
                         tt = tt.next0_
                     s = MiscHelper.get_text_value(t, t1, GetTextAttr.NO)
                     if (s is not None): 
-                        res1 = TransItemToken._new2655(t, t1, TransItemToken.Typs.NAME, True, s)
+                        res1 = TransItemToken._new2664(t, t1, TransItemToken.Typs.NAME, True, s)
                         if (not t1.is_newline_after): 
                             br = BracketHelper.try_parse(t1.next0_, BracketParseAttr.NO, 100)
                             if (br is not None): 
@@ -523,14 +523,14 @@ class TransItemToken(MetaToken):
     
     @staticmethod
     def __attach_model(t : 'Token', can_be_first_word : bool, prev : 'TransItemToken') -> 'TransItemToken':
-        res = TransItemToken._new2654(t, t, TransItemToken.Typs.MODEL)
+        res = TransItemToken._new2663(t, t, TransItemToken.Typs.MODEL)
         cyr = io.StringIO()
         lat = io.StringIO()
         t0 = t
         num = False
-        first_pass3278 = True
+        first_pass3289 = True
         while True:
-            if first_pass3278: first_pass3278 = False
+            if first_pass3289: first_pass3289 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and t.whitespaces_before_count > 1): 
@@ -627,9 +627,9 @@ class TransItemToken(MetaToken):
             if (npt is not None and npt.noun.is_value("ФОН", None)): 
                 t = npt.end_token.next0_
         res = None
-        first_pass3279 = True
+        first_pass3290 = True
         while True:
-            if first_pass3279: first_pass3279 = False
+            if first_pass3290: first_pass3290 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before): 
@@ -667,7 +667,7 @@ class TransItemToken(MetaToken):
             t1 = t
         if (res is None or (res.tell() < 4)): 
             return None
-        re = TransItemToken._new2651(t0, t1, TransItemToken.Typs.NUMBER, Utils.toStringStringIO(res))
+        re = TransItemToken._new2660(t0, t1, TransItemToken.Typs.NUMBER, Utils.toStringStringIO(res))
         if (not ignore_region): 
             k = 0; i = res.tell() - 1
             while i > 4: 
@@ -709,7 +709,7 @@ class TransItemToken(MetaToken):
             return None
         if (not t.chars.is_all_upper or t.is_whitespace_after): 
             doubt += 1
-        res = TransItemToken._new2658(t0, t, TransItemToken.Typs.NUMBER, TransportKind.AUTO)
+        res = TransItemToken._new2667(t0, t, TransItemToken.Typs.NUMBER, TransportKind.AUTO)
         res.value = "{0}{1}{2}".format(v1.cyr_word, nt.get_source_text(), v2.cyr_word)
         nt = (Utils.asObjectOrNull(t.next0_, NumberToken))
         if (((nt is not None and nt.int_value is not None and nt.typ == NumberSpellingType.DIGIT) and not nt.morph.class0_.is_adjective and nt.int_value is not None) and (nt.int_value < 1000) and (t.whitespaces_after_count < 2)): 
@@ -728,22 +728,32 @@ class TransItemToken(MetaToken):
     M_ONTOLOGY = None
     
     @staticmethod
+    def check_number_keyword(t : 'Token') -> 'Token':
+        tok = TransItemToken.M_ONTOLOGY.try_parse(t, TerminParseAttr.NO)
+        if (tok is None): 
+            return None
+        tt = Utils.asObjectOrNull(tok.termin, TransItemToken.TransTermin)
+        if (tt is not None and tt.typ == TransItemToken.Typs.NUMBER): 
+            return tok.end_token.next0_
+        return None
+    
+    @staticmethod
     def initialize() -> None:
         if (TransItemToken.M_ONTOLOGY is not None): 
             return
         TransItemToken.M_ONTOLOGY = TerminCollection()
-        t = TransItemToken.TransTermin._new2659("автомобиль", True, TransItemToken.Typs.NOUN, TransportKind.AUTO)
+        t = TransItemToken.TransTermin._new2668("автомобиль", True, TransItemToken.Typs.NOUN, TransportKind.AUTO)
         t.add_abridge("а-м")
         t.add_variant("автомашина", False)
         t.add_variant("ТРАНСПОРТНОЕ СРЕДСТВО", False)
         t.add_variant("автомобіль", False)
         TransItemToken.M_ONTOLOGY.add(t)
         for s in ["ВНЕДОРОЖНИК", "ПОЗАШЛЯХОВИК", "АВТОБУС", "МИКРОАВТОБУС", "ГРУЗОВИК", "МОТОЦИКЛ", "МОПЕД"]: 
-            TransItemToken.M_ONTOLOGY.add(TransItemToken.TransTermin._new2659(s, True, TransItemToken.Typs.NOUN, TransportKind.AUTO))
-        t = TransItemToken.TransTermin._new2659("", True, TransItemToken.Typs.NOUN, TransportKind.AUTO)
+            TransItemToken.M_ONTOLOGY.add(TransItemToken.TransTermin._new2668(s, True, TransItemToken.Typs.NOUN, TransportKind.AUTO))
+        t = TransItemToken.TransTermin._new2668("", True, TransItemToken.Typs.NOUN, TransportKind.AUTO)
         t.add_abridge("а-м")
         TransItemToken.M_ONTOLOGY.add(t)
-        t = TransItemToken.TransTermin._new2662("государственный номер", True, TransItemToken.Typs.NUMBER, "ИМО")
+        t = TransItemToken.TransTermin._new2671("государственный номер", True, TransItemToken.Typs.NUMBER, "ИМО")
         t.add_abridge("г-н")
         t.add_abridge("н\\з")
         t.add_abridge("г\\н")
@@ -757,31 +767,31 @@ class TransItemToken(MetaToken):
         t.add_variant("государственный регистрационный знак", False)
         t.add_variant("бортовой номер", False)
         TransItemToken.M_ONTOLOGY.add(t)
-        t = TransItemToken.TransTermin._new2663("державний номер", True, TransItemToken.Typs.NUMBER, MorphLang.UA)
+        t = TransItemToken.TransTermin._new2672("державний номер", True, TransItemToken.Typs.NUMBER, MorphLang.UA)
         t.add_variant("держномер", False)
         t.add_abridge("держ.номер")
         t.add_abridge("держ.ном.")
         TransItemToken.M_ONTOLOGY.add(t)
-        t = TransItemToken.TransTermin._new2664("номер", True, TransItemToken.Typs.NUMBER)
+        t = TransItemToken.TransTermin._new2673("номер", True, TransItemToken.Typs.NUMBER)
         TransItemToken.M_ONTOLOGY.add(t)
         for s in ["КРУИЗНЫЙ ЛАЙНЕР", "ТЕПЛОХОД", "ПАРОХОД", "ЯХТА", "ЛОДКА", "КАТЕР", "КОРАБЛЬ", "СУДНО", "ПОДВОДНАЯ ЛОДКА", "АПК", "ШХУНА", "ПАРОМ", "КРЕЙСЕР", "АВИАНОСЕЦ", "ЭСМИНЕЦ", "ФРЕГАТ", "ЛИНКОР", "АТОМОХОД", "ЛЕДОКОЛ", "ПЛАВБАЗА", "ТАНКЕР", "СУПЕРТАНКЕР", "СУХОГРУЗ", "ТРАУЛЕР", "РЕФРИЖЕРАТОР"]: 
-            t = TransItemToken.TransTermin._new2659(s, True, TransItemToken.Typs.NOUN, TransportKind.SHIP)
+            t = TransItemToken.TransTermin._new2668(s, True, TransItemToken.Typs.NOUN, TransportKind.SHIP)
             TransItemToken.M_ONTOLOGY.add(t)
             if (s == "АПК"): 
                 t.is_doubt = True
         for s in ["КРУЇЗНИЙ ЛАЙНЕР", "ПАРОПЛАВ", "ПАРОПЛАВ", "ЯХТА", "ЧОВЕН", "КОРАБЕЛЬ", "СУДНО", "ПІДВОДНИЙ ЧОВЕН", "АПК", "ШХУНА", "ПОРОМ", "КРЕЙСЕР", "АВІАНОСЕЦЬ", "ЕСМІНЕЦЬ", "ФРЕГАТ", "ЛІНКОР", "АТОМОХІД", "КРИГОЛАМ", "ПЛАВБАЗА", "ТАНКЕР", "СУПЕРТАНКЕР", "СУХОВАНТАЖ", "ТРАУЛЕР", "РЕФРИЖЕРАТОР"]: 
-            t = TransItemToken.TransTermin._new2666(s, True, TransItemToken.Typs.NOUN, MorphLang.UA, TransportKind.SHIP)
+            t = TransItemToken.TransTermin._new2675(s, True, TransItemToken.Typs.NOUN, MorphLang.UA, TransportKind.SHIP)
             TransItemToken.M_ONTOLOGY.add(t)
             if (s == "АПК"): 
                 t.is_doubt = True
         for s in ["САМОЛЕТ", "АВИАЛАЙНЕР", "ИСТРЕБИТЕЛЬ", "БОМБАРДИРОВЩИК", "ВЕРТОЛЕТ"]: 
-            TransItemToken.M_ONTOLOGY.add(TransItemToken.TransTermin._new2659(s, True, TransItemToken.Typs.NOUN, TransportKind.FLY))
+            TransItemToken.M_ONTOLOGY.add(TransItemToken.TransTermin._new2668(s, True, TransItemToken.Typs.NOUN, TransportKind.FLY))
         for s in ["ЛІТАК", "АВІАЛАЙНЕР", "ВИНИЩУВАЧ", "БОМБАРДУВАЛЬНИК", "ВЕРТОЛІТ"]: 
-            TransItemToken.M_ONTOLOGY.add(TransItemToken.TransTermin._new2666(s, True, TransItemToken.Typs.NOUN, MorphLang.UA, TransportKind.FLY))
+            TransItemToken.M_ONTOLOGY.add(TransItemToken.TransTermin._new2675(s, True, TransItemToken.Typs.NOUN, MorphLang.UA, TransportKind.FLY))
         for s in ["КОСМИЧЕСКИЙ КОРАБЛЬ", "ЗВЕЗДОЛЕТ", "КОСМИЧЕСКАЯ СТАНЦИЯ", "РАКЕТА-НОСИТЕЛЬ"]: 
-            TransItemToken.M_ONTOLOGY.add(TransItemToken.TransTermin._new2659(s, True, TransItemToken.Typs.NOUN, TransportKind.SPACE))
+            TransItemToken.M_ONTOLOGY.add(TransItemToken.TransTermin._new2668(s, True, TransItemToken.Typs.NOUN, TransportKind.SPACE))
         for s in ["КОСМІЧНИЙ КОРАБЕЛЬ", "ЗОРЕЛІТ", "КОСМІЧНА СТАНЦІЯ", "РАКЕТА-НОСІЙ"]: 
-            TransItemToken.M_ONTOLOGY.add(TransItemToken.TransTermin._new2666(s, True, TransItemToken.Typs.NOUN, MorphLang.UA, TransportKind.SPACE))
+            TransItemToken.M_ONTOLOGY.add(TransItemToken.TransTermin._new2675(s, True, TransItemToken.Typs.NOUN, MorphLang.UA, TransportKind.SPACE))
         TransItemToken.__load_brands(TransItemToken.M_CARS, TransportKind.AUTO)
         TransItemToken.__load_brands(TransItemToken.M_FLYS, TransportKind.FLY)
     
@@ -812,10 +822,10 @@ class TransItemToken(MetaToken):
     
     M_FLYS = "\n        Boeing, Боинг;\n        Airbus, Аэробус, Эрбас;\n        Ил, Илюшин, true;\n        Ту, Туполев, true;\n        Ан, Антонов, true;\n        Су, Сухой, Sukhoi, Sukhoy, true;\n        Як, Яковлев, true;\n        BAE Systems, БАЕ Системз;\n        ATR, АТР, true;\n        AVIC;\n        Bombardier, Бомбардье;  \n        Britten-Norman, Бриттен-Норман;\n        Cessna, Цессна;\n        Dornier, Дорнье;\n        Embraer, Эмбраер;\n        Fairchild, Fairchild Aerospace, Фэйрчайлд;\n        Fokker, Фоккер;\n        Hawker Beechcraft, Хокер Бичкрафт;\n        Indonesian Aerospace, Индонезиан;\n        Lockheed Martin, Локхид Мартин;\n        LZ Auronautical Industries, LET;\n        Douglas, McDonnell Douglas, Дуглас;\n        NAMC, НАМК;\n        Pilatus, Пилатус, true;\n        Piper Aircraft;\n        Saab, Сааб, true;\n        Shorts, Шортс, true;\n"
     
-    M_CARS = "\n        AC Cars;\n        Acura, Акура;\n        Abarth;\n        Alfa Romeo, Альфа Ромео;\n        ALPINA, Альпина, true;\n        Ariel Motor, Ариэль Мотор;\n        ARO, true;\n        Artega, true;\n        Aston Martin;\n        AUDI, Ауди;\n        Austin Healey;\n        BAW;\n        Beijing Jeep;\n        Bentley, Бентли;\n        Bitter, Биттер, true;\n        BMW, БМВ;\n        Brilliance;\n        Bristol, Бристоль, true;\n        Bugatti, Бугатти;\n        Buick, Бьюик;\n        BYD, true;\n        Cadillac, Кадиллак, Кадилак;\n        Caterham;\n        Chery, trye;\n        Chevrolet, Шевроле, Шеврале;\n        Chrysler, Крайслер;\n        Citroen, Ситроен, Ситроэн;\n        Dacia;\n        DADI;\n        Daewoo, Дэо;\n        Dodge, Додж;\n        Daihatsu;\n        Daimler, Даймлер;\n        DKW;\n        Derways;\n        Eagle, true;\n        Elfin Sports Cars;\n        FAW, true;\n        Ferrari, Феррари, Ферари;\n        FIAT, Фиат;\n        Fisker Karma;\n        Ford, Форд;\n        Geely;\n        GEO, true;\n        GMC, true;\n        Gonow;\n        Great Wall, true;\n        Gumpert;\n        Hafei;\n        Haima;\n        Honda, Хонда;\n        Horch;\n        Hudson, true;\n        Hummer, Хаммер;\n        Harley, Харлей;\n        Hyundai, Хюндай, Хундай;\n        Infiniti, true;\n        Isuzu, Исузу;\n        Jaguar, Ягуар, true;\n        Jeep, Джип, true;\n        Kia, Киа, true;\n        Koenigsegg;\n        Lamborghini, Ламборджини;\n        Land Rover, Лендровер, Лэндровер;\n        Landwind;\n        Lancia;\n        Lexus, Лексус;\n        Leyland;\n        Lifan;\n        Lincoln, Линкольн, true;\n        Lotus, true;\n        Mahindra;\n        Maserati;\n        Maybach;\n        Mazda, Мазда;\n        Mercedes-Benz, Mercedes, Мерседес, Мэрседес, Мерседес-бенц;\n        Mercury, true;\n        Mini, true;\n        Mitsubishi, Mitsubishi Motors, Мицубиши, Мицубиси;\n        Morgan, true;\n        Nissan, Nissan Motor, Ниссан, Нисан;\n        Opel, Опель;\n        Pagani;\n        Peugeot, Пежо;\n        Plymouth;\n        Pontiac, Понтиак;\n        Porsche, Порше;\n        Renault, Рено;\n        Rinspeed;\n        Rolls-Royce, Роллс-Ройс;\n        SAAB, Сааб;\n        Saleen;\n        Saturn, Сатурн, true;\n        Scion;\n        Seat, true;\n        Skoda, Шкода;\n        Smart, true;\n        Spyker, true;\n        Ssang Yong, Ссанг янг;\n        Subaru, Субару;\n        Suzuki, Судзуки;\n        Tesla, true;\n        Toyota, Тойота;\n        Vauxhall;\n        Volkswagen, Фольксваген;\n        Volvo, Вольво;\n        Wartburg;\n        Wiesmann;\n        Yamaha, Ямаха;\n        Zenvo;\n\n        ВАЗ, VAZ;\n        ГАЗ, GAZ, true;\n        ЗАЗ, ZAZ;\n        ЗИЛ, ZIL;\n        АЗЛК, AZLK;\n        Иж, true;\n        Москвич, true;\n        УАЗ, UAZ;\n        ТАГАЗ, TaGAZ;\n        Лада, true;\n\n"
+    M_CARS = "\n        AC Cars;\n        Acura, Акура;\n        Abarth;\n        Alfa Romeo, Альфа Ромео;\n        ALPINA, Альпина, true;\n        Ariel Motor, Ариэль Мотор;\n        ARO, true;\n        Artega, true;\n        Aston Martin;\n        AUDI, Ауди;\n        Austin Healey;\n        BAW;\n        Beijing Jeep;\n        Bentley, Бентли;\n        Bitter, Биттер, true;\n        BMW, БМВ;\n        Brilliance;\n        Bristol, Бристоль, true;\n        Bugatti, Бугатти;\n        Buick, Бьюик;\n        BYD, true;\n        Cadillac, Кадиллак, Кадилак;\n        Caterham;\n        Chery, trye;\n        Chevrolet, Шевроле, Шеврале;\n        Chrysler, Крайслер;\n        Citroen, Ситроен, Ситроэн;\n        Dacia;\n        DADI;\n        Daewoo, Дэо;\n        Dodge, Додж;\n        Daihatsu;\n        Daimler, Даймлер;\n        DKW;\n        Derways;\n        Eagle, true;\n        Elfin Sports Cars;\n        FAW, true;\n        Ferrari, Феррари, Ферари;\n        FIAT, Фиат;\n        Fisker Karma;\n        Ford, Форд;\n        Geely;\n        GEO, true;\n        GMC, true;\n        Gonow;\n        Great Wall, true;\n        Gumpert;\n        Hafei;\n        Haima;\n        Honda, Хонда;\n        Horch;\n        Hudson, true;\n        Hummer, Хаммер;\n        Harley, Харлей;\n        Hyundai, Хюндай, Хундай;\n        Infiniti, true;\n        Isuzu, Исузу;\n        Jaguar, Ягуар, true;\n        Jeep, Джип, true;\n        Kia, Киа, true;\n        Koenigsegg;\n        Lamborghini, Ламборджини;\n        Land Rover, Лендровер, Лэндровер;\n        Landwind;\n        Lancia;\n        Lexus, Лексус;\n        Leyland;\n        Lifan;\n        Lincoln, Линкольн, true;\n        Lotus, true;\n        Mahindra;\n        Maserati;\n        Maybach;\n        Mazda, Мазда;\n        Mercedes-Benz, Mercedes, Мерседес, Мэрседес, Мерседес-бенц;\n        Mercury, true;\n        Mini, true;\n        Mitsubishi, Mitsubishi Motors, Мицубиши, Мицубиси;\n        Morgan, true;\n        Nissan, Nissan Motor, Ниссан, Нисан;\n        Opel, Опель;\n        Pagani;\n        Peugeot, Пежо;\n        Plymouth;\n        Pontiac, Понтиак;\n        Porsche, Порше;\n        Renault, Рено;\n        Rinspeed;\n        Rolls-Royce, Роллс-Ройс;\n        SAAB, Сааб;\n        Saleen;\n        Saturn, Сатурн, true;\n        Scion;\n        Seat, true;\n        Skoda, Шкода;\n        Smart, true;\n        Spyker, true;\n        Ssang Yong, Ссанг янг;\n        Subaru, Субару;\n        Suzuki, Судзуки;\n        Tesla, true;\n        Toyota, Тойота;\n        Vauxhall;\n        Volkswagen, Фольксваген;\n        Volvo, Вольво;\n        Wartburg;\n        Wiesmann;\n        Yamaha, Ямаха;\n        Zenvo;\n\n        ВАЗ, VAZ;\n        ГАЗ, GAZ, true;\n        ЗАЗ, ZAZ;\n        ЗИЛ, ZIL;\n        АЗЛК, AZLK;\n        Иж, true;\n        Москвич, true;\n        УАЗ, UAZ;\n        ТАГАЗ, TaGAZ;\n        Лада, Жигули, true;\n\n"
     
     @staticmethod
-    def _new2644(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent', _arg5 : 'MorphCollection') -> 'TransItemToken':
+    def _new2653(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent', _arg5 : 'MorphCollection') -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.ref = _arg4
@@ -823,21 +833,21 @@ class TransItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2645(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent') -> 'TransItemToken':
+    def _new2654(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent') -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.ref = _arg4
         return res
     
     @staticmethod
-    def _new2647(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : typing.List[object]) -> 'TransItemToken':
+    def _new2656(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : typing.List[object]) -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.route_items = _arg4
         return res
     
     @staticmethod
-    def _new2649(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'TransportKind', _arg4 : 'Typs', _arg5 : bool, _arg6 : 'CharsInfo', _arg7 : 'MorphCollection') -> 'TransItemToken':
+    def _new2658(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'TransportKind', _arg4 : 'Typs', _arg5 : bool, _arg6 : 'CharsInfo', _arg7 : 'MorphCollection') -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.kind = _arg3
         res.typ = _arg4
@@ -847,20 +857,20 @@ class TransItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2651(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str) -> 'TransItemToken':
+    def _new2660(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str) -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new2654(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs') -> 'TransItemToken':
+    def _new2663(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs') -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new2655(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : bool, _arg5 : str) -> 'TransItemToken':
+    def _new2664(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : bool, _arg5 : str) -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.is_doubt = _arg4
@@ -868,7 +878,7 @@ class TransItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2658(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'TransportKind') -> 'TransItemToken':
+    def _new2667(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'TransportKind') -> 'TransItemToken':
         res = TransItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.kind = _arg4

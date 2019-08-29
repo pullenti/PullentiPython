@@ -64,9 +64,9 @@ class DecreeAnalyzer(Analyzer):
                 return None
             ukaz = None
             tt = t
-            first_pass2987 = True
+            first_pass2998 = True
             while True:
-                if first_pass2987: first_pass2987 = False
+                if first_pass2998: first_pass2998 = False
                 else: tt = tt.previous
                 if (not (tt is not None)): break
                 if (tt.is_char_of(",") or tt.morph.class0_.is_preposition or tt.morph.class0_.is_conjunction): 
@@ -100,7 +100,7 @@ class DecreeAnalyzer(Analyzer):
                 return res
             if (ukaz is not None): 
                 if (base_typ is not None and base_typ.value is not None and (("ДОГОВОР" in base_typ.value or "ДОГОВІР" in base_typ.value))): 
-                    return DecreeAnalyzer.ThisDecree._new1106(ukaz, ukaz, True, base_typ.value)
+                    return DecreeAnalyzer.ThisDecree._new1113(ukaz, ukaz, True, base_typ.value)
             return None
         
         @staticmethod
@@ -138,7 +138,7 @@ class DecreeAnalyzer(Analyzer):
                     br = True
             if (not ((isinstance(tt, TextToken)))): 
                 if ((isinstance(tt, ReferentToken)) and (isinstance(tt.get_referent(), DecreeReferent))): 
-                    return DecreeAnalyzer.ThisDecree._new1107(t, tt, Utils.asObjectOrNull(tt.get_referent(), DecreeReferent))
+                    return DecreeAnalyzer.ThisDecree._new1114(t, tt, Utils.asObjectOrNull(tt.get_referent(), DecreeReferent))
                 return None
             if (tt.chars.is_all_lower): 
                 if (DecreeToken.is_keyword(tt, True) is not None): 
@@ -182,14 +182,14 @@ class DecreeAnalyzer(Analyzer):
             return res
         
         @staticmethod
-        def _new1106(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool, _arg4 : str) -> 'ThisDecree':
+        def _new1113(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool, _arg4 : str) -> 'ThisDecree':
             res = DecreeAnalyzer.ThisDecree(_arg1, _arg2)
             res.has_this_ref = _arg3
             res.typ = _arg4
             return res
         
         @staticmethod
-        def _new1107(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DecreeReferent') -> 'ThisDecree':
+        def _new1114(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DecreeReferent') -> 'ThisDecree':
             res = DecreeAnalyzer.ThisDecree(_arg1, _arg2)
             res.real = _arg3
             return res
@@ -226,9 +226,9 @@ class DecreeAnalyzer(Analyzer):
         kodeks = False
         max_empty = 30
         t = dts[0].begin_token.previous
-        first_pass2988 = True
+        first_pass2999 = True
         while True:
-            if first_pass2988: first_pass2988 = False
+            if first_pass2999: first_pass2999 = False
             else: t = t.previous
             if (not (t is not None)): break
             if (t.is_comma_and): 
@@ -265,9 +265,9 @@ class DecreeAnalyzer(Analyzer):
         is_noun_doubt = False
         num_tok = None
         i = 0
-        first_pass2989 = True
+        first_pass3000 = True
         while True:
-            if first_pass2989: first_pass2989 = False
+            if first_pass3000: first_pass3000 = False
             else: i += 1
             if (not (i < len(dts))): break
             if (dts[i].typ == DecreeToken.ItemType.TYP): 
@@ -286,7 +286,10 @@ class DecreeAnalyzer(Analyzer):
                 ki = DecreeToken.get_kind(dts[i].value)
                 if (ki == DecreeKind.STANDARD): 
                     if (i > 0): 
-                        return None
+                        if (len(dts) == 2 and dts[0].typ == DecreeToken.ItemType.NUMBER and dts[i].value == "ТЕХНИЧЕСКИЕ УСЛОВИЯ"): 
+                            pass
+                        else: 
+                            return None
                 if (ki == DecreeKind.KODEX): 
                     if (i > 0): 
                         break
@@ -585,9 +588,9 @@ class DecreeAnalyzer(Analyzer):
                         else: 
                             break
                         tt1 = tt1.previous
-                        first_pass2990 = True
+                        first_pass3001 = True
                         while True:
-                            if first_pass2990: first_pass2990 = False
+                            if first_pass3001: first_pass3001 = False
                             else: tt1 = (None if tt1 is None else tt1.previous)
                             if (not (tt1 is not None and tt1.begin_char > dn.begin_char)): break
                             if (tt1.morph.class0_.is_conjunction or tt1.morph.class0_.is_preposition): 
@@ -725,9 +728,9 @@ class DecreeAnalyzer(Analyzer):
             if (rt.begin_token.previous is not None and rt.begin_token.previous.is_value("ПАСПОРТ", None)): 
                 cou = 0
                 tt = rt.end_token.next0_
-                first_pass2991 = True
+                first_pass3002 = True
                 while True:
-                    if first_pass2991: first_pass2991 = False
+                    if first_pass3002: first_pass3002 = False
                     else: tt = (None if tt is None else tt.next0_)
                     if (not (tt is not None and (cou < 1000))): break
                     if (tt.is_value("СРОК", "ТЕРМІН") and tt.next0_ is not None and tt.next0_.is_value("РЕАЛИЗАЦИЯ", "РЕАЛІЗАЦІЯ")): 
@@ -753,9 +756,9 @@ class DecreeAnalyzer(Analyzer):
         if (rt.end_token.next0_ is not None and rt.end_token.next0_.is_char('(')): 
             dt = None
             tt = rt.end_token.next0_.next0_
-            first_pass2992 = True
+            first_pass3003 = True
             while True:
-                if first_pass2992: first_pass2992 = False
+                if first_pass3003: first_pass3003 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 r = tt.get_referent()
@@ -831,7 +834,7 @@ class DecreeAnalyzer(Analyzer):
                 nu = DecreeToken.try_attach(ttt.next0_, dts[0], False)
                 if (nu is None or nu.typ != DecreeToken.ItemType.NUMBER): 
                     break
-                dr1 = DecreeReferent._new1094(dec.typ)
+                dr1 = DecreeReferent._new1101(dec.typ)
                 dr1._add_number(nu)
                 rt_li.append(ReferentToken(dr1, ttt.next0_, nu.end_token))
                 if (not ttt.is_comma): 
@@ -918,9 +921,9 @@ class DecreeAnalyzer(Analyzer):
         aliases = TerminCollection()
         last_dec_dist = 0
         t = kit.first_token
-        first_pass2993 = True
+        first_pass3004 = True
         while True:
-            if first_pass2993: first_pass2993 = False
+            if first_pass3004: first_pass3004 = False
             else: t = t.next0_; last_dec_dist += 1
             if (not (t is not None)): break
             dts = DecreeToken.try_attach_list(t, None, 10, last_dec_dist > 1000)
@@ -977,6 +980,7 @@ class DecreeAnalyzer(Analyzer):
                                 term.init_by(mt.begin_token, mt.end_token.previous, rt0.referent, False)
                                 aliases.add(term)
                     kit.embed_token(rt0)
+                    last_dec_dist = 0
                     t = (rt0)
                     continue
                 if (dts is None or len(dts) == 0): 
@@ -1013,9 +1017,9 @@ class DecreeAnalyzer(Analyzer):
                     mt = DecreeAnalyzer._check_alias_after(t.next0_)
                     if (mt is not None): 
                         tt = dts[0].begin_token.previous
-                        first_pass2994 = True
+                        first_pass3005 = True
                         while True:
-                            if first_pass2994: first_pass2994 = False
+                            if first_pass3005: first_pass3005 = False
                             else: tt = tt.previous
                             if (not (tt is not None)): break
                             if (tt.is_comma): 
@@ -1078,9 +1082,9 @@ class DecreeAnalyzer(Analyzer):
                         rt.tag = (rt0.referent)
         if (len(ad.referents) > 0): 
             t = kit.first_token
-            first_pass2995 = True
+            first_pass3006 = True
             while True:
-                if first_pass2995: first_pass2995 = False
+                if first_pass3006: first_pass3006 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 dr = Utils.asObjectOrNull(t.get_referent(), DecreeReferent)
@@ -1131,9 +1135,9 @@ class DecreeAnalyzer(Analyzer):
         expire_regime = False
         has_start_change = 0
         t = kit.first_token
-        first_pass2996 = True
+        first_pass3007 = True
         while True:
-            if first_pass2996: first_pass2996 = False
+            if first_pass3007: first_pass3007 = False
             else: t = t.next0_
             if (not (t is not None)): break
             dts = None
@@ -1276,7 +1280,7 @@ class DecreeAnalyzer(Analyzer):
                             change_stack.append(dprs[0].owner)
                         change_stack.insert(0, dprs[0])
                     if (len(change_stack) > 0 or dcht.decree is not None): 
-                        root_change = (Utils.asObjectOrNull(ad.register_referent(DecreeChangeReferent._new1095(DecreeChangeKind.CONTAINER)), DecreeChangeReferent))
+                        root_change = (Utils.asObjectOrNull(ad.register_referent(DecreeChangeReferent._new1102(DecreeChangeKind.CONTAINER)), DecreeChangeReferent))
                         if (len(change_stack) > 0): 
                             root_change.add_slot(DecreeChangeReferent.ATTR_OWNER, change_stack[0], False, 0)
                         else: 
@@ -1308,7 +1312,7 @@ class DecreeAnalyzer(Analyzer):
                     chrt = DecreeChangeToken.attach_referents(dprs[0], dcht)
                     if (chrt is None and expire_regime): 
                         chrt = list()
-                        dcr = DecreeChangeReferent._new1095(DecreeChangeKind.EXPIRE)
+                        dcr = DecreeChangeReferent._new1102(DecreeChangeKind.EXPIRE)
                         chrt.append(ReferentToken(dcr, dcht.begin_token, dcht.end_token))
                 elif (dcht.act_kind == DecreeChangeKind.APPEND): 
                     ee = False
@@ -1329,13 +1333,13 @@ class DecreeAnalyzer(Analyzer):
                     chrt = DecreeChangeToken.attach_referents(change_stack[0], dcht)
                 if ((chrt is None and ((expire_regime or dcht.act_kind == DecreeChangeKind.EXPIRE)) and dcht.decree is not None) and dprs is None): 
                     chrt = list()
-                    dcr = DecreeChangeReferent._new1095(DecreeChangeKind.EXPIRE)
+                    dcr = DecreeChangeReferent._new1102(DecreeChangeKind.EXPIRE)
                     dcr.add_slot(DecreeChangeReferent.ATTR_OWNER, dcht.decree, False, 0)
                     chrt.append(ReferentToken(dcr, dcht.begin_token, dcht.end_token))
                     tt = dcht.end_token.next0_
-                    first_pass2997 = True
+                    first_pass3008 = True
                     while True:
-                        if first_pass2997: first_pass2997 = False
+                        if first_pass3008: first_pass3008 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.next0_ is None): 
@@ -1350,7 +1354,7 @@ class DecreeAnalyzer(Analyzer):
                             break
                         tt = tt.next0_
                         if (isinstance(tt.get_referent(), DecreeReferent)): 
-                            dcr = DecreeChangeReferent._new1095(DecreeChangeKind.EXPIRE)
+                            dcr = DecreeChangeReferent._new1102(DecreeChangeKind.EXPIRE)
                             dcr.add_slot(DecreeChangeReferent.ATTR_OWNER, tt.get_referent(), False, 0)
                             rt = ReferentToken(dcr, tt, tt)
                             if (tt.next0_ is not None and tt.next0_.is_char('(')): 
@@ -1473,9 +1477,9 @@ class DecreeAnalyzer(Analyzer):
         alias = None
         aliast0 = None
         tt = tt.next0_
-        first_pass2998 = True
+        first_pass3009 = True
         while True:
-            if first_pass2998: first_pass2998 = False
+            if first_pass3009: first_pass3009 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             cou += 1
@@ -1538,9 +1542,9 @@ class DecreeAnalyzer(Analyzer):
         else: 
             t = t.next0_
         ok = False
-        first_pass2999 = True
+        first_pass3010 = True
         while True:
-            if first_pass2999: first_pass2999 = False
+            if first_pass3010: first_pass3010 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_comma_and or t.morph.class0_.is_preposition): 
@@ -1562,10 +1566,10 @@ class DecreeAnalyzer(Analyzer):
         kit = t.kit
         olev = None
         lev = 0
-        wrapolev1099 = RefOutArgWrapper(None)
-        inoutres1100 = Utils.tryGetValue(kit.misc_data, "dovr", wrapolev1099)
-        olev = wrapolev1099.value
-        if (not inoutres1100): 
+        wrapolev1106 = RefOutArgWrapper(None)
+        inoutres1107 = Utils.tryGetValue(kit.misc_data, "dovr", wrapolev1106)
+        olev = wrapolev1106.value
+        if (not inoutres1107): 
             lev = 1
             kit.misc_data["dovr"] = lev
         else: 
@@ -1715,9 +1719,9 @@ class DecreeAnalyzer(Analyzer):
                 t0 = t0.previous
         pub0 = None
         pub_part0 = None
-        first_pass3000 = True
+        first_pass3011 = True
         while True:
-            if first_pass3000: first_pass3000 = False
+            if first_pass3011: first_pass3011 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char_of(",;.") or t.is_and): 
@@ -1781,7 +1785,7 @@ class DecreeAnalyzer(Analyzer):
                     pub._add_number(num)
                     res.append(ReferentToken(pub, Utils.ifNotNull(t0, t), pt.begin_token.previous))
                 if (pub_part is None): 
-                    pub_part = DecreePartReferent._new1101(pub)
+                    pub_part = DecreePartReferent._new1108(pub)
                     res.append(ReferentToken(pub_part, pt.begin_token, pt.end_token))
                 pub0 = pub
                 if (len(pt.values) == 1): 
@@ -1793,7 +1797,7 @@ class DecreeAnalyzer(Analyzer):
                     ii = 0
                     while ii < len(pt.values): 
                         if (ii > 0): 
-                            pub_part = DecreePartReferent._new1101(pub)
+                            pub_part = DecreePartReferent._new1108(pub)
                             res.append(ReferentToken(pub_part, pt.values[ii].begin_token, pt.values[ii].end_token))
                         else: 
                             res[len(res) - 1].end_token = pt.values[ii].end_token
@@ -1812,7 +1816,7 @@ class DecreeAnalyzer(Analyzer):
             if (isinstance(t, NumberToken)): 
                 rt = t.kit.process_referent("DATE", t)
                 if (rt is not None): 
-                    date_ = DecreeToken._new841(rt.begin_token, rt.end_token, DecreeToken.ItemType.DATE)
+                    date_ = DecreeToken._new846(rt.begin_token, rt.end_token, DecreeToken.ItemType.DATE)
                     date_.ref = rt
                     pub0 = (None)
                     pub_part0 = (None)
@@ -1909,7 +1913,7 @@ class DecreeAnalyzer(Analyzer):
             if (t1 is not None and (isinstance(t1.get_referent(), DecreeReferent)) and not parts[0].is_newline_after): 
                 pass
             else: 
-                li = InstrToken1.parse(parts[0].begin_token, True, None, 0, None, False, 0, False)
+                li = InstrToken1.parse(parts[0].begin_token, True, None, 0, None, False, 0, False, False)
                 if (li is not None and li.has_verb): 
                     if ((len(parts) == 1 and parts[0].typ == PartToken.ItemType.PART and "резолют" in str(parts[0])) and parts[0].is_newline_before): 
                         return None
@@ -2010,9 +2014,9 @@ class DecreeAnalyzer(Analyzer):
                 parts[i].has_terminator = False
                 i += 1
         i = 0
-        first_pass3001 = True
+        first_pass3012 = True
         while True:
-            if first_pass3001: first_pass3001 = False
+            if first_pass3012: first_pass3012 = False
             else: i += 1
             if (not (i < len(parts))): break
             if (parts[i].typ == PartToken.ItemType.PREFIX): 
@@ -2079,7 +2083,7 @@ class DecreeAnalyzer(Analyzer):
                 for p in li: 
                     nam = PartToken._get_attr_name_by_typ(p.typ)
                     if (nam is not None): 
-                        sl = Slot._new1104(nam, p, 1)
+                        sl = Slot._new1111(nam, p, 1)
                         sl_list.append(sl)
                         if (p.ind < len(p.values)): 
                             sl.value = p.values[p.ind]
@@ -2202,9 +2206,9 @@ class DecreeAnalyzer(Analyzer):
                         if (owner is not None and DecreeAnalyzer._get_decree(parts[0].begin_token.previous.previous) is not None): 
                             owner = (None)
             tt = parts[0].begin_token.previous
-            first_pass3002 = True
+            first_pass3013 = True
             while True:
-                if first_pass3002: first_pass3002 = False
+                if first_pass3013: first_pass3013 = False
                 else: tt = tt.previous; coef_before += 1
                 if (not (tt is not None)): break
                 if (tt.is_newline_after): 
@@ -2316,9 +2320,9 @@ class DecreeAnalyzer(Analyzer):
                     has_newline = True
                 ttt = ttt.next0_
             tt = tt0
-            first_pass3003 = True
+            first_pass3014 = True
             while True:
-                if first_pass3003: first_pass3003 = False
+                if first_pass3014: first_pass3014 = False
                 else: tt = tt.next0_; coef_after += 1
                 if (not (tt is not None)): break
                 if (owner is not None and coef_after > 0): 
@@ -2486,6 +2490,8 @@ class DecreeAnalyzer(Analyzer):
                 if (br.open_char == '('): 
                     if (parts[0].typ == PartToken.ItemType.SUBPROGRAM): 
                         ok = False
+                    elif (PartToken.try_attach(tt.next0_, None, False, False) is not None): 
+                        ok = False
                     else: 
                         ttt = tt.next0_
                         while ttt is not None and (ttt.end_char < br.end_char): 
@@ -2526,17 +2532,22 @@ class DecreeAnalyzer(Analyzer):
         if (len(res) == 1 and (res[0].referent).name is None): 
             if ((res[0].begin_token.previous is not None and res[0].begin_token.previous.is_char('(') and res[0].end_token.next0_ is not None) and res[0].end_token.next0_.is_char(')')): 
                 if (BracketHelper.can_be_end_of_sequence(res[0].begin_token.previous.previous, False, None, False)): 
+                    beg = None
                     tt = res[0].begin_token.previous.previous.previous
                     while tt is not None: 
                         if (tt.is_newline_after): 
                             break
                         if (BracketHelper.can_be_start_of_sequence(tt, False, False)): 
+                            br = BracketHelper.try_parse(tt, BracketParseAttr.NO, 100)
+                            if (br is not None and ((br.end_char + 10) < res[0].begin_char)): 
+                                break
                             if (tt.next0_.chars.is_letter and not tt.next0_.chars.is_all_lower): 
-                                (res[0].referent)._add_name(MiscHelper.get_text_value(tt, res[0].begin_token.previous.previous, GetTextAttr.NO))
-                                res[0].begin_token = tt
-                                res[0].end_token = res[0].end_token.next0_
-                            break
+                                beg = tt
                         tt = tt.previous
+                    if (beg is not None): 
+                        (res[0].referent)._add_name(MiscHelper.get_text_value(beg, res[0].begin_token.previous.previous, GetTextAttr.NO))
+                        res[0].begin_token = beg
+                        res[0].end_token = res[0].end_token.next0_
         if (is_program): 
             for i in range(len(res) - 1, -1, -1):
                 pa = Utils.asObjectOrNull(res[i].referent, DecreePartReferent)
@@ -2575,7 +2586,7 @@ class DecreeAnalyzer(Analyzer):
                     et = et.previous
                 else: 
                     break
-            res1.append(MetaToken._new835(res[i].begin_token, et, li))
+            res1.append(MetaToken._new840(res[i].begin_token, et, li))
             i = (j - 1)
             i += 1
         return res1

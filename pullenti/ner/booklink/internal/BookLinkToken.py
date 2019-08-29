@@ -57,9 +57,9 @@ class BookLinkToken(MetaToken):
                 re = BookLinkToken._new346(t, rtp.end_token, BookLinkTyp.PERSON, rtp)
             re.person_template = (Utils.valToEnum(rtp.misc_attrs, FioTemplateType))
             tt = rtp.begin_token
-            first_pass2884 = True
+            first_pass2895 = True
             while True:
-                if first_pass2884: first_pass2884 = False
+                if first_pass2895: first_pass2895 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= rtp.end_char)): break
                 if (not ((isinstance(tt.get_referent(), PersonPropertyReferent)))): 
@@ -158,9 +158,9 @@ class BookLinkToken(MetaToken):
                 return BookLinkToken._new348(t, tok_.end_token, typ_, tok_.termin.canonic_text)
             if (typ_ == BookLinkTyp.ELECTRONRES): 
                 tt = tok_.end_token.next0_
-                first_pass2885 = True
+                first_pass2896 = True
                 while True:
-                    if first_pass2885: first_pass2885 = False
+                    if first_pass2896: first_pass2896 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if ((isinstance(tt, TextToken)) and not tt.chars.is_letter): 
@@ -216,9 +216,9 @@ class BookLinkToken(MetaToken):
                     tt0 = tt
                     tt1 = tt
                     tt = tt.next0_
-                    first_pass2886 = True
+                    first_pass2897 = True
                     while True:
-                        if first_pass2886: first_pass2886 = False
+                        if first_pass2897: first_pass2897 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.is_char_of(",") or tt.is_hiphen): 
@@ -263,9 +263,9 @@ class BookLinkToken(MetaToken):
             if (((term == "СМ" or term == "CM" or term == "НАПР") or term == "НАПРИМЕР" or term == "SEE") or term == "ПОДРОБНЕЕ" or term == "ПОДРОБНО"): 
                 res = BookLinkToken._new347(t, t, BookLinkTyp.SEE)
                 t = t.next0_
-                first_pass2887 = True
+                first_pass2898 = True
                 while True:
-                    if first_pass2887: first_pass2887 = False
+                    if first_pass2898: first_pass2898 = False
                     else: t = t.next0_
                     if (not (t is not None)): break
                     if (t.is_char_of(".:") or t.is_value("ALSO", None)): 

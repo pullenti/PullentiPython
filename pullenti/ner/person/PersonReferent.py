@@ -691,9 +691,9 @@ class PersonReferent(Referent):
                 v = str(self.slots[i].value)
                 if (not v in vars0_): 
                     j = 0
-                    first_pass3258 = True
+                    first_pass3269 = True
                     while True:
-                        if first_pass3258: first_pass3258 = False
+                        if first_pass3269: first_pass3269 = False
                         else: j += 1
                         if (not (j < len(self.slots))): break
                         if (j != i and self.slots[j].type_name == self.slots[i].type_name): 
@@ -753,7 +753,7 @@ class PersonReferent(Referent):
         tit = self.__find_shortest_king_titul(False)
         for a in self.slots: 
             if (a.type_name == PersonReferent.ATTR_IDENTITY): 
-                oi.termins.append(Termin._new2584(str(a.value), True))
+                oi.termins.append(Termin._new2593(str(a.value), True))
             elif (a.type_name == PersonReferent.ATTR_LASTNAME): 
                 t = Termin(str(a.value))
                 if (len(t.terms) > 20): 

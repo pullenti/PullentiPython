@@ -58,6 +58,7 @@ class NumbersWithUnitToken(MetaToken):
         self.whl = None;
         self.units = list()
         self.div_num = None;
+        self.is_age = False
     
     def __str__(self) -> str:
         res = io.StringIO()
@@ -199,7 +200,7 @@ class NumbersWithUnitToken(MetaToken):
             utxt = utxt[0:0+len(utxt) - 1]
             terms = UnitsHelper.TERMINS.try_attach_str(utxt, None)
             if (terms is not None and len(terms) > 0): 
-                mt.units.append(UnitToken._new1612(mt.end_token.next0_, mt.end_token.next0_, Utils.asObjectOrNull(terms[0].tag, Unit)))
+                mt.units.append(UnitToken._new1619(mt.end_token.next0_, mt.end_token.next0_, Utils.asObjectOrNull(terms[0].tag, Unit)))
                 mt.end_token = mt.end_token.next0_
                 res1 = NumbersWithUnitToken.try_parse_multi(mt.end_token.next0_, add_units, False, False, False, False)
                 if (res1 is not None): 
@@ -264,9 +265,9 @@ class NumbersWithUnitToken(MetaToken):
         has_keyw = False
         is_diap_keyw = False
         min_max = 0
-        wrapmin_max1619 = RefOutArgWrapper(min_max)
-        ttt = NumbersWithUnitToken._is_min_or_max(t, wrapmin_max1619)
-        min_max = wrapmin_max1619.value
+        wrapmin_max1626 = RefOutArgWrapper(min_max)
+        ttt = NumbersWithUnitToken._is_min_or_max(t, wrapmin_max1626)
+        min_max = wrapmin_max1626.value
         if (ttt is not None): 
             t = ttt.next0_
             if (t is None): 
@@ -302,11 +303,14 @@ class NumbersWithUnitToken(MetaToken):
                 return mt0
         plusminus = False
         unit_before = False
+        is_age_ = False
         dty = NumbersWithUnitToken.DiapTyp.UNDEFINED
         whd = None
         uni = None
         tok = NumbersWithUnitToken.M_TERMINS.try_parse(t, TerminParseAttr.NO)
         if (tok is not None): 
+            if (tok.end_token.is_value("СТАРШЕ", None) or tok.end_token.is_value("МЛАДШЕ", None)): 
+                is_age_ = True
             t = tok.end_token.next0_
             dty = (Utils.valToEnum(tok.termin.tag, NumbersWithUnitToken.DiapTyp))
             has_keyw = True
@@ -373,6 +377,9 @@ class NumbersWithUnitToken(MetaToken):
             uni = UnitToken.try_parse_list(t, add_units, False)
             if (uni is not None): 
                 t = uni[len(uni) - 1].end_token.next0_
+        elif (t.is_value("ЗА", None) and (isinstance(t.next0_, NumberToken))): 
+            dty = NumbersWithUnitToken.DiapTyp.GE
+            t = t.next0_
         while t is not None and ((t.is_char_of(":,") or t.is_value("ЧЕМ", None) or t.is_table_control_char)):
             t = t.next0_
         if (t is not None): 
@@ -439,22 +446,22 @@ class NumbersWithUnitToken(MetaToken):
                 for u in UnitsHelper.UNITS: 
                     if (u.fullname_cyr == unam): 
                         uni = list()
-                        uni.append(UnitToken._new1612(t, t, u))
+                        uni.append(UnitToken._new1619(t, t, u))
                         break
                 if (uni is None): 
                     return None
-                res = NumbersWithUnitToken._new1614(t0, tt.end_token, about_)
+                res = NumbersWithUnitToken._new1621(t0, tt.end_token, about_)
                 t = tt.end_token.next0_
             else: 
                 if (not can_omit_number and not has_keyw and not can_be_nan): 
                     return None
                 if ((uni is not None and len(uni) == 1 and uni[0].begin_token == uni[0].end_token) and uni[0].length_char > 3): 
                     rval = (1)
-                    res = NumbersWithUnitToken._new1614(t0, uni[len(uni) - 1].end_token, about_)
+                    res = NumbersWithUnitToken._new1621(t0, uni[len(uni) - 1].end_token, about_)
                     t = res.end_token.next0_
                 elif (has_keyw and can_be_nan): 
                     rval = math.nan
-                    res = NumbersWithUnitToken._new1614(t0, t0, about_)
+                    res = NumbersWithUnitToken._new1621(t0, t0, about_)
                     if (t is not None): 
                         res.end_token = t.previous
                     else: 
@@ -466,7 +473,9 @@ class NumbersWithUnitToken(MetaToken):
                     return None
         else: 
             if ((t == t0 and t0.is_hiphen and not t.is_whitespace_before) and not t.is_whitespace_after and (num.real_value < 0)): 
-                return None
+                num = NumberHelper.try_parse_real_number(t.next0_, True, False)
+                if (num is None): 
+                    return None
             if (t == t0 and (isinstance(t, NumberToken)) and t.morph.class0_.is_adjective): 
                 nn = Utils.asObjectOrNull((t).end_token, TextToken)
                 if (nn is None): 
@@ -479,7 +488,7 @@ class NumbersWithUnitToken(MetaToken):
                     if (mi.class0_.is_adjective): 
                         return None
             t = num.end_token.next0_
-            res = NumbersWithUnitToken._new1614(t0, num.end_token, about_)
+            res = NumbersWithUnitToken._new1621(t0, num.end_token, about_)
             rval = num.real_value
         if (uni is None): 
             uni = UnitToken.try_parse_list(t, add_units, False)
@@ -523,9 +532,9 @@ class NumbersWithUnitToken(MetaToken):
         is_second_max = False
         if (not second): 
             iii = 0
-            wrapiii1618 = RefOutArgWrapper(iii)
-            ttt = NumbersWithUnitToken._is_min_or_max(t, wrapiii1618)
-            iii = wrapiii1618.value
+            wrapiii1625 = RefOutArgWrapper(iii)
+            ttt = NumbersWithUnitToken._is_min_or_max(t, wrapiii1625)
+            iii = wrapiii1625.value
             if (ttt is not None and iii > 0): 
                 is_second_max = True
                 t = ttt.next0_
@@ -604,6 +613,8 @@ class NumbersWithUnitToken(MetaToken):
             else: 
                 res.single_val = rval
                 res.plus_minus_percent = plusminus
+        if (is_age_): 
+            res.is_age = True
         return res
     
     @staticmethod
@@ -645,7 +656,7 @@ class NumbersWithUnitToken(MetaToken):
                     nams.append("ДИАМЕТР")
                 else: 
                     return None
-            return MetaToken._new835(t, t, nams)
+            return MetaToken._new840(t, t, nams)
         t0 = t
         t1 = t
         while t is not None: 
@@ -681,7 +692,7 @@ class NumbersWithUnitToken(MetaToken):
             t = t.next0_
         if (nams is None or (len(nams) < 2)): 
             return None
-        return MetaToken._new835(t0, t1, nams)
+        return MetaToken._new840(t0, t1, nams)
     
     M_TERMINS = None
     
@@ -697,6 +708,8 @@ class NumbersWithUnitToken(MetaToken):
         t.add_variant("НЕ КОРОЧЕ", False)
         t.add_variant("НЕ МЕДЛЕННЕЕ", False)
         t.add_variant("НЕ НИЖЕ", False)
+        t.add_variant("НЕ МОЛОЖЕ", False)
+        t.add_variant("НЕ ДЕШЕВЛЕ", False)
         t.add_variant("НЕ МЕНЕ", False)
         NumbersWithUnitToken.M_TERMINS.add(t)
         t = Termin._new119("МЕНЕЕ", NumbersWithUnitToken.DiapTyp.LS)
@@ -705,6 +718,8 @@ class NumbersWithUnitToken(MetaToken):
         t.add_variant("КОРОЧЕ", False)
         t.add_variant("МЕДЛЕННЕЕ", False)
         t.add_variant("НИЖЕ", False)
+        t.add_variant("МЛАДШЕ", False)
+        t.add_variant("ДЕШЕВЛЕ", False)
         NumbersWithUnitToken.M_TERMINS.add(t)
         t = Termin._new119("НЕ БОЛЕЕ", NumbersWithUnitToken.DiapTyp.LE)
         t.add_variant("НЕ БОЛЬШЕ", False)
@@ -714,6 +729,8 @@ class NumbersWithUnitToken(MetaToken):
         t.add_variant("НЕ ВЫШЕ", False)
         t.add_variant("НЕ ПОЗДНЕЕ", False)
         t.add_variant("НЕ ДОЛЬШЕ", False)
+        t.add_variant("НЕ СТАРШЕ", False)
+        t.add_variant("НЕ ДОРОЖЕ", False)
         NumbersWithUnitToken.M_TERMINS.add(t)
         t = Termin._new119("БОЛЕЕ", NumbersWithUnitToken.DiapTyp.GT)
         t.add_variant("БОЛЬШЕ", False)
@@ -723,6 +740,8 @@ class NumbersWithUnitToken(MetaToken):
         t.add_variant("ГЛУБЖЕ", False)
         t.add_variant("ВЫШЕ", False)
         t.add_variant("СВЫШЕ", False)
+        t.add_variant("СТАРШЕ", False)
+        t.add_variant("ДОРОЖЕ", False)
         NumbersWithUnitToken.M_TERMINS.add(t)
         t = Termin._new119("ОТ", NumbersWithUnitToken.DiapTyp.FROM)
         t.add_variant("С", False)
@@ -752,13 +771,13 @@ class NumbersWithUnitToken(MetaToken):
         NumbersWithUnitToken.M_SPEC.add(t)
     
     @staticmethod
-    def _new1605(_arg1 : 'Token', _arg2 : 'Token', _arg3 : float) -> 'NumbersWithUnitToken':
+    def _new1612(_arg1 : 'Token', _arg2 : 'Token', _arg3 : float) -> 'NumbersWithUnitToken':
         res = NumbersWithUnitToken(_arg1, _arg2)
         res.single_val = _arg3
         return res
     
     @staticmethod
-    def _new1614(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'NumbersWithUnitToken':
+    def _new1621(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'NumbersWithUnitToken':
         res = NumbersWithUnitToken(_arg1, _arg2)
         res.about = _arg3
         return res

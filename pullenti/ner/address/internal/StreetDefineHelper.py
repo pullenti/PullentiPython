@@ -220,9 +220,9 @@ class StreetDefineHelper:
             return None
         sec_number = None
         j = n0
-        first_pass2866 = True
+        first_pass2877 = True
         while True:
-            if first_pass2866: first_pass2866 = False
+            if first_pass2877: first_pass2877 = False
             else: j += 1
             if (not (j <= n1)): break
             if (sli[j].typ == StreetItemType.NUMBER): 
@@ -571,9 +571,9 @@ class StreetDefineHelper:
             elif (noun.termin.canonic_text == "ПРОЕЗД" and street.find_slot(StreetReferent.ATTR_NAME, "ПРОЕКТИРУЕМЫЙ", True) is not None): 
                 res.is_doubt = False
             tt0 = res.begin_token.previous
-            first_pass2867 = True
+            first_pass2878 = True
             while True:
-                if first_pass2867: first_pass2867 = False
+                if first_pass2878: first_pass2878 = False
                 else: tt0 = tt0.previous
                 if (not (tt0 is not None)): break
                 if (tt0.is_char_of(",,") or tt0.is_comma_and): 
@@ -622,9 +622,9 @@ class StreetDefineHelper:
                     is_street_before = True
                 cou = 0
                 tt = sli[0].end_token.next0_
-                first_pass2868 = True
+                first_pass2879 = True
                 while True:
-                    if first_pass2868: first_pass2868 = False
+                    if first_pass2879: first_pass2879 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (not tt.is_comma_and or tt.next0_ is None): 
@@ -742,9 +742,9 @@ class StreetDefineHelper:
                 if (nex is not None): 
                     return None
                 t = sli[0].begin_token.previous
-                first_pass2869 = True
+                first_pass2880 = True
                 while True:
-                    if first_pass2869: first_pass2869 = False
+                    if first_pass2880: first_pass2880 = False
                     else: t = t.previous
                     if (not (t is not None)): break
                     if (t.is_newline_after): 

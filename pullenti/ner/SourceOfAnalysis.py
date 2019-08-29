@@ -60,9 +60,9 @@ class SourceOfAnalysis:
         cou = 0
         total_len = 0
         i = 0
-        first_pass3310 = True
+        first_pass3321 = True
         while True:
-            if first_pass3310: first_pass3310 = False
+            if first_pass3321: first_pass3321 = False
             else: i += 1
             if (not (i < len(txt))): break
             ch = txt[i]

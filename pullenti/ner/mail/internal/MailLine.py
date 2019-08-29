@@ -121,9 +121,9 @@ class MailLine(MetaToken):
         res = MailLine(t0, t0)
         pr = True
         t = t0
-        first_pass3167 = True
+        first_pass3178 = True
         while True:
-            if first_pass3167: first_pass3167 = False
+            if first_pass3178: first_pass3178 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before and t0 != t): 
@@ -156,9 +156,9 @@ class MailLine(MetaToken):
             nams = 0
             oth = 0
             last_comma = None
-            first_pass3168 = True
+            first_pass3179 = True
             while True:
-                if first_pass3168: first_pass3168 = False
+                if first_pass3179: first_pass3179 = False
                 else: t = t.next0_
                 if (not (t is not None and (t.end_char < res.end_char))): break
                 if (isinstance(t.get_referent(), PersonReferent)): 
@@ -194,9 +194,9 @@ class MailLine(MetaToken):
             if (t0.is_value("HAVE", None)): 
                 pass
             t = t0
-            first_pass3169 = True
+            first_pass3180 = True
             while True:
-                if first_pass3169: first_pass3169 = False
+                if first_pass3180: first_pass3180 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= res.end_char)): break
                 if (not ((isinstance(t, TextToken)))): 
@@ -217,9 +217,9 @@ class MailLine(MetaToken):
                     t = tok.end_token
                     if ((isinstance(t.next0_, TextToken)) and t.next0_.morph.case_.is_genitive): 
                         t = t.next0_
-                        first_pass3170 = True
+                        first_pass3181 = True
                         while True:
-                            if first_pass3170: first_pass3170 = False
+                            if first_pass3181: first_pass3181 = False
                             else: t = t.next0_
                             if (not (t.end_char <= res.end_char)): break
                             if (t.morph.class0_.is_conjunction): 

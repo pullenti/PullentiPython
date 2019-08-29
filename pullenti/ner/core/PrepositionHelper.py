@@ -31,7 +31,7 @@ class PrepositionHelper:
             return None
         tok = PrepositionHelper.__m_ontology.try_parse(t, TerminParseAttr.NO)
         if (tok is not None): 
-            return PrepositionToken._new593(t, tok.end_token, tok.termin.canonic_text, tok.termin.tag)
+            return PrepositionToken._new597(t, tok.end_token, tok.termin.canonic_text, tok.termin.tag)
         mc = t.get_morph_class_in_dictionary()
         if (not mc.is_preposition): 
             return None
@@ -50,14 +50,14 @@ class PrepositionHelper:
             return
         PrepositionHelper.__m_ontology = TerminCollection()
         for s in ["близко от", "в виде", "в зависимости от", "в интересах", "в качестве", "в лице", "в отличие от", "в отношении", "в пандан", "в пользу", "в преддверии", "в продолжение", "в результате", "в роли", "в силу", "в случае", "в течение", "в целях", "в честь", "во имя", "вплоть до", "впредь до", "за вычетом", "за исключением", "за счет", "исходя из", "на благо", "на виду у", "на глазах у", "начиная с", "невзирая на", "недалеко от", "независимо от", "от имени", "от лица", "по линии", "по мере", "по поводу", "по причине", "по случаю", "поблизости от", "под видом", "под эгидой", "при помощи", "с ведома", "с помощью", "с точки зрения", "с целью"]: 
-            PrepositionHelper.__m_ontology.add(Termin._new594(s.upper(), MorphLang.RU, True, MorphCase.GENITIVE))
+            PrepositionHelper.__m_ontology.add(Termin._new598(s.upper(), MorphLang.RU, True, MorphCase.GENITIVE))
         for s in ["вдоль по", "по направлению к", "применительно к", "смотря по", "судя по"]: 
-            PrepositionHelper.__m_ontology.add(Termin._new594(s.upper(), MorphLang.RU, True, MorphCase.DATIVE))
+            PrepositionHelper.__m_ontology.add(Termin._new598(s.upper(), MorphLang.RU, True, MorphCase.DATIVE))
         for s in ["несмотря на", "с прицелом на"]: 
-            PrepositionHelper.__m_ontology.add(Termin._new594(s.upper(), MorphLang.RU, True, MorphCase.ACCUSATIVE))
+            PrepositionHelper.__m_ontology.add(Termin._new598(s.upper(), MorphLang.RU, True, MorphCase.ACCUSATIVE))
         for s in ["во славу"]: 
-            PrepositionHelper.__m_ontology.add(Termin._new594(s.upper(), MorphLang.RU, True, ((MorphCase.GENITIVE) | MorphCase.DATIVE)))
+            PrepositionHelper.__m_ontology.add(Termin._new598(s.upper(), MorphLang.RU, True, ((MorphCase.GENITIVE) | MorphCase.DATIVE)))
         for s in ["не считая"]: 
-            PrepositionHelper.__m_ontology.add(Termin._new594(s.upper(), MorphLang.RU, True, ((MorphCase.GENITIVE) | MorphCase.ACCUSATIVE)))
+            PrepositionHelper.__m_ontology.add(Termin._new598(s.upper(), MorphLang.RU, True, ((MorphCase.GENITIVE) | MorphCase.ACCUSATIVE)))
         for s in ["в связи с", "в соответствии с", "вслед за", "лицом к лицу с", "наряду с", "по сравнению с", "рядом с", "следом за"]: 
-            PrepositionHelper.__m_ontology.add(Termin._new594(s.upper(), MorphLang.RU, True, MorphCase.INSTRUMENTAL))
+            PrepositionHelper.__m_ontology.add(Termin._new598(s.upper(), MorphLang.RU, True, MorphCase.INSTRUMENTAL))

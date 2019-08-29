@@ -53,9 +53,9 @@ class FundsItemToken(MetaToken):
             return None
         typ0 = FundsItemTyp.UNDEFINED
         tt = t
-        first_pass2900 = True
+        first_pass2911 = True
         while True:
-            if first_pass2900: first_pass2900 = False
+            if first_pass2911: first_pass2911 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.morph.class0_.is_preposition or tt.morph.class0_.is_adverb): 
@@ -115,9 +115,9 @@ class FundsItemToken(MetaToken):
                     cou = 0
                     ok = False
                     ttt = tt.previous
-                    first_pass2901 = True
+                    first_pass2912 = True
                     while True:
-                        if first_pass2901: first_pass2901 = False
+                        if first_pass2912: first_pass2912 = False
                         else: ttt = ttt.previous
                         if (not (ttt is not None)): break
                         cou += 1
@@ -188,9 +188,9 @@ class FundsItemToken(MetaToken):
         li.append(f)
         is_in_br = False
         tt = f.end_token.next0_
-        first_pass2902 = True
+        first_pass2913 = True
         while True:
-            if first_pass2902: first_pass2902 = False
+            if first_pass2913: first_pass2913 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if ((tt.is_whitespace_before and tt.previous is not None and tt.previous.is_char('.')) and tt.chars.is_capital_upper): 

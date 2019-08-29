@@ -293,9 +293,9 @@ class MorphSerializeHelper:
                         continue
                     rtn = root
                     lev = 0
-                    first_pass2853 = True
+                    first_pass2864 = True
                     while True:
-                        if first_pass2853: first_pass2853 = False
+                        if first_pass2864: first_pass2864 = False
                         else: lev += 1
                         if (not (lev < MorphSerializeHelper.__max_tail_len)): break
                         i = len(wf) - 1 - lev

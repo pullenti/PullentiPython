@@ -91,7 +91,7 @@ class NounPhraseToken(MetaToken):
             plural(bool): 
         
         """
-        mi = MorphBaseInfo._new563(cas, MorphLang.RU)
+        mi = MorphBaseInfo._new567(cas, MorphLang.RU)
         if (plural): 
             mi.number = MorphNumber.PLURAL
         else: 

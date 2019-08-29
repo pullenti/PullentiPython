@@ -522,19 +522,19 @@ class MorphCollection(MorphBaseInfo):
         return res
     
     @staticmethod
-    def _new577(_arg1 : 'MorphClass') -> 'MorphCollection':
+    def _new581(_arg1 : 'MorphClass') -> 'MorphCollection':
         res = MorphCollection()
         res.class0_ = _arg1
         return res
     
     @staticmethod
-    def _new2313(_arg1 : 'MorphGender') -> 'MorphCollection':
+    def _new2322(_arg1 : 'MorphGender') -> 'MorphCollection':
         res = MorphCollection()
         res.gender = _arg1
         return res
     
     @staticmethod
-    def _new2417(_arg1 : 'MorphCase') -> 'MorphCollection':
+    def _new2426(_arg1 : 'MorphCase') -> 'MorphCollection':
         res = MorphCollection()
         res.case_ = _arg1
         return res

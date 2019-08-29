@@ -258,7 +258,7 @@ class NounPhraseItem(MetaToken):
             t = (Utils.ifNotNull(t1, t0))
             if (k == 0): 
                 if ((((isinstance(t0, TextToken))) and t0.next0_ is not None and t0.next0_.is_hiphen) and t0.next0_.next0_ is not None): 
-                    if (not t0.is_whitespace_after and not t0.morph.class0_.is_pronoun): 
+                    if (not t0.is_whitespace_after and not t0.morph.class0_.is_pronoun and not ((isinstance(t0.next0_.next0_, NumberToken)))): 
                         if (not t0.next0_.is_whitespace_after): 
                             t = t0.next0_.next0_
                         elif (t0.next0_.next0_.chars.is_all_lower and LanguageHelper.ends_with((t0).term, "О")): 

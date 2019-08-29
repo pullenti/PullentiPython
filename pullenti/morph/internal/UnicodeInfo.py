@@ -130,6 +130,8 @@ class UnicodeInfo:
     @staticmethod
     def _static_ctor():
         UnicodeInfo.ALL_CHARS = list()
+        cyrvowel = "АЕЁИОУЮЯЫЭЄІЇЎӘӨҰҮІ"
+        cyrvowel += cyrvowel.lower()
         for i in range(0x10000):
             ch = chr(i)
             ui = UnicodeInfo(i)
@@ -143,11 +145,11 @@ class UnicodeInfo:
                 ui.is_letter = True
                 if (i >= 0x400 and (i < 0x500)): 
                     ui.is_cyrillic = True
-                    if ("АЕЁИОУЮЯЫЭЄІЇЎӘӨҰҮІ".find(ch) >= 0): 
+                    if (cyrvowel.find(ch) >= 0): 
                         ui.is_vowel = True
                 elif (i < 0x200): 
                     ui.is_latin = True
-                    if ("AEIOUY".find(ch) >= 0): 
+                    if ("AEIOUYaeiouy".find(ch) >= 0): 
                         ui.is_vowel = True
                 if (str.isupper(ch)): 
                     ui.is_upper = True

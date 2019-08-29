@@ -57,9 +57,9 @@ class ListHelper:
             if (t is None or t.end_char > max_char): 
                 return None
             res = ListHelper.LineToken(t, t)
-            first_pass3144 = True
+            first_pass3155 = True
             while True:
-                if first_pass3144: first_pass3144 = False
+                if first_pass3155: first_pass3155 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= max_char)): break
                 if (t.is_char(':')): 
@@ -171,18 +171,18 @@ class ListHelper:
         if (res.kind == InstrumentKind.CLAUSE and res.number == 12): 
             pass
         i = 0
-        first_pass3145 = True
+        first_pass3156 = True
         while True:
-            if first_pass3145: first_pass3145 = False
+            if first_pass3156: first_pass3156 = False
             else: i += 1
             if (not (i < len(res.children))): break
             if (res.children[i].kind == InstrumentKind.INDENTION and ((res.children[i].end_token.is_char_of(":;") or ((((i + 1) < len(res.children)) and res.children[i + 1].kind == InstrumentKind.EDITIONS and res.children[i + 1].end_token.is_char_of(":;")))))): 
                 cou = 1
                 list_bullet = chr(0)
                 j = (i + 1)
-                first_pass3146 = True
+                first_pass3157 = True
                 while True:
-                    if first_pass3146: first_pass3146 = False
+                    if first_pass3157: first_pass3157 = False
                     else: j += 1
                     if (not (j < len(res.children))): break
                     ch = res.children[j]
@@ -204,7 +204,7 @@ class ListHelper:
                             tt = ch.begin_token.next0_
                             while tt is not None and (tt.end_char < ch.end_char): 
                                 if (tt.previous.is_char('.') and MiscHelper.can_be_start_of_sentence(tt)): 
-                                    ch2 = FragToken._new1350(tt, ch.end_token, InstrumentKind.INDENTION, ch.number)
+                                    ch2 = FragToken._new1357(tt, ch.end_token, InstrumentKind.INDENTION, ch.number)
                                     ch.end_token = tt.previous
                                     res.children.insert(j + 1, ch2)
                                     k = j + 1
@@ -225,9 +225,9 @@ class ListHelper:
                     continue
                 if ((i > 0 and not res.children[i].end_token.is_char(':') and res.children[i - 1].kind2 == InstrumentKind.UNDEFINED) and res.children[i - 1].end_token.is_char(':')): 
                     res.children[i - 1].kind2 = InstrumentKind.LISTHEAD
-                first_pass3147 = True
+                first_pass3158 = True
                 while True:
-                    if first_pass3147: first_pass3147 = False
+                    if first_pass3158: first_pass3158 = False
                     else: i += 1
                     if (not (i < j)): break
                     ch = res.children[i]
@@ -274,7 +274,7 @@ class ListHelper:
             return -1
         if (res.has_changes and res.multiline_changes_value is not None): 
             ci = res.multiline_changes_value
-            cit = FragToken._new1333(ci.begin_token, ci.end_token, InstrumentKind.CITATION)
+            cit = FragToken._new1340(ci.begin_token, ci.end_token, InstrumentKind.CITATION)
             res.children.append(cit)
             if (BracketHelper.is_bracket(cit.begin_token.previous, True)): 
                 cit.begin_token = cit.begin_token.previous
@@ -324,7 +324,7 @@ class ListHelper:
             return 1
         end_char = res.end_char
         if (res._itok is None): 
-            res._itok = InstrToken1.parse(res.begin_token, True, None, 0, None, False, res.end_char, False)
+            res._itok = InstrToken1.parse(res.begin_token, True, None, 0, None, False, res.end_char, False, False)
         lines = ListHelper.LineToken.parse_list(res.begin_token, end_char, None)
         if (lines is None or (len(lines) < 1)): 
             return -1
@@ -353,9 +353,9 @@ class ListHelper:
                 lines[1].is_list_item = False
                 lines[0].is_list_item = lines[1].is_list_item
         i = 0
-        first_pass3148 = True
+        first_pass3159 = True
         while True:
-            if first_pass3148: first_pass3148 = False
+            if first_pass3159: first_pass3159 = False
             else: i += 1
             if (not (i < len(lines))): break
             if (lines[i].is_list_item): 
@@ -446,9 +446,9 @@ class ListHelper:
         if (cou < 2): 
             return -1
         i = 0
-        first_pass3149 = True
+        first_pass3160 = True
         while True:
-            if first_pass3149: first_pass3149 = False
+            if first_pass3160: first_pass3160 = False
             else: i += 1
             if (not (i < len(lines))): break
             if (lines[i].is_list_item): 
@@ -495,16 +495,16 @@ class ListHelper:
                         i += 1
         for li in lines: 
             li.correct_begin_token()
-            ch = FragToken._new1350(li.begin_token, li.end_token, (InstrumentKind.LISTITEM if li.is_list_item else InstrumentKind.CONTENT), li.number)
+            ch = FragToken._new1357(li.begin_token, li.end_token, (InstrumentKind.LISTITEM if li.is_list_item else InstrumentKind.CONTENT), li.number)
             if (ch.kind == InstrumentKind.CONTENT and ch.end_token.is_char(':')): 
                 ch.kind = InstrumentKind.LISTHEAD
             res.children.append(ch)
             chli = Utils.asObjectOrNull(li.tag, list)
             if (chli is not None): 
                 for lt in chli: 
-                    ch.children.append(FragToken._new1333(lt.begin_token, lt.end_token, InstrumentKind.LISTITEM))
+                    ch.children.append(FragToken._new1340(lt.begin_token, lt.end_token, InstrumentKind.LISTITEM))
                 if (ch.begin_char < ch.children[0].begin_char): 
-                    ch.children.insert(0, FragToken._new1333(ch.begin_token, ch.children[0].begin_token.previous, InstrumentKind.CONTENT))
+                    ch.children.insert(0, FragToken._new1340(ch.begin_token, ch.children[0].begin_token.previous, InstrumentKind.CONTENT))
         return ret
     
     @staticmethod
@@ -514,9 +514,9 @@ class ListHelper:
             if ((lines[i].typ == InstrToken1.Types.LINE and len(lines[i].numbers) == 0 and lines[i].begin_token.is_value("ПРИЛОЖЕНИЯ", "ДОДАТОК")) and len(lines[i + 1].numbers) > 0 and lines[i].end_token.is_char(':')): 
                 num = 1
                 i += 1
-                first_pass3150 = True
+                first_pass3161 = True
                 while True:
-                    if first_pass3150: first_pass3150 = False
+                    if first_pass3161: first_pass3161 = False
                     else: i += 1
                     if (not (i < len(lines))): break
                     if (len(lines[i].numbers) == 0): 
@@ -527,10 +527,10 @@ class ListHelper:
                             continue
                         break
                     else: 
-                        wrapnn1539 = RefOutArgWrapper(0)
-                        inoutres1540 = Utils.tryParseInt(lines[i].numbers[0], wrapnn1539)
-                        nn = wrapnn1539.value
-                        if (inoutres1540): 
+                        wrapnn1546 = RefOutArgWrapper(0)
+                        inoutres1547 = Utils.tryParseInt(lines[i].numbers[0], wrapnn1546)
+                        nn = wrapnn1546.value
+                        if (inoutres1547): 
                             num = (nn + 1)
                         lines[i].num_typ = NumberTypes.UNDEFINED
                         lines[i].numbers.clear()
@@ -568,7 +568,7 @@ class ListHelper:
             i += 1
         if (len(index) == len(content) and len(index) > 2): 
             if ((ind_text * 10) < con_text): 
-                lines[0] = InstrToken1._new1541(lines[0].begin_token, lines[cind - 1].end_token, True, InstrToken1.Types.INDEX)
+                lines[0] = InstrToken1._new1548(lines[0].begin_token, lines[cind - 1].end_token, True, InstrToken1.Types.INDEX)
                 del lines[1:1+cind - 1]
     
     @staticmethod

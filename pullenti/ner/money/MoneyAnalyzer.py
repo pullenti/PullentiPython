@@ -73,9 +73,9 @@ class MoneyAnalyzer(Analyzer):
         """
         ad = kit.get_analyzer_data(self)
         t = kit.first_token
-        first_pass3182 = True
+        first_pass3193 = True
         while True:
-            if first_pass3182: first_pass3182 = False
+            if first_pass3193: first_pass3193 = False
             else: t = t.next0_
             if (not (t is not None)): break
             mon = MoneyAnalyzer.try_parse(t)

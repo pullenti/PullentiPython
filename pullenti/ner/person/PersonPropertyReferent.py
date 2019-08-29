@@ -178,9 +178,9 @@ class PersonPropertyReferent(Referent):
             eq = False
             noeq = False
             i = 0
-            first_pass3256 = True
+            first_pass3267 = True
             while True:
-                if first_pass3256: first_pass3256 = False
+                if first_pass3267: first_pass3267 = False
                 else: i += 1
                 if (not (i < len(refs1))): break
                 if (refs1[i] in refs2): 
@@ -195,9 +195,9 @@ class PersonPropertyReferent(Referent):
                                 eq = True
                                 break
             i = 0
-            first_pass3257 = True
+            first_pass3268 = True
             while True:
-                if first_pass3257: first_pass3257 = False
+                if first_pass3268: first_pass3268 = False
                 else: i += 1
                 if (not (i < len(refs2))): break
                 if (refs2[i] in refs1): 
@@ -306,7 +306,7 @@ class PersonPropertyReferent(Referent):
         return False
     
     @staticmethod
-    def _new2413(_arg1 : str) -> 'PersonPropertyReferent':
+    def _new2422(_arg1 : str) -> 'PersonPropertyReferent':
         res = PersonPropertyReferent()
         res.name = _arg1
         return res

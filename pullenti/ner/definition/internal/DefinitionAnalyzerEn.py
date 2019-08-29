@@ -24,9 +24,9 @@ class DefinitionAnalyzerEn:
     @staticmethod
     def process(kit : 'AnalysisKit', ad : 'AnalyzerData') -> None:
         t = kit.first_token
-        first_pass3004 = True
+        first_pass3015 = True
         while True:
-            if first_pass3004: first_pass3004 = False
+            if first_pass3015: first_pass3015 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not MiscHelper.can_be_start_of_sentence(t)): 
@@ -53,9 +53,9 @@ class DefinitionAnalyzerEn:
         if (mc.is_preposition or mc.is_misc or mc.is_adverb): 
             if (not MiscHelper.is_eng_article(tt)): 
                 tt = tt.next0_
-                first_pass3005 = True
+                first_pass3016 = True
                 while True:
-                    if first_pass3005: first_pass3005 = False
+                    if first_pass3016: first_pass3016 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_comma): 
@@ -101,9 +101,9 @@ class DefinitionAnalyzerEn:
             if (not tt.get_morph_class_in_dictionary().is_verb): 
                 break
             tt = tt.next0_
-        first_pass3006 = True
+        first_pass3017 = True
         while True:
-            if first_pass3006: first_pass3006 = False
+            if first_pass3017: first_pass3017 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.next0_ is None): 

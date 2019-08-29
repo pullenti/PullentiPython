@@ -33,22 +33,22 @@ class DecreeHelper:
             return None
         try: 
             prts = Utils.splitString(str0_, '.', False)
-            wrapy830 = RefOutArgWrapper(0)
-            inoutres831 = Utils.tryParseInt(prts[0], wrapy830)
-            y = wrapy830.value
-            if (not inoutres831): 
+            wrapy835 = RefOutArgWrapper(0)
+            inoutres836 = Utils.tryParseInt(prts[0], wrapy835)
+            y = wrapy835.value
+            if (not inoutres836): 
                 return None
             mon = 0
             day = 0
             if (len(prts) > 1): 
-                wrapmon828 = RefOutArgWrapper(0)
-                inoutres829 = Utils.tryParseInt(prts[1], wrapmon828)
-                mon = wrapmon828.value
-                if (inoutres829): 
+                wrapmon833 = RefOutArgWrapper(0)
+                inoutres834 = Utils.tryParseInt(prts[1], wrapmon833)
+                mon = wrapmon833.value
+                if (inoutres834): 
                     if (len(prts) > 2): 
-                        wrapday827 = RefOutArgWrapper(0)
-                        Utils.tryParseInt(prts[2], wrapday827)
-                        day = wrapday827.value
+                        wrapday832 = RefOutArgWrapper(0)
+                        Utils.tryParseInt(prts[2], wrapday832)
+                        day = wrapday832.value
             if (mon <= 0): 
                 mon = 1
             if (day <= 0): 
@@ -75,14 +75,14 @@ class DecreeHelper:
         if (dr is not None): 
             if (dr.kind == DecreeKind.PUBLISHER): 
                 return None
-            res = CanonicDecreeRefUri._new832(t.kit.sofa.text, dr, t.begin_char, t.end_char)
+            res = CanonicDecreeRefUri._new837(t.kit.sofa.text, dr, t.begin_char, t.end_char)
             if ((t.previous is not None and t.previous.is_char('(') and t.next0_ is not None) and t.next0_.is_char(')')): 
                 return res
             if ((t).misc_attrs != 0): 
                 return res
             rt = Utils.asObjectOrNull(t, ReferentToken)
             if (rt.begin_token.is_char('(') and rt.end_token.is_char(')')): 
-                res = CanonicDecreeRefUri._new832(t.kit.sofa.text, dr, rt.begin_token.next0_.begin_char, rt.end_token.previous.end_char)
+                res = CanonicDecreeRefUri._new837(t.kit.sofa.text, dr, rt.begin_token.next0_.begin_char, rt.end_token.previous.end_char)
                 return res
             next_decree_items = None
             if ((t.next0_ is not None and t.next0_.is_comma_and and (isinstance(t.next0_.next0_, ReferentToken))) and (isinstance(t.next0_.next0_.get_referent(), DecreeReferent))): 
@@ -97,9 +97,9 @@ class DecreeHelper:
             was_typ = False
             was_num = False
             tt = (t).begin_token
-            first_pass2966 = True
+            first_pass2977 = True
             while True:
-                if first_pass2966: first_pass2966 = False
+                if first_pass2977: first_pass2977 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= t.end_char)): break
                 if (tt.begin_char == t.begin_char and tt.is_char('(') and tt.next0_ is not None): 
@@ -141,9 +141,9 @@ class DecreeHelper:
                         res.begin_char = li[len(li) - 1].begin_char
                         res.end_char = li[len(li) - 1].end_char
                     i = 0
-                    first_pass2967 = True
+                    first_pass2978 = True
                     while True:
-                        if first_pass2967: first_pass2967 = False
+                        if first_pass2978: first_pass2978 = False
                         else: i += 1
                         if (not (i < len(li))): break
                         l_ = li[i]
@@ -216,7 +216,7 @@ class DecreeHelper:
                 has_diap = True
                 t1 = t.next0_.next0_
                 diap_ref = (Utils.asObjectOrNull(t1, ReferentToken))
-        res = CanonicDecreeRefUri._new834(t.kit.sofa.text, dpr, t.begin_char, t1.end_char, has_diap)
+        res = CanonicDecreeRefUri._new839(t.kit.sofa.text, dpr, t.begin_char, t1.end_char, has_diap)
         if ((t.previous is not None and t.previous.is_char('(') and t1.next0_ is not None) and t1.next0_.is_char(')')): 
             return res
         tt = (t).begin_token
@@ -291,9 +291,9 @@ class DecreeHelper:
                 return res
         if (((has_same_before or has_same_after)) and ptmin != PartToken.ItemType.PREFIX): 
             tt = (t).begin_token
-            first_pass2968 = True
+            first_pass2979 = True
             while True:
-                if first_pass2968: first_pass2968 = False
+                if first_pass2979: first_pass2979 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= res.end_char)): break
                 if (tt.begin_char >= res.begin_char): 
@@ -416,9 +416,9 @@ class DecreeHelper:
         ndst0 = None
         ndst1 = None
         tt = t.next0_
-        first_pass2969 = True
+        first_pass2980 = True
         while True:
-            if first_pass2969: first_pass2969 = False
+            if first_pass2980: first_pass2980 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_value("НДС", None)): 
@@ -437,7 +437,7 @@ class DecreeHelper:
                         if (has_nds): 
                             ok = True
                         if (ok): 
-                            return MetaToken._new835(tt, ne.end_token, "Размер НДС должен быть {0}%, а не {1}%".format(nds, ne.real_value))
+                            return MetaToken._new840(tt, ne.end_token, "Размер НДС должен быть {0}%, а не {1}%".format(nds, ne.real_value))
                     ndst1 = ne.end_token
                     tt = ndst1
                     has_nds_perc = True
@@ -461,7 +461,7 @@ class DecreeHelper:
             return None
         if (m1 is None): 
             if (nds_mustbe_money): 
-                return MetaToken._new835(ndst0, ndst1, "Размер НДС должен быть в денежном выражении")
+                return MetaToken._new840(ndst0, ndst1, "Размер НДС должен быть в денежном выражении")
             return None
         if (has_all): 
             return None
@@ -483,16 +483,16 @@ class DecreeHelper:
             if ((delta < 1) and m1.rest == 0 and m.rest == 0): 
                 pass
             else: 
-                mr = MoneyReferent._new837(m1.currency, must_be)
-                return MetaToken._new835(t, tt, "Размер НДС должен быть {0}, а не {1}".format(DecreeHelper.__out_money(mr), DecreeHelper.__out_money(m1)))
+                mr = MoneyReferent._new842(m1.currency, must_be)
+                return MetaToken._new840(t, tt, "Размер НДС должен быть {0}, а не {1}".format(DecreeHelper.__out_money(mr), DecreeHelper.__out_money(m1)))
         if (incl): 
             return None
         m2 = None
         has_all = False
         tt = tt.next0_
-        first_pass2970 = True
+        first_pass2981 = True
         while True:
-            if first_pass2970: first_pass2970 = False
+            if first_pass2981: first_pass2981 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (isinstance(tt, ReferentToken)): 
@@ -512,7 +512,7 @@ class DecreeHelper:
             if (delta < 0): 
                 delta = (- delta)
             if (delta > 0.01): 
-                mr = MoneyReferent._new837(m1.currency, must_be)
+                mr = MoneyReferent._new842(m1.currency, must_be)
                 err = "Всего с НДС должно быть {0}, а не {1}".format(DecreeHelper.__out_money(mr), DecreeHelper.__out_money(m2))
-                return MetaToken._new835(t, tt, err)
+                return MetaToken._new840(t, tt, err)
         return None

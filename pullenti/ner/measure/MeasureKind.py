@@ -23,6 +23,8 @@ class MeasureKind(IntEnum):
     """ Температура """
     IP = 8
     """ Класс защиты """
+    PERCENT = 9
+    """ Процент """
     
     @classmethod
     def has_value(cls, value):

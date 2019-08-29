@@ -28,7 +28,7 @@ class ExtOntologyItem:
             return res
     
     @staticmethod
-    def _new2775(_arg1 : object, _arg2 : 'Referent', _arg3 : str) -> 'ExtOntologyItem':
+    def _new2784(_arg1 : object, _arg2 : 'Referent', _arg3 : str) -> 'ExtOntologyItem':
         res = ExtOntologyItem()
         res.ext_id = _arg1
         res.referent = _arg2

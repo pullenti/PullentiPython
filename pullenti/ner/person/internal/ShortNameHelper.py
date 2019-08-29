@@ -24,7 +24,7 @@ class ShortNameHelper:
             return self.name
         
         @staticmethod
-        def _new2564(_arg1 : str, _arg2 : 'MorphGender') -> 'ShortnameVar':
+        def _new2573(_arg1 : str, _arg2 : 'MorphGender') -> 'ShortnameVar':
             res = ShortNameHelper.ShortnameVar()
             res.name = _arg1
             res.gender = _arg2
@@ -45,10 +45,10 @@ class ShortNameHelper:
     @staticmethod
     def get_names_for_shortname(shortname : str) -> typing.List['ShortnameVar']:
         res = [ ]
-        wrapres2562 = RefOutArgWrapper(None)
-        inoutres2563 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, shortname, wrapres2562)
-        res = wrapres2562.value
-        if (not inoutres2563): 
+        wrapres2571 = RefOutArgWrapper(None)
+        inoutres2572 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, shortname, wrapres2571)
+        res = wrapres2571.value
+        if (not inoutres2572): 
             return None
         else: 
             return res
@@ -79,13 +79,13 @@ class ShortNameHelper:
                         t = t.next0_
                     for s in shos: 
                         li = None
-                        wrapli2565 = RefOutArgWrapper(None)
-                        inoutres2566 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, s, wrapli2565)
-                        li = wrapli2565.value
-                        if (not inoutres2566): 
+                        wrapli2574 = RefOutArgWrapper(None)
+                        inoutres2575 = Utils.tryGetValue(ShortNameHelper.M_SHORTS_NAMES, s, wrapli2574)
+                        li = wrapli2574.value
+                        if (not inoutres2575): 
                             li = list()
                             ShortNameHelper.M_SHORTS_NAMES[s] = li
-                        li.append(ShortNameHelper.ShortnameVar._new2564(nam, g))
+                        li.append(ShortNameHelper.ShortnameVar._new2573(nam, g))
                     if (t is None): 
                         break
                     t = t.previous

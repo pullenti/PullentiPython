@@ -47,9 +47,9 @@ class NumberExHelper:
                 return None
             val = tt.term
             i = 4
-            first_pass2919 = True
+            first_pass2930 = True
             while True:
-                if first_pass2919: first_pass2919 = False
+                if first_pass2930: first_pass2930 = False
                 else: i += 1
                 if (not (i < (len(val) - 5))): break
                 v = val[0:0+i]

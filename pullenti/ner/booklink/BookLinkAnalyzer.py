@@ -110,9 +110,9 @@ class BookLinkAnalyzer(Analyzer):
         refs_by_num = dict()
         rts = [ ]
         t = kit.first_token
-        first_pass2888 = True
+        first_pass2899 = True
         while True:
-            if first_pass2888: first_pass2888 = False
+            if first_pass2899: first_pass2899 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char('(')): 
@@ -176,9 +176,9 @@ class BookLinkAnalyzer(Analyzer):
                     refs_by_num[re.number] = li
                 li.append(re)
         t = kit.first_token
-        first_pass2889 = True
+        first_pass2900 = True
         while True:
-            if first_pass2889: first_pass2889 = False
+            if first_pass2900: first_pass2900 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -225,9 +225,9 @@ class BookLinkAnalyzer(Analyzer):
                 return None
             if (bbb.typ == BookLinkTyp.SEE): 
                 tt = bbb.end_token.next0_
-                first_pass2890 = True
+                first_pass2901 = True
                 while True:
-                    if first_pass2890: first_pass2890 = False
+                    if first_pass2901: first_pass2901 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_char_of(",:.")): 
@@ -301,9 +301,9 @@ class BookLinkAnalyzer(Analyzer):
                         pass
                     else: 
                         return None
-            first_pass2891 = True
+            first_pass2902 = True
             while True:
-                if first_pass2891: first_pass2891 = False
+                if first_pass2902: first_pass2902 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (isinstance(t, NumberToken)): 
@@ -339,9 +339,9 @@ class BookLinkAnalyzer(Analyzer):
             else: 
                 ok = False
                 tt = t
-                first_pass2892 = True
+                first_pass2903 = True
                 while True:
-                    if first_pass2892: first_pass2892 = False
+                    if first_pass2903: first_pass2903 = False
                     else: tt = (None if tt is None else tt.next0_)
                     if (not (tt is not None)): break
                     if (tt.is_newline_before): 
@@ -382,9 +382,9 @@ class BookLinkAnalyzer(Analyzer):
         start_of_name = None
         prev_pers_templ = FioTemplateType.UNDEFINED
         if (regtyp == BookLinkAnalyzer.RegionTyp.AUTHORS): 
-            first_pass2893 = True
+            first_pass2904 = True
             while True:
-                if first_pass2893: first_pass2893 = False
+                if first_pass2904: first_pass2904 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (max_char > 0 and t.begin_char >= max_char): 
@@ -493,9 +493,9 @@ class BookLinkAnalyzer(Analyzer):
         if (br is not None): 
             t = t.next0_
         pages = None
-        first_pass2894 = True
+        first_pass2905 = True
         while True:
-            if first_pass2894: first_pass2894 = False
+            if first_pass2905: first_pass2905 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char > 0 and t.begin_char >= max_char): 
@@ -544,9 +544,9 @@ class BookLinkAnalyzer(Analyzer):
                 words = 0
                 notwords = 0
                 tt = t.next0_
-                first_pass2895 = True
+                first_pass2906 = True
                 while True:
-                    if first_pass2895: first_pass2895 = False
+                    if first_pass2906: first_pass2906 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     blt0 = BookLinkToken.try_parse(tt, 0)
@@ -728,9 +728,9 @@ class BookLinkAnalyzer(Analyzer):
                 coef -= (2)
         if (res.lang == "EN"): 
             tt = tn0.next0_
-            first_pass2896 = True
+            first_pass2907 = True
             while True:
-                if first_pass2896: first_pass2896 = False
+                if first_pass2907: first_pass2907 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and (tt.end_char < tn1.end_char))): break
                 if (tt.is_comma and tt.next0_ is not None and ((not tt.next0_.chars.is_all_lower or (isinstance(tt.next0_, ReferentToken))))): 
@@ -747,9 +747,9 @@ class BookLinkAnalyzer(Analyzer):
         authors = True
         edits = False
         br = (None)
-        first_pass2897 = True
+        first_pass2908 = True
         while True:
-            if first_pass2897: first_pass2897 = False
+            if first_pass2908: first_pass2908 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char > 0 and t.begin_char >= max_char): 

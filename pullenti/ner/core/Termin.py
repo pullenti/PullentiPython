@@ -216,7 +216,7 @@ class Termin:
             return False
         
         @staticmethod
-        def _new1945(_arg1 : 'TextToken', _arg2 : bool) -> 'Term':
+        def _new1954(_arg1 : 'TextToken', _arg2 : bool) -> 'Term':
             res = Termin.Term(_arg1)
             res.is_pattern_any = _arg2
             return res
@@ -228,7 +228,7 @@ class Termin:
             self.tail = None;
         
         def add_part(self, val : str, has_delim : bool=False) -> None:
-            self.parts.append(Termin.AbridgePart._new621(val, has_delim))
+            self.parts.append(Termin.AbridgePart._new625(val, has_delim))
         
         def __str__(self) -> str:
             if (self.tail is not None): 
@@ -298,7 +298,7 @@ class Termin:
                         point = False
                     tt = tt.next0_
                     i += 1
-                res = TerminToken._new622(t0, te, t0 == te)
+                res = TerminToken._new626(t0, te, t0 == te)
                 if (point): 
                     res.morph = MorphCollection()
                 return res
@@ -325,14 +325,14 @@ class Termin:
                 return self.value
         
         @staticmethod
-        def _new621(_arg1 : str, _arg2 : bool) -> 'AbridgePart':
+        def _new625(_arg1 : str, _arg2 : bool) -> 'AbridgePart':
             res = Termin.AbridgePart()
             res.value = _arg1
             res.has_delim = _arg2
             return res
         
         @staticmethod
-        def _new623(_arg1 : str) -> 'AbridgePart':
+        def _new627(_arg1 : str) -> 'AbridgePart':
             res = Termin.AbridgePart()
             res.value = _arg1
             return res
@@ -403,9 +403,9 @@ class Termin:
         elif (not tok and sp): 
             wrds = Utils.splitString(text, ' ', False)
             i = 0
-            first_pass2945 = True
+            first_pass2956 = True
             while True:
-                if first_pass2945: first_pass2945 = False
+                if first_pass2956: first_pass2956 = False
                 else: i += 1
                 if (not (i < len(wrds))): break
                 if (Utils.isNullOrEmpty(wrds[i])): 
@@ -508,7 +508,7 @@ class Termin:
             i += 1
         if (i == 0): 
             return None
-        a.parts.append(Termin.AbridgePart._new623(abr[0:0+i].upper()))
+        a.parts.append(Termin.AbridgePart._new627(abr[0:0+i].upper()))
         self.abridges.append(a)
         if (((i + 1) < len(abr)) and abr[i] == '-'): 
             a.tail = abr[i + 1:].upper()
@@ -522,7 +522,7 @@ class Termin:
                         if (not str.isalpha(abr[j])): 
                             break
                         j += 1
-                    p = Termin.AbridgePart._new623(abr[i:i+j - i].upper())
+                    p = Termin.AbridgePart._new627(abr[i:i+j - i].upper())
                     if (j < len(abr)): 
                         if (not Utils.isWhitespace(abr[j])): 
                             p.has_delim = True
@@ -698,9 +698,9 @@ class Termin:
         if (self.acronym_smart is not None and (((pars) & (TerminParseAttr.FULLWORDSONLY))) == (TerminParseAttr.NO) and term is not None): 
             if (self.acronym_smart == term): 
                 if (t0.next0_ is not None and t0.next0_.is_char('.') and not t0.is_whitespace_after): 
-                    return TerminToken._new625(t0, t0.next0_, self)
+                    return TerminToken._new629(t0, t0.next0_, self)
                 else: 
-                    return TerminToken._new625(t0, t0, self)
+                    return TerminToken._new629(t0, t0, self)
             t1 = Utils.asObjectOrNull(t0, TextToken)
             tt = Utils.asObjectOrNull(t0, TextToken)
             i = 0
@@ -720,13 +720,13 @@ class Termin:
                 tt = (Utils.asObjectOrNull(tt.next0_.next0_, TextToken))
                 i += 1
             if (i >= len(self.acronym)): 
-                return TerminToken._new625(t0, t1, self)
+                return TerminToken._new629(t0, t1, self)
         if (self.acronym is not None and term is not None and self.acronym == term): 
             if (t0.chars.is_all_upper or self.acronym_can_be_lower or ((not t0.chars.is_all_lower and len(term) >= 3))): 
-                return TerminToken._new625(t0, t0, self)
+                return TerminToken._new629(t0, t0, self)
         if (self.acronym is not None and t0.chars.is_last_lower and t0.length_char > 3): 
             if (t0.is_value(self.acronym, None)): 
-                return TerminToken._new625(t0, t0, self)
+                return TerminToken._new629(t0, t0, self)
         cou = 0
         i = 0
         while i < len(self.terms): 
@@ -744,9 +744,9 @@ class Termin:
             mc = None
             dont_change_mc = False
             i = 0
-            first_pass2946 = True
+            first_pass2957 = True
             while True:
-                if first_pass2946: first_pass2946 = False
+                if first_pass2957: first_pass2957 = False
                 else: i += 1
                 if (not (i < len(self.terms))): break
                 if (self.terms[i].is_hiphen): 
@@ -822,7 +822,7 @@ class Termin:
                     npt = NounPhraseHelper.try_parse(t0, NounPhraseParseAttr.NO, 0)
                     if (npt is not None and npt.end_char <= t1.end_char): 
                         mc = npt.morph
-                return TerminToken._new630(t0, t1, mc)
+                return TerminToken._new634(t0, t1, mc)
         if (len(self.terms) > 1 and self.ignore_terms_order): 
             terms_ = list(self.terms)
             t1 = t0
@@ -892,9 +892,9 @@ class Termin:
         if (self.acronym_smart is not None and (((pars) & (TerminParseAttr.FULLWORDSONLY))) == (TerminParseAttr.NO) and term is not None): 
             if (self.acronym_smart == term): 
                 if (t0.next0_ is not None and t0.next0_.is_char('.') and not t0.is_whitespace_after): 
-                    return TerminToken._new625(t0, t0.next0_, self)
+                    return TerminToken._new629(t0, t0.next0_, self)
                 else: 
-                    return TerminToken._new625(t0, t0, self)
+                    return TerminToken._new629(t0, t0, self)
             t1 = Utils.asObjectOrNull(t0, TextToken)
             tt = Utils.asObjectOrNull(t0, TextToken)
             i = 0
@@ -914,13 +914,13 @@ class Termin:
                 tt = (Utils.asObjectOrNull(tt.next0_.next0_, TextToken))
                 i += 1
             if (i >= len(self.acronym)): 
-                return TerminToken._new625(t0, t1, self)
+                return TerminToken._new629(t0, t1, self)
         if (self.acronym is not None and term is not None and self.acronym == term): 
             if (t0.chars.is_all_upper or self.acronym_can_be_lower or ((not t0.chars.is_all_lower and len(term) >= 3))): 
-                return TerminToken._new625(t0, t0, self)
+                return TerminToken._new629(t0, t0, self)
         if (self.acronym is not None and t0.chars.is_last_lower and t0.length_char > 3): 
             if (t0.is_value(self.acronym, None)): 
-                return TerminToken._new625(t0, t0, self)
+                return TerminToken._new629(t0, t0, self)
         if (len(self.terms) > 0): 
             t1 = None
             tt = t0
@@ -994,7 +994,7 @@ class Termin:
                 return None
             if (t0.morph.items_count > 0): 
                 mc = MorphCollection(t0.morph)
-            return TerminToken._new636(t0, t1, mc, self)
+            return TerminToken._new640(t0, t1, mc, self)
         if (self.abridges is not None and (((pars) & (TerminParseAttr.FULLWORDSONLY))) == (TerminParseAttr.NO)): 
             res = None
             for a in self.abridges: 
@@ -1156,39 +1156,39 @@ class Termin:
         return res
     
     @staticmethod
-    def _new594(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : object) -> 'Termin':
+    def _new598(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : object) -> 'Termin':
         res = Termin(_arg1, _arg2, _arg3)
         res.tag = _arg4
         return res
     
     @staticmethod
-    def _new702(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : str) -> 'Termin':
+    def _new707(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : str) -> 'Termin':
         res = Termin(_arg1, _arg2, _arg3)
         res.canonic_text = _arg4
         return res
     
     @staticmethod
-    def _new898(_arg1 : str, _arg2 : 'MorphLang') -> 'Termin':
+    def _new905(_arg1 : str, _arg2 : 'MorphLang') -> 'Termin':
         res = Termin(_arg1)
         res.lang = _arg2
         return res
     
     @staticmethod
-    def _new910(_arg1 : str, _arg2 : 'MorphLang', _arg3 : object, _arg4 : object) -> 'Termin':
+    def _new917(_arg1 : str, _arg2 : 'MorphLang', _arg3 : object, _arg4 : object) -> 'Termin':
         res = Termin(_arg1, _arg2)
         res.tag = _arg3
         res.tag2 = _arg4
         return res
     
     @staticmethod
-    def _new914(_arg1 : str, _arg2 : 'MorphLang', _arg3 : object, _arg4 : str) -> 'Termin':
+    def _new921(_arg1 : str, _arg2 : 'MorphLang', _arg3 : object, _arg4 : str) -> 'Termin':
         res = Termin(_arg1, _arg2)
         res.tag = _arg3
         res.acronym = _arg4
         return res
     
     @staticmethod
-    def _new920(_arg1 : str, _arg2 : str, _arg3 : 'MorphLang', _arg4 : object) -> 'Termin':
+    def _new927(_arg1 : str, _arg2 : str, _arg3 : 'MorphLang', _arg4 : object) -> 'Termin':
         res = Termin(_arg1)
         res.canonic_text = _arg2
         res.lang = _arg3
@@ -1196,7 +1196,7 @@ class Termin:
         return res
     
     @staticmethod
-    def _new923(_arg1 : str, _arg2 : object, _arg3 : str, _arg4 : object) -> 'Termin':
+    def _new930(_arg1 : str, _arg2 : object, _arg3 : str, _arg4 : object) -> 'Termin':
         res = Termin(_arg1)
         res.tag = _arg2
         res.acronym = _arg3
@@ -1204,7 +1204,7 @@ class Termin:
         return res
     
     @staticmethod
-    def _new925(_arg1 : str, _arg2 : 'MorphLang', _arg3 : object, _arg4 : str, _arg5 : object) -> 'Termin':
+    def _new932(_arg1 : str, _arg2 : 'MorphLang', _arg3 : object, _arg4 : str, _arg5 : object) -> 'Termin':
         res = Termin(_arg1, _arg2)
         res.tag = _arg3
         res.acronym = _arg4
@@ -1212,7 +1212,7 @@ class Termin:
         return res
     
     @staticmethod
-    def _new945(_arg1 : str, _arg2 : str, _arg3 : object, _arg4 : object) -> 'Termin':
+    def _new952(_arg1 : str, _arg2 : str, _arg3 : object, _arg4 : object) -> 'Termin':
         res = Termin(_arg1)
         res.acronym = _arg2
         res.tag = _arg3
@@ -1220,57 +1220,57 @@ class Termin:
         return res
     
     @staticmethod
-    def _new994(_arg1 : str, _arg2 : 'MorphLang', _arg3 : str, _arg4 : object) -> 'Termin':
+    def _new1001(_arg1 : str, _arg2 : 'MorphLang', _arg3 : str, _arg4 : object) -> 'Termin':
         res = Termin(_arg1, _arg2)
         res.canonic_text = _arg3
         res.tag = _arg4
         return res
     
     @staticmethod
-    def _new1113(_arg1 : str, _arg2 : str) -> 'Termin':
+    def _new1120(_arg1 : str, _arg2 : str) -> 'Termin':
         res = Termin(_arg1)
         res.canonic_text = _arg2
         return res
     
     @staticmethod
-    def _new1148(_arg1 : str, _arg2 : 'MorphLang', _arg3 : str) -> 'Termin':
+    def _new1155(_arg1 : str, _arg2 : 'MorphLang', _arg3 : str) -> 'Termin':
         res = Termin(_arg1, _arg2)
         res.canonic_text = _arg3
         return res
     
     @staticmethod
-    def _new1248(_arg1 : str, _arg2 : 'MorphLang') -> 'Termin':
+    def _new1255(_arg1 : str, _arg2 : 'MorphLang') -> 'Termin':
         res = Termin()
         res.acronym = _arg1
         res.lang = _arg2
         return res
     
     @staticmethod
-    def _new1496(_arg1 : str, _arg2 : 'MorphLang', _arg3 : str) -> 'Termin':
+    def _new1503(_arg1 : str, _arg2 : 'MorphLang', _arg3 : str) -> 'Termin':
         res = Termin(_arg1, _arg2)
         res.acronym = _arg3
         return res
     
     @staticmethod
-    def _new2325(_arg1 : str, _arg2 : object) -> 'Termin':
+    def _new2334(_arg1 : str, _arg2 : object) -> 'Termin':
         res = Termin(_arg1)
         res.tag2 = _arg2
         return res
     
     @staticmethod
-    def _new2584(_arg1 : str, _arg2 : bool) -> 'Termin':
+    def _new2593(_arg1 : str, _arg2 : bool) -> 'Termin':
         res = Termin(_arg1)
         res.ignore_terms_order = _arg2
         return res
     
     @staticmethod
-    def _new2606(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : object) -> 'Termin':
+    def _new2615(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : object) -> 'Termin':
         res = Termin(_arg1, _arg2, _arg3)
         res.tag2 = _arg4
         return res
     
     @staticmethod
-    def _new2699(_arg1 : str, _arg2 : str, _arg3 : object, _arg4 : str) -> 'Termin':
+    def _new2708(_arg1 : str, _arg2 : str, _arg3 : object, _arg4 : str) -> 'Termin':
         res = Termin(_arg1)
         res.canonic_text = _arg2
         res.tag = _arg3
@@ -1278,7 +1278,7 @@ class Termin:
         return res
     
     @staticmethod
-    def _new2709(_arg1 : str, _arg2 : str, _arg3 : object, _arg4 : str, _arg5 : bool) -> 'Termin':
+    def _new2718(_arg1 : str, _arg2 : str, _arg3 : object, _arg4 : str, _arg5 : bool) -> 'Termin':
         res = Termin(_arg1)
         res.canonic_text = _arg2
         res.tag = _arg3
@@ -1287,7 +1287,7 @@ class Termin:
         return res
     
     @staticmethod
-    def _new2722(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : str, _arg5 : object, _arg6 : object) -> 'Termin':
+    def _new2731(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : str, _arg5 : object, _arg6 : object) -> 'Termin':
         res = Termin(_arg1, _arg2, _arg3)
         res.canonic_text = _arg4
         res.tag = _arg5
@@ -1295,7 +1295,7 @@ class Termin:
         return res
     
     @staticmethod
-    def _new2723(_arg1 : str, _arg2 : str, _arg3 : object, _arg4 : object) -> 'Termin':
+    def _new2732(_arg1 : str, _arg2 : str, _arg3 : object, _arg4 : object) -> 'Termin':
         res = Termin(_arg1)
         res.canonic_text = _arg2
         res.tag = _arg3
@@ -1303,7 +1303,7 @@ class Termin:
         return res
     
     @staticmethod
-    def _new2726(_arg1 : str, _arg2 : str, _arg3 : str, _arg4 : object, _arg5 : object, _arg6 : bool) -> 'Termin':
+    def _new2735(_arg1 : str, _arg2 : str, _arg3 : str, _arg4 : object, _arg5 : object, _arg6 : bool) -> 'Termin':
         res = Termin(_arg1)
         res.canonic_text = _arg2
         res.acronym = _arg3
@@ -1313,14 +1313,14 @@ class Termin:
         return res
     
     @staticmethod
-    def _new2750(_arg1 : str, _arg2 : str, _arg3 : object) -> 'Termin':
+    def _new2759(_arg1 : str, _arg2 : str, _arg3 : object) -> 'Termin':
         res = Termin(_arg1)
         res.acronym = _arg2
         res.tag = _arg3
         return res
     
     @staticmethod
-    def _new2760(_arg1 : str, _arg2 : str, _arg3 : str, _arg4 : object) -> 'Termin':
+    def _new2769(_arg1 : str, _arg2 : str, _arg3 : str, _arg4 : object) -> 'Termin':
         res = Termin(_arg1)
         res.canonic_text = _arg2
         res.acronym = _arg3

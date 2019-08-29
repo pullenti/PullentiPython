@@ -148,7 +148,7 @@ class KeywordReferent(Referent):
         return res
     
     @staticmethod
-    def _new1581(_arg1 : 'KeywordType') -> 'KeywordReferent':
+    def _new1588(_arg1 : 'KeywordType') -> 'KeywordReferent':
         res = KeywordReferent()
         res.typ = _arg1
         return res

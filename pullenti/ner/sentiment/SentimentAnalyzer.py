@@ -78,9 +78,9 @@ class SentimentAnalyzer(Analyzer):
     def process(self, kit : 'AnalysisKit') -> None:
         ad = kit.get_analyzer_data(self)
         t = kit.first_token
-        first_pass3264 = True
+        first_pass3275 = True
         while True:
-            if first_pass3264: first_pass3264 = False
+            if first_pass3275: first_pass3275 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -96,9 +96,9 @@ class SentimentAnalyzer(Analyzer):
             t0 = t
             t1 = tok.end_token
             tt = t.previous
-            first_pass3265 = True
+            first_pass3276 = True
             while True:
-                if first_pass3265: first_pass3265 = False
+                if first_pass3276: first_pass3276 = False
                 else: tt = tt.previous
                 if (not (tt is not None)): break
                 tok0 = SentimentAnalyzer.__m_termins.try_parse(tt, TerminParseAttr.NO)
@@ -114,9 +114,9 @@ class SentimentAnalyzer(Analyzer):
                     continue
                 break
             tt = t1.next0_
-            first_pass3266 = True
+            first_pass3277 = True
             while True:
-                if first_pass3266: first_pass3266 = False
+                if first_pass3277: first_pass3277 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not ((isinstance(tt, TextToken)))): 

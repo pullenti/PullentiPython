@@ -10,7 +10,7 @@ class ProgressPeace:
         self.max0_ = 0
     
     @staticmethod
-    def _new2804(_arg1 : float, _arg2 : float) -> 'ProgressPeace':
+    def _new2813(_arg1 : float, _arg2 : float) -> 'ProgressPeace':
         res = ProgressPeace()
         res.min0_ = _arg1
         res.max0_ = _arg2

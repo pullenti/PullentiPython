@@ -211,9 +211,16 @@ class UnitToken(MetaToken):
                 nex = UnitToken.try_parse(tt.next0_, add_units, None, False)
                 if (nex is not None): 
                     return None
+            if (toks[0].begin_token == toks[0].end_token and ((toks[0].begin_token.is_value("М", None) or toks[0].begin_token.is_value("M", None))) and toks[0].begin_token.chars.is_all_lower): 
+                if (prev is not None and prev.unit is not None and prev.unit.kind == MeasureKind.LENGTH): 
+                    res = UnitToken._new1619(t0, toks[0].end_token, UnitsHelper.UMINUTE)
+                    res.pow0_ = pow0__
+                    if (is_neg): 
+                        res.pow0_ = (- pow0__)
+                    return res
             uts = list()
             for tok in toks: 
-                res = UnitToken._new1612(t0, tok.end_token, Utils.asObjectOrNull(tok.termin.tag, Unit))
+                res = UnitToken._new1619(t0, tok.end_token, Utils.asObjectOrNull(tok.termin.tag, Unit))
                 res.pow0_ = pow0__
                 if (is_neg): 
                     res.pow0_ = (- pow0__)
@@ -244,7 +251,7 @@ class UnitToken(MetaToken):
         elif ((t.is_char('<') and t.next0_ is not None and t.next0_.next0_ is not None) and t.next0_.next0_.is_char('>') and ((t.next0_.is_value("О", None) or t.next0_.is_value("O", None) or (((isinstance(t.next0_, NumberToken)) and (t.next0_).value == "0"))))): 
             t1 = t.next0_.next0_
         if (t1 is not None): 
-            res = UnitToken._new1612(t0, t1, UnitsHelper.UGRADUS)
+            res = UnitToken._new1619(t0, t1, UnitsHelper.UGRADUS)
             res.__check_doubt()
             t = t1.next0_
             if (t is not None and t.is_comma): 
@@ -265,24 +272,24 @@ class UnitToken(MetaToken):
         if ((isinstance(t, TextToken)) and ((t.is_value("ОС", None) or t.is_value("OC", None)))): 
             str0_ = t.get_source_text()
             if (str0_ == "оС" or str0_ == "oC"): 
-                res = UnitToken._new1722(t, t, UnitsHelper.UGRADUSC, False)
+                res = UnitToken._new1731(t, t, UnitsHelper.UGRADUSC, False)
                 return res
         if (t.is_char('%')): 
             tt1 = t.next0_
             if (tt1 is not None and tt1.is_char('(')): 
                 tt1 = tt1.next0_
             if ((isinstance(tt1, TextToken)) and (tt1).term.startswith("ОБ")): 
-                re = UnitToken._new1612(t, tt1, UnitsHelper.UALCO)
+                re = UnitToken._new1619(t, tt1, UnitsHelper.UALCO)
                 if (re.end_token.next0_ is not None and re.end_token.next0_.is_char('.')): 
                     re.end_token = re.end_token.next0_
                 if (re.end_token.next0_ is not None and re.end_token.next0_.is_char(')') and t.next0_.is_char('(')): 
                     re.end_token = re.end_token.next0_
                 return re
-            return UnitToken._new1612(t, t, UnitsHelper.UPERCENT)
+            return UnitToken._new1619(t, t, UnitsHelper.UPERCENT)
         if (add_units is not None): 
             tok = add_units.try_parse(t, TerminParseAttr.NO)
             if (tok is not None): 
-                res = UnitToken._new1725(t0, tok.end_token, Utils.asObjectOrNull(tok.termin.tag, UnitReferent))
+                res = UnitToken._new1734(t0, tok.end_token, Utils.asObjectOrNull(tok.termin.tag, UnitReferent))
                 if (tok.end_token.next0_ is not None and tok.end_token.next0_.is_char('.')): 
                     tok.end_token = tok.end_token.next0_
                 res.pow0_ = pow0__
@@ -313,7 +320,7 @@ class UnitToken(MetaToken):
             pass
         elif (t.length_char > 7): 
             return None
-        res1 = UnitToken._new1726(t0, t1, pow0__, True)
+        res1 = UnitToken._new1735(t0, t1, pow0__, True)
         res1.unknown_name = (t).get_source_text()
         res1.__correct()
         return res1
@@ -371,9 +378,9 @@ class UnitToken(MetaToken):
                 self.is_doubt = False
         cou = 0
         t = self.begin_token.previous
-        first_pass3180 = True
+        first_pass3191 = True
         while True:
-            if first_pass3180: first_pass3180 = False
+            if first_pass3191: first_pass3191 = False
             else: t = t.previous; cou += 1
             if (not (t is not None and (cou < 30))): break
             mr = Utils.asObjectOrNull(t.get_referent(), MeasureReferent)
@@ -434,26 +441,26 @@ class UnitToken(MetaToken):
         return Utils.toStringStringIO(res)
     
     @staticmethod
-    def _new1612(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Unit') -> 'UnitToken':
+    def _new1619(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Unit') -> 'UnitToken':
         res = UnitToken(_arg1, _arg2)
         res.unit = _arg3
         return res
     
     @staticmethod
-    def _new1722(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Unit', _arg4 : bool) -> 'UnitToken':
+    def _new1731(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Unit', _arg4 : bool) -> 'UnitToken':
         res = UnitToken(_arg1, _arg2)
         res.unit = _arg3
         res.is_doubt = _arg4
         return res
     
     @staticmethod
-    def _new1725(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'UnitReferent') -> 'UnitToken':
+    def _new1734(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'UnitReferent') -> 'UnitToken':
         res = UnitToken(_arg1, _arg2)
         res.ext_onto = _arg3
         return res
     
     @staticmethod
-    def _new1726(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : bool) -> 'UnitToken':
+    def _new1735(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : bool) -> 'UnitToken':
         res = UnitToken(_arg1, _arg2)
         res.pow0_ = _arg3
         res.is_doubt = _arg4

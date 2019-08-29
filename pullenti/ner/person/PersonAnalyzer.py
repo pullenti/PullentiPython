@@ -64,9 +64,9 @@ class PersonAnalyzer(Analyzer):
             if (isinstance(referent, PersonReferent)): 
                 exist_props = None
                 i = 0
-                first_pass3252 = True
+                first_pass3263 = True
                 while True:
-                    if first_pass3252: first_pass3252 = False
+                    if first_pass3263: first_pass3263 = False
                     else: i += 1
                     if (not (i < len(referent.slots))): break
                     a = referent.slots[i]
@@ -101,9 +101,9 @@ class PersonAnalyzer(Analyzer):
                                 referent.upload_slot(a, pat.referent)
             if (isinstance(referent, PersonPropertyReferent)): 
                 i = 0
-                first_pass3253 = True
+                first_pass3264 = True
                 while True:
-                    if first_pass3253: first_pass3253 = False
+                    if first_pass3264: first_pass3264 = False
                     else: i += 1
                     if (not (i < len(referent.slots))): break
                     a = referent.slots[i]
@@ -236,7 +236,7 @@ class PersonAnalyzer(Analyzer):
                                                 rt1 = Utils.asObjectOrNull(ss.value, ReferentToken)
                                                 rt1.referent = ad.register_referent(rt1.referent)
                                                 ss.value = rt1.referent
-                                                rr = ReferentToken._new745(rt1.referent, rt1.begin_token, rt1.end_token, rt1.morph)
+                                                rr = ReferentToken._new750(rt1.referent, rt1.begin_token, rt1.end_token, rt1.morph)
                                                 kit.embed_token(rr)
                                                 if (rr.begin_token == rt.begin_token): 
                                                     rt.begin_token = rr
@@ -259,7 +259,7 @@ class PersonAnalyzer(Analyzer):
                                                             rt1 = Utils.asObjectOrNull(ss.value, ReferentToken)
                                                             rt1.referent = ad.register_referent(rt1.referent)
                                                             ss.value = rt1.referent
-                                                            rr = ReferentToken._new745(rt1.referent, rt1.begin_token, rt1.end_token, rt1.morph)
+                                                            rr = ReferentToken._new750(rt1.referent, rt1.begin_token, rt1.end_token, rt1.morph)
                                                             kit.embed_token(rr)
                                                             if (rr.begin_token == rt0.begin_token): 
                                                                 rt0.begin_token = rr
@@ -270,7 +270,7 @@ class PersonAnalyzer(Analyzer):
                                                             if (rr.end_token == pat.end_token): 
                                                                 pat.end_token = rr
                                                     pat.prop_ref = Utils.asObjectOrNull(ad.register_referent(pat.prop_ref), PersonPropertyReferent)
-                                                    rt2 = ReferentToken._new745(pat.prop_ref, pat.begin_token, pat.end_token, pat.morph)
+                                                    rt2 = ReferentToken._new750(pat.prop_ref, pat.begin_token, pat.end_token, pat.morph)
                                                     kit.embed_token(rt2)
                                                     if (rt2.begin_token == rt0.begin_token): 
                                                         rt0.begin_token = rt2
@@ -287,7 +287,7 @@ class PersonAnalyzer(Analyzer):
                                 rt.referent = ad.register_referent(rt.referent)
                                 for p in pats: 
                                     if (p.prop_ref is not None): 
-                                        rr = ReferentToken._new745(p.prop_ref, p.begin_token, p.end_token, p.morph)
+                                        rr = ReferentToken._new750(p.prop_ref, p.begin_token, p.end_token, p.morph)
                                         kit.embed_token(rr)
                                         if (rr.begin_token == rt.begin_token): 
                                             rt.begin_token = rr
@@ -320,18 +320,18 @@ class PersonAnalyzer(Analyzer):
                 if (s.type_name == PersonReferent.ATTR_ATTR and (isinstance(s.value, PersonPropertyReferent))): 
                     pr = Utils.asObjectOrNull(s.value, PersonPropertyReferent)
                     li = [ ]
-                    wrapli2571 = RefOutArgWrapper(None)
-                    inoutres2572 = Utils.tryGetValue(props, pr, wrapli2571)
-                    li = wrapli2571.value
-                    if (not inoutres2572): 
+                    wrapli2580 = RefOutArgWrapper(None)
+                    inoutres2581 = Utils.tryGetValue(props, pr, wrapli2580)
+                    li = wrapli2580.value
+                    if (not inoutres2581): 
                         li = list()
                         props[pr] = li
                     if (not p in li): 
                         li.append(p)
         t = kit.first_token
-        first_pass3254 = True
+        first_pass3265 = True
         while True:
-            if first_pass3254: first_pass3254 = False
+            if first_pass3265: first_pass3265 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (isinstance(t, ReferentToken)): 
@@ -363,13 +363,13 @@ class PersonAnalyzer(Analyzer):
                     pat.data = (ad)
                     pat.save_to_local_ontology()
                     kit.embed_token(pat)
-                    rt = ReferentToken._new745(pers[0], pat, pat, pat.morph)
+                    rt = ReferentToken._new750(pers[0], pat, pat, pat.morph)
                     kit.embed_token(rt)
                     t = (rt)
                     continue
             if (pat.prop_ref is not None): 
                 if (pat.can_be_independent_property or len(pers) > 0): 
-                    rt = ReferentToken._new745(ad.register_referent(pat.prop_ref), pat.begin_token, pat.end_token, pat.morph)
+                    rt = ReferentToken._new750(ad.register_referent(pat.prop_ref), pat.begin_token, pat.end_token, pat.morph)
                     kit.embed_token(rt)
                     t = (rt)
                     continue
@@ -392,7 +392,7 @@ class PersonAnalyzer(Analyzer):
         self.__m_level -= 1
         if (pat is None or pat.prop_ref is None): 
             return None
-        rt = ReferentToken._new745(pat.prop_ref, pat.begin_token, pat.end_token, pat.morph)
+        rt = ReferentToken._new750(pat.prop_ref, pat.begin_token, pat.end_token, pat.morph)
         rt.data = (ad)
         return rt
     
@@ -425,8 +425,8 @@ class PersonAnalyzer(Analyzer):
         if (names is not None): 
             for n in names: 
                 pers = PersonReferent()
-                bi = MorphBaseInfo._new2576(MorphNumber.SINGULAR, t.kit.base_language)
-                bi.class0_ = MorphClass._new2538(True)
+                bi = MorphBaseInfo._new2585(MorphNumber.SINGULAR, t.kit.base_language)
+                bi.class0_ = MorphClass._new2547(True)
                 if (n.firstname.vars0_[0].gender == MorphGender.FEMINIE): 
                     pers.is_female = True
                     bi.gender = MorphGender.FEMINIE
@@ -445,7 +445,7 @@ class PersonAnalyzer(Analyzer):
                             if (sur0 is not None): 
                                 pers.add_slot(PersonReferent.ATTR_LASTNAME, sur0, False, 0)
                         pers.add_slot(PersonReferent.ATTR_LASTNAME, sur, False, 0)
-                res.append(ReferentToken._new745(pers, n.begin_token, n.end_token, n.morph))
+                res.append(ReferentToken._new750(pers, n.begin_token, n.end_token, n.morph))
         return res
     
     @staticmethod
@@ -463,9 +463,9 @@ class PersonAnalyzer(Analyzer):
         can_attach_to_previous_person = True
         is_king = False
         after_be_predicate = False
-        first_pass3255 = True
+        first_pass3266 = True
         while True:
-            if first_pass3255: first_pass3255 = False
+            if first_pass3266: first_pass3266 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (attrs is not None and t.next0_ is not None): 
@@ -654,8 +654,8 @@ class PersonAnalyzer(Analyzer):
                             return None
                         v = pits[0].firstname.vars0_[0]
                         pers = PersonReferent()
-                        bi = MorphBaseInfo._new2579(v.gender, MorphNumber.SINGULAR, pits[0].kit.base_language)
-                        bi.class0_ = MorphClass._new2538(True)
+                        bi = MorphBaseInfo._new2588(v.gender, MorphNumber.SINGULAR, pits[0].kit.base_language)
+                        bi.class0_ = MorphClass._new2547(True)
                         if (v.gender == MorphGender.MASCULINE): 
                             pers.is_male = True
                         elif (v.gender == MorphGender.FEMINIE): 
@@ -679,8 +679,8 @@ class PersonAnalyzer(Analyzer):
                         pr = (Utils.asObjectOrNull((vvv).referent, PersonReferent))
                     if (pr is not None): 
                         pers = PersonReferent()
-                        bi = MorphBaseInfo._new2581(MorphNumber.SINGULAR, attr.gender, attr.kit.base_language)
-                        bi.class0_ = MorphClass._new2538(True)
+                        bi = MorphBaseInfo._new2590(MorphNumber.SINGULAR, attr.gender, attr.kit.base_language)
+                        bi.class0_ = MorphClass._new2547(True)
                         for s in pr.slots: 
                             if (s.type_name == PersonReferent.ATTR_LASTNAME): 
                                 sur = Utils.asObjectOrNull(s.value, str)
@@ -926,7 +926,7 @@ class PersonAnalyzer(Analyzer):
         if (attrs is not None): 
             attr = attrs[len(attrs) - 1]
             if (attr.can_be_single_person and attr.prop_ref is not None): 
-                return ReferentToken._new745(attr.prop_ref, attr.begin_token, attr.end_token, attr.morph)
+                return ReferentToken._new750(attr.prop_ref, attr.begin_token, attr.end_token, attr.morph)
         return None
     
     def process_ontology_item(self, begin : 'Token') -> 'ReferentToken':

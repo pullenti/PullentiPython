@@ -17,7 +17,7 @@ class ProxyReferent:
         return self.value
     
     @staticmethod
-    def _new2812(_arg1 : str, _arg2 : 'Referent') -> 'ProxyReferent':
+    def _new2821(_arg1 : str, _arg2 : 'Referent') -> 'ProxyReferent':
         res = ProxyReferent()
         res.value = _arg1
         res.owner_referent = _arg2

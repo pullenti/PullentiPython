@@ -105,9 +105,9 @@ class StreetReferent(Referent):
         typs_ = self.typs
         if (len(typs_) > 0): 
             i = 0
-            first_pass2882 = True
+            first_pass2893 = True
             while True:
-                if first_pass2882: first_pass2882 = False
+                if first_pass2893: first_pass2893 = False
                 else: i += 1
                 if (not (i < len(typs_))): break
                 if (nam is not None and typs_[i].upper() in nam): 

@@ -722,9 +722,9 @@ class StreetItemToken(MetaToken):
                 pass
             else: 
                 return None
-        first_pass2870 = True
+        first_pass2881 = True
         while True:
-            if first_pass2870: first_pass2870 = False
+            if first_pass2881: first_pass2881 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_count > 0 and len(res) >= max_count): 
@@ -797,9 +797,9 @@ class StreetItemToken(MetaToken):
                     if (not sit.is_in_dictionary): 
                         tt = sit.end_token.next0_
                         has_house = False
-                        first_pass2871 = True
+                        first_pass2882 = True
                         while True:
-                            if first_pass2871: first_pass2871 = False
+                            if first_pass2882: first_pass2882 = False
                             else: tt = tt.next0_
                             if (not (tt is not None)): break
                             if (tt.is_newline_before): 
@@ -907,9 +907,9 @@ class StreetItemToken(MetaToken):
                         break
             t = sit.end_token
         i = 0
-        first_pass2872 = True
+        first_pass2883 = True
         while True:
-            if first_pass2872: first_pass2872 = False
+            if first_pass2883: first_pass2883 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].typ == StreetItemType.NAME and res[i + 1].typ == StreetItemType.NAME and (res[i].whitespaces_after_count < 3)): 
@@ -972,9 +972,9 @@ class StreetItemToken(MetaToken):
                         break
             i += 1
         i = 0
-        first_pass2873 = True
+        first_pass2884 = True
         while True:
-            if first_pass2873: first_pass2873 = False
+            if first_pass2884: first_pass2884 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].typ == StreetItemType.NAME or res[i].typ == StreetItemType.STDNAME or res[i].typ == StreetItemType.STDADJECTIVE): 

@@ -186,7 +186,7 @@ class DateReferent(Referent):
             res = Utils.valToEnum(s, DatePointerType)
             if (isinstance(res, DatePointerType)): 
                 return Utils.valToEnum(res, DatePointerType)
-        except Exception as ex791: 
+        except Exception as ex796: 
             pass
         return DatePointerType.NO
     @pointer.setter
@@ -412,85 +412,85 @@ class DateReferent(Referent):
         return False
     
     @staticmethod
-    def _new728(_arg1 : 'DateReferent', _arg2 : int) -> 'DateReferent':
+    def _new733(_arg1 : 'DateReferent', _arg2 : int) -> 'DateReferent':
         res = DateReferent()
         res.higher = _arg1
         res.day = _arg2
         return res
     
     @staticmethod
-    def _new729(_arg1 : int, _arg2 : int) -> 'DateReferent':
+    def _new734(_arg1 : int, _arg2 : int) -> 'DateReferent':
         res = DateReferent()
         res.month = _arg1
         res.day = _arg2
         return res
     
     @staticmethod
-    def _new730(_arg1 : int) -> 'DateReferent':
+    def _new735(_arg1 : int) -> 'DateReferent':
         res = DateReferent()
         res.year = _arg1
         return res
     
     @staticmethod
-    def _new733(_arg1 : int, _arg2 : int) -> 'DateReferent':
+    def _new738(_arg1 : int, _arg2 : int) -> 'DateReferent':
         res = DateReferent()
         res.hour = _arg1
         res.minute = _arg2
         return res
     
     @staticmethod
-    def _new734(_arg1 : 'DatePointerType') -> 'DateReferent':
+    def _new739(_arg1 : 'DatePointerType') -> 'DateReferent':
         res = DateReferent()
         res.pointer = _arg1
         return res
     
     @staticmethod
-    def _new746(_arg1 : int, _arg2 : 'DateReferent') -> 'DateReferent':
+    def _new751(_arg1 : int, _arg2 : 'DateReferent') -> 'DateReferent':
         res = DateReferent()
         res.month = _arg1
         res.higher = _arg2
         return res
     
     @staticmethod
-    def _new751(_arg1 : int, _arg2 : 'DateReferent') -> 'DateReferent':
+    def _new756(_arg1 : int, _arg2 : 'DateReferent') -> 'DateReferent':
         res = DateReferent()
         res.day = _arg1
         res.higher = _arg2
         return res
     
     @staticmethod
-    def _new767(_arg1 : int) -> 'DateReferent':
+    def _new772(_arg1 : int) -> 'DateReferent':
         res = DateReferent()
         res.month = _arg1
         return res
     
     @staticmethod
-    def _new768(_arg1 : int) -> 'DateReferent':
+    def _new773(_arg1 : int) -> 'DateReferent':
         res = DateReferent()
         res.century = _arg1
         return res
     
     @staticmethod
-    def _new774(_arg1 : int) -> 'DateReferent':
+    def _new779(_arg1 : int) -> 'DateReferent':
         res = DateReferent()
         res.day = _arg1
         return res
     
     @staticmethod
-    def _new776(_arg1 : 'DateReferent') -> 'DateReferent':
+    def _new781(_arg1 : 'DateReferent') -> 'DateReferent':
         res = DateReferent()
         res.higher = _arg1
         return res
     
     @staticmethod
-    def _new777(_arg1 : 'DateReferent', _arg2 : int) -> 'DateReferent':
+    def _new782(_arg1 : 'DateReferent', _arg2 : int) -> 'DateReferent':
         res = DateReferent()
         res.higher = _arg1
         res.month = _arg2
         return res
     
     @staticmethod
-    def _new786(_arg1 : int) -> 'DateReferent':
+    def _new791(_arg1 : int) -> 'DateReferent':
         res = DateReferent()
         res.day_of_week = _arg1
         return res

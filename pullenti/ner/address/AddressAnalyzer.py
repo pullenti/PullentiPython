@@ -121,9 +121,9 @@ class AddressAnalyzer(Analyzer):
         cur = 0
         next_pos = delta
         t = kit.first_token
-        first_pass2874 = True
+        first_pass2885 = True
         while True:
-            if first_pass2874: first_pass2874 = False
+            if first_pass2885: first_pass2885 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.begin_char > next_pos): 
@@ -198,9 +198,9 @@ class AddressAnalyzer(Analyzer):
                 i += 1
             if (i >= len(li) and metro is None and det_typ == AddressDetailType.UNDEFINED): 
                 i = 0
-                first_pass2875 = True
+                first_pass2886 = True
                 while True:
-                    if first_pass2875: first_pass2875 = False
+                    if first_pass2886: first_pass2886 = False
                     else: i += 1
                     if (not (i < len(li))): break
                     cit = False
@@ -242,9 +242,9 @@ class AddressAnalyzer(Analyzer):
                 if (i >= len(li)): 
                     i = -1
                 i = 0
-                first_pass2876 = True
+                first_pass2887 = True
                 while True:
-                    if first_pass2876: first_pass2876 = False
+                    if first_pass2887: first_pass2887 = False
                     else: i += 1
                     if (not (i < len(li))): break
                     if (li[i].tag is not None): 
@@ -458,9 +458,9 @@ class AddressAnalyzer(Analyzer):
                 if (geos is None): 
                     has_geo = False
                     tt = li[0].begin_token.previous
-                    first_pass2877 = True
+                    first_pass2888 = True
                     while True:
-                        if first_pass2877: first_pass2877 = False
+                        if first_pass2888: first_pass2888 = False
                         else: tt = tt.previous
                         if (not (tt is not None)): break
                         if (tt.morph.class0_.is_preposition or tt.is_comma): 
@@ -594,9 +594,9 @@ class AddressAnalyzer(Analyzer):
             ter_ref0 = None
             sr0 = None
             ii = 0
-            first_pass2878 = True
+            first_pass2889 = True
             while True:
-                if first_pass2878: first_pass2878 = False
+                if first_pass2889: first_pass2889 = False
                 else: ii += 1
                 if (not (ii < len(streets))): break
                 s = streets[ii]
@@ -813,9 +813,9 @@ class AddressAnalyzer(Analyzer):
                         t = t.next0_
         sli = list()
         t = kit.first_token
-        first_pass2879 = True
+        first_pass2890 = True
         while True:
-            if first_pass2879: first_pass2879 = False
+            if first_pass2890: first_pass2890 = False
             else: t = (None if t is None else t.next0_)
             if (not (t is not None)): break
             sr = Utils.asObjectOrNull(t.get_referent(), StreetReferent)
@@ -826,9 +826,9 @@ class AddressAnalyzer(Analyzer):
             sli.clear()
             sli.append(sr)
             t = t.next0_
-            first_pass2880 = True
+            first_pass2891 = True
             while True:
-                if first_pass2880: first_pass2880 = False
+                if first_pass2891: first_pass2891 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_comma_and): 
@@ -878,9 +878,9 @@ class AddressAnalyzer(Analyzer):
             return None
         street = Utils.asObjectOrNull(rt.referent, StreetReferent)
         t = rt.end_token.next0_
-        first_pass2881 = True
+        first_pass2892 = True
         while True:
-            if first_pass2881: first_pass2881 = False
+            if first_pass2892: first_pass2892 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not t.is_char(';')): 
