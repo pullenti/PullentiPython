@@ -94,7 +94,7 @@ class GeoReferent(Referent):
                     if (name is None): 
                         name = v
                     elif (len(name) > len(v)): 
-                        if ((len(v) < 4) and (len(name) < 10)): 
+                        if ((len(v) < 4) and (len(name) < 20)): 
                             pass
                         elif (name[len(name) - 1] == 'В'): 
                             pass

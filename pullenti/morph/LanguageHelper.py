@@ -38,9 +38,9 @@ class LanguageHelper:
         ru_chars = 0
         en_chars = 0
         i = 0
-        first_pass2865 = True
+        first_pass2896 = True
         while True:
-            if first_pass2865: first_pass2865 = False
+            if first_pass2896: first_pass2896 = False
             else: i += 1
             if (not (i < len(text))): break
             ch = text[i]
@@ -174,9 +174,9 @@ class LanguageHelper:
         y = False
         udaren = False
         i = 0
-        first_pass2866 = True
+        first_pass2897 = True
         while True:
-            if first_pass2866: first_pass2866 = False
+            if first_pass2897: first_pass2897 = False
             else: i += 1
             if (not (i < len(value))): break
             ch = value[i]
@@ -229,9 +229,9 @@ class LanguageHelper:
                 return value
         tmp = Utils.newStringIO(value)
         i = 0
-        first_pass2867 = True
+        first_pass2898 = True
         while True:
-            if first_pass2867: first_pass2867 = False
+            if first_pass2898: first_pass2898 = False
             else: i += 1
             if (not (i < tmp.tell())): break
             if (Utils.getCharAtStringIO(tmp, i) == 'Ь' and ((i + 1) < tmp.tell()) and Utils.getCharAtStringIO(tmp, i + 1) == 'I'): 
@@ -296,10 +296,10 @@ class LanguageHelper:
             prep(str): предлог
         
         """
-        wrapmc45 = RefOutArgWrapper(None)
-        inoutres46 = Utils.tryGetValue(LanguageHelper.__m_prep_cases, prep, wrapmc45)
-        mc = wrapmc45.value
-        if (inoutres46): 
+        wrapmc60 = RefOutArgWrapper(None)
+        inoutres61 = Utils.tryGetValue(LanguageHelper.__m_prep_cases, prep, wrapmc60)
+        mc = wrapmc60.value
+        if (inoutres61): 
             return mc
         else: 
             return MorphCase.UNDEFINED
@@ -310,10 +310,10 @@ class LanguageHelper:
     
     @staticmethod
     def normalize_preposition(prep : str) -> str:
-        wrapres47 = RefOutArgWrapper(None)
-        inoutres48 = Utils.tryGetValue(LanguageHelper.__m_prep_norms, prep, wrapres47)
-        res = wrapres47.value
-        if (inoutres48): 
+        wrapres62 = RefOutArgWrapper(None)
+        inoutres63 = Utils.tryGetValue(LanguageHelper.__m_prep_norms, prep, wrapres62)
+        res = wrapres62.value
+        if (inoutres63): 
             return res
         else: 
             return prep

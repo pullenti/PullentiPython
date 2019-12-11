@@ -204,7 +204,7 @@ class MorphCase:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphCase._new49(((val1) & (val2)))
+        return MorphCase._new64(((val1) & (val2)))
     
     def __or__(self : 'MorphCase', arg2 : 'MorphCase') -> 'MorphCase':
         val1 = 0
@@ -213,7 +213,7 @@ class MorphCase:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphCase._new49(((val1) | (val2)))
+        return MorphCase._new64(((val1) | (val2)))
     
     def __xor__(self : 'MorphCase', arg2 : 'MorphCase') -> 'MorphCase':
         val1 = 0
@@ -222,7 +222,7 @@ class MorphCase:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphCase._new49(((val1) ^ (val2)))
+        return MorphCase._new64(((val1) ^ (val2)))
     
     def __eq__(self : 'MorphCase', arg2 : 'MorphCase') -> bool:
         val1 = 0
@@ -243,7 +243,7 @@ class MorphCase:
         return val1 != val2
     
     @staticmethod
-    def _new49(_arg1 : int) -> 'MorphCase':
+    def _new64(_arg1 : int) -> 'MorphCase':
         res = MorphCase()
         res.value = _arg1
         return res
@@ -251,18 +251,18 @@ class MorphCase:
     # static constructor for class MorphCase
     @staticmethod
     def _static_ctor():
-        MorphCase.UNDEFINED = MorphCase._new49(0)
-        MorphCase.NOMINATIVE = MorphCase._new49(1)
-        MorphCase.GENITIVE = MorphCase._new49(2)
-        MorphCase.DATIVE = MorphCase._new49(4)
-        MorphCase.ACCUSATIVE = MorphCase._new49(8)
-        MorphCase.INSTRUMENTAL = MorphCase._new49(0x10)
-        MorphCase.PREPOSITIONAL = MorphCase._new49(0x20)
-        MorphCase.VOCATIVE = MorphCase._new49(0x40)
-        MorphCase.PARTIAL = MorphCase._new49(0x80)
-        MorphCase.COMMON = MorphCase._new49(0x100)
-        MorphCase.POSSESSIVE = MorphCase._new49(0x200)
-        MorphCase.ALL_CASES = MorphCase._new49(0x3FF)
+        MorphCase.UNDEFINED = MorphCase._new64(0)
+        MorphCase.NOMINATIVE = MorphCase._new64(1)
+        MorphCase.GENITIVE = MorphCase._new64(2)
+        MorphCase.DATIVE = MorphCase._new64(4)
+        MorphCase.ACCUSATIVE = MorphCase._new64(8)
+        MorphCase.INSTRUMENTAL = MorphCase._new64(0x10)
+        MorphCase.PREPOSITIONAL = MorphCase._new64(0x20)
+        MorphCase.VOCATIVE = MorphCase._new64(0x40)
+        MorphCase.PARTIAL = MorphCase._new64(0x80)
+        MorphCase.COMMON = MorphCase._new64(0x100)
+        MorphCase.POSSESSIVE = MorphCase._new64(0x200)
+        MorphCase.ALL_CASES = MorphCase._new64(0x3FF)
         MorphCase.__m_names = ["именит.", "родит.", "дател.", "винит.", "творит.", "предлож.", "зват.", "частич.", "общ.", "притяж."]
 
 MorphCase._static_ctor()

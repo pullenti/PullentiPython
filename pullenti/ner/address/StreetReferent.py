@@ -105,9 +105,9 @@ class StreetReferent(Referent):
         typs_ = self.typs
         if (len(typs_) > 0): 
             i = 0
-            first_pass2893 = True
+            first_pass2924 = True
             while True:
-                if first_pass2893: first_pass2893 = False
+                if first_pass2924: first_pass2924 = False
                 else: i += 1
                 if (not (i < len(typs_))): break
                 if (nam is not None and typs_[i].upper() in nam): 
@@ -116,7 +116,7 @@ class StreetReferent(Referent):
                     print('/', end="", file=tmp)
                 print(typs_[i], end="", file=tmp)
         else: 
-            print(("вулиця" if lang.is_ua else "улица"), end="", file=tmp)
+            print(("вулиця" if lang is not None and lang.is_ua else "улица"), end="", file=tmp)
         if (self.number is not None): 
             print(" {0}".format(self.number), end="", file=tmp, flush=True)
             if (self.sec_number is not None): 

@@ -98,14 +98,14 @@ class DateRangeReferent(Referent):
         return 0
     
     @staticmethod
-    def _new732(_arg1 : 'DateReferent', _arg2 : 'DateReferent') -> 'DateRangeReferent':
+    def _new749(_arg1 : 'DateReferent', _arg2 : 'DateReferent') -> 'DateRangeReferent':
         res = DateRangeReferent()
         res.date_from = _arg1
         res.date_to = _arg2
         return res
     
     @staticmethod
-    def _new737(_arg1 : 'DateReferent') -> 'DateRangeReferent':
+    def _new754(_arg1 : 'DateReferent') -> 'DateRangeReferent':
         res = DateRangeReferent()
         res.date_to = _arg1
         return res

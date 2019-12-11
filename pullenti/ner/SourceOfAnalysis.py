@@ -44,6 +44,7 @@ class SourceOfAnalysis:
         self.crlf_corrected_count = 0
         self.do_word_correction_by_morph = False
         self.do_words_merging_by_morph = True
+        self.create_number_tokens = True
         self.correction_dict = None
         self.__m_total_transliteral_substitutions = 0
         if (Utils.isNullOrEmpty(txt)): 
@@ -60,9 +61,9 @@ class SourceOfAnalysis:
         cou = 0
         total_len = 0
         i = 0
-        first_pass3321 = True
+        first_pass3353 = True
         while True:
-            if first_pass3321: first_pass3321 = False
+            if first_pass3353: first_pass3353 = False
             else: i += 1
             if (not (i < len(txt))): break
             ch = txt[i]
@@ -274,3 +275,9 @@ class SourceOfAnalysis:
     
     def deserialize(self, stream : io.IOBase) -> None:
         self.text = SerializerHelper.deserialize_string(stream)
+    
+    @staticmethod
+    def _new579(_arg1 : str, _arg2 : bool) -> 'SourceOfAnalysis':
+        res = SourceOfAnalysis(_arg1)
+        res.create_number_tokens = _arg2
+        return res

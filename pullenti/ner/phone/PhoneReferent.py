@@ -33,7 +33,7 @@ class PhoneReferent(Referent):
     def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         if (self.country_code is not None): 
-            print("+{0} ".format(self.country_code), end="", file=res, flush=True)
+            print("{0}{1} ".format(("+" if self.country_code != "8" else ""), self.country_code), end="", file=res, flush=True)
         num = self.number
         if (num is not None and len(num) >= 9): 
             cou = 3

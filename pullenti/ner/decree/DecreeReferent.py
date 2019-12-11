@@ -189,10 +189,10 @@ class DecreeReferent(Referent):
                 i = str0_.find('.')
                 if (i == 4): 
                     str0_ = str0_[0:0+4]
-                wrapi1117 = RefOutArgWrapper(0)
-                inoutres1118 = Utils.tryParseInt(str0_, wrapi1117)
-                i = wrapi1117.value
-                if (inoutres1118): 
+                wrapi1134 = RefOutArgWrapper(0)
+                inoutres1135 = Utils.tryParseInt(str0_, wrapi1134)
+                i = wrapi1134.value
+                if (inoutres1135): 
                     res.append(i)
         return res
     
@@ -544,7 +544,7 @@ class DecreeReferent(Referent):
         return oi
     
     @staticmethod
-    def _new1101(_arg1 : str) -> 'DecreeReferent':
+    def _new1118(_arg1 : str) -> 'DecreeReferent':
         res = DecreeReferent()
         res.typ = _arg1
         return res

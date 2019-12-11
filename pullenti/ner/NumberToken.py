@@ -7,9 +7,10 @@ import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 
 class NumberToken(MetaToken):
     """ Числовой токен (числительное) """
@@ -35,10 +36,10 @@ class NumberToken(MetaToken):
             self.__m_value = self.__m_value[0:0+len(self.__m_value) - 2]
         while len(self.__m_value) > 1 and self.__m_value[0] == '0' and self.__m_value[1] != '.':
             self.__m_value = self.__m_value[1:]
-        wrapn2807 = RefOutArgWrapper(0)
-        inoutres2808 = Utils.tryParseInt(self.__m_value, wrapn2807)
-        n = wrapn2807.value
-        if (inoutres2808): 
+        wrapn2838 = RefOutArgWrapper(0)
+        inoutres2839 = Utils.tryParseInt(self.__m_value, wrapn2838)
+        n = wrapn2838.value
+        if (inoutres2839): 
             self.__m_int_val = n
         else: 
             self.__m_int_val = (None)
@@ -86,13 +87,11 @@ class NumberToken(MetaToken):
         return str(self.value)
     
     def _serialize(self, stream : io.IOBase) -> None:
-        from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         super()._serialize(stream)
         SerializerHelper.serialize_string(stream, self.__m_value)
         SerializerHelper.serialize_int(stream, self.typ)
     
     def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit', vers : int) -> None:
-        from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         super()._deserialize(stream, kit_, vers)
         if (vers == 0): 
             buf = Utils.newArrayOfBytes(8, 0)
@@ -104,7 +103,7 @@ class NumberToken(MetaToken):
         self.typ = (Utils.valToEnum(SerializerHelper.deserialize_int(stream), NumberSpellingType))
     
     @staticmethod
-    def _new572(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'MorphCollection') -> 'NumberToken':
+    def _new588(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'MorphCollection') -> 'NumberToken':
         res = NumberToken(_arg1, _arg2, _arg3, _arg4)
         res.morph = _arg5
         return res

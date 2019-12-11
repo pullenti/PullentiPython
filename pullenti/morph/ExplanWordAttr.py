@@ -172,7 +172,7 @@ class ExplanWordAttr:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return ExplanWordAttr._new43(((val1) & (val2)))
+        return ExplanWordAttr._new58(((val1) & (val2)))
     
     def __or__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> 'ExplanWordAttr':
         val1 = 0
@@ -181,7 +181,7 @@ class ExplanWordAttr:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return ExplanWordAttr._new43(((val1) | (val2)))
+        return ExplanWordAttr._new58(((val1) | (val2)))
     
     def __eq__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> bool:
         val1 = 0
@@ -204,7 +204,7 @@ class ExplanWordAttr:
     UNDEFINED = None
     
     @staticmethod
-    def _new43(_arg1 : int) -> 'ExplanWordAttr':
+    def _new58(_arg1 : int) -> 'ExplanWordAttr':
         res = ExplanWordAttr()
         res.value = _arg1
         return res

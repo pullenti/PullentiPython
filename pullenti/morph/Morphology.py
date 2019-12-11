@@ -230,6 +230,8 @@ class Morphology:
             return var
         return Utils.ifNotNull(Morphology.__m_inner.get_wordform(var, MorphClass.ADJECTIVE, bi.gender, bi.case_, bi.number, MorphLang.UNKNOWN, None), var)
     
+    LAZY_LOAD = True
+    
     # static constructor for class Morphology
     @staticmethod
     def _static_ctor():

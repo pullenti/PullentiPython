@@ -57,13 +57,13 @@ class AnalysisKit:
                     pass
                 tt = TextToken(mt, self)
                 if (sofa_.correction_dict is not None): 
-                    wrapcorw543 = RefOutArgWrapper(None)
-                    inoutres544 = Utils.tryGetValue(sofa_.correction_dict, mt.term, wrapcorw543)
-                    corw = wrapcorw543.value
-                    if (inoutres544): 
+                    wrapcorw558 = RefOutArgWrapper(None)
+                    inoutres559 = Utils.tryGetValue(sofa_.correction_dict, mt.term, wrapcorw558)
+                    corw = wrapcorw558.value
+                    if (inoutres559): 
                         ccc = Morphology.process(corw, lang, None)
                         if (ccc is not None and len(ccc) == 1): 
-                            tt1 = TextToken._new542(ccc[0], self, tt.term)
+                            tt1 = TextToken._new557(ccc[0], self, tt.term)
                             tt1.begin_char = tt.begin_char
                             tt1.end_char = tt.end_char
                             tt1.chars = tt.chars
@@ -85,23 +85,24 @@ class AnalysisKit:
             self.__correct_words_by_morph(lang)
         self.__merge_letters()
         self.__define_base_language()
-        t = self.first_token
-        first_pass2939 = True
-        while True:
-            if first_pass2939: first_pass2939 = False
-            else: t = t.next0_
-            if (not (t is not None)): break
-            nt = NumberHelper._try_parse_number(t)
-            if (nt is None): 
-                continue
-            self.embed_token(nt)
-            t = (nt)
+        if (sofa_.create_number_tokens): 
+            t = self.first_token
+            first_pass2970 = True
+            while True:
+                if first_pass2970: first_pass2970 = False
+                else: t = t.next0_
+                if (not (t is not None)): break
+                nt = NumberHelper._try_parse_number(t)
+                if (nt is None): 
+                    continue
+                self.embed_token(nt)
+                t = (nt)
         if (only_tokenizing): 
             return
         t = self.first_token
-        first_pass2940 = True
+        first_pass2971 = True
         while True:
-            if first_pass2940: first_pass2940 = False
+            if first_pass2971: first_pass2971 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.morph.class0_.is_preposition): 
@@ -138,9 +139,9 @@ class AnalysisKit:
     
     def __clear_dust(self) -> None:
         t = self.first_token
-        first_pass2941 = True
+        first_pass2972 = True
         while True:
-            if first_pass2941: first_pass2941 = False
+            if first_pass2972: first_pass2972 = False
             else: t = t.next0_
             if (not (t is not None)): break
             cou = AnalysisKit.__calc_abnormal_coef(t)
@@ -149,9 +150,9 @@ class AnalysisKit:
                 continue
             t1 = t
             tt = t
-            first_pass2942 = True
+            first_pass2973 = True
             while True:
-                if first_pass2942: first_pass2942 = False
+                if first_pass2973: first_pass2973 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 co = AnalysisKit.__calc_abnormal_coef(tt)
@@ -205,9 +206,9 @@ class AnalysisKit:
     
     def __correct_words_by_merging(self, lang : 'MorphLang') -> None:
         t = self.first_token
-        first_pass2943 = True
+        first_pass2974 = True
         while True:
-            if first_pass2943: first_pass2943 = False
+            if first_pass2974: first_pass2974 = False
             else: t = t.next0_
             if (not (t is not None and t.next0_ is not None)): break
             if (not t.chars.is_letter or (t.length_char < 2)): 
@@ -257,9 +258,9 @@ class AnalysisKit:
     
     def __correct_words_by_morph(self, lang : 'MorphLang') -> None:
         tt = self.first_token
-        first_pass2944 = True
+        first_pass2975 = True
         while True:
-            if first_pass2944: first_pass2944 = False
+            if first_pass2975: first_pass2975 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (not ((isinstance(tt, TextToken)))): 
@@ -279,7 +280,7 @@ class AnalysisKit:
             ccc = Morphology.process(corw, lang, None)
             if (ccc is None or len(ccc) != 1): 
                 continue
-            tt1 = TextToken._new545(ccc[0], self, tt.chars, tt.begin_char, tt.end_char, (tt).term)
+            tt1 = TextToken._new560(ccc[0], self, tt.chars, tt.begin_char, tt.end_char, (tt).term)
             mc = tt1.get_morph_class_in_dictionary()
             if (mc.is_proper_surname): 
                 continue
@@ -297,9 +298,9 @@ class AnalysisKit:
         before_word = False
         tmp = io.StringIO()
         t = self.first_token
-        first_pass2945 = True
+        first_pass2976 = True
         while True:
-            if first_pass2945: first_pass2945 = False
+            if first_pass2976: first_pass2976 = False
             else: t = t.next0_
             if (not (t is not None)): break
             tt = Utils.asObjectOrNull(t, TextToken)
@@ -373,7 +374,7 @@ class AnalysisKit:
         mt.next0_ = tn
         if (isinstance(mt, ReferentToken)): 
             if ((mt).referent is not None): 
-                (mt).referent.add_occurence(TextAnnotation._new546(self.sofa, mt.begin_char, mt.end_char))
+                (mt).referent.add_occurence(TextAnnotation._new561(self.sofa, mt.begin_char, mt.end_char))
     
     def debed_token(self, t : 'Token') -> 'Token':
         """ Убрать метатокен из цепочки, восстановив исходное
@@ -446,10 +447,10 @@ class AnalysisKit:
         """
         if (analyzer is None or analyzer.name is None): 
             return None
-        wrapd547 = RefOutArgWrapper(None)
-        inoutres548 = Utils.tryGetValue(self.__m_datas, analyzer.name, wrapd547)
-        d = wrapd547.value
-        if (inoutres548): 
+        wrapd562 = RefOutArgWrapper(None)
+        inoutres563 = Utils.tryGetValue(self.__m_datas, analyzer.name, wrapd562)
+        d = wrapd562.value
+        if (inoutres563): 
             d.kit = self
             return d
         default_data = analyzer.create_analyzer_data()
@@ -473,9 +474,9 @@ class AnalysisKit:
         stat = dict()
         total = 0
         t = self.first_token
-        first_pass2946 = True
+        first_pass2977 = True
         while True:
-            if first_pass2946: first_pass2946 = False
+            if first_pass2977: first_pass2977 = False
             else: t = t.next0_
             if (not (t is not None)): break
             tt = Utils.asObjectOrNull(t, TextToken)
@@ -576,7 +577,7 @@ class AnalysisKit:
             stream.seek(stream.tell() - (1), io.SEEK_SET)
         self.__m_sofa = SourceOfAnalysis(None)
         self.__m_sofa.deserialize(stream)
-        self.base_language = MorphLang._new5(SerializerHelper.deserialize_int(stream))
+        self.base_language = MorphLang._new10(SerializerHelper.deserialize_int(stream))
         self.__m_entities = list()
         cou = SerializerHelper.deserialize_int(stream)
         i = 0
@@ -596,14 +597,14 @@ class AnalysisKit:
         return True
     
     @staticmethod
-    def _new2811(_arg1 : 'Processor', _arg2 : 'ExtOntology') -> 'AnalysisKit':
+    def _new2842(_arg1 : 'Processor', _arg2 : 'ExtOntology') -> 'AnalysisKit':
         res = AnalysisKit()
         res.processor = _arg1
         res.ontology = _arg2
         return res
     
     @staticmethod
-    def _new2812(_arg1 : 'SourceOfAnalysis', _arg2 : bool, _arg3 : 'MorphLang', _arg4 : EventHandler, _arg5 : 'ExtOntology', _arg6 : 'Processor') -> 'AnalysisKit':
+    def _new2843(_arg1 : 'SourceOfAnalysis', _arg2 : bool, _arg3 : 'MorphLang', _arg4 : EventHandler, _arg5 : 'ExtOntology', _arg6 : 'Processor') -> 'AnalysisKit':
         res = AnalysisKit(_arg1, _arg2, _arg3, _arg4)
         res.ontology = _arg5
         res.processor = _arg6

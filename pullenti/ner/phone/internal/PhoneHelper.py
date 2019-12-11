@@ -51,10 +51,10 @@ class PhoneHelper:
             i = 0
             while i < len(cod): 
                 dig = cod[i]
-                wrapnn2594 = RefOutArgWrapper(None)
-                inoutres2595 = Utils.tryGetValue(tn.children, dig, wrapnn2594)
-                nn = wrapnn2594.value
-                if (not inoutres2595): 
+                wrapnn2625 = RefOutArgWrapper(None)
+                inoutres2626 = Utils.tryGetValue(tn.children, dig, wrapnn2625)
+                nn = wrapnn2625.value
+                if (not inoutres2626): 
                     nn = PhoneHelper.PhoneNode()
                     nn.pref = cod[0:0+i + 1]
                     tn.children[dig] = nn
@@ -87,10 +87,10 @@ class PhoneHelper:
         i = 0
         while i < len(full_number): 
             dig = full_number[i]
-            wrapnn2596 = RefOutArgWrapper(None)
-            inoutres2597 = Utils.tryGetValue(nod.children, dig, wrapnn2596)
-            nn = wrapnn2596.value
-            if (not inoutres2597): 
+            wrapnn2627 = RefOutArgWrapper(None)
+            inoutres2628 = Utils.tryGetValue(nod.children, dig, wrapnn2627)
+            nn = wrapnn2627.value
+            if (not inoutres2628): 
                 break
             if (nn.countries is not None and len(nn.countries) > 0): 
                 max_ind = i

@@ -79,15 +79,17 @@ class DerivateDictionary:
             tn1 = None
             if (tn.nodes is None): 
                 break
-            wraptn13 = RefOutArgWrapper(None)
-            inoutres4 = Utils.tryGetValue(tn.nodes, k, wraptn13)
-            tn1 = wraptn13.value
-            if (not inoutres4): 
+            wraptn14 = RefOutArgWrapper(None)
+            inoutres5 = Utils.tryGetValue(tn.nodes, k, wraptn14)
+            tn1 = wraptn14.value
+            if (not inoutres5): 
                 break
             tn = tn1
             if (tn.lazy_pos > 0): 
-                self.__m_buf.seek(tn.lazy_pos)
-                DeserializeHelper.deserialize_tree_node(self.__m_buf, self, tn, True)
+                pos = tn.lazy_pos
+                wrappos3 = RefOutArgWrapper(pos)
+                DeserializeHelper.deserialize_tree_node(self.__m_buf, self, tn, True, wrappos3)
+                pos = wrappos3.value
                 tn.lazy_pos = 0
             i += 1
         res = (None if i < len(word) else tn.groups)
@@ -169,9 +171,9 @@ class DerivateDictionary:
             return None
         len0_ = len(word) - 4
         i = 1
-        first_pass2852 = True
+        first_pass2883 = True
         while True:
-            if first_pass2852: first_pass2852 = False
+            if first_pass2883: first_pass2883 = False
             else: i += 1
             if (not (i <= len0_)): break
             rest = word[i:]

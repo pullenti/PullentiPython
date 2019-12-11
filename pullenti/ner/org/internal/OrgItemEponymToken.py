@@ -12,8 +12,8 @@ from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.geo.GeoReferent import GeoReferent
 from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.TextToken import TextToken
 from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.MiscHelper import MiscHelper
@@ -46,9 +46,9 @@ class OrgItemEponymToken(MetaToken):
         def try_attach(t : 'Token') -> typing.List['PersonItemToken']:
             from pullenti.ner.TextToken import TextToken
             res = list()
-            first_pass3196 = True
+            first_pass3228 = True
             while True:
-                if first_pass3196: first_pass3196 = False
+                if first_pass3228: first_pass3228 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_newline_before and len(res) > 0): 
@@ -63,11 +63,11 @@ class OrgItemEponymToken(MetaToken):
                     t1 = t
                     if (t1.next0_ is not None and t1.next0_.is_char('.')): 
                         t1 = t1.next0_
-                    res.append(OrgItemEponymToken.PersonItemToken._new1791(t, t1, OrgItemEponymToken.PersonItemType.INITIAL, s))
+                    res.append(OrgItemEponymToken.PersonItemToken._new1811(t, t1, OrgItemEponymToken.PersonItemType.INITIAL, s))
                     t = t1
                     continue
                 if (tt.is_and): 
-                    res.append(OrgItemEponymToken.PersonItemToken._new1792(t, t, OrgItemEponymToken.PersonItemType.AND))
+                    res.append(OrgItemEponymToken.PersonItemToken._new1812(t, t, OrgItemEponymToken.PersonItemType.AND))
                     continue
                 if (tt.morph.class0_.is_pronoun or tt.morph.class0_.is_personal_pronoun): 
                     break
@@ -78,27 +78,27 @@ class OrgItemEponymToken(MetaToken):
                     t1 = t
                     if (t1.next0_ is not None and not t1.is_whitespace_after and t1.next0_.is_char('.')): 
                         t1 = t1.next0_
-                    res.append(OrgItemEponymToken.PersonItemToken._new1791(t, t1, OrgItemEponymToken.PersonItemType.LOCASEWORD, s))
+                    res.append(OrgItemEponymToken.PersonItemToken._new1811(t, t1, OrgItemEponymToken.PersonItemType.LOCASEWORD, s))
                     t = t1
                     continue
                 if (tt.morph.class0_.is_proper_name): 
-                    res.append(OrgItemEponymToken.PersonItemToken._new1791(t, t, OrgItemEponymToken.PersonItemType.NAME, s))
+                    res.append(OrgItemEponymToken.PersonItemToken._new1811(t, t, OrgItemEponymToken.PersonItemType.NAME, s))
                 elif ((t.next0_ is not None and t.next0_.is_hiphen and (isinstance(t.next0_.next0_, TextToken))) and not t.next0_.is_whitespace_after): 
-                    res.append(OrgItemEponymToken.PersonItemToken._new1791(t, t.next0_.next0_, OrgItemEponymToken.PersonItemType.SURNAME, "{0}-{1}".format(s, (t.next0_.next0_).term)))
+                    res.append(OrgItemEponymToken.PersonItemToken._new1811(t, t.next0_.next0_, OrgItemEponymToken.PersonItemType.SURNAME, "{0}-{1}".format(s, (t.next0_.next0_).term)))
                     t = t.next0_.next0_
                 else: 
-                    res.append(OrgItemEponymToken.PersonItemToken._new1791(t, t, OrgItemEponymToken.PersonItemType.SURNAME, s))
+                    res.append(OrgItemEponymToken.PersonItemToken._new1811(t, t, OrgItemEponymToken.PersonItemType.SURNAME, s))
             return (res if len(res) > 0 else None)
         
         @staticmethod
-        def _new1791(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonItemType', _arg4 : str) -> 'PersonItemToken':
+        def _new1811(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonItemType', _arg4 : str) -> 'PersonItemToken':
             res = OrgItemEponymToken.PersonItemToken(_arg1, _arg2)
             res.typ = _arg3
             res.value = _arg4
             return res
         
         @staticmethod
-        def _new1792(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonItemType') -> 'PersonItemToken':
+        def _new1812(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PersonItemType') -> 'PersonItemToken':
             res = OrgItemEponymToken.PersonItemToken(_arg1, _arg2)
             res.typ = _arg3
             return res
@@ -125,12 +125,12 @@ class OrgItemEponymToken(MetaToken):
             if (r1 is not None and r1.type_name == "DATE"): 
                 str0_ = str(r1).upper()
                 if ((str0_ == "1 МАЯ" or str0_ == "7 ОКТЯБРЯ" or str0_ == "9 МАЯ") or str0_ == "8 МАРТА"): 
-                    dt = OrgItemEponymToken._new1787(t, t, list())
+                    dt = OrgItemEponymToken._new1807(t, t, list())
                     dt.eponyms.append(str0_)
                     return dt
             age = NumberHelper.try_parse_age(t)
             if ((age is not None and (((isinstance(age.end_token.next0_, TextToken)) or (isinstance(age.end_token.next0_, ReferentToken)))) and (age.whitespaces_after_count < 3)) and not age.end_token.next0_.chars.is_all_lower and age.end_token.next0_.chars.is_cyrillic_letter): 
-                dt = OrgItemEponymToken._new1787(t, age.end_token.next0_, list())
+                dt = OrgItemEponymToken._new1807(t, age.end_token.next0_, list())
                 dt.eponyms.append("{0} {1}".format(age.value, dt.end_token.get_source_text().upper()))
                 return dt
             return None
@@ -172,7 +172,7 @@ class OrgItemEponymToken(MetaToken):
             return None
         r = t1.get_referent()
         if ((r is not None and r.type_name == "DATE" and full) and r.find_slot("DAY", None, True) is not None and r.find_slot("YEAR", None, True) is None): 
-            dt = OrgItemEponymToken._new1787(t, t1, list())
+            dt = OrgItemEponymToken._new1807(t, t1, list())
             dt.eponyms.append(str(r).upper())
             return dt
         holy = False
@@ -281,10 +281,10 @@ class OrgItemEponymToken(MetaToken):
             i += 2
         if (len(eponims) == 0): 
             return None
-        return OrgItemEponymToken._new1787(t, t1, eponims)
+        return OrgItemEponymToken._new1807(t, t1, eponims)
     
     @staticmethod
-    def _new1787(_arg1 : 'Token', _arg2 : 'Token', _arg3 : typing.List[str]) -> 'OrgItemEponymToken':
+    def _new1807(_arg1 : 'Token', _arg2 : 'Token', _arg3 : typing.List[str]) -> 'OrgItemEponymToken':
         res = OrgItemEponymToken(_arg1, _arg2)
         res.eponyms = _arg3
         return res

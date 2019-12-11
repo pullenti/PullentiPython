@@ -23,7 +23,7 @@ class StatisticCollection:
             self.second_has_other_first = False
         
         @staticmethod
-        def _new620(_arg1 : int, _arg2 : int) -> 'BigrammInfo':
+        def _new636(_arg1 : int, _arg2 : int) -> 'BigrammInfo':
             res = StatisticCollection.BigrammInfo()
             res.first_count = _arg1
             res.second_count = _arg2
@@ -64,7 +64,7 @@ class StatisticCollection:
                 self.like_chars_after_words[w] += 1
         
         @staticmethod
-        def _new607(_arg1 : str) -> 'WordInfo':
+        def _new623(_arg1 : str) -> 'WordInfo':
             res = StatisticCollection.WordInfo()
             res.normal = _arg1
             return res
@@ -80,9 +80,9 @@ class StatisticCollection:
         prev = None
         prevt = None
         t = first
-        first_pass2955 = True
+        first_pass2986 = True
         while True:
-            if first_pass2955: first_pass2955 = False
+            if first_pass2986: first_pass2986 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_hiphen): 
@@ -129,13 +129,13 @@ class StatisticCollection:
                 vars0_.append(wf.normal_full)
         res = None
         for v in vars0_: 
-            wrapres605 = RefOutArgWrapper(None)
-            inoutres606 = Utils.tryGetValue(self.__m_items, v, wrapres605)
-            res = wrapres605.value
-            if (inoutres606): 
+            wrapres621 = RefOutArgWrapper(None)
+            inoutres622 = Utils.tryGetValue(self.__m_items, v, wrapres621)
+            res = wrapres621.value
+            if (inoutres622): 
                 break
         if (res is None): 
-            res = StatisticCollection.WordInfo._new607(tt.lemma)
+            res = StatisticCollection.WordInfo._new623(tt.lemma)
         for v in vars0_: 
             if (not v in self.__m_items): 
                 self.__m_items[v] = res
@@ -157,50 +157,50 @@ class StatisticCollection:
     def __find_item(self, tt : 'TextToken', do_absolute : bool=True) -> 'WordInfo':
         if (tt is None): 
             return None
-        wrapres614 = RefOutArgWrapper(None)
-        inoutres615 = Utils.tryGetValue(self.__m_items, tt.term, wrapres614)
-        res = wrapres614.value
-        if (inoutres615): 
+        wrapres630 = RefOutArgWrapper(None)
+        inoutres631 = Utils.tryGetValue(self.__m_items, tt.term, wrapres630)
+        res = wrapres630.value
+        if (inoutres631): 
             return res
         if (do_absolute): 
             s = MiscHelper.get_absolute_normal_value(tt.term, False)
             if (s is not None): 
-                wrapres608 = RefOutArgWrapper(None)
-                inoutres609 = Utils.tryGetValue(self.__m_items, s, wrapres608)
-                res = wrapres608.value
-                if (inoutres609): 
+                wrapres624 = RefOutArgWrapper(None)
+                inoutres625 = Utils.tryGetValue(self.__m_items, s, wrapres624)
+                res = wrapres624.value
+                if (inoutres625): 
                     return res
         for wff in tt.morph.items: 
             wf = Utils.asObjectOrNull(wff, MorphWordForm)
             if (wf is None): 
                 continue
-            wrapres612 = RefOutArgWrapper(None)
-            inoutres613 = Utils.tryGetValue(self.__m_items, Utils.ifNotNull(wf.normal_case, ""), wrapres612)
-            res = wrapres612.value
-            if (inoutres613): 
+            wrapres628 = RefOutArgWrapper(None)
+            inoutres629 = Utils.tryGetValue(self.__m_items, Utils.ifNotNull(wf.normal_case, ""), wrapres628)
+            res = wrapres628.value
+            if (inoutres629): 
                 return res
-            wrapres610 = RefOutArgWrapper(None)
-            inoutres611 = Utils.tryGetValue(self.__m_items, wf.normal_full, wrapres610)
-            res = wrapres610.value
-            if (wf.normal_full is not None and inoutres611): 
+            wrapres626 = RefOutArgWrapper(None)
+            inoutres627 = Utils.tryGetValue(self.__m_items, wf.normal_full, wrapres626)
+            res = wrapres626.value
+            if (wf.normal_full is not None and inoutres627): 
                 return res
         return None
     
     def __add_bigramm(self, b1 : 'WordInfo', b2 : 'WordInfo') -> None:
-        wrapdi618 = RefOutArgWrapper(None)
-        inoutres619 = Utils.tryGetValue(self.__m_bigramms, b1.normal, wrapdi618)
-        di = wrapdi618.value
-        if (not inoutres619): 
+        wrapdi634 = RefOutArgWrapper(None)
+        inoutres635 = Utils.tryGetValue(self.__m_bigramms, b1.normal, wrapdi634)
+        di = wrapdi634.value
+        if (not inoutres635): 
             di = dict()
             self.__m_bigramms[b1.normal] = di
         if (b2.normal in di): 
             di[b2.normal] += 1
         else: 
             di[b2.normal] = 1
-        wrapdi616 = RefOutArgWrapper(None)
-        inoutres617 = Utils.tryGetValue(self.__m_bigramms_rev, b2.normal, wrapdi616)
-        di = wrapdi616.value
-        if (not inoutres617): 
+        wrapdi632 = RefOutArgWrapper(None)
+        inoutres633 = Utils.tryGetValue(self.__m_bigramms_rev, b2.normal, wrapdi632)
+        di = wrapdi632.value
+        if (not inoutres633): 
             di = dict()
             self.__m_bigramms_rev[b2.normal] = di
         if (b1.normal in di): 
@@ -216,15 +216,15 @@ class StatisticCollection:
         return self.__get_bigrams_info(si1, si2)
     
     def __get_bigrams_info(self, si1 : 'WordInfo', si2 : 'WordInfo') -> 'BigrammInfo':
-        res = StatisticCollection.BigrammInfo._new620(si1.total_count, si2.total_count)
+        res = StatisticCollection.BigrammInfo._new636(si1.total_count, si2.total_count)
         di12 = None
-        wrapdi12622 = RefOutArgWrapper(None)
-        Utils.tryGetValue(self.__m_bigramms, si1.normal, wrapdi12622)
-        di12 = wrapdi12622.value
+        wrapdi12638 = RefOutArgWrapper(None)
+        Utils.tryGetValue(self.__m_bigramms, si1.normal, wrapdi12638)
+        di12 = wrapdi12638.value
         di21 = None
-        wrapdi21621 = RefOutArgWrapper(None)
-        Utils.tryGetValue(self.__m_bigramms_rev, si2.normal, wrapdi21621)
-        di21 = wrapdi21621.value
+        wrapdi21637 = RefOutArgWrapper(None)
+        Utils.tryGetValue(self.__m_bigramms_rev, si2.normal, wrapdi21637)
+        di21 = wrapdi21637.value
         if (di12 is not None): 
             if (not si2.normal in di12): 
                 res.first_has_other_second = True
@@ -248,10 +248,10 @@ class StatisticCollection:
         if (si2 is None): 
             return None
         si1 = None
-        wrapsi1623 = RefOutArgWrapper(None)
-        inoutres624 = Utils.tryGetValue(self.__m_items, ini[0:0+1], wrapsi1623)
-        si1 = wrapsi1623.value
-        if (not inoutres624): 
+        wrapsi1639 = RefOutArgWrapper(None)
+        inoutres640 = Utils.tryGetValue(self.__m_items, ini[0:0+1], wrapsi1639)
+        si1 = wrapsi1639.value
+        if (not inoutres640): 
             return None
         if (si1 is None): 
             return None

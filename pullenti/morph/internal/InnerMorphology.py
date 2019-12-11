@@ -30,7 +30,7 @@ class InnerMorphology:
             self.lang = None;
         
         @staticmethod
-        def _new6(_arg1 : 'MorphLang') -> 'UniLexWrap':
+        def _new11(_arg1 : 'MorphLang') -> 'UniLexWrap':
             res = InnerMorphology.UniLexWrap()
             res.lang = _arg1
             return res
@@ -142,9 +142,9 @@ class InnerMorphology:
         tot_by_words = 0
         tot_kz_words = 0
         i = 0
-        first_pass2853 = True
+        first_pass2884 = True
         while True:
-            if first_pass2853: first_pass2853 = False
+            if first_pass2884: first_pass2884 = False
             else: i += 1
             if (not (i < twr.length)): break
             ty = InnerMorphology._get_char_typ(twrch[i])
@@ -189,11 +189,11 @@ class InnerMorphology:
                 term0 = term
             lemmas = None
             if (ty == 1 and not only_tokenizing): 
-                wraplemmas7 = RefOutArgWrapper(None)
-                inoutres8 = Utils.tryGetValue(uni_lex, term, wraplemmas7)
-                lemmas = wraplemmas7.value
-                if (not inoutres8): 
-                    lemmas = InnerMorphology.UniLexWrap._new6(lang)
+                wraplemmas12 = RefOutArgWrapper(None)
+                inoutres13 = Utils.tryGetValue(uni_lex, term, wraplemmas12)
+                lemmas = wraplemmas12.value
+                if (not inoutres13): 
+                    lemmas = InnerMorphology.UniLexWrap._new11(lang)
                     uni_lex[term] = lemmas
             tok = MorphToken()
             tok.term = term
@@ -233,9 +233,9 @@ class InnerMorphology:
                 tot_rus_words = tot_by_words
                 for kp in uni_lex.items(): 
                     lang = MorphLang()
-                    wraplang9 = RefOutArgWrapper(lang)
-                    kp[1].word_forms = self.__process_one_word(kp[0], wraplang9)
-                    lang = wraplang9.value
+                    wraplang14 = RefOutArgWrapper(lang)
+                    kp[1].word_forms = self.__process_one_word(kp[0], wraplang14)
+                    lang = wraplang14.value
                     if (kp[1].word_forms is not None): 
                         for wf in kp[1].word_forms: 
                             lang |= wf.language
@@ -276,9 +276,9 @@ class InnerMorphology:
                     lang = MorphLang.BY
                 elif (tot_kz_words > tot_rus_words and tot_kz_words > tot_ukr_words and tot_kz_words > tot_by_words): 
                     lang = MorphLang.KZ
-            wraplang10 = RefOutArgWrapper(lang)
-            kp[1].word_forms = self.__process_one_word(kp[0], wraplang10)
-            lang = wraplang10.value
+            wraplang15 = RefOutArgWrapper(lang)
+            kp[1].word_forms = self.__process_one_word(kp[0], wraplang15)
+            lang = wraplang15.value
             kp[1].lang = lang
             if ((((lang) & MorphLang.RU)) != MorphLang.UNKNOWN): 
                 tot_rus_words += 1
@@ -308,9 +308,9 @@ class InnerMorphology:
                 debug_token = r
         if (not good_text): 
             i = 0
-            first_pass2854 = True
+            first_pass2885 = True
             while True:
-                if first_pass2854: first_pass2854 = False
+                if first_pass2885: first_pass2885 = False
                 else: i += 1
                 if (not (i < (len(res) - 2))): break
                 ui0 = twrch[res[i].begin_char]
@@ -424,9 +424,9 @@ class InnerMorphology:
                         res[i].word_forms = li
                         del res[i + 1]
         i = 0
-        first_pass2855 = True
+        first_pass2886 = True
         while True:
-            if first_pass2855: first_pass2855 = False
+            if first_pass2886: first_pass2886 = False
             else: i += 1
             if (not (i < len(res))): break
             mt = res[i]
@@ -492,13 +492,13 @@ class InnerMorphology:
                         break
                 if (not ok): 
                     mt.word_forms = list(mt.word_forms)
-                    mt.word_forms.insert(0, MorphWordForm._new11(pref, MorphClass.NOUN, 1))
+                    mt.word_forms.insert(0, MorphWordForm._new16(pref, MorphClass.NOUN, 1))
         if (good_text or only_tokenizing): 
             return res
         i = 0
-        first_pass2856 = True
+        first_pass2887 = True
         while True:
-            if first_pass2856: first_pass2856 = False
+            if first_pass2887: first_pass2887 = False
             else: i += 1
             if (not (i < len(res))): break
             if (res[i].length == 1 and res[i].char_info.is_latin_letter): 
@@ -561,9 +561,9 @@ class InnerMorphology:
                         del res[i + 1:i + 1+2]
             i += 1
         i = 0
-        first_pass2857 = True
+        first_pass2888 = True
         while True:
-            if first_pass2857: first_pass2857 = False
+            if first_pass2888: first_pass2888 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (not res[i].char_info.is_letter and not res[i + 1].char_info.is_letter and (res[i].end_char + 1) == res[i + 1].begin_char): 
@@ -710,10 +710,10 @@ class InnerMorphology:
     
     def __process_one_word0(self, wstr : str) -> typing.List['MorphWordForm']:
         dl = MorphLang()
-        wrapdl12 = RefOutArgWrapper(dl)
-        inoutres13 = self.__process_one_word(wstr, wrapdl12)
-        dl = wrapdl12.value
-        return inoutres13
+        wrapdl17 = RefOutArgWrapper(dl)
+        inoutres18 = self.__process_one_word(wstr, wrapdl17)
+        dl = wrapdl17.value
+        return inoutres18
     
     def __process_one_word(self, wstr : str, def_lang : 'MorphLang') -> typing.List['MorphWordForm']:
         lang = InnerMorphology.__detect_lang(None, 0, 0, wstr)

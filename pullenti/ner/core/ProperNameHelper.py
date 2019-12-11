@@ -13,10 +13,10 @@ from pullenti.ner.Token import Token
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.morph.Morphology import Morphology
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.NumberToken import NumberToken
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphCase import MorphCase
 from pullenti.ner.TextToken import TextToken
@@ -71,7 +71,7 @@ class ProperNameHelper:
                                     var = (te.next0_).term
                                     if (isinstance(it, MorphWordForm)): 
                                         var = (it).normal_case
-                                    bi = MorphBaseInfo._new562(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
+                                    bi = MorphBaseInfo._new577(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
                                     var = Morphology.get_wordform(var, bi)
                                     if (var is not None): 
                                         res = "{0}, {1}".format(res, var)
@@ -128,9 +128,9 @@ class ProperNameHelper:
         res = io.StringIO()
         prefix = None
         t = begin
-        first_pass2954 = True
+        first_pass2985 = True
         while True:
-            if first_pass2954: first_pass2954 = False
+            if first_pass2985: first_pass2985 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             if (res.tell() > 1000): 

@@ -621,7 +621,7 @@ class DecreePartReferent(Referent):
         return res
     
     @staticmethod
-    def _new1108(_arg1 : 'DecreeReferent') -> 'DecreePartReferent':
+    def _new1125(_arg1 : 'DecreeReferent') -> 'DecreePartReferent':
         res = DecreePartReferent()
         res.owner = _arg1
         return res

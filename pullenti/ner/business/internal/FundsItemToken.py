@@ -53,9 +53,9 @@ class FundsItemToken(MetaToken):
             return None
         typ0 = FundsItemTyp.UNDEFINED
         tt = t
-        first_pass2911 = True
+        first_pass2942 = True
         while True:
-            if first_pass2911: first_pass2911 = False
+            if first_pass2942: first_pass2942 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.morph.class0_.is_preposition or tt.morph.class0_.is_adverb): 
@@ -71,13 +71,13 @@ class FundsItemToken(MetaToken):
                 continue
             re = tt.get_referent()
             if (isinstance(re, OrganizationReferent)): 
-                return FundsItemToken._new430(t, tt, FundsItemTyp.ORG, re)
+                return FundsItemToken._new445(t, tt, FundsItemTyp.ORG, re)
             if (isinstance(re, MoneyReferent)): 
                 if (typ0 == FundsItemTyp.UNDEFINED): 
                     typ0 = FundsItemTyp.SUM
                 if ((tt.next0_ is not None and tt.next0_.is_value("ЗА", None) and tt.next0_.next0_ is not None) and ((tt.next0_.next0_.is_value("АКЦИЯ", None) or tt.next0_.next0_.is_value("АКЦІЯ", None)))): 
                     typ0 = FundsItemTyp.PRICE
-                res = FundsItemToken._new430(t, tt, typ0, re)
+                res = FundsItemToken._new445(t, tt, typ0, re)
                 return res
             if (re is not None): 
                 break
@@ -87,7 +87,7 @@ class FundsItemToken(MetaToken):
             if (npt is not None): 
                 res = None
                 if (npt.noun.is_value("АКЦІЯ", None) or npt.noun.is_value("АКЦИЯ", None)): 
-                    res = FundsItemToken._new432(t, npt.end_token, FundsItemTyp.NOUN, FundsKind.STOCK)
+                    res = FundsItemToken._new447(t, npt.end_token, FundsItemTyp.NOUN, FundsKind.STOCK)
                     if (len(npt.adjectives) > 0): 
                         for v in FundsItemToken.__m_act_types: 
                             if (npt.adjectives[0].is_value(v, None)): 
@@ -96,9 +96,9 @@ class FundsItemToken(MetaToken):
                                     res.string_val = "голосующая акция"
                                 break
                 elif (((npt.noun.is_value("БУМАГА", None) or npt.noun.is_value("ПАПІР", None))) and npt.end_token.previous is not None and ((npt.end_token.previous.is_value("ЦЕННЫЙ", None) or npt.end_token.previous.is_value("ЦІННИЙ", None)))): 
-                    res = FundsItemToken._new433(t, npt.end_token, FundsItemTyp.NOUN, FundsKind.STOCK, "ценные бумаги")
+                    res = FundsItemToken._new448(t, npt.end_token, FundsItemTyp.NOUN, FundsKind.STOCK, "ценные бумаги")
                 elif (((npt.noun.is_value("КАПИТАЛ", None) or npt.noun.is_value("КАПІТАЛ", None))) and len(npt.adjectives) > 0 and ((npt.adjectives[0].is_value("УСТАВНОЙ", None) or npt.adjectives[0].is_value("УСТАВНЫЙ", None) or npt.adjectives[0].is_value("СТАТУТНИЙ", None)))): 
-                    res = FundsItemToken._new432(t, npt.end_token, FundsItemTyp.NOUN, FundsKind.CAPITAL)
+                    res = FundsItemToken._new447(t, npt.end_token, FundsItemTyp.NOUN, FundsKind.CAPITAL)
                 if (res is not None): 
                     rt = res.kit.process_referent(OrganizationAnalyzer.ANALYZER_NAME, res.end_token.next0_)
                     if (rt is not None): 
@@ -115,9 +115,9 @@ class FundsItemToken(MetaToken):
                     cou = 0
                     ok = False
                     ttt = tt.previous
-                    first_pass2912 = True
+                    first_pass2943 = True
                     while True:
-                        if first_pass2912: first_pass2912 = False
+                        if first_pass2943: first_pass2943 = False
                         else: ttt = ttt.previous
                         if (not (ttt is not None)): break
                         cou += 1
@@ -145,7 +145,7 @@ class FundsItemToken(MetaToken):
                                 break
                             ttt = ttt.next0_
                     if (ok): 
-                        res = FundsItemToken._new435(t, tt, FundsKind.STOCK, FundsItemTyp.NOUN)
+                        res = FundsItemToken._new450(t, tt, FundsKind.STOCK, FundsItemTyp.NOUN)
                         res.string_val = "{0}ая акция".format(val[0:0+len(val) - 2].lower())
                         return res
             if (isinstance(tt, NumberToken)): 
@@ -154,7 +154,7 @@ class FundsItemToken(MetaToken):
                     if (tt.previous is not None and tt.previous.is_value("НА", None)): 
                         break
                     if (num.ex_typ == NumberExType.PERCENT): 
-                        res = FundsItemToken._new436(t, num.end_token, FundsItemTyp.PERCENT, num)
+                        res = FundsItemToken._new451(t, num.end_token, FundsItemTyp.PERCENT, num)
                         t = num.end_token.next0_
                         if (t is not None and ((t.is_char('+') or t.is_value("ПЛЮС", None))) and (isinstance(t.next0_, NumberToken))): 
                             res.end_token = t.next0_
@@ -168,7 +168,7 @@ class FundsItemToken(MetaToken):
                 t1 = tt
                 if (t1.next0_ is not None and t1.next0_.is_value("ШТУКА", None)): 
                     t1 = t1.next0_
-                return FundsItemToken._new436(t, t1, FundsItemTyp.COUNT, Utils.asObjectOrNull(tt, NumberToken))
+                return FundsItemToken._new451(t, t1, FundsItemTyp.COUNT, Utils.asObjectOrNull(tt, NumberToken))
             break
         return None
     
@@ -188,9 +188,9 @@ class FundsItemToken(MetaToken):
         li.append(f)
         is_in_br = False
         tt = f.end_token.next0_
-        first_pass2913 = True
+        first_pass2944 = True
         while True:
-            if first_pass2913: first_pass2913 = False
+            if first_pass2944: first_pass2944 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if ((tt.is_whitespace_before and tt.previous is not None and tt.previous.is_char('.')) and tt.chars.is_capital_upper): 
@@ -300,21 +300,21 @@ class FundsItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new430(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'FundsItemTyp', _arg4 : 'Referent') -> 'FundsItemToken':
+    def _new445(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'FundsItemTyp', _arg4 : 'Referent') -> 'FundsItemToken':
         res = FundsItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.ref = _arg4
         return res
     
     @staticmethod
-    def _new432(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'FundsItemTyp', _arg4 : 'FundsKind') -> 'FundsItemToken':
+    def _new447(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'FundsItemTyp', _arg4 : 'FundsKind') -> 'FundsItemToken':
         res = FundsItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.kind = _arg4
         return res
     
     @staticmethod
-    def _new433(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'FundsItemTyp', _arg4 : 'FundsKind', _arg5 : str) -> 'FundsItemToken':
+    def _new448(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'FundsItemTyp', _arg4 : 'FundsKind', _arg5 : str) -> 'FundsItemToken':
         res = FundsItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.kind = _arg4
@@ -322,14 +322,14 @@ class FundsItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new435(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'FundsKind', _arg4 : 'FundsItemTyp') -> 'FundsItemToken':
+    def _new450(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'FundsKind', _arg4 : 'FundsItemTyp') -> 'FundsItemToken':
         res = FundsItemToken(_arg1, _arg2)
         res.kind = _arg3
         res.typ = _arg4
         return res
     
     @staticmethod
-    def _new436(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'FundsItemTyp', _arg4 : 'NumberToken') -> 'FundsItemToken':
+    def _new451(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'FundsItemTyp', _arg4 : 'NumberToken') -> 'FundsItemToken':
         res = FundsItemToken(_arg1, _arg2)
         res.typ = _arg3
         res.num_val = _arg4

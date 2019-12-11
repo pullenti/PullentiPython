@@ -101,7 +101,7 @@ class NounPhraseItem(MetaToken):
                 continue
             if (single_number and v.single_number_value is not None): 
                 if (mc is not None and ((gender == MorphGender.NEUTER or gender == MorphGender.FEMINIE)) and mc.is_adjective): 
-                    bi = MorphBaseInfo._new469(MorphClass(mc), gender, MorphNumber.SINGULAR, MorphCase.NOMINATIVE, self.morph.language)
+                    bi = MorphBaseInfo._new484(MorphClass(mc), gender, MorphNumber.SINGULAR, MorphCase.NOMINATIVE, self.morph.language)
                     str0_ = Morphology.get_wordform(v.single_number_value, bi)
                     if (str0_ is not None): 
                         res = str0_
@@ -114,10 +114,10 @@ class NounPhraseItem(MetaToken):
             if (Utils.isNullOrEmpty(v.normal_value)): 
                 continue
             if (str.isdigit(v.normal_value[0]) and mc is not None and mc.is_adjective): 
-                wrapval470 = RefOutArgWrapper(0)
-                inoutres471 = Utils.tryParseInt(v.normal_value, wrapval470)
-                val = wrapval470.value
-                if (inoutres471): 
+                wrapval485 = RefOutArgWrapper(0)
+                inoutres486 = Utils.tryParseInt(v.normal_value, wrapval485)
+                val = wrapval485.value
+                if (inoutres486): 
                     str0_ = NumberHelper.get_number_adjective(val, gender, (MorphNumber.SINGULAR if single_number or val == 1 else MorphNumber.PLURAL))
                     if (str0_ is not None): 
                         res = str0_
@@ -263,7 +263,7 @@ class NounPhraseItem(MetaToken):
                             t = t0.next0_.next0_
                         elif (t0.next0_.next0_.chars.is_all_lower and LanguageHelper.ends_with((t0).term, "О")): 
                             t = t0.next0_.next0_
-            it = NounPhraseItem._new472(t0, t, _can_be_surname)
+            it = NounPhraseItem._new487(t0, t, _can_be_surname)
             if (t0 == t and (isinstance(t0, ReferentToken))): 
                 it.can_be_noun = True
                 it.morph = MorphCollection(t0.morph)
@@ -459,7 +459,7 @@ class NounPhraseItem(MetaToken):
     __m_std_adjectives = None
     
     @staticmethod
-    def _new472(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'NounPhraseItem':
+    def _new487(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'NounPhraseItem':
         res = NounPhraseItem(_arg1, _arg2)
         res.can_be_surname = _arg3
         return res

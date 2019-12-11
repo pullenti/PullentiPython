@@ -160,9 +160,9 @@ class BlockLine(MetaToken):
                 if (npt.noun.is_value("ХАРАКТЕРИСТИКА", None) or npt.noun.is_value("СОДЕРЖАНИЕ", "ЗМІСТ")): 
                     ok = True
                     tt = npt.end_token.next0_
-                    first_pass2924 = True
+                    first_pass2955 = True
                     while True:
-                        if first_pass2924: first_pass2924 = False
+                        if first_pass2955: first_pass2955 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.end_char <= res.end_char)): break
                         if (tt.is_char('.')): 
@@ -185,9 +185,9 @@ class BlockLine(MetaToken):
                 elif (npt.noun.is_value("ВЫВОД", "ВИСНОВОК") or npt.noun.is_value("РЕЗУЛЬТАТ", "ДОСЛІДЖЕННЯ")): 
                     ok = True
                     tt = npt.end_token.next0_
-                    first_pass2925 = True
+                    first_pass2956 = True
                     while True:
-                        if first_pass2925: first_pass2925 = False
+                        if first_pass2956: first_pass2956 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.end_char <= res.end_char)): break
                         if (tt.is_char_of(",.") or tt.is_and): 
@@ -223,9 +223,9 @@ class BlockLine(MetaToken):
                         if (npt.begin_token == npt.end_token and npt.noun.is_value("СПИСОК", None) and npt.end_char == res.end_char): 
                             ok = False
                         tt = npt.end_token.next0_
-                        first_pass2926 = True
+                        first_pass2957 = True
                         while True:
-                            if first_pass2926: first_pass2926 = False
+                            if first_pass2957: first_pass2957 = False
                             else: tt = tt.next0_
                             if (not (tt is not None and tt.end_char <= res.end_char)): break
                             if (tt.is_char_of(",.:") or tt.is_and or tt.morph.class0_.is_preposition): 
@@ -279,16 +279,16 @@ class BlockLine(MetaToken):
             return
         BlockLine.__m_ontology = TerminCollection()
         for s in ["СОДЕРЖАНИЕ", "СОДЕРЖИМОЕ", "ОГЛАВЛЕНИЕ", "ПЛАН", "PLAN", "ЗМІСТ", "CONTENTS", "INDEX"]: 
-            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.INDEX))
+            BlockLine.__m_ontology.add(Termin._new135(s, BlkTyps.INDEX))
         for s in ["ГЛАВА", "CHAPTER", "РАЗДЕЛ", "ПАРАГРАФ", "VOLUME", "SECTION", "РОЗДІЛ"]: 
-            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.CHAPTER))
+            BlockLine.__m_ontology.add(Termin._new135(s, BlkTyps.CHAPTER))
         for s in ["ВВЕДЕНИЕ", "ВСТУПЛЕНИЕ", "ПРЕДИСЛОВИЕ", "INTRODUCTION"]: 
-            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.INTRO))
+            BlockLine.__m_ontology.add(Termin._new135(s, BlkTyps.INTRO))
         for s in ["ВСТУП", "ПЕРЕДМОВА"]: 
-            BlockLine.__m_ontology.add(Termin._new457(s, MorphLang.UA, BlkTyps.INTRO))
+            BlockLine.__m_ontology.add(Termin._new472(s, MorphLang.UA, BlkTyps.INTRO))
         for s in ["ВЫВОДЫ", "ВЫВОД", "ЗАКЛЮЧЕНИЕ", "CONCLUSION", "ВИСНОВОК", "ВИСНОВКИ"]: 
-            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.CONSLUSION))
+            BlockLine.__m_ontology.add(Termin._new135(s, BlkTyps.CONSLUSION))
         for s in ["ПРИЛОЖЕНИЕ", "APPENDIX", "ДОДАТОК"]: 
-            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.APPENDIX))
+            BlockLine.__m_ontology.add(Termin._new135(s, BlkTyps.APPENDIX))
         for s in ["СПИСОК СОКРАЩЕНИЙ", "СПИСОК УСЛОВНЫХ СОКРАЩЕНИЙ", "СПИСОК ИСПОЛЬЗУЕМЫХ СОКРАЩЕНИЙ", "УСЛОВНЫЕ СОКРАЩЕНИЯ", "ОБЗОР ЛИТЕРАТУРЫ", "АННОТАЦИЯ", "ANNOTATION", "БЛАГОДАРНОСТИ", "SUPPLEMENT", "ABSTRACT", "СПИСОК СКОРОЧЕНЬ", "ПЕРЕЛІК УМОВНИХ СКОРОЧЕНЬ", "СПИСОК ВИКОРИСТОВУВАНИХ СКОРОЧЕНЬ", "УМОВНІ СКОРОЧЕННЯ", "ОГЛЯД ЛІТЕРАТУРИ", "АНОТАЦІЯ", "ПОДЯКИ"]: 
-            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.MISC))
+            BlockLine.__m_ontology.add(Termin._new135(s, BlkTyps.MISC))

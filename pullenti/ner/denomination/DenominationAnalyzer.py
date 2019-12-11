@@ -13,9 +13,9 @@ from pullenti.ner.Referent import Referent
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.TextToken import TextToken
 from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
-from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.denomination.internal.MetaDenom import MetaDenom
+from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.ProcessorService import ProcessorService
 from pullenti.ner.Analyzer import Analyzer
@@ -81,9 +81,9 @@ class DenominationAnalyzer(Analyzer):
             detect_new_denoms = False
             dt = datetime.datetime.now()
             t = kit.first_token
-            first_pass3032 = True
+            first_pass3064 = True
             while True:
-                if first_pass3032: first_pass3032 = False
+                if first_pass3064: first_pass3064 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_whitespace_before): 
@@ -177,9 +177,9 @@ class DenominationAnalyzer(Analyzer):
         nums = 0
         chars = 0
         w = t1.next0_
-        first_pass3033 = True
+        first_pass3065 = True
         while True:
-            if first_pass3033: first_pass3033 = False
+            if first_pass3065: first_pass3065 = False
             else: w = w.next0_
             if (not (w is not None)): break
             if (w.is_whitespace_before and not for_ontology): 

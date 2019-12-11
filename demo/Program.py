@@ -39,9 +39,9 @@ class Program:
         print("Noun groups: ", end="", flush=True)
         t = are.first_token
         # перебираем токены
-        first_pass2848 = True
+        first_pass2879 = True
         while True:
-            if first_pass2848: first_pass2848 = False
+            if first_pass2879: first_pass2879 = False
             else: t = t.next0_
             if (not (t is not None)): break
             # выделяем именную группу с текущего токена
@@ -65,9 +65,9 @@ class Program:
             # пример выделения именных групп
             print("\r\n==========================================\r\nNoun groups: ", flush=True)
             t = ar.first_token
-            first_pass2849 = True
+            first_pass2880 = True
             while True:
-                if first_pass2849: first_pass2849 = False
+                if first_pass2880: first_pass2880 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 # токены с сущностями игнорируем
@@ -89,9 +89,9 @@ class Program:
                     print(e0_, flush=True)
             print("\r\n==========================================\r\nKeywords2: ", flush=True)
             t = ar.first_token
-            first_pass2850 = True
+            first_pass2881 = True
             while True:
-                if first_pass2850: first_pass2850 = False
+                if first_pass2881: first_pass2881 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (isinstance(t, ReferentToken)): 

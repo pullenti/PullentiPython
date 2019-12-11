@@ -21,7 +21,7 @@ class IntOntologyCollection:
             self.owner = None;
         
         @staticmethod
-        def _new559(_arg1 : 'IntOntologyItem', _arg2 : object) -> 'OntologyTermin':
+        def _new574(_arg1 : 'IntOntologyItem', _arg2 : object) -> 'OntologyTermin':
             res = IntOntologyCollection.OntologyTermin()
             res.owner = _arg1
             res.tag = _arg2
@@ -51,7 +51,7 @@ class IntOntologyCollection:
                 (di.termins[i]).owner = di
                 self.__m_termins.add(di.termins[i])
             else: 
-                nt = IntOntologyCollection.OntologyTermin._new559(di, di.termins[i].tag)
+                nt = IntOntologyCollection.OntologyTermin._new574(di, di.termins[i].tag)
                 di.termins[i].copy_to(nt)
                 self.__m_termins.add(nt)
                 di.termins[i] = (nt)
@@ -93,7 +93,7 @@ class IntOntologyCollection:
             di(IntOntologyItem): 
             t(Termin): 
         """
-        nt = IntOntologyCollection.OntologyTermin._new559(di, t.tag)
+        nt = IntOntologyCollection.OntologyTermin._new574(di, t.tag)
         t.copy_to(nt)
         self.__m_termins.add(nt)
     
@@ -132,7 +132,7 @@ class IntOntologyCollection:
                 if (di in dis): 
                     continue
                 dis.append(di)
-            res.append(IntOntologyToken._new561(tt.begin_token, tt.end_token, di, tt.termin, tt.morph))
+            res.append(IntOntologyToken._new576(tt.begin_token, tt.end_token, di, tt.termin, tt.morph))
         return (None if len(res) == 0 else res)
     
     def try_attach_by_item(self, item : 'IntOntologyItem') -> typing.List['IntOntologyItem']:
@@ -218,7 +218,7 @@ class IntOntologyCollection:
             i += 1
     
     @staticmethod
-    def _new2792(_arg1 : bool) -> 'IntOntologyCollection':
+    def _new2823(_arg1 : bool) -> 'IntOntologyCollection':
         res = IntOntologyCollection()
         res.is_ext_ontology = _arg1
         return res

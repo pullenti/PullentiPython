@@ -21,7 +21,7 @@ class PersonRelations:
                 r = rr
                 break
         if (r is None): 
-            r = PersonRelation._new2632(pers)
+            r = PersonRelation._new2663(pers)
             self.rels.append(r)
         if (not typ in r.coefs): 
             r.coefs[typ] = coef

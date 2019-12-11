@@ -6,18 +6,18 @@ import typing
 import math
 
 from pullenti.ner.Token import Token
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.Referent import Referent
-from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.NumberExType import NumberExType
-from pullenti.ner.money.internal.MoneyMeta import MoneyMeta
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.Referent import Referent
 from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
-from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.money.internal.MoneyMeta import MoneyMeta
 from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.money.MoneyReferent import MoneyReferent
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.ProcessorService import ProcessorService
 
 class MoneyAnalyzer(Analyzer):
     """ Анализатор для денежных сумм """
@@ -73,9 +73,9 @@ class MoneyAnalyzer(Analyzer):
         """
         ad = kit.get_analyzer_data(self)
         t = kit.first_token
-        first_pass3193 = True
+        first_pass3225 = True
         while True:
-            if first_pass3193: first_pass3193 = False
+            if first_pass3225: first_pass3225 = False
             else: t = t.next0_
             if (not (t is not None)): break
             mon = MoneyAnalyzer.try_parse(t)

@@ -91,11 +91,11 @@ class MeasureAnalyzer(Analyzer):
                     continue
                 for s in uu.slots: 
                     if (s.type_name == UnitReferent.ATTR_NAME or s.type_name == UnitReferent.ATTR_FULLNAME): 
-                        addunits.add(Termin._new119(Utils.asObjectOrNull(s.value, str), uu))
+                        addunits.add(Termin._new135(Utils.asObjectOrNull(s.value, str), uu))
         t = kit.first_token
-        first_pass3192 = True
+        first_pass3224 = True
         while True:
-            if first_pass3192: first_pass3192 = False
+            if first_pass3224: first_pass3224 = False
             else: t = t.next0_
             if (not (t is not None)): break
             mt = MeasureToken.try_parse_minimal(t, addunits, False)

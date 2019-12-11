@@ -51,9 +51,9 @@ class VerbPhraseHelper:
         verb_be_before = False
         norm = None
         prep = None
-        first_pass2959 = True
+        first_pass2990 = True
         while True:
-            if first_pass2959: first_pass2959 = False
+            if first_pass2990: first_pass2990 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -148,7 +148,7 @@ class VerbPhraseHelper:
             if (res is None): 
                 res = VerbPhraseToken(t0, t)
             res.end_token = t
-            it = VerbPhraseItemToken._new667(t, t, MorphCollection(t.morph))
+            it = VerbPhraseItemToken._new683(t, t, MorphCollection(t.morph))
             if (not0_ is not None): 
                 it.begin_token = not0_
                 it.not0_ = True
@@ -162,7 +162,7 @@ class VerbPhraseHelper:
             if (norm is None): 
                 norm = t.get_normal_case_text((MorphClass.ADJECTIVE if ty == 3 else (MorphClass.ADVERB if ty == 2 else MorphClass.VERB)), True, MorphGender.MASCULINE, False)
                 if (ty == 1 and not tt.morph.case_.is_undefined): 
-                    mi = MorphWordForm._new668(MorphCase.NOMINATIVE, MorphNumber.SINGULAR, MorphGender.MASCULINE)
+                    mi = MorphWordForm._new684(MorphCase.NOMINATIVE, MorphNumber.SINGULAR, MorphGender.MASCULINE)
                     for mit in tt.morph.items: 
                         if (isinstance(mit, MorphWordForm)): 
                             mi.misc = (mit).misc

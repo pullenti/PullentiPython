@@ -20,10 +20,10 @@ from pullenti.morph.Morphology import Morphology
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.geo.GeoReferent import GeoReferent
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.address.internal.StreetItemType import StreetItemType
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.address.internal.StreetItemType import StreetItemType
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.address.StreetReferent import StreetReferent
@@ -93,11 +93,11 @@ class StreetDefineHelper:
                     stri0 = StreetReferent()
                     stri0.add_slot(StreetReferent.ATTR_TYP, "микрорайон", False, 0)
                     stri0.add_slot(StreetReferent.ATTR_NAME, sli[i].termin.canonic_text, False, 0)
-                    return AddressItemToken._new87(AddressItemToken.ItemType.STREET, sli[0].begin_token, sli[0].end_token, stri0, True)
+                    return AddressItemToken._new102(AddressItemToken.ItemType.STREET, sli[0].begin_token, sli[0].end_token, stri0, True)
                 if (i == 0 and (i + 1) >= len(sli) and sli[i].termin.canonic_text == "МИКРОРАЙОН"): 
                     stri0 = StreetReferent()
                     stri0.add_slot(StreetReferent.ATTR_TYP, sli[i].termin.canonic_text.lower(), False, 0)
-                    return AddressItemToken._new87(AddressItemToken.ItemType.STREET, sli[0].begin_token, sli[0].end_token, stri0, True)
+                    return AddressItemToken._new102(AddressItemToken.ItemType.STREET, sli[0].begin_token, sli[0].end_token, stri0, True)
                 if (sli[i].termin.canonic_text == "ПЛОЩАДЬ" or sli[i].termin.canonic_text == "ПЛОЩА"): 
                     tt = sli[i].end_token.next0_
                     if (tt is not None and ((tt.is_hiphen or tt.is_char(':')))): 
@@ -220,9 +220,9 @@ class StreetDefineHelper:
             return None
         sec_number = None
         j = n0
-        first_pass2877 = True
+        first_pass2908 = True
         while True:
-            if first_pass2877: first_pass2877 = False
+            if first_pass2908: first_pass2908 = False
             else: j += 1
             if (not (j <= n1)): break
             if (sli[j].typ == StreetItemType.NUMBER): 
@@ -328,7 +328,7 @@ class StreetDefineHelper:
                     street.add_slot(StreetReferent.ATTR_TYP, noun.alt_termin.canonic_text.lower(), False, 0)
         else: 
             street.add_slot(StreetReferent.ATTR_TYP, "метро", False, 0)
-        res = AddressItemToken._new84(AddressItemToken.ItemType.STREET, rli[0].begin_token, rli[0].end_token, street)
+        res = AddressItemToken._new99(AddressItemToken.ItemType.STREET, rli[0].begin_token, rli[0].end_token, street)
         for r in rli: 
             if (res.begin_char > r.begin_char): 
                 res.begin_token = r.begin_token
@@ -469,13 +469,13 @@ class StreetDefineHelper:
                 if (name.morph.gender == MorphGender.FEMINIE or name.morph.gender == MorphGender.MASCULINE or name.morph.gender == MorphGender.NEUTER): 
                     adj_gen = name.morph.gender
             if (name is not None and (((name.morph.number) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
-                s = Morphology.get_wordform(adj.termin.canonic_text, MorphBaseInfo._new211(MorphClass.ADJECTIVE, MorphNumber.PLURAL))
+                s = Morphology.get_wordform(adj.termin.canonic_text, MorphBaseInfo._new227(MorphClass.ADJECTIVE, MorphNumber.PLURAL))
             elif (adj_gen != MorphGender.UNDEFINED): 
-                s = Morphology.get_wordform(adj.termin.canonic_text, MorphBaseInfo._new212(MorphClass.ADJECTIVE, adj_gen))
+                s = Morphology.get_wordform(adj.termin.canonic_text, MorphBaseInfo._new228(MorphClass.ADJECTIVE, adj_gen))
             elif ((((adj.morph.gender) & (gen))) == (MorphGender.UNDEFINED)): 
-                s = Morphology.get_wordform(adj.termin.canonic_text, MorphBaseInfo._new212(MorphClass.ADJECTIVE, adj.morph.gender))
+                s = Morphology.get_wordform(adj.termin.canonic_text, MorphBaseInfo._new228(MorphClass.ADJECTIVE, adj.morph.gender))
             else: 
-                s = Morphology.get_wordform(adj.termin.canonic_text, MorphBaseInfo._new212(MorphClass.ADJECTIVE, gen))
+                s = Morphology.get_wordform(adj.termin.canonic_text, MorphBaseInfo._new228(MorphClass.ADJECTIVE, gen))
             adj_str = s
             if (name is not None and (Utils.indexOfList(sli, adj, 0) < Utils.indexOfList(sli, name, 0))): 
                 if (adj.end_token.is_char('.') and adj.length_char <= 3 and not adj.begin_token.chars.is_all_lower): 
@@ -571,9 +571,9 @@ class StreetDefineHelper:
             elif (noun.termin.canonic_text == "ПРОЕЗД" and street.find_slot(StreetReferent.ATTR_NAME, "ПРОЕКТИРУЕМЫЙ", True) is not None): 
                 res.is_doubt = False
             tt0 = res.begin_token.previous
-            first_pass2878 = True
+            first_pass2909 = True
             while True:
-                if first_pass2878: first_pass2878 = False
+                if first_pass2909: first_pass2909 = False
                 else: tt0 = tt0.previous
                 if (not (tt0 is not None)): break
                 if (tt0.is_char_of(",,") or tt0.is_comma_and): 
@@ -609,7 +609,7 @@ class StreetDefineHelper:
             street = StreetReferent()
             street.add_slot(StreetReferent.ATTR_TYP, ("метро" if for_metro else (("вулиця" if sli[0].kit.base_language.is_ua else "улица"))), False, 0)
             street.add_slot(StreetReferent.ATTR_NAME, s, False, 0)
-            res0 = AddressItemToken._new87(AddressItemToken.ItemType.STREET, sli[0].begin_token, sli[0].end_token, street, True)
+            res0 = AddressItemToken._new102(AddressItemToken.ItemType.STREET, sli[0].begin_token, sli[0].end_token, street, True)
             if (sli[0].is_in_brackets): 
                 res0.is_doubt = False
             return res0
@@ -622,9 +622,9 @@ class StreetDefineHelper:
                     is_street_before = True
                 cou = 0
                 tt = sli[0].end_token.next0_
-                first_pass2879 = True
+                first_pass2910 = True
                 while True:
-                    if first_pass2879: first_pass2879 = False
+                    if first_pass2910: first_pass2910 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (not tt.is_comma_and or tt.next0_ is None): 
@@ -742,9 +742,9 @@ class StreetDefineHelper:
                 if (nex is not None): 
                     return None
                 t = sli[0].begin_token.previous
-                first_pass2880 = True
+                first_pass2911 = True
                 while True:
-                    if first_pass2880: first_pass2880 = False
+                    if first_pass2911: first_pass2911 = False
                     else: t = t.previous
                     if (not (t is not None)): break
                     if (t.is_newline_after): 
@@ -788,7 +788,7 @@ class StreetDefineHelper:
         street.add_slot(StreetReferent.ATTR_NAME, val, False, 0)
         if (alt_val is not None): 
             street.add_slot(StreetReferent.ATTR_NAME, alt_val, False, 0)
-        return AddressItemToken._new87(AddressItemToken.ItemType.STREET, sli[0].begin_token, sli[len(sli) - 1].end_token, street, doubt)
+        return AddressItemToken._new102(AddressItemToken.ItemType.STREET, sli[0].begin_token, sli[len(sli) - 1].end_token, street, doubt)
     
     @staticmethod
     def __try_parse_fix(sits : typing.List['StreetItemToken']) -> 'AddressItemToken':
@@ -809,12 +809,12 @@ class StreetDefineHelper:
                 elif (sits[1].is_number_km): 
                     str0_.add_slot(StreetReferent.ATTR_NUMBER, num + "км", False, 0)
                     t1 = sits[1].end_token
-            return AddressItemToken._new84(AddressItemToken.ItemType.STREET, t0, t1, str0_)
+            return AddressItemToken._new99(AddressItemToken.ItemType.STREET, t0, t1, str0_)
         if (MiscLocationHelper.check_geo_object_before(sits[0].begin_token) or AddressItemToken.check_house_after(sits[0].end_token.next0_, False, True)): 
             str0_ = StreetReferent()
             str0_.add_slot(StreetReferent.ATTR_TYP, "улица", False, 0)
             str0_.add_slot(StreetReferent.ATTR_NAME, sits[0].termin.canonic_text, False, 0)
-            return AddressItemToken._new84(AddressItemToken.ItemType.STREET, sits[0].begin_token, sits[0].end_token, str0_)
+            return AddressItemToken._new99(AddressItemToken.ItemType.STREET, sits[0].begin_token, sits[0].end_token, str0_)
         return None
     
     @staticmethod

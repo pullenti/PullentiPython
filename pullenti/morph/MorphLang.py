@@ -150,7 +150,7 @@ class MorphLang:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphLang._new5(((val1) & (val2)))
+        return MorphLang._new10(((val1) & (val2)))
     
     def __or__(self : 'MorphLang', arg2 : 'MorphLang') -> 'MorphLang':
         val1 = 0
@@ -159,7 +159,7 @@ class MorphLang:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphLang._new5(((val1) | (val2)))
+        return MorphLang._new10(((val1) | (val2)))
     
     def __eq__(self : 'MorphLang', arg2 : 'MorphLang') -> bool:
         val1 = 0
@@ -194,43 +194,43 @@ class MorphLang:
     KZ = None
     
     @staticmethod
-    def _new5(_arg1 : int) -> 'MorphLang':
+    def _new10(_arg1 : int) -> 'MorphLang':
         res = MorphLang()
         res.value = _arg1
         return res
     
     @staticmethod
-    def _new78(_arg1 : bool) -> 'MorphLang':
+    def _new93(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_ru = _arg1
         return res
     
     @staticmethod
-    def _new79(_arg1 : bool) -> 'MorphLang':
+    def _new94(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_ua = _arg1
         return res
     
     @staticmethod
-    def _new80(_arg1 : bool) -> 'MorphLang':
+    def _new95(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_by = _arg1
         return res
     
     @staticmethod
-    def _new81(_arg1 : bool) -> 'MorphLang':
+    def _new96(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_en = _arg1
         return res
     
     @staticmethod
-    def _new82(_arg1 : bool) -> 'MorphLang':
+    def _new97(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_it = _arg1
         return res
     
     @staticmethod
-    def _new83(_arg1 : bool) -> 'MorphLang':
+    def _new98(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_kz = _arg1
         return res
@@ -240,11 +240,11 @@ class MorphLang:
     def _static_ctor():
         MorphLang.__m_names = ["RU", "UA", "BY", "EN", "IT", "KZ"]
         MorphLang.UNKNOWN = MorphLang()
-        MorphLang.RU = MorphLang._new78(True)
-        MorphLang.UA = MorphLang._new79(True)
-        MorphLang.BY = MorphLang._new80(True)
-        MorphLang.EN = MorphLang._new81(True)
-        MorphLang.IT = MorphLang._new82(True)
-        MorphLang.KZ = MorphLang._new83(True)
+        MorphLang.RU = MorphLang._new93(True)
+        MorphLang.UA = MorphLang._new94(True)
+        MorphLang.BY = MorphLang._new95(True)
+        MorphLang.EN = MorphLang._new96(True)
+        MorphLang.IT = MorphLang._new97(True)
+        MorphLang.KZ = MorphLang._new98(True)
 
 MorphLang._static_ctor()

@@ -459,12 +459,12 @@ class MorphCollection(MorphBaseInfo):
     
     def _deserialize(self, stream : io.IOBase) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
-        self.__m_class = MorphClass._new64(SerializerHelper.deserialize_short(stream))
-        self.__m_case = MorphCase._new49(SerializerHelper.deserialize_short(stream))
+        self.__m_class = MorphClass._new79(SerializerHelper.deserialize_short(stream))
+        self.__m_case = MorphCase._new64(SerializerHelper.deserialize_short(stream))
         self.__m_gender = (Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphGender))
         self.__m_number = (Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphNumber))
         self.__m_voice = (Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphVoice))
-        self.__m_language = MorphLang._new5(SerializerHelper.deserialize_short(stream))
+        self.__m_language = MorphLang._new10(SerializerHelper.deserialize_short(stream))
         cou = SerializerHelper.deserialize_int(stream)
         self.__m_items = list()
         i = 0
@@ -501,11 +501,11 @@ class MorphCollection(MorphBaseInfo):
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         ty = Utils.readByteIO(stream)
         res = (MorphBaseInfo() if ty == 0 else MorphWordForm())
-        res.class0_ = MorphClass._new64(SerializerHelper.deserialize_short(stream))
-        res.case_ = MorphCase._new49(SerializerHelper.deserialize_short(stream))
+        res.class0_ = MorphClass._new79(SerializerHelper.deserialize_short(stream))
+        res.case_ = MorphCase._new64(SerializerHelper.deserialize_short(stream))
         res.gender = Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphGender)
         res.number = Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphNumber)
-        res.language = MorphLang._new5(SerializerHelper.deserialize_short(stream))
+        res.language = MorphLang._new10(SerializerHelper.deserialize_short(stream))
         if (ty == 0): 
             return res
         wf = Utils.asObjectOrNull(res, MorphWordForm)
@@ -522,19 +522,19 @@ class MorphCollection(MorphBaseInfo):
         return res
     
     @staticmethod
-    def _new581(_arg1 : 'MorphClass') -> 'MorphCollection':
+    def _new597(_arg1 : 'MorphClass') -> 'MorphCollection':
         res = MorphCollection()
         res.class0_ = _arg1
         return res
     
     @staticmethod
-    def _new2322(_arg1 : 'MorphGender') -> 'MorphCollection':
+    def _new2351(_arg1 : 'MorphGender') -> 'MorphCollection':
         res = MorphCollection()
         res.gender = _arg1
         return res
     
     @staticmethod
-    def _new2426(_arg1 : 'MorphCase') -> 'MorphCollection':
+    def _new2455(_arg1 : 'MorphCase') -> 'MorphCollection':
         res = MorphCollection()
         res.case_ = _arg1
         return res

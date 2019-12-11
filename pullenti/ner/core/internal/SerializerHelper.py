@@ -5,9 +5,8 @@
 import io
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.Token import Token
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.Token import Token
 from pullenti.ner.TextToken import TextToken
 
 class SerializerHelper:
@@ -77,9 +76,9 @@ class SerializerHelper:
             return None
         res = None
         prev = None
-        first_pass2931 = True
+        first_pass2962 = True
         while True:
-            if first_pass2931: first_pass2931 = False
+            if first_pass2962: first_pass2962 = False
             else: cou -= 1
             if (not (cou > 0)): break
             t = SerializerHelper.__deserialize_token(stream, kit, vers)
@@ -111,6 +110,7 @@ class SerializerHelper:
     @staticmethod
     def serialize_token(stream : io.IOBase, t : 'Token') -> None:
         from pullenti.ner.MetaToken import MetaToken
+        from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.ReferentToken import ReferentToken
         typ = 0
         if (isinstance(t, TextToken)): 
@@ -131,6 +131,7 @@ class SerializerHelper:
     @staticmethod
     def __deserialize_token(stream : io.IOBase, kit : 'AnalysisKit', vers : int) -> 'Token':
         from pullenti.ner.MetaToken import MetaToken
+        from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.ReferentToken import ReferentToken
         typ = SerializerHelper.deserialize_short(stream)
         if (typ == (0)): 

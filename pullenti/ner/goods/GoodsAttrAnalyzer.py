@@ -80,9 +80,9 @@ class GoodsAttrAnalyzer(Analyzer):
         cur = 0
         next_pos = 0
         t = kit.first_token
-        first_pass3067 = True
+        first_pass3099 = True
         while True:
-            if first_pass3067: first_pass3067 = False
+            if first_pass3099: first_pass3099 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.begin_char > next_pos): 

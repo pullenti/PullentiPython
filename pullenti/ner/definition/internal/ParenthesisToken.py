@@ -66,13 +66,13 @@ class ParenthesisToken(MetaToken):
                         t1 = npt1.end_token.next0_
             r = t1.get_referent()
             if (r is not None): 
-                res = ParenthesisToken._new1119(t, t1, r)
+                res = ParenthesisToken._new1136(t, t1, r)
                 if (t1.next0_ is not None and t1.next0_.is_comma): 
                     sila = False
                     ttt = t1.next0_.next0_
-                    first_pass3018 = True
+                    first_pass3050 = True
                     while True:
-                        if first_pass3018: first_pass3018 = False
+                        if first_pass3050: first_pass3050 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_value("СИЛА", None) or ttt.is_value("ДЕЙСТВИЕ", None)): 
@@ -115,7 +115,7 @@ class ParenthesisToken(MetaToken):
     __m_termins = None
     
     @staticmethod
-    def _new1119(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent') -> 'ParenthesisToken':
+    def _new1136(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent') -> 'ParenthesisToken':
         res = ParenthesisToken(_arg1, _arg2)
         res.ref = _arg3
         return res

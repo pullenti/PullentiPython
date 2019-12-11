@@ -55,7 +55,7 @@ class BookLinkRefReferent(Referent):
             return BookLinkRefType.UNDEFINED
         try: 
             return Utils.valToEnum(val, BookLinkRefType)
-        except Exception as ex399: 
+        except Exception as ex414: 
             pass
         return BookLinkRefType.UNDEFINED
     @typ.setter
@@ -120,18 +120,18 @@ class BookLinkRefReferent(Referent):
         num2 = r2.get_string_value(BookLinkRefReferent.ATTR_NUMBER)
         if (num1 is None or num2 is None): 
             return None
-        wrapn1400 = RefOutArgWrapper(0)
-        inoutres401 = Utils.tryParseInt(num1, wrapn1400)
-        wrapn2402 = RefOutArgWrapper(0)
-        inoutres403 = Utils.tryParseInt(num2, wrapn2402)
-        n1 = wrapn1400.value
-        n2 = wrapn2402.value
-        if (not inoutres401 or not inoutres403): 
+        wrapn1415 = RefOutArgWrapper(0)
+        inoutres416 = Utils.tryParseInt(num1, wrapn1415)
+        wrapn2417 = RefOutArgWrapper(0)
+        inoutres418 = Utils.tryParseInt(num2, wrapn2417)
+        n1 = wrapn1415.value
+        n2 = wrapn2417.value
+        if (not inoutres416 or not inoutres418): 
             return None
         return n2 - n1
     
     @staticmethod
-    def _new391(_arg1 : 'Referent') -> 'BookLinkRefReferent':
+    def _new406(_arg1 : 'Referent') -> 'BookLinkRefReferent':
         res = BookLinkRefReferent()
         res.book = _arg1
         return res

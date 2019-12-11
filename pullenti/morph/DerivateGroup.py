@@ -66,16 +66,16 @@ class DerivateGroup:
         return res
     
     def create_by_prefix(self, pref : str, lang : 'MorphLang') -> 'DerivateGroup':
-        res = DerivateGroup._new41(True, pref)
+        res = DerivateGroup._new56(True, pref)
         for w in self.words: 
             if (lang is not None and not lang.is_undefined and ((w.lang) & lang).is_undefined): 
                 continue
-            rw = DerivateWord._new42(res, pref + w.spelling, w.lang, w.class0_, w.aspect, w.reflexive, w.tense, w.voice, w.attrs)
+            rw = DerivateWord._new57(res, pref + w.spelling, w.lang, w.class0_, w.aspect, w.reflexive, w.tense, w.voice, w.attrs)
             res.words.append(rw)
         return res
     
     @staticmethod
-    def _new41(_arg1 : bool, _arg2 : str) -> 'DerivateGroup':
+    def _new56(_arg1 : bool, _arg2 : str) -> 'DerivateGroup':
         res = DerivateGroup()
         res.is_generated = _arg1
         res.prefix = _arg2

@@ -11,8 +11,8 @@ from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.definition.DefinitionKind import DefinitionKind
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.definition.internal.ParenthesisToken import ParenthesisToken
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphCase import MorphCase
@@ -112,13 +112,13 @@ class DefinitionAnalyzer(Analyzer):
                     termin = it.referent.get_string_value(DefinitionReferent.ATTR_TERMIN)
                     if (not termin in oh): 
                         oh[termin] = True
-                        onto.add(Termin._new1120(termin, termin))
+                        onto.add(Termin._new1137(termin, termin))
             if (len(onto.termins) == 0): 
                 onto = (None)
         t = kit.first_token
-        first_pass3019 = True
+        first_pass3051 = True
         while True:
-            if first_pass3019: first_pass3019 = False
+            if first_pass3051: first_pass3051 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not glos_regime and t.is_newline_before): 
@@ -244,9 +244,9 @@ class DefinitionAnalyzer(Analyzer):
     
     @staticmethod
     def __ignore_list_prefix(t : 'Token') -> 'Token':
-        first_pass3020 = True
+        first_pass3052 = True
         while True:
-            if first_pass3020: first_pass3020 = False
+            if first_pass3052: first_pass3052 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_after): 
@@ -312,9 +312,9 @@ class DefinitionAnalyzer(Analyzer):
                 t = t.next0_
             return None
         misc_token = None
-        first_pass3021 = True
+        first_pass3053 = True
         while True:
-            if first_pass3021: first_pass3021 = False
+            if first_pass3053: first_pass3053 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and MiscHelper.can_be_start_of_sentence(t)): 
@@ -658,9 +658,9 @@ class DefinitionAnalyzer(Analyzer):
                 dr.add_slot(DefinitionReferent.ATTR_MISC, Utils.asObjectOrNull(misc_token.tag, str), False, 0)
         t1 = None
         multi_parts = None
-        first_pass3022 = True
+        first_pass3054 = True
         while True:
-            if first_pass3022: first_pass3022 = False
+            if first_pass3054: first_pass3054 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (MiscHelper.can_be_start_of_sentence(t)): 
@@ -754,9 +754,9 @@ class DefinitionAnalyzer(Analyzer):
             tmp = io.StringIO()
             print(df, end="", file=tmp)
             t = t1.next0_
-            first_pass3023 = True
+            first_pass3055 = True
             while True:
-                if first_pass3023: first_pass3023 = False
+                if first_pass3055: first_pass3055 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_char('(')): 
@@ -830,9 +830,9 @@ class DefinitionAnalyzer(Analyzer):
         r0 = t0
         r1 = None
         l0 = None
-        first_pass3024 = True
+        first_pass3056 = True
         while True:
-            if first_pass3024: first_pass3024 = False
+            if first_pass3056: first_pass3056 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and MiscHelper.can_be_start_of_sentence(t)): 
@@ -879,7 +879,7 @@ class DefinitionAnalyzer(Analyzer):
             return None
         if ((((l1.end_char - l0.end_char)) * 2) > ((r1.end_char - r0.end_char))): 
             return None
-        dr = DefinitionReferent._new1121(DefinitionKind.DEFINITION)
+        dr = DefinitionReferent._new1138(DefinitionKind.DEFINITION)
         nam = MiscHelper.get_text_value(l0, l1, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
         if (nam is None): 
             return None
@@ -915,9 +915,9 @@ class DefinitionAnalyzer(Analyzer):
         if (t.is_value("КАК", None)): 
             t1 = None
             tt = t.next0_
-            first_pass3025 = True
+            first_pass3057 = True
             while True:
-                if first_pass3025: first_pass3025 = False
+                if first_pass3057: first_pass3057 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_newline_before): 
@@ -931,21 +931,21 @@ class DefinitionAnalyzer(Analyzer):
                     continue
                 break
             if (t1 is not None): 
-                res = MetaToken._new840(t, t1, MiscHelper.get_text_value(t, t1, GetTextAttr.KEEPQUOTES))
+                res = MetaToken._new857(t, t1, MiscHelper.get_text_value(t, t1, GetTextAttr.KEEPQUOTES))
                 res.morph.class0_ = MorphClass.NOUN
                 return res
             return None
         npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.PARSENUMERICASADJECTIVE, 0)
         if (npt is not None): 
             if (DefinitionAnalyzer.__m_misc_first_words.try_parse(npt.noun.begin_token, TerminParseAttr.NO) is not None): 
-                res = MetaToken._new840(t, npt.end_token, npt.get_normal_case_text(None, True, MorphGender.UNDEFINED, False))
+                res = MetaToken._new857(t, npt.end_token, npt.get_normal_case_text(None, True, MorphGender.UNDEFINED, False))
                 res.morph.case_ = MorphCase.NOMINATIVE
                 return res
         if (t.is_value("В", None)): 
             npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
             if (npt is not None): 
                 if (npt.noun.is_value("СМЫСЛ", None)): 
-                    res = MetaToken._new840(t, npt.end_token, MiscHelper.get_text_value(t, npt.end_token, GetTextAttr.NO))
+                    res = MetaToken._new857(t, npt.end_token, MiscHelper.get_text_value(t, npt.end_token, GetTextAttr.NO))
                     res.morph.class0_ = MorphClass.NOUN
                     return res
         return None
@@ -957,9 +957,9 @@ class DefinitionAnalyzer(Analyzer):
         tt = None
         pr = 0
         tt = t
-        first_pass3026 = True
+        first_pass3058 = True
         while True:
-            if first_pass3026: first_pass3026 = False
+            if first_pass3058: first_pass3058 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_whitespace_before and tt != t): 
@@ -1051,9 +1051,9 @@ class DefinitionAnalyzer(Analyzer):
         for k in range(2):
             terms = (terms1 if k == 0 else terms2)
             t = ((ar1.first_token if k == 0 else ar2.first_token))
-            first_pass3027 = True
+            first_pass3059 = True
             while True:
-                if first_pass3027: first_pass3027 = False
+                if first_pass3059: first_pass3059 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
@@ -1091,9 +1091,9 @@ class DefinitionAnalyzer(Analyzer):
         tmp2 = io.StringIO()
         if (ar is not None): 
             t = ar.first_token
-            first_pass3028 = True
+            first_pass3060 = True
             while True:
-                if first_pass3028: first_pass3028 = False
+                if first_pass3060: first_pass3060 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 t1 = None
@@ -1105,9 +1105,9 @@ class DefinitionAnalyzer(Analyzer):
                 if (t1 is None): 
                     continue
                 tt = t1.next0_
-                first_pass3029 = True
+                first_pass3061 = True
                 while True:
-                    if first_pass3029: first_pass3029 = False
+                    if first_pass3061: first_pass3061 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_and): 
@@ -1130,9 +1130,9 @@ class DefinitionAnalyzer(Analyzer):
                     break
                 vars0_ = list()
                 tt = t
-                first_pass3030 = True
+                first_pass3062 = True
                 while True:
-                    if first_pass3030: first_pass3030 = False
+                    if first_pass3062: first_pass3062 = False
                     else: tt = tt.next0_
                     if (not (tt is not None and tt.end_char <= t1.end_char)): break
                     if (not ((isinstance(tt, TextToken)))): 

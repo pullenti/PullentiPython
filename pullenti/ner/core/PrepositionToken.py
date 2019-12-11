@@ -32,7 +32,7 @@ class PrepositionToken(MetaToken):
         return res
     
     @staticmethod
-    def _new597(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'MorphCase') -> 'PrepositionToken':
+    def _new613(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'MorphCase') -> 'PrepositionToken':
         res = PrepositionToken(_arg1, _arg2)
         res.normal = _arg3
         res.next_case = _arg4

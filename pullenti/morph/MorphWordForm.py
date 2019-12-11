@@ -108,7 +108,7 @@ class MorphWordForm(MorphBaseInfo):
         return False
     
     @staticmethod
-    def _new11(_arg1 : str, _arg2 : 'MorphClass', _arg3 : int) -> 'MorphWordForm':
+    def _new16(_arg1 : str, _arg2 : 'MorphClass', _arg3 : int) -> 'MorphWordForm':
         res = MorphWordForm()
         res.normal_case = _arg1
         res.class0_ = _arg2
@@ -116,7 +116,7 @@ class MorphWordForm(MorphBaseInfo):
         return res
     
     @staticmethod
-    def _new668(_arg1 : 'MorphCase', _arg2 : 'MorphNumber', _arg3 : 'MorphGender') -> 'MorphWordForm':
+    def _new684(_arg1 : 'MorphCase', _arg2 : 'MorphNumber', _arg3 : 'MorphGender') -> 'MorphWordForm':
         res = MorphWordForm()
         res.case_ = _arg1
         res.number = _arg2

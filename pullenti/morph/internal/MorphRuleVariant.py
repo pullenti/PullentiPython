@@ -78,7 +78,7 @@ class MorphRuleVariant(MorphBaseInfo):
         return 1
     
     @staticmethod
-    def _new36(_arg1 : 'MorphMiscInfo') -> 'MorphRuleVariant':
+    def _new51(_arg1 : 'MorphMiscInfo') -> 'MorphRuleVariant':
         res = MorphRuleVariant()
         res.misc_info = _arg1
         return res

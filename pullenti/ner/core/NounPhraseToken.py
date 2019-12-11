@@ -14,8 +14,8 @@ from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.Morphology import Morphology
 from pullenti.ner.core.internal.NounPhraseItemTextVar import NounPhraseItemTextVar
-from pullenti.ner.TextToken import TextToken
 from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.MiscHelper import MiscHelper
 
 class NounPhraseToken(MetaToken):
@@ -91,7 +91,7 @@ class NounPhraseToken(MetaToken):
             plural(bool): 
         
         """
-        mi = MorphBaseInfo._new567(cas, MorphLang.RU)
+        mi = MorphBaseInfo._new583(cas, MorphLang.RU)
         if (plural): 
             mi.number = MorphNumber.PLURAL
         else: 

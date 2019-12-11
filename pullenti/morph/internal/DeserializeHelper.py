@@ -4,6 +4,7 @@
 
 import io
 from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.DerivateWord import DerivateWord
@@ -23,24 +24,33 @@ class DeserializeHelper:
         with io.BytesIO() as tmp: 
             MorphSerializeHelper.deflate_gzip(str0_, tmp)
             wr = ByteArrayWrapper(bytearray(tmp.getvalue()))
-            cou = wr.deserialize_int()
+            pos = 0
+            wrappos9 = RefOutArgWrapper(pos)
+            cou = wr.deserialize_int(wrappos9)
+            pos = wrappos9.value
             while cou > 0: 
-                p1 = wr.deserialize_int()
+                wrappos7 = RefOutArgWrapper(pos)
+                p1 = wr.deserialize_int(wrappos7)
+                pos = wrappos7.value
                 ew = DerivateGroup()
                 if (lazy_load): 
-                    ew._lazy_pos = wr.position
-                    wr.seek(p1)
+                    ew._lazy_pos = pos
+                    pos = p1
                 else: 
-                    DeserializeHelper.deserialize_derivate_group(wr, ew)
+                    wrappos6 = RefOutArgWrapper(pos)
+                    DeserializeHelper.deserialize_derivate_group(wr, ew, wrappos6)
+                    pos = wrappos6.value
                 dic._m_all_groups.append(ew)
                 cou -= 1
             dic._m_root = ExplanTreeNode()
-            DeserializeHelper.deserialize_tree_node(wr, dic, dic._m_root, lazy_load)
+            wrappos8 = RefOutArgWrapper(pos)
+            DeserializeHelper.deserialize_tree_node(wr, dic, dic._m_root, lazy_load, wrappos8)
+            pos = wrappos8.value
         return wr
     
     @staticmethod
-    def deserialize_derivate_group(str0_ : 'ByteArrayWrapper', dg : 'DerivateGroup') -> None:
-        attr = str0_.deserialize_short()
+    def deserialize_derivate_group(str0_ : 'ByteArrayWrapper', dg : 'DerivateGroup', pos : int) -> None:
+        attr = str0_.deserialize_short(pos)
         if (((attr & 1)) != 0): 
             dg.is_dummy = True
         if (((attr & 2)) != 0): 
@@ -55,52 +65,52 @@ class DeserializeHelper:
             dg.m_rev_agent_case = 1
         if (((attr & 0x40)) != 0): 
             dg.m_rev_agent_case = 2
-        dg.questions = (Utils.valToEnum(str0_.deserialize_short(), NextModelQuestion))
-        dg.questions_ref = (Utils.valToEnum(str0_.deserialize_short(), NextModelQuestion))
-        dg.prefix = str0_.deserialize_string()
-        cou = str0_.deserialize_short()
+        dg.questions = (Utils.valToEnum(str0_.deserialize_short(pos), NextModelQuestion))
+        dg.questions_ref = (Utils.valToEnum(str0_.deserialize_short(pos), NextModelQuestion))
+        dg.prefix = str0_.deserialize_string(pos)
+        cou = str0_.deserialize_short(pos)
         while cou > 0: 
             w = DerivateWord(dg)
-            w.spelling = str0_.deserialize_string()
+            w.spelling = str0_.deserialize_string(pos)
             w.class0_ = MorphClass()
-            w.class0_.value = (str0_.deserialize_short())
-            w.lang = MorphLang._new5(str0_.deserialize_short())
-            w.attrs.value = (str0_.deserialize_short())
+            w.class0_.value = (str0_.deserialize_short(pos))
+            w.lang = MorphLang._new10(str0_.deserialize_short(pos))
+            w.attrs.value = (str0_.deserialize_short(pos))
             dg.words.append(w)
             cou -= 1
-        cou = str0_.deserialize_short()
+        cou = str0_.deserialize_short(pos)
         while cou > 0: 
-            pref = Utils.ifNotNull(str0_.deserialize_string(), "")
+            pref = Utils.ifNotNull(str0_.deserialize_string(pos), "")
             cas = MorphCase()
-            cas.value = (str0_.deserialize_short())
+            cas.value = (str0_.deserialize_short(pos))
             if (dg.nexts is None): 
                 dg.nexts = dict()
             dg.nexts[pref] = cas
             cou -= 1
-        cou = str0_.deserialize_short()
+        cou = str0_.deserialize_short(pos)
         while cou > 0: 
-            pref = Utils.ifNotNull(str0_.deserialize_string(), "")
+            pref = Utils.ifNotNull(str0_.deserialize_string(pos), "")
             cas = MorphCase()
-            cas.value = (str0_.deserialize_short())
+            cas.value = (str0_.deserialize_short(pos))
             if (dg.nexts_ref is None): 
                 dg.nexts_ref = dict()
             dg.nexts_ref[pref] = cas
             cou -= 1
     
     @staticmethod
-    def deserialize_tree_node(str0_ : 'ByteArrayWrapper', dic : 'DerivateDictionary', tn : 'ExplanTreeNode', lazy_load : bool) -> None:
-        cou = str0_.deserialize_short()
+    def deserialize_tree_node(str0_ : 'ByteArrayWrapper', dic : 'DerivateDictionary', tn : 'ExplanTreeNode', lazy_load : bool, pos : int) -> None:
+        cou = str0_.deserialize_short(pos)
         li = (list() if cou > 1 else None)
         while cou > 0: 
-            id0_ = str0_.deserialize_int()
+            id0_ = str0_.deserialize_int(pos)
             if (id0_ > 0 and id0_ <= len(dic._m_all_groups)): 
                 gr = dic._m_all_groups[id0_ - 1]
                 if (gr._lazy_pos > 0): 
-                    p0 = str0_.position
-                    str0_.seek(gr._lazy_pos)
-                    DeserializeHelper.deserialize_derivate_group(str0_, gr)
+                    p0 = pos.value
+                    pos.value = gr._lazy_pos
+                    DeserializeHelper.deserialize_derivate_group(str0_, gr, pos)
                     gr._lazy_pos = 0
-                    str0_.seek(p0)
+                    pos.value = p0
                 if (li is not None): 
                     li.append(gr)
                 else: 
@@ -108,20 +118,20 @@ class DeserializeHelper:
             cou -= 1
         if (li is not None): 
             tn.groups = (li)
-        cou = str0_.deserialize_short()
+        cou = str0_.deserialize_short(pos)
         if (cou == 0): 
             return
         while cou > 0: 
-            ke = str0_.deserialize_short()
-            p1 = str0_.deserialize_int()
+            ke = str0_.deserialize_short(pos)
+            p1 = str0_.deserialize_int(pos)
             tn1 = ExplanTreeNode()
             if (tn.nodes is None): 
                 tn.nodes = dict()
             if (not ke in tn.nodes): 
                 tn.nodes[ke] = tn1
             if (lazy_load): 
-                tn1.lazy_pos = str0_.position
-                str0_.seek(p1)
+                tn1.lazy_pos = pos.value
+                pos.value = p1
             else: 
-                DeserializeHelper.deserialize_tree_node(str0_, dic, tn1, False)
+                DeserializeHelper.deserialize_tree_node(str0_, dic, tn1, False, pos)
             cou -= 1

@@ -8,25 +8,25 @@ import unicodedata
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphCase import MorphCase
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.ner.core.internal.RusLatAccord import RusLatAccord
-from pullenti.morph.Morphology import Morphology
-from pullenti.ner.Token import Token
-from pullenti.morph.MorphWordForm import MorphWordForm
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.CanBeEqualsAttrs import CanBeEqualsAttrs
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.TextToken import TextToken
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.ner.Token import Token
+from pullenti.ner.core.CanBeEqualsAttrs import CanBeEqualsAttrs
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
 from pullenti.ner.ProcessorService import ProcessorService
 from pullenti.ner.core.AnalysisKit import AnalysisKit
 
@@ -1041,7 +1041,7 @@ class MiscHelper:
                                         var = (te.next0_).term
                                         if (isinstance(it, MorphWordForm)): 
                                             var = (it).normal_case
-                                        bi = MorphBaseInfo._new562(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
+                                        bi = MorphBaseInfo._new577(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
                                         var = Morphology.get_wordform(var, bi)
                                         if (var is not None): 
                                             var = MiscHelper.__corr_chars(var, te.next0_.chars, keep_chars, Utils.asObjectOrNull(te.next0_, TextToken))
@@ -1056,9 +1056,9 @@ class MiscHelper:
         if (begin is None or begin.end_char > end.end_char): 
             return Utils.toStringStringIO(res)
         t = begin
-        first_pass2950 = True
+        first_pass2981 = True
         while True:
-            if first_pass2950: first_pass2950 = False
+            if first_pass2981: first_pass2981 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             last = (Utils.getCharAtStringIO(res, res.tell() - 1) if res.tell() > 0 else ' ')
@@ -1364,7 +1364,7 @@ class MiscHelper:
                     elif ((t.next0_ is not None and t.next0_.is_hiphen and t.is_value("ГЕНЕРАЛ", None)) or t.is_value("КАПИТАН", None)): 
                         pass
                     else: 
-                        mbi = MorphBaseInfo._new563(npt.morph.gender, cas, MorphNumber.SINGULAR)
+                        mbi = MorphBaseInfo._new578(npt.morph.gender, cas, MorphNumber.SINGULAR)
                         if (plural_number): 
                             mbi.number = MorphNumber.PLURAL
                         wcas = Morphology.get_wordform(word, mbi)
@@ -1400,7 +1400,9 @@ class MiscHelper:
         """
         from pullenti.ner.core.NounPhraseToken import NounPhraseToken
         from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-        ar = ProcessorService.get_empty_processor().process(SourceOfAnalysis(str0_), None, None)
+        if (str0_ == "коп" or str0_ == "руб"): 
+            return str0_
+        ar = ProcessorService.get_empty_processor().process(SourceOfAnalysis._new579(str0_, False), None, None)
         if (ar is None or ar.first_token is None): 
             return str0_
         npt = NounPhraseHelper.try_parse(ar.first_token, NounPhraseParseAttr.PARSENUMERICASADJECTIVE, 0)
@@ -1414,13 +1416,13 @@ class MiscHelper:
         if (cas is None or cas.is_undefined): 
             cas = MorphCase.NOMINATIVE
         if (not Utils.isNullOrEmpty(num_val) and num == MorphNumber.UNDEFINED): 
-            if (cas is not None and not cas.is_nominative): 
+            if (cas is not None and not cas.is_nominative and not cas.is_genitive): 
                 if (num_val == "1"): 
                     num = MorphNumber.SINGULAR
                 else: 
                     num = MorphNumber.PLURAL
-        adj_bi = MorphBaseInfo._new564((MorphClass.ADJECTIVE) | MorphClass.NOUN, cas, num, npt.morph.gender)
-        noun_bi = MorphBaseInfo._new565(npt.noun.morph.class0_, cas, num)
+        adj_bi = MorphBaseInfo._new580((MorphClass.ADJECTIVE) | MorphClass.NOUN, cas, num, npt.morph.gender)
+        noun_bi = MorphBaseInfo._new581(npt.noun.morph.class0_, cas, num)
         if (npt.noun.morph.class0_.is_noun): 
             noun_bi.class0_ = MorphClass.NOUN
         year = None
@@ -1428,9 +1430,9 @@ class MiscHelper:
         if (not Utils.isNullOrEmpty(num_val) and num == MorphNumber.UNDEFINED): 
             ch = num_val[len(num_val) - 1]
             n = 0
-            wrapn566 = RefOutArgWrapper(0)
-            Utils.tryParseInt(num_val, wrapn566)
-            n = wrapn566.value
+            wrapn582 = RefOutArgWrapper(0)
+            Utils.tryParseInt(num_val, wrapn582)
+            n = wrapn582.value
             if (num_val == "1" or ((ch == '1' and n > 20 and ((n % 100)) != 11))): 
                 adj_bi.number = noun_bi.number = MorphNumber.SINGULAR
                 if (str0_ == "год" or str0_ == "раз"): 

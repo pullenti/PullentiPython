@@ -100,7 +100,7 @@ class AddressReferent(Referent):
             return AddressHouseType.HOUSE
         try: 
             return Utils.valToEnum(str0_, AddressHouseType)
-        except Exception as ex342: 
+        except Exception as ex357: 
             return AddressHouseType.HOUSE
     @house_type.setter
     def house_type(self, value) -> 'AddressHouseType':
@@ -124,7 +124,7 @@ class AddressReferent(Referent):
             return AddressBuildingType.BUILDING
         try: 
             return Utils.valToEnum(str0_, AddressBuildingType)
-        except Exception as ex343: 
+        except Exception as ex358: 
             return AddressBuildingType.BUILDING
     @building_type.setter
     def building_type(self, value) -> 'AddressBuildingType':
@@ -335,7 +335,7 @@ class AddressReferent(Referent):
             res = Utils.valToEnum(s, AddressDetailType)
             if (isinstance(res, AddressDetailType)): 
                 return Utils.valToEnum(res, AddressDetailType)
-        except Exception as ex344: 
+        except Exception as ex359: 
             pass
         return AddressDetailType.UNDEFINED
     @detail.setter

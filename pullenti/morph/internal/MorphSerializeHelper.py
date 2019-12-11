@@ -51,32 +51,51 @@ class MorphSerializeHelper:
         me.m_rules.clear()
         me.m_root = MorphTreeNode()
         me.m_root_reverce = MorphTreeNode()
-        cou = buf.deserialize_int()
+        pos = 0
+        wrappos50 = RefOutArgWrapper(pos)
+        cou = buf.deserialize_int(wrappos50)
+        pos = wrappos50.value
         while cou > 0: 
             mi = MorphMiscInfo()
-            MorphSerializeHelper.__deserialize_morph_misc_info(buf, mi)
+            wrappos42 = RefOutArgWrapper(pos)
+            MorphSerializeHelper.__deserialize_morph_misc_info(buf, mi, wrappos42)
+            pos = wrappos42.value
             me._m_vars.append(mi)
             cou -= 1
-        cou = buf.deserialize_int()
+        wrappos49 = RefOutArgWrapper(pos)
+        cou = buf.deserialize_int(wrappos49)
+        pos = wrappos49.value
         while cou > 0: 
-            p1 = buf.deserialize_int()
+            wrappos44 = RefOutArgWrapper(pos)
+            p1 = buf.deserialize_int(wrappos44)
+            pos = wrappos44.value
             r = MorphRule()
             if (lazy_load): 
-                r.lazy_pos = buf.position
-                buf.seek(p1)
+                r.lazy_pos = pos
+                pos = p1
             else: 
-                MorphSerializeHelper.__deserialize_morph_rule(buf, r, me)
+                wrappos43 = RefOutArgWrapper(pos)
+                MorphSerializeHelper.__deserialize_morph_rule(buf, r, me, wrappos43)
+                pos = wrappos43.value
             me.m_rules.append(r)
             cou -= 1
         if (lazy_load): 
-            MorphSerializeHelper._deserialize_morph_tree_node_lazy(buf, me.m_root, me)
+            wrappos45 = RefOutArgWrapper(pos)
+            MorphSerializeHelper._deserialize_morph_tree_node_lazy(buf, me.m_root, me, wrappos45)
+            pos = wrappos45.value
         else: 
-            MorphSerializeHelper.__deserialize_morph_tree_node(buf, me.m_root, me)
+            wrappos46 = RefOutArgWrapper(pos)
+            MorphSerializeHelper.__deserialize_morph_tree_node(buf, me.m_root, me, wrappos46)
+            pos = wrappos46.value
         if (not ignore_rev_tree): 
             if (lazy_load): 
-                MorphSerializeHelper._deserialize_morph_tree_node_lazy(buf, me.m_root_reverce, me)
+                wrappos47 = RefOutArgWrapper(pos)
+                MorphSerializeHelper._deserialize_morph_tree_node_lazy(buf, me.m_root_reverce, me, wrappos47)
+                pos = wrappos47.value
             else: 
-                MorphSerializeHelper.__deserialize_morph_tree_node(buf, me.m_root_reverce, me)
+                wrappos48 = RefOutArgWrapper(pos)
+                MorphSerializeHelper.__deserialize_morph_tree_node(buf, me.m_root_reverce, me, wrappos48)
+                pos = wrappos48.value
         tmp.close()
         return buf
     
@@ -88,10 +107,10 @@ class MorphSerializeHelper:
         Utils.writeByteIO(res, 0xFF)
     
     @staticmethod
-    def __deserialize_morph_misc_info(str0_ : 'ByteArrayWrapper', mi : 'MorphMiscInfo') -> None:
-        mi._m_value = (str0_.deserialize_short())
+    def __deserialize_morph_misc_info(str0_ : 'ByteArrayWrapper', mi : 'MorphMiscInfo', pos : int) -> None:
+        mi._m_value = (str0_.deserialize_short(pos))
         while True:
-            s = str0_.deserialize_string()
+            s = str0_.deserialize_string(pos)
             if (Utils.isNullOrEmpty(s)): 
                 break
             mi.attrs.append(s)
@@ -134,20 +153,20 @@ class MorphSerializeHelper:
         Utils.writeByteIO(res, 0xFF)
     
     @staticmethod
-    def __deserialize_morph_rule(str0_ : 'ByteArrayWrapper', r : 'MorphRule', me : 'MorphEngine') -> None:
-        r._id0_ = str0_.deserialize_short()
-        while not str0_.iseof:
-            b = str0_.deserialize_byte()
+    def __deserialize_morph_rule(str0_ : 'ByteArrayWrapper', r : 'MorphRule', me : 'MorphEngine', pos : int) -> None:
+        r._id0_ = str0_.deserialize_short(pos)
+        while not str0_.iseof(pos.value):
+            b = str0_.deserialize_byte(pos)
             if (b == (0xFF)): 
                 break
-            str0_.back()
-            key = Utils.ifNotNull(str0_.deserialize_string(), "")
+            pos.value -= 1
+            key = Utils.ifNotNull(str0_.deserialize_string(pos), "")
             li = list()
             r.variants[key] = li
             r.variants_key.append(key)
             r.variants_list.append(li)
-            while not str0_.iseof:
-                mrv = MorphSerializeHelper.__deserialize_morph_rule_variant(str0_, me)
+            while not str0_.iseof(pos.value):
+                mrv = MorphSerializeHelper.__deserialize_morph_rule_variant(str0_, me, pos)
                 if (mrv is None): 
                     break
                 mrv.tail = key
@@ -165,23 +184,23 @@ class MorphSerializeHelper:
         MorphSerializeHelper.__serialize_string(res, v.full_normal_tail)
     
     @staticmethod
-    def __deserialize_morph_rule_variant(str0_ : 'ByteArrayWrapper', me : 'MorphEngine') -> 'MorphRuleVariant':
-        id0_ = str0_.deserialize_short() - 1
+    def __deserialize_morph_rule_variant(str0_ : 'ByteArrayWrapper', me : 'MorphEngine', pos : int) -> 'MorphRuleVariant':
+        id0_ = str0_.deserialize_short(pos) - 1
         if ((id0_ < 0) or id0_ >= len(me._m_vars)): 
             return None
-        mrv = MorphRuleVariant._new36(me._m_vars[id0_])
+        mrv = MorphRuleVariant._new51(me._m_vars[id0_])
         mc = MorphClass()
-        mc.value = (str0_.deserialize_short())
+        mc.value = (str0_.deserialize_short(pos))
         if (mc.is_misc and mc.is_proper): 
             mc.is_misc = False
         mrv.class0_ = mc
-        mrv.gender = Utils.valToEnum(str0_.deserialize_byte(), MorphGender)
-        mrv.number = Utils.valToEnum(str0_.deserialize_byte(), MorphNumber)
+        mrv.gender = Utils.valToEnum(str0_.deserialize_byte(pos), MorphGender)
+        mrv.number = Utils.valToEnum(str0_.deserialize_byte(pos), MorphNumber)
         mca = MorphCase()
-        mca.value = (str0_.deserialize_byte())
+        mca.value = (str0_.deserialize_byte(pos))
         mrv.case_ = mca
-        mrv.normal_tail = str0_.deserialize_string()
-        mrv.full_normal_tail = str0_.deserialize_string()
+        mrv.normal_tail = str0_.deserialize_string(pos)
+        mrv.full_normal_tail = str0_.deserialize_string(pos)
         return mrv
     
     @staticmethod
@@ -212,9 +231,9 @@ class MorphSerializeHelper:
         MorphSerializeHelper.__serialize_short(res, 0xFFFF)
     
     @staticmethod
-    def __deserialize_morph_tree_node_base(str0_ : 'ByteArrayWrapper', tn : 'MorphTreeNode', me : 'MorphEngine') -> None:
-        while not str0_.iseof:
-            i = str0_.deserialize_short()
+    def __deserialize_morph_tree_node_base(str0_ : 'ByteArrayWrapper', tn : 'MorphTreeNode', me : 'MorphEngine', pos : int) -> None:
+        while not str0_.iseof(pos.value):
+            i = str0_.deserialize_short(pos)
             i -= 1
             if ((i < 0) or i >= len(me.m_rules)): 
                 break
@@ -222,13 +241,13 @@ class MorphSerializeHelper:
             if (tn.rules is None): 
                 tn.rules = list()
             tn.rules.append(r)
-        while not str0_.iseof:
-            tail = str0_.deserialize_string()
+        while not str0_.iseof(pos.value):
+            tail = str0_.deserialize_string(pos)
             if (tail is None): 
                 break
-            rule_id = str0_.deserialize_short()
-            coef = str0_.deserialize_short()
-            v = MorphSerializeHelper.__deserialize_morph_rule_variant(str0_, me)
+            rule_id = str0_.deserialize_short(pos)
+            coef = str0_.deserialize_short(pos)
+            v = MorphSerializeHelper.__deserialize_morph_rule_variant(str0_, me, pos)
             if (v is None): 
                 break
             v.tail = tail
@@ -242,43 +261,43 @@ class MorphSerializeHelper:
             tn.reverce_variants.append(v)
     
     @staticmethod
-    def _deserialize_morph_tree_node_lazy(str0_ : 'ByteArrayWrapper', tn : 'MorphTreeNode', me : 'MorphEngine') -> None:
-        MorphSerializeHelper.__deserialize_morph_tree_node_base(str0_, tn, me)
-        while not str0_.iseof:
-            i = str0_.deserialize_short()
+    def _deserialize_morph_tree_node_lazy(str0_ : 'ByteArrayWrapper', tn : 'MorphTreeNode', me : 'MorphEngine', pos : int) -> None:
+        MorphSerializeHelper.__deserialize_morph_tree_node_base(str0_, tn, me, pos)
+        while not str0_.iseof(pos.value):
+            i = str0_.deserialize_short(pos)
             if (i == 0xFFFF): 
                 break
-            pos = str0_.deserialize_int()
+            pp = str0_.deserialize_int(pos)
             child = MorphTreeNode()
-            child.lazy_pos = str0_.position
+            child.lazy_pos = pos.value
             if (tn.nodes is None): 
                 tn.nodes = dict()
             tn.nodes[i] = child
-            str0_.seek(pos)
-        p = str0_.position
+            pos.value = pp
+        p = pos.value
         if (tn.rules is not None): 
             for r in tn.rules: 
                 if (r.lazy_pos > 0): 
-                    str0_.seek(r.lazy_pos)
-                    MorphSerializeHelper.__deserialize_morph_rule(str0_, r, me)
+                    pos.value = r.lazy_pos
+                    MorphSerializeHelper.__deserialize_morph_rule(str0_, r, me, pos)
                     r.lazy_pos = 0
-            str0_.seek(p)
+            pos.value = p
     
     @staticmethod
-    def __deserialize_morph_tree_node(str0_ : 'ByteArrayWrapper', tn : 'MorphTreeNode', me : 'MorphEngine') -> int:
+    def __deserialize_morph_tree_node(str0_ : 'ByteArrayWrapper', tn : 'MorphTreeNode', me : 'MorphEngine', pos : int) -> int:
         res = 0
-        MorphSerializeHelper.__deserialize_morph_tree_node_base(str0_, tn, me)
-        while not str0_.iseof:
-            i = str0_.deserialize_short()
+        MorphSerializeHelper.__deserialize_morph_tree_node_base(str0_, tn, me, pos)
+        while not str0_.iseof(pos.value):
+            i = str0_.deserialize_short(pos)
             if (i == 0xFFFF): 
                 break
-            pos = str0_.deserialize_int()
+            pp = str0_.deserialize_int(pos)
             child = MorphTreeNode()
             if (tn.nodes is None): 
                 tn.nodes = dict()
             tn.nodes[i] = child
             res += 1
-            res += MorphSerializeHelper.__deserialize_morph_tree_node(str0_, child, me)
+            res += MorphSerializeHelper.__deserialize_morph_tree_node(str0_, child, me, pos)
         return res
     
     MAX_VARIANTS = 0
@@ -293,9 +312,9 @@ class MorphSerializeHelper:
                         continue
                     rtn = root
                     lev = 0
-                    first_pass2864 = True
+                    first_pass2895 = True
                     while True:
-                        if first_pass2864: first_pass2864 = False
+                        if first_pass2895: first_pass2895 = False
                         else: lev += 1
                         if (not (lev < MorphSerializeHelper.__max_tail_len)): break
                         i = len(wf) - 1 - lev
@@ -305,10 +324,10 @@ class MorphSerializeHelper:
                         if (rtn.nodes is None): 
                             rtn.nodes = dict()
                         next0_ = None
-                        wrapnext37 = RefOutArgWrapper(None)
-                        inoutres38 = Utils.tryGetValue(rtn.nodes, ch, wrapnext37)
-                        next0_ = wrapnext37.value
-                        if (not inoutres38): 
+                        wrapnext52 = RefOutArgWrapper(None)
+                        inoutres53 = Utils.tryGetValue(rtn.nodes, ch, wrapnext52)
+                        next0_ = wrapnext52.value
+                        if (not inoutres53): 
                             next0_ = MorphTreeNode()
                             rtn.nodes[ch] = next0_
                         rtn = next0_

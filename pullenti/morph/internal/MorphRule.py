@@ -28,10 +28,10 @@ class MorphRule:
         self.variants_list.clear()
         for v in vars0_: 
             li = [ ]
-            wrapli32 = RefOutArgWrapper(None)
-            inoutres33 = Utils.tryGetValue(self.variants, Utils.ifNotNull(v.tail, ""), wrapli32)
-            li = wrapli32.value
-            if (not inoutres33): 
+            wrapli38 = RefOutArgWrapper(None)
+            inoutres39 = Utils.tryGetValue(self.variants, Utils.ifNotNull(v.tail, ""), wrapli38)
+            li = wrapli38.value
+            if (not inoutres39): 
                 li = list()
                 self.variants[Utils.ifNotNull(v.tail, "")] = li
             li.append(v)
@@ -54,10 +54,10 @@ class MorphRule:
         if (var.class0_.is_undefined): 
             pass
         li = [ ]
-        wrapli34 = RefOutArgWrapper(None)
-        inoutres35 = Utils.tryGetValue(self.variants, tail, wrapli34)
-        li = wrapli34.value
-        if (not inoutres35): 
+        wrapli40 = RefOutArgWrapper(None)
+        inoutres41 = Utils.tryGetValue(self.variants, tail, wrapli40)
+        li = wrapli40.value
+        if (not inoutres41): 
             li = list()
             self.variants[tail] = li
         var.tail = tail

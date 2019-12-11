@@ -16,6 +16,7 @@ class MeasureMeta(ReferentClass):
         MeasureMeta.GLOBAL_META.add_feature(MeasureReferent.ATTR_UNIT, "Единица измерения", 1, 2)
         MeasureMeta.GLOBAL_META.add_feature(MeasureReferent.ATTR_REF, "Ссылка на уточняющее измерение", 0, 0)
         MeasureMeta.GLOBAL_META.add_feature(MeasureReferent.ATTR_NAME, "Наименование", 0, 0)
+        MeasureMeta.GLOBAL_META.add_feature(MeasureReferent.ATTR_KIND, "Тип", 0, 1)
     
     @property
     def name(self) -> str:

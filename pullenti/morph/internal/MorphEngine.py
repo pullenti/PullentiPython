@@ -31,6 +31,7 @@ class MorphEngine:
         self.m_rules = list()
     
     def initialize(self, lang : 'MorphLang') -> bool:
+        from pullenti.morph.Morphology import Morphology
         if (not self.language.is_undefined): 
             return False
         with self._m_lock: 
@@ -47,14 +48,17 @@ class MorphEngine:
                         continue
                     with Utils.getResourceStream('pullenti.morph.internal.properties', n) as stream: 
                         stream.seek(0, io.SEEK_SET)
-                        self.__m_lazy_buf = MorphSerializeHelper.deserialize_all(stream, self, False, True)
+                        self.__m_lazy_buf = MorphSerializeHelper.deserialize_all(stream, self, False, Morphology.LAZY_LOAD)
                     return True
             return False
     
     def __load_tree_node(self, tn : 'MorphTreeNode') -> None:
         with self._m_lock: 
-            self.__m_lazy_buf.seek(tn.lazy_pos)
-            MorphSerializeHelper._deserialize_morph_tree_node_lazy(self.__m_lazy_buf, tn, self)
+            pos = tn.lazy_pos
+            if (pos > 0): 
+                wrappos19 = RefOutArgWrapper(pos)
+                MorphSerializeHelper._deserialize_morph_tree_node_lazy(self.__m_lazy_buf, tn, self, wrappos19)
+                pos = wrappos19.value
             tn.lazy_pos = 0
     
     def process(self, word : str) -> typing.List['MorphWordForm']:
@@ -94,10 +98,10 @@ class MorphEngine:
                 if (res is None): 
                     res = list()
                 for r in tn.rules: 
-                    wrapmvs14 = RefOutArgWrapper(None)
-                    inoutres15 = Utils.tryGetValue(r.variants, word_end, wrapmvs14)
-                    mvs = wrapmvs14.value
-                    if (inoutres15): 
+                    wrapmvs20 = RefOutArgWrapper(None)
+                    inoutres21 = Utils.tryGetValue(r.variants, word_end, wrapmvs20)
+                    mvs = wrapmvs20.value
+                    if (inoutres21): 
                         if (word_begin is None): 
                             if (i == len(word)): 
                                 word_begin = word
@@ -109,10 +113,10 @@ class MorphEngine:
             if (tn.nodes is None or i >= len(word)): 
                 break
             ch = ord(word[i])
-            wraptn16 = RefOutArgWrapper(None)
-            inoutres17 = Utils.tryGetValue(tn.nodes, ch, wraptn16)
-            tn = wraptn16.value
-            if (not inoutres17): 
+            wraptn22 = RefOutArgWrapper(None)
+            inoutres23 = Utils.tryGetValue(tn.nodes, ch, wraptn22)
+            tn = wraptn22.value
+            if (not inoutres23): 
                 break
             i += 1
         need_test_unknown_vars = True
@@ -166,10 +170,10 @@ class MorphEngine:
                 ch = ord(word[i])
                 if (tn.nodes is None): 
                     break
-                wrapnext18 = RefOutArgWrapper(None)
-                inoutres19 = Utils.tryGetValue(tn.nodes, ch, wrapnext18)
-                next0_ = wrapnext18.value
-                if (not inoutres19): 
+                wrapnext24 = RefOutArgWrapper(None)
+                inoutres25 = Utils.tryGetValue(tn.nodes, ch, wrapnext24)
+                next0_ = wrapnext24.value
+                if (not inoutres25): 
                     break
                 tn = next0_
                 if (tn.lazy_pos > 0): 
@@ -272,25 +276,25 @@ class MorphEngine:
             if (tn.nodes is None or i >= len(word)): 
                 break
             ch = ord(word[i])
-            wraptn20 = RefOutArgWrapper(None)
-            inoutres21 = Utils.tryGetValue(tn.nodes, ch, wraptn20)
-            tn = wraptn20.value
-            if (not inoutres21): 
+            wraptn26 = RefOutArgWrapper(None)
+            inoutres27 = Utils.tryGetValue(tn.nodes, ch, wraptn26)
+            tn = wraptn26.value
+            if (not inoutres27): 
                 break
             i += 1
         i = 0
-        first_pass2858 = True
+        first_pass2889 = True
         while True:
-            if first_pass2858: first_pass2858 = False
+            if first_pass2889: first_pass2889 = False
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
             if (wf.contains_attr("инф.", None)): 
                 continue
             j = i + 1
-            first_pass2859 = True
+            first_pass2890 = True
             while True:
-                if first_pass2859: first_pass2859 = False
+                if first_pass2890: first_pass2890 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
@@ -301,18 +305,18 @@ class MorphEngine:
                     del res[j]
                     j -= 1
         i = 0
-        first_pass2860 = True
+        first_pass2891 = True
         while True:
-            if first_pass2860: first_pass2860 = False
+            if first_pass2891: first_pass2891 = False
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
             if (wf.contains_attr("инф.", None)): 
                 continue
             j = i + 1
-            first_pass2861 = True
+            first_pass2892 = True
             while True:
-                if first_pass2861: first_pass2861 = False
+                if first_pass2892: first_pass2892 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
@@ -384,10 +388,10 @@ class MorphEngine:
             if (tn.nodes is None or i >= len(word)): 
                 break
             ch = ord(word[i])
-            wraptn22 = RefOutArgWrapper(None)
-            inoutres23 = Utils.tryGetValue(tn.nodes, ch, wraptn22)
-            tn = wraptn22.value
-            if (not inoutres23): 
+            wraptn28 = RefOutArgWrapper(None)
+            inoutres29 = Utils.tryGetValue(tn.nodes, ch, wraptn28)
+            tn = wraptn28.value
+            if (not inoutres29): 
                 break
             i += 1
         if (find): 
@@ -400,10 +404,10 @@ class MorphEngine:
             ch = ord(word[i])
             if (tn.nodes is None): 
                 break
-            wrapnext24 = RefOutArgWrapper(None)
-            inoutres25 = Utils.tryGetValue(tn.nodes, ch, wrapnext24)
-            next0_ = wrapnext24.value
-            if (not inoutres25): 
+            wrapnext30 = RefOutArgWrapper(None)
+            inoutres31 = Utils.tryGetValue(tn.nodes, ch, wrapnext30)
+            next0_ = wrapnext30.value
+            if (not inoutres31): 
                 break
             tn = next0_
             if (tn.lazy_pos > 0): 
@@ -503,9 +507,9 @@ class MorphEngine:
         return vars0_[0]
     
     def __check_corr_var(self, word : str, tn : 'MorphTreeNode', i : int) -> str:
-        first_pass2862 = True
+        first_pass2893 = True
         while True:
-            if first_pass2862: first_pass2862 = False
+            if first_pass2893: first_pass2893 = False
             else: i += 1
             if (not (i <= len(word))): break
             if (tn.lazy_pos > 0): 
@@ -540,10 +544,10 @@ class MorphEngine:
                 break
             ch = ord(word[i])
             if (ch != (0x2A)): 
-                wraptn26 = RefOutArgWrapper(None)
-                inoutres27 = Utils.tryGetValue(tn.nodes, ch, wraptn26)
-                tn = wraptn26.value
-                if (inoutres27): 
+                wraptn32 = RefOutArgWrapper(None)
+                inoutres33 = Utils.tryGetValue(tn.nodes, ch, wraptn32)
+                tn = wraptn32.value
+                if (inoutres33): 
                     continue
                 break
             if (tn.nodes is not None): 
@@ -571,10 +575,10 @@ class MorphEngine:
             ch = ord(word[i])
             if (tn.nodes is None): 
                 break
-            wrapnext28 = RefOutArgWrapper(None)
-            inoutres29 = Utils.tryGetValue(tn.nodes, ch, wrapnext28)
-            next0_ = wrapnext28.value
-            if (not inoutres29): 
+            wrapnext34 = RefOutArgWrapper(None)
+            inoutres35 = Utils.tryGetValue(tn.nodes, ch, wrapnext34)
+            next0_ = wrapnext34.value
+            if (not inoutres35): 
                 break
             tn = next0_
             if (tn.lazy_pos > 0): 
@@ -703,9 +707,9 @@ class MorphEngine:
         i = 0
         while i < (len(res) - 1): 
             j = i + 1
-            first_pass2863 = True
+            first_pass2894 = True
             while True:
-                if first_pass2863: first_pass2863 = False
+                if first_pass2894: first_pass2894 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 if (MorphEngine.__comp1(res[i], res[j])): 
@@ -737,10 +741,10 @@ class MorphEngine:
     
     def register_morph_info(self, var : 'MorphMiscInfo') -> 'MorphMiscInfo':
         key = str(var)
-        wrapv30 = RefOutArgWrapper(None)
-        inoutres31 = Utils.tryGetValue(self._m_vars_hash, key, wrapv30)
-        v = wrapv30.value
-        if (inoutres31): 
+        wrapv36 = RefOutArgWrapper(None)
+        inoutres37 = Utils.tryGetValue(self._m_vars_hash, key, wrapv36)
+        v = wrapv36.value
+        if (inoutres37): 
             return v
         self._m_vars_hash[key] = var
         self._m_vars.append(var)

@@ -137,21 +137,21 @@ class MorphBaseInfo:
         return True
     
     @staticmethod
-    def _new211(_arg1 : 'MorphClass', _arg2 : 'MorphNumber') -> 'MorphBaseInfo':
+    def _new227(_arg1 : 'MorphClass', _arg2 : 'MorphNumber') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.class0_ = _arg1
         res.number = _arg2
         return res
     
     @staticmethod
-    def _new212(_arg1 : 'MorphClass', _arg2 : 'MorphGender') -> 'MorphBaseInfo':
+    def _new228(_arg1 : 'MorphClass', _arg2 : 'MorphGender') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.class0_ = _arg1
         res.gender = _arg2
         return res
     
     @staticmethod
-    def _new240(_arg1 : 'MorphCase', _arg2 : 'MorphClass', _arg3 : 'MorphNumber', _arg4 : 'MorphGender') -> 'MorphBaseInfo':
+    def _new256(_arg1 : 'MorphCase', _arg2 : 'MorphClass', _arg3 : 'MorphNumber', _arg4 : 'MorphGender') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.case_ = _arg1
         res.class0_ = _arg2
@@ -160,7 +160,7 @@ class MorphBaseInfo:
         return res
     
     @staticmethod
-    def _new469(_arg1 : 'MorphClass', _arg2 : 'MorphGender', _arg3 : 'MorphNumber', _arg4 : 'MorphCase', _arg5 : 'MorphLang') -> 'MorphBaseInfo':
+    def _new484(_arg1 : 'MorphClass', _arg2 : 'MorphGender', _arg3 : 'MorphNumber', _arg4 : 'MorphCase', _arg5 : 'MorphLang') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.class0_ = _arg1
         res.gender = _arg2
@@ -170,7 +170,7 @@ class MorphBaseInfo:
         return res
     
     @staticmethod
-    def _new562(_arg1 : 'MorphClass', _arg2 : 'MorphGender', _arg3 : 'MorphNumber', _arg4 : 'MorphLang') -> 'MorphBaseInfo':
+    def _new577(_arg1 : 'MorphClass', _arg2 : 'MorphGender', _arg3 : 'MorphNumber', _arg4 : 'MorphLang') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.class0_ = _arg1
         res.gender = _arg2
@@ -179,7 +179,7 @@ class MorphBaseInfo:
         return res
     
     @staticmethod
-    def _new563(_arg1 : 'MorphGender', _arg2 : 'MorphCase', _arg3 : 'MorphNumber') -> 'MorphBaseInfo':
+    def _new578(_arg1 : 'MorphGender', _arg2 : 'MorphCase', _arg3 : 'MorphNumber') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.gender = _arg1
         res.case_ = _arg2
@@ -187,7 +187,7 @@ class MorphBaseInfo:
         return res
     
     @staticmethod
-    def _new564(_arg1 : 'MorphClass', _arg2 : 'MorphCase', _arg3 : 'MorphNumber', _arg4 : 'MorphGender') -> 'MorphBaseInfo':
+    def _new580(_arg1 : 'MorphClass', _arg2 : 'MorphCase', _arg3 : 'MorphNumber', _arg4 : 'MorphGender') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.class0_ = _arg1
         res.case_ = _arg2
@@ -196,7 +196,7 @@ class MorphBaseInfo:
         return res
     
     @staticmethod
-    def _new565(_arg1 : 'MorphClass', _arg2 : 'MorphCase', _arg3 : 'MorphNumber') -> 'MorphBaseInfo':
+    def _new581(_arg1 : 'MorphClass', _arg2 : 'MorphCase', _arg3 : 'MorphNumber') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.class0_ = _arg1
         res.case_ = _arg2
@@ -204,20 +204,20 @@ class MorphBaseInfo:
         return res
     
     @staticmethod
-    def _new567(_arg1 : 'MorphCase', _arg2 : 'MorphLang') -> 'MorphBaseInfo':
+    def _new583(_arg1 : 'MorphCase', _arg2 : 'MorphLang') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.case_ = _arg1
         res.language = _arg2
         return res
     
     @staticmethod
-    def _new579(_arg1 : 'MorphClass') -> 'MorphBaseInfo':
+    def _new595(_arg1 : 'MorphClass') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.class0_ = _arg1
         return res
     
     @staticmethod
-    def _new1809(_arg1 : 'MorphCase', _arg2 : 'MorphGender', _arg3 : 'MorphNumber') -> 'MorphBaseInfo':
+    def _new1829(_arg1 : 'MorphCase', _arg2 : 'MorphGender', _arg3 : 'MorphNumber') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.case_ = _arg1
         res.gender = _arg2
@@ -225,7 +225,7 @@ class MorphBaseInfo:
         return res
     
     @staticmethod
-    def _new2356(_arg1 : 'MorphClass', _arg2 : 'MorphGender', _arg3 : 'MorphLang') -> 'MorphBaseInfo':
+    def _new2385(_arg1 : 'MorphClass', _arg2 : 'MorphGender', _arg3 : 'MorphLang') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.class0_ = _arg1
         res.gender = _arg2
@@ -233,33 +233,33 @@ class MorphBaseInfo:
         return res
     
     @staticmethod
-    def _new2452(_arg1 : 'MorphCase') -> 'MorphBaseInfo':
+    def _new2481(_arg1 : 'MorphCase') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.case_ = _arg1
         return res
     
     @staticmethod
-    def _new2465(_arg1 : 'MorphCase', _arg2 : 'MorphGender') -> 'MorphBaseInfo':
+    def _new2494(_arg1 : 'MorphCase', _arg2 : 'MorphGender') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.case_ = _arg1
         res.gender = _arg2
         return res
     
     @staticmethod
-    def _new2479(_arg1 : 'MorphGender', _arg2 : 'MorphCase') -> 'MorphBaseInfo':
+    def _new2508(_arg1 : 'MorphGender', _arg2 : 'MorphCase') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.gender = _arg1
         res.case_ = _arg2
         return res
     
     @staticmethod
-    def _new2501(_arg1 : 'MorphGender') -> 'MorphBaseInfo':
+    def _new2530(_arg1 : 'MorphGender') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.gender = _arg1
         return res
     
     @staticmethod
-    def _new2548(_arg1 : 'MorphCase', _arg2 : 'MorphGender', _arg3 : 'MorphClass') -> 'MorphBaseInfo':
+    def _new2577(_arg1 : 'MorphCase', _arg2 : 'MorphGender', _arg3 : 'MorphClass') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.case_ = _arg1
         res.gender = _arg2
@@ -267,14 +267,14 @@ class MorphBaseInfo:
         return res
     
     @staticmethod
-    def _new2585(_arg1 : 'MorphNumber', _arg2 : 'MorphLang') -> 'MorphBaseInfo':
+    def _new2614(_arg1 : 'MorphNumber', _arg2 : 'MorphLang') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.number = _arg1
         res.language = _arg2
         return res
     
     @staticmethod
-    def _new2588(_arg1 : 'MorphGender', _arg2 : 'MorphNumber', _arg3 : 'MorphLang') -> 'MorphBaseInfo':
+    def _new2619(_arg1 : 'MorphGender', _arg2 : 'MorphNumber', _arg3 : 'MorphLang') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.gender = _arg1
         res.number = _arg2
@@ -282,7 +282,7 @@ class MorphBaseInfo:
         return res
     
     @staticmethod
-    def _new2590(_arg1 : 'MorphNumber', _arg2 : 'MorphGender', _arg3 : 'MorphLang') -> 'MorphBaseInfo':
+    def _new2621(_arg1 : 'MorphNumber', _arg2 : 'MorphGender', _arg3 : 'MorphLang') -> 'MorphBaseInfo':
         res = MorphBaseInfo()
         res.number = _arg1
         res.gender = _arg2

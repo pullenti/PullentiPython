@@ -73,9 +73,9 @@ class NextModelHelper:
     
     @staticmethod
     def find_by_spel(spel : str) -> 'NextModelItem':
-        wrapres39 = RefOutArgWrapper(None)
-        inoutres40 = Utils.tryGetValue(NextModelHelper.__m_hash_by_spel, spel, wrapres39)
-        res = wrapres39.value
-        if (not inoutres40): 
+        wrapres54 = RefOutArgWrapper(None)
+        inoutres55 = Utils.tryGetValue(NextModelHelper.__m_hash_by_spel, spel, wrapres54)
+        res = wrapres54.value
+        if (not inoutres55): 
             return None
         return res

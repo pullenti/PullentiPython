@@ -8,7 +8,7 @@ from setuptools import (
 
 with open('pullenti/ner/ProcessorService.py') as file:
     source = file.read()
-    match = re.search(r'return "(\d\.\d\d)"', source)
+    match = re.search(r'return "([0-9.]+)"', source)
     version = match.group(1)
 
 setup(

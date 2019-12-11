@@ -44,7 +44,7 @@ class DerivateWord:
         return Utils.toStringStringIO(tmp)
     
     @staticmethod
-    def _new42(_arg1 : 'DerivateGroup', _arg2 : str, _arg3 : 'MorphLang', _arg4 : 'MorphClass', _arg5 : 'MorphAspect', _arg6 : bool, _arg7 : 'MorphTense', _arg8 : 'MorphVoice', _arg9 : 'ExplanWordAttr') -> 'DerivateWord':
+    def _new57(_arg1 : 'DerivateGroup', _arg2 : str, _arg3 : 'MorphLang', _arg4 : 'MorphClass', _arg5 : 'MorphAspect', _arg6 : bool, _arg7 : 'MorphTense', _arg8 : 'MorphVoice', _arg9 : 'ExplanWordAttr') -> 'DerivateWord':
         res = DerivateWord(_arg1)
         res.spelling = _arg2
         res.lang = _arg3

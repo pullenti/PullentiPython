@@ -219,10 +219,10 @@ class Referent:
         str0_ = self.get_string_value(attr_name)
         if (Utils.isNullOrEmpty(str0_)): 
             return def_value
-        wrapres2829 = RefOutArgWrapper(0)
-        inoutres2830 = Utils.tryParseInt(str0_, wrapres2829)
-        res = wrapres2829.value
-        if (not inoutres2830): 
+        wrapres2860 = RefOutArgWrapper(0)
+        inoutres2861 = Utils.tryParseInt(str0_, wrapres2860)
+        res = wrapres2860.value
+        if (not inoutres2861): 
             return def_value
         return res
     
@@ -247,7 +247,7 @@ class Referent:
         return res
     
     def add_occurence_of_ref_tok(self, rt : 'ReferentToken') -> None:
-        self.add_occurence(TextAnnotation._new731(rt.kit.sofa, rt.begin_char, rt.end_char, rt.referent))
+        self.add_occurence(TextAnnotation._new748(rt.kit.sofa, rt.begin_char, rt.end_char, rt.referent))
     
     def add_occurence(self, anno : 'TextAnnotation') -> None:
         """ Добавить аннотацию
@@ -265,7 +265,7 @@ class Referent:
                 l_._merge(anno)
                 return
         if (anno.occurence_of != self and anno.occurence_of is not None): 
-            anno = TextAnnotation._new2832(anno.begin_char, anno.end_char, anno.sofa)
+            anno = TextAnnotation._new2863(anno.begin_char, anno.end_char, anno.sofa)
         if (self.__m_occurrence is None): 
             self.__m_occurrence = list()
         anno.occurence_of = self
@@ -318,7 +318,7 @@ class Referent:
         res.occurrence.extend(self.occurrence)
         res.ontology_items = self.ontology_items
         for r in self.slots: 
-            rr = Slot._new2833(r.type_name, r.value, r.count)
+            rr = Slot._new2864(r.type_name, r.value, r.count)
             rr.owner = res
             res.slots.append(rr)
         return res
@@ -487,7 +487,7 @@ class Referent:
         self.__m_occurrence = list()
         i = 0
         while i < cou: 
-            a = TextAnnotation._new2834(sofa, self)
+            a = TextAnnotation._new2865(sofa, self)
             self.__m_occurrence.append(a)
             a.begin_char = SerializerHelper.deserialize_int(stream)
             a.end_char = SerializerHelper.deserialize_int(stream)

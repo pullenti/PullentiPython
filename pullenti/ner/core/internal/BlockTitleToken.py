@@ -30,9 +30,9 @@ class BlockTitleToken(MetaToken):
         intro = None
         lits = None
         tt = t
-        first_pass2927 = True
+        first_pass2958 = True
         while True:
-            if first_pass2927: first_pass2927 = False
+            if first_pass2958: first_pass2958 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 
@@ -75,9 +75,9 @@ class BlockTitleToken(MetaToken):
             cou = 0
             err = 0
             tt = content.end_token.next0_
-            first_pass2928 = True
+            first_pass2959 = True
             while True:
-                if first_pass2928: first_pass2928 = False
+                if first_pass2959: first_pass2959 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not tt.is_newline_before): 
@@ -112,9 +112,9 @@ class BlockTitleToken(MetaToken):
             return None
         first = True
         tt = t0
-        first_pass2929 = True
+        first_pass2960 = True
         while True:
-            if first_pass2929: first_pass2929 = False
+            if first_pass2960: first_pass2960 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (not tt.is_newline_before): 
@@ -168,9 +168,9 @@ class BlockTitleToken(MetaToken):
         if (li.typ == BlkTyps.INDEX): 
             pass
         if (li.is_exist_name): 
-            return BlockTitleToken._new461(t, li.end_token, li.typ)
+            return BlockTitleToken._new476(t, li.end_token, li.typ)
         if (li.end_token == li.number_end or ((li.end_token.is_char_of(".:") and li.end_token.previous == li.number_end))): 
-            res2 = BlockTitleToken._new461(t, li.end_token, li.typ)
+            res2 = BlockTitleToken._new476(t, li.end_token, li.typ)
             if (li.typ == BlkTyps.CHAPTER or li.typ == BlkTyps.APPENDIX): 
                 li2 = BlockLine.create(li.end_token.next0_, names)
                 if ((li2 is not None and li2.typ == BlkTyps.UNDEFINED and li2.is_all_upper) and li2.words > 0): 
@@ -188,7 +188,7 @@ class BlockTitleToken(MetaToken):
             return res2
         if (li.number_end is None): 
             return None
-        res = BlockTitleToken._new461(t, li.end_token, li.typ)
+        res = BlockTitleToken._new476(t, li.end_token, li.typ)
         if (res.typ == BlkTyps.UNDEFINED): 
             if (li.words < 1): 
                 return None
@@ -238,7 +238,7 @@ class BlockTitleToken(MetaToken):
         return res
     
     @staticmethod
-    def _new461(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BlkTyps') -> 'BlockTitleToken':
+    def _new476(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BlkTyps') -> 'BlockTitleToken':
         res = BlockTitleToken(_arg1, _arg2)
         res.typ = _arg3
         return res

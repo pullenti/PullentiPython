@@ -188,9 +188,9 @@ class BracketHelper:
         lev = 1
         is_assim = br_list[0].char0_ != '«' and BracketHelper.M_ASSYMOPEN_CHARS.find(br_list[0].char0_) >= 0
         t = t0.next0_
-        first_pass2947 = True
+        first_pass2978 = True
         while True:
-            if first_pass2947: first_pass2947 = False
+            if first_pass2978: first_pass2978 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -359,9 +359,9 @@ class BracketHelper:
                         t = t.next0_
                 lev1 = 0
                 tt = br_list[0].source.previous
-                first_pass2948 = True
+                first_pass2979 = True
                 while True:
-                    if first_pass2948: first_pass2948 = False
+                    if first_pass2979: first_pass2979 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.is_newline_after or tt.is_table_control_char): 
@@ -401,9 +401,9 @@ class BracketHelper:
         if (res is None): 
             cou = 0
             tt = t0.next0_
-            first_pass2949 = True
+            first_pass2980 = True
             while True:
-                if first_pass2949: first_pass2949 = False
+                if first_pass2980: first_pass2980 = False
                 else: tt = tt.next0_; cou += 1
                 if (not (tt is not None)): break
                 if (tt.is_table_control_char): 

@@ -132,6 +132,10 @@ class GeoOwnerHelper:
                     if ((s.value) != "регион" and (s.value) != "регіон"): 
                         if (lo.find_slot(s.type_name, s.value, True) is not None): 
                             return False
+            if ("почтовое отделение" in hit): 
+                return False
+            if ("почтовое отделение" in lot): 
+                return True
             if (hi.is_state): 
                 return True
             if ("волость" in lot): 

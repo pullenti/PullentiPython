@@ -101,7 +101,7 @@ class RusLatAccord:
         RusLatAccord.__m_accords.append(RusLatAccord("ь", ""))
         RusLatAccord.__m_accords.append(RusLatAccord("", "gh"))
         RusLatAccord.__m_accords.append(RusLatAccord("", "h"))
-        RusLatAccord.__m_accords.append(RusLatAccord._new531("", "e", True))
+        RusLatAccord.__m_accords.append(RusLatAccord._new546("", "e", True))
         RusLatAccord.__m_accords.append(RusLatAccord("еи", "ei"))
         RusLatAccord.__m_accords.append(RusLatAccord("аи", "ai"))
         RusLatAccord.__m_accords.append(RusLatAccord("ай", "i"))
@@ -309,7 +309,7 @@ class RusLatAccord:
         return max_len
     
     @staticmethod
-    def _new531(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'RusLatAccord':
+    def _new546(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'RusLatAccord':
         res = RusLatAccord(_arg1, _arg2)
         res.on_tail = _arg3
         return res

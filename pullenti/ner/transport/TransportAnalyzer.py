@@ -79,9 +79,9 @@ class TransportAnalyzer(Analyzer):
         objs_by_model = dict()
         obj_by_names = TerminCollection()
         t = kit.first_token
-        first_pass3291 = True
+        first_pass3323 = True
         while True:
-            if first_pass3291: first_pass3291 = False
+            if first_pass3323: first_pass3323 = False
             else: t = t.next0_
             if (not (t is not None)): break
             its = TransItemToken.try_parse_list(t, 10)
@@ -92,9 +92,9 @@ class TransportAnalyzer(Analyzer):
                 for rt in rts: 
                     cou = 0
                     tt = t.previous
-                    first_pass3292 = True
+                    first_pass3324 = True
                     while True:
-                        if first_pass3292: first_pass3292 = False
+                        if first_pass3324: first_pass3324 = False
                         else: tt = tt.previous; cou += 1
                         if (not (tt is not None and (cou < 1000))): break
                         tr = Utils.asObjectOrNull(tt.get_referent(), TransportReferent)
@@ -117,10 +117,10 @@ class TransportAnalyzer(Analyzer):
                             for k in range(2):
                                 if (not str.isdigit(mod[0])): 
                                     li = [ ]
-                                    wrapli2680 = RefOutArgWrapper(None)
-                                    inoutres2681 = Utils.tryGetValue(objs_by_model, mod, wrapli2680)
-                                    li = wrapli2680.value
-                                    if (not inoutres2681): 
+                                    wrapli2711 = RefOutArgWrapper(None)
+                                    inoutres2712 = Utils.tryGetValue(objs_by_model, mod, wrapli2711)
+                                    li = wrapli2711.value
+                                    if (not inoutres2712): 
                                         li = list()
                                         objs_by_model[mod] = li
                                     if (not rt.referent in li): 
@@ -133,13 +133,13 @@ class TransportAnalyzer(Analyzer):
                                     break
                                 mod = "{0} {1}".format(brand, mod)
                         elif (s.type_name == TransportReferent.ATTR_NAME): 
-                            obj_by_names.add(Termin._new119(str(s.value), rt.referent))
+                            obj_by_names.add(Termin._new135(str(s.value), rt.referent))
         if (len(objs_by_model) == 0 and len(obj_by_names.termins) == 0): 
             return
         t = kit.first_token
-        first_pass3293 = True
+        first_pass3325 = True
         while True:
-            if first_pass3293: first_pass3293 = False
+            if first_pass3325: first_pass3325 = False
             else: t = t.next0_
             if (not (t is not None)): break
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 10)
@@ -194,9 +194,9 @@ class TransportAnalyzer(Analyzer):
         t1 = None
         brand_is_doubt = False
         i = 0
-        first_pass3294 = True
+        first_pass3326 = True
         while True:
-            if first_pass3294: first_pass3294 = False
+            if first_pass3326: first_pass3326 = False
             else: i += 1
             if (not (i < len(its))): break
             if (its[i].typ == TransItemToken.Typs.NOUN): 

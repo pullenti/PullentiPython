@@ -31,9 +31,9 @@ class BusinessFactItem(MetaToken):
         if (res is None): 
             return None
         tt = res.end_token.next0_
-        first_pass2909 = True
+        first_pass2940 = True
         while True:
-            if first_pass2909: first_pass2909 = False
+            if first_pass2940: first_pass2940 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.morph.class0_.is_preposition): 
@@ -68,11 +68,11 @@ class BusinessFactItem(MetaToken):
         if (tok is not None): 
             ki = Utils.valToEnum(tok.termin.tag, BusinessFactKind)
             if (ki != BusinessFactKind.UNDEFINED): 
-                return BusinessFactItem._new404(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph, tok.termin.tag2 is not None)
+                return BusinessFactItem._new419(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph, tok.termin.tag2 is not None)
             tt = tok.end_token.next0_
-            first_pass2910 = True
+            first_pass2941 = True
             while True:
-                if first_pass2910: first_pass2910 = False
+                if first_pass2941: first_pass2941 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.morph.class0_.is_preposition): 
@@ -82,15 +82,15 @@ class BusinessFactItem(MetaToken):
                     continue
                 ki = (Utils.valToEnum(tok.termin.tag, BusinessFactKind))
                 if (ki != BusinessFactKind.UNDEFINED): 
-                    return BusinessFactItem._new405(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph)
+                    return BusinessFactItem._new420(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph)
                 tt = tok.end_token
         npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
         if (npt is not None): 
             if (((((npt.noun.is_value("АКЦИОНЕР", None) or npt.noun.is_value("ВЛАДЕЛЕЦ", None) or npt.noun.is_value("ВЛАДЕЛИЦА", None)) or npt.noun.is_value("СОВЛАДЕЛЕЦ", None) or npt.noun.is_value("СОВЛАДЕЛИЦА", None)) or npt.noun.is_value("АКЦІОНЕР", None) or npt.noun.is_value("ВЛАСНИК", None)) or npt.noun.is_value("ВЛАСНИЦЯ", None) or npt.noun.is_value("СПІВВЛАСНИК", None)) or npt.noun.is_value("СПІВВЛАСНИЦЯ", None)): 
-                return BusinessFactItem._new405(t, npt.end_token, BusinessFactItemTyp.BASE, BusinessFactKind.HAVE, npt.morph)
+                return BusinessFactItem._new420(t, npt.end_token, BusinessFactItemTyp.BASE, BusinessFactKind.HAVE, npt.morph)
         if (npt is not None): 
             if ((npt.noun.is_value("ОСНОВАТЕЛЬ", None) or npt.noun.is_value("ОСНОВАТЕЛЬНИЦА", None) or npt.noun.is_value("ЗАСНОВНИК", None)) or npt.noun.is_value("ЗАСНОВНИЦЯ", None)): 
-                return BusinessFactItem._new405(t, npt.end_token, BusinessFactItemTyp.BASE, BusinessFactKind.CREATE, npt.morph)
+                return BusinessFactItem._new420(t, npt.end_token, BusinessFactItemTyp.BASE, BusinessFactKind.CREATE, npt.morph)
         return None
     
     @staticmethod
@@ -99,54 +99,54 @@ class BusinessFactItem(MetaToken):
             return
         BusinessFactItem.__m_base_onto = TerminCollection()
         for s in ["КУПИТЬ", "ПОКУПАТЬ", "ПРИОБРЕТАТЬ", "ПРИОБРЕСТИ", "ПОКУПКА", "ПРИОБРЕТЕНИЕ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new119(s, BusinessFactKind.GET))
+            BusinessFactItem.__m_base_onto.add(Termin._new135(s, BusinessFactKind.GET))
         for s in ["КУПИТИ", "КУПУВАТИ", "КУПУВАТИ", "ПРИДБАТИ", "ПОКУПКА", "ПРИДБАННЯ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new120(s, BusinessFactKind.GET, MorphLang.UA))
+            BusinessFactItem.__m_base_onto.add(Termin._new136(s, BusinessFactKind.GET, MorphLang.UA))
         for s in ["ПРОДАТЬ", "ПРОДАВАТЬ", "ПРОДАЖА"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new119(s, BusinessFactKind.SELL))
+            BusinessFactItem.__m_base_onto.add(Termin._new135(s, BusinessFactKind.SELL))
         for s in ["ПРОДАТИ", "ПРОДАВАТИ", "ПРОДАЖ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new120(s, BusinessFactKind.SELL, MorphLang.UA))
+            BusinessFactItem.__m_base_onto.add(Termin._new136(s, BusinessFactKind.SELL, MorphLang.UA))
         for s in ["ФИНАНСИРОВАТЬ", "СПОНСИРОВАТЬ", "ПРОФИНАНСИРОВАТЬ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new119(s, BusinessFactKind.FINANCE))
+            BusinessFactItem.__m_base_onto.add(Termin._new135(s, BusinessFactKind.FINANCE))
         for s in ["ФІНАНСУВАТИ", "СПОНСОРУВАТИ", "ПРОФІНАНСУВАТИ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new120(s, BusinessFactKind.FINANCE, MorphLang.UA))
+            BusinessFactItem.__m_base_onto.add(Termin._new136(s, BusinessFactKind.FINANCE, MorphLang.UA))
         for s in ["ВЛАДЕТЬ", "РАСПОРЯЖАТЬСЯ", "КОНТРОЛИРОВАТЬ", "ПРИНАДЛЕЖАТЬ", "СТАТЬ ВЛАДЕЛЬЦЕМ", "КОНСОЛИДИРОВАТЬ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new119(s, BusinessFactKind.HAVE))
+            BusinessFactItem.__m_base_onto.add(Termin._new135(s, BusinessFactKind.HAVE))
         for s in ["ВОЛОДІТИ", "РОЗПОРЯДЖАТИСЯ", "КОНТРОЛЮВАТИ", "НАЛЕЖАТИ", "СТАТИ ВЛАСНИКОМ", "КОНСОЛІДУВАТИ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new120(s, BusinessFactKind.HAVE, MorphLang.UA))
+            BusinessFactItem.__m_base_onto.add(Termin._new136(s, BusinessFactKind.HAVE, MorphLang.UA))
         for s in ["ПРИНАДЛЕЖАЩИЙ", "КОНТРОЛИРУЕМЫЙ", "ВЛАДЕЕМЫЙ", "ПЕРЕЙТИ ПОД КОНТРОЛЬ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new121(s, BusinessFactKind.HAVE, s))
+            BusinessFactItem.__m_base_onto.add(Termin._new137(s, BusinessFactKind.HAVE, s))
         for s in ["НАЛЕЖНИЙ", "КОНТРОЛЬОВАНИЙ", "ВЛАДЕЕМЫЙ", "ПЕРЕЙТИ ПІД КОНТРОЛЬ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new417(s, BusinessFactKind.HAVE, s, MorphLang.UA))
+            BusinessFactItem.__m_base_onto.add(Termin._new432(s, BusinessFactKind.HAVE, s, MorphLang.UA))
         for s in ["ЗАКРЫТЬ СДЕЛКУ", "СОВЕРШИТЬ СДЕЛКУ", "ЗАВЕРШИТЬ СДЕЛКУ", "ЗАКЛЮЧИТЬ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new119(s, BusinessFactKind.UNDEFINED))
+            BusinessFactItem.__m_base_onto.add(Termin._new135(s, BusinessFactKind.UNDEFINED))
         for s in ["ЗАКРИТИ ОПЕРАЦІЮ", "ЗДІЙСНИТИ ОПЕРАЦІЮ", "ЗАВЕРШИТИ ОПЕРАЦІЮ", "УКЛАСТИ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new120(s, BusinessFactKind.UNDEFINED, MorphLang.UA))
+            BusinessFactItem.__m_base_onto.add(Termin._new136(s, BusinessFactKind.UNDEFINED, MorphLang.UA))
         for s in ["ДОХОД", "ПРИБЫЛЬ", "ВЫРУЧКА"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new119(s, BusinessFactKind.PROFIT))
+            BusinessFactItem.__m_base_onto.add(Termin._new135(s, BusinessFactKind.PROFIT))
         for s in ["ДОХІД", "ПРИБУТОК", "ВИРУЧКА"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new120(s, BusinessFactKind.PROFIT, MorphLang.UA))
+            BusinessFactItem.__m_base_onto.add(Termin._new136(s, BusinessFactKind.PROFIT, MorphLang.UA))
         for s in ["УБЫТОК"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new119(s, BusinessFactKind.DAMAGES))
+            BusinessFactItem.__m_base_onto.add(Termin._new135(s, BusinessFactKind.DAMAGES))
         for s in ["ЗБИТОК"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new120(s, BusinessFactKind.DAMAGES, MorphLang.UA))
+            BusinessFactItem.__m_base_onto.add(Termin._new136(s, BusinessFactKind.DAMAGES, MorphLang.UA))
         for s in ["СОГЛАШЕНИЕ", "ДОГОВОР"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new119(s, BusinessFactKind.AGREEMENT))
+            BusinessFactItem.__m_base_onto.add(Termin._new135(s, BusinessFactKind.AGREEMENT))
         for s in ["УГОДА", "ДОГОВІР"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new120(s, BusinessFactKind.AGREEMENT, MorphLang.UA))
+            BusinessFactItem.__m_base_onto.add(Termin._new136(s, BusinessFactKind.AGREEMENT, MorphLang.UA))
         for s in ["ИСК", "СУДЕБНЫЙ ИСК"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new119(s, BusinessFactKind.LAWSUIT))
+            BusinessFactItem.__m_base_onto.add(Termin._new135(s, BusinessFactKind.LAWSUIT))
         for s in ["ПОЗОВ", "СУДОВИЙ ПОЗОВ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new120(s, BusinessFactKind.LAWSUIT, MorphLang.UA))
+            BusinessFactItem.__m_base_onto.add(Termin._new136(s, BusinessFactKind.LAWSUIT, MorphLang.UA))
         for s in ["ДОЧЕРНЕЕ ПРЕДПРИЯТИЕ", "ДОЧЕРНЕЕ ПОДРАЗДЕЛЕНИЕ", "ДОЧЕРНЯЯ КОМПАНИЯ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new119(s, BusinessFactKind.SUBSIDIARY))
+            BusinessFactItem.__m_base_onto.add(Termin._new135(s, BusinessFactKind.SUBSIDIARY))
         for s in ["ДОЧІРНЄ ПІДПРИЄМСТВО", "ДОЧІРНІЙ ПІДРОЗДІЛ", "ДОЧІРНЯ КОМПАНІЯ"]: 
-            BusinessFactItem.__m_base_onto.add(Termin._new120(s, BusinessFactKind.SUBSIDIARY, MorphLang.UA))
+            BusinessFactItem.__m_base_onto.add(Termin._new136(s, BusinessFactKind.SUBSIDIARY, MorphLang.UA))
     
     __m_base_onto = None
     
     @staticmethod
-    def _new404(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BusinessFactItemTyp', _arg4 : 'BusinessFactKind', _arg5 : 'MorphCollection', _arg6 : bool) -> 'BusinessFactItem':
+    def _new419(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BusinessFactItemTyp', _arg4 : 'BusinessFactKind', _arg5 : 'MorphCollection', _arg6 : bool) -> 'BusinessFactItem':
         res = BusinessFactItem(_arg1, _arg2)
         res.typ = _arg3
         res.base_kind = _arg4
@@ -155,7 +155,7 @@ class BusinessFactItem(MetaToken):
         return res
     
     @staticmethod
-    def _new405(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BusinessFactItemTyp', _arg4 : 'BusinessFactKind', _arg5 : 'MorphCollection') -> 'BusinessFactItem':
+    def _new420(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BusinessFactItemTyp', _arg4 : 'BusinessFactKind', _arg5 : 'MorphCollection') -> 'BusinessFactItem':
         res = BusinessFactItem(_arg1, _arg2)
         res.typ = _arg3
         res.base_kind = _arg4

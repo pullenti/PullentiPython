@@ -86,26 +86,26 @@ class TextToken(Token):
         """
         if (dict0_ is None): 
             return None
-        wrapres2842 = RefOutArgWrapper(None)
-        inoutres2843 = Utils.tryGetValue(dict0_, self.term, wrapres2842)
-        res = wrapres2842.value
-        if (inoutres2843): 
+        wrapres2873 = RefOutArgWrapper(None)
+        inoutres2874 = Utils.tryGetValue(dict0_, self.term, wrapres2873)
+        res = wrapres2873.value
+        if (inoutres2874): 
             return res
         if (self.morph is not None): 
             for it in self.morph.items: 
                 mf = Utils.asObjectOrNull(it, MorphWordForm)
                 if (mf is not None): 
                     if (mf.normal_case is not None): 
-                        wrapres2838 = RefOutArgWrapper(None)
-                        inoutres2839 = Utils.tryGetValue(dict0_, mf.normal_case, wrapres2838)
-                        res = wrapres2838.value
-                        if (inoutres2839): 
+                        wrapres2869 = RefOutArgWrapper(None)
+                        inoutres2870 = Utils.tryGetValue(dict0_, mf.normal_case, wrapres2869)
+                        res = wrapres2869.value
+                        if (inoutres2870): 
                             return res
                     if (mf.normal_full is not None and mf.normal_case != mf.normal_full): 
-                        wrapres2840 = RefOutArgWrapper(None)
-                        inoutres2841 = Utils.tryGetValue(dict0_, mf.normal_full, wrapres2840)
-                        res = wrapres2840.value
-                        if (inoutres2841): 
+                        wrapres2871 = RefOutArgWrapper(None)
+                        inoutres2872 = Utils.tryGetValue(dict0_, mf.normal_full, wrapres2871)
+                        res = wrapres2871.value
+                        if (inoutres2872): 
                             return res
         return None
     
@@ -214,7 +214,7 @@ class TextToken(Token):
             return None
         te = None
         if (single_number and mc is not None): 
-            bi = MorphBaseInfo._new562(MorphClass(mc), gender, MorphNumber.SINGULAR, self.morph.language)
+            bi = MorphBaseInfo._new577(MorphClass(mc), gender, MorphNumber.SINGULAR, self.morph.language)
             vars0_ = Morphology.get_wordform(self.term, bi)
             if (vars0_ is not None): 
                 te = vars0_
@@ -292,13 +292,13 @@ class TextToken(Token):
         self.max_length = SerializerHelper.deserialize_short(stream)
     
     @staticmethod
-    def _new542(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : str) -> 'TextToken':
+    def _new557(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : str) -> 'TextToken':
         res = TextToken(_arg1, _arg2)
         res.term0 = _arg3
         return res
     
     @staticmethod
-    def _new545(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : 'CharsInfo', _arg4 : int, _arg5 : int, _arg6 : str) -> 'TextToken':
+    def _new560(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : 'CharsInfo', _arg4 : int, _arg5 : int, _arg6 : str) -> 'TextToken':
         res = TextToken(_arg1, _arg2)
         res.chars = _arg3
         res.begin_char = _arg4

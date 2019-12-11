@@ -88,18 +88,18 @@ class TableHelper:
             if (not t.is_char(chr(0x1E))): 
                 return None
             is_tab = True
-        wrapis_tab533 = RefOutArgWrapper(is_tab)
-        rw = TableHelper.__parse(t, max_char, None, wrapis_tab533)
-        is_tab = wrapis_tab533.value
+        wrapis_tab548 = RefOutArgWrapper(is_tab)
+        rw = TableHelper.__parse(t, max_char, None, wrapis_tab548)
+        is_tab = wrapis_tab548.value
         if (rw is None): 
             return None
         res = list()
         res.append(rw)
         t = rw.end_token.next0_
         while t is not None: 
-            wrapis_tab532 = RefOutArgWrapper(is_tab)
-            rw0 = TableHelper.__parse(t, max_char, rw, wrapis_tab532)
-            is_tab = wrapis_tab532.value
+            wrapis_tab547 = RefOutArgWrapper(is_tab)
+            rw0 = TableHelper.__parse(t, max_char, rw, wrapis_tab547)
+            is_tab = wrapis_tab547.value
             if (rw0 is None): 
                 break
             rw = rw0
@@ -177,7 +177,7 @@ class TableHelper:
         if (cell_info is None): 
             return None
         res = TableRowToken(t0, tt)
-        res.cells.append(TableCellToken._new534(t, tt, cell_info.row_span, cell_info.col_span))
+        res.cells.append(TableCellToken._new549(t, tt, cell_info.row_span, cell_info.col_span))
         tt = tt.next0_
         while tt is not None and ((tt.end_char <= max_char or max_char == 0)): 
             t0 = tt
@@ -202,13 +202,13 @@ class TableHelper:
                 break
             if (cell_info.typ == TableHelper.TableTypes.ROWEND): 
                 if (tt != t0): 
-                    res.cells.append(TableCellToken._new534(t0, tt, cell_info.row_span, cell_info.col_span))
+                    res.cells.append(TableCellToken._new549(t0, tt, cell_info.row_span, cell_info.col_span))
                 res.end_token = tt
                 res._eor = True
                 break
             if (cell_info.typ != TableHelper.TableTypes.CELLEND): 
                 break
-            res.cells.append(TableCellToken._new534(t0, tt, cell_info.row_span, cell_info.col_span))
+            res.cells.append(TableCellToken._new549(t0, tt, cell_info.row_span, cell_info.col_span))
             res.end_token = tt
             tt = tt.next0_
         if ((len(res.cells) < 2) and not res._eor): 

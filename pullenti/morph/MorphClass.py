@@ -239,9 +239,9 @@ class MorphClass:
     def __str__(self) -> str:
         tmp_str = io.StringIO()
         i = 0
-        first_pass2868 = True
+        first_pass2899 = True
         while True:
-            if first_pass2868: first_pass2868 = False
+            if first_pass2899: first_pass2899 = False
             else: i += 1
             if (not (i < len(MorphClass.__m_names))): break
             if (self.__get_value(i)): 
@@ -268,7 +268,7 @@ class MorphClass:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphClass._new64(((val1) & (val2)))
+        return MorphClass._new79(((val1) & (val2)))
     
     def __or__(self : 'MorphClass', arg2 : 'MorphClass') -> 'MorphClass':
         val1 = 0
@@ -277,7 +277,7 @@ class MorphClass:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphClass._new64(((val1) | (val2)))
+        return MorphClass._new79(((val1) | (val2)))
     
     def __xor__(self : 'MorphClass', arg2 : 'MorphClass') -> 'MorphClass':
         val1 = 0
@@ -286,7 +286,7 @@ class MorphClass:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphClass._new64(((val1) ^ (val2)))
+        return MorphClass._new79(((val1) ^ (val2)))
     
     def __eq__(self : 'MorphClass', arg2 : 'MorphClass') -> bool:
         val1 = 0
@@ -325,67 +325,67 @@ class MorphClass:
     CONJUNCTION = None
     
     @staticmethod
-    def _new64(_arg1 : int) -> 'MorphClass':
+    def _new79(_arg1 : int) -> 'MorphClass':
         res = MorphClass()
         res.value = _arg1
         return res
     
     @staticmethod
-    def _new67(_arg1 : bool) -> 'MorphClass':
+    def _new82(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_undefined = _arg1
         return res
     
     @staticmethod
-    def _new68(_arg1 : bool) -> 'MorphClass':
+    def _new83(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_noun = _arg1
         return res
     
     @staticmethod
-    def _new69(_arg1 : bool) -> 'MorphClass':
+    def _new84(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_pronoun = _arg1
         return res
     
     @staticmethod
-    def _new70(_arg1 : bool) -> 'MorphClass':
+    def _new85(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_personal_pronoun = _arg1
         return res
     
     @staticmethod
-    def _new71(_arg1 : bool) -> 'MorphClass':
+    def _new86(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_verb = _arg1
         return res
     
     @staticmethod
-    def _new72(_arg1 : bool) -> 'MorphClass':
+    def _new87(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_adjective = _arg1
         return res
     
     @staticmethod
-    def _new73(_arg1 : bool) -> 'MorphClass':
+    def _new88(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_adverb = _arg1
         return res
     
     @staticmethod
-    def _new74(_arg1 : bool) -> 'MorphClass':
+    def _new89(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_preposition = _arg1
         return res
     
     @staticmethod
-    def _new75(_arg1 : bool) -> 'MorphClass':
+    def _new90(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_conjunction = _arg1
         return res
     
     @staticmethod
-    def _new2547(_arg1 : bool) -> 'MorphClass':
+    def _new2576(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_proper_surname = _arg1
         return res
@@ -394,14 +394,14 @@ class MorphClass:
     @staticmethod
     def _static_ctor():
         MorphClass.__m_names = ["существ.", "прилаг.", "глагол", "наречие", "местоим.", "разное", "предлог", "союз", "собств.", "фамилия", "имя", "отч.", "геогр.", "личн.местоим."]
-        MorphClass.UNDEFINED = MorphClass._new67(True)
-        MorphClass.NOUN = MorphClass._new68(True)
-        MorphClass.PRONOUN = MorphClass._new69(True)
-        MorphClass.PERSONAL_PRONOUN = MorphClass._new70(True)
-        MorphClass.VERB = MorphClass._new71(True)
-        MorphClass.ADJECTIVE = MorphClass._new72(True)
-        MorphClass.ADVERB = MorphClass._new73(True)
-        MorphClass.PREPOSITION = MorphClass._new74(True)
-        MorphClass.CONJUNCTION = MorphClass._new75(True)
+        MorphClass.UNDEFINED = MorphClass._new82(True)
+        MorphClass.NOUN = MorphClass._new83(True)
+        MorphClass.PRONOUN = MorphClass._new84(True)
+        MorphClass.PERSONAL_PRONOUN = MorphClass._new85(True)
+        MorphClass.VERB = MorphClass._new86(True)
+        MorphClass.ADJECTIVE = MorphClass._new87(True)
+        MorphClass.ADVERB = MorphClass._new88(True)
+        MorphClass.PREPOSITION = MorphClass._new89(True)
+        MorphClass.CONJUNCTION = MorphClass._new90(True)
 
 MorphClass._static_ctor()

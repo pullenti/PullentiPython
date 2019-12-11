@@ -7,13 +7,13 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.ner.Token import Token
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.morph.MorphWordForm import MorphWordForm
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.ner.TextToken import TextToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.core.Termin import Termin
 
 class TerminCollection:
@@ -110,10 +110,10 @@ class TerminCollection:
             ch = ord(key[i])
             if (nod.children is None): 
                 nod.children = dict()
-            wrapnn641 = RefOutArgWrapper(None)
-            inoutres642 = Utils.tryGetValue(nod.children, ch, wrapnn641)
-            nn = wrapnn641.value
-            if (not inoutres642): 
+            wrapnn657 = RefOutArgWrapper(None)
+            inoutres658 = Utils.tryGetValue(nod.children, ch, wrapnn657)
+            nn = wrapnn657.value
+            if (not inoutres658): 
                 nn = TerminCollection.CharNode()
                 nod.children[ch] = nn
             nod = nn
@@ -132,10 +132,10 @@ class TerminCollection:
             ch = ord(key[i])
             if (nod.children is None): 
                 return
-            wrapnn643 = RefOutArgWrapper(None)
-            inoutres644 = Utils.tryGetValue(nod.children, ch, wrapnn643)
-            nn = wrapnn643.value
-            if (not inoutres644): 
+            wrapnn659 = RefOutArgWrapper(None)
+            inoutres660 = Utils.tryGetValue(nod.children, ch, wrapnn659)
+            nn = wrapnn659.value
+            if (not inoutres660): 
                 return
             nod = nn
             i += 1
@@ -153,10 +153,10 @@ class TerminCollection:
             ch = ord(key[i])
             if (nod.children is None): 
                 return None
-            wrapnn645 = RefOutArgWrapper(None)
-            inoutres646 = Utils.tryGetValue(nod.children, ch, wrapnn645)
-            nn = wrapnn645.value
-            if (not inoutres646): 
+            wrapnn661 = RefOutArgWrapper(None)
+            inoutres662 = Utils.tryGetValue(nod.children, ch, wrapnn661)
+            nn = wrapnn661.value
+            if (not inoutres662): 
                 return None
             nod = nn
             i += 1
@@ -164,10 +164,10 @@ class TerminCollection:
     
     def __add_to_hash1(self, key : int, t : 'Termin') -> None:
         li = None
-        wrapli647 = RefOutArgWrapper(None)
-        inoutres648 = Utils.tryGetValue(self.__m_hash1, key, wrapli647)
-        li = wrapli647.value
-        if (not inoutres648): 
+        wrapli663 = RefOutArgWrapper(None)
+        inoutres664 = Utils.tryGetValue(self.__m_hash1, key, wrapli663)
+        li = wrapli663.value
+        if (not inoutres664): 
             li = list()
             self.__m_hash1[key] = li
         if (not t in li): 
@@ -267,24 +267,24 @@ class TerminCollection:
                     if (nod.children is None): 
                         no_vars = True
                         break
-                    wrapnn649 = RefOutArgWrapper(None)
-                    inoutres650 = Utils.tryGetValue(nod.children, ch, wrapnn649)
-                    nn = wrapnn649.value
-                    if (not inoutres650): 
+                    wrapnn665 = RefOutArgWrapper(None)
+                    inoutres666 = Utils.tryGetValue(nod.children, ch, wrapnn665)
+                    nn = wrapnn665.value
+                    if (not inoutres666): 
                         no_vars = True
                         break
                     nod = nn
                     i += 1
             if (not no_vars): 
-                wrapres655 = RefOutArgWrapper(res)
-                inoutres656 = self.__manage_var(token, pars, s, nod, len0, wrapres655)
-                res = wrapres655.value
-                if (inoutres656): 
+                wrapres671 = RefOutArgWrapper(res)
+                inoutres672 = self.__manage_var(token, pars, s, nod, len0, wrapres671)
+                res = wrapres671.value
+                if (inoutres672): 
                     was_vars = True
                 i = 0
-                first_pass2958 = True
+                first_pass2989 = True
                 while True:
-                    if first_pass2958: first_pass2958 = False
+                    if first_pass2989: first_pass2989 = False
                     else: i += 1
                     if (not (i < tt.morph.items_count)): break
                     if ((((pars) & (TerminParseAttr.TERMONLY))) != (TerminParseAttr.NO)): 
@@ -309,10 +309,10 @@ class TerminCollection:
                         if (j < i): 
                             ok = False
                     if (ok): 
-                        wrapres651 = RefOutArgWrapper(res)
-                        inoutres652 = self.__manage_var(token, pars, wf.normal_case, nod, tt.invariant_prefix_length, wrapres651)
-                        res = wrapres651.value
-                        if (inoutres652): 
+                        wrapres667 = RefOutArgWrapper(res)
+                        inoutres668 = self.__manage_var(token, pars, wf.normal_case, nod, tt.invariant_prefix_length, wrapres667)
+                        res = wrapres667.value
+                        if (inoutres668): 
                             was_vars = True
                     if (wf.normal_full is None or wf.normal_full == wf.normal_case or wf.normal_full == s): 
                         continue
@@ -324,25 +324,25 @@ class TerminCollection:
                         j += 1
                     if (j < i): 
                         continue
-                    wrapres653 = RefOutArgWrapper(res)
-                    inoutres654 = self.__manage_var(token, pars, wf.normal_full, nod, tt.invariant_prefix_length, wrapres653)
-                    res = wrapres653.value
-                    if (inoutres654): 
+                    wrapres669 = RefOutArgWrapper(res)
+                    inoutres670 = self.__manage_var(token, pars, wf.normal_full, nod, tt.invariant_prefix_length, wrapres669)
+                    res = wrapres669.value
+                    if (inoutres670): 
                         was_vars = True
         elif (isinstance(token, NumberToken)): 
-            wrapres657 = RefOutArgWrapper(res)
-            inoutres658 = self.__manage_var(token, pars, str((token).value), root, 0, wrapres657)
-            res = wrapres657.value
-            if (inoutres658): 
+            wrapres673 = RefOutArgWrapper(res)
+            inoutres674 = self.__manage_var(token, pars, str((token).value), root, 0, wrapres673)
+            res = wrapres673.value
+            if (inoutres674): 
                 was_vars = True
         else: 
             return None
         if (not was_vars and s is not None and len(s) == 1): 
             vars0_ = [ ]
-            wrapvars659 = RefOutArgWrapper(None)
-            inoutres660 = Utils.tryGetValue(self.__m_hash1, ord(s[0]), wrapvars659)
-            vars0_ = wrapvars659.value
-            if (inoutres660): 
+            wrapvars675 = RefOutArgWrapper(None)
+            inoutres676 = Utils.tryGetValue(self.__m_hash1, ord(s[0]), wrapvars675)
+            vars0_ = wrapvars675.value
+            if (inoutres676): 
                 for t in vars0_: 
                     if (not t.lang.is_undefined): 
                         if (not token.morph.language.is_undefined): 
@@ -381,10 +381,10 @@ class TerminCollection:
             ch = ord(v[i])
             if (nod.children is None): 
                 return False
-            wrapnn661 = RefOutArgWrapper(None)
-            inoutres662 = Utils.tryGetValue(nod.children, ch, wrapnn661)
-            nn = wrapnn661.value
-            if (not inoutres662): 
+            wrapnn677 = RefOutArgWrapper(None)
+            inoutres678 = Utils.tryGetValue(nod.children, ch, wrapnn677)
+            nn = wrapnn677.value
+            if (not inoutres678): 
                 return False
             nod = nn
             i += 1
@@ -460,19 +460,19 @@ class TerminCollection:
             for t in self.termins: 
                 ct = t.canonic_text
                 li = [ ]
-                wrapli663 = RefOutArgWrapper(None)
-                inoutres664 = Utils.tryGetValue(self.__m_hash_canonic, ct, wrapli663)
-                li = wrapli663.value
-                if (not inoutres664): 
+                wrapli679 = RefOutArgWrapper(None)
+                inoutres680 = Utils.tryGetValue(self.__m_hash_canonic, ct, wrapli679)
+                li = wrapli679.value
+                if (not inoutres680): 
                     li = list()
                     self.__m_hash_canonic[ct] = li
                 if (not t in li): 
                     li.append(t)
         res = [ ]
-        wrapres665 = RefOutArgWrapper(None)
-        inoutres666 = Utils.tryGetValue(self.__m_hash_canonic, text, wrapres665)
-        res = wrapres665.value
-        if (not inoutres666): 
+        wrapres681 = RefOutArgWrapper(None)
+        inoutres682 = Utils.tryGetValue(self.__m_hash_canonic, text, wrapres681)
+        res = wrapres681.value
+        if (not inoutres682): 
             return None
         else: 
             return res

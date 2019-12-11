@@ -77,7 +77,7 @@ class FundsReferent(Referent):
             res = Utils.valToEnum(s, FundsKind)
             if (isinstance(res, FundsKind)): 
                 return Utils.valToEnum(res, FundsKind)
-        except Exception as ex451: 
+        except Exception as ex466: 
             pass
         return FundsKind.UNDEFINED
     @kind.setter
@@ -130,10 +130,10 @@ class FundsReferent(Referent):
         val = self.get_string_value(FundsReferent.ATTR_COUNT)
         if (val is None): 
             return 0
-        wrapv452 = RefOutArgWrapper(0)
-        inoutres453 = Utils.tryParseInt(val, wrapv452)
-        v = wrapv452.value
-        if (not inoutres453): 
+        wrapv467 = RefOutArgWrapper(0)
+        inoutres468 = Utils.tryParseInt(val, wrapv467)
+        v = wrapv467.value
+        if (not inoutres468): 
             return 0
         return v
     @count.setter

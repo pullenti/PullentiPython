@@ -7,38 +7,38 @@ import io
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.morph.MorphCase import MorphCase
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.denomination.DenominationAnalyzer import DenominationAnalyzer
 from pullenti.morph.Explanatory import Explanatory
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.Termin import Termin
-from pullenti.ner.measure.MeasureReferent import MeasureReferent
-from pullenti.ner.Referent import Referent
-from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
-from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.denomination.DenominationReferent import DenominationReferent
-from pullenti.ner.measure.internal.MeasureToken import MeasureToken
-from pullenti.ner.core.VerbPhraseHelper import VerbPhraseHelper
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.goods.GoodAttrType import GoodAttrType
-from pullenti.ner.goods.GoodAttributeReferent import GoodAttributeReferent
-from pullenti.ner.core.internal.RusLatAccord import RusLatAccord
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.TextToken import TextToken
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.denomination.DenominationReferent import DenominationReferent
 from pullenti.ner.uri.UriReferent import UriReferent
+from pullenti.ner.measure.MeasureReferent import MeasureReferent
+from pullenti.ner.core.VerbPhraseHelper import VerbPhraseHelper
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.ner.denomination.DenominationAnalyzer import DenominationAnalyzer
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.core.internal.RusLatAccord import RusLatAccord
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.goods.GoodAttrType import GoodAttrType
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.goods.GoodAttributeReferent import GoodAttributeReferent
+from pullenti.ner.Referent import Referent
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.measure.internal.MeasureToken import MeasureToken
 
 class GoodAttrToken(MetaToken):
     
@@ -117,9 +117,9 @@ class GoodAttrToken(MetaToken):
         key = None
         next_seq = False
         tt = t
-        first_pass3062 = True
+        first_pass3094 = True
         while True:
-            if first_pass3062: first_pass3062 = False
+            if first_pass3094: first_pass3094 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt != t and tt.is_newline_before): 
@@ -175,7 +175,7 @@ class GoodAttrToken(MetaToken):
             if (tt.morph.class0_.is_preposition or tt.morph.class0_.is_conjunction): 
                 continue
             if (isinstance(tt, NumberToken)): 
-                res.append(GoodAttrToken._new1276(tt, tt, tt.get_source_text()))
+                res.append(GoodAttrToken._new1295(tt, tt, tt.get_source_text()))
         if (len(res) > 0 and res[len(res) - 1].typ == GoodAttrType.CHARACTER): 
             if (res[len(res) - 1].end_token == res[len(res) - 1].begin_token and res[len(res) - 1].end_token.get_morph_class_in_dictionary().is_adverb): 
                 del res[len(res) - 1]
@@ -215,7 +215,7 @@ class GoodAttrToken(MetaToken):
         r = t.get_referent()
         if (r is not None): 
             if (r.type_name == "ORGANIZATION" or r.type_name == "GEO"): 
-                return GoodAttrToken._new1277(t, t, GoodAttrType.REFERENT, r)
+                return GoodAttrToken._new1296(t, t, GoodAttrType.REFERENT, r)
         if (can_be_measure): 
             res = GoodAttrToken.__try_parse_num(t)
             if ((res) is not None): 
@@ -224,6 +224,12 @@ class GoodAttrToken(MetaToken):
             res = GoodAttrToken.__try_parse_chars(t)
             if ((res) is not None): 
                 return res
+        ms = MeasureToken.try_parse(t, None, True, False, False, False)
+        if (ms is not None and ms.nums is not None): 
+            nres = GoodAttrToken._new1297(t, ms.end_token, GoodAttrType.NUMERIC)
+            nres.name = ms.name
+            nres.value = ms.get_norm_values()
+            return nres
         if (t.kit.ontology is not None): 
             li = t.kit.ontology.attach_token(GoodAttributeReferent.OBJ_TYPENAME, t)
             if (li is not None and li[0].item is not None and (isinstance(li[0].item.referent, GoodAttributeReferent))): 
@@ -245,7 +251,7 @@ class GoodAttrToken(MetaToken):
                     return res
                 tok2 = GoodAttrToken.__m_std_abbrs.try_parse(tt2, TerminParseAttr.NO)
                 if (tok2 is not None and ((Utils.asObjectOrNull(tok2.termin.tag2, str))) == "NO"): 
-                    res = GoodAttrToken._new1278(t, tok2.end_token, GoodAttrType.UNDEFINED)
+                    res = GoodAttrToken._new1297(t, tok2.end_token, GoodAttrType.UNDEFINED)
                     return res
                 res = GoodAttrToken.__try_parse_model(tt2)
                 if (res is not None): 
@@ -253,15 +259,15 @@ class GoodAttrToken(MetaToken):
                     res.name = tok.termin.canonic_text
                     return res
             if (ty != GoodAttrType.REFERENT): 
-                res = GoodAttrToken._new1279(t, tok.end_token, ty, tok.termin.canonic_text, tok.morph)
+                res = GoodAttrToken._new1299(t, tok.end_token, ty, tok.termin.canonic_text, tok.morph)
                 if (res.end_token.next0_ is not None and res.end_token.next0_.is_char('.')): 
                     res.end_token = res.end_token.next0_
                 return res
             if (ty == GoodAttrType.REFERENT): 
                 tt = tok.end_token.next0_
-                first_pass3063 = True
+                first_pass3095 = True
                 while True:
-                    if first_pass3063: first_pass3063 = False
+                    if first_pass3095: first_pass3095 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_newline_before): 
@@ -280,18 +286,18 @@ class GoodAttrToken(MetaToken):
                 if (tt is None): 
                     return None
                 if (tt.get_referent() is not None): 
-                    return GoodAttrToken._new1280(t, tt, tt.get_referent(), GoodAttrType.REFERENT)
+                    return GoodAttrToken._new1300(t, tt, tt.get_referent(), GoodAttrType.REFERENT)
                 if ((isinstance(tt, TextToken)) and not tt.chars.is_all_lower and tt.chars.is_letter): 
                     rt = tt.kit.process_referent("ORGANIZATION", tt)
                     if (rt is not None): 
-                        return GoodAttrToken._new1281(t, rt.end_token, rt, GoodAttrType.REFERENT)
+                        return GoodAttrToken._new1301(t, rt.end_token, rt, GoodAttrType.REFERENT)
                 if (BracketHelper.can_be_start_of_sequence(tt, False, False)): 
                     rt = tt.kit.process_referent("ORGANIZATION", tt.next0_)
                     if (rt is not None): 
                         t1 = rt.end_token
                         if (BracketHelper.can_be_end_of_sequence(t1.next0_, False, None, False)): 
                             t1 = t1.next0_
-                        return GoodAttrToken._new1281(t, t1, rt, GoodAttrType.REFERENT)
+                        return GoodAttrToken._new1301(t, t1, rt, GoodAttrType.REFERENT)
         if (t.is_value("КАТАЛОЖНЫЙ", None)): 
             tt = MiscHelper.check_number_prefix(t.next0_)
             if (tt is not None): 
@@ -310,7 +316,7 @@ class GoodAttrToken(MetaToken):
                         tt = tt.next0_
                 if (tt is None): 
                     return None
-                res = GoodAttrToken._new1283(t, tt, GoodAttrType.NUMERIC, "ФАСОВКА")
+                res = GoodAttrToken._new1303(t, tt, GoodAttrType.NUMERIC, "ФАСОВКА")
                 et = None
                 while tt is not None: 
                     if (tt.is_comma): 
@@ -326,7 +332,7 @@ class GoodAttrToken(MetaToken):
                     res.end_token = et
                 return res
         if ((isinstance(t, ReferentToken)) and (((isinstance(t.get_referent(), UriReferent)) or t.get_referent().type_name == "DECREE"))): 
-            res = GoodAttrToken._new1283(t, t, GoodAttrType.MODEL, "СПЕЦИФИКАЦИЯ")
+            res = GoodAttrToken._new1303(t, t, GoodAttrType.MODEL, "СПЕЦИФИКАЦИЯ")
             res.value = str(t.get_referent())
             return res
         if (key is None and not is_chars): 
@@ -354,7 +360,7 @@ class GoodAttrToken(MetaToken):
                     if (npt1 is not None and npt1.end_token != t and len(npt1.adjectives) > 0): 
                         ok = False
                 if (ok): 
-                    res = GoodAttrToken._new1285(t, t, GoodAttrType.KEYWORD, t.morph)
+                    res = GoodAttrToken._new1305(t, t, GoodAttrType.KEYWORD, t.morph)
                     res.value = t.get_normal_case_text(MorphClass.NOUN, True, MorphGender.UNDEFINED, False)
                     if ((t.next0_ is not None and t.next0_.is_hiphen and (isinstance(t.next0_.next0_, TextToken))) and ((t.next0_.next0_.chars.is_all_lower or t.next0_.next0_.chars == t.chars))): 
                         if (not t.is_whitespace_after and not t.next0_.is_whitespace_after): 
@@ -367,7 +373,7 @@ class GoodAttrToken(MetaToken):
             if ((rt is None and t.whitespaces_after_count == 1 and (isinstance(t.next0_, NumberToken))) and (t.length_char < 3) and GoodAttrToken.__try_parse_num(t.next0_) is None): 
                 rt = GoodAttrToken.__m_denom_an.try_attach(t, True)
             if (rt is not None): 
-                res = GoodAttrToken._new1278(t, rt.end_token, GoodAttrType.MODEL)
+                res = GoodAttrToken._new1297(t, rt.end_token, GoodAttrType.MODEL)
                 dr = Utils.asObjectOrNull(rt.referent, DenominationReferent)
                 for s in dr.slots: 
                     if (s.type_name == DenominationReferent.ATTR_VALUE): 
@@ -380,7 +386,7 @@ class GoodAttrToken(MetaToken):
                 res = GoodAttrToken.__try_parse_model(t)
                 return res
         if (t.chars.is_latin_letter and t.is_whitespace_before): 
-            res = GoodAttrToken._new1278(t, t, GoodAttrType.PROPER)
+            res = GoodAttrToken._new1297(t, t, GoodAttrType.PROPER)
             ttt = t.next0_
             while ttt is not None: 
                 if (ttt.chars.is_latin_letter and ttt.chars == t.chars): 
@@ -421,15 +427,15 @@ class GoodAttrToken(MetaToken):
             if (npt is None and t.get_morph_class_in_dictionary().is_adverb): 
                 npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
             if (npt is not None and ((npt.chars.is_all_lower or npt.chars.is_all_upper)) and npt.chars.is_cyrillic_letter): 
-                re = GoodAttrToken._new1278(t0, npt.end_token, GoodAttrType.CHARACTER)
+                re = GoodAttrToken._new1297(t0, npt.end_token, GoodAttrType.CHARACTER)
                 cas = MorphCase()
                 tt = npt.end_token.next0_
                 while tt is not None: 
-                    if (tt.is_newline_before): 
+                    if (tt.is_newline_before or tt.is_char(';')): 
                         break
-                    if (((tt.morph.class0_.is_preposition or tt.is_comma_and)) and tt.next0_ is not None): 
+                    if (tt.is_comma_and and tt.next0_ is not None): 
                         tt = tt.next0_
-                    npt1 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
+                    npt1 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.PARSEPREPOSITION, 0)
                     if (npt1 is None and tt.get_morph_class_in_dictionary().is_adverb): 
                         npt1 = NounPhraseHelper.try_parse(tt.next0_, NounPhraseParseAttr.NO, 0)
                     if (npt1 is None): 
@@ -466,7 +472,7 @@ class GoodAttrToken(MetaToken):
             npt1 = NounPhraseHelper.try_parse(t, Utils.valToEnum((NounPhraseParseAttr.ADJECTIVECANBELAST) | (NounPhraseParseAttr.PARSENUMERICASADJECTIVE), NounPhraseParseAttr), 0)
             if (npt1 is not None): 
                 if (((npt1.noun.begin_token.is_value("СОРТ", None) or npt1.noun.begin_token.is_value("КЛАСС", None) or npt1.noun.begin_token.is_value("ГРУППА", None)) or npt1.noun.begin_token.is_value("КАТЕГОРИЯ", None) or npt1.noun.begin_token.is_value("ТИП", None)) or npt1.noun.begin_token.is_value("ПОДТИП", None)): 
-                    res = GoodAttrToken._new1278(t, npt1.end_token, GoodAttrType.CHARACTER)
+                    res = GoodAttrToken._new1297(t, npt1.end_token, GoodAttrType.CHARACTER)
                     res.value = npt1.get_normal_case_text(None, False, MorphGender.UNDEFINED, False)
                     if (res.begin_token == res.end_token): 
                         if (t.next0_ is not None and t.next0_.is_value("ВЫСШ", None)): 
@@ -487,13 +493,13 @@ class GoodAttrToken(MetaToken):
                         return res
             if (((isinstance(t, NumberToken)) and (t).int_value is not None and (t).typ == NumberSpellingType.DIGIT) and (isinstance(t.next0_, TextToken)) and (t.whitespaces_after_count < 2)): 
                 if (((t.next0_.is_value("СОРТ", None) or t.next0_.is_value("КЛАСС", None) or t.next0_.is_value("ГРУППА", None)) or t.next0_.is_value("КАТЕГОРИЯ", None) or t.next0_.is_value("ТИП", None)) or t.next0_.is_value("ПОДТИП", None)): 
-                    res = GoodAttrToken._new1278(t, t.next0_, GoodAttrType.CHARACTER)
+                    res = GoodAttrToken._new1297(t, t.next0_, GoodAttrType.CHARACTER)
                     res.value = "{0} {1}".format(NumberHelper.get_number_adjective((t).int_value, (MorphGender.FEMINIE if (((t.next0_.morph.gender) & (MorphGender.FEMINIE))) != (MorphGender.UNDEFINED) else MorphGender.MASCULINE), MorphNumber.SINGULAR), t.next0_.get_normal_case_text(MorphClass.NOUN, True, MorphGender.UNDEFINED, False))
                     return res
             if (npt1 is not None and npt1.noun.begin_token.is_value("ХАРАКТЕРИСТИКА", None)): 
                 t11 = npt1.end_token.next0_
                 if (t11 is not None and ((t11.is_value("УКАЗАТЬ", None) or t11.is_value("УКАЗЫВАТЬ", None)))): 
-                    res = GoodAttrToken._new1278(t, t11, GoodAttrType.UNDEFINED)
+                    res = GoodAttrToken._new1297(t, t11, GoodAttrType.UNDEFINED)
                     npt2 = NounPhraseHelper.try_parse(t11.next0_, NounPhraseParseAttr.PARSEPREPOSITION, 0)
                     if (npt2 is not None): 
                         res.end_token = npt2.end_token
@@ -526,7 +532,7 @@ class GoodAttrToken(MetaToken):
                 if ((t.is_value("ПРЕДНАЗНАЧИТЬ", None) or t.is_value("ПРЕДНАЗНАЧАТЬ", None) or t.is_value("ИЗГОТОВИТЬ", None)) or t.is_value("ИЗГОТОВЛЯТЬ", None)): 
                     is_char_ = False
             if (is_char_): 
-                res = GoodAttrToken._new1278(t, t, GoodAttrType.CHARACTER)
+                res = GoodAttrToken._new1297(t, t, GoodAttrType.CHARACTER)
                 res.value = t.get_normal_case_text(MorphClass.ADJECTIVE, True, MorphGender.MASCULINE, False)
                 return res
         if ((t.chars.is_cyrillic_letter and pref is None and (isinstance(t, TextToken))) and t.morph.class0_.is_verb): 
@@ -551,38 +557,38 @@ class GoodAttrToken(MetaToken):
                     is_prop = True
                 if (len(npt.adjectives) > 0 and pref is None): 
                     if (key is None): 
-                        return GoodAttrToken._new1293(t0, npt.adjectives[0].end_token, GoodAttrType.CHARACTER, npt.adjectives[0].get_normal_case_text(MorphClass.ADJECTIVE, True, MorphGender.MASCULINE, False))
+                        return GoodAttrToken._new1313(t0, npt.adjectives[0].end_token, GoodAttrType.CHARACTER, npt.adjectives[0].get_normal_case_text(MorphClass.ADJECTIVE, True, MorphGender.MASCULINE, False))
                 if (pref is None and key is not None and npt.noun.is_value(key.value, None)): 
                     if (len(npt.adjectives) == 0): 
-                        return GoodAttrToken._new1279(t0, npt.end_token, GoodAttrType.KEYWORD, npt.noun.get_normal_case_text(MorphClass.NOUN, True, MorphGender.UNDEFINED, False), npt.morph)
-                    return GoodAttrToken._new1293(t0, npt.adjectives[0].end_token, GoodAttrType.CHARACTER, npt.adjectives[0].get_normal_case_text(MorphClass.ADJECTIVE, True, MorphGender.MASCULINE, False))
+                        return GoodAttrToken._new1299(t0, npt.end_token, GoodAttrType.KEYWORD, npt.noun.get_normal_case_text(MorphClass.NOUN, True, MorphGender.UNDEFINED, False), npt.morph)
+                    return GoodAttrToken._new1313(t0, npt.adjectives[0].end_token, GoodAttrType.CHARACTER, npt.adjectives[0].get_normal_case_text(MorphClass.ADJECTIVE, True, MorphGender.MASCULINE, False))
                 if (is_prop): 
-                    res = GoodAttrToken._new1278(t0, npt.end_token, GoodAttrType.CHARACTER)
+                    res = GoodAttrToken._new1297(t0, npt.end_token, GoodAttrType.CHARACTER)
                     res.value = npt.get_normal_case_text(None, True, MorphGender.UNDEFINED, False)
                     return res
                 if (not npt.chars.is_all_lower): 
-                    return GoodAttrToken._new1279(t0, npt.end_token, GoodAttrType.PROPER, npt.get_source_text(), npt.morph)
+                    return GoodAttrToken._new1299(t0, npt.end_token, GoodAttrType.PROPER, npt.get_source_text(), npt.morph)
             if (isinstance(t, TextToken)): 
                 if (((t.get_morph_class_in_dictionary().is_adjective or t.morph.class0_ == MorphClass.ADJECTIVE)) and pref is None): 
-                    return GoodAttrToken._new1279(t0, t, GoodAttrType.CHARACTER, (t).get_lemma(), t.morph)
+                    return GoodAttrToken._new1299(t0, t, GoodAttrType.CHARACTER, (t).get_lemma(), t.morph)
             if ((isinstance(t, NumberToken)) and pref is not None): 
                 num = GoodAttrToken.__try_parse_num(t)
                 if (num is not None): 
                     num.begin_token = t0
                     return num
             if (pref is not None and t.morph.class0_.is_adjective and (isinstance(t, TextToken))): 
-                res = GoodAttrToken._new1278(t0, t, GoodAttrType.CHARACTER)
+                res = GoodAttrToken._new1297(t0, t, GoodAttrType.CHARACTER)
                 res.value = (t).get_normal_case_text(MorphClass.ADJECTIVE, True, MorphGender.MASCULINE, False)
                 return res
             if (pref is not None and t.next0_ is not None and t.next0_.is_value("WC", None)): 
-                return GoodAttrToken._new1293(t, t.next0_, GoodAttrType.CHARACTER, "туалет")
+                return GoodAttrToken._new1313(t, t.next0_, GoodAttrType.CHARACTER, "туалет")
             if (pref is not None): 
                 return None
         if (t is not None and t.is_value("№", None) and (isinstance(t.next0_, NumberToken))): 
-            return GoodAttrToken._new1293(t, t.next0_, GoodAttrType.MODEL, "№{0}".format((t.next0_).value))
+            return GoodAttrToken._new1313(t, t.next0_, GoodAttrType.MODEL, "№{0}".format((t.next0_).value))
         if ((isinstance(t, TextToken)) and t.chars.is_letter): 
             if (t.length_char > 2 and ((not t.chars.is_all_lower or t.chars.is_latin_letter))): 
-                return GoodAttrToken._new1293(t, t, GoodAttrType.PROPER, (t).term)
+                return GoodAttrToken._new1313(t, t, GoodAttrType.PROPER, (t).term)
             return None
         if (BracketHelper.can_be_start_of_sequence(t, True, False)): 
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
@@ -594,14 +600,14 @@ class GoodAttrToken(MetaToken):
                     res1.begin_token = t
                     res1.end_token = br.end_token
                 else: 
-                    res1 = GoodAttrToken._new1278(br.begin_token, br.end_token, GoodAttrType.PROPER)
+                    res1 = GoodAttrToken._new1297(br.begin_token, br.end_token, GoodAttrType.PROPER)
                     res1.value = MiscHelper.get_text_value_of_meta_token(br, GetTextAttr.NO)
                 return res1
         if (t.is_char('(')): 
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
             if (br is not None): 
                 if (t.next0_.is_value("ПРИЛОЖЕНИЕ", None)): 
-                    return GoodAttrToken._new1278(t, br.end_token, GoodAttrType.UNDEFINED)
+                    return GoodAttrToken._new1297(t, br.end_token, GoodAttrType.UNDEFINED)
         nnn = GoodAttrToken.__try_parse_num2(t)
         if (nnn is not None): 
             return nnn
@@ -611,12 +617,12 @@ class GoodAttrToken(MetaToken):
     def __try_parse_model(t : 'Token') -> 'GoodAttrToken':
         if (t is None): 
             return None
-        res = GoodAttrToken._new1278(t, t, GoodAttrType.MODEL)
+        res = GoodAttrToken._new1297(t, t, GoodAttrType.MODEL)
         tmp = io.StringIO()
         tt = t
-        first_pass3064 = True
+        first_pass3096 = True
         while True:
-            if first_pass3064: first_pass3064 = False
+            if first_pass3096: first_pass3096 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_whitespace_before and tt != t): 
@@ -662,14 +668,14 @@ class GoodAttrToken(MetaToken):
             mrs = mt.create_refenets_tokens_with_register(None, False)
             if (mrs is not None and len(mrs) > 0 and (isinstance(mrs[len(mrs) - 1].referent, MeasureReferent))): 
                 mr = Utils.asObjectOrNull(mrs[len(mrs) - 1].referent, MeasureReferent)
-                res = GoodAttrToken._new1283(t, mt.end_token, GoodAttrType.NUMERIC, mr.get_string_value(MeasureReferent.ATTR_NAME))
+                res = GoodAttrToken._new1303(t, mt.end_token, GoodAttrType.NUMERIC, mr.get_string_value(MeasureReferent.ATTR_NAME))
                 res.value = mr.to_string(True, None, 0)
                 return res
         mts = NumbersWithUnitToken.try_parse_multi(t, None, False, False, False, False)
         if ((mts is not None and len(mts) == 1 and mts[0].units is not None) and len(mts[0].units) > 0): 
             mrs = mts[0].create_refenets_tokens_with_register(None, None, True)
             mr = mrs[len(mrs) - 1]
-            res = GoodAttrToken._new1278(t, mr.end_token, GoodAttrType.NUMERIC)
+            res = GoodAttrToken._new1297(t, mr.end_token, GoodAttrType.NUMERIC)
             res.value = mr.referent.to_string(True, None, 0)
             return res
         return None
@@ -680,7 +686,7 @@ class GoodAttrToken(MetaToken):
             return None
         tok = GoodAttrToken.__m_num_suff.try_parse(t.next0_, TerminParseAttr.NO)
         if (tok is not None and (t.whitespaces_after_count < 3)): 
-            res = GoodAttrToken._new1278(t, tok.end_token, GoodAttrType.NUMERIC)
+            res = GoodAttrToken._new1297(t, tok.end_token, GoodAttrType.NUMERIC)
             res.value = ((t).value + tok.termin.canonic_text.lower())
             if (res.end_token.next0_ is not None and res.end_token.next0_.is_char('.')): 
                 res.end_token = res.end_token.next0_
@@ -691,22 +697,22 @@ class GoodAttrToken(MetaToken):
             if (isinstance(tt, MetaToken)): 
                 if ((tt).end_token.is_value("СП", None)): 
                     if (num.value == "1"): 
-                        return GoodAttrToken._new1293(t, tt, GoodAttrType.CHARACTER, "односпальный")
+                        return GoodAttrToken._new1313(t, tt, GoodAttrType.CHARACTER, "односпальный")
                     if (num.value == "1.5"): 
-                        return GoodAttrToken._new1293(t, tt, GoodAttrType.CHARACTER, "полутораспальный")
+                        return GoodAttrToken._new1313(t, tt, GoodAttrType.CHARACTER, "полутораспальный")
                     if (num.value == "2"): 
-                        return GoodAttrToken._new1293(t, tt, GoodAttrType.CHARACTER, "вдухспальный")
+                        return GoodAttrToken._new1313(t, tt, GoodAttrType.CHARACTER, "вдухспальный")
             tt = tt.next0_
             if (tt is not None and tt.is_hiphen): 
                 tt = tt.next0_
             if (tt is not None and tt.is_value("СП", None)): 
                 if (num.value == "1"): 
-                    return GoodAttrToken._new1293(t, tt, GoodAttrType.CHARACTER, "односпальный")
+                    return GoodAttrToken._new1313(t, tt, GoodAttrType.CHARACTER, "односпальный")
                 if (num.value == "1.5"): 
-                    return GoodAttrToken._new1293(t, tt, GoodAttrType.CHARACTER, "полутораспальный")
+                    return GoodAttrToken._new1313(t, tt, GoodAttrType.CHARACTER, "полутораспальный")
                 if (num.value == "2"): 
-                    return GoodAttrToken._new1293(t, tt, GoodAttrType.CHARACTER, "вдухспальный")
-            return GoodAttrToken._new1293(t, num.end_token, GoodAttrType.NUMERIC, num.value)
+                    return GoodAttrToken._new1313(t, tt, GoodAttrType.CHARACTER, "вдухспальный")
+            return GoodAttrToken._new1313(t, num.end_token, GoodAttrType.NUMERIC, num.value)
         return None
     
     @staticmethod
@@ -725,10 +731,13 @@ class GoodAttrToken(MetaToken):
         t2 = None
         tt = t1.next0_
         while tt is not None: 
-            if (MiscHelper.can_be_start_of_sentence(tt)): 
+            if (MiscHelper.can_be_start_of_sentence(tt) or tt.is_char(';')): 
                 break
             if (tt.is_char(':') or tt.is_hiphen): 
                 t2 = tt.next0_
+                break
+            if (tt.is_value("ДА", None) or tt.is_value("НЕТ", None)): 
+                t2 = tt
                 break
             vvv = VerbPhraseHelper.try_parse(tt, False)
             if (vvv is not None): 
@@ -747,13 +756,15 @@ class GoodAttrToken(MetaToken):
         while tt is not None: 
             if (MiscHelper.can_be_start_of_sentence(tt)): 
                 break
+            if (tt.is_char(';')): 
+                break
             t3 = tt
             tt = tt.next0_
         name_ = MiscHelper.get_text_value(t, t1, GetTextAttr.NO)
         val = MiscHelper.get_text_value(t2, (t3.previous if t3.is_char('.') else t3), GetTextAttr.NO)
         if (Utils.isNullOrEmpty(val)): 
             return None
-        return GoodAttrToken._new1316(t, t3, GoodAttrType.CHARACTER, name_, val)
+        return GoodAttrToken._new1336(t, t3, GoodAttrType.CHARACTER, name_, val)
     
     __m_num_suff = None
     
@@ -789,55 +800,55 @@ class GoodAttrToken(MetaToken):
         t = Termin("МЕШ")
         t.add_variant("МЕШОК", False)
         GoodAttrToken.__m_num_suff.add(t)
-        t = Termin._new119("ЕРШ", GoodAttrType.KEYWORD)
+        t = Termin._new135("ЕРШ", GoodAttrType.KEYWORD)
         t.add_variant("ЕРШИК", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("КОНДИЦИОНЕР", GoodAttrType.KEYWORD)
+        t = Termin._new135("КОНДИЦИОНЕР", GoodAttrType.KEYWORD)
         t.add_variant("КОНДИЦ", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("УДЛИНИТЕЛЬ", GoodAttrType.KEYWORD)
+        t = Termin._new135("УДЛИНИТЕЛЬ", GoodAttrType.KEYWORD)
         t.add_abridge("УДЛ-ЛЬ")
         t.add_abridge("УДЛИН-ЛЬ")
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("УСТРОЙСТВО", GoodAttrType.KEYWORD)
+        t = Termin._new135("УСТРОЙСТВО", GoodAttrType.KEYWORD)
         t.add_abridge("УСТР-ВО")
         t.add_abridge("УСТР.")
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("ПРОКЛАДКИ", GoodAttrType.KEYWORD)
+        t = Termin._new135("ПРОКЛАДКИ", GoodAttrType.KEYWORD)
         t.add_variant("ПРОКЛ", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("ДЕЗОДОРАНТ", GoodAttrType.KEYWORD)
+        t = Termin._new135("ДЕЗОДОРАНТ", GoodAttrType.KEYWORD)
         t.add_variant("ДЕЗ", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("ОХЛАЖДЕННЫЙ", GoodAttrType.CHARACTER)
+        t = Termin._new135("ОХЛАЖДЕННЫЙ", GoodAttrType.CHARACTER)
         t.add_variant("ОХЛ", False)
         t.add_variant("ОХЛАЖД", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("МЕДИЦИНСКИЙ", GoodAttrType.CHARACTER)
+        t = Termin._new135("МЕДИЦИНСКИЙ", GoodAttrType.CHARACTER)
         t.add_variant("МЕД", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("СТЕРИЛЬНЫЙ", GoodAttrType.CHARACTER)
+        t = Termin._new135("СТЕРИЛЬНЫЙ", GoodAttrType.CHARACTER)
         t.add_variant("СТЕР", False)
         t.add_variant("СТ", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("ХЛОПЧАТОБУМАЖНЫЙ", GoodAttrType.CHARACTER)
+        t = Termin._new135("ХЛОПЧАТОБУМАЖНЫЙ", GoodAttrType.CHARACTER)
         t.add_abridge("Х/Б")
         t.add_abridge("ХБ")
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("ДЕТСКИЙ", GoodAttrType.CHARACTER)
+        t = Termin._new135("ДЕТСКИЙ", GoodAttrType.CHARACTER)
         t.add_variant("ДЕТ", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("МУЖСКОЙ", GoodAttrType.CHARACTER)
+        t = Termin._new135("МУЖСКОЙ", GoodAttrType.CHARACTER)
         t.add_variant("МУЖ", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("ЖЕНСКИЙ", GoodAttrType.CHARACTER)
+        t = Termin._new135("ЖЕНСКИЙ", GoodAttrType.CHARACTER)
         t.add_variant("ЖЕН", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("СТРАНА", GoodAttrType.REFERENT)
+        t = Termin._new135("СТРАНА", GoodAttrType.REFERENT)
         t.add_variant("СТРАНА ПРОИСХОЖДЕНИЯ", False)
         t.add_variant("ПРОИСХОЖДЕНИЕ", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("ПРОИЗВОДИТЕЛЬ", GoodAttrType.REFERENT)
+        t = Termin._new135("ПРОИЗВОДИТЕЛЬ", GoodAttrType.REFERENT)
         t.add_abridge("ПР-ЛЬ")
         t.add_abridge("ПРОИЗВ-ЛЬ")
         t.add_abridge("ПРОИЗВ.")
@@ -847,48 +858,48 @@ class GoodAttrToken(MetaToken):
         t.add_variant("КОМПАНИЯ", False)
         t.add_variant("ФИРМА", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new121("ТОВАРНЫЙ ЗНАК", GoodAttrType.UNDEFINED, "")
+        t = Termin._new137("ТОВАРНЫЙ ЗНАК", GoodAttrType.UNDEFINED, "")
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new121("КАТАЛОЖНЫЙ НОМЕР", GoodAttrType.UNDEFINED, "")
+        t = Termin._new137("КАТАЛОЖНЫЙ НОМЕР", GoodAttrType.UNDEFINED, "")
         t.add_variant("НОМЕР В КАТАЛОГЕ", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new121("МАРКА", GoodAttrType.UNDEFINED, "")
+        t = Termin._new137("МАРКА", GoodAttrType.UNDEFINED, "")
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new121("ФИРМА", GoodAttrType.UNDEFINED, "")
+        t = Termin._new137("ФИРМА", GoodAttrType.UNDEFINED, "")
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new121("МОДЕЛЬ", GoodAttrType.UNDEFINED, "")
+        t = Termin._new137("МОДЕЛЬ", GoodAttrType.UNDEFINED, "")
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new121("НЕТ", GoodAttrType.UNDEFINED, "NO")
+        t = Termin._new137("НЕТ", GoodAttrType.UNDEFINED, "NO")
         t.add_variant("ОТСУТСТВОВАТЬ", False)
         t.add_variant("НЕ ИМЕТЬ", False)
         GoodAttrToken.__m_std_abbrs.add(t)
-        t = Termin._new119("БОЛЕЕ", GoodAttrType.UNDEFINED)
+        t = Termin._new135("БОЛЕЕ", GoodAttrType.UNDEFINED)
         t.add_variant("МЕНЕЕ", False)
         t.add_variant("НЕ БОЛЕЕ", False)
         t.add_variant("НЕ МЕНЕЕ", False)
         GoodAttrToken.__m_std_abbrs.add(t)
     
     @staticmethod
-    def _new1276(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'GoodAttrToken':
+    def _new1295(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'GoodAttrToken':
         res = GoodAttrToken(_arg1, _arg2)
         res.value = _arg3
         return res
     
     @staticmethod
-    def _new1277(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType', _arg4 : 'Referent') -> 'GoodAttrToken':
+    def _new1296(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType', _arg4 : 'Referent') -> 'GoodAttrToken':
         res = GoodAttrToken(_arg1, _arg2)
         res.typ = _arg3
         res.ref = _arg4
         return res
     
     @staticmethod
-    def _new1278(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType') -> 'GoodAttrToken':
+    def _new1297(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType') -> 'GoodAttrToken':
         res = GoodAttrToken(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new1279(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType', _arg4 : str, _arg5 : 'MorphCollection') -> 'GoodAttrToken':
+    def _new1299(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType', _arg4 : str, _arg5 : 'MorphCollection') -> 'GoodAttrToken':
         res = GoodAttrToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
@@ -896,42 +907,42 @@ class GoodAttrToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1280(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent', _arg4 : 'GoodAttrType') -> 'GoodAttrToken':
+    def _new1300(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent', _arg4 : 'GoodAttrType') -> 'GoodAttrToken':
         res = GoodAttrToken(_arg1, _arg2)
         res.ref = _arg3
         res.typ = _arg4
         return res
     
     @staticmethod
-    def _new1281(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ReferentToken', _arg4 : 'GoodAttrType') -> 'GoodAttrToken':
+    def _new1301(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ReferentToken', _arg4 : 'GoodAttrType') -> 'GoodAttrToken':
         res = GoodAttrToken(_arg1, _arg2)
         res.ref_tok = _arg3
         res.typ = _arg4
         return res
     
     @staticmethod
-    def _new1283(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType', _arg4 : str) -> 'GoodAttrToken':
+    def _new1303(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType', _arg4 : str) -> 'GoodAttrToken':
         res = GoodAttrToken(_arg1, _arg2)
         res.typ = _arg3
         res.name = _arg4
         return res
     
     @staticmethod
-    def _new1285(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType', _arg4 : 'MorphCollection') -> 'GoodAttrToken':
+    def _new1305(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType', _arg4 : 'MorphCollection') -> 'GoodAttrToken':
         res = GoodAttrToken(_arg1, _arg2)
         res.typ = _arg3
         res.morph = _arg4
         return res
     
     @staticmethod
-    def _new1293(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType', _arg4 : str) -> 'GoodAttrToken':
+    def _new1313(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType', _arg4 : str) -> 'GoodAttrToken':
         res = GoodAttrToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new1316(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType', _arg4 : str, _arg5 : str) -> 'GoodAttrToken':
+    def _new1336(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'GoodAttrType', _arg4 : str, _arg5 : str) -> 'GoodAttrToken':
         res = GoodAttrToken(_arg1, _arg2)
         res.typ = _arg3
         res.name = _arg4

@@ -13,14 +13,14 @@ from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.address.StreetReferent import StreetReferent
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.address.AddressReferent import AddressReferent
 
 class MiscLocationHelper:
@@ -31,9 +31,9 @@ class MiscLocationHelper:
         if (t is None): 
             return False
         tt = t.previous
-        first_pass3041 = True
+        first_pass3073 = True
         while True:
-            if first_pass3041: first_pass3041 = False
+            if first_pass3073: first_pass3073 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             if ((tt.is_char_of(",.;:") or tt.is_hiphen or tt.is_and) or tt.morph.class0_.is_conjunction or tt.morph.class0_.is_preposition): 
@@ -44,6 +44,10 @@ class MiscLocationHelper:
                 return True
             if (tt.is_value("УРОЖЕНЕЦ", "УРОДЖЕНЕЦЬ") or tt.is_value("УРОЖЕНКА", "УРОДЖЕНКА")): 
                 return True
+            if (tt.length_char == 2 and (isinstance(tt, TextToken)) and tt.chars.is_all_upper): 
+                term = (tt).term
+                if (not Utils.isNullOrEmpty(term) and term[0] == 'Р'): 
+                    return True
             rt = Utils.asObjectOrNull(tt, ReferentToken)
             if (rt is None): 
                 break
@@ -66,22 +70,42 @@ class MiscLocationHelper:
         return False
     
     @staticmethod
-    def check_geo_object_after(t : 'Token') -> bool:
+    def check_geo_object_after(t : 'Token', dont_check_city : bool=False) -> bool:
+        from pullenti.ner.geo.internal.CityItemToken import CityItemToken
         if (t is None): 
             return False
         cou = 0
         tt = t.next0_
-        first_pass3042 = True
+        first_pass3074 = True
         while True:
-            if first_pass3042: first_pass3042 = False
+            if first_pass3074: first_pass3074 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
-            if ((tt.is_char_of(",.;") or tt.is_hiphen or tt.morph.class0_.is_conjunction) or tt.morph.class0_.is_preposition): 
+            if (tt.is_char_of(",.;") or tt.is_hiphen or tt.morph.class0_.is_conjunction): 
+                continue
+            if (tt.morph.class0_.is_preposition): 
+                if (not dont_check_city and tt.is_value("С", None) and tt.next0_ is not None): 
+                    ttt = tt.next0_
+                    if (ttt.is_char('.') and (ttt.next0_.whitespaces_after_count < 3)): 
+                        ttt = ttt.next0_
+                    cits = CityItemToken.try_parse_list(ttt, None, 3)
+                    if (cits is not None and len(cits) == 1 and ((cits[0].typ == CityItemToken.ItemType.PROPERNAME or cits[0].typ == CityItemToken.ItemType.CITY))): 
+                        if (tt.chars.is_all_upper and not cits[0].chars.is_all_upper): 
+                            pass
+                        else: 
+                            return True
                 continue
             if (tt.is_value("ТЕРРИТОРИЯ", "ТЕРИТОРІЯ")): 
                 continue
             rt = Utils.asObjectOrNull(tt, ReferentToken)
             if (rt is None): 
+                if (not dont_check_city): 
+                    cits = CityItemToken.try_parse_list(tt, None, 3)
+                    if ((cits is not None and len(cits) == 2 and cits[0].typ == CityItemToken.ItemType.NOUN) and ((cits[1].typ == CityItemToken.ItemType.PROPERNAME or cits[1].typ == CityItemToken.ItemType.CITY))): 
+                        if (cits[0].chars.is_all_upper and not cits[1].chars.is_all_upper): 
+                            pass
+                        else: 
+                            return True
                 if ((isinstance(tt, TextToken)) and tt.length_char > 2 and cou == 0): 
                     cou += 1
                     continue
@@ -294,10 +318,10 @@ class MiscLocationHelper:
         """
         from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         res = None
-        wrapres1171 = RefOutArgWrapper(None)
-        inoutres1172 = Utils.tryGetValue(MiscLocationHelper.__m_geo_ref_by_name, name, wrapres1171)
-        res = wrapres1171.value
-        if (inoutres1172): 
+        wrapres1188 = RefOutArgWrapper(None)
+        inoutres1189 = Utils.tryGetValue(MiscLocationHelper.__m_geo_ref_by_name, name, wrapres1188)
+        res = wrapres1188.value
+        if (inoutres1189): 
             return res
         for r in TerrItemToken._m_all_states: 
             if (r.find_slot(None, name, True) is not None): 
@@ -321,7 +345,7 @@ class MiscLocationHelper:
         tok = MiscLocationHelper.__m_nords.try_parse(t, TerminParseAttr.NO)
         if (tok is None): 
             return None
-        res = MetaToken._new577(t, t, t.morph)
+        res = MetaToken._new593(t, t, t.morph)
         t1 = None
         if ((t.next0_ is not None and t.next0_.is_hiphen and not t.is_whitespace_after) and not t.is_whitespace_after): 
             t1 = t.next0_.next0_

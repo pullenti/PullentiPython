@@ -111,9 +111,9 @@ class TitleNameToken(MetaToken):
         tstart = self.begin_token
         tend = self.end_token
         t = self.begin_token
-        first_pass3281 = True
+        first_pass3313 = True
         while True:
-            if first_pass3281: first_pass3281 = False
+            if first_pass3313: first_pass3313 = False
             else: t = t.next0_
             if (not (t != self.end_token.next0_ and t is not None and t.end_char <= self.end_token.end_char)): break
             if (t.is_newline_before): 
