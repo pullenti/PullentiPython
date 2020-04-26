@@ -283,18 +283,18 @@ class MorphEngine:
                 break
             i += 1
         i = 0
-        first_pass2889 = True
+        first_pass2895 = True
         while True:
-            if first_pass2889: first_pass2889 = False
+            if first_pass2895: first_pass2895 = False
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
             if (wf.contains_attr("инф.", None)): 
                 continue
             j = i + 1
-            first_pass2890 = True
+            first_pass2896 = True
             while True:
-                if first_pass2890: first_pass2890 = False
+                if first_pass2896: first_pass2896 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
@@ -305,18 +305,18 @@ class MorphEngine:
                     del res[j]
                     j -= 1
         i = 0
-        first_pass2891 = True
+        first_pass2897 = True
         while True:
-            if first_pass2891: first_pass2891 = False
+            if first_pass2897: first_pass2897 = False
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
             if (wf.contains_attr("инф.", None)): 
                 continue
             j = i + 1
-            first_pass2892 = True
+            first_pass2898 = True
             while True:
-                if first_pass2892: first_pass2892 = False
+                if first_pass2898: first_pass2898 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
@@ -507,9 +507,9 @@ class MorphEngine:
         return vars0_[0]
     
     def __check_corr_var(self, word : str, tn : 'MorphTreeNode', i : int) -> str:
-        first_pass2893 = True
+        first_pass2899 = True
         while True:
-            if first_pass2893: first_pass2893 = False
+            if first_pass2899: first_pass2899 = False
             else: i += 1
             if (not (i <= len(word))): break
             if (tn.lazy_pos > 0): 
@@ -707,9 +707,9 @@ class MorphEngine:
         i = 0
         while i < (len(res) - 1): 
             j = i + 1
-            first_pass2894 = True
+            first_pass2900 = True
             while True:
-                if first_pass2894: first_pass2894 = False
+                if first_pass2900: first_pass2900 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 if (MorphEngine.__comp1(res[i], res[j])): 

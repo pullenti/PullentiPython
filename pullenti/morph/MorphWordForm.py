@@ -64,9 +64,9 @@ class MorphWordForm(MorphBaseInfo):
                 self.normal_full = word_begin
     
     def __str__(self) -> str:
-        return self.to_string(False)
+        return self.to_string_ex(False)
     
-    def to_string(self, ignore_normals : bool) -> str:
+    def to_string_ex(self, ignore_normals : bool) -> str:
         res = io.StringIO()
         if (not ignore_normals): 
             print(Utils.ifNotNull(self.normal_case, ""), end="", file=res)

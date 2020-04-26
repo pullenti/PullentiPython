@@ -97,9 +97,9 @@ class DecreeHelper:
             was_typ = False
             was_num = False
             tt = (t).begin_token
-            first_pass3008 = True
+            first_pass3014 = True
             while True:
-                if first_pass3008: first_pass3008 = False
+                if first_pass3014: first_pass3014 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= t.end_char)): break
                 if (tt.begin_char == t.begin_char and tt.is_char('(') and tt.next0_ is not None): 
@@ -141,9 +141,9 @@ class DecreeHelper:
                         res.begin_char = li[len(li) - 1].begin_char
                         res.end_char = li[len(li) - 1].end_char
                     i = 0
-                    first_pass3009 = True
+                    first_pass3015 = True
                     while True:
-                        if first_pass3009: first_pass3009 = False
+                        if first_pass3015: first_pass3015 = False
                         else: i += 1
                         if (not (i < len(li))): break
                         l_ = li[i]
@@ -291,9 +291,9 @@ class DecreeHelper:
                 return res
         if (((has_same_before or has_same_after)) and ptmin != PartToken.ItemType.PREFIX): 
             tt = (t).begin_token
-            first_pass3010 = True
+            first_pass3016 = True
             while True:
-                if first_pass3010: first_pass3010 = False
+                if first_pass3016: first_pass3016 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= res.end_char)): break
                 if (tt.begin_char >= res.begin_char): 
@@ -416,9 +416,9 @@ class DecreeHelper:
         ndst0 = None
         ndst1 = None
         tt = t.next0_
-        first_pass3011 = True
+        first_pass3017 = True
         while True:
-            if first_pass3011: first_pass3011 = False
+            if first_pass3017: first_pass3017 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_value("НДС", None)): 
@@ -490,9 +490,9 @@ class DecreeHelper:
         m2 = None
         has_all = False
         tt = tt.next0_
-        first_pass3012 = True
+        first_pass3018 = True
         while True:
-            if first_pass3012: first_pass3012 = False
+            if first_pass3018: first_pass3018 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (isinstance(tt, ReferentToken)): 

@@ -43,6 +43,7 @@ class AnalysisKit:
         self.processor = None;
         self.recurse_level = 0
         self._m_analyzer_stack = list()
+        self.onto_regime = False
         if (sofa_ is None): 
             return
         self.__m_sofa = sofa_
@@ -87,9 +88,9 @@ class AnalysisKit:
         self.__define_base_language()
         if (sofa_.create_number_tokens): 
             t = self.first_token
-            first_pass2970 = True
+            first_pass2976 = True
             while True:
-                if first_pass2970: first_pass2970 = False
+                if first_pass2976: first_pass2976 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 nt = NumberHelper._try_parse_number(t)
@@ -100,9 +101,9 @@ class AnalysisKit:
         if (only_tokenizing): 
             return
         t = self.first_token
-        first_pass2971 = True
+        first_pass2977 = True
         while True:
-            if first_pass2971: first_pass2971 = False
+            if first_pass2977: first_pass2977 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.morph.class0_.is_preposition): 
@@ -139,9 +140,9 @@ class AnalysisKit:
     
     def __clear_dust(self) -> None:
         t = self.first_token
-        first_pass2972 = True
+        first_pass2978 = True
         while True:
-            if first_pass2972: first_pass2972 = False
+            if first_pass2978: first_pass2978 = False
             else: t = t.next0_
             if (not (t is not None)): break
             cou = AnalysisKit.__calc_abnormal_coef(t)
@@ -150,9 +151,9 @@ class AnalysisKit:
                 continue
             t1 = t
             tt = t
-            first_pass2973 = True
+            first_pass2979 = True
             while True:
-                if first_pass2973: first_pass2973 = False
+                if first_pass2979: first_pass2979 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 co = AnalysisKit.__calc_abnormal_coef(tt)
@@ -206,9 +207,9 @@ class AnalysisKit:
     
     def __correct_words_by_merging(self, lang : 'MorphLang') -> None:
         t = self.first_token
-        first_pass2974 = True
+        first_pass2980 = True
         while True:
-            if first_pass2974: first_pass2974 = False
+            if first_pass2980: first_pass2980 = False
             else: t = t.next0_
             if (not (t is not None and t.next0_ is not None)): break
             if (not t.chars.is_letter or (t.length_char < 2)): 
@@ -258,9 +259,9 @@ class AnalysisKit:
     
     def __correct_words_by_morph(self, lang : 'MorphLang') -> None:
         tt = self.first_token
-        first_pass2975 = True
+        first_pass2981 = True
         while True:
-            if first_pass2975: first_pass2975 = False
+            if first_pass2981: first_pass2981 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (not ((isinstance(tt, TextToken)))): 
@@ -298,9 +299,9 @@ class AnalysisKit:
         before_word = False
         tmp = io.StringIO()
         t = self.first_token
-        first_pass2976 = True
+        first_pass2982 = True
         while True:
-            if first_pass2976: first_pass2976 = False
+            if first_pass2982: first_pass2982 = False
             else: t = t.next0_
             if (not (t is not None)): break
             tt = Utils.asObjectOrNull(t, TextToken)
@@ -474,9 +475,9 @@ class AnalysisKit:
         stat = dict()
         total = 0
         t = self.first_token
-        first_pass2977 = True
+        first_pass2983 = True
         while True:
-            if first_pass2977: first_pass2977 = False
+            if first_pass2983: first_pass2983 = False
             else: t = t.next0_
             if (not (t is not None)): break
             tt = Utils.asObjectOrNull(t, TextToken)
@@ -597,15 +598,16 @@ class AnalysisKit:
         return True
     
     @staticmethod
-    def _new2842(_arg1 : 'Processor', _arg2 : 'ExtOntology') -> 'AnalysisKit':
+    def _new2846(_arg1 : 'Processor', _arg2 : 'ExtOntology') -> 'AnalysisKit':
         res = AnalysisKit()
         res.processor = _arg1
         res.ontology = _arg2
         return res
     
     @staticmethod
-    def _new2843(_arg1 : 'SourceOfAnalysis', _arg2 : bool, _arg3 : 'MorphLang', _arg4 : EventHandler, _arg5 : 'ExtOntology', _arg6 : 'Processor') -> 'AnalysisKit':
+    def _new2847(_arg1 : 'SourceOfAnalysis', _arg2 : bool, _arg3 : 'MorphLang', _arg4 : EventHandler, _arg5 : 'ExtOntology', _arg6 : 'Processor', _arg7 : bool) -> 'AnalysisKit':
         res = AnalysisKit(_arg1, _arg2, _arg3, _arg4)
         res.ontology = _arg5
         res.processor = _arg6
+        res.onto_regime = _arg7
         return res

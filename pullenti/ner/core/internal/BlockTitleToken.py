@@ -30,9 +30,9 @@ class BlockTitleToken(MetaToken):
         intro = None
         lits = None
         tt = t
-        first_pass2958 = True
+        first_pass2964 = True
         while True:
-            if first_pass2958: first_pass2958 = False
+            if first_pass2964: first_pass2964 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 
@@ -75,9 +75,9 @@ class BlockTitleToken(MetaToken):
             cou = 0
             err = 0
             tt = content.end_token.next0_
-            first_pass2959 = True
+            first_pass2965 = True
             while True:
-                if first_pass2959: first_pass2959 = False
+                if first_pass2965: first_pass2965 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not tt.is_newline_before): 
@@ -112,9 +112,9 @@ class BlockTitleToken(MetaToken):
             return None
         first = True
         tt = t0
-        first_pass2960 = True
+        first_pass2966 = True
         while True:
-            if first_pass2960: first_pass2960 = False
+            if first_pass2966: first_pass2966 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (not tt.is_newline_before): 

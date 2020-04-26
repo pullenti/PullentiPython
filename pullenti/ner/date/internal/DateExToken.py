@@ -610,9 +610,9 @@ class DateExToken(MetaToken):
         from_regime = False
         t0 = None
         tt = t
-        first_pass2991 = True
+        first_pass2997 = True
         while True:
-            if first_pass2991: first_pass2991 = False
+            if first_pass2997: first_pass2997 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             drr = Utils.asObjectOrNull(tt.get_referent(), DateRangeReferent)

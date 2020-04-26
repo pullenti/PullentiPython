@@ -3,6 +3,7 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 import typing
+from pullenti.unisharp.Utils import Utils
 
 from pullenti.ner.org.OrganizationKind import OrganizationKind
 from pullenti.ner.org.OrgProfile import OrgProfile
@@ -156,6 +157,10 @@ class OrgOwnershipHelper:
             if (OrgOwnershipHelper.__contains(ltyps, "офис", "офіс")): 
                 if (OrgOwnershipHelper.__contains(htyps, "филиал", "філіал") or OrgOwnershipHelper.__contains(htyps, "отделение", "відділення")): 
                     return True
+        if (OrgOwnershipHelper.__contains(ltyps, "управление", "управління") or OrgOwnershipHelper.__contains(ltyps, "отдел", "відділ")): 
+            str0_ = higher.to_string(True, None, 0)
+            if (Utils.startsWithString(str0_, "ГУ", True)): 
+                return True
         return False
     
     @staticmethod

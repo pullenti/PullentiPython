@@ -373,6 +373,6 @@ class Token:
         self.begin_char = SerializerHelper.deserialize_int(stream)
         self.end_char = SerializerHelper.deserialize_int(stream)
         self.__m_attrs = (SerializerHelper.deserialize_int(stream))
-        self.chars = CharsInfo._new2830(SerializerHelper.deserialize_int(stream))
+        self.chars = CharsInfo._new2834(SerializerHelper.deserialize_int(stream))
         self.__m_morph = MorphCollection()
         self.__m_morph._deserialize(stream)

@@ -91,9 +91,9 @@ class GoodsAnalyzer(Analyzer):
         next_pos = 0
         goods_ = list()
         t = kit.first_token
-        first_pass3097 = True
+        first_pass3103 = True
         while True:
-            if first_pass3097: first_pass3097 = False
+            if first_pass3103: first_pass3103 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not t.is_newline_before): 
@@ -142,9 +142,9 @@ class GoodsAnalyzer(Analyzer):
                 return None
         res = ReferentToken(ga, begin, begin)
         t = begin
-        first_pass3098 = True
+        first_pass3104 = True
         while True:
-            if first_pass3098: first_pass3098 = False
+            if first_pass3104: first_pass3104 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char(';')): 

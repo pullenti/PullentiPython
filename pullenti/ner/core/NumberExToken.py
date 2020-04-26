@@ -126,10 +126,10 @@ class NumberExToken(NumberToken):
         from pullenti.ner.core.internal.NumberExHelper import NumberExHelper
         if (ty2 != NumberExType.UNDEFINED): 
             return "{0}/{1}".format(NumberExToken.ex_typ_to_string(ty, NumberExType.UNDEFINED), NumberExToken.ex_typ_to_string(ty2, NumberExType.UNDEFINED))
-        wrapres584 = RefOutArgWrapper(None)
-        inoutres585 = Utils.tryGetValue(NumberExHelper._m_normals_typs, ty, wrapres584)
-        res = wrapres584.value
-        if (inoutres585): 
+        wrapres585 = RefOutArgWrapper(None)
+        inoutres586 = Utils.tryGetValue(NumberExHelper._m_normals_typs, ty, wrapres585)
+        res = wrapres585.value
+        if (inoutres586): 
             return res
         return "?"
     
@@ -195,7 +195,7 @@ class NumberExToken(NumberToken):
         return res
     
     @staticmethod
-    def _new603(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float) -> 'NumberExToken':
+    def _new604(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float) -> 'NumberExToken':
         res = NumberExToken(_arg1, _arg2, _arg3, _arg4, _arg5)
         res.real_value = _arg6
         return res

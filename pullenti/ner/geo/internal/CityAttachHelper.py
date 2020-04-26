@@ -11,27 +11,27 @@ from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.address.internal.StreetDefineHelper import StreetDefineHelper
 from pullenti.ner.Token import Token
+from pullenti.ner.date.DateReferent import DateReferent
 from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.date.DateReferent import DateReferent
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.address.internal.StreetItemType import StreetItemType
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
+from pullenti.ner.Referent import Referent
 from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.morph.MorphClass import MorphClass
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.address.internal.StreetItemType import StreetItemType
-from pullenti.ner.Referent import Referent
-from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
-from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
-from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
 from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-from pullenti.ner.core.ProperNameHelper import ProperNameHelper
+from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
+from pullenti.ner.geo.GeoReferent import GeoReferent
 from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
+from pullenti.ner.core.ProperNameHelper import ProperNameHelper
 
 class CityAttachHelper:
     
@@ -438,9 +438,9 @@ class CityAttachHelper:
             ok = True
         else: 
             tt2 = li[0].end_token.next0_
-            first_pass3067 = True
+            first_pass3073 = True
             while True:
-                if first_pass3067: first_pass3067 = False
+                if first_pass3073: first_pass3073 = False
                 else: tt2 = tt2.next0_
                 if (not (tt2 is not None)): break
                 if (tt2.is_newline_before): 
@@ -452,9 +452,9 @@ class CityAttachHelper:
                 break
             if (not ok): 
                 tt2 = li[0].begin_token.previous
-                first_pass3068 = True
+                first_pass3074 = True
                 while True:
-                    if first_pass3068: first_pass3068 = False
+                    if first_pass3074: first_pass3074 = False
                     else: tt2 = tt2.previous
                     if (not (tt2 is not None)): break
                     if (tt2.is_newline_after): 

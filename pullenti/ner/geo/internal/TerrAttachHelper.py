@@ -20,8 +20,8 @@ from pullenti.ner.Referent import Referent
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
 from pullenti.ner.Token import Token
 from pullenti.ner.core.BracketHelper import BracketHelper
@@ -417,9 +417,9 @@ class TerrAttachHelper:
                 cou = 0
                 str0_ = li[0].termin_item.canonic_text.lower()
                 tt = li[0].begin_token.previous
-                first_pass3075 = True
+                first_pass3081 = True
                 while True:
-                    if first_pass3075: first_pass3075 = False
+                    if first_pass3081: first_pass3081 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.is_newline_after): 
@@ -434,9 +434,9 @@ class TerrAttachHelper:
                     ok = True
                     cou = 0
                     tt = li[0].end_token.next0_
-                    first_pass3076 = True
+                    first_pass3082 = True
                     while True:
-                        if first_pass3076: first_pass3076 = False
+                        if first_pass3082: first_pass3082 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.is_newline_before): 

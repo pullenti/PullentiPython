@@ -104,9 +104,9 @@ class OrgItemEngItem(MetaToken):
         tok = None
         geo_ = None
         add_typ = None
-        first_pass3227 = True
+        first_pass3233 = True
         while True:
-            if first_pass3227: first_pass3227 = False
+            if first_pass3233: first_pass3233 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and t.whitespaces_before_count > 1): 

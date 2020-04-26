@@ -38,9 +38,9 @@ class LanguageHelper:
         ru_chars = 0
         en_chars = 0
         i = 0
-        first_pass2896 = True
+        first_pass2902 = True
         while True:
-            if first_pass2896: first_pass2896 = False
+            if first_pass2902: first_pass2902 = False
             else: i += 1
             if (not (i < len(text))): break
             ch = text[i]
@@ -174,9 +174,9 @@ class LanguageHelper:
         y = False
         udaren = False
         i = 0
-        first_pass2897 = True
+        first_pass2903 = True
         while True:
-            if first_pass2897: first_pass2897 = False
+            if first_pass2903: first_pass2903 = False
             else: i += 1
             if (not (i < len(value))): break
             ch = value[i]
@@ -229,9 +229,9 @@ class LanguageHelper:
                 return value
         tmp = Utils.newStringIO(value)
         i = 0
-        first_pass2898 = True
+        first_pass2904 = True
         while True:
-            if first_pass2898: first_pass2898 = False
+            if first_pass2904: first_pass2904 = False
             else: i += 1
             if (not (i < tmp.tell())): break
             if (Utils.getCharAtStringIO(tmp, i) == 'Ь' and ((i + 1) < tmp.tell()) and Utils.getCharAtStringIO(tmp, i + 1) == 'I'): 

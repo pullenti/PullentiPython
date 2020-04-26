@@ -29,10 +29,10 @@ from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.decree.DecreeKind import DecreeKind
 from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.decree.DecreeKind import DecreeKind
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.mail.internal.MailLine import MailLine
 from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.org.OrgProfile import OrgProfile
@@ -175,9 +175,9 @@ class DecreeToken(MetaToken):
             pass
         if (res.typ == DecreeToken.ItemType.NUMBER): 
             tt = res.end_token.next0_
-            first_pass3013 = True
+            first_pass3019 = True
             while True:
-                if first_pass3013: first_pass3013 = False
+                if first_pass3019: first_pass3019 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not tt.is_comma_and or tt.is_newline_before): 
@@ -333,9 +333,9 @@ class DecreeToken(MetaToken):
                 rr.children.append(DecreeToken._new868(t.next0_, t.next0_, DecreeToken.ItemType.OWNER, Utils.asObjectOrNull(t.next0_, ReferentToken)))
                 rr.children.append(DecreeToken._new868(t11.next0_, t11.next0_, DecreeToken.ItemType.OWNER, Utils.asObjectOrNull(t11.next0_, ReferentToken)))
                 t = rr.end_token.next0_
-                first_pass3014 = True
+                first_pass3020 = True
                 while True:
-                    if first_pass3014: first_pass3014 = False
+                    if first_pass3020: first_pass3020 = False
                     else: t = t.next0_
                     if (not (t is not None)): break
                     if ((is_br and t.is_char('(') and (isinstance(t.next0_, TextToken))) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
@@ -572,9 +572,9 @@ class DecreeToken(MetaToken):
                 if (tok.begin_token == tok.end_token and (tok.length_char < 4) and len(toks) > 1): 
                     cou = 0
                     tt = t.previous
-                    first_pass3015 = True
+                    first_pass3021 = True
                     while True:
-                        if first_pass3015: first_pass3015 = False
+                        if first_pass3021: first_pass3021 = False
                         else: tt = tt.previous; cou += 1
                         if (not (tt is not None and (cou < 500))): break
                         dr = Utils.asObjectOrNull(tt.get_referent(), DecreeReferent)
@@ -629,9 +629,9 @@ class DecreeToken(MetaToken):
                 if (res.typ_kind == DecreeKind.STANDARD): 
                     cou = 0
                     tt = res.end_token.next0_
-                    first_pass3016 = True
+                    first_pass3022 = True
                     while True:
-                        if first_pass3016: first_pass3016 = False
+                        if first_pass3022: first_pass3022 = False
                         else: tt = tt.next0_; cou += 1
                         if (not (tt is not None and (cou < 3))): break
                         if (tt.whitespaces_before_count > 2): 
@@ -743,9 +743,9 @@ class DecreeToken(MetaToken):
                         if (npt.end_token.is_value("КОЛЛЕГИЯ", "КОЛЕГІЯ")): 
                             res1 = DecreeToken._new892(t, npt.end_token, DecreeToken.ItemType.OWNER, npt.get_normal_case_text(None, False, MorphGender.UNDEFINED, False), npt.morph)
                             t = npt.end_token.next0_
-                            first_pass3017 = True
+                            first_pass3023 = True
                             while True:
-                                if first_pass3017: first_pass3017 = False
+                                if first_pass3023: first_pass3023 = False
                                 else: t = t.next0_
                                 if (not (t is not None)): break
                                 if (t.is_and or t.morph.class0_.is_preposition): 
@@ -955,9 +955,9 @@ class DecreeToken(MetaToken):
                 return nn
             t1 = (None)
             ttt = t
-            first_pass3018 = True
+            first_pass3024 = True
             while True:
-                if first_pass3018: first_pass3018 = False
+                if first_pass3024: first_pass3024 = False
                 else: ttt = ttt.next0_
                 if (not (ttt is not None)): break
                 if (ttt.is_newline_before): 
@@ -1025,9 +1025,9 @@ class DecreeToken(MetaToken):
             return None
         cou = 0
         tt = t
-        first_pass3019 = True
+        first_pass3025 = True
         while True:
-            if first_pass3019: first_pass3019 = False
+            if first_pass3025: first_pass3025 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             cou += 1
@@ -1050,9 +1050,9 @@ class DecreeToken(MetaToken):
         res = None
         digs = False
         br = False
-        first_pass3020 = True
+        first_pass3026 = True
         while True:
-            if first_pass3020: first_pass3020 = False
+            if first_pass3026: first_pass3026 = False
             else: t2 = t2.next0_
             if (not (t2 is not None)): break
             if (t2.is_char_of("(),;")): 
@@ -1212,9 +1212,9 @@ class DecreeToken(MetaToken):
                 p.begin_token = t.previous
                 p.end_token = tt
                 tt = tt.next0_
-        first_pass3021 = True
+        first_pass3027 = True
         while True:
-            if first_pass3021: first_pass3021 = False
+            if first_pass3027: first_pass3027 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             ws = False
@@ -1381,9 +1381,9 @@ class DecreeToken(MetaToken):
             res.append(p)
             tt = p.end_token
         i = 0
-        first_pass3022 = True
+        first_pass3028 = True
         while True:
-            if first_pass3022: first_pass3022 = False
+            if first_pass3028: first_pass3028 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].end_token.next0_.is_comma): 
@@ -1441,9 +1441,9 @@ class DecreeToken(MetaToken):
                     del res[i + 1]
                     i -= 1
         i = 0
-        first_pass3023 = True
+        first_pass3029 = True
         while True:
-            if first_pass3023: first_pass3023 = False
+            if first_pass3029: first_pass3029 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].typ == DecreeToken.ItemType.UNKNOWN): 
@@ -1567,9 +1567,9 @@ class DecreeToken(MetaToken):
             return None
         cou = 0
         tt = t
-        first_pass3024 = True
+        first_pass3030 = True
         while True:
-            if first_pass3024: first_pass3024 = False
+            if first_pass3030: first_pass3030 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before and tt != t): 
@@ -1715,9 +1715,9 @@ class DecreeToken(MetaToken):
             return None
         t1 = t
         tt = t.next0_
-        first_pass3025 = True
+        first_pass3031 = True
         while True:
-            if first_pass3025: first_pass3025 = False
+            if first_pass3031: first_pass3031 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 

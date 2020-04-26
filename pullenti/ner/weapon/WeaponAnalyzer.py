@@ -13,17 +13,17 @@ from pullenti.ner.weapon.internal.WeaponItemToken import WeaponItemToken
 from pullenti.ner.Referent import Referent
 from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.weapon.internal.MetaWeapon import MetaWeapon
 from pullenti.ner.weapon.WeaponReferent import WeaponReferent
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.ProcessorService import ProcessorService
-from pullenti.ner.core.Termin import Termin
 from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.ProcessorService import ProcessorService
 from pullenti.ner.measure.MeasureAnalyzer import MeasureAnalyzer
+from pullenti.ner.geo.GeoReferent import GeoReferent
 
 class WeaponAnalyzer(Analyzer):
     """ Анализатор выделения оружия """
@@ -74,9 +74,9 @@ class WeaponAnalyzer(Analyzer):
         objs_by_model = dict()
         obj_by_names = TerminCollection()
         t = kit.first_token
-        first_pass3345 = True
+        first_pass3351 = True
         while True:
-            if first_pass3345: first_pass3345 = False
+            if first_pass3351: first_pass3351 = False
             else: t = t.next0_
             if (not (t is not None)): break
             its = WeaponItemToken.try_parse_list(t, 10)
@@ -94,10 +94,10 @@ class WeaponAnalyzer(Analyzer):
                             for k in range(2):
                                 if (not str.isdigit(mod[0])): 
                                     li = [ ]
-                                    wrapli2812 = RefOutArgWrapper(None)
-                                    inoutres2813 = Utils.tryGetValue(objs_by_model, mod, wrapli2812)
-                                    li = wrapli2812.value
-                                    if (not inoutres2813): 
+                                    wrapli2816 = RefOutArgWrapper(None)
+                                    inoutres2817 = Utils.tryGetValue(objs_by_model, mod, wrapli2816)
+                                    li = wrapli2816.value
+                                    if (not inoutres2817): 
                                         li = list()
                                         objs_by_model[mod] = li
                                     if (not rt.referent in li): 
@@ -114,9 +114,9 @@ class WeaponAnalyzer(Analyzer):
         if (len(objs_by_model) == 0 and len(obj_by_names.termins) == 0): 
             return
         t = kit.first_token
-        first_pass3346 = True
+        first_pass3352 = True
         while True:
-            if first_pass3346: first_pass3346 = False
+            if first_pass3352: first_pass3352 = False
             else: t = t.next0_
             if (not (t is not None)): break
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 10)
@@ -173,9 +173,9 @@ class WeaponAnalyzer(Analyzer):
         brand = None
         model = None
         i = 0
-        first_pass3347 = True
+        first_pass3353 = True
         while True:
-            if first_pass3347: first_pass3347 = False
+            if first_pass3353: first_pass3353 = False
             else: i += 1
             if (not (i < len(its))): break
             if (its[i].typ == WeaponItemToken.Typs.NOUN): 
@@ -272,9 +272,9 @@ class WeaponAnalyzer(Analyzer):
         if (noun is None and model is not None): 
             cou = 0
             tt = its[0].begin_token.previous
-            first_pass3348 = True
+            first_pass3354 = True
             while True:
-                if first_pass3348: first_pass3348 = False
+                if first_pass3354: first_pass3354 = False
                 else: tt = tt.previous; cou += 1
                 if (not (tt is not None and (cou < 100))): break
                 prev = Utils.asObjectOrNull(tt.get_referent(), WeaponReferent)

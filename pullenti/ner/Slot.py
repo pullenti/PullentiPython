@@ -138,7 +138,7 @@ class Slot:
         return res
     
     @staticmethod
-    def _new2864(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
+    def _new2868(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
         res = Slot()
         res.type_name = _arg1
         res.value = _arg2

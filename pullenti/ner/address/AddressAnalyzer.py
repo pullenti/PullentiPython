@@ -121,9 +121,9 @@ class AddressAnalyzer(Analyzer):
         cur = 0
         next_pos = delta
         t = kit.first_token
-        first_pass2916 = True
+        first_pass2922 = True
         while True:
-            if first_pass2916: first_pass2916 = False
+            if first_pass2922: first_pass2922 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.begin_char > next_pos): 
@@ -198,9 +198,9 @@ class AddressAnalyzer(Analyzer):
                 i += 1
             if (i >= len(li) and metro is None and det_typ == AddressDetailType.UNDEFINED): 
                 i = 0
-                first_pass2917 = True
+                first_pass2923 = True
                 while True:
-                    if first_pass2917: first_pass2917 = False
+                    if first_pass2923: first_pass2923 = False
                     else: i += 1
                     if (not (i < len(li))): break
                     cit = False
@@ -242,9 +242,9 @@ class AddressAnalyzer(Analyzer):
                 if (i >= len(li)): 
                     i = -1
                 i = 0
-                first_pass2918 = True
+                first_pass2924 = True
                 while True:
-                    if first_pass2918: first_pass2918 = False
+                    if first_pass2924: first_pass2924 = False
                     else: i += 1
                     if (not (i < len(li))): break
                     if (li[i].tag is not None): 
@@ -260,46 +260,62 @@ class AddressAnalyzer(Analyzer):
                     elif (li[i].typ == AddressItemToken.ItemType.KILOMETER and li[i].is_digit and (((i0 < len(li)) and li[i0].is_street_road))): 
                         if (addr.kilometer is not None): 
                             break
-                        addr.add_slot(AddressReferent.ATTR_KILOMETER, li[i].value, False, 0).tag = li[i]
+                        s = addr.add_slot(AddressReferent.ATTR_KILOMETER, li[i].value, False, 0)
+                        if (s is not None): 
+                            s.tag = li[i]
                         li[i].tag = (self)
                     elif (li[i].typ == AddressItemToken.ItemType.PLOT): 
                         if (addr.plot is not None): 
                             break
-                        addr.add_slot(AddressReferent.ATTR_PLOT, li[i].value, False, 0).tag = li[i]
+                        s = addr.add_slot(AddressReferent.ATTR_PLOT, li[i].value, False, 0)
+                        if (s is not None): 
+                            s.tag = li[i]
                         li[i].tag = (self)
                     elif (li[i].typ == AddressItemToken.ItemType.BOX and li[i].is_digit): 
                         if (addr.box is not None): 
                             break
-                        addr.add_slot(AddressReferent.ATTR_BOX, li[i].value, False, 0).tag = li[i]
+                        s = addr.add_slot(AddressReferent.ATTR_BOX, li[i].value, False, 0)
+                        if (s is not None): 
+                            s.tag = li[i]
                         li[i].tag = (self)
                     elif (li[i].typ == AddressItemToken.ItemType.BLOCK and li[i].is_digit): 
                         if (addr.block is not None): 
                             break
-                        addr.add_slot(AddressReferent.ATTR_BLOCK, li[i].value, False, 0).tag = li[i]
+                        s = addr.add_slot(AddressReferent.ATTR_BLOCK, li[i].value, False, 0)
+                        if (s is not None): 
+                            s.tag = li[i]
                         li[i].tag = (self)
                     elif (li[i].typ == AddressItemToken.ItemType.CORPUS): 
                         if (addr.corpus is not None): 
                             break
                         if (li[i].value is not None): 
-                            addr.add_slot(AddressReferent.ATTR_CORPUS, li[i].value, False, 0).tag = li[i]
+                            s = addr.add_slot(AddressReferent.ATTR_CORPUS, li[i].value, False, 0)
+                            if (s is not None): 
+                                s.tag = li[i]
                         li[i].tag = (self)
                     elif (li[i].typ == AddressItemToken.ItemType.BUILDING): 
                         if (addr.building is not None): 
                             break
                         if (li[i].value is not None): 
-                            addr.add_slot(AddressReferent.ATTR_BUILDING, li[i].value, False, 0).tag = li[i]
+                            s = addr.add_slot(AddressReferent.ATTR_BUILDING, li[i].value, False, 0)
+                            if (s is not None): 
+                                s.tag = li[i]
                             if (li[i].building_type != AddressBuildingType.UNDEFINED): 
                                 addr.building_type = li[i].building_type
                         li[i].tag = (self)
                     elif (li[i].typ == AddressItemToken.ItemType.FLOOR and li[i].is_digit): 
                         if (addr.floor0_ is not None): 
                             break
-                        addr.add_slot(AddressReferent.ATTR_FLOOR, li[i].value, False, 0).tag = li[i]
+                        s = addr.add_slot(AddressReferent.ATTR_FLOOR, li[i].value, False, 0)
+                        if (s is not None): 
+                            s.tag = li[i]
                         li[i].tag = (self)
                     elif (li[i].typ == AddressItemToken.ItemType.POTCH and li[i].is_digit): 
                         if (addr.potch is not None): 
                             break
-                        addr.add_slot(AddressReferent.ATTR_PORCH, li[i].value, False, 0).tag = li[i]
+                        s = addr.add_slot(AddressReferent.ATTR_PORCH, li[i].value, False, 0)
+                        if (s is not None): 
+                            s.tag = li[i]
                         li[i].tag = (self)
                     elif (li[i].typ == AddressItemToken.ItemType.FLAT): 
                         if (addr.flat is not None): 
@@ -310,7 +326,9 @@ class AddressAnalyzer(Analyzer):
                     elif (li[i].typ == AddressItemToken.ItemType.OFFICE and li[i].is_digit): 
                         if (addr.office is not None): 
                             break
-                        addr.add_slot(AddressReferent.ATTR_OFFICE, li[i].value, False, 0).tag = li[i]
+                        s = addr.add_slot(AddressReferent.ATTR_OFFICE, li[i].value, False, 0)
+                        if (s is not None): 
+                            s.tag = li[i]
                         li[i].tag = (self)
                     elif (li[i].typ == AddressItemToken.ItemType.CORPUSORFLAT and ((li[i].is_digit or li[i].value is None))): 
                         j = (i + 1)
@@ -458,9 +476,9 @@ class AddressAnalyzer(Analyzer):
                 if (geos is None): 
                     has_geo = False
                     tt = li[0].begin_token.previous
-                    first_pass2919 = True
+                    first_pass2925 = True
                     while True:
-                        if first_pass2919: first_pass2919 = False
+                        if first_pass2925: first_pass2925 = False
                         else: tt = tt.previous
                         if (not (tt is not None)): break
                         if (tt.morph.class0_.is_preposition or tt.is_comma): 
@@ -594,9 +612,9 @@ class AddressAnalyzer(Analyzer):
             ter_ref0 = None
             sr0 = None
             ii = 0
-            first_pass2920 = True
+            first_pass2926 = True
             while True:
-                if first_pass2920: first_pass2920 = False
+                if first_pass2926: first_pass2926 = False
                 else: ii += 1
                 if (not (ii < len(streets))): break
                 s = streets[ii]
@@ -813,9 +831,9 @@ class AddressAnalyzer(Analyzer):
                         t = t.next0_
         sli = list()
         t = kit.first_token
-        first_pass2921 = True
+        first_pass2927 = True
         while True:
-            if first_pass2921: first_pass2921 = False
+            if first_pass2927: first_pass2927 = False
             else: t = (None if t is None else t.next0_)
             if (not (t is not None)): break
             sr = Utils.asObjectOrNull(t.get_referent(), StreetReferent)
@@ -826,9 +844,9 @@ class AddressAnalyzer(Analyzer):
             sli.clear()
             sli.append(sr)
             t = t.next0_
-            first_pass2922 = True
+            first_pass2928 = True
             while True:
-                if first_pass2922: first_pass2922 = False
+                if first_pass2928: first_pass2928 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_comma_and): 
@@ -878,9 +896,9 @@ class AddressAnalyzer(Analyzer):
             return None
         street = Utils.asObjectOrNull(rt.referent, StreetReferent)
         t = rt.end_token.next0_
-        first_pass2923 = True
+        first_pass2929 = True
         while True:
-            if first_pass2923: first_pass2923 = False
+            if first_pass2929: first_pass2929 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not t.is_char(';')): 

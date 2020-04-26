@@ -18,14 +18,14 @@ from pullenti.ner.Referent import Referent
 from pullenti.ner.person.internal.PersonAttrTerminType import PersonAttrTerminType
 from pullenti.ner.TextToken import TextToken
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
 from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.person.PersonAnalyzer import PersonAnalyzer
 from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
 
@@ -94,7 +94,7 @@ class PersonHelper:
                     if (ttt.is_value("ИМ", "ІМ")): 
                         for_attribute = True
         if (for_attribute): 
-            return ReferentToken._new2489(p, begin, end, morph_, p._m_person_identity_typ)
+            return ReferentToken._new2492(p, begin, end, morph_, p._m_person_identity_typ)
         if ((begin.previous is not None and begin.previous.is_comma_and and (isinstance(begin.previous.previous, ReferentToken))) and (isinstance(begin.previous.previous.get_referent(), PersonReferent))): 
             rt00 = Utils.asObjectOrNull(begin.previous.previous, ReferentToken)
             ttt = rt00
@@ -115,15 +115,15 @@ class PersonHelper:
                     p.add_slot(PersonReferent.ATTR_ATTR, rt00.begin_token.get_referent(), False, 0)
         if (ad is not None): 
             if (ad.overflow_level > 10): 
-                return ReferentToken._new2489(p, begin, end, morph_, p._m_person_identity_typ)
+                return ReferentToken._new2492(p, begin, end, morph_, p._m_person_identity_typ)
             ad.overflow_level += 1
         attrs1 = None
         has_position = False
         open_br = False
         t = end.next0_
-        first_pass3280 = True
+        first_pass3286 = True
         while True:
-            if first_pass3280: first_pass3280 = False
+            if first_pass3286: first_pass3286 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -174,7 +174,7 @@ class PersonHelper:
                 pit1 = PersonItemToken.try_attach(t, None, PersonItemToken.ParseAttr.NO, None)
                 if ((pit1 is not None and t.chars.is_capital_upper and pit1.end_token.next0_ is not None) and (isinstance(t, TextToken)) and pit1.end_token.next0_.is_char(')')): 
                     if (pit1.lastname is not None): 
-                        inf = MorphBaseInfo._new2481(MorphCase.NOMINATIVE)
+                        inf = MorphBaseInfo._new2484(MorphCase.NOMINATIVE)
                         if (p.is_male): 
                             inf.gender = Utils.valToEnum((inf.gender) | (MorphGender.MASCULINE), MorphGender)
                         if (p.is_female): 
@@ -355,9 +355,9 @@ class PersonHelper:
                     end = end.next0_
         crlf_cou = 0
         t = end.next0_
-        first_pass3281 = True
+        first_pass3287 = True
         while True:
-            if first_pass3281: first_pass3281 = False
+            if first_pass3287: first_pass3287 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -408,7 +408,7 @@ class PersonHelper:
                             break
                 if (not exist): 
                     pat = PersonAttrToken(t, t)
-                    pat.prop_ref = PersonPropertyReferent._new2451("сотрудник")
+                    pat.prop_ref = PersonPropertyReferent._new2454("сотрудник")
                     pat.prop_ref.add_slot(PersonPropertyReferent.ATTR_REF, r, False, 0)
                     p.add_slot(PersonReferent.ATTR_ATTR, pat, False, 0)
                 continue
@@ -427,7 +427,7 @@ class PersonHelper:
                 t0 = t0.previous
             if (t0 is not None and (isinstance(t0.get_referent(), PersonIdentityReferent))): 
                 p.add_slot(PersonReferent.ATTR_IDDOC, t0.get_referent(), False, 0)
-        return ReferentToken._new2489(p, begin, end, morph_, p._m_person_identity_typ)
+        return ReferentToken._new2492(p, begin, end, morph_, p._m_person_identity_typ)
     
     @staticmethod
     def create_sex(pr : 'PersonReferent', t : 'Token') -> 'Token':
@@ -477,9 +477,9 @@ class PersonHelper:
         """
         has_keyw = False
         is_br = False
-        first_pass3282 = True
+        first_pass3288 = True
         while True:
-            if first_pass3282: first_pass3282 = False
+            if first_pass3288: first_pass3288 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_hiphen or t.is_comma or t.is_char_of(".:;")): 
@@ -503,9 +503,9 @@ class PersonHelper:
                     pr.add_slot(PersonReferent.ATTR_NICKNAME, ni, False, 0)
                     t = br.end_token
                     tt = t.next0_
-                    first_pass3283 = True
+                    first_pass3289 = True
                     while True:
-                        if first_pass3283: first_pass3283 = False
+                        if first_pass3289: first_pass3289 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.is_comma_and): 
@@ -525,9 +525,9 @@ class PersonHelper:
                     return t
         else: 
             ret = None
-            first_pass3284 = True
+            first_pass3290 = True
             while True:
-                if first_pass3284: first_pass3284 = False
+                if first_pass3290: first_pass3290 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_comma_and): 

@@ -24,20 +24,20 @@ from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.address.internal.EpNerAddressInternalResourceHelper import EpNerAddressInternalResourceHelper
 from pullenti.ner.date.DateReferent import DateReferent
 from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.core.Termin import Termin
-from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.ner.address.internal.StreetItemType import StreetItemType
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.address.internal.StreetItemType import StreetItemType
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
 from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
 
@@ -120,9 +120,9 @@ class CityItemToken(MetaToken):
         li = list()
         li.append(ci)
         t = ci.end_token.next0_
-        first_pass3069 = True
+        first_pass3075 = True
         while True:
-            if first_pass3069: first_pass3069 = False
+            if first_pass3075: first_pass3075 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before): 
@@ -436,9 +436,9 @@ class CityItemToken(MetaToken):
             if (ooo): 
                 tt = t
                 ttt = tt
-                first_pass3070 = True
+                first_pass3076 = True
                 while True:
-                    if first_pass3070: first_pass3070 = False
+                    if first_pass3076: first_pass3076 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if (ttt.is_char_of(",.")): 
@@ -684,9 +684,9 @@ class CityItemToken(MetaToken):
                             res.doubtful = False
             if ((res.begin_token == res.end_token and res.typ == CityItemToken.ItemType.CITY and res.onto_item is not None) and res.onto_item.canonic_text == "САНКТ - ПЕТЕРБУРГ"): 
                 tt = res.begin_token.previous
-                first_pass3071 = True
+                first_pass3077 = True
                 while True:
-                    if first_pass3071: first_pass3071 = False
+                    if first_pass3077: first_pass3077 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.is_hiphen or tt.is_char('.')): 
@@ -1013,9 +1013,9 @@ class CityItemToken(MetaToken):
             return None
         cou = 0
         tt = t
-        first_pass3072 = True
+        first_pass3078 = True
         while True:
-            if first_pass3072: first_pass3072 = False
+            if first_pass3078: first_pass3078 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             if (not ((isinstance(tt, TextToken)))): 

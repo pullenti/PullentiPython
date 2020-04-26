@@ -76,9 +76,9 @@ class NamedEntityAnalyzer(Analyzer):
     def process(self, kit : 'AnalysisKit') -> None:
         ad = Utils.asObjectOrNull(kit.get_analyzer_data(self), AnalyzerDataWithOntology)
         t = kit.first_token
-        first_pass3226 = True
+        first_pass3232 = True
         while True:
-            if first_pass3226: first_pass3226 = False
+            if first_pass3232: first_pass3232 = False
             else: t = t.next0_
             if (not (t is not None)): break
             li = NamedItemToken.try_parse_list(t, ad.local_ontology)

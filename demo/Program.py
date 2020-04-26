@@ -6,17 +6,17 @@ import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import Stopwatch
 
-from pullenti.ner.keyword.KeywordReferent import KeywordReferent
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.keyword.KeywordReferent import KeywordReferent
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.ProcessorService import ProcessorService
 from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.ProcessorService import ProcessorService
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.keyword.KeywordAnalyzer import KeywordAnalyzer
 from pullenti.ner.Sdk import Sdk
 
@@ -39,9 +39,9 @@ class Program:
         print("Noun groups: ", end="", flush=True)
         t = are.first_token
         # перебираем токены
-        first_pass2879 = True
+        first_pass2885 = True
         while True:
-            if first_pass2879: first_pass2879 = False
+            if first_pass2885: first_pass2885 = False
             else: t = t.next0_
             if (not (t is not None)): break
             # выделяем именную группу с текущего токена
@@ -65,9 +65,9 @@ class Program:
             # пример выделения именных групп
             print("\r\n==========================================\r\nNoun groups: ", flush=True)
             t = ar.first_token
-            first_pass2880 = True
+            first_pass2886 = True
             while True:
-                if first_pass2880: first_pass2880 = False
+                if first_pass2886: first_pass2886 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 # токены с сущностями игнорируем
@@ -89,9 +89,9 @@ class Program:
                     print(e0_, flush=True)
             print("\r\n==========================================\r\nKeywords2: ", flush=True)
             t = ar.first_token
-            first_pass2881 = True
+            first_pass2887 = True
             while True:
-                if first_pass2881: first_pass2881 = False
+                if first_pass2887: first_pass2887 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (isinstance(t, ReferentToken)): 

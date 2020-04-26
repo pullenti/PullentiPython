@@ -130,7 +130,7 @@ class TransportReferent(Referent):
             res = Utils.valToEnum(s, TransportKind)
             if (isinstance(res, TransportKind)): 
                 return Utils.valToEnum(res, TransportKind)
-        except Exception as ex2714: 
+        except Exception as ex2717: 
             pass
         return TransportKind.UNDEFINED
     

@@ -11,8 +11,8 @@ from pullenti.ner.Token import Token
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.MiscHelper import MiscHelper
 
 class DefinitionWithNumericToken(MetaToken):
     """ Для поддержки выделений тезисов с числовыми данными """
@@ -43,9 +43,9 @@ class DefinitionWithNumericToken(MetaToken):
         tt = t
         noun_ = None
         num = None
-        first_pass3063 = True
+        first_pass3069 = True
         while True:
-            if first_pass3063: first_pass3063 = False
+            if first_pass3069: first_pass3069 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt != t and MiscHelper.can_be_start_of_sentence(tt)): 

@@ -16,13 +16,13 @@ from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.Token import Token
 from pullenti.ner.TextToken import TextToken
-from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.decree.DecreeAnalyzer import DecreeAnalyzer
 from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.decree.DecreeAnalyzer import DecreeAnalyzer
 from pullenti.ner.decree.internal.DecreeToken import DecreeToken
 from pullenti.ner.decree.DecreeReferent import DecreeReferent
 
@@ -102,9 +102,9 @@ class PartToken(MetaToken):
                 self.value = "{0}.{1}".format(self.value, (self.end_token.next0_.next0_).term)
                 self.end_token = self.end_token.next0_.next0_.next0_
             t = self.end_token.next0_
-            first_pass3026 = True
+            first_pass3032 = True
             while True:
-                if first_pass3026: first_pass3026 = False
+                if first_pass3032: first_pass3032 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_whitespace_before): 
@@ -375,9 +375,9 @@ class PartToken(MetaToken):
                 ok = True
                 newp = None
                 ttt = t1.next0_
-                first_pass3027 = True
+                first_pass3033 = True
                 while True:
-                    if first_pass3027: first_pass3027 = False
+                    if first_pass3033: first_pass3033 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if (ttt.end_char > br.end_token.previous.end_char): 
@@ -752,9 +752,9 @@ class PartToken(MetaToken):
             res.append(p)
             tt = p.end_token.next0_
         i = 0
-        first_pass3028 = True
+        first_pass3034 = True
         while True:
-            if first_pass3028: first_pass3028 = False
+            if first_pass3034: first_pass3034 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].typ == PartToken.ItemType.PART and res[i + 1].typ == PartToken.ItemType.PART and len(res[i].values) > 1): 

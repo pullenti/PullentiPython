@@ -108,6 +108,8 @@ class GeoReferent(Referent):
             name = "МОЛДАВИЯ"
         elif (name == "БЕЛАРУСЬ"): 
             name = "БЕЛОРУССИЯ"
+        elif (name == "АПСНЫ"): 
+            name = "АБХАЗИЯ"
         return Utils.ifNotNull(name, "?")
     
     def to_sort_string(self) -> str:

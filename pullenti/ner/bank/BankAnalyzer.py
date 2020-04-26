@@ -18,10 +18,10 @@ from pullenti.ner.bank.BankDataReferent import BankDataReferent
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.ProcessorService import ProcessorService
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
 class BankAnalyzer(Analyzer):
     """ Анализатор банковских данных (счетов, платёжных реквизитов...) """
@@ -107,9 +107,9 @@ class BankAnalyzer(Analyzer):
         org_is_bank = False
         empty = 0
         last_uri = None
-        first_pass2925 = True
+        first_pass2931 = True
         while True:
-            if first_pass2925: first_pass2925 = False
+            if first_pass2931: first_pass2931 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char and t != t0): 

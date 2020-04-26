@@ -6,34 +6,34 @@ import io
 import typing
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.date.DateReferent import DateReferent
-from pullenti.ner.uri.UriReferent import UriReferent
-from pullenti.ner.geo.GeoReferent import GeoReferent
 from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.uri.UriReferent import UriReferent
+from pullenti.ner.date.DateReferent import DateReferent
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.geo.GeoReferent import GeoReferent
 from pullenti.ner.decree.DecreeKind import DecreeKind
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.bank.BankDataReferent import BankDataReferent
 from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.core.Termin import Termin
-from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.bank.BankDataReferent import BankDataReferent
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.TextToken import TextToken
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.ner.person.PersonAnalyzer import PersonAnalyzer
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.person.PersonReferent import PersonReferent
 from pullenti.ner.decree.internal.DecreeToken import DecreeToken
+from pullenti.ner.person.PersonAnalyzer import PersonAnalyzer
 from pullenti.ner.instrument.internal.ILTypes import ILTypes
-from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
 from pullenti.ner.decree.DecreeReferent import DecreeReferent
 from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
 
@@ -186,9 +186,9 @@ class InstrToken(MetaToken):
             res.typ = ILTypes.UNDEFINED
             return res
         t = res.end_token.next0_
-        first_pass3170 = True
+        first_pass3176 = True
         while True:
-            if first_pass3170: first_pass3170 = False
+            if first_pass3176: first_pass3176 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if ((isinstance(t, ReferentToken)) and (isinstance(res.ref, ReferentToken))): 
@@ -277,9 +277,9 @@ class InstrToken(MetaToken):
         t0 = t
         t1 = None
         has_word = False
-        first_pass3171 = True
+        first_pass3177 = True
         while True:
-            if first_pass3171: first_pass3171 = False
+            if first_pass3177: first_pass3177 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before and t != t0): 
@@ -307,9 +307,9 @@ class InstrToken(MetaToken):
                         tt = rt.end_token.next0_
                 cou = 0
                 t11 = (None if tt is None else tt.previous)
-                first_pass3172 = True
+                first_pass3178 = True
                 while True:
-                    if first_pass3172: first_pass3172 = False
+                    if first_pass3178: first_pass3178 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_table_control_char): 
@@ -409,9 +409,9 @@ class InstrToken(MetaToken):
             has_word = True
             if (isinstance(r, InstrumentParticipant)): 
                 tt = (t).begin_token
-                first_pass3173 = True
+                first_pass3179 = True
                 while True:
-                    if first_pass3173: first_pass3173 = False
+                    if first_pass3179: first_pass3179 = False
                     else: tt = tt.next0_
                     if (not (tt is not None and (tt.end_char < t.end_char))): break
                     rr = tt.get_referent()
@@ -439,9 +439,9 @@ class InstrToken(MetaToken):
                             return InstrToken._new1528(t, t, ILTypes.APPENDIX, "ПРИЛОЖЕНИЕ")
                         ok = True
                         tt = t.next0_
-                        first_pass3174 = True
+                        first_pass3180 = True
                         while True:
-                            if first_pass3174: first_pass3174 = False
+                            if first_pass3180: first_pass3180 = False
                             else: tt = tt.next0_
                             if (not (tt is not None)): break
                             if (tt.is_newline_before): 
@@ -457,9 +457,9 @@ class InstrToken(MetaToken):
             if ((isinstance(r, DecreeReferent)) and (r).kind == DecreeKind.PUBLISHER and t == t0): 
                 res1 = InstrToken._new1525(t, t, ILTypes.APPROVED)
                 tt = t.next0_
-                first_pass3175 = True
+                first_pass3181 = True
                 while True:
-                    if first_pass3175: first_pass3175 = False
+                    if first_pass3181: first_pass3181 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_char_of(",;")): 
@@ -570,9 +570,9 @@ class InstrToken(MetaToken):
                                     ok = False
                         if (ok and t.previous is not None): 
                             ttp = t.previous
-                            first_pass3176 = True
+                            first_pass3182 = True
                             while True:
-                                if first_pass3176: first_pass3176 = False
+                                if first_pass3182: first_pass3182 = False
                                 else: ttp = ttp.previous
                                 if (not (ttp is not None)): break
                                 if (ttp.is_table_control_char and not ttp.is_char(chr(0x1F))): 
@@ -585,9 +585,9 @@ class InstrToken(MetaToken):
                         if ((ok and t.previous is not None and (t.newlines_before_count < 3)) and not t.is_newline_after): 
                             lines = 0
                             ttp = t.previous
-                            first_pass3177 = True
+                            first_pass3183 = True
                             while True:
-                                if first_pass3177: first_pass3177 = False
+                                if first_pass3183: first_pass3183 = False
                                 else: ttp = ttp.previous
                                 if (not (ttp is not None)): break
                                 if (not ttp.is_newline_before): 
@@ -641,9 +641,9 @@ class InstrToken(MetaToken):
         res = InstrToken._new1525(t00, t1, ILTypes.UNDEFINED)
         res.no_words = True
         t = t0
-        first_pass3178 = True
+        first_pass3184 = True
         while True:
-            if first_pass3178: first_pass3178 = False
+            if first_pass3184: first_pass3184 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= t1.end_char)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -672,9 +672,9 @@ class InstrToken(MetaToken):
         t0 = t
         t1 = t
         t = t.next0_
-        first_pass3179 = True
+        first_pass3185 = True
         while True:
-            if first_pass3179: first_pass3179 = False
+            if first_pass3185: first_pass3185 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction): 

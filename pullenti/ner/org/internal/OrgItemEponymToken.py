@@ -7,17 +7,17 @@ import io
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.Token import Token
-from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.Token import Token
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.core.MiscHelper import MiscHelper
 
 class OrgItemEponymToken(MetaToken):
     
@@ -46,9 +46,9 @@ class OrgItemEponymToken(MetaToken):
         def try_attach(t : 'Token') -> typing.List['PersonItemToken']:
             from pullenti.ner.TextToken import TextToken
             res = list()
-            first_pass3228 = True
+            first_pass3234 = True
             while True:
-                if first_pass3228: first_pass3228 = False
+                if first_pass3234: first_pass3234 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_newline_before and len(res) > 0): 

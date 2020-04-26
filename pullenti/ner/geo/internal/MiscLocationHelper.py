@@ -13,14 +13,14 @@ from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.TextToken import TextToken
 from pullenti.ner.address.StreetReferent import StreetReferent
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.geo.GeoReferent import GeoReferent
 from pullenti.ner.address.AddressReferent import AddressReferent
 
 class MiscLocationHelper:
@@ -31,9 +31,9 @@ class MiscLocationHelper:
         if (t is None): 
             return False
         tt = t.previous
-        first_pass3073 = True
+        first_pass3079 = True
         while True:
-            if first_pass3073: first_pass3073 = False
+            if first_pass3079: first_pass3079 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             if ((tt.is_char_of(",.;:") or tt.is_hiphen or tt.is_and) or tt.morph.class0_.is_conjunction or tt.morph.class0_.is_preposition): 
@@ -76,9 +76,9 @@ class MiscLocationHelper:
             return False
         cou = 0
         tt = t.next0_
-        first_pass3074 = True
+        first_pass3080 = True
         while True:
-            if first_pass3074: first_pass3074 = False
+            if first_pass3080: first_pass3080 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_char_of(",.;") or tt.is_hiphen or tt.morph.class0_.is_conjunction): 
@@ -345,7 +345,7 @@ class MiscLocationHelper:
         tok = MiscLocationHelper.__m_nords.try_parse(t, TerminParseAttr.NO)
         if (tok is None): 
             return None
-        res = MetaToken._new593(t, t, t.morph)
+        res = MetaToken._new594(t, t, t.morph)
         t1 = None
         if ((t.next0_ is not None and t.next0_.is_hiphen and not t.is_whitespace_after) and not t.is_whitespace_after): 
             t1 = t.next0_.next0_

@@ -159,9 +159,9 @@ class FragToken(MetaToken):
         newlines = 0
         types = 0
         t = t0
-        first_pass3119 = True
+        first_pass3125 = True
         while True:
-            if first_pass3119: first_pass3119 = False
+            if first_pass3125: first_pass3125 = False
             else: t = t.next0_; cou += 1
             if (not (t is not None and (cou < 300))): break
             if (t.is_char('_')): 
@@ -195,9 +195,9 @@ class FragToken(MetaToken):
             return None
         par2 = None
         cou = 0
-        first_pass3120 = True
+        first_pass3126 = True
         while True:
-            if first_pass3120: first_pass3120 = False
+            if first_pass3126: first_pass3126 = False
             else: t = t.next0_; cou += 1
             if (not (t is not None and (cou < 100))): break
             if (par1.kind == ParticipantToken.Kinds.NAMEDASPARTS): 
@@ -224,9 +224,9 @@ class FragToken(MetaToken):
         if (par1 is not None and par2 is not None and ((par1.typ is None or par2.typ is None))): 
             stat = dict()
             tt = t
-            first_pass3121 = True
+            first_pass3127 = True
             while True:
-                if first_pass3121: first_pass3121 = False
+                if first_pass3127: first_pass3127 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 ttt = tt
@@ -256,9 +256,9 @@ class FragToken(MetaToken):
         contr_typs = ParticipantToken.get_doc_types(par1.typ, (None if par2 is None else par2.typ))
         t1 = par1.begin_token.previous
         lastt1 = None
-        first_pass3122 = True
+        first_pass3128 = True
         while True:
-            if first_pass3122: first_pass3122 = False
+            if first_pass3128: first_pass3128 = False
             else: t1 = t1.previous
             if (not (t1 is not None and t1.begin_char >= t0.begin_char)): break
             if (t1.is_newline_after): 
@@ -303,9 +303,9 @@ class FragToken(MetaToken):
         nam_beg2 = None
         nam_end2 = None
         t = t0
-        first_pass3123 = True
+        first_pass3129 = True
         while True:
-            if first_pass3123: first_pass3123 = False
+            if first_pass3129: first_pass3129 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= t1.end_char)): break
             if (isinstance(t.get_referent(), DecreeReferent)): 
@@ -484,9 +484,9 @@ class FragToken(MetaToken):
                 return None
             tt2 = None
             ttt = rt.end_token.next0_
-            first_pass3124 = True
+            first_pass3130 = True
             while True:
-                if first_pass3124: first_pass3124 = False
+                if first_pass3130: first_pass3130 = False
                 else: ttt = ttt.next0_
                 if (not (ttt is not None)): break
                 if (ttt.is_comma or ttt.is_and): 
@@ -504,9 +504,9 @@ class FragToken(MetaToken):
                 stat = dict()
                 cou1 = 0
                 ttt = tt2
-                first_pass3125 = True
+                first_pass3131 = True
                 while True:
-                    if first_pass3125: first_pass3125 = False
+                    if first_pass3131: first_pass3131 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if (ttt.is_value(par1.typ, None)): 
@@ -550,9 +550,9 @@ class FragToken(MetaToken):
                     p2 = ppp
         req_regim = 0
         t = rt.next0_
-        first_pass3126 = True
+        first_pass3132 = True
         while True:
-            if first_pass3126: first_pass3126 = False
+            if first_pass3132: first_pass3132 = False
             else: t = (((None if t is None else t.next0_)))
             if (not (t is not None)): break
             if (t.begin_char >= 712 and (t.begin_char < 740)): 
@@ -640,9 +640,9 @@ class FragToken(MetaToken):
             while t.is_table_control_char and t.next0_ is not None:
                 t = t.next0_
             cur = 0
-            first_pass3127 = True
+            first_pass3133 = True
             while True:
-                if first_pass3127: first_pass3127 = False
+                if first_pass3133: first_pass3133 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_table_control_char and t.is_char(chr(0x1F))): 
@@ -658,9 +658,9 @@ class FragToken(MetaToken):
                     break
                 if (len(ps) == 2 and t.next0_.is_table_control_char): 
                     tt = t.next0_
-                    first_pass3128 = True
+                    first_pass3134 = True
                     while True:
-                        if first_pass3128: first_pass3128 = False
+                        if first_pass3134: first_pass3134 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.is_table_control_char and tt.is_char(chr(0x1F))): 
@@ -698,9 +698,9 @@ class FragToken(MetaToken):
             t0 = t0.next0_
         title = FragToken._new1360(t0, t0, InstrumentKind.HEAD)
         t = t0
-        first_pass3129 = True
+        first_pass3135 = True
         while True:
-            if first_pass3129: first_pass3129 = False
+            if first_pass3135: first_pass3135 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -747,9 +747,9 @@ class FragToken(MetaToken):
         t11 = None
         is_br = BracketHelper.can_be_start_of_sequence(t00, False, False)
         t = t00
-        first_pass3130 = True
+        first_pass3136 = True
         while True:
-            if first_pass3130: first_pass3130 = False
+            if first_pass3136: first_pass3136 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_after): 
@@ -813,9 +813,9 @@ class FragToken(MetaToken):
             return None
         cou = 0
         t = t.next0_
-        first_pass3131 = True
+        first_pass3137 = True
         while True:
-            if first_pass3131: first_pass3131 = False
+            if first_pass3137: first_pass3137 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction): 
@@ -852,9 +852,9 @@ class FragToken(MetaToken):
         cou = 0
         tmp = io.StringIO()
         t = title.begin_token
-        first_pass3132 = True
+        first_pass3138 = True
         while True:
-            if first_pass3132: first_pass3132 = False
+            if first_pass3138: first_pass3138 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= title.end_char)): break
             if (t.is_newline_before): 
@@ -880,9 +880,9 @@ class FragToken(MetaToken):
                         potv.begin_token = t
                         (potv.referent).typ = "ОТВЕТЧИК"
         t = title.end_token.next0_
-        first_pass3133 = True
+        first_pass3139 = True
         while True:
-            if first_pass3133: first_pass3133 = False
+            if first_pass3139: first_pass3139 = False
             else: t = t.next0_
             if (not (t is not None)): break
             cou += 1
@@ -964,9 +964,9 @@ class FragToken(MetaToken):
             t = npt.end_token.next0_
             if (t is not None and t.is_char(':')): 
                 t = t.next0_
-            first_pass3134 = True
+            first_pass3140 = True
             while True:
-                if first_pass3134: first_pass3134 = False
+                if first_pass3140: first_pass3140 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_char(',')): 
@@ -1002,9 +1002,9 @@ class FragToken(MetaToken):
                         break
             arefs = list()
             t1 = None
-            first_pass3135 = True
+            first_pass3141 = True
             while True:
-                if first_pass3135: first_pass3135 = False
+                if first_pass3141: first_pass3141 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_newline_before and t != t0): 
@@ -1030,9 +1030,9 @@ class FragToken(MetaToken):
                             Utils.setLengthStringIO(tmp, tmp.tell() - 3)
                         t1 = t
                         tt = t.next0_
-                        first_pass3136 = True
+                        first_pass3142 = True
                         while True:
-                            if first_pass3136: first_pass3136 = False
+                            if first_pass3142: first_pass3142 = False
                             else: tt = tt.next0_
                             if (not (tt is not None)): break
                             if (tt.is_comma_and): 
@@ -1090,9 +1090,9 @@ class FragToken(MetaToken):
             else: 
                 break
         t = (t if potv is None else potv.next0_)
-        first_pass3137 = True
+        first_pass3143 = True
         while True:
-            if first_pass3137: first_pass3137 = False
+            if first_pass3143: first_pass3143 = False
             else: t = t.next0_
             if (not (t is not None)): break
             rt = None
@@ -1165,9 +1165,9 @@ class FragToken(MetaToken):
         ok = False
         br = False
         refs = list()
-        first_pass3138 = True
+        first_pass3144 = True
         while True:
-            if first_pass3138: first_pass3138 = False
+            if first_pass3144: first_pass3144 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before and t != t0): 
@@ -1261,9 +1261,9 @@ class FragToken(MetaToken):
         if (res is None): 
             return
         t = res.begin_token
-        first_pass3139 = True
+        first_pass3145 = True
         while True:
-            if first_pass3139: first_pass3139 = False
+            if first_pass3145: first_pass3145 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= res.end_char)): break
             if (t == res.begin_token): 
@@ -1282,9 +1282,9 @@ class FragToken(MetaToken):
                 sum0_ = None
                 te = (None)
                 tt = t.next0_
-                first_pass3140 = True
+                first_pass3146 = True
                 while True:
-                    if first_pass3140: first_pass3140 = False
+                    if first_pass3146: first_pass3146 = False
                     else: tt = tt.next0_
                     if (not (tt is not None and tt.end_char <= res.end_char)): break
                     if (tt.morph.class0_.is_preposition): 
@@ -1310,9 +1310,9 @@ class FragToken(MetaToken):
                     arts.append(ReferentToken(art, t, te))
             if ((t.is_value("ЗАЯВЛЕНИЕ", "ЗАЯВА") or t.is_value("ИСК", "ПОЗОВ") or t.is_value("ТРЕБОВАНИЕ", "ВИМОГА")) or t.is_value("ЗАЯВЛЕННЫЙ", "ЗАЯВЛЕНИЙ") or t.is_value("УДОВЛЕТВОРЕНИЕ", "ЗАДОВОЛЕННЯ")): 
                 tt = t.next0_
-                first_pass3141 = True
+                first_pass3147 = True
                 while True:
-                    if first_pass3141: first_pass3141 = False
+                    if first_pass3147: first_pass3147 = False
                     else: tt = tt.next0_
                     if (not (tt is not None and tt.end_char <= res.end_char)): break
                     if (tt.morph.class0_.is_preposition): 
@@ -1342,9 +1342,9 @@ class FragToken(MetaToken):
                 zak = -1
                 otm = -1
                 tt = t.next0_
-                first_pass3142 = True
+                first_pass3148 = True
                 while True:
-                    if first_pass3142: first_pass3142 = False
+                    if first_pass3148: first_pass3148 = False
                     else: tt = tt.next0_
                     if (not (tt is not None and tt.end_char <= res.end_char)): break
                     if (tt.morph.class0_.is_preposition): 
@@ -1384,9 +1384,9 @@ class FragToken(MetaToken):
             return None
         dir0_ = False
         i = 0
-        first_pass3143 = True
+        first_pass3149 = True
         while True:
-            if first_pass3143: first_pass3143 = False
+            if first_pass3149: first_pass3149 = False
             else: i += 1
             if (not (i < len(self.children))): break
             if (self.children[i].kind == InstrumentKind.DIRECTIVE and ((i + 1) < len(self.children))): 
@@ -1437,9 +1437,9 @@ class FragToken(MetaToken):
         li2 = list()
         ok = False
         tt = t1.next0_
-        first_pass3144 = True
+        first_pass3150 = True
         while True:
-            if first_pass3144: first_pass3144 = False
+            if first_pass3150: first_pass3150 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (not tt.is_newline_before): 
@@ -1489,9 +1489,9 @@ class FragToken(MetaToken):
             t0 = t0.next0_
         cou = 0
         t = t0
-        first_pass3145 = True
+        first_pass3151 = True
         while True:
-            if first_pass3145: first_pass3145 = False
+            if first_pass3151: first_pass3151 = False
             else: t = t.next0_; cou += 1
             if (not (t is not None and (cou < 300))): break
             dr = Utils.asObjectOrNull(t.get_referent(), DecreeReferent)
@@ -1519,9 +1519,9 @@ class FragToken(MetaToken):
         cou = 0
         has_num = False
         t = t0
-        first_pass3146 = True
+        first_pass3152 = True
         while True:
-            if first_pass3146: first_pass3146 = False
+            if first_pass3152: first_pass3152 = False
             else: t = t.next0_
             if (not (t is not None and (cou < 100))): break
             if (t.is_newline_before and t != t0): 
@@ -1657,9 +1657,9 @@ class FragToken(MetaToken):
                     t = t.next0_
                 elif ((t.is_char('(') and t.next0_ is not None and t.next0_.is_value("КОПИЯ", "КОПІЯ")) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(')')): 
                     t = t.next0_.next0_
-        first_pass3147 = True
+        first_pass3153 = True
         while True:
-            if first_pass3147: first_pass3147 = False
+            if first_pass3153: first_pass3153 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -1910,9 +1910,9 @@ class FragToken(MetaToken):
                 if (t.is_value("ДАТА", None)): 
                     ok = False
                     tt = t.next0_
-                    first_pass3148 = True
+                    first_pass3154 = True
                     while True:
-                        if first_pass3148: first_pass3148 = False
+                        if first_pass3154: first_pass3154 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if ((tt.is_value("ПОДПИСАНИЕ", "ПІДПИСАННЯ") or tt.is_value("ВВЕДЕНИЕ", "ВВЕДЕННЯ") or tt.is_value("ПРИНЯТИЕ", "ПРИЙНЯТТЯ")) or tt.is_value("ДЕЙСТВИЕ", "ДІЮ") or tt.morph.class0_.is_preposition): 
@@ -2079,9 +2079,9 @@ class FragToken(MetaToken):
                             t1 = t1.next0_
                         title.end_token = t1
                         t = t1.next0_
-                        first_pass3149 = True
+                        first_pass3155 = True
                         while True:
-                            if first_pass3149: first_pass3149 = False
+                            if first_pass3155: first_pass3155 = False
                             else: t = t.next0_
                             if (not (t is not None)): break
                             if (FragToken.__is_start_of_body(t, False)): 
@@ -2259,9 +2259,9 @@ class FragToken(MetaToken):
             return None
         title.end_token = t1
         t1 = t1.next0_
-        first_pass3150 = True
+        first_pass3156 = True
         while True:
-            if first_pass3150: first_pass3150 = False
+            if first_pass3156: first_pass3156 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
             if (t1.is_newline_before and t1.is_value("ЧАСТЬ", "ЧАСТИНА")): 
@@ -2402,9 +2402,9 @@ class FragToken(MetaToken):
             title.end_token = appr0.end_token
             title.children.append(appr0)
             t = appr0.end_token.next0_
-        first_pass3151 = True
+        first_pass3157 = True
         while True:
-            if first_pass3151: first_pass3151 = False
+            if first_pass3157: first_pass3157 = False
             else: t = t.next0_
             if (not (t is not None)): break
             fr = InstrToken1.parse(t, True, None, 0, None, False, 0, True, False)
@@ -2648,9 +2648,9 @@ class FragToken(MetaToken):
                         title.tag = (sub)
                         return title
         nt0 = None
-        first_pass3152 = True
+        first_pass3158 = True
         while True:
-            if first_pass3152: first_pass3152 = False
+            if first_pass3158: first_pass3158 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -2810,9 +2810,9 @@ class FragToken(MetaToken):
         if (len(title.children) == 0 and title.end_token == title.begin_token): 
             return None
         t1 = title.end_token.next0_
-        first_pass3153 = True
+        first_pass3159 = True
         while True:
-            if first_pass3153: first_pass3153 = False
+            if first_pass3159: first_pass3159 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
             dt = DecreeToken.try_attach(t1, None, False)
@@ -3355,9 +3355,9 @@ class FragToken(MetaToken):
             i += 1
         has_app = False
         i = 0
-        first_pass3154 = True
+        first_pass3160 = True
         while True:
-            if first_pass3154: first_pass3154 = False
+            if first_pass3160: first_pass3160 = False
             else: i += 1
             if (not (i < len(li))): break
             if (li[i].typ == ILTypes.APPENDIX or li[i].typ == ILTypes.APPROVED): 
@@ -3549,9 +3549,9 @@ class FragToken(MetaToken):
             app = FragToken(li[i].begin_token, li[i].end_token)
             title = FragToken.__create_appendix_title(app.begin_token, app, res._m_doc, is_all_apps, False)
             j = (i + 1)
-            first_pass3155 = True
+            first_pass3161 = True
             while True:
-                if first_pass3155: first_pass3155 = False
+                if first_pass3161: first_pass3161 = False
                 else: j += 1
                 if (not (j < len(li))): break
                 if (title is not None and li[j].end_char <= title.end_char): 
@@ -3642,9 +3642,9 @@ class FragToken(MetaToken):
             if (ch.kind == InstrumentKind.APPENDIX): 
                 appendixes.append(ch)
         i = 1
-        first_pass3156 = True
+        first_pass3162 = True
         while True:
-            if first_pass3156: first_pass3156 = False
+            if first_pass3162: first_pass3162 = False
             else: i += 1
             if (not (i < len(appendixes))): break
             max_coef = 0
@@ -3785,9 +3785,9 @@ class FragToken(MetaToken):
                 return res
             tt0 = t.next0_
             t = t.next0_
-            first_pass3157 = True
+            first_pass3163 = True
             while True:
-                if first_pass3157: first_pass3157 = False
+                if first_pass3163: first_pass3163 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 dtt = DecreeToken.try_attach(t, None, False)
@@ -3802,9 +3802,9 @@ class FragToken(MetaToken):
                 res.end_token = t
             return res
         t = t.next0_
-        first_pass3158 = True
+        first_pass3164 = True
         while True:
-            if first_pass3158: first_pass3158 = False
+            if first_pass3164: first_pass3164 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_and or t.morph.class0_.is_preposition): 
@@ -3845,9 +3845,9 @@ class FragToken(MetaToken):
                 i += 1
         elif (isinstance(t.get_referent(), DecreeReferent)): 
             res.referents = list()
-            first_pass3159 = True
+            first_pass3165 = True
             while True:
-                if first_pass3159: first_pass3159 = False
+                if first_pass3165: first_pass3165 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_comma_and): 
@@ -3864,9 +3864,9 @@ class FragToken(MetaToken):
                 res.end_token = t
         elif ((isinstance(t.get_referent(), PersonReferent)) or (isinstance(t.get_referent(), PersonPropertyReferent))): 
             res.referents = list()
-            first_pass3160 = True
+            first_pass3166 = True
             while True:
-                if first_pass3160: first_pass3160 = False
+                if first_pass3166: first_pass3166 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_comma_and): 
@@ -3981,9 +3981,9 @@ class FragToken(MetaToken):
                 is_doubt = True
             ok = True
             t = t.next0_
-            first_pass3161 = True
+            first_pass3167 = True
             while True:
-                if first_pass3161: first_pass3161 = False
+                if first_pass3167: first_pass3167 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.next0_ is None): 
@@ -4007,9 +4007,9 @@ class FragToken(MetaToken):
             return None
         decrs = list()
         t = t.next0_
-        first_pass3162 = True
+        first_pass3168 = True
         while True:
-            if first_pass3162: first_pass3162 = False
+            if first_pass3168: first_pass3168 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (is_in_bracks): 
@@ -4062,9 +4062,9 @@ class FragToken(MetaToken):
         ignore_cur_line = False
         keyword = False
         tt = t
-        first_pass3163 = True
+        first_pass3169 = True
         while True:
-            if first_pass3163: first_pass3163 = False
+            if first_pass3169: first_pass3169 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 
@@ -4178,9 +4178,9 @@ class FragToken(MetaToken):
             if (isinstance(t.get_referent(), DecreeChangeReferent)): 
                 dcr = Utils.asObjectOrNull(t.get_referent(), DecreeChangeReferent)
                 tt = (t).begin_token
-                first_pass3164 = True
+                first_pass3170 = True
                 while True:
-                    if first_pass3164: first_pass3164 = False
+                    if first_pass3170: first_pass3170 = False
                     else: tt = tt.next0_
                     if (not (tt is not None and tt.end_char <= t.end_char)): break
                     dval = Utils.asObjectOrNull(tt.get_referent(), DecreeChangeValueReferent)
@@ -4262,9 +4262,9 @@ class FragToken(MetaToken):
         t0 = self.begin_token
         tabs = False
         tt = self.begin_token
-        first_pass3165 = True
+        first_pass3171 = True
         while True:
-            if first_pass3165: first_pass3165 = False
+            if first_pass3171: first_pass3171 = False
             else: tt = tt.next0_
             if (not (tt is not None and tt.end_char <= end_char_)): break
             if (not tt.is_newline_before): 
@@ -4313,9 +4313,9 @@ class FragToken(MetaToken):
                 for r in tab.children: 
                     no = 0
                     ii = 0
-                    first_pass3166 = True
+                    first_pass3172 = True
                     while True:
-                        if first_pass3166: first_pass3166 = False
+                        if first_pass3172: first_pass3172 = False
                         else: ii += 1
                         if (not (ii < len(r.children))): break
                         if ((no < len(rnums)) and rnums[no] > 0): 
@@ -4338,9 +4338,9 @@ class FragToken(MetaToken):
         tz = None
         cou = 0
         t = t0
-        first_pass3167 = True
+        first_pass3173 = True
         while True:
-            if first_pass3167: first_pass3167 = False
+            if first_pass3173: first_pass3173 = False
             else: t = t.next0_
             if (not (t is not None and (cou < 300))): break
             if ((isinstance(t, TextToken)) and t.length_char > 1): 
@@ -4359,9 +4359,9 @@ class FragToken(MetaToken):
             return None
         title = FragToken._new1360(t0, tz.end_token, InstrumentKind.HEAD)
         t = t0
-        first_pass3168 = True
+        first_pass3174 = True
         while True:
-            if first_pass3168: first_pass3168 = False
+            if first_pass3174: first_pass3174 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not t.is_newline_before): 
@@ -4388,9 +4388,9 @@ class FragToken(MetaToken):
                 if (t.next0_ is not None and t.next0_.is_value("НА", None)): 
                     t1 = t.next0_
                     tt = t1.next0_
-                    first_pass3169 = True
+                    first_pass3175 = True
                     while True:
-                        if first_pass3169: first_pass3169 = False
+                        if first_pass3175: first_pass3175 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.is_newline_before): 

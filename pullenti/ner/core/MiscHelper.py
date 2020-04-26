@@ -8,26 +8,27 @@ import unicodedata
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.core.internal.RusLatAccord import RusLatAccord
 from pullenti.morph.MorphCase import MorphCase
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.TextToken import TextToken
+from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.core.internal.RusLatAccord import RusLatAccord
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.ner.Token import Token
-from pullenti.ner.core.CanBeEqualsAttrs import CanBeEqualsAttrs
-from pullenti.ner.NumberToken import NumberToken
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.morph.Morphology import Morphology
-from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
+from pullenti.ner.core.CanBeEqualsAttrs import CanBeEqualsAttrs
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
 from pullenti.ner.core.AnalysisKit import AnalysisKit
 
 class MiscHelper:
@@ -954,8 +955,17 @@ class MiscHelper:
         Returns:
             str: результат
         """
+        from pullenti.ner.core.NounPhraseMultivarToken import NounPhraseMultivarToken
         if (mt is None): 
             return None
+        if (isinstance(mt, NounPhraseMultivarToken)): 
+            nt = Utils.asObjectOrNull(mt, NounPhraseMultivarToken)
+            res = io.StringIO()
+            if (nt.source.preposition is not None): 
+                print("{0} ".format(MiscHelper.__get_text_value_(nt.source.preposition.begin_token, nt.source.preposition.end_token, attrs, None)), end="", file=res, flush=True)
+            print("{0} ".format(MiscHelper.__get_text_value_(nt.source.adjectives[nt.adj_index].begin_token, nt.source.adjectives[nt.adj_index].end_token, attrs, None)), end="", file=res, flush=True)
+            print(MiscHelper.__get_text_value_(nt.source.noun.begin_token, nt.source.noun.end_token, attrs, None), end="", file=res)
+            return Utils.toStringStringIO(res)
         return MiscHelper.__get_text_value_(mt.begin_token, mt.end_token, attrs, mt.get_referent())
     
     @staticmethod
@@ -974,7 +984,6 @@ class MiscHelper:
     
     @staticmethod
     def __get_text_value_(begin : 'Token', end : 'Token', attrs : 'GetTextAttr', r : 'Referent') -> str:
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         from pullenti.ner.core.BracketHelper import BracketHelper
         if (begin is None or end is None or begin.end_char > end.end_char): 
             return None
@@ -1056,9 +1065,9 @@ class MiscHelper:
         if (begin is None or begin.end_char > end.end_char): 
             return Utils.toStringStringIO(res)
         t = begin
-        first_pass2981 = True
+        first_pass2987 = True
         while True:
-            if first_pass2981: first_pass2981 = False
+            if first_pass2987: first_pass2987 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             last = (Utils.getCharAtStringIO(res, res.tell() - 1) if res.tell() > 0 else ' ')
@@ -1262,7 +1271,6 @@ class MiscHelper:
         Returns:
             str: результат, в худшем случае вернёт исходную строку
         """
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         if (Utils.isNullOrEmpty(txt)): 
             return txt
         npt = NounPhraseHelper.try_parse(begin_sample, NounPhraseParseAttr.NO, 0)
@@ -1328,7 +1336,6 @@ class MiscHelper:
         Returns:
             str: результат (в крайнем случае, вернёт исходную строку, если ничего не получилось)
         """
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         ar = ProcessorService.get_empty_processor().process(SourceOfAnalysis(txt), None, None)
         if (ar is None or ar.first_token is None): 
             return txt
@@ -1399,9 +1406,10 @@ class MiscHelper:
         
         """
         from pullenti.ner.core.NounPhraseToken import NounPhraseToken
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         if (str0_ == "коп" or str0_ == "руб"): 
             return str0_
+        if (str0_ == "лет"): 
+            str0_ = "год"
         ar = ProcessorService.get_empty_processor().process(SourceOfAnalysis._new579(str0_, False), None, None)
         if (ar is None or ar.first_token is None): 
             return str0_

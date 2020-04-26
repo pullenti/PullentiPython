@@ -49,17 +49,17 @@ class ListHelper:
         @staticmethod
         def parse(t : 'Token', max_char : int, prev : 'LineToken') -> 'LineToken':
             from pullenti.ner.TextToken import TextToken
-            from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-            from pullenti.morph.LanguageHelper import LanguageHelper
             from pullenti.ner.NumberToken import NumberToken
+            from pullenti.morph.LanguageHelper import LanguageHelper
+            from pullenti.ner.core.BracketParseAttr import BracketParseAttr
             from pullenti.ner.core.BracketHelper import BracketHelper
             from pullenti.ner.decree.DecreeReferent import DecreeReferent
             if (t is None or t.end_char > max_char): 
                 return None
             res = ListHelper.LineToken(t, t)
-            first_pass3187 = True
+            first_pass3193 = True
             while True:
-                if first_pass3187: first_pass3187 = False
+                if first_pass3193: first_pass3193 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= max_char)): break
                 if (t.is_char(':')): 
@@ -171,18 +171,18 @@ class ListHelper:
         if (res.kind == InstrumentKind.CLAUSE and res.number == 12): 
             pass
         i = 0
-        first_pass3188 = True
+        first_pass3194 = True
         while True:
-            if first_pass3188: first_pass3188 = False
+            if first_pass3194: first_pass3194 = False
             else: i += 1
             if (not (i < len(res.children))): break
             if (res.children[i].kind == InstrumentKind.INDENTION and ((res.children[i].end_token.is_char_of(":;") or ((((i + 1) < len(res.children)) and res.children[i + 1].kind == InstrumentKind.EDITIONS and res.children[i + 1].end_token.is_char_of(":;")))))): 
                 cou = 1
                 list_bullet = chr(0)
                 j = (i + 1)
-                first_pass3189 = True
+                first_pass3195 = True
                 while True:
-                    if first_pass3189: first_pass3189 = False
+                    if first_pass3195: first_pass3195 = False
                     else: j += 1
                     if (not (j < len(res.children))): break
                     ch = res.children[j]
@@ -225,9 +225,9 @@ class ListHelper:
                     continue
                 if ((i > 0 and not res.children[i].end_token.is_char(':') and res.children[i - 1].kind2 == InstrumentKind.UNDEFINED) and res.children[i - 1].end_token.is_char(':')): 
                     res.children[i - 1].kind2 = InstrumentKind.LISTHEAD
-                first_pass3190 = True
+                first_pass3196 = True
                 while True:
-                    if first_pass3190: first_pass3190 = False
+                    if first_pass3196: first_pass3196 = False
                     else: i += 1
                     if (not (i < j)): break
                     ch = res.children[i]
@@ -353,9 +353,9 @@ class ListHelper:
                 lines[1].is_list_item = False
                 lines[0].is_list_item = lines[1].is_list_item
         i = 0
-        first_pass3191 = True
+        first_pass3197 = True
         while True:
-            if first_pass3191: first_pass3191 = False
+            if first_pass3197: first_pass3197 = False
             else: i += 1
             if (not (i < len(lines))): break
             if (lines[i].is_list_item): 
@@ -446,9 +446,9 @@ class ListHelper:
         if (cou < 2): 
             return -1
         i = 0
-        first_pass3192 = True
+        first_pass3198 = True
         while True:
-            if first_pass3192: first_pass3192 = False
+            if first_pass3198: first_pass3198 = False
             else: i += 1
             if (not (i < len(lines))): break
             if (lines[i].is_list_item): 
@@ -514,9 +514,9 @@ class ListHelper:
             if ((lines[i].typ == InstrToken1.Types.LINE and len(lines[i].numbers) == 0 and lines[i].begin_token.is_value("ПРИЛОЖЕНИЯ", "ДОДАТОК")) and len(lines[i + 1].numbers) > 0 and lines[i].end_token.is_char(':')): 
                 num = 1
                 i += 1
-                first_pass3193 = True
+                first_pass3199 = True
                 while True:
-                    if first_pass3193: first_pass3193 = False
+                    if first_pass3199: first_pass3199 = False
                     else: i += 1
                     if (not (i < len(lines))): break
                     if (len(lines[i].numbers) == 0): 

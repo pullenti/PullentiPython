@@ -111,7 +111,7 @@ class Feature:
         self.outer_valuesen.append(ext_val_eng)
     
     @staticmethod
-    def _new2866(_arg1 : str, _arg2 : str, _arg3 : int, _arg4 : int) -> 'Feature':
+    def _new2870(_arg1 : str, _arg2 : str, _arg3 : int, _arg4 : int) -> 'Feature':
         res = Feature()
         res.name = _arg1
         res.caption = _arg2

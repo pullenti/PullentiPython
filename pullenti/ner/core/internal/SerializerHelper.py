@@ -76,9 +76,9 @@ class SerializerHelper:
             return None
         res = None
         prev = None
-        first_pass2962 = True
+        first_pass2968 = True
         while True:
-            if first_pass2962: first_pass2962 = False
+            if first_pass2968: first_pass2968 = False
             else: cou -= 1
             if (not (cou > 0)): break
             t = SerializerHelper.__deserialize_token(stream, kit, vers)

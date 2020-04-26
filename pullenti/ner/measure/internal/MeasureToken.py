@@ -10,23 +10,23 @@ from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.date.internal.DateItemToken import DateItemToken
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.Referent import Referent
-from pullenti.ner.measure.UnitReferent import UnitReferent
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.measure.MeasureKind import MeasureKind
 from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.measure.MeasureKind import MeasureKind
+from pullenti.ner.Referent import Referent
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.NounPhraseToken import NounPhraseToken
-from pullenti.ner.measure.MeasureReferent import MeasureReferent
 from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.measure.UnitReferent import UnitReferent
+from pullenti.ner.measure.MeasureReferent import MeasureReferent
 from pullenti.ner.measure.internal.UnitToken import UnitToken
+from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
 from pullenti.ner.core.BracketHelper import BracketHelper
 
 class MeasureToken(MetaToken):
@@ -78,9 +78,9 @@ class MeasureToken(MetaToken):
                 mr.add_slot(MeasureReferent.ATTR_NAME, self.name, False, 0)
             ints = list()
             k = 0
-            first_pass3219 = True
+            first_pass3225 = True
             while True:
-                if first_pass3219: first_pass3219 = False
+                if first_pass3225: first_pass3225 = False
                 else: k += 1
                 if (not (k < len(self.internals))): break
                 ii = self.internals[k]
@@ -253,15 +253,15 @@ class MeasureToken(MetaToken):
                 return None
         t1 = npt.end_token
         t = npt.end_token
-        name_ = MetaToken._new593(npt.begin_token, npt.end_token, npt.morph)
+        name_ = MetaToken._new594(npt.begin_token, npt.end_token, npt.morph)
         units = None
         units2 = None
         internals_ = list()
         not0_ = False
         tt = t1.next0_
-        first_pass3220 = True
+        first_pass3226 = True
         while True:
-            if first_pass3220: first_pass3220 = False
+            if first_pass3226: first_pass3226 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 
@@ -491,9 +491,9 @@ class MeasureToken(MetaToken):
                 name_.end_token = t1
         t11 = t1
         t1 = t1.next0_
-        first_pass3221 = True
+        first_pass3227 = True
         while True:
-            if first_pass3221: first_pass3221 = False
+            if first_pass3227: first_pass3227 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
             if (t1.is_table_control_char): 
@@ -517,9 +517,9 @@ class MeasureToken(MetaToken):
                 if (t1.is_char(':')): 
                     li = list()
                     ttt = t1.next0_
-                    first_pass3222 = True
+                    first_pass3228 = True
                     while True:
-                        if first_pass3222: first_pass3222 = False
+                        if first_pass3228: first_pass3228 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_hiphen or ttt.is_table_control_char): 

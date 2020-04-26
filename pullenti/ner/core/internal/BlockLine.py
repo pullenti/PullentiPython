@@ -14,8 +14,8 @@ from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.internal.BlkTyps import BlkTyps
-from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.NumberHelper import NumberHelper
 
 class BlockLine(MetaToken):
     
@@ -160,9 +160,9 @@ class BlockLine(MetaToken):
                 if (npt.noun.is_value("ХАРАКТЕРИСТИКА", None) or npt.noun.is_value("СОДЕРЖАНИЕ", "ЗМІСТ")): 
                     ok = True
                     tt = npt.end_token.next0_
-                    first_pass2955 = True
+                    first_pass2961 = True
                     while True:
-                        if first_pass2955: first_pass2955 = False
+                        if first_pass2961: first_pass2961 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.end_char <= res.end_char)): break
                         if (tt.is_char('.')): 
@@ -185,9 +185,9 @@ class BlockLine(MetaToken):
                 elif (npt.noun.is_value("ВЫВОД", "ВИСНОВОК") or npt.noun.is_value("РЕЗУЛЬТАТ", "ДОСЛІДЖЕННЯ")): 
                     ok = True
                     tt = npt.end_token.next0_
-                    first_pass2956 = True
+                    first_pass2962 = True
                     while True:
-                        if first_pass2956: first_pass2956 = False
+                        if first_pass2962: first_pass2962 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.end_char <= res.end_char)): break
                         if (tt.is_char_of(",.") or tt.is_and): 
@@ -223,9 +223,9 @@ class BlockLine(MetaToken):
                         if (npt.begin_token == npt.end_token and npt.noun.is_value("СПИСОК", None) and npt.end_char == res.end_char): 
                             ok = False
                         tt = npt.end_token.next0_
-                        first_pass2957 = True
+                        first_pass2963 = True
                         while True:
-                            if first_pass2957: first_pass2957 = False
+                            if first_pass2963: first_pass2963 = False
                             else: tt = tt.next0_
                             if (not (tt is not None and tt.end_char <= res.end_char)): break
                             if (tt.is_char_of(",.:") or tt.is_and or tt.morph.class0_.is_preposition): 

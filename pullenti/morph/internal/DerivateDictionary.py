@@ -2,6 +2,7 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
+import threading
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -21,6 +22,7 @@ class DerivateDictionary:
         self.__m_buf = None;
         self._m_root = ExplanTreeNode()
         self._m_all_groups = list()
+        self._m_lock = threading.Lock()
     
     def init(self, lang_ : 'MorphLang') -> bool:
         if (self.__m_inited): 
@@ -69,6 +71,15 @@ class DerivateDictionary:
                 i += 1
             tn._add_group(dg)
     
+    def __load_tree_node(self, tn : 'ExplanTreeNode') -> None:
+        with self._m_lock: 
+            pos = tn.lazy_pos
+            if (pos > 0): 
+                wrappos3 = RefOutArgWrapper(pos)
+                DeserializeHelper.deserialize_tree_node(self.__m_buf, self, tn, True, wrappos3)
+                pos = wrappos3.value
+            tn.lazy_pos = 0
+    
     def find(self, word : str, try_create : bool, lang_ : 'MorphLang') -> typing.List['DerivateGroup']:
         if (Utils.isNullOrEmpty(word)): 
             return None
@@ -86,11 +97,7 @@ class DerivateDictionary:
                 break
             tn = tn1
             if (tn.lazy_pos > 0): 
-                pos = tn.lazy_pos
-                wrappos3 = RefOutArgWrapper(pos)
-                DeserializeHelper.deserialize_tree_node(self.__m_buf, self, tn, True, wrappos3)
-                pos = wrappos3.value
-                tn.lazy_pos = 0
+                self.__load_tree_node(tn)
             i += 1
         res = (None if i < len(word) else tn.groups)
         li = None
@@ -171,9 +178,9 @@ class DerivateDictionary:
             return None
         len0_ = len(word) - 4
         i = 1
-        first_pass2883 = True
+        first_pass2889 = True
         while True:
-            if first_pass2883: first_pass2883 = False
+            if first_pass2889: first_pass2889 = False
             else: i += 1
             if (not (i <= len0_)): break
             rest = word[i:]

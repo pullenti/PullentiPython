@@ -17,10 +17,10 @@ from pullenti.ner.booklink.BookLinkAnalyzer import BookLinkAnalyzer
 from pullenti.ner.business.BusinessAnalyzer import BusinessAnalyzer
 from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
 from pullenti.ner.date.DateAnalyzer import DateAnalyzer
-from pullenti.ner.keyword.KeywordAnalyzer import KeywordAnalyzer
-from pullenti.ner.phone.PhoneAnalyzer import PhoneAnalyzer
-from pullenti.ner.money.MoneyAnalyzer import MoneyAnalyzer
 from pullenti.ner.uri.UriAnalyzer import UriAnalyzer
+from pullenti.ner.keyword.KeywordAnalyzer import KeywordAnalyzer
+from pullenti.ner.money.MoneyAnalyzer import MoneyAnalyzer
+from pullenti.ner.phone.PhoneAnalyzer import PhoneAnalyzer
 from pullenti.ner.definition.DefinitionAnalyzer import DefinitionAnalyzer
 from pullenti.ner.address.AddressAnalyzer import AddressAnalyzer
 from pullenti.ner.geo.GeoAnalyzer import GeoAnalyzer

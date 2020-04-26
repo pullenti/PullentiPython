@@ -15,28 +15,28 @@ from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.denomination.DenominationReferent import DenominationReferent
 from pullenti.ner.uri.UriReferent import UriReferent
 from pullenti.ner.measure.MeasureReferent import MeasureReferent
-from pullenti.ner.core.VerbPhraseHelper import VerbPhraseHelper
 from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.VerbPhraseHelper import VerbPhraseHelper
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.ner.denomination.DenominationAnalyzer import DenominationAnalyzer
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.internal.RusLatAccord import RusLatAccord
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.TextToken import TextToken
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.internal.RusLatAccord import RusLatAccord
+from pullenti.ner.Referent import Referent
+from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.goods.GoodAttrType import GoodAttrType
+from pullenti.ner.goods.GoodAttributeReferent import GoodAttributeReferent
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.Termin import Termin
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.goods.GoodAttributeReferent import GoodAttributeReferent
-from pullenti.ner.Referent import Referent
-from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.measure.internal.MeasureToken import MeasureToken
 
@@ -117,9 +117,9 @@ class GoodAttrToken(MetaToken):
         key = None
         next_seq = False
         tt = t
-        first_pass3094 = True
+        first_pass3100 = True
         while True:
-            if first_pass3094: first_pass3094 = False
+            if first_pass3100: first_pass3100 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt != t and tt.is_newline_before): 
@@ -265,9 +265,9 @@ class GoodAttrToken(MetaToken):
                 return res
             if (ty == GoodAttrType.REFERENT): 
                 tt = tok.end_token.next0_
-                first_pass3095 = True
+                first_pass3101 = True
                 while True:
-                    if first_pass3095: first_pass3095 = False
+                    if first_pass3101: first_pass3101 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_newline_before): 
@@ -620,9 +620,9 @@ class GoodAttrToken(MetaToken):
         res = GoodAttrToken._new1297(t, t, GoodAttrType.MODEL)
         tmp = io.StringIO()
         tt = t
-        first_pass3096 = True
+        first_pass3102 = True
         while True:
-            if first_pass3096: first_pass3096 = False
+            if first_pass3102: first_pass3102 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_whitespace_before and tt != t): 

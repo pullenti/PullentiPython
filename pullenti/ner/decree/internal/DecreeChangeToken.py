@@ -7,33 +7,33 @@ import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
+from pullenti.ner.decree.DecreeChangeValueKind import DecreeChangeValueKind
+from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
+from pullenti.ner.decree.internal.PartToken import PartToken
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.Token import Token
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.Referent import Referent
 from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
 from pullenti.ner.instrument.internal.NumberingHelper import NumberingHelper
-from pullenti.ner.decree.internal.PartToken import PartToken
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.decree.internal.DecreeChangeTokenTyp import DecreeChangeTokenTyp
-from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.ner.decree.DecreeReferent import DecreeReferent
-from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
-from pullenti.ner.decree.DecreeChangeValueKind import DecreeChangeValueKind
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.decree.internal.DecreeChangeTokenTyp import DecreeChangeTokenTyp
+from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
 from pullenti.ner.decree.internal.DecreeToken import DecreeToken
+from pullenti.ner.Token import Token
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
 
 class DecreeChangeToken(MetaToken):
@@ -90,9 +90,9 @@ class DecreeChangeToken(MetaToken):
         tt = t
         if (t.is_newline_before and not ignore_newlines): 
             tt = t
-            first_pass3000 = True
+            first_pass3006 = True
             while True:
-                if first_pass3000: first_pass3000 = False
+                if first_pass3006: first_pass3006 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt == t and BracketHelper.is_bracket(tt, False) and not tt.is_char('(')): 
@@ -129,9 +129,9 @@ class DecreeChangeToken(MetaToken):
                 res.end_token = tt
             has_change = False
             tt = tt.next0_
-            first_pass3001 = True
+            first_pass3007 = True
             while True:
-                if first_pass3001: first_pass3001 = False
+                if first_pass3007: first_pass3007 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_newline_before): 
@@ -191,9 +191,9 @@ class DecreeChangeToken(MetaToken):
         if (((not ignore_newlines and t.is_newline_before and ((tt.is_value("ПРИЗНАТЬ", "ВИЗНАТИ") or tt.is_value("СЧИТАТЬ", "ВВАЖАТИ")))) and tt.next0_ is not None and tt.next0_.is_value("УТРАТИТЬ", "ВТРАТИТИ")) and tt.next0_.next0_ is not None and tt.next0_.next0_.is_value("СИЛА", "ЧИННІСТЬ")): 
             res = DecreeChangeToken._new815(tt, tt.next0_.next0_, DecreeChangeTokenTyp.ACTION, DecreeChangeKind.EXPIRE)
             tt = tt.next0_.next0_.next0_
-            first_pass3002 = True
+            first_pass3008 = True
             while True:
-                if first_pass3002: first_pass3002 = False
+                if first_pass3008: first_pass3008 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_char(':')): 
@@ -237,9 +237,9 @@ class DecreeChangeToken(MetaToken):
             if (tt.is_value("СЛОВО", None)): 
                 pass
             res = DecreeChangeToken._new814(tt, tt, DecreeChangeTokenTyp.STARTSINGLE)
-            first_pass3003 = True
+            first_pass3009 = True
             while True:
-                if first_pass3003: first_pass3003 = False
+                if first_pass3009: first_pass3009 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt != t and tt.is_newline_before): 
@@ -536,9 +536,9 @@ class DecreeChangeToken(MetaToken):
                         can_be_start = True
                 if (can_be_start): 
                     ttt = (tt.next0_ if BracketHelper.can_be_start_of_sequence(tt, True, False) else tt)
-                    first_pass3004 = True
+                    first_pass3010 = True
                     while True:
-                        if first_pass3004: first_pass3004 = False
+                        if first_pass3010: first_pass3010 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_char_of(".;") and ttt.is_newline_after): 
@@ -604,9 +604,9 @@ class DecreeChangeToken(MetaToken):
             doubt1 = None
             clause_last = None
             tt = t.next0_
-            first_pass3005 = True
+            first_pass3011 = True
             while True:
-                if first_pass3005: first_pass3005 = False
+                if first_pass3011: first_pass3011 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not tt.is_newline_after): 
@@ -680,9 +680,9 @@ class DecreeChangeToken(MetaToken):
         res = list()
         res.append(d0)
         t = d0.end_token.next0_
-        first_pass3006 = True
+        first_pass3012 = True
         while True:
-            if first_pass3006: first_pass3006 = False
+            if first_pass3012: first_pass3012 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before): 
@@ -821,9 +821,9 @@ class DecreeChangeToken(MetaToken):
         new_items = None
         while True:
             i = 0
-            first_pass3007 = True
+            first_pass3013 = True
             while True:
-                if first_pass3007: first_pass3007 = False
+                if first_pass3013: first_pass3013 = False
                 else: i += 1
                 if (not (i < len(toks))): break
                 tok = toks[i]

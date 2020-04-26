@@ -31,15 +31,15 @@ from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.address.internal.StreetItemType import StreetItemType
 from pullenti.ner.Token import Token
 from pullenti.ner.TextToken import TextToken
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.address.AddressReferent import AddressReferent
-from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
+from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
 
 class StreetItemToken(MetaToken):
@@ -722,9 +722,9 @@ class StreetItemToken(MetaToken):
                 pass
             else: 
                 return None
-        first_pass2912 = True
+        first_pass2918 = True
         while True:
-            if first_pass2912: first_pass2912 = False
+            if first_pass2918: first_pass2918 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_count > 0 and len(res) >= max_count): 
@@ -797,9 +797,9 @@ class StreetItemToken(MetaToken):
                     if (not sit.is_in_dictionary): 
                         tt = sit.end_token.next0_
                         has_house = False
-                        first_pass2913 = True
+                        first_pass2919 = True
                         while True:
-                            if first_pass2913: first_pass2913 = False
+                            if first_pass2919: first_pass2919 = False
                             else: tt = tt.next0_
                             if (not (tt is not None)): break
                             if (tt.is_newline_before): 
@@ -907,9 +907,9 @@ class StreetItemToken(MetaToken):
                         break
             t = sit.end_token
         i = 0
-        first_pass2914 = True
+        first_pass2920 = True
         while True:
-            if first_pass2914: first_pass2914 = False
+            if first_pass2920: first_pass2920 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].typ == StreetItemType.NAME and res[i + 1].typ == StreetItemType.NAME and (res[i].whitespaces_after_count < 3)): 
@@ -972,9 +972,9 @@ class StreetItemToken(MetaToken):
                         break
             i += 1
         i = 0
-        first_pass2915 = True
+        first_pass2921 = True
         while True:
-            if first_pass2915: first_pass2915 = False
+            if first_pass2921: first_pass2921 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].typ == StreetItemType.NAME or res[i].typ == StreetItemType.STDNAME or res[i].typ == StreetItemType.STDADJECTIVE): 
@@ -991,7 +991,7 @@ class StreetItemToken(MetaToken):
                     res[i].alt_value = (Utils.ifNotNull(res[i].value, MiscHelper.get_text_value(res[i].begin_token, res[i].end_token, GetTextAttr.NO)))
                     if (res[i].typ == StreetItemType.STDADJECTIVE): 
                         adjs = MiscLocationHelper.get_std_adj_full(res[i].begin_token, res[i + 1].morph.gender, res[i + 1].morph.number, True)
-                        if (len(adjs) > 0): 
+                        if (adjs is not None and len(adjs) > 0): 
                             res[i].alt_value = adjs[0]
                     res[i].value = "{0} {1}".format(res[i].alt_value, res[i + 1].termin.canonic_text)
                     res[i].typ = StreetItemType.STDNAME

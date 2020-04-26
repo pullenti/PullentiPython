@@ -7,14 +7,14 @@ import typing
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.date.DateRangeReferent import DateRangeReferent
+from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.core.NumberExType import NumberExType
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.date.DatePointerType import DatePointerType
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.TextToken import TextToken
@@ -288,9 +288,9 @@ class DateItemToken(MetaToken):
                         if (tt is not None and tt.is_char('.')): 
                             res.end_token = tt
                             tt = tt.next0_
-                first_pass2992 = True
+                first_pass2998 = True
                 while True:
-                    if first_pass2992: first_pass2992 = False
+                    if first_pass2998: first_pass2998 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_value("УТРО", "РАНОК")): 
@@ -488,9 +488,9 @@ class DateItemToken(MetaToken):
                         return None
                 cou = 0
                 tt = t.previous
-                first_pass2993 = True
+                first_pass2999 = True
                 while True:
-                    if first_pass2993: first_pass2993 = False
+                    if first_pass2999: first_pass2999 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (cou > 200): 
@@ -561,45 +561,45 @@ class DateItemToken(MetaToken):
         tt.add_abridge("Р.Х.")
         DateItemToken.M_NEW_AGE.add(tt)
         DateItemToken.M_SEASONS = TerminCollection()
-        DateItemToken.M_SEASONS.add(Termin._new614("ЗИМА", MorphLang.RU, True, DatePointerType.WINTER))
-        DateItemToken.M_SEASONS.add(Termin._new614("WINTER", MorphLang.EN, True, DatePointerType.WINTER))
-        t = Termin._new614("ВЕСНА", MorphLang.RU, True, DatePointerType.SPRING)
+        DateItemToken.M_SEASONS.add(Termin._new615("ЗИМА", MorphLang.RU, True, DatePointerType.WINTER))
+        DateItemToken.M_SEASONS.add(Termin._new615("WINTER", MorphLang.EN, True, DatePointerType.WINTER))
+        t = Termin._new615("ВЕСНА", MorphLang.RU, True, DatePointerType.SPRING)
         t.add_variant("ПРОВЕСНА", True)
         DateItemToken.M_SEASONS.add(t)
-        DateItemToken.M_SEASONS.add(Termin._new614("SPRING", MorphLang.EN, True, DatePointerType.SPRING))
-        t = Termin._new614("ЛЕТО", MorphLang.RU, True, DatePointerType.SUMMER)
+        DateItemToken.M_SEASONS.add(Termin._new615("SPRING", MorphLang.EN, True, DatePointerType.SPRING))
+        t = Termin._new615("ЛЕТО", MorphLang.RU, True, DatePointerType.SUMMER)
         DateItemToken.M_SEASONS.add(t)
-        t = Termin._new614("ЛІТО", MorphLang.UA, True, DatePointerType.SUMMER)
+        t = Termin._new615("ЛІТО", MorphLang.UA, True, DatePointerType.SUMMER)
         DateItemToken.M_SEASONS.add(t)
-        t = Termin._new614("ОСЕНЬ", MorphLang.RU, True, DatePointerType.AUTUMN)
+        t = Termin._new615("ОСЕНЬ", MorphLang.RU, True, DatePointerType.AUTUMN)
         DateItemToken.M_SEASONS.add(t)
-        t = Termin._new614("AUTUMN", MorphLang.EN, True, DatePointerType.AUTUMN)
+        t = Termin._new615("AUTUMN", MorphLang.EN, True, DatePointerType.AUTUMN)
         DateItemToken.M_SEASONS.add(t)
-        t = Termin._new614("ОСІНЬ", MorphLang.UA, True, DatePointerType.AUTUMN)
+        t = Termin._new615("ОСІНЬ", MorphLang.UA, True, DatePointerType.AUTUMN)
         DateItemToken.M_SEASONS.add(t)
         DateItemToken.M_MONTHES = TerminCollection()
         months = ["ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"]
         i = 0
         while i < len(months): 
-            t = Termin._new614(months[i], MorphLang.RU, True, i + 1)
+            t = Termin._new615(months[i], MorphLang.RU, True, i + 1)
             DateItemToken.M_MONTHES.add(t)
             i += 1
         months = ["СІЧЕНЬ", "ЛЮТИЙ", "БЕРЕЗЕНЬ", "КВІТЕНЬ", "ТРАВЕНЬ", "ЧЕРВЕНЬ", "ЛИПЕНЬ", "СЕРПЕНЬ", "ВЕРЕСЕНЬ", "ЖОВТЕНЬ", "ЛИСТОПАД", "ГРУДЕНЬ"]
         i = 0
         while i < len(months): 
-            t = Termin._new614(months[i], MorphLang.UA, True, i + 1)
+            t = Termin._new615(months[i], MorphLang.UA, True, i + 1)
             DateItemToken.M_MONTHES.add(t)
             i += 1
         months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
         i = 0
         while i < len(months): 
-            t = Termin._new614(months[i], MorphLang.EN, True, i + 1)
+            t = Termin._new615(months[i], MorphLang.EN, True, i + 1)
             DateItemToken.M_MONTHES.add(t)
             i += 1
         months = ["GENNAIO", "FEBBRAIO", "MARZO", "APRILE", "MAGGIO", "GUINGO", "LUGLIO", "AGOSTO", "SETTEMBRE", "OTTOBRE", "NOVEMBRE", "DICEMBRE"]
         i = 0
         while i < len(months): 
-            t = Termin._new614(months[i], MorphLang.IT, True, i + 1)
+            t = Termin._new615(months[i], MorphLang.IT, True, i + 1)
             DateItemToken.M_MONTHES.add(t)
             i += 1
         for m in ["ЯНВ", "ФЕВ", "ФЕВР", "МАР", "АПР", "ИЮН", "ИЮЛ", "АВГ", "СЕН", "СЕНТ", "ОКТ", "НОЯ", "НОЯБ", "ДЕК", "JAN", "FEB", "MAR", "APR", "JUN", "JUL", "AUG", "SEP", "SEPT", "OCT", "NOV", "DEC"]: 
@@ -618,44 +618,44 @@ class DateItemToken(MetaToken):
         DateItemToken.M_EMPTY_WORDS["DEL"] = MorphLang.IT
         DateItemToken.M_EMPTY_WORDS["IL"] = MorphLang.IT
         DateItemToken.DAYS_OF_WEEK = TerminCollection()
-        te = Termin._new614("SUNDAY", MorphLang.EN, True, 7)
+        te = Termin._new615("SUNDAY", MorphLang.EN, True, 7)
         te.add_abridge("SUN")
         te.add_variant("ВОСКРЕСЕНЬЕ", True)
         te.add_variant("ВОСКРЕСЕНИЕ", True)
         te.add_abridge("ВС")
         te.add_variant("НЕДІЛЯ", True)
         DateItemToken.DAYS_OF_WEEK.add(te)
-        te = Termin._new614("MONDAY", MorphLang.EN, True, 1)
+        te = Termin._new615("MONDAY", MorphLang.EN, True, 1)
         te.add_abridge("MON")
         te.add_variant("ПОНЕДЕЛЬНИК", True)
         te.add_abridge("ПОН")
         te.add_variant("ПОНЕДІЛОК", True)
         DateItemToken.DAYS_OF_WEEK.add(te)
-        te = Termin._new614("TUESDAY", MorphLang.EN, True, 2)
+        te = Termin._new615("TUESDAY", MorphLang.EN, True, 2)
         te.add_abridge("TUE")
         te.add_variant("ВТОРНИК", True)
         te.add_abridge("ВТ")
         te.add_variant("ВІВТОРОК", True)
         DateItemToken.DAYS_OF_WEEK.add(te)
-        te = Termin._new614("WEDNESDAY", MorphLang.EN, True, 3)
+        te = Termin._new615("WEDNESDAY", MorphLang.EN, True, 3)
         te.add_abridge("WED")
         te.add_variant("СРЕДА", True)
         te.add_abridge("СР")
         te.add_variant("СЕРЕДА", True)
         DateItemToken.DAYS_OF_WEEK.add(te)
-        te = Termin._new614("THURSDAY", MorphLang.EN, True, 4)
+        te = Termin._new615("THURSDAY", MorphLang.EN, True, 4)
         te.add_abridge("THU")
         te.add_variant("ЧЕТВЕРГ", True)
         te.add_abridge("ЧТ")
         te.add_variant("ЧЕТВЕР", True)
         DateItemToken.DAYS_OF_WEEK.add(te)
-        te = Termin._new614("FRIDAY", MorphLang.EN, True, 5)
+        te = Termin._new615("FRIDAY", MorphLang.EN, True, 5)
         te.add_abridge("FRI")
         te.add_variant("ПЯТНИЦА", True)
         te.add_abridge("ПТ")
         te.add_variant("ПЯТНИЦЯ", True)
         DateItemToken.DAYS_OF_WEEK.add(te)
-        te = Termin._new614("SATURDAY", MorphLang.EN, True, 6)
+        te = Termin._new615("SATURDAY", MorphLang.EN, True, 6)
         te.add_abridge("SAT")
         te.add_variant("СУББОТА", True)
         te.add_abridge("СБ")

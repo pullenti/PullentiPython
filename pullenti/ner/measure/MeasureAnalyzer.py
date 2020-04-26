@@ -93,9 +93,9 @@ class MeasureAnalyzer(Analyzer):
                     if (s.type_name == UnitReferent.ATTR_NAME or s.type_name == UnitReferent.ATTR_FULLNAME): 
                         addunits.add(Termin._new135(Utils.asObjectOrNull(s.value, str), uu))
         t = kit.first_token
-        first_pass3224 = True
+        first_pass3230 = True
         while True:
-            if first_pass3224: first_pass3224 = False
+            if first_pass3230: first_pass3230 = False
             else: t = t.next0_
             if (not (t is not None)): break
             mt = MeasureToken.try_parse_minimal(t, addunits, False)

@@ -6,12 +6,12 @@ from pullenti.unisharp.Utils import Utils
 
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.ConjunctionToken import ConjunctionToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.ConjunctionType import ConjunctionType
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-from pullenti.ner.core.ConjunctionType import ConjunctionType
+from pullenti.ner.core.ConjunctionToken import ConjunctionToken
 
 class ConjunctionHelper:
     """ Поддержка работы с союзами (запятая тоже считается союзом) """

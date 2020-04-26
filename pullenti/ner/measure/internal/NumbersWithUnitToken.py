@@ -307,7 +307,7 @@ class NumbersWithUnitToken(MetaToken):
         dty = NumbersWithUnitToken.DiapTyp.UNDEFINED
         whd = None
         uni = None
-        tok = NumbersWithUnitToken.M_TERMINS.try_parse(t, TerminParseAttr.NO)
+        tok = (None if NumbersWithUnitToken.M_TERMINS is None else NumbersWithUnitToken.M_TERMINS.try_parse(t, TerminParseAttr.NO))
         if (tok is not None): 
             if (tok.end_token.is_value("СТАРШЕ", None) or tok.end_token.is_value("МЛАДШЕ", None)): 
                 is_age_ = True

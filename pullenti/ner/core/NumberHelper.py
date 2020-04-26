@@ -87,17 +87,17 @@ class NumberHelper:
                 if (str.isdigit(sss[0]) and len(sss) == 3): 
                     val2 = val
                     ttt = et.next0_
-                    first_pass2982 = True
+                    first_pass2988 = True
                     while True:
-                        if first_pass2982: first_pass2982 = False
+                        if first_pass2988: first_pass2988 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         ss = ttt.get_source_text()
                         if (ttt.whitespaces_before_count == 1 and ttt.length_char == 3 and str.isdigit(ss[0])): 
-                            wrapii586 = RefOutArgWrapper(0)
-                            inoutres587 = Utils.tryParseInt(ss, wrapii586)
-                            ii = wrapii586.value
-                            if (not inoutres587): 
+                            wrapii587 = RefOutArgWrapper(0)
+                            inoutres588 = Utils.tryParseInt(ss, wrapii587)
+                            ii = wrapii587.value
+                            if (not inoutres588): 
                                 break
                             val2 += ss
                             continue
@@ -182,12 +182,12 @@ class NumberHelper:
                     val += next0_.value
                     et = (Utils.asObjectOrNull(next0_.end_token, TextToken))
                     break
-            res = NumberToken._new588(token, et, val, typ, mc)
+            res = NumberToken._new589(token, et, val, typ, mc)
             if (et.next0_ is not None and (len(res.value) < 4) and ((et.next0_.is_hiphen or et.next0_.is_value("ДО", None)))): 
                 tt1 = et.next0_.next0_
-                first_pass2983 = True
+                first_pass2989 = True
                 while True:
-                    if first_pass2983: first_pass2983 = False
+                    if first_pass2989: first_pass2989 = False
                     else: tt1 = tt1.next0_
                     if (not (tt1 is not None)): break
                     if (not ((isinstance(tt1, TextToken)))): 
@@ -413,9 +413,9 @@ class NumberHelper:
                 if (isinstance(t1, TextToken)): 
                     v = (t1).term
                     if ((v == "ЛЕТ" or v == "ЛЕТИЯ" or v == "ЛЕТИЕ") or v == "РІЧЧЯ"): 
-                        return NumberToken._new588(t, t1, nt.value, NumberSpellingType.AGE, t1.morph)
+                        return NumberToken._new589(t, t1, nt.value, NumberSpellingType.AGE, t1.morph)
                     if (t1.is_value("ЛЕТНИЙ", "РІЧНИЙ")): 
-                        return NumberToken._new588(t, t1, nt.value, NumberSpellingType.AGE, t1.morph)
+                        return NumberToken._new589(t, t1, nt.value, NumberSpellingType.AGE, t1.morph)
                     if (v == "Л" or ((v == "Р" and nt.morph.language.is_ua))): 
                         return NumberToken(t, (t1.next0_ if t1.next0_ is not None and t1.next0_.is_char('.') else t1), nt.value, NumberSpellingType.AGE)
             return None
@@ -426,12 +426,12 @@ class NumberHelper:
         if (LanguageHelper.ends_with_ex(s, "ЛЕТИЕ", "ЛЕТИЯ", "РІЧЧЯ", None)): 
             term = NumberHelper._m_nums.find(s[0:0+len(s) - 5])
             if (term is not None): 
-                return NumberToken._new588(tt, tt, str(term.tag), NumberSpellingType.AGE, tt.morph)
+                return NumberToken._new589(tt, tt, str(term.tag), NumberSpellingType.AGE, tt.morph)
         s = tt.lemma
         if (LanguageHelper.ends_with_ex(s, "ЛЕТНИЙ", "РІЧНИЙ", None, None)): 
             term = NumberHelper._m_nums.find(s[0:0+len(s) - 6])
             if (term is not None): 
-                return NumberToken._new588(tt, tt, str(term.tag), NumberSpellingType.AGE, tt.morph)
+                return NumberToken._new589(tt, tt, str(term.tag), NumberSpellingType.AGE, tt.morph)
         return None
     
     @staticmethod
@@ -483,13 +483,13 @@ class NumberHelper:
                         mc = MorphCollection()
                         mc.class0_ = MorphClass.ADJECTIVE
                         mc.language = MorphLang.EN
-                        return MetaToken._new593(tt, tt.next0_.next0_, mc)
+                        return MetaToken._new594(tt, tt.next0_.next0_, mc)
             return None
         if ((s == "TH" or s == "ST" or s == "RD") or s == "ND"): 
             mc = MorphCollection()
             mc.class0_ = MorphClass.ADJECTIVE
             mc.language = MorphLang.EN
-            return MetaToken._new593(tt, tt, mc)
+            return MetaToken._new594(tt, tt, mc)
         if (not tt.chars.is_cyrillic_letter): 
             return None
         if (not tt.is_whitespace_after): 
@@ -530,11 +530,11 @@ class NumberHelper:
                     mc.add_item(MorphBaseInfo(v))
         if (tt.morph.language.is_ua and mc is None and s == "Ї"): 
             mc = MorphCollection()
-            mc.add_item(MorphBaseInfo._new595(MorphClass.ADJECTIVE))
+            mc.add_item(MorphBaseInfo._new596(MorphClass.ADJECTIVE))
         if (mc is not None): 
-            return MetaToken._new593(tt, tt, mc)
+            return MetaToken._new594(tt, tt, mc)
         if ((((len(s) < 3) and not tt.is_whitespace_before and tt.previous is not None) and tt.previous.is_hiphen and not tt.previous.is_whitespace_before) and tt.whitespaces_after_count == 1 and s != "А"): 
-            return MetaToken._new593(tt, tt, MorphCollection._new597(MorphClass.ADJECTIVE))
+            return MetaToken._new594(tt, tt, MorphCollection._new598(MorphClass.ADJECTIVE))
         return None
     
     @staticmethod
@@ -552,9 +552,9 @@ class NumberHelper:
         ns = None
         sps = None
         t1 = t
-        first_pass2984 = True
+        first_pass2990 = True
         while True:
-            if first_pass2984: first_pass2984 = False
+            if first_pass2990: first_pass2990 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
             if (t1.next0_ is None): 
@@ -773,24 +773,24 @@ class NumberHelper:
             if (res0.real_value == 0): 
                 str0_ = "0.{0}".format(val)
                 dd = 0
-                wrapdd601 = RefOutArgWrapper(0)
-                inoutres602 = Utils.tryParseFloat(str0_, wrapdd601)
-                dd = wrapdd601.value
-                if (inoutres602): 
+                wrapdd602 = RefOutArgWrapper(0)
+                inoutres603 = Utils.tryParseFloat(str0_, wrapdd602)
+                dd = wrapdd602.value
+                if (inoutres603): 
                     pass
                 else: 
-                    wrapdd599 = RefOutArgWrapper(0)
-                    inoutres600 = Utils.tryParseFloat(str0_.replace('.', ','), wrapdd599)
-                    dd = wrapdd599.value
-                    if (inoutres600): 
+                    wrapdd600 = RefOutArgWrapper(0)
+                    inoutres601 = Utils.tryParseFloat(str0_.replace('.', ','), wrapdd600)
+                    dd = wrapdd600.value
+                    if (inoutres601): 
                         pass
                     else: 
                         return None
                 res0.real_value = dd + res0.real_value
             return res0
-        wrapd604 = RefOutArgWrapper(0)
-        tt = NumberHelper.__try_parse_float(Utils.asObjectOrNull(t, NumberToken), wrapd604, no_whitespace)
-        d = wrapd604.value
+        wrapd605 = RefOutArgWrapper(0)
+        tt = NumberHelper.__try_parse_float(Utils.asObjectOrNull(t, NumberToken), wrapd605, no_whitespace)
+        d = wrapd605.value
         if (tt is None): 
             if ((t.next0_ is None or t.is_whitespace_after or t.next0_.chars.is_letter) or can_be_integer): 
                 tt = t
@@ -802,7 +802,7 @@ class NumberHelper:
         if (tt.next0_ is not None and tt.next0_.is_value("ДЕСЯТОК", None)): 
             d *= (10)
             tt = tt.next0_
-        return NumberExToken._new603(t0, tt, "", NumberSpellingType.DIGIT, NumberExType.UNDEFINED, d)
+        return NumberExToken._new604(t0, tt, "", NumberSpellingType.DIGIT, NumberExType.UNDEFINED, d)
     
     @staticmethod
     def get_number_adjective(value : int, gender : 'MorphGender', num : 'MorphNumber') -> str:
@@ -1049,15 +1049,15 @@ class NumberHelper:
         """
         if (str0_ == "NaN"): 
             return math.nan
-        wrapres607 = RefOutArgWrapper(0)
-        inoutres608 = Utils.tryParseFloat(str0_, wrapres607)
-        res = wrapres607.value
-        if (inoutres608): 
+        wrapres608 = RefOutArgWrapper(0)
+        inoutres609 = Utils.tryParseFloat(str0_, wrapres608)
+        res = wrapres608.value
+        if (inoutres609): 
             return res
-        wrapres605 = RefOutArgWrapper(0)
-        inoutres606 = Utils.tryParseFloat(str0_.replace('.', ','), wrapres605)
-        res = wrapres605.value
-        if (inoutres606): 
+        wrapres606 = RefOutArgWrapper(0)
+        inoutres607 = Utils.tryParseFloat(str0_.replace('.', ','), wrapres606)
+        res = wrapres606.value
+        if (inoutres607): 
             return res
         return None
     

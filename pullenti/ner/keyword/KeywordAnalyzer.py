@@ -27,9 +27,9 @@ from pullenti.ner.keyword.KeywordType import KeywordType
 from pullenti.ner.keyword.internal.KeywordMeta import KeywordMeta
 from pullenti.ner.money.MoneyReferent import MoneyReferent
 from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.keyword.KeywordReferent import KeywordReferent
 from pullenti.ner.core.MiscHelper import MiscHelper
@@ -129,9 +129,9 @@ class KeywordAnalyzer(Analyzer):
             t = t.next0_
         cur = 0
         t = kit.first_token
-        first_pass3207 = True
+        first_pass3213 = True
         while True:
-            if first_pass3207: first_pass3207 = False
+            if first_pass3213: first_pass3213 = False
             else: t = t.next0_; cur += 1
             if (not (t is not None)): break
             r = t.get_referent()
@@ -194,9 +194,9 @@ class KeywordAnalyzer(Analyzer):
             li.clear()
             t0 = t
             tt = t
-            first_pass3208 = True
+            first_pass3214 = True
             while True:
-                if first_pass3208: first_pass3208 = False
+                if first_pass3214: first_pass3214 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= npt.end_char)): break
                 if (not ((isinstance(tt, TextToken)))): 
@@ -263,9 +263,9 @@ class KeywordAnalyzer(Analyzer):
                 t = (rt1)
         cur = 0
         t = kit.first_token
-        first_pass3209 = True
+        first_pass3215 = True
         while True:
-            if first_pass3209: first_pass3209 = False
+            if first_pass3215: first_pass3215 = False
             else: t = t.next0_; cur += 1
             if (not (t is not None)): break
             kw = Utils.asObjectOrNull(t.get_referent(), KeywordReferent)

@@ -162,9 +162,9 @@ class NumberingHelper:
         res = None
         many_spec_char_lines = 0
         i = 0
-        first_pass3194 = True
+        first_pass3200 = True
         while True:
-            if first_pass3194: first_pass3194 = False
+            if first_pass3200: first_pass3200 = False
             else: i += 1
             if (not (i < len(lines))): break
             li = lines[i]
@@ -240,9 +240,9 @@ class NumberingHelper:
         while ch:
             ch = False
             i = 1
-            first_pass3195 = True
+            first_pass3201 = True
             while True:
-                if first_pass3195: first_pass3195 = False
+                if first_pass3201: first_pass3201 = False
                 else: i += 1
                 if (not (i < len(res))): break
                 d = NumberingHelper.calc_delta(res[i - 1], res[i], False)
@@ -502,9 +502,9 @@ class NumberingHelper:
             res.end_token = res.num_end_token
             res.num_suffix = (None)
             ttt = t.next0_
-            first_pass3196 = True
+            first_pass3202 = True
             while True:
-                if first_pass3196: first_pass3196 = False
+                if first_pass3202: first_pass3202 = False
                 else: ttt = ttt.next0_
                 if (not (ttt is not None and (len(res.numbers) < 4))): break
                 ok1 = False

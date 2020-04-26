@@ -21,10 +21,10 @@ from pullenti.ner.MorphCollection import MorphCollection
 from pullenti.ner.Token import Token
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.core.internal.NounPhraseItem import NounPhraseItem
 
@@ -68,9 +68,9 @@ class _NounPraseHelperInt:
         internal_noun_prase = None
         conj_before = False
         t = first
-        first_pass2964 = True
+        first_pass2970 = True
         while True:
-            if first_pass2964: first_pass2964 = False
+            if first_pass2970: first_pass2970 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char_pos > 0 and t.begin_char > max_char_pos): 
@@ -80,10 +80,12 @@ class _NounPraseHelperInt:
                     break
                 if ((((typ) & (NounPhraseParseAttr.CANNOTHASCOMMAAND))) != (NounPhraseParseAttr.NO)): 
                     break
-                if (items is not None and t.is_and): 
+                if (items is not None and ((t.is_and or t.is_or))): 
                     conj_before = True
                     if ((t.next0_ is not None and t.next0_.is_char_of("\\/") and t.next0_.next0_ is not None) and t.next0_.next0_.is_or): 
                         t = t.next0_.next0_
+                    if (((t.next0_ is not None and t.next0_.is_char('(') and t.next0_.next0_ is not None) and t.next0_.next0_.is_or and t.next0_.next0_.next0_ is not None) and t.next0_.next0_.next0_.is_char(')')): 
+                        t = t.next0_.next0_.next0_
                     continue
                 break
             elif (t.is_comma): 
@@ -165,9 +167,9 @@ class _NounPraseHelperInt:
         if (len(items) == 1 and items[0].can_be_adj): 
             and0_ = False
             tt1 = items[0].end_token.next0_
-            first_pass2965 = True
+            first_pass2971 = True
             while True:
-                if first_pass2965: first_pass2965 = False
+                if first_pass2971: first_pass2971 = False
                 else: tt1 = tt1.next0_
                 if (not (tt1 is not None)): break
                 if (tt1.is_and or tt1.is_or): 
@@ -237,6 +239,7 @@ class _NounPraseHelperInt:
                                 npt1.adverbs = adverbs
                             else: 
                                 npt1.adverbs[0:0] = adverbs
+                        npt1.begin_token = first
                         return npt1
                 if (tt1 is not None and tt1.morph.class0_.is_noun and not tt1.morph.case_.is_genitive): 
                     it = NounPhraseItem.try_parse(tt1, items, typ)
@@ -348,9 +351,9 @@ class _NounPraseHelperInt:
                 if (not is_num_not): 
                     noun.morph = res.morph
         i = 0
-        first_pass2966 = True
+        first_pass2972 = True
         while True:
-            if first_pass2966: first_pass2966 = False
+            if first_pass2972: first_pass2972 = False
             else: i += 1
             if (not (i < len(items))): break
             for av in items[i].adj_morph: 
@@ -398,9 +401,9 @@ class _NounPraseHelperInt:
             if (items[i].end_char > res.end_char): 
                 res.end_token = items[i].end_token
         i = 0
-        first_pass2967 = True
+        first_pass2973 = True
         while True:
-            if first_pass2967: first_pass2967 = False
+            if first_pass2973: first_pass2973 = False
             else: i += 1
             if (not (i < (len(res.adjectives) - 1))): break
             if (res.adjectives[i].whitespaces_after_count > 5): 
@@ -443,9 +446,11 @@ class _NounPraseHelperInt:
                     pass
                 elif (te.is_comma): 
                     zap += 1
-                elif (te.is_and): 
+                elif (te.is_and or te.is_or): 
                     and0_ += 1
                     if (i == (len(res.adjectives) - 2)): 
+                        last_and = True
+                    elif (i == (len(res.adjectives) - 3) and res.adjectives[i + 1].begin_token.morph.class0_.is_pronoun): 
                         last_and = True
                 if (not res.adjectives[i].begin_token.morph.class0_.is_pronoun): 
                     cou += 1
@@ -491,9 +496,9 @@ class _NounPraseHelperInt:
             else: 
                 comma = False
                 tt = res.begin_token.previous
-                first_pass2968 = True
+                first_pass2974 = True
                 while True:
-                    if first_pass2968: first_pass2968 = False
+                    if first_pass2974: first_pass2974 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.morph.class0_.is_adverb): 
@@ -549,9 +554,9 @@ class _NounPraseHelperInt:
         if (first.previous is not None and first.previous.morph.class0_.is_preposition and (first.whitespaces_before_count < 3)): 
             has_prop = True
         t = first
-        first_pass2969 = True
+        first_pass2975 = True
         while True:
-            if first_pass2969: first_pass2969 = False
+            if first_pass2975: first_pass2975 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char_pos > 0 and t.begin_char > max_char_pos): 

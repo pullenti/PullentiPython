@@ -13,8 +13,8 @@ from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.decree.DecreeKind import DecreeKind
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.instrument.InstrumentKind import InstrumentKind
 from pullenti.ner.Token import Token
 from pullenti.ner.NumberSpellingType import NumberSpellingType
@@ -246,9 +246,9 @@ class InstrToken1(MetaToken):
                 if (isinstance(t.get_referent(), DecreePartReferent)): 
                     t = t.kit.debed_token(t)
                 t = t.next0_
-                first_pass3180 = True
+                first_pass3186 = True
                 while True:
-                    if first_pass3180: first_pass3180 = False
+                    if first_pass3186: first_pass3186 = False
                     else: t = t.next0_
                     if (not (t is not None)): break
                     if (res.num_end_token is None): 
@@ -359,9 +359,9 @@ class InstrToken1(MetaToken):
                 return re
         check_comment = 0
         ttt = t
-        first_pass3181 = True
+        first_pass3187 = True
         while True:
-            if first_pass3181: first_pass3181 = False
+            if first_pass3187: first_pass3187 = False
             else: ttt = ttt.next0_
             if (not (ttt is not None)): break
             if (((ttt.is_newline_before or ttt.is_table_control_char)) and ttt != t): 
@@ -422,9 +422,9 @@ class InstrToken1(MetaToken):
                 res.typ = InstrToken1.Types.APPROVED
                 err = 0
                 ttt = dt1.end_token.next0_
-                first_pass3182 = True
+                first_pass3188 = True
                 while True:
-                    if first_pass3182: first_pass3182 = False
+                    if first_pass3188: first_pass3188 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if (DecreeToken.is_keyword(ttt, False) is not None): 
@@ -602,9 +602,9 @@ class InstrToken1(MetaToken):
         num = res.typ != InstrToken1.Types.EDITIONS
         has_letters = False
         is_app = cur is not None and ((cur.kind == InstrumentKind.APPENDIX or cur.kind == InstrumentKind.INTERNALDOCUMENT))
-        first_pass3183 = True
+        first_pass3189 = True
         while True:
-            if first_pass3183: first_pass3183 = False
+            if first_pass3189: first_pass3189 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char > 0 and t.begin_char > max_char): 
@@ -858,9 +858,9 @@ class InstrToken1(MetaToken):
         if (res.end_token.is_char('>') and res.begin_token.is_value("ПУТЕВОДИТЕЛЬ", None)): 
             res.typ = InstrToken1.Types.COMMENT
             ttt = res.end_token.next0_
-            first_pass3184 = True
+            first_pass3190 = True
             while True:
-                if first_pass3184: first_pass3184 = False
+                if first_pass3190: first_pass3190 = False
                 else: ttt = ttt.next0_
                 if (not (ttt is not None)): break
                 li2 = InstrToken1.parse(ttt, True, None, 0, None, False, 0, False, False)
@@ -918,9 +918,9 @@ class InstrToken1(MetaToken):
         if (len(res.numbers) == 2 and res.numbers[0] == "2" and res.numbers[1] == "3"): 
             pass
         tt = (res.begin_token if res.num_end_token is None else res.num_end_token.next0_)
-        first_pass3185 = True
+        first_pass3191 = True
         while True:
-            if first_pass3185: first_pass3185 = False
+            if first_pass3191: first_pass3191 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.end_char > res.end_token.end_char): 
@@ -939,9 +939,9 @@ class InstrToken1(MetaToken):
         res.title_typ = InstrToken1.StdTitleType.UNDEFINED
         words = 0
         tt = (res.begin_token if res.num_begin_token is None else res.num_begin_token.next0_)
-        first_pass3186 = True
+        first_pass3192 = True
         while True:
-            if first_pass3186: first_pass3186 = False
+            if first_pass3192: first_pass3192 = False
             else: tt = tt.next0_
             if (not (tt is not None and tt.end_char <= res.end_char)): break
             if (not ((isinstance(tt, TextToken))) or tt.is_char('_')): 

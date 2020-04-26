@@ -5,31 +5,33 @@
 import typing
 import datetime
 import math
+import threading
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.ner.Token import Token
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.TextAnnotation import TextAnnotation
-from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.Referent import Referent
-from pullenti.ner.date.DatePointerType import DatePointerType
+from pullenti.ner.Token import Token
+from pullenti.ner.TextAnnotation import TextAnnotation
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.date.DatePointerType import DatePointerType
 from pullenti.ner.date.internal.MetaDate import MetaDate
-from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.ner.date.internal.MetaDateRange import MetaDateRange
-from pullenti.ner.core.Termin import Termin
-from pullenti.ner.date.DateRangeReferent import DateRangeReferent
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.date.DateRangeReferent import DateRangeReferent
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.ProcessorService import ProcessorService
-from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.date.internal.MetaDateRange import MetaDateRange
 from pullenti.ner.core.AnalyzerData import AnalyzerData
 from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.measure.MeasureAnalyzer import MeasureAnalyzer
 from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
 from pullenti.ner.date.internal.DateItemToken import DateItemToken
-from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.date.DateReferent import DateReferent
 
 class DateAnalyzer(Analyzer):
     """ Анализатор для дат и диапазонов дат """
@@ -111,9 +113,9 @@ class DateAnalyzer(Analyzer):
         """
         ad = Utils.asObjectOrNull(kit.get_analyzer_data(self), DateAnalyzer.DateAnalizerData)
         t = kit.first_token
-        first_pass2994 = True
+        first_pass3000 = True
         while True:
-            if first_pass2994: first_pass2994 = False
+            if first_pass3000: first_pass3000 = False
             else: t = t.next0_
             if (not (t is not None)): break
             pli = DateItemToken.try_attach_list(t, 20)
@@ -121,9 +123,9 @@ class DateAnalyzer(Analyzer):
                 continue
             high = False
             tt = t.previous
-            first_pass2995 = True
+            first_pass3001 = True
             while True:
-                if first_pass2995: first_pass2995 = False
+                if first_pass3001: first_pass3001 = False
                 else: tt = tt.previous
                 if (not (tt is not None)): break
                 if (tt.is_value("ДАТА", None) or tt.is_value("DATE", None)): 
@@ -696,9 +698,9 @@ class DateAnalyzer(Analyzer):
     def __corr_time(self, t0 : 'Token', time : 'DateReferent') -> 'Token':
         t1 = None
         t = t0
-        first_pass2996 = True
+        first_pass3002 = True
         while True:
-            if first_pass2996: first_pass2996 = False
+            if first_pass3002: first_pass3002 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -779,9 +781,9 @@ class DateAnalyzer(Analyzer):
         mon.value = (None)
         day.value = (None)
         i = 0
-        first_pass2997 = True
+        first_pass3003 = True
         while True:
-            if first_pass2997: first_pass2997 = False
+            if first_pass3003: first_pass3003 = False
             else: i += 1
             if (not (i < (len(its) - 4))): break
             if (its[i].begin_token.previous is not None and its[i].begin_token.previous.is_char(')') and (its[i].whitespaces_before_count < 2)): 
@@ -794,9 +796,9 @@ class DateAnalyzer(Analyzer):
                 else: 
                     continue
             j = i
-            first_pass2998 = True
+            first_pass3004 = True
             while True:
-                if first_pass2998: first_pass2998 = False
+                if first_pass3004: first_pass3004 = False
                 else: j += 1
                 if (not (j < (i + 4))): break
                 if (its[j].is_whitespace_after): 
@@ -1118,9 +1120,9 @@ class DateAnalyzer(Analyzer):
     
     def __apply_date_range0(self, kit : 'AnalysisKit', ad : 'AnalyzerData') -> None:
         t = kit.first_token
-        first_pass2999 = True
+        first_pass3005 = True
         while True:
-            if first_pass2999: first_pass2999 = False
+            if first_pass3005: first_pass3005 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -1229,19 +1231,30 @@ class DateAnalyzer(Analyzer):
             t = (ReferentToken(ad.register_referent(DateRangeReferent._new749(date1, date2)), t, t1))
             kit.embed_token(Utils.asObjectOrNull(t, ReferentToken))
     
+    M_LOCK = None
+    
     M_INITED = None
     
     @staticmethod
     def initialize() -> None:
-        if (DateAnalyzer.M_INITED): 
-            return
-        DateAnalyzer.M_INITED = True
-        MetaDate.initialize()
-        MetaDateRange.initialize()
-        try: 
-            Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
-            DateItemToken.initialize()
-            Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False
-        except Exception as ex: 
-            raise Utils.newException(ex.__str__(), ex)
-        ProcessorService.register_analyzer(DateAnalyzer())
+        with DateAnalyzer.M_LOCK: 
+            if (DateAnalyzer.M_INITED): 
+                return
+            DateAnalyzer.M_INITED = True
+            MeasureAnalyzer.initialize()
+            MetaDate.initialize()
+            MetaDateRange.initialize()
+            try: 
+                Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
+                DateItemToken.initialize()
+                Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False
+            except Exception as ex: 
+                raise Utils.newException(ex.__str__(), ex)
+            ProcessorService.register_analyzer(DateAnalyzer())
+    
+    # static constructor for class DateAnalyzer
+    @staticmethod
+    def _static_ctor():
+        DateAnalyzer.M_LOCK = threading.Lock()
+
+DateAnalyzer._static_ctor()

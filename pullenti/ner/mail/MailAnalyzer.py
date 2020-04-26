@@ -71,9 +71,9 @@ class MailAnalyzer(Analyzer):
     def process(self, kit : 'AnalysisKit') -> None:
         lines = list()
         t = kit.first_token
-        first_pass3214 = True
+        first_pass3220 = True
         while True:
-            if first_pass3214: first_pass3214 = False
+            if first_pass3220: first_pass3220 = False
             else: t = t.next0_
             if (not (t is not None)): break
             ml = MailLine.parse(t, 0)
@@ -88,9 +88,9 @@ class MailAnalyzer(Analyzer):
         blocks = list()
         blk = None
         i = 0
-        first_pass3215 = True
+        first_pass3221 = True
         while True:
-            if first_pass3215: first_pass3215 = False
+            if first_pass3221: first_pass3221 = False
             else: i += 1
             if (not (i < len(lines))): break
             ml = lines[i]
@@ -114,9 +114,9 @@ class MailAnalyzer(Analyzer):
                 if (is_new): 
                     blk = list()
                     blocks.append(blk)
-                    first_pass3216 = True
+                    first_pass3222 = True
                     while True:
-                        if first_pass3216: first_pass3216 = False
+                        if first_pass3222: first_pass3222 = False
                         else: i += 1
                         if (not (i < len(lines))): break
                         if (lines[i].typ == MailLine.Types.FROM): 
@@ -160,9 +160,9 @@ class MailAnalyzer(Analyzer):
             return
         ad = kit.get_analyzer_data(self)
         j = 0
-        first_pass3217 = True
+        first_pass3223 = True
         while True:
-            if first_pass3217: first_pass3217 = False
+            if first_pass3223: first_pass3223 = False
             else: j += 1
             if (not (j < len(blocks))): break
             lines = blocks[j]
@@ -188,9 +188,9 @@ class MailAnalyzer(Analyzer):
             t2 = None
             err = 0
             i = (len(lines) - 1)
-            first_pass3218 = True
+            first_pass3224 = True
             while True:
-                if first_pass3218: first_pass3218 = False
+                if first_pass3224: first_pass3224 = False
                 else: i -= 1
                 if (not (i >= i0)): break
                 li = lines[i]

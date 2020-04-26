@@ -17,14 +17,14 @@ from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.TextToken import TextToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.org.OrgProfile import OrgProfile
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.Termin import Termin
-from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.org.OrgProfile import OrgProfile
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
@@ -143,9 +143,9 @@ class OrgItemNameToken(MetaToken):
                 non = True
             br = False
             tt = res.end_token.next0_
-            first_pass3229 = True
+            first_pass3235 = True
             while True:
-                if first_pass3229: first_pass3229 = False
+                if first_pass3235: first_pass3235 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_table_control_char): 
@@ -423,9 +423,9 @@ class OrgItemNameToken(MetaToken):
             if (t1 is not None and t1.chars.is_latin_letter and not t1.chars.is_all_lower): 
                 res = OrgItemNameToken._new1832(t, t1, t1.chars, t1.morph)
                 ttt = t1.next0_
-                first_pass3230 = True
+                first_pass3236 = True
                 while True:
-                    if first_pass3230: first_pass3230 = False
+                    if first_pass3236: first_pass3236 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if (ttt.whitespaces_before_count > 2): 
@@ -635,13 +635,13 @@ class OrgItemNameToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2374(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'OrgItemNameToken':
+    def _new2377(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.is_std_name = _arg3
         return res
     
     @staticmethod
-    def _new2376(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'CharsInfo') -> 'OrgItemNameToken':
+    def _new2379(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'CharsInfo') -> 'OrgItemNameToken':
         res = OrgItemNameToken(_arg1, _arg2)
         res.value = _arg3
         res.chars = _arg4

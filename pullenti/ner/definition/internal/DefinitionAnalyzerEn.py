@@ -4,29 +4,29 @@
 
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.definition.DefinitionKind import DefinitionKind
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.TextToken import TextToken
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.Referent import Referent
-from pullenti.ner.Token import Token
+from pullenti.ner.definition.DefinitionKind import DefinitionKind
 from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.Referent import Referent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.Token import Token
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.core.NounPhraseToken import NounPhraseToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 
 class DefinitionAnalyzerEn:
     
     @staticmethod
     def process(kit : 'AnalysisKit', ad : 'AnalyzerData') -> None:
         t = kit.first_token
-        first_pass3047 = True
+        first_pass3053 = True
         while True:
-            if first_pass3047: first_pass3047 = False
+            if first_pass3053: first_pass3053 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not MiscHelper.can_be_start_of_sentence(t)): 
@@ -53,9 +53,9 @@ class DefinitionAnalyzerEn:
         if (mc.is_preposition or mc.is_misc or mc.is_adverb): 
             if (not MiscHelper.is_eng_article(tt)): 
                 tt = tt.next0_
-                first_pass3048 = True
+                first_pass3054 = True
                 while True:
-                    if first_pass3048: first_pass3048 = False
+                    if first_pass3054: first_pass3054 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_comma): 
@@ -101,9 +101,9 @@ class DefinitionAnalyzerEn:
             if (not tt.get_morph_class_in_dictionary().is_verb): 
                 break
             tt = tt.next0_
-        first_pass3049 = True
+        first_pass3055 = True
         while True:
-            if first_pass3049: first_pass3049 = False
+            if first_pass3055: first_pass3055 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.next0_ is None): 

@@ -70,9 +70,9 @@ class Line(MetaToken):
                 if (t.begin_char > max_end_char): 
                     break
             t1 = t
-            first_pass3310 = True
+            first_pass3316 = True
             while True:
-                if first_pass3310: first_pass3310 = False
+                if first_pass3316: first_pass3316 = False
                 else: t1 = t1.next0_
                 if (not (t1 is not None and t1.next0_ is not None)): break
                 if (t1.is_newline_after): 

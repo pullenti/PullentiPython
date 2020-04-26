@@ -4,20 +4,22 @@
 
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.MorphCase import MorphCase
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphCase import MorphCase
 from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.MorphWordForm import MorphWordForm
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.core.VerbPhraseItemToken import VerbPhraseItemToken
 from pullenti.ner.MorphCollection import MorphCollection
 from pullenti.ner.Token import Token
 from pullenti.morph.Morphology import Morphology
-from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.VerbPhraseToken import VerbPhraseToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.PrepositionHelper import PrepositionHelper
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.VerbPhraseItemToken import VerbPhraseItemToken
+from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.morph.Explanatory import Explanatory
 
 class VerbPhraseHelper:
@@ -51,9 +53,9 @@ class VerbPhraseHelper:
         verb_be_before = False
         norm = None
         prep = None
-        first_pass2990 = True
+        first_pass2996 = True
         while True:
-            if first_pass2990: first_pass2990 = False
+            if first_pass2996: first_pass2996 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -103,6 +105,8 @@ class VerbPhraseHelper:
                 if (has_verb): 
                     if (not tt.morph.contains_attr("инф.", None) or is_participle): 
                         break
+            elif ((mc.is_adjective and tt.morph.contains_attr("к.ф.", None) and tt.term.endswith("О")) and NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0) is None): 
+                ty = 2
             elif (mc.is_adjective and can_be_partition): 
                 if (tt.morph.contains_attr("к.ф.", None)): 
                     break

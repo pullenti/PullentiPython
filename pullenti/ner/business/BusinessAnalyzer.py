@@ -91,9 +91,9 @@ class BusinessAnalyzer(Analyzer):
                 t = (rt)
             t = t.next0_
         t = kit.first_token
-        first_pass2945 = True
+        first_pass2951 = True
         while True:
-            if first_pass2945: first_pass2945 = False
+            if first_pass2951: first_pass2951 = False
             else: t = t.next0_
             if (not (t is not None)): break
             rt = self.__analize_fact(t)
@@ -143,9 +143,9 @@ class BusinessAnalyzer(Analyzer):
         points = 0
         t0 = None
         t1 = t
-        first_pass2946 = True
+        first_pass2952 = True
         while True:
-            if first_pass2946: first_pass2946 = False
+            if first_pass2952: first_pass2952 = False
             else: t = t.previous
             if (not (t is not None)): break
             if (t.is_newline_after): 
@@ -187,9 +187,9 @@ class BusinessAnalyzer(Analyzer):
                     if ((isinstance(r, PersonReferent)) or (isinstance(r, OrganizationReferent)) or (isinstance(r, FundsReferent))): 
                         return ReferentToken(r, t, t1)
             return None
-        first_pass2947 = True
+        first_pass2953 = True
         while True:
-            if first_pass2947: first_pass2947 = False
+            if first_pass2953: first_pass2953 = False
             else: t = t.previous
             if (not (t is not None)): break
             if (t.is_char('.')): 
@@ -260,9 +260,9 @@ class BusinessAnalyzer(Analyzer):
         t1 = bfi.end_token.next0_
         if (t1 is None): 
             return None
-        first_pass2948 = True
+        first_pass2954 = True
         while True:
-            if first_pass2948: first_pass2948 = False
+            if first_pass2954: first_pass2954 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
             if (t1.morph.class0_.is_adverb): 
@@ -288,9 +288,9 @@ class BusinessAnalyzer(Analyzer):
             if (fr.source == bef.referent): 
                 cou = 0
                 tt = bef.begin_token.previous
-                first_pass2949 = True
+                first_pass2955 = True
                 while True:
-                    if first_pass2949: first_pass2949 = False
+                    if first_pass2955: first_pass2955 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     cou += 1
@@ -511,9 +511,9 @@ class BusinessAnalyzer(Analyzer):
         dt = None
         sum0_ = None
         t = t.next0_
-        first_pass2950 = True
+        first_pass2956 = True
         while True:
-            if first_pass2950: first_pass2950 = False
+            if first_pass2956: first_pass2956 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char('.')): 
@@ -572,9 +572,9 @@ class BusinessAnalyzer(Analyzer):
         t1 = bfi.end_token
         max_lines = 1
         t = bfi.begin_token.previous
-        first_pass2951 = True
+        first_pass2957 = True
         while True:
-            if first_pass2951: first_pass2951 = False
+            if first_pass2957: first_pass2957 = False
             else: t = t.previous
             if (not (t is not None)): break
             if (t.is_char('.') or t.is_newline_after): 
@@ -607,9 +607,9 @@ class BusinessAnalyzer(Analyzer):
                 break
         if (second is None): 
             t = bfi.end_token.next0_
-            first_pass2952 = True
+            first_pass2958 = True
             while True:
-                if first_pass2952: first_pass2952 = False
+                if first_pass2958: first_pass2958 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_char('.')): 
@@ -646,9 +646,9 @@ class BusinessAnalyzer(Analyzer):
             return None
         org0 = None
         t = bfi.begin_token.previous
-        first_pass2953 = True
+        first_pass2959 = True
         while True:
-            if first_pass2953: first_pass2953 = False
+            if first_pass2959: first_pass2959 = False
             else: t = t.previous
             if (not (t is not None)): break
             if (t.is_char('(') or t.is_char('%')): 
@@ -716,9 +716,9 @@ class BusinessAnalyzer(Analyzer):
         whos = list()
         funds = list()
         t = rt.end_token.next0_
-        first_pass2954 = True
+        first_pass2960 = True
         while True:
-            if first_pass2954: first_pass2954 = False
+            if first_pass2960: first_pass2960 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before or t.is_char('.')): 

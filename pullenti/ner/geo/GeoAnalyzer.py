@@ -5,41 +5,41 @@
 import typing
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.address.internal.StreetItemType import StreetItemType
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.address.internal.MetaAddress import MetaAddress
-from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.address.internal.MetaAddress import MetaAddress
 from pullenti.ner.address.internal.MetaStreet import MetaStreet
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.address.AddressAnalyzer import AddressAnalyzer
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.ner.core.AnalyzerData import AnalyzerData
 from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.Referent import Referent
+from pullenti.ner.geo.internal.MetaGeo import MetaGeo
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.Token import Token
-from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
-from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
-from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
-from pullenti.ner.Referent import Referent
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
-from pullenti.ner.address.AddressAnalyzer import AddressAnalyzer
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
-from pullenti.ner.geo.internal.MetaGeo import MetaGeo
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
 from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
+from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
+from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
 from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-from pullenti.ner.geo.internal.TerrAttachHelper import TerrAttachHelper
-from pullenti.ner.core.AnalyzerData import AnalyzerData
 from pullenti.ner.geo.internal.CityAttachHelper import CityAttachHelper
+from pullenti.ner.geo.internal.TerrAttachHelper import TerrAttachHelper
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
 
 class GeoAnalyzer(Analyzer):
     """ Анализатор стран """
@@ -71,9 +71,9 @@ class GeoAnalyzer(Analyzer):
                             elif (LanguageHelper.ends_with_ex(typ, "область", "территория", None, None)): 
                                 gen = (Utils.valToEnum((gen) | (MorphGender.FEMINIE), MorphGender))
                     i = 0
-                    first_pass3079 = True
+                    first_pass3085 = True
                     while True:
-                        if first_pass3079: first_pass3079 = False
+                        if first_pass3085: first_pass3085 = False
                         else: i += 1
                         if (not (i < len(names))): break
                         n = names[i]
@@ -174,9 +174,9 @@ class GeoAnalyzer(Analyzer):
         non_registered = list()
         for step in range(2):
             t = kit.first_token
-            first_pass3080 = True
+            first_pass3086 = True
             while True:
-                if first_pass3080: first_pass3080 = False
+                if first_pass3086: first_pass3086 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (len(ad.referents) >= 2000): 
@@ -307,9 +307,9 @@ class GeoAnalyzer(Analyzer):
                 if (len(ad.referents) == 0 and len(non_registered) == 0): 
                     break
         t = kit.first_token
-        first_pass3081 = True
+        first_pass3087 = True
         while True:
-            if first_pass3081: first_pass3081 = False
+            if first_pass3087: first_pass3087 = False
             else: t = (None if t is None else t.next0_)
             if (not (t is not None)): break
             g = Utils.asObjectOrNull(t.get_referent(), GeoReferent)
@@ -337,9 +337,9 @@ class GeoAnalyzer(Analyzer):
             t1 = t
             i = 1
             t = t.next0_
-            first_pass3082 = True
+            first_pass3088 = True
             while True:
-                if first_pass3082: first_pass3082 = False
+                if first_pass3088: first_pass3088 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_comma_and): 
@@ -363,9 +363,9 @@ class GeoAnalyzer(Analyzer):
         new_cities = False
         is_city_before = False
         t = kit.first_token
-        first_pass3083 = True
+        first_pass3089 = True
         while True:
-            if first_pass3083: first_pass3083 = False
+            if first_pass3089: first_pass3089 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char_of(".,")): 
@@ -430,9 +430,9 @@ class GeoAnalyzer(Analyzer):
             is_city_before = False
         if (new_cities and len(ad.local_ontology.items) > 0): 
             t = kit.first_token
-            first_pass3084 = True
+            first_pass3090 = True
             while True:
-                if first_pass3084: first_pass3084 = False
+                if first_pass3090: first_pass3090 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (not ((isinstance(t, TextToken)))): 
@@ -462,9 +462,9 @@ class GeoAnalyzer(Analyzer):
                     t = li[0].end_token
         go_back = False
         t = kit.first_token
-        first_pass3085 = True
+        first_pass3091 = True
         while True:
-            if first_pass3085: first_pass3085 = False
+            if first_pass3091: first_pass3091 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (go_back): 
@@ -481,9 +481,9 @@ class GeoAnalyzer(Analyzer):
             comma2 = False
             inp = False
             adj = False
-            first_pass3086 = True
+            first_pass3092 = True
             while True:
-                if first_pass3086: first_pass3086 = False
+                if first_pass3092: first_pass3092 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_char_of(",")): 
@@ -516,9 +516,9 @@ class GeoAnalyzer(Analyzer):
                 continue
             ttt = tt.next0_
             geo2 = None
-            first_pass3087 = True
+            first_pass3093 = True
             while True:
-                if first_pass3087: first_pass3087 = False
+                if first_pass3093: first_pass3093 = False
                 else: ttt = ttt.next0_
                 if (not (ttt is not None)): break
                 if (ttt.is_comma_and): 
@@ -638,9 +638,9 @@ class GeoAnalyzer(Analyzer):
                 oc.occurence_of = rg
                 rg.add_occurence(oc)
         t = kit.first_token
-        first_pass3088 = True
+        first_pass3094 = True
         while True:
-            if first_pass3088: first_pass3088 = False
+            if first_pass3094: first_pass3094 = False
             else: t = t.next0_
             if (not (t is not None)): break
             geo_ = Utils.asObjectOrNull(t.get_referent(), GeoReferent)
@@ -729,9 +729,9 @@ class GeoAnalyzer(Analyzer):
         i = 0
         res = None
         tt = t
-        first_pass3089 = True
+        first_pass3095 = True
         while True:
-            if first_pass3089: first_pass3089 = False
+            if first_pass3095: first_pass3095 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             i += 1
@@ -887,9 +887,9 @@ class GeoAnalyzer(Analyzer):
             if ((ctoks is not None and len(ctoks) == 1 and ctoks[0].typ == CityItemToken.ItemType.NOUN) and ctoks[0].value == "ГОРОД"): 
                 cou = 0
                 t = begin.previous
-                first_pass3090 = True
+                first_pass3096 = True
                 while True:
-                    if first_pass3090: first_pass3090 = False
+                    if first_pass3096: first_pass3096 = False
                     else: t = t.previous
                     if (not (t is not None)): break
                     cou += 1
@@ -991,9 +991,9 @@ class GeoAnalyzer(Analyzer):
                 return None
             city = Utils.asObjectOrNull(rt.referent, GeoReferent)
             t = rt.end_token.next0_
-            first_pass3091 = True
+            first_pass3097 = True
             while True:
-                if first_pass3091: first_pass3091 = False
+                if first_pass3097: first_pass3097 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (not t.is_char(';')): 
@@ -1027,9 +1027,9 @@ class GeoAnalyzer(Analyzer):
         terr = None
         te = None
         t = begin
-        first_pass3092 = True
+        first_pass3098 = True
         while True:
-            if first_pass3092: first_pass3092 = False
+            if first_pass3098: first_pass3098 = False
             else: t = t.next0_
             if (not (t is not None)): break
             t0 = t
@@ -1037,9 +1037,9 @@ class GeoAnalyzer(Analyzer):
             tn0 = None
             tn1 = None
             tt = t0
-            first_pass3093 = True
+            first_pass3099 = True
             while True:
-                if first_pass3093: first_pass3093 = False
+                if first_pass3099: first_pass3099 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_char_of(";")): 

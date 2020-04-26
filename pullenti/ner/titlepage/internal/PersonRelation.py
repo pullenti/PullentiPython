@@ -34,7 +34,7 @@ class PersonRelation:
         return Utils.toStringStringIO(res)
     
     @staticmethod
-    def _new2663(_arg1 : 'PersonReferent') -> 'PersonRelation':
+    def _new2666(_arg1 : 'PersonReferent') -> 'PersonRelation':
         res = PersonRelation()
         res.person = _arg1
         return res

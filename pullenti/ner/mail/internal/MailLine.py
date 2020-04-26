@@ -5,21 +5,21 @@
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.address.AddressReferent import AddressReferent
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.TextToken import TextToken
-from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
-from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
 from pullenti.ner.person.PersonReferent import PersonReferent
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.address.AddressReferent import AddressReferent
 
 class MailLine(MetaToken):
     
@@ -121,9 +121,9 @@ class MailLine(MetaToken):
         res = MailLine(t0, t0)
         pr = True
         t = t0
-        first_pass3210 = True
+        first_pass3216 = True
         while True:
-            if first_pass3210: first_pass3210 = False
+            if first_pass3216: first_pass3216 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before and t0 != t): 
@@ -156,9 +156,9 @@ class MailLine(MetaToken):
             nams = 0
             oth = 0
             last_comma = None
-            first_pass3211 = True
+            first_pass3217 = True
             while True:
-                if first_pass3211: first_pass3211 = False
+                if first_pass3217: first_pass3217 = False
                 else: t = t.next0_
                 if (not (t is not None and (t.end_char < res.end_char))): break
                 if (isinstance(t.get_referent(), PersonReferent)): 
@@ -194,9 +194,9 @@ class MailLine(MetaToken):
             if (t0.is_value("HAVE", None)): 
                 pass
             t = t0
-            first_pass3212 = True
+            first_pass3218 = True
             while True:
-                if first_pass3212: first_pass3212 = False
+                if first_pass3218: first_pass3218 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= res.end_char)): break
                 if (not ((isinstance(t, TextToken)))): 
@@ -217,9 +217,9 @@ class MailLine(MetaToken):
                     t = tok.end_token
                     if ((isinstance(t.next0_, TextToken)) and t.next0_.morph.case_.is_genitive): 
                         t = t.next0_
-                        first_pass3213 = True
+                        first_pass3219 = True
                         while True:
-                            if first_pass3213: first_pass3213 = False
+                            if first_pass3219: first_pass3219 = False
                             else: t = t.next0_
                             if (not (t.end_char <= res.end_char)): break
                             if (t.morph.class0_.is_conjunction): 

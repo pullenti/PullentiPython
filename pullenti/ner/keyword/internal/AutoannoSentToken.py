@@ -55,9 +55,9 @@ class AutoannoSentToken(MetaToken):
     def create_annotation(kit_ : 'AnalysisKit', max_sents : int) -> 'KeywordReferent':
         sents = list()
         t = kit_.first_token
-        first_pass3206 = True
+        first_pass3212 = True
         while True:
-            if first_pass3206: first_pass3206 = False
+            if first_pass3212: first_pass3212 = False
             else: t = t.next0_
             if (not (t is not None)): break
             sent = AutoannoSentToken.__try_parse(t)

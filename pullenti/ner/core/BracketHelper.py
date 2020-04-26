@@ -5,16 +5,16 @@
 import io
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.Token import Token
 from pullenti.ner.TextToken import TextToken
-from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.BracketSequenceToken import BracketSequenceToken
 
 class BracketHelper:
@@ -188,9 +188,9 @@ class BracketHelper:
         lev = 1
         is_assim = br_list[0].char0_ != '«' and BracketHelper.M_ASSYMOPEN_CHARS.find(br_list[0].char0_) >= 0
         t = t0.next0_
-        first_pass2978 = True
+        first_pass2984 = True
         while True:
-            if first_pass2978: first_pass2978 = False
+            if first_pass2984: first_pass2984 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -359,9 +359,9 @@ class BracketHelper:
                         t = t.next0_
                 lev1 = 0
                 tt = br_list[0].source.previous
-                first_pass2979 = True
+                first_pass2985 = True
                 while True:
-                    if first_pass2979: first_pass2979 = False
+                    if first_pass2985: first_pass2985 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.is_newline_after or tt.is_table_control_char): 
@@ -401,9 +401,9 @@ class BracketHelper:
         if (res is None): 
             cou = 0
             tt = t0.next0_
-            first_pass2980 = True
+            first_pass2986 = True
             while True:
-                if first_pass2980: first_pass2980 = False
+                if first_pass2986: first_pass2986 = False
                 else: tt = tt.next0_; cou += 1
                 if (not (tt is not None)): break
                 if (tt.is_table_control_char): 

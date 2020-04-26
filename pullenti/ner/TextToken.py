@@ -86,26 +86,26 @@ class TextToken(Token):
         """
         if (dict0_ is None): 
             return None
-        wrapres2873 = RefOutArgWrapper(None)
-        inoutres2874 = Utils.tryGetValue(dict0_, self.term, wrapres2873)
-        res = wrapres2873.value
-        if (inoutres2874): 
+        wrapres2877 = RefOutArgWrapper(None)
+        inoutres2878 = Utils.tryGetValue(dict0_, self.term, wrapres2877)
+        res = wrapres2877.value
+        if (inoutres2878): 
             return res
         if (self.morph is not None): 
             for it in self.morph.items: 
                 mf = Utils.asObjectOrNull(it, MorphWordForm)
                 if (mf is not None): 
                     if (mf.normal_case is not None): 
-                        wrapres2869 = RefOutArgWrapper(None)
-                        inoutres2870 = Utils.tryGetValue(dict0_, mf.normal_case, wrapres2869)
-                        res = wrapres2869.value
-                        if (inoutres2870): 
+                        wrapres2873 = RefOutArgWrapper(None)
+                        inoutres2874 = Utils.tryGetValue(dict0_, mf.normal_case, wrapres2873)
+                        res = wrapres2873.value
+                        if (inoutres2874): 
                             return res
                     if (mf.normal_full is not None and mf.normal_case != mf.normal_full): 
-                        wrapres2871 = RefOutArgWrapper(None)
-                        inoutres2872 = Utils.tryGetValue(dict0_, mf.normal_full, wrapres2871)
-                        res = wrapres2871.value
-                        if (inoutres2872): 
+                        wrapres2875 = RefOutArgWrapper(None)
+                        inoutres2876 = Utils.tryGetValue(dict0_, mf.normal_full, wrapres2875)
+                        res = wrapres2875.value
+                        if (inoutres2876): 
                             return res
         return None
     
@@ -218,13 +218,6 @@ class TextToken(Token):
             vars0_ = Morphology.get_wordform(self.term, bi)
             if (vars0_ is not None): 
                 te = vars0_
-        if (self.chars.is_cyrillic_letter and te is None and len(self.term) > 3): 
-            ch0 = self.term[len(self.term) - 1]
-            ch1 = self.term[len(self.term) - 2]
-            if (ch0 == 'М' and ((ch1 == 'О' or ch1 == 'А'))): 
-                te = self.term[0:0+len(self.term) - 2]
-            elif (not LanguageHelper.is_cyrillic_vowel(ch1) and LanguageHelper.is_cyrillic_vowel(ch0)): 
-                te = self.term[0:0+len(self.term) - 1]
         if (te is None): 
             te = self.term
         if (keep_chars): 

@@ -8,21 +8,24 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.ner.Token import Token
-from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.phone.PhoneKind import PhoneKind
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.TextToken import TextToken
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.phone.internal.PhoneHelper import PhoneHelper
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.Referent import Referent
 from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
-from pullenti.ner.phone.internal.MetaPhone import MetaPhone
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.ProcessorService import ProcessorService
-from pullenti.ner.phone.internal.PhoneItemToken import PhoneItemToken
-from pullenti.ner.core.AnalyzerData import AnalyzerData
-from pullenti.ner.phone.PhoneReferent import PhoneReferent
+from pullenti.ner.phone.internal.MetaPhone import MetaPhone
 from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.phone.internal.PhoneItemToken import PhoneItemToken
+from pullenti.ner.uri.UriAnalyzer import UriAnalyzer
+from pullenti.ner.phone.PhoneReferent import PhoneReferent
+from pullenti.ner.core.AnalyzerData import AnalyzerData
 
 class PhoneAnalyzer(Analyzer):
     """ Анализатор для выделения телефонных номеров """
@@ -43,10 +46,10 @@ class PhoneAnalyzer(Analyzer):
             if (len(key) >= 10): 
                 key = key[3:]
             ph_li = [ ]
-            wrapph_li2656 = RefOutArgWrapper(None)
-            inoutres2657 = Utils.tryGetValue(self.__m_phones_hash, key, wrapph_li2656)
-            ph_li = wrapph_li2656.value
-            if (not inoutres2657): 
+            wrapph_li2659 = RefOutArgWrapper(None)
+            inoutres2660 = Utils.tryGetValue(self.__m_phones_hash, key, wrapph_li2659)
+            ph_li = wrapph_li2659.value
+            if (not inoutres2660): 
                 ph_li = list()
                 self.__m_phones_hash[key] = ph_li
             for p in ph_li: 
@@ -106,9 +109,9 @@ class PhoneAnalyzer(Analyzer):
         """
         ad = Utils.asObjectOrNull(kit.get_analyzer_data(self), PhoneAnalyzer.PhoneAnalizerData)
         t = kit.first_token
-        first_pass3304 = True
+        first_pass3310 = True
         while True:
-            if first_pass3304: first_pass3304 = False
+            if first_pass3310: first_pass3310 = False
             else: t = t.next0_
             if (not (t is not None)): break
             pli = PhoneItemToken.try_attach_all(t)
@@ -166,6 +169,13 @@ class PhoneAnalyzer(Analyzer):
                     break
             if (prev_phone is not None): 
                 is_phone_before = True
+            if (len(pli) == 1 and pli[0].item_type == PhoneItemToken.PhoneItemType.NUMBER): 
+                tt = t.previous
+                if ((isinstance(tt, TextToken)) and not tt.chars.is_letter): 
+                    tt = tt.previous
+                if (isinstance(tt, TextToken)): 
+                    if (UriAnalyzer._m_schemes.try_parse(tt, TerminParseAttr.NO) is not None): 
+                        continue
             rts = self.__try_attach(pli, j, is_phone_before, prev_phone)
             if (rts is None): 
                 j = 1
@@ -261,9 +271,9 @@ class PhoneAnalyzer(Analyzer):
         if (prev_phone is not None and prev_phone._m_template is not None and pli[j].item_type == PhoneItemToken.PhoneItemType.NUMBER): 
             tmp = io.StringIO()
             jj = j
-            first_pass3305 = True
+            first_pass3311 = True
             while True:
-                if first_pass3305: first_pass3305 = False
+                if first_pass3311: first_pass3311 = False
                 else: jj += 1
                 if (not (jj < len(pli))): break
                 if (pli[jj].item_type == PhoneItemToken.PhoneItemType.NUMBER): 
@@ -361,9 +371,9 @@ class PhoneAnalyzer(Analyzer):
                     std = True
                     ok = True
                     j += 5
-        first_pass3306 = True
+        first_pass3312 = True
         while True:
-            if first_pass3306: first_pass3306 = False
+            if first_pass3312: first_pass3312 = False
             else: j += 1
             if (not (j < len(pli))): break
             if (std): 
@@ -394,6 +404,12 @@ class PhoneAnalyzer(Analyzer):
                     continue
                 ok = False
             elif (pli[j].item_type == PhoneItemToken.PhoneItemType.NUMBER): 
+                if (num.tell() == 0 and pli[j].begin_token.previous is not None and pli[j].begin_token.previous.is_table_control_char): 
+                    tt = pli[len(pli) - 1].end_token.next0_
+                    if (tt is not None and tt.is_char_of(",.")): 
+                        tt = tt.next0_
+                    if (isinstance(tt, NumberToken)): 
+                        return None
                 if ((num.tell() + len(pli[j].value)) > 13): 
                     if (j > 0 and pli[j - 1].item_type == PhoneItemToken.PhoneItemType.DELIM): 
                         j -= 1

@@ -333,10 +333,10 @@ class OrganizationReferent(Referent):
         if (name is None or (len(name) < 1)): 
             return None
         if (str.isdigit(name[0]) and name.find(' ') > 0): 
-            wrapi2395 = RefOutArgWrapper(0)
-            inoutres2396 = Utils.tryParseInt(name[0:0+name.find(' ')], wrapi2395)
-            i = wrapi2395.value
-            if (inoutres2396): 
+            wrapi2398 = RefOutArgWrapper(0)
+            inoutres2399 = Utils.tryParseInt(name[0:0+name.find(' ')], wrapi2398)
+            i = wrapi2398.value
+            if (inoutres2399): 
                 if (i > 1): 
                     num.value = i
                     name = name[name.find(' '):].strip()
@@ -348,8 +348,8 @@ class OrganizationReferent(Referent):
             if (i >= 0 and name[i] == '.'): 
                 pass
             else: 
-                inoutres2397 = Utils.tryParseInt(name[i + 1:], num)
-                if (i > 0 and inoutres2397 and num.value > 0): 
+                inoutres2400 = Utils.tryParseInt(name[i + 1:], num)
+                if (i > 0 and inoutres2400 and num.value > 0): 
                     if (i < 1): 
                         return None
                     name = name[0:0+i].strip()
@@ -375,9 +375,9 @@ class OrganizationReferent(Referent):
         tmp = io.StringIO()
         not_empty = False
         i = 0
-        first_pass3269 = True
+        first_pass3275 = True
         while True:
-            if first_pass3269: first_pass3269 = False
+            if first_pass3275: first_pass3275 = False
             else: i += 1
             if (not (i < len(name))): break
             ch = name[i]
@@ -408,9 +408,9 @@ class OrganizationReferent(Referent):
         return Utils.toStringStringIO(tmp)
     
     def add_name(self, name : str, remove_long_gov_names : bool=True, t : 'Token'=None) -> None:
-        wrapnum2398 = RefOutArgWrapper(0)
-        s = self.__correct_name(name, wrapnum2398)
-        num = wrapnum2398.value
+        wrapnum2401 = RefOutArgWrapper(0)
+        s = self.__correct_name(name, wrapnum2401)
+        num = wrapnum2401.value
         if (s is None): 
             if (num > 0 and self.number is None): 
                 self.number = str(num)
@@ -480,9 +480,9 @@ class OrganizationReferent(Referent):
                 return
             if (typ.name is not None and Utils.compareStrings(typ.name, typ.typ, True) != 0 and ((len(typ.name) > len(typ.typ) or self.find_slot(OrganizationReferent.ATTR_NAME, None, True) is None))): 
                 num = 0
-                wrapnum2399 = RefOutArgWrapper(0)
-                s = self.__correct_name(typ.name, wrapnum2399)
-                num = wrapnum2399.value
+                wrapnum2402 = RefOutArgWrapper(0)
+                s = self.__correct_name(typ.name, wrapnum2402)
+                num = wrapnum2402.value
                 self.add_slot(OrganizationReferent.ATTR_NAME, s, False, cou)
                 if (num > 0 and typ.is_dep and self.number is None): 
                     self.number = str(num)
@@ -496,9 +496,9 @@ class OrganizationReferent(Referent):
                 self.add_slot(OrganizationReferent.ATTR_NAME, "{0} {1}".format(typ.typ.upper(), s), False, cou)
                 if (typ.name is not None): 
                     num = 0
-                    wrapnum2400 = RefOutArgWrapper(0)
-                    ss = self.__correct_name(typ.name, wrapnum2400)
-                    num = wrapnum2400.value
+                    wrapnum2403 = RefOutArgWrapper(0)
+                    ss = self.__correct_name(typ.name, wrapnum2403)
+                    num = wrapnum2403.value
                     if (ss is not None): 
                         self.add_type_str(ss)
                         self.add_slot(OrganizationReferent.ATTR_NAME, "{0} {1}".format(ss, s), False, cou)
@@ -523,7 +523,7 @@ class OrganizationReferent(Referent):
                         str0_ = "Unit"
                     v = Utils.valToEnum(str0_, OrgProfile)
                     res.append(v)
-                except Exception as ex2401: 
+                except Exception as ex2404: 
                     pass
         return res
     
@@ -637,9 +637,9 @@ class OrganizationReferent(Referent):
         res = list(self.types)
         res.sort()
         i = 0
-        first_pass3270 = True
+        first_pass3276 = True
         while True:
-            if first_pass3270: first_pass3270 = False
+            if first_pass3276: first_pass3276 = False
             else: i += 1
             if (not (i < len(res))): break
             if (str.islower(res[i][0])): 
@@ -1089,10 +1089,10 @@ class OrganizationReferent(Referent):
                 for v in self._name_vars.items(): 
                     if (typ == Referent.EqualType.DIFFERENTTEXTS and v[1]): 
                         continue
-                    wrapb2402 = RefOutArgWrapper(False)
-                    inoutres2403 = Utils.tryGetValue(org0_._name_vars, v[0], wrapb2402)
-                    b = wrapb2402.value
-                    if (not inoutres2403): 
+                    wrapb2405 = RefOutArgWrapper(False)
+                    inoutres2406 = Utils.tryGetValue(org0_._name_vars, v[0], wrapb2405)
+                    b = wrapb2405.value
+                    if (not inoutres2406): 
                         continue
                     if (typ == Referent.EqualType.DIFFERENTTEXTS and b): 
                         continue
@@ -1266,10 +1266,6 @@ class OrganizationReferent(Referent):
                 n = self.find_slot(OrganizationReferent.ATTR_NAME, t.replace('.', ' '), True)
                 if (n is None): 
                     self.add_slot(OrganizationReferent.ATTR_NAME, t.replace('.', ' '), False, 0)
-            elif (t.find(' ') >= 0): 
-                n = self.find_slot(OrganizationReferent.ATTR_NAME, t.replace(" ", ""), True)
-                if (n is not None and n.count == 0): 
-                    self.slots.remove(n)
         eps = self.eponyms
         if (len(eps) > 1): 
             for e0_ in eps: 

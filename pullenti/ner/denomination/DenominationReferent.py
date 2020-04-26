@@ -38,9 +38,9 @@ class DenominationReferent(Referent):
     def _add_value(self, begin : 'Token', end : 'Token') -> None:
         tmp = io.StringIO()
         t = begin
-        first_pass3066 = True
+        first_pass3072 = True
         while True:
-            if first_pass3066: first_pass3066 = False
+            if first_pass3072: first_pass3072 = False
             else: t = t.next0_
             if (not (t is not None and t.previous != end)): break
             if (isinstance(t, NumberToken)): 

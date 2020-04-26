@@ -99,7 +99,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2863(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
+    def _new2867(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
         res = TextAnnotation()
         res.begin_char = _arg1
         res.end_char = _arg2
@@ -107,7 +107,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2865(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
+    def _new2869(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.occurence_of = _arg2

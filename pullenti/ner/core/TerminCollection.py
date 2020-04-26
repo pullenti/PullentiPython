@@ -28,6 +28,7 @@ class TerminCollection:
     def __init__(self) -> None:
         self.termins = list()
         self.all_add_strs_normalized = False
+        self.synonyms = None
         self.__m_root = TerminCollection.CharNode()
         self.__m_root_ua = TerminCollection.CharNode()
         self.__m_hash1 = dict()
@@ -110,10 +111,10 @@ class TerminCollection:
             ch = ord(key[i])
             if (nod.children is None): 
                 nod.children = dict()
-            wrapnn657 = RefOutArgWrapper(None)
-            inoutres658 = Utils.tryGetValue(nod.children, ch, wrapnn657)
-            nn = wrapnn657.value
-            if (not inoutres658): 
+            wrapnn658 = RefOutArgWrapper(None)
+            inoutres659 = Utils.tryGetValue(nod.children, ch, wrapnn658)
+            nn = wrapnn658.value
+            if (not inoutres659): 
                 nn = TerminCollection.CharNode()
                 nod.children[ch] = nn
             nod = nn
@@ -132,10 +133,10 @@ class TerminCollection:
             ch = ord(key[i])
             if (nod.children is None): 
                 return
-            wrapnn659 = RefOutArgWrapper(None)
-            inoutres660 = Utils.tryGetValue(nod.children, ch, wrapnn659)
-            nn = wrapnn659.value
-            if (not inoutres660): 
+            wrapnn660 = RefOutArgWrapper(None)
+            inoutres661 = Utils.tryGetValue(nod.children, ch, wrapnn660)
+            nn = wrapnn660.value
+            if (not inoutres661): 
                 return
             nod = nn
             i += 1
@@ -151,12 +152,28 @@ class TerminCollection:
         i = 0
         while i < len(key): 
             ch = ord(key[i])
-            if (nod.children is None): 
-                return None
-            wrapnn661 = RefOutArgWrapper(None)
-            inoutres662 = Utils.tryGetValue(nod.children, ch, wrapnn661)
-            nn = wrapnn661.value
-            if (not inoutres662): 
+            nn = None
+            if (nod.children is not None): 
+                wrapnn662 = RefOutArgWrapper(None)
+                Utils.tryGetValue(nod.children, ch, wrapnn662)
+                nn = wrapnn662.value
+            if (nn is None): 
+                if (ch == (32)): 
+                    if (nod.termins is not None): 
+                        pp = Utils.splitString(key, ' ', False)
+                        res = None
+                        for t in nod.termins: 
+                            if (len(t.terms) == len(pp)): 
+                                k = 1
+                                while k < len(pp): 
+                                    if (not pp[k] in t.terms[k].variants): 
+                                        break
+                                    k += 1
+                                if (k >= len(pp)): 
+                                    if (res is None): 
+                                        res = list()
+                                    res.append(t)
+                        return res
                 return None
             nod = nn
             i += 1
@@ -217,6 +234,19 @@ class TerminCollection:
         re = self.__try_attach_all_(token, pars, False)
         if (re is None and token.morph.language.is_ua): 
             re = self.__try_attach_all_(token, pars, True)
+        if (re is None and self.synonyms is not None): 
+            re0 = self.synonyms.try_parse(token, TerminParseAttr.NO)
+            if (re0 is not None and (isinstance(re0.termin.tag, list))): 
+                term = self.find(re0.termin.canonic_text)
+                for syn in Utils.asObjectOrNull(re0.termin.tag, list): 
+                    if (term is not None): 
+                        break
+                    term = self.find(syn)
+                if (term is not None): 
+                    re0.termin = term
+                    res1 = list()
+                    res1.append(re0)
+                    return res1
         return re
     
     def __try_attach_all_sim(self, token : 'Token', simd : float=0) -> typing.List['TerminToken']:
@@ -282,9 +312,9 @@ class TerminCollection:
                 if (inoutres672): 
                     was_vars = True
                 i = 0
-                first_pass2989 = True
+                first_pass2995 = True
                 while True:
-                    if first_pass2989: first_pass2989 = False
+                    if first_pass2995: first_pass2995 = False
                     else: i += 1
                     if (not (i < tt.morph.items_count)): break
                     if ((((pars) & (TerminParseAttr.TERMONLY))) != (TerminParseAttr.NO)): 

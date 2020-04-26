@@ -8,32 +8,32 @@ import xml.etree
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.Token import Token
-from pullenti.ner.address.internal.EpNerAddressInternalResourceHelper import EpNerAddressInternalResourceHelper
-from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.Token import Token
+from pullenti.ner.Referent import Referent
 from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.address.internal.EpNerAddressInternalResourceHelper import EpNerAddressInternalResourceHelper
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.TextToken import TextToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.geo.internal.TerrTermin import TerrTermin
-from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.geo.internal.TerrTermin import TerrTermin
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
 from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
 
 class TerrItemToken(MetaToken):
@@ -206,9 +206,9 @@ class TerrItemToken(MetaToken):
                     if (cc.end_token.next0_ is None or not cc.end_token.next0_.is_value("СОЮЗ", None)): 
                         cc.onto_item = (None)
         i = 0
-        first_pass3077 = True
+        first_pass3083 = True
         while True:
-            if first_pass3077: first_pass3077 = False
+            if first_pass3083: first_pass3083 = False
             else: i += 1
             if (not (i < len(li))): break
             if (li[i].onto_item is not None and li[i].onto_item2 is not None): 
@@ -237,9 +237,9 @@ class TerrItemToken(MetaToken):
         tt1 = None
         val = None
         tt = t
-        first_pass3078 = True
+        first_pass3084 = True
         while True:
-            if first_pass3078: first_pass3078 = False
+            if first_pass3084: first_pass3084 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_char_of(",.")): 

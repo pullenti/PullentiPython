@@ -218,7 +218,7 @@ class IntOntologyCollection:
             i += 1
     
     @staticmethod
-    def _new2823(_arg1 : bool) -> 'IntOntologyCollection':
+    def _new2827(_arg1 : bool) -> 'IntOntologyCollection':
         res = IntOntologyCollection()
         res.is_ext_ontology = _arg1
         return res

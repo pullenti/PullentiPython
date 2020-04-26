@@ -5,7 +5,6 @@
 
 from pullenti.morph.MorphCase import MorphCase
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.PrepositionHelper import PrepositionHelper
 
 class NounPhraseHelper:
     """ Выделение именных групп (существительсно с согласованными прилагательными (если они есть). """
@@ -22,6 +21,7 @@ class NounPhraseHelper:
         Returns:
             NounPhraseToken: именная группа или null
         """
+        from pullenti.ner.core.PrepositionHelper import PrepositionHelper
         from pullenti.ner.core._NounPraseHelperInt import _NounPraseHelperInt
         res = _NounPraseHelperInt.try_parse(t, typ, max_char_pos)
         if (res is not None): 

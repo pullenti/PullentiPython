@@ -31,9 +31,9 @@ class BusinessFactItem(MetaToken):
         if (res is None): 
             return None
         tt = res.end_token.next0_
-        first_pass2940 = True
+        first_pass2946 = True
         while True:
-            if first_pass2940: first_pass2940 = False
+            if first_pass2946: first_pass2946 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.morph.class0_.is_preposition): 
@@ -70,9 +70,9 @@ class BusinessFactItem(MetaToken):
             if (ki != BusinessFactKind.UNDEFINED): 
                 return BusinessFactItem._new419(t, tok.end_token, BusinessFactItemTyp.BASE, ki, tok.morph, tok.termin.tag2 is not None)
             tt = tok.end_token.next0_
-            first_pass2941 = True
+            first_pass2947 = True
             while True:
-                if first_pass2941: first_pass2941 = False
+                if first_pass2947: first_pass2947 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.morph.class0_.is_preposition): 

@@ -19,16 +19,16 @@ from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.Morphology import Morphology
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.address.internal.StreetItemType import StreetItemType
+from pullenti.ner.address.StreetReferent import StreetReferent
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.address.internal.StreetItemType import StreetItemType
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.address.StreetReferent import StreetReferent
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
 from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
 
@@ -220,9 +220,9 @@ class StreetDefineHelper:
             return None
         sec_number = None
         j = n0
-        first_pass2908 = True
+        first_pass2914 = True
         while True:
-            if first_pass2908: first_pass2908 = False
+            if first_pass2914: first_pass2914 = False
             else: j += 1
             if (not (j <= n1)): break
             if (sli[j].typ == StreetItemType.NUMBER): 
@@ -571,9 +571,9 @@ class StreetDefineHelper:
             elif (noun.termin.canonic_text == "ПРОЕЗД" and street.find_slot(StreetReferent.ATTR_NAME, "ПРОЕКТИРУЕМЫЙ", True) is not None): 
                 res.is_doubt = False
             tt0 = res.begin_token.previous
-            first_pass2909 = True
+            first_pass2915 = True
             while True:
-                if first_pass2909: first_pass2909 = False
+                if first_pass2915: first_pass2915 = False
                 else: tt0 = tt0.previous
                 if (not (tt0 is not None)): break
                 if (tt0.is_char_of(",,") or tt0.is_comma_and): 
@@ -622,9 +622,9 @@ class StreetDefineHelper:
                     is_street_before = True
                 cou = 0
                 tt = sli[0].end_token.next0_
-                first_pass2910 = True
+                first_pass2916 = True
                 while True:
-                    if first_pass2910: first_pass2910 = False
+                    if first_pass2916: first_pass2916 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (not tt.is_comma_and or tt.next0_ is None): 
@@ -742,9 +742,9 @@ class StreetDefineHelper:
                 if (nex is not None): 
                     return None
                 t = sli[0].begin_token.previous
-                first_pass2911 = True
+                first_pass2917 = True
                 while True:
-                    if first_pass2911: first_pass2911 = False
+                    if first_pass2917: first_pass2917 = False
                     else: t = t.previous
                     if (not (t is not None)): break
                     if (t.is_newline_after): 

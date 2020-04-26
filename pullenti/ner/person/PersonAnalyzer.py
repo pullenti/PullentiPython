@@ -10,38 +10,38 @@ from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphCase import MorphCase
-from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.Token import Token
 from pullenti.ner.person.internal.PersonAttrTerminType import PersonAttrTerminType
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.person.internal.PersonMorphCollection import PersonMorphCollection
-from pullenti.ner.person.internal.ShortNameHelper import ShortNameHelper
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.mail.internal.MailLine import MailLine
-from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.person.internal.ShortNameHelper import ShortNameHelper
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.person.PersonPropertyKind import PersonPropertyKind
 from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
+from pullenti.ner.person.internal.PersonMorphCollection import PersonMorphCollection
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.person.internal.MetaPersonIdentity import MetaPersonIdentity
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.person.internal.MetaPersonProperty import MetaPersonProperty
 from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.person.internal.MetaPerson import MetaPerson
+from pullenti.ner.MorphCollection import MorphCollection
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.person.PersonReferent import PersonReferent
-from pullenti.ner.person.internal.MetaPersonIdentity import MetaPersonIdentity
 from pullenti.ner.ProcessorService import ProcessorService
 from pullenti.ner.Referent import Referent
-from pullenti.ner.person.internal.MetaPerson import MetaPerson
-from pullenti.ner.person.internal.MetaPersonProperty import MetaPersonProperty
-from pullenti.ner.MorphCollection import MorphCollection
 from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
-from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
-from pullenti.ner.core.AnalyzerData import AnalyzerData
-from pullenti.morph.Morphology import Morphology
 from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.AnalyzerData import AnalyzerData
 
 class PersonAnalyzer(Analyzer):
     """ Анализатор выделения персон """
@@ -65,9 +65,9 @@ class PersonAnalyzer(Analyzer):
             if (isinstance(referent, PersonReferent)): 
                 exist_props = None
                 i = 0
-                first_pass3295 = True
+                first_pass3301 = True
                 while True:
-                    if first_pass3295: first_pass3295 = False
+                    if first_pass3301: first_pass3301 = False
                     else: i += 1
                     if (not (i < len(referent.slots))): break
                     a = referent.slots[i]
@@ -102,9 +102,9 @@ class PersonAnalyzer(Analyzer):
                                 referent.upload_slot(a, pat.referent)
             if (isinstance(referent, PersonPropertyReferent)): 
                 i = 0
-                first_pass3296 = True
+                first_pass3302 = True
                 while True:
-                    if first_pass3296: first_pass3296 = False
+                    if first_pass3302: first_pass3302 = False
                     else: i += 1
                     if (not (i < len(referent.slots))): break
                     a = referent.slots[i]
@@ -321,18 +321,18 @@ class PersonAnalyzer(Analyzer):
                 if (s.type_name == PersonReferent.ATTR_ATTR and (isinstance(s.value, PersonPropertyReferent))): 
                     pr = Utils.asObjectOrNull(s.value, PersonPropertyReferent)
                     li = [ ]
-                    wrapli2609 = RefOutArgWrapper(None)
-                    inoutres2610 = Utils.tryGetValue(props, pr, wrapli2609)
-                    li = wrapli2609.value
-                    if (not inoutres2610): 
+                    wrapli2612 = RefOutArgWrapper(None)
+                    inoutres2613 = Utils.tryGetValue(props, pr, wrapli2612)
+                    li = wrapli2612.value
+                    if (not inoutres2613): 
                         li = list()
                         props[pr] = li
                     if (not p in li): 
                         li.append(p)
         t = kit.first_token
-        first_pass3297 = True
+        first_pass3303 = True
         while True:
-            if first_pass3297: first_pass3297 = False
+            if first_pass3303: first_pass3303 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (isinstance(t, ReferentToken)): 
@@ -427,8 +427,8 @@ class PersonAnalyzer(Analyzer):
         if (names is not None): 
             for n in names: 
                 pers = PersonReferent()
-                bi = MorphBaseInfo._new2614(MorphNumber.SINGULAR, t.kit.base_language)
-                bi.class0_ = MorphClass._new2576(True)
+                bi = MorphBaseInfo._new2617(MorphNumber.SINGULAR, t.kit.base_language)
+                bi.class0_ = MorphClass._new2579(True)
                 if (n.firstname.vars0_[0].gender == MorphGender.FEMINIE): 
                     pers.is_female = True
                     bi.gender = MorphGender.FEMINIE
@@ -466,9 +466,9 @@ class PersonAnalyzer(Analyzer):
         can_attach_to_previous_person = True
         is_king = False
         after_be_predicate = False
-        first_pass3298 = True
+        first_pass3304 = True
         while True:
-            if first_pass3298: first_pass3298 = False
+            if first_pass3304: first_pass3304 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (attrs is not None and t.next0_ is not None): 
@@ -544,7 +544,7 @@ class PersonAnalyzer(Analyzer):
                     if (pits[2].is_newline_after and pits[5].is_newline_after): 
                         a = (None)
             if ((a is None and t.is_value("НА", None) and t.next0_ is not None) and t.next0_.is_value("ИМЯ", None)): 
-                a = PersonAttrToken._new2449(t, t.next0_, MorphCollection._new2455(MorphCase.GENITIVE))
+                a = PersonAttrToken._new2452(t, t.next0_, MorphCollection._new2458(MorphCase.GENITIVE))
                 is_genitive = True
             if (a is None): 
                 break
@@ -663,8 +663,8 @@ class PersonAnalyzer(Analyzer):
                             return None
                         v = pits[0].firstname.vars0_[0]
                         pers = PersonReferent()
-                        bi = MorphBaseInfo._new2619(v.gender, MorphNumber.SINGULAR, pits[0].kit.base_language)
-                        bi.class0_ = MorphClass._new2576(True)
+                        bi = MorphBaseInfo._new2622(v.gender, MorphNumber.SINGULAR, pits[0].kit.base_language)
+                        bi.class0_ = MorphClass._new2579(True)
                         if (v.gender == MorphGender.MASCULINE): 
                             pers.is_male = True
                         elif (v.gender == MorphGender.FEMINIE): 
@@ -688,8 +688,8 @@ class PersonAnalyzer(Analyzer):
                         pr = (Utils.asObjectOrNull((vvv).referent, PersonReferent))
                     if (pr is not None): 
                         pers = PersonReferent()
-                        bi = MorphBaseInfo._new2621(MorphNumber.SINGULAR, attr.gender, attr.kit.base_language)
-                        bi.class0_ = MorphClass._new2576(True)
+                        bi = MorphBaseInfo._new2624(MorphNumber.SINGULAR, attr.gender, attr.kit.base_language)
+                        bi.class0_ = MorphClass._new2579(True)
                         for s in pr.slots: 
                             if (s.type_name == PersonReferent.ATTR_LASTNAME): 
                                 sur = Utils.asObjectOrNull(s.value, str)
@@ -831,6 +831,14 @@ class PersonAnalyzer(Analyzer):
                                 for v in pr0.slots: 
                                     if (v.type_name == PersonReferent.ATTR_LASTNAME): 
                                         first.lastname.add(v.value, None, (MorphGender.MASCULINE if pr0.is_male else ((MorphGender.FEMINIE if pr0.is_female else MorphGender.UNDEFINED))), True)
+            if ((((pli is None or len(pli) == 0)) and len(pits) == 1 and pits[0].lastname is not None) and attrs is not None and not pits[0].is_in_dictionary): 
+                for a in attrs: 
+                    if (a.prop_ref is not None and ((a.typ == PersonAttrTerminType.PREFIX or a.prop_ref.kind == PersonPropertyKind.BOSS))): 
+                        last = PersonIdentityToken(pits[0].begin_token, pits[0].end_token)
+                        PersonIdentityToken.manage_lastname(last, pits[0], mi)
+                        last.coef = (2)
+                        pli.append(last)
+                        break
             if (pli is not None and len(pli) > 0): 
                 PersonIdentityToken.sort(pli)
                 best = pli[0]

@@ -19,9 +19,9 @@ from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.ner.NumberToken import NumberToken
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphCase import MorphCase
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.BracketHelper import BracketHelper
 
 class ProperNameHelper:
@@ -128,9 +128,9 @@ class ProperNameHelper:
         res = io.StringIO()
         prefix = None
         t = begin
-        first_pass2985 = True
+        first_pass2991 = True
         while True:
-            if first_pass2985: first_pass2985 = False
+            if first_pass2991: first_pass2991 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             if (res.tell() > 1000): 

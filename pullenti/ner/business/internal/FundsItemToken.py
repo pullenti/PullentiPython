@@ -12,14 +12,14 @@ from pullenti.ner.org.OrganizationKind import OrganizationKind
 from pullenti.ner.Referent import Referent
 from pullenti.ner.core.NumberExType import NumberExType
 from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.org.OrganizationReferent import OrganizationReferent
 from pullenti.ner.business.FundsKind import FundsKind
-from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.business.internal.FundsItemTyp import FundsItemTyp
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.money.MoneyReferent import MoneyReferent
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.org.OrganizationAnalyzer import OrganizationAnalyzer
 
 class FundsItemToken(MetaToken):
@@ -53,9 +53,9 @@ class FundsItemToken(MetaToken):
             return None
         typ0 = FundsItemTyp.UNDEFINED
         tt = t
-        first_pass2942 = True
+        first_pass2948 = True
         while True:
-            if first_pass2942: first_pass2942 = False
+            if first_pass2948: first_pass2948 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.morph.class0_.is_preposition or tt.morph.class0_.is_adverb): 
@@ -115,9 +115,9 @@ class FundsItemToken(MetaToken):
                     cou = 0
                     ok = False
                     ttt = tt.previous
-                    first_pass2943 = True
+                    first_pass2949 = True
                     while True:
-                        if first_pass2943: first_pass2943 = False
+                        if first_pass2949: first_pass2949 = False
                         else: ttt = ttt.previous
                         if (not (ttt is not None)): break
                         cou += 1
@@ -188,9 +188,9 @@ class FundsItemToken(MetaToken):
         li.append(f)
         is_in_br = False
         tt = f.end_token.next0_
-        first_pass2944 = True
+        first_pass2950 = True
         while True:
-            if first_pass2944: first_pass2944 = False
+            if first_pass2950: first_pass2950 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if ((tt.is_whitespace_before and tt.previous is not None and tt.previous.is_char('.')) and tt.chars.is_capital_upper): 

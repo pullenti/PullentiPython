@@ -23,22 +23,22 @@ from pullenti.ner.phone.PhoneReferent import PhoneReferent
 from pullenti.ner.decree.DecreeReferent import DecreeReferent
 from pullenti.ner.bank.BankDataReferent import BankDataReferent
 from pullenti.ner.instrument.InstrumentAnalyzer import InstrumentAnalyzer
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.person.PersonReferent import PersonReferent
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.org.OrganizationReferent import OrganizationReferent
+from pullenti.ner.person.PersonReferent import PersonReferent
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.person.PersonIdentityReferent import PersonIdentityReferent
 from pullenti.ner.address.AddressReferent import AddressReferent
-from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.BracketHelper import BracketHelper
 
 class ParticipantToken(MetaToken):
     
@@ -81,9 +81,9 @@ class ParticipantToken(MetaToken):
                     refs = list()
                     refs.append(r1)
                     refs.append(r2)
-                    first_pass3197 = True
+                    first_pass3203 = True
                     while True:
-                        if first_pass3197: first_pass3197 = False
+                        if first_pass3203: first_pass3203 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if ((ttt.is_comma_and and ttt.next0_ is not None and ttt.next0_.get_referent() is not None) and ttt.next0_.get_referent().type_name == r1.type_name): 
@@ -92,9 +92,9 @@ class ParticipantToken(MetaToken):
                                 refs.append(ttt.get_referent())
                             continue
                         break
-                    first_pass3198 = True
+                    first_pass3204 = True
                     while True:
-                        if first_pass3198: first_pass3198 = False
+                        if first_pass3204: first_pass3204 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_comma or ttt.morph.class0_.is_preposition): 
@@ -149,9 +149,9 @@ class ParticipantToken(MetaToken):
                 brr = None
                 add_refs = None
                 ttt = t.next0_
-                first_pass3199 = True
+                first_pass3205 = True
                 while True:
-                    if first_pass3199: first_pass3199 = False
+                    if first_pass3205: first_pass3205 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if ((isinstance(ttt, NumberToken)) and (isinstance(ttt.next0_, TextToken)) and (ttt.next0_).term == "СТОРОНЫ"): 
@@ -279,9 +279,9 @@ class ParticipantToken(MetaToken):
         typ_ = None
         t1 = None
         t0 = tt
-        first_pass3200 = True
+        first_pass3206 = True
         while True:
-            if first_pass3200: first_pass3200 = False
+            if first_pass3206: first_pass3206 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.morph.class0_.is_preposition and typ_ is not None): 
@@ -493,9 +493,9 @@ class ParticipantToken(MetaToken):
                 is_in_tab_cell = True
                 break
             tt = tt.next0_; cou += 1
-        first_pass3201 = True
+        first_pass3207 = True
         while True:
-            if first_pass3201: first_pass3201 = False
+            if first_pass3207: first_pass3207 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.begin_char == 8923): 
@@ -583,9 +583,9 @@ class ParticipantToken(MetaToken):
         tt0 = self.begin_token
         refs = list()
         t = tt0.previous
-        first_pass3202 = True
+        first_pass3208 = True
         while True:
-            if first_pass3202: first_pass3202 = False
+            if first_pass3208: first_pass3208 = False
             else: t = t.previous
             if (not (t is not None and t.begin_char >= min_char)): break
             if (t.is_newline_after): 
@@ -613,9 +613,9 @@ class ParticipantToken(MetaToken):
             t = t.next0_
         if (t is not None and t.is_char(',')): 
             t = t.next0_
-        first_pass3203 = True
+        first_pass3209 = True
         while True:
-            if first_pass3203: first_pass3203 = False
+            if first_pass3209: first_pass3209 = False
             else: t = t.next0_
             if (not (t is not None and ((max_char == 0 or t.begin_char <= max_char)))): break
             if (t.is_value("СТОРОНА", None)): 
@@ -684,9 +684,9 @@ class ParticipantToken(MetaToken):
     @staticmethod
     def __try_attach_contract_ground(t : 'Token', ip : 'InstrumentParticipant', can_be_passport : bool=False) -> 'Token':
         ok = False
-        first_pass3204 = True
+        first_pass3210 = True
         while True:
-            if first_pass3204: first_pass3204 = False
+            if first_pass3210: first_pass3210 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char(',') or t.morph.class0_.is_preposition): 
@@ -720,9 +720,9 @@ class ParticipantToken(MetaToken):
                 if (dts is None): 
                     has_spec = False
                     ttt = t.next0_
-                    first_pass3205 = True
+                    first_pass3211 = True
                     while True:
-                        if first_pass3205: first_pass3205 = False
+                        if first_pass3211: first_pass3211 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None and ((ttt.end_char - t.end_char) < 200))): break
                         if (ttt.is_comma): 

@@ -7,14 +7,14 @@ import io
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.Token import Token
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.measure.MeasureReferent import MeasureReferent
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.measure.internal.UnitsFactors import UnitsFactors
 from pullenti.ner.Referent import Referent
 from pullenti.morph.MorphGender import MorphGender
@@ -378,9 +378,9 @@ class UnitToken(MetaToken):
                 self.is_doubt = False
         cou = 0
         t = self.begin_token.previous
-        first_pass3223 = True
+        first_pass3229 = True
         while True:
-            if first_pass3223: first_pass3223 = False
+            if first_pass3229: first_pass3229 = False
             else: t = t.previous; cou += 1
             if (not (t is not None and (cou < 30))): break
             mr = Utils.asObjectOrNull(t.get_referent(), MeasureReferent)

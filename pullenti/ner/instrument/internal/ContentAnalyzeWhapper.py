@@ -6,21 +6,21 @@ import typing
 import math
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.TextToken import TextToken
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.Referent import Referent
-from pullenti.ner.instrument.internal.EditionHelper import EditionHelper
-from pullenti.ner.decree.DecreeKind import DecreeKind
-from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.instrument.internal.NumberingHelper import NumberingHelper
+from pullenti.ner.instrument.internal.NumberTypes import NumberTypes
+from pullenti.ner.decree.DecreeKind import DecreeKind
 from pullenti.ner.decree.DecreeReferent import DecreeReferent
-from pullenti.ner.instrument.InstrumentKind import InstrumentKind
+from pullenti.ner.instrument.internal.EditionHelper import EditionHelper
 from pullenti.ner.instrument.internal.ContractHelper import ContractHelper
 from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-from pullenti.ner.instrument.internal.NumberTypes import NumberTypes
+from pullenti.ner.instrument.InstrumentKind import InstrumentKind
 from pullenti.ner.instrument.internal.FragToken import FragToken
 
 class ContentAnalyzeWhapper:
@@ -47,9 +47,9 @@ class ContentAnalyzeWhapper:
                 elif ("ДОГОВОР" in ty or "ДОГОВІР" in ty or "КОНТРАКТ" in ty): 
                     self.doc_typ = DecreeKind.CONTRACT
         t = root.begin_token
-        first_pass3100 = True
+        first_pass3106 = True
         while True:
-            if first_pass3100: first_pass3100 = False
+            if first_pass3106: first_pass3106 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.begin_char > root.end_token.end_char): 
@@ -159,9 +159,9 @@ class ContentAnalyzeWhapper:
         if (((root.kind == InstrumentKind.PARAGRAPH and len(lines_) > 10 and lines_[0].typ == InstrToken1.Types.LINE) and len(lines_[0].numbers) > 0 and not lines_[0].has_verb) and lines_[1].typ == InstrToken1.Types.CLAUSE): 
             nums.append(lines_[0])
             ii = 2
-            first_pass3101 = True
+            first_pass3107 = True
             while True:
-                if first_pass3101: first_pass3101 = False
+                if first_pass3107: first_pass3107 = False
                 else: ii += 1
                 if (not (ii < (len(lines_) - 1))): break
                 ch = lines_[ii]
@@ -212,9 +212,9 @@ class ContentAnalyzeWhapper:
                     if (li.typ_container_rank == lev): 
                         nums.append(li)
             i = 0
-            first_pass3102 = True
+            first_pass3108 = True
             while True:
-                if first_pass3102: first_pass3102 = False
+                if first_pass3108: first_pass3108 = False
                 else: i += 1
                 if (not (i < len(nums))): break
                 d0 = (NumberingHelper.calc_delta(nums[i - 1], nums[i], True) if i > 0 else 0)
@@ -286,9 +286,9 @@ class ContentAnalyzeWhapper:
         fr = None
         blk = list()
         i = 0
-        first_pass3103 = True
+        first_pass3109 = True
         while True:
-            if first_pass3103: first_pass3103 = False
+            if first_pass3109: first_pass3109 = False
             else: i += 1
             if (not (i <= len(lines_))): break
             li = (lines_[i] if i < len(lines_) else None)
@@ -432,9 +432,9 @@ class ContentAnalyzeWhapper:
                 num0 = "1"
                 ok = True
                 i = 1
-                first_pass3104 = True
+                first_pass3110 = True
                 while True:
-                    if first_pass3104: first_pass3104 = False
+                    if first_pass3110: first_pass3110 = False
                     else: i += 1
                     if (not (i < len(lines_))): break
                     li = lines_[i]
@@ -470,9 +470,9 @@ class ContentAnalyzeWhapper:
         blk = list()
         childs = list()
         i = 0
-        first_pass3105 = True
+        first_pass3111 = True
         while True:
-            if first_pass3105: first_pass3105 = False
+            if first_pass3111: first_pass3111 = False
             else: i += 1
             if (not (i <= len(lines_))): break
             li = (lines_[i] if i < len(lines_) else None)
@@ -717,9 +717,9 @@ class ContentAnalyzeWhapper:
                                 break
                             tt = tt.next0_
                     is_tab = False
-                    first_pass3106 = True
+                    first_pass3112 = True
                     while True:
-                        if first_pass3106: first_pass3106 = False
+                        if first_pass3112: first_pass3112 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.end_char <= li.end_char)): break
                         it1 = InstrToken1.parse(tt, True, None, 0, None, False, 0, False, True)
@@ -842,9 +842,9 @@ class ContentAnalyzeWhapper:
         while i < len(lines_): 
             if (lines_[i].typ == InstrToken1.Types.DIRECTIVE): 
                 j = (i - 1)
-                first_pass3107 = True
+                first_pass3113 = True
                 while True:
-                    if first_pass3107: first_pass3107 = False
+                    if first_pass3113: first_pass3113 = False
                     else: j -= 1
                     if (not (j >= 0)): break
                     li = lines_[j]
@@ -1010,9 +1010,9 @@ class ContentAnalyzeWhapper:
                             i += 1
                     its = 0
                     j = i
-                    first_pass3108 = True
+                    first_pass3114 = True
                     while True:
-                        if first_pass3108: first_pass3108 = False
+                        if first_pass3114: first_pass3114 = False
                         else: j += 1
                         if (not (j < len(ch.children))): break
                         if (ch.children[j].kind != InstrumentKind.ITEM): 
@@ -1030,9 +1030,9 @@ class ContentAnalyzeWhapper:
                             continue
                         next_sect = None
                         tt = la.end_token
-                        first_pass3109 = True
+                        first_pass3115 = True
                         while True:
-                            if first_pass3109: first_pass3109 = False
+                            if first_pass3115: first_pass3115 = False
                             else: tt = tt.previous
                             if (not (tt is not None and tt.begin_char > la.begin_char)): break
                             if (tt.is_newline_before): 
@@ -1095,9 +1095,9 @@ class ContentAnalyzeWhapper:
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         fr_nams = None
         i = 0
-        first_pass3110 = True
+        first_pass3116 = True
         while True:
-            if first_pass3110: first_pass3110 = False
+            if first_pass3116: first_pass3116 = False
             else: i += 1
             if (not (i < len(root.children))): break
             ch = root.children[i]
@@ -1108,9 +1108,9 @@ class ContentAnalyzeWhapper:
                 break
             nam_has = False
             j = 0
-            first_pass3111 = True
+            first_pass3117 = True
             while True:
-                if first_pass3111: first_pass3111 = False
+                if first_pass3117: first_pass3117 = False
                 else: j += 1
                 if (not (j < len(ch.children))): break
                 chh = ch.children[j]
@@ -1136,9 +1136,9 @@ class ContentAnalyzeWhapper:
         if (fr_nams is not None): 
             for ch in fr_nams: 
                 j = 0
-                first_pass3112 = True
+                first_pass3118 = True
                 while True:
-                    if first_pass3112: first_pass3112 = False
+                    if first_pass3118: first_pass3118 = False
                     else: j += 1
                     if (not (j < len(ch.children))): break
                     chh = ch.children[j]
@@ -1252,9 +1252,9 @@ class ContentAnalyzeWhapper:
                             i += 1
         inds = 0
         i = i0
-        first_pass3113 = True
+        first_pass3119 = True
         while True:
-            if first_pass3113: first_pass3113 = False
+            if first_pass3119: first_pass3119 = False
             else: i += 1
             if (not (i < len(root.children))): break
             if (root.children[i].kind == InstrumentKind.COMMENT): 
@@ -1268,9 +1268,9 @@ class ContentAnalyzeWhapper:
                 pass
             num = 1
             i = i0
-            first_pass3114 = True
+            first_pass3120 = True
             while True:
-                if first_pass3114: first_pass3114 = False
+                if first_pass3120: first_pass3120 = False
                 else: i += 1
                 if (not (i < len(root.children))): break
                 if (root.children[i].kind == InstrumentKind.COMMENT): 
@@ -1286,9 +1286,9 @@ class ContentAnalyzeWhapper:
                 i += (len(lii) - 1)
             num = 1
             i = (i0 + 1)
-            first_pass3115 = True
+            first_pass3121 = True
             while True:
-                if first_pass3115: first_pass3115 = False
+                if first_pass3121: first_pass3121 = False
                 else: i += 1
                 if (not (i < len(root.children))): break
                 ch = root.children[i]
@@ -1301,9 +1301,9 @@ class ContentAnalyzeWhapper:
                 num += 1
             if (num > 1 and i >= len(root.children)): 
                 i = (i0 + 1)
-                first_pass3116 = True
+                first_pass3122 = True
                 while True:
-                    if first_pass3116: first_pass3116 = False
+                    if first_pass3122: first_pass3122 = False
                     else: i += 1
                     if (not (i < len(root.children))): break
                     ch = root.children[i]
@@ -1354,9 +1354,9 @@ class ContentAnalyzeWhapper:
         res = list()
         t0 = fr.begin_token
         tt = t0
-        first_pass3117 = True
+        first_pass3123 = True
         while True:
-            if first_pass3117: first_pass3117 = False
+            if first_pass3123: first_pass3123 = False
             else: tt = tt.next0_
             if (not (tt is not None and tt.end_char <= fr.end_char)): break
             if (tt.end_char == fr.end_char): 
@@ -1396,9 +1396,9 @@ class ContentAnalyzeWhapper:
                 del root.children[0]
                 root.children[0:0] = chh.children
         i = 0
-        first_pass3118 = True
+        first_pass3124 = True
         while True:
-            if first_pass3118: first_pass3118 = False
+            if first_pass3124: first_pass3124 = False
             else: i += 1
             if (not (i < len(root.children))): break
             ch = root.children[i]

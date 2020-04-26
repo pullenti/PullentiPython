@@ -2,20 +2,22 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
+import typing
 import io
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphLang import MorphLang
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.core.NounPhraseMultivarToken import NounPhraseMultivarToken
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.internal.NounPhraseItemTextVar import NounPhraseItemTextVar
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-from pullenti.morph.Morphology import Morphology
-from pullenti.ner.core.internal.NounPhraseItemTextVar import NounPhraseItemTextVar
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.MiscHelper import MiscHelper
 
 class NounPhraseToken(MetaToken):
@@ -30,6 +32,18 @@ class NounPhraseToken(MetaToken):
         self.anafor = None;
         self.preposition = None;
         self.multi_nouns = False
+    
+    def get_multivars(self) -> typing.List['NounPhraseMultivarToken']:
+        """ Это если MultiNouns = true, то можно как бы расщепить на варианты
+         (грузовой и легковой автомобили -> грузовой автомобиль и легковой автомобиль)
+        
+        """
+        res = list()
+        i = 0
+        while i < len(self.adjectives): 
+            res.append(NounPhraseMultivarToken._new583(self.adjectives[i].begin_token, (self.end_token if i == (len(self.adjectives) - 1) else self.adjectives[i].end_token), self, i))
+            i += 1
+        return res
     
     def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         res = io.StringIO()
@@ -91,7 +105,7 @@ class NounPhraseToken(MetaToken):
             plural(bool): 
         
         """
-        mi = MorphBaseInfo._new583(cas, MorphLang.RU)
+        mi = MorphBaseInfo._new584(cas, MorphLang.RU)
         if (plural): 
             mi.number = MorphNumber.PLURAL
         else: 

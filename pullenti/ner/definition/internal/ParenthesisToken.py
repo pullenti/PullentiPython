@@ -3,16 +3,16 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 
-from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.TextToken import TextToken
+from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
 
 class ParenthesisToken(MetaToken):
     """ Анализ вводных слов и словосочетаний """
@@ -70,9 +70,9 @@ class ParenthesisToken(MetaToken):
                 if (t1.next0_ is not None and t1.next0_.is_comma): 
                     sila = False
                     ttt = t1.next0_.next0_
-                    first_pass3050 = True
+                    first_pass3056 = True
                     while True:
-                        if first_pass3050: first_pass3050 = False
+                        if first_pass3056: first_pass3056 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_value("СИЛА", None) or ttt.is_value("ДЕЙСТВИЕ", None)): 

@@ -30,8 +30,8 @@ from pullenti.ner.person.PersonReferent import PersonReferent
 from pullenti.ner.geo.GeoReferent import GeoReferent
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.BracketHelper import BracketHelper
 
 class BookLinkToken(MetaToken):
     
@@ -57,9 +57,9 @@ class BookLinkToken(MetaToken):
                 re = BookLinkToken._new361(t, rtp.end_token, BookLinkTyp.PERSON, rtp)
             re.person_template = (Utils.valToEnum(rtp.misc_attrs, FioTemplateType))
             tt = rtp.begin_token
-            first_pass2926 = True
+            first_pass2932 = True
             while True:
-                if first_pass2926: first_pass2926 = False
+                if first_pass2932: first_pass2932 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= rtp.end_char)): break
                 if (not ((isinstance(tt.get_referent(), PersonPropertyReferent)))): 
@@ -158,9 +158,9 @@ class BookLinkToken(MetaToken):
                 return BookLinkToken._new363(t, tok_.end_token, typ_, tok_.termin.canonic_text)
             if (typ_ == BookLinkTyp.ELECTRONRES): 
                 tt = tok_.end_token.next0_
-                first_pass2927 = True
+                first_pass2933 = True
                 while True:
-                    if first_pass2927: first_pass2927 = False
+                    if first_pass2933: first_pass2933 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if ((isinstance(tt, TextToken)) and not tt.chars.is_letter): 
@@ -216,9 +216,9 @@ class BookLinkToken(MetaToken):
                     tt0 = tt
                     tt1 = tt
                     tt = tt.next0_
-                    first_pass2928 = True
+                    first_pass2934 = True
                     while True:
-                        if first_pass2928: first_pass2928 = False
+                        if first_pass2934: first_pass2934 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.is_char_of(",") or tt.is_hiphen): 
@@ -263,9 +263,9 @@ class BookLinkToken(MetaToken):
             if (((term == "СМ" or term == "CM" or term == "НАПР") or term == "НАПРИМЕР" or term == "SEE") or term == "ПОДРОБНЕЕ" or term == "ПОДРОБНО"): 
                 res = BookLinkToken._new362(t, t, BookLinkTyp.SEE)
                 t = t.next0_
-                first_pass2929 = True
+                first_pass2935 = True
                 while True:
-                    if first_pass2929: first_pass2929 = False
+                    if first_pass2935: first_pass2935 = False
                     else: t = t.next0_
                     if (not (t is not None)): break
                     if (t.is_char_of(".:") or t.is_value("ALSO", None)): 

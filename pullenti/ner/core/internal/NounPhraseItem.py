@@ -6,27 +6,27 @@ import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.NumberToken import NumberToken
 from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.MorphCollection import MorphCollection
-from pullenti.morph.Morphology import Morphology
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.ner.core.internal.NounPhraseItemTextVar import NounPhraseItemTextVar
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.morph.MorphCase import MorphCase
+from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.internal.NounPhraseItemTextVar import NounPhraseItemTextVar
 
 class NounPhraseItem(MetaToken):
     """ Элемент именной группы """
@@ -243,7 +243,7 @@ class NounPhraseItem(MetaToken):
                 if (t.morph.get_indexer_item(0).contains_attr("в.ср.ст.", None)): 
                     return None
             mc1 = t.get_morph_class_in_dictionary()
-            if (mc1 == MorphClass.VERB): 
+            if (mc1 == MorphClass.VERB and t.morph.case_.is_undefined): 
                 return None
             if (((((attrs) & (NounPhraseParseAttr.IGNOREPARTICIPLES))) == (NounPhraseParseAttr.IGNOREPARTICIPLES) and t.morph.class0_.is_verb and not t.morph.class0_.is_noun) and not t.morph.class0_.is_proper): 
                 for wf in t.morph.items: 
@@ -270,6 +270,10 @@ class NounPhraseItem(MetaToken):
             can_be_prepos = False
             for v in t.morph.items: 
                 wf = Utils.asObjectOrNull(v, MorphWordForm)
+                if (v.class0_.is_verb and not v.case_.is_undefined): 
+                    it.can_be_adj = True
+                    it.adj_morph.append(NounPhraseItemTextVar(v, t))
+                    continue
                 if (v.class0_.is_preposition): 
                     can_be_prepos = True
                 if (v.class0_.is_adjective or ((v.class0_.is_pronoun and not v.class0_.is_personal_pronoun)) or ((v.class0_.is_noun and (isinstance(t, NumberToken))))): 

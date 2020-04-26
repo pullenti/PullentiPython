@@ -57,6 +57,7 @@ pullenti.ner.core.IntOntologyItem: Элемент онтологического
 pullenti.ner.core.IntOntologyToken: Это привязка элемента отнологии к тексту
 pullenti.ner.core.MiscHelper: Разные полезные процедурки
 pullenti.ner.core.NounPhraseHelper: Выделение именных групп (существительсно с согласованными прилагательными (если они есть).
+pullenti.ner.core.NounPhraseMultivarToken: Вариант расщепления именной группы, у которой слиплись существительные
 pullenti.ner.core.NounPhraseParseAttr: Параметры выделения
 pullenti.ner.core.NounPhraseToken: Токен для представления именной группы
 pullenti.ner.core.NumberExToken: Число с стандартный постфиксом (мерой длины, вес, деньги и т.п.)

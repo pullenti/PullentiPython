@@ -239,9 +239,9 @@ class MorphClass:
     def __str__(self) -> str:
         tmp_str = io.StringIO()
         i = 0
-        first_pass2899 = True
+        first_pass2905 = True
         while True:
-            if first_pass2899: first_pass2899 = False
+            if first_pass2905: first_pass2905 = False
             else: i += 1
             if (not (i < len(MorphClass.__m_names))): break
             if (self.__get_value(i)): 
@@ -385,7 +385,7 @@ class MorphClass:
         return res
     
     @staticmethod
-    def _new2576(_arg1 : bool) -> 'MorphClass':
+    def _new2579(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_proper_surname = _arg1
         return res
