@@ -613,7 +613,7 @@ class DecreePartReferent(Referent):
             if (max0_.find_slot(s.type_name, s.value, True) is not None): 
                 continue
             cou += 1
-            if ((cou) > 1): 
+            if (cou > 1): 
                 return None
             res.upload_slot(s, "{0}-{1}".format(s.value, ss.value))
         if (cou != 1): 
@@ -621,7 +621,7 @@ class DecreePartReferent(Referent):
         return res
     
     @staticmethod
-    def _new1125(_arg1 : 'DecreeReferent') -> 'DecreePartReferent':
+    def _new1174(_arg1 : 'DecreeReferent') -> 'DecreePartReferent':
         res = DecreePartReferent()
         res.owner = _arg1
         return res

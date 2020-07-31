@@ -4,7 +4,7 @@
 
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.DerivateGroup import DerivateGroup
+from pullenti.semantic.utils.DerivateGroup import DerivateGroup
 
 class ExplanTreeNode:
     

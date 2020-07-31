@@ -8,11 +8,8 @@ from pullenti.unisharp.Utils import Utils
 class MorphLang:
     """ Язык(и) """
     
-    def __init__(self, lng : 'MorphLang'=None) -> None:
+    def __init__(self) -> None:
         self.value = 0
-        self.value = (0)
-        if (lng is not None): 
-            self.value = lng.value
     
     def __get_value(self, i : int) -> bool:
         return (((((self.value) >> i)) & 1)) != 0
@@ -95,13 +92,20 @@ class MorphLang:
     
     def __str__(self) -> str:
         tmp_str = io.StringIO()
-        i = 0
-        while i < len(MorphLang.__m_names): 
-            if (self.__get_value(i)): 
-                if (tmp_str.tell() > 0): 
-                    print(";", end="", file=tmp_str)
-                print(MorphLang.__m_names[i], end="", file=tmp_str)
-            i += 1
+        if (self.is_ru): 
+            print("RU;", end="", file=tmp_str)
+        if (self.is_ua): 
+            print("UA;", end="", file=tmp_str)
+        if (self.is_by): 
+            print("BY;", end="", file=tmp_str)
+        if (self.is_en): 
+            print("EN;", end="", file=tmp_str)
+        if (self.is_it): 
+            print("IT;", end="", file=tmp_str)
+        if (self.is_kz): 
+            print("KZ;", end="", file=tmp_str)
+        if (tmp_str.tell() > 0): 
+            Utils.setLengthStringIO(tmp_str, tmp_str.tell() - 1)
         return Utils.toStringStringIO(tmp_str)
     
     def equals(self, obj : object) -> bool:
@@ -150,7 +154,7 @@ class MorphLang:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphLang._new10(((val1) & (val2)))
+        return MorphLang._new75(((val1) & (val2)))
     
     def __or__(self : 'MorphLang', arg2 : 'MorphLang') -> 'MorphLang':
         val1 = 0
@@ -159,7 +163,7 @@ class MorphLang:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphLang._new10(((val1) | (val2)))
+        return MorphLang._new75(((val1) | (val2)))
     
     def __eq__(self : 'MorphLang', arg2 : 'MorphLang') -> bool:
         val1 = 0
@@ -180,57 +184,64 @@ class MorphLang:
         return val1 != val2
     
     UNKNOWN = None
+    """ Неопределённое """
     
     RU = None
+    """ Русский """
     
     UA = None
+    """ Украинский """
     
     BY = None
+    """ Белорусский """
     
     EN = None
+    """ Английский """
     
     IT = None
+    """ Итальянский """
     
     KZ = None
+    """ Казахский """
     
     @staticmethod
-    def _new10(_arg1 : int) -> 'MorphLang':
+    def _new75(_arg1 : int) -> 'MorphLang':
         res = MorphLang()
         res.value = _arg1
         return res
     
     @staticmethod
-    def _new93(_arg1 : bool) -> 'MorphLang':
+    def _new77(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_ru = _arg1
         return res
     
     @staticmethod
-    def _new94(_arg1 : bool) -> 'MorphLang':
+    def _new78(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_ua = _arg1
         return res
     
     @staticmethod
-    def _new95(_arg1 : bool) -> 'MorphLang':
+    def _new79(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_by = _arg1
         return res
     
     @staticmethod
-    def _new96(_arg1 : bool) -> 'MorphLang':
+    def _new80(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_en = _arg1
         return res
     
     @staticmethod
-    def _new97(_arg1 : bool) -> 'MorphLang':
+    def _new81(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_it = _arg1
         return res
     
     @staticmethod
-    def _new98(_arg1 : bool) -> 'MorphLang':
+    def _new82(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_kz = _arg1
         return res
@@ -240,11 +251,11 @@ class MorphLang:
     def _static_ctor():
         MorphLang.__m_names = ["RU", "UA", "BY", "EN", "IT", "KZ"]
         MorphLang.UNKNOWN = MorphLang()
-        MorphLang.RU = MorphLang._new93(True)
-        MorphLang.UA = MorphLang._new94(True)
-        MorphLang.BY = MorphLang._new95(True)
-        MorphLang.EN = MorphLang._new96(True)
-        MorphLang.IT = MorphLang._new97(True)
-        MorphLang.KZ = MorphLang._new98(True)
+        MorphLang.RU = MorphLang._new77(True)
+        MorphLang.UA = MorphLang._new78(True)
+        MorphLang.BY = MorphLang._new79(True)
+        MorphLang.EN = MorphLang._new80(True)
+        MorphLang.IT = MorphLang._new81(True)
+        MorphLang.KZ = MorphLang._new82(True)
 
 MorphLang._static_ctor()

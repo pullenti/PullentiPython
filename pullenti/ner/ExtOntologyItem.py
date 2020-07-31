@@ -68,7 +68,7 @@ class ExtOntologyItem:
         self.referent.deserialize(stream, self._refs, None)
     
     @staticmethod
-    def _new2819(_arg1 : object, _arg2 : 'Referent', _arg3 : str) -> 'ExtOntologyItem':
+    def _new2869(_arg1 : object, _arg2 : 'Referent', _arg3 : str) -> 'ExtOntologyItem':
         res = ExtOntologyItem()
         res.ext_id = _arg1
         res.referent = _arg2

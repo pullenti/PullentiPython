@@ -55,7 +55,7 @@ class GeneralRelationHelper:
                         i += 1
         
         @staticmethod
-        def _new479(_arg1 : 'Referent', _arg2 : 'AnalyzerData') -> 'Node':
+        def _new463(_arg1 : 'Referent', _arg2 : 'AnalyzerData') -> 'Node':
             res = GeneralRelationHelper.Node()
             res.ref = _arg1
             res.ad = _arg2
@@ -70,24 +70,26 @@ class GeneralRelationHelper:
             if (ad is None): 
                 continue
             for r in ad.referents: 
-                nod = GeneralRelationHelper.Node._new479(r, ad)
+                nod = GeneralRelationHelper.Node._new463(r, ad)
                 all_refs.append(nod)
                 r.tag = nod
-                wrapsi482 = RefOutArgWrapper(None)
-                inoutres483 = Utils.tryGetValue(all0_, a.name, wrapsi482)
-                si = wrapsi482.value
-                if (not inoutres483): 
+                wrapsi466 = RefOutArgWrapper(None)
+                inoutres467 = Utils.tryGetValue(all0_, a.name, wrapsi466)
+                si = wrapsi466.value
+                if (not inoutres467): 
                     si = dict()
                     all0_[a.name] = si
                 strs = r.get_compare_strings()
                 if (strs is None or len(strs) == 0): 
                     continue
                 for s in strs: 
+                    if (s is None): 
+                        continue
                     li = [ ]
-                    wrapli480 = RefOutArgWrapper(None)
-                    inoutres481 = Utils.tryGetValue(si, s, wrapli480)
-                    li = wrapli480.value
-                    if (not inoutres481): 
+                    wrapli464 = RefOutArgWrapper(None)
+                    inoutres465 = Utils.tryGetValue(si, s, wrapli464)
+                    li = wrapli464.value
+                    if (not inoutres465): 
                         li = list()
                         si[s] = li
                     li.append(r)

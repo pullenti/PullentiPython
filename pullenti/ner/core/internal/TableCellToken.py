@@ -22,9 +22,9 @@ class TableCellToken(MetaToken):
         while t is not None and t.end_char <= self.end_char: 
             t0 = t
             t1 = t
-            first_pass2969 = True
+            first_pass3653 = True
             while True:
-                if first_pass2969: first_pass2969 = False
+                if first_pass3653: first_pass3653 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= self.end_char)): break
                 t1 = t
@@ -38,7 +38,7 @@ class TableCellToken(MetaToken):
         return res
     
     @staticmethod
-    def _new549(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : int) -> 'TableCellToken':
+    def _new534(_arg1 : 'Token', _arg2 : 'Token', _arg3 : int, _arg4 : int) -> 'TableCellToken':
         res = TableCellToken(_arg1, _arg2)
         res.row_span = _arg3
         res.col_span = _arg4

@@ -78,9 +78,9 @@ class SentimentAnalyzer(Analyzer):
     def process(self, kit : 'AnalysisKit') -> None:
         ad = kit.get_analyzer_data(self)
         t = kit.first_token
-        first_pass3313 = True
+        first_pass4004 = True
         while True:
-            if first_pass3313: first_pass3313 = False
+            if first_pass4004: first_pass4004 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -96,9 +96,9 @@ class SentimentAnalyzer(Analyzer):
             t0 = t
             t1 = tok.end_token
             tt = t.previous
-            first_pass3314 = True
+            first_pass4005 = True
             while True:
-                if first_pass3314: first_pass3314 = False
+                if first_pass4005: first_pass4005 = False
                 else: tt = tt.previous
                 if (not (tt is not None)): break
                 tok0 = SentimentAnalyzer.__m_termins.try_parse(tt, TerminParseAttr.NO)
@@ -114,9 +114,9 @@ class SentimentAnalyzer(Analyzer):
                     continue
                 break
             tt = t1.next0_
-            first_pass3315 = True
+            first_pass4006 = True
             while True:
-                if first_pass3315: first_pass3315 = False
+                if first_pass4006: first_pass4006 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not ((isinstance(tt, TextToken)))): 
@@ -161,11 +161,11 @@ class SentimentAnalyzer(Analyzer):
                     if (Utils.isNullOrEmpty(line)): 
                         continue
                     coef = (1 if i == 0 else -1)
-                    SentimentAnalyzer.__m_termins.add(Termin._new135(line, coef))
+                    SentimentAnalyzer.__m_termins.add(Termin._new119(line, coef))
         except Exception as ex: 
             pass
         for s in ["ОЧЕНЬ", "СИЛЬНО"]: 
-            SentimentAnalyzer.__m_termins.add(Termin._new135(s, 0))
+            SentimentAnalyzer.__m_termins.add(Termin._new119(s, 0))
         Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = False
         ProcessorService.register_analyzer(SentimentAnalyzer())
     

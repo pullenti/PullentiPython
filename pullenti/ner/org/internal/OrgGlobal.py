@@ -58,10 +58,10 @@ class OrgGlobal:
                             elif (xx.tag == "abbr"): 
                                 abbr = Utils.getXmlInnerText(xx)
                             elif (xx.tag == "geo"): 
-                                wrapgeo1777 = RefOutArgWrapper(None)
-                                inoutres1778 = Utils.tryGetValue(geos, Utils.getXmlInnerText(xx), wrapgeo1777)
-                                geo_ = wrapgeo1777.value
-                                if (not inoutres1778): 
+                                wrapgeo1826 = RefOutArgWrapper(None)
+                                inoutres1827 = Utils.tryGetValue(geos, Utils.getXmlInnerText(xx), wrapgeo1826)
+                                geo_ = wrapgeo1826.value
+                                if (not inoutres1827): 
                                     ar = geo_proc.process(SourceOfAnalysis(Utils.getXmlInnerText(xx)), None, lang)
                                     if (ar is not None and len(ar.entities) == 1 and (isinstance(ar.entities[0], GeoReferent))): 
                                         geo_ = (Utils.asObjectOrNull(ar.entities[0], GeoReferent))

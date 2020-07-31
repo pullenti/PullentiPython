@@ -6,22 +6,22 @@ import typing
 import io
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.MorphMiscInfo import MorphMiscInfo
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphCase import MorphCase
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.morph.MorphVoice import MorphVoice
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphMiscInfo import MorphMiscInfo
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.morph.MorphWordForm import MorphWordForm
 
 class MorphCollection(MorphBaseInfo):
     """ Коллекция морфологических вариантов """
     
     def __init__(self, source : 'MorphCollection'=None) -> None:
-        super().__init__(None)
+        super().__init__()
         self.__m_class = MorphClass()
         self.__m_gender = MorphGender.UNDEFINED
         self.__m_number = MorphNumber.UNDEFINED
@@ -38,15 +38,15 @@ class MorphCollection(MorphBaseInfo):
                 mi = (Utils.asObjectOrNull((it).clone(), MorphWordForm))
             else: 
                 mi = MorphBaseInfo()
-                it.copy_to(mi)
+                mi.copy_from(it)
             if (self.__m_items is None): 
                 self.__m_items = list()
             self.__m_items.append(mi)
-        self.__m_class = MorphClass(source.__m_class)
+        self.__m_class = MorphClass._new72(source.__m_class.value)
         self.__m_gender = source.__m_gender
-        self.__m_case = MorphCase(source.__m_case)
+        self.__m_case = MorphCase._new48(source.__m_case.value)
         self.__m_number = source.__m_number
-        self.__m_language = MorphLang(source.__m_language)
+        self.__m_language = MorphLang._new75(source.__m_language.value)
         self.__m_voice = source.__m_voice
         self.__m_need_recalc = False
     
@@ -73,11 +73,11 @@ class MorphCollection(MorphBaseInfo):
             except Exception as ex: 
                 pass
         if (not self.__m_need_recalc): 
-            res.__m_class = MorphClass(self.__m_class)
+            res.__m_class = MorphClass._new72(self.__m_class.value)
             res.__m_gender = self.__m_gender
-            res.__m_case = MorphCase(self.__m_case)
+            res.__m_case = MorphCase._new48(self.__m_case.value)
             res.__m_number = self.__m_number
-            res.__m_language = MorphLang(self.__m_language)
+            res.__m_language = MorphLang._new75(self.__m_language.value)
             res.__m_need_recalc = False
             res.__m_voice = self.__m_voice
         return res
@@ -385,16 +385,17 @@ class MorphCollection(MorphBaseInfo):
                 del self.__m_items[i]
                 self.__m_need_recalc = True
     
-    def remove_items_ex(self, col : 'MorphCollection', cla : 'MorphClass') -> None:
-        """ Удалить элементы, не соответствующие другой морфологической коллекции
+    def remove_items_list_cla(self, bis : typing.List['MorphBaseInfo'], cla : 'MorphClass') -> None:
+        """ Удалить элементы, не соответствующие заданным параметрам
         
         Args:
-            col(MorphCollection): 
+            bis(typing.List[MorphBaseInfo]): 
+            cla(MorphClass): 
         """
         if (self.__m_items is None): 
             return
         for i in range(len(self.__m_items) - 1, -1, -1):
-            if (not cla.is_undefined): 
+            if (cla is not None and not cla.is_undefined): 
                 if ((((self.__m_items[i].class0_.value) & (cla.value))) == 0): 
                     if (((self.__m_items[i].class0_.is_proper or self.__m_items[i].class0_.is_noun)) and ((cla.is_proper or cla.is_noun))): 
                         pass
@@ -403,7 +404,7 @@ class MorphCollection(MorphBaseInfo):
                         self.__m_need_recalc = True
                         continue
             ok = False
-            for it in col.items: 
+            for it in bis: 
                 if (not it.case_.is_undefined and not self.__m_items[i].case_.is_undefined): 
                     if (((self.__m_items[i].case_) & it.case_).is_undefined): 
                         continue
@@ -418,6 +419,14 @@ class MorphCollection(MorphBaseInfo):
             if (not ok): 
                 del self.__m_items[i]
                 self.__m_need_recalc = True
+    
+    def remove_items_ex(self, col : 'MorphCollection', cla : 'MorphClass') -> None:
+        """ Удалить элементы, не соответствующие другой морфологической коллекции
+        
+        Args:
+            col(MorphCollection): 
+        """
+        self.remove_items_list_cla(col.items, cla)
     
     def find_item(self, cas : 'MorphCase', num : 'MorphNumber'=MorphNumber.UNDEFINED, gen : 'MorphGender'=MorphGender.UNDEFINED) -> 'MorphBaseInfo':
         if (self.__m_items is None): 
@@ -459,12 +468,12 @@ class MorphCollection(MorphBaseInfo):
     
     def _deserialize(self, stream : io.IOBase) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
-        self.__m_class = MorphClass._new79(SerializerHelper.deserialize_short(stream))
-        self.__m_case = MorphCase._new64(SerializerHelper.deserialize_short(stream))
+        self.__m_class = MorphClass._new72(SerializerHelper.deserialize_short(stream))
+        self.__m_case = MorphCase._new48(SerializerHelper.deserialize_short(stream))
         self.__m_gender = (Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphGender))
         self.__m_number = (Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphNumber))
         self.__m_voice = (Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphVoice))
-        self.__m_language = MorphLang._new10(SerializerHelper.deserialize_short(stream))
+        self.__m_language = MorphLang._new75(SerializerHelper.deserialize_short(stream))
         cou = SerializerHelper.deserialize_int(stream)
         self.__m_items = list()
         i = 0
@@ -501,11 +510,11 @@ class MorphCollection(MorphBaseInfo):
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         ty = Utils.readByteIO(stream)
         res = (MorphBaseInfo() if ty == 0 else MorphWordForm())
-        res.class0_ = MorphClass._new79(SerializerHelper.deserialize_short(stream))
-        res.case_ = MorphCase._new64(SerializerHelper.deserialize_short(stream))
+        res.class0_ = MorphClass._new72(SerializerHelper.deserialize_short(stream))
+        res.case_ = MorphCase._new48(SerializerHelper.deserialize_short(stream))
         res.gender = Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphGender)
         res.number = Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphNumber)
-        res.language = MorphLang._new10(SerializerHelper.deserialize_short(stream))
+        res.language = MorphLang._new75(SerializerHelper.deserialize_short(stream))
         if (ty == 0): 
             return res
         wf = Utils.asObjectOrNull(res, MorphWordForm)
@@ -522,19 +531,19 @@ class MorphCollection(MorphBaseInfo):
         return res
     
     @staticmethod
-    def _new598(_arg1 : 'MorphClass') -> 'MorphCollection':
+    def _new584(_arg1 : 'MorphClass') -> 'MorphCollection':
         res = MorphCollection()
         res.class0_ = _arg1
         return res
     
     @staticmethod
-    def _new2354(_arg1 : 'MorphGender') -> 'MorphCollection':
+    def _new2421(_arg1 : 'MorphGender') -> 'MorphCollection':
         res = MorphCollection()
         res.gender = _arg1
         return res
     
     @staticmethod
-    def _new2458(_arg1 : 'MorphCase') -> 'MorphCollection':
+    def _new2507(_arg1 : 'MorphCase') -> 'MorphCollection':
         res = MorphCollection()
         res.case_ = _arg1
         return res

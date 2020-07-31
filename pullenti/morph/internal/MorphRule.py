@@ -3,12 +3,10 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 import io
-import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphWordForm import MorphWordForm
 
 class MorphRule:
     
@@ -28,10 +26,10 @@ class MorphRule:
         self.variants_list.clear()
         for v in vars0_: 
             li = [ ]
-            wrapli38 = RefOutArgWrapper(None)
-            inoutres39 = Utils.tryGetValue(self.variants, Utils.ifNotNull(v.tail, ""), wrapli38)
-            li = wrapli38.value
-            if (not inoutres39): 
+            wrapli28 = RefOutArgWrapper(None)
+            inoutres29 = Utils.tryGetValue(self.variants, Utils.ifNotNull(v.tail, ""), wrapli28)
+            li = wrapli28.value
+            if (not inoutres29): 
                 li = list()
                 self.variants[Utils.ifNotNull(v.tail, "")] = li
             li.append(v)
@@ -54,28 +52,12 @@ class MorphRule:
         if (var.class0_.is_undefined): 
             pass
         li = [ ]
-        wrapli40 = RefOutArgWrapper(None)
-        inoutres41 = Utils.tryGetValue(self.variants, tail, wrapli40)
-        li = wrapli40.value
-        if (not inoutres41): 
+        wrapli30 = RefOutArgWrapper(None)
+        inoutres31 = Utils.tryGetValue(self.variants, tail, wrapli30)
+        li = wrapli30.value
+        if (not inoutres31): 
             li = list()
             self.variants[tail] = li
         var.tail = tail
         li.append(var)
-        var.rule = self
-    
-    def process_result(self, res : typing.List['MorphWordForm'], word_begin : str, mvs : typing.List['MorphRuleVariant']) -> None:
-        for mv in mvs: 
-            r = MorphWordForm(mv, None)
-            if (mv.normal_tail is not None and len(mv.normal_tail) > 0 and mv.normal_tail[0] != '-'): 
-                r.normal_case = (word_begin + mv.normal_tail)
-            else: 
-                r.normal_case = word_begin
-            if (mv.full_normal_tail is not None): 
-                if (len(mv.full_normal_tail) > 0 and mv.full_normal_tail[0] != '-'): 
-                    r.normal_full = (word_begin + mv.full_normal_tail)
-                else: 
-                    r.normal_full = word_begin
-            if (not MorphWordForm._has_morph_equals(res, r)): 
-                r.undef_coef = (0)
-                res.append(r)
+        var.rule = (self)

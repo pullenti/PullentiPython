@@ -6,9 +6,10 @@ import io
 import typing
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.Token import Token
 from pullenti.morph.CharsInfo import CharsInfo
+from pullenti.ner.Token import Token
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 
 class MetaToken(Token):
@@ -32,7 +33,7 @@ class MetaToken(Token):
                     if (self.chars.is_capital_upper and t.chars.is_all_lower): 
                         pass
                     else: 
-                        self.chars = CharsInfo._new2834(((self.chars.value) & (t.chars.value)))
+                        self.chars = CharsInfo._new2618(((self.chars.value) & (t.chars.value)))
                 if (t == end): 
                     break
                 t = t.next0_
@@ -46,12 +47,12 @@ class MetaToken(Token):
             t = self._m_begin_token.next0_
             while t is not None: 
                 cou += 1
-                if ((cou) > 100): 
+                if (cou > 100): 
                     break
                 if (t.end_char > self._m_end_token.end_char): 
                     break
                 if (t.chars.is_letter): 
-                    self.chars = CharsInfo._new2834(((self.chars.value) & (t.chars.value)))
+                    self.chars = CharsInfo._new2618(((self.chars.value) & (t.chars.value)))
                 if (t == self._m_end_token): 
                     break
                 t = t.next0_
@@ -67,8 +68,6 @@ class MetaToken(Token):
                 pass
             else: 
                 self._m_begin_token = value
-                if (value is not None): 
-                    self.begin_char = self._m_begin_token.begin_char
                 self.__refresh_chars_info()
         return value
     
@@ -83,10 +82,18 @@ class MetaToken(Token):
                 pass
             else: 
                 self._m_end_token = value
-                if (value is not None): 
-                    self.end_char = self._m_end_token.end_char
                 self.__refresh_chars_info()
         return value
+    
+    @property
+    def begin_char(self) -> int:
+        bt = self.begin_token
+        return (0 if bt is None else bt.begin_char)
+    
+    @property
+    def end_char(self) -> int:
+        et = self.end_token
+        return (0 if et is None else et.end_char)
     
     @property
     def tokens_count(self) -> int:
@@ -142,9 +149,9 @@ class MetaToken(Token):
     def get_referents(self) -> typing.List['Referent']:
         res = None
         t = self.begin_token
-        first_pass3356 = True
+        first_pass4047 = True
         while True:
-            if first_pass3356: first_pass3356 = False
+            if first_pass4047: first_pass4047 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= self.end_char)): break
             li = t.get_referents()
@@ -173,34 +180,34 @@ class MetaToken(Token):
             return False
         return True
     
-    def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def get_normal_case_text(self, mc : 'MorphClass'=None, num : 'MorphNumber'=MorphNumber.UNDEFINED, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         from pullenti.ner.core.MiscHelper import MiscHelper
         attr = GetTextAttr.NO
-        if (single_number): 
+        if (num == MorphNumber.SINGULAR): 
             attr = (Utils.valToEnum((attr) | (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE), GetTextAttr))
         else: 
             attr = (Utils.valToEnum((attr) | (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE), GetTextAttr))
         if (keep_chars): 
             attr = (Utils.valToEnum((attr) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
         if (self.begin_token == self.end_token): 
-            return self.begin_token.get_normal_case_text(mc, single_number, gender, keep_chars)
+            return self.begin_token.get_normal_case_text(mc, num, gender, keep_chars)
         else: 
             return MiscHelper.get_text_value(self.begin_token, self.end_token, attr)
     
     @staticmethod
-    def _new594(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'MetaToken':
+    def _new580(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.morph = _arg3
         return res
     
     @staticmethod
-    def _new857(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object) -> 'MetaToken':
+    def _new902(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object) -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.tag = _arg3
         return res
     
     @staticmethod
-    def _new2355(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
+    def _new2422(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.tag = _arg3
         res.morph = _arg4

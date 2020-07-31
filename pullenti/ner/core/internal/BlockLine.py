@@ -68,7 +68,7 @@ class BlockLine(MetaToken):
             nums += 1
         tok = BlockLine.__m_ontology.try_parse(t, TerminParseAttr.NO)
         if (tok is None): 
-            npt1 = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
+            npt1 = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0, None)
             if (npt1 is not None and npt1.end_token != npt1.begin_token): 
                 tok = BlockLine.__m_ontology.try_parse(npt1.noun.begin_token, TerminParseAttr.NO)
         if (tok is not None): 
@@ -91,13 +91,13 @@ class BlockLine(MetaToken):
                 tok = (None)
             if (typ_ == BlkTyps.INDEX and not t.is_value("ОГЛАВЛЕНИЕ", None)): 
                 if (not t.is_newline_after and t.next0_ is not None): 
-                    npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
+                    npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0, None)
                     if (npt is not None and npt.is_newline_after and npt.morph.case_.is_genitive): 
                         tok = (None)
                     elif (npt is None): 
                         tok = (None)
             if ((typ_ == BlkTyps.INTRO and tok is not None and not tok.is_newline_after) and t.is_value("ВВЕДЕНИЕ", None)): 
-                npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
+                npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0, None)
                 if (npt is not None and npt.morph.case_.is_genitive): 
                     tok = (None)
             if (tok is not None): 
@@ -155,19 +155,19 @@ class BlockLine(MetaToken):
                         res.has_verb = True
             t = t.next0_
         if (res.typ == BlkTyps.UNDEFINED): 
-            npt = NounPhraseHelper.try_parse((res.begin_token if res.number_end is None else res.number_end.next0_), NounPhraseParseAttr.NO, 0)
+            npt = NounPhraseHelper.try_parse((res.begin_token if res.number_end is None else res.number_end.next0_), NounPhraseParseAttr.NO, 0, None)
             if (npt is not None): 
                 if (npt.noun.is_value("ХАРАКТЕРИСТИКА", None) or npt.noun.is_value("СОДЕРЖАНИЕ", "ЗМІСТ")): 
                     ok = True
                     tt = npt.end_token.next0_
-                    first_pass2961 = True
+                    first_pass3645 = True
                     while True:
-                        if first_pass2961: first_pass2961 = False
+                        if first_pass3645: first_pass3645 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.end_char <= res.end_char)): break
                         if (tt.is_char('.')): 
                             continue
-                        npt2 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
+                        npt2 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0, None)
                         if (npt2 is None or not npt2.morph.case_.is_genitive): 
                             ok = False
                             break
@@ -185,14 +185,14 @@ class BlockLine(MetaToken):
                 elif (npt.noun.is_value("ВЫВОД", "ВИСНОВОК") or npt.noun.is_value("РЕЗУЛЬТАТ", "ДОСЛІДЖЕННЯ")): 
                     ok = True
                     tt = npt.end_token.next0_
-                    first_pass2962 = True
+                    first_pass3646 = True
                     while True:
-                        if first_pass2962: first_pass2962 = False
+                        if first_pass3646: first_pass3646 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.end_char <= res.end_char)): break
                         if (tt.is_char_of(",.") or tt.is_and): 
                             continue
-                        npt1 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
+                        npt1 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0, None)
                         if (npt1 is not None): 
                             if (npt1.noun.is_value("РЕЗУЛЬТАТ", "ДОСЛІДЖЕННЯ") or npt1.noun.is_value("РЕКОМЕНДАЦИЯ", "РЕКОМЕНДАЦІЯ") or npt1.noun.is_value("ИССЛЕДОВАНИЕ", "ДОСЛІДЖЕННЯ")): 
                                 tt = npt1.end_token
@@ -223,16 +223,16 @@ class BlockLine(MetaToken):
                         if (npt.begin_token == npt.end_token and npt.noun.is_value("СПИСОК", None) and npt.end_char == res.end_char): 
                             ok = False
                         tt = npt.end_token.next0_
-                        first_pass2963 = True
+                        first_pass3647 = True
                         while True:
-                            if first_pass2963: first_pass2963 = False
+                            if first_pass3647: first_pass3647 = False
                             else: tt = tt.next0_
                             if (not (tt is not None and tt.end_char <= res.end_char)): break
                             if (tt.is_char_of(",.:") or tt.is_and or tt.morph.class0_.is_preposition): 
                                 continue
                             if (tt.is_value("ОТРАЖЕНЫ", "ВІДОБРАЖЕНІ")): 
                                 continue
-                            npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
+                            npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0, None)
                             if (npt is None): 
                                 ok = False
                                 break
@@ -279,16 +279,16 @@ class BlockLine(MetaToken):
             return
         BlockLine.__m_ontology = TerminCollection()
         for s in ["СОДЕРЖАНИЕ", "СОДЕРЖИМОЕ", "ОГЛАВЛЕНИЕ", "ПЛАН", "PLAN", "ЗМІСТ", "CONTENTS", "INDEX"]: 
-            BlockLine.__m_ontology.add(Termin._new135(s, BlkTyps.INDEX))
+            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.INDEX))
         for s in ["ГЛАВА", "CHAPTER", "РАЗДЕЛ", "ПАРАГРАФ", "VOLUME", "SECTION", "РОЗДІЛ"]: 
-            BlockLine.__m_ontology.add(Termin._new135(s, BlkTyps.CHAPTER))
+            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.CHAPTER))
         for s in ["ВВЕДЕНИЕ", "ВСТУПЛЕНИЕ", "ПРЕДИСЛОВИЕ", "INTRODUCTION"]: 
-            BlockLine.__m_ontology.add(Termin._new135(s, BlkTyps.INTRO))
+            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.INTRO))
         for s in ["ВСТУП", "ПЕРЕДМОВА"]: 
-            BlockLine.__m_ontology.add(Termin._new472(s, MorphLang.UA, BlkTyps.INTRO))
+            BlockLine.__m_ontology.add(Termin._new456(s, MorphLang.UA, BlkTyps.INTRO))
         for s in ["ВЫВОДЫ", "ВЫВОД", "ЗАКЛЮЧЕНИЕ", "CONCLUSION", "ВИСНОВОК", "ВИСНОВКИ"]: 
-            BlockLine.__m_ontology.add(Termin._new135(s, BlkTyps.CONSLUSION))
+            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.CONSLUSION))
         for s in ["ПРИЛОЖЕНИЕ", "APPENDIX", "ДОДАТОК"]: 
-            BlockLine.__m_ontology.add(Termin._new135(s, BlkTyps.APPENDIX))
+            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.APPENDIX))
         for s in ["СПИСОК СОКРАЩЕНИЙ", "СПИСОК УСЛОВНЫХ СОКРАЩЕНИЙ", "СПИСОК ИСПОЛЬЗУЕМЫХ СОКРАЩЕНИЙ", "УСЛОВНЫЕ СОКРАЩЕНИЯ", "ОБЗОР ЛИТЕРАТУРЫ", "АННОТАЦИЯ", "ANNOTATION", "БЛАГОДАРНОСТИ", "SUPPLEMENT", "ABSTRACT", "СПИСОК СКОРОЧЕНЬ", "ПЕРЕЛІК УМОВНИХ СКОРОЧЕНЬ", "СПИСОК ВИКОРИСТОВУВАНИХ СКОРОЧЕНЬ", "УМОВНІ СКОРОЧЕННЯ", "ОГЛЯД ЛІТЕРАТУРИ", "АНОТАЦІЯ", "ПОДЯКИ"]: 
-            BlockLine.__m_ontology.add(Termin._new135(s, BlkTyps.MISC))
+            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.MISC))

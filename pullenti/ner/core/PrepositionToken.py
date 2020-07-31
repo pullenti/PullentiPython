@@ -4,6 +4,7 @@
 
 
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.MiscHelper import MiscHelper
 
@@ -20,7 +21,7 @@ class PrepositionToken(MetaToken):
     def __str__(self) -> str:
         return self.normal
     
-    def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def get_normal_case_text(self, mc : 'MorphClass'=None, num : 'MorphNumber'=MorphNumber.UNDEFINED, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         res = self.normal
         if (keep_chars): 
             if (self.chars.is_all_lower): 
@@ -32,7 +33,7 @@ class PrepositionToken(MetaToken):
         return res
     
     @staticmethod
-    def _new614(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'MorphCase') -> 'PrepositionToken':
+    def _new600(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'MorphCase') -> 'PrepositionToken':
         res = PrepositionToken(_arg1, _arg2)
         res.normal = _arg3
         res.next_case = _arg4

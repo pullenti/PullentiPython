@@ -9,16 +9,15 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.ner.Referent import Referent
-from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.decree.DecreeKind import DecreeKind
 from pullenti.ner.decree.internal.MetaDecree import MetaDecree
-from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.decree.DecreeKind import DecreeKind
 from pullenti.ner.date.DateRangeReferent import DateRangeReferent
-from pullenti.ner.decree.internal.DecreeToken import DecreeToken
 
 class DecreeReferent(Referent):
     """ Сущность, представляющая ссылку на НПА """
@@ -160,6 +159,8 @@ class DecreeReferent(Referent):
             return False
         if (dt.ref is not None and (isinstance(dt.ref.referent, DateReferent))): 
             dr = Utils.asObjectOrNull(dt.ref.referent, DateReferent)
+            if (dr.is_relative): 
+                return False
             year = dr.year
             mon = dr.month
             day = dr.day
@@ -189,10 +190,10 @@ class DecreeReferent(Referent):
                 i = str0_.find('.')
                 if (i == 4): 
                     str0_ = str0_[0:0+4]
-                wrapi1134 = RefOutArgWrapper(0)
-                inoutres1135 = Utils.tryParseInt(str0_, wrapi1134)
-                i = wrapi1134.value
-                if (inoutres1135): 
+                wrapi1179 = RefOutArgWrapper(0)
+                inoutres1180 = Utils.tryParseInt(str0_, wrapi1179)
+                i = wrapi1179.value
+                if (inoutres1180): 
                     res.append(i)
         return res
     
@@ -207,12 +208,14 @@ class DecreeReferent(Referent):
     
     @property
     def kind(self) -> 'DecreeKind':
+        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         return DecreeToken.get_kind(self.typ)
     
     @property
     def is_law(self) -> bool:
         """ Признак того, что это именно закон, а не подзаконный акт.
          Для законов возможны несколько номеров и дат (редакций) """
+        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         return DecreeToken.is_law(self.typ)
     
     @property
@@ -249,6 +252,7 @@ class DecreeReferent(Referent):
         return s
     
     def _add_number(self, dt : 'DecreeToken') -> None:
+        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         if (dt.typ == DecreeToken.ItemType.NUMBER): 
             if (dt.num_year > 0): 
                 self.add_slot(DecreeReferent.ATTR_DATE, str(dt.num_year), False, 0)
@@ -319,6 +323,7 @@ class DecreeReferent(Referent):
         return b
     
     def __can_be_equals(self, obj : 'Referent', typ_ : 'EqualType', ignore_geo : bool) -> bool:
+        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         dr = Utils.asObjectOrNull(obj, DecreeReferent)
         if (dr is None): 
             return False
@@ -447,6 +452,7 @@ class DecreeReferent(Referent):
         return False
     
     def _check_correction(self, noun_is_doubtful : bool) -> bool:
+        from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         typ_ = self.typ0
         if (typ_ is None): 
             return False
@@ -544,7 +550,7 @@ class DecreeReferent(Referent):
         return oi
     
     @staticmethod
-    def _new1118(_arg1 : str) -> 'DecreeReferent':
+    def _new1167(_arg1 : str) -> 'DecreeReferent':
         res = DecreeReferent()
         res.typ = _arg1
         return res

@@ -17,12 +17,12 @@ from pullenti.ner.decree.internal.DecreeToken import DecreeToken
 from pullenti.ner.instrument.internal.InstrToken import InstrToken
 from pullenti.ner.uri.UriReferent import UriReferent
 from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
-from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-from pullenti.ner.phone.PhoneReferent import PhoneReferent
 from pullenti.ner.decree.DecreeReferent import DecreeReferent
-from pullenti.ner.bank.BankDataReferent import BankDataReferent
+from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.ner.instrument.InstrumentAnalyzer import InstrumentAnalyzer
+from pullenti.ner.phone.PhoneReferent import PhoneReferent
+from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
+from pullenti.ner.bank.BankDataReferent import BankDataReferent
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.org.OrganizationReferent import OrganizationReferent
@@ -81,9 +81,9 @@ class ParticipantToken(MetaToken):
                     refs = list()
                     refs.append(r1)
                     refs.append(r2)
-                    first_pass3203 = True
+                    first_pass3894 = True
                     while True:
-                        if first_pass3203: first_pass3203 = False
+                        if first_pass3894: first_pass3894 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if ((ttt.is_comma_and and ttt.next0_ is not None and ttt.next0_.get_referent() is not None) and ttt.next0_.get_referent().type_name == r1.type_name): 
@@ -92,9 +92,9 @@ class ParticipantToken(MetaToken):
                                 refs.append(ttt.get_referent())
                             continue
                         break
-                    first_pass3204 = True
+                    first_pass3895 = True
                     while True:
-                        if first_pass3204: first_pass3204 = False
+                        if first_pass3895: first_pass3895 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_comma or ttt.morph.class0_.is_preposition): 
@@ -103,9 +103,9 @@ class ParticipantToken(MetaToken):
                             continue
                         if (ttt.is_value("ДОГОВАРИВАТЬСЯ", None)): 
                             continue
-                        npt = NounPhraseHelper.try_parse(ttt, NounPhraseParseAttr.NO, 0)
+                        npt = NounPhraseHelper.try_parse(ttt, NounPhraseParseAttr.NO, 0, None)
                         if (npt is not None and npt.noun.is_value("СТОРОНА", None) and npt.morph.number != MorphNumber.SINGULAR): 
-                            re = ParticipantToken._new1586(t, npt.end_token, ParticipantToken.Kinds.NAMEDASPARTS)
+                            re = ParticipantToken._new1635(t, npt.end_token, ParticipantToken.Kinds.NAMEDASPARTS)
                             re.parts = refs
                             return re
                         break
@@ -128,7 +128,7 @@ class ParticipantToken(MetaToken):
                     elif (isinstance(ttt, ReferentToken)): 
                         pass
                     elif (has_br or has_named): 
-                        npt = NounPhraseHelper.try_parse(ttt, NounPhraseParseAttr.REFERENTCANBENOUN, 0)
+                        npt = NounPhraseHelper.try_parse(ttt, NounPhraseParseAttr.REFERENTCANBENOUN, 0, None)
                         if (npt is None): 
                             break
                         if (has_br): 
@@ -137,8 +137,8 @@ class ParticipantToken(MetaToken):
                         if (not has_named): 
                             if (ParticipantToken.M_ONTOLOGY.try_parse(ttt, TerminParseAttr.NO) is None): 
                                 break
-                        re = ParticipantToken._new1586(t, t, ParticipantToken.Kinds.NAMEDAS)
-                        re.typ = npt.get_normal_case_text(None, True, MorphGender.UNDEFINED, False)
+                        re = ParticipantToken._new1635(t, t, ParticipantToken.Kinds.NAMEDAS)
+                        re.typ = npt.get_normal_case_text(None, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False)
                         re.parts = list()
                         re.parts.append(r1)
                         return re
@@ -149,9 +149,9 @@ class ParticipantToken(MetaToken):
                 brr = None
                 add_refs = None
                 ttt = t.next0_
-                first_pass3205 = True
+                first_pass3896 = True
                 while True:
-                    if first_pass3205: first_pass3205 = False
+                    if first_pass3896: first_pass3896 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if ((isinstance(ttt, NumberToken)) and (isinstance(ttt.next0_, TextToken)) and (ttt.next0_).term == "СТОРОНЫ"): 
@@ -176,7 +176,7 @@ class ParticipantToken(MetaToken):
                     elif (brr is not None or has_named): 
                         if (BracketHelper.can_be_start_of_sequence(ttt, True, False)): 
                             ttt = ttt.next0_
-                        npt = NounPhraseHelper.try_parse(ttt, NounPhraseParseAttr.REFERENTCANBENOUN, 0)
+                        npt = NounPhraseHelper.try_parse(ttt, NounPhraseParseAttr.REFERENTCANBENOUN, 0, None)
                         typ22 = None
                         if (npt is not None): 
                             ttt = npt.end_token
@@ -189,7 +189,7 @@ class ParticipantToken(MetaToken):
                             if (ttok is not None): 
                                 typ22 = ttok.termin.canonic_text
                             elif (has_named and ttt.morph.class0_.is_adjective): 
-                                typ22 = ttt.get_normal_case_text(MorphClass.ADJECTIVE, False, MorphGender.UNDEFINED, False)
+                                typ22 = ttt.get_normal_case_text(MorphClass.ADJECTIVE, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False)
                             elif (brr is not None): 
                                 continue
                             else: 
@@ -204,8 +204,8 @@ class ParticipantToken(MetaToken):
                         if (not has_named and typ22 is None): 
                             if (ParticipantToken.M_ONTOLOGY.try_parse(npt.begin_token, TerminParseAttr.NO) is None): 
                                 break
-                        re = ParticipantToken._new1586(t, ttt, ParticipantToken.Kinds.NAMEDAS)
-                        re.typ = (Utils.ifNotNull(typ22, npt.get_normal_case_text(None, True, MorphGender.UNDEFINED, False)))
+                        re = ParticipantToken._new1635(t, ttt, ParticipantToken.Kinds.NAMEDAS)
+                        re.typ = (Utils.ifNotNull(typ22, npt.get_normal_case_text(None, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False)))
                         re.parts = list()
                         re.parts.append(r1)
                         return re
@@ -224,7 +224,7 @@ class ParticipantToken(MetaToken):
                             continue
                         if (isinstance(ttt.get_referent(), GeoReferent)): 
                             continue
-                        npt = NounPhraseHelper.try_parse(ttt, NounPhraseParseAttr.NO, 0)
+                        npt = NounPhraseHelper.try_parse(ttt, NounPhraseParseAttr.NO, 0, None)
                         if (npt is not None): 
                             if ((npt.noun.is_value("МЕСТО", None) or npt.noun.is_value("ЖИТЕЛЬСТВО", None) or npt.noun.is_value("ПРЕДПРИНИМАТЕЛЬ", None)) or npt.noun.is_value("ПОЛ", None) or npt.noun.is_value("РОЖДЕНИЕ", None)): 
                                 ttt = npt.end_token
@@ -240,7 +240,7 @@ class ParticipantToken(MetaToken):
                             continue
                         break
                 if (end_side is not None or ((add_refs is not None and t.previous is not None and t.previous.is_and))): 
-                    re = ParticipantToken._new1586(t, Utils.ifNotNull(end_side, t), ParticipantToken.Kinds.NAMEDAS)
+                    re = ParticipantToken._new1635(t, Utils.ifNotNull(end_side, t), ParticipantToken.Kinds.NAMEDAS)
                     re.typ = (None)
                     re.parts = list()
                     re.parts.append(r1)
@@ -259,7 +259,7 @@ class ParticipantToken(MetaToken):
                 if (isinstance(tt1, ReferentToken)): 
                     r1 = tt1.get_referent()
                     if ((isinstance(r1, PersonReferent)) or (isinstance(r1, OrganizationReferent))): 
-                        re = ParticipantToken._new1586(t, tt1, ParticipantToken.Kinds.NAMEDAS)
+                        re = ParticipantToken._new1635(t, tt1, ParticipantToken.Kinds.NAMEDAS)
                         re.typ = too.termin.canonic_text
                         re.parts = list()
                         re.parts.append(r1)
@@ -279,9 +279,9 @@ class ParticipantToken(MetaToken):
         typ_ = None
         t1 = None
         t0 = tt
-        first_pass3206 = True
+        first_pass3897 = True
         while True:
-            if first_pass3206: first_pass3206 = False
+            if first_pass3897: first_pass3897 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.morph.class0_.is_preposition and typ_ is not None): 
@@ -341,7 +341,7 @@ class ParticipantToken(MetaToken):
                     if (named and tt.get_morph_class_in_dictionary().is_noun): 
                         if (not tt.chars.is_all_lower or BracketHelper.is_bracket(tt.previous, True)): 
                             if (DecreeToken.is_keyword(tt, False) is None): 
-                                val = tt.get_normal_case_text(MorphClass.NOUN, True, MorphGender.UNDEFINED, False)
+                                val = tt.get_normal_case_text(MorphClass.NOUN, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False)
                                 if (typ_ is not None): 
                                     if (not ParticipantToken.__is_types_equal(typ_, val)): 
                                         break
@@ -363,9 +363,9 @@ class ParticipantToken(MetaToken):
                                 t1 = tt
                                 continue
                         if (dc.is_adjective): 
-                            npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
+                            npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0, None)
                             if (npt is not None and len(npt.adjectives) > 0 and npt.noun.get_morph_class_in_dictionary().is_noun): 
-                                typ_ = npt.get_normal_case_text(None, True, MorphGender.UNDEFINED, False)
+                                typ_ = npt.get_normal_case_text(None, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False)
                                 t1 = npt.end_token
                                 continue
                 if (tt == t): 
@@ -409,7 +409,7 @@ class ParticipantToken(MetaToken):
             t1 = t1.next0_
         if (br and t1.next0_ is not None and BracketHelper.can_be_end_of_sequence(t1.next0_, False, None, False)): 
             t1 = t1.next0_
-        res = ParticipantToken._new1591(t, t1, (ParticipantToken.Kinds.NAMEDAS if named else ParticipantToken.Kinds.PURE), typ_)
+        res = ParticipantToken._new1640(t, t1, (ParticipantToken.Kinds.NAMEDAS if named else ParticipantToken.Kinds.PURE), typ_)
         if (t.is_char(':')): 
             res.begin_token = t.next0_
         return res
@@ -493,9 +493,9 @@ class ParticipantToken(MetaToken):
                 is_in_tab_cell = True
                 break
             tt = tt.next0_; cou += 1
-        first_pass3207 = True
+        first_pass3898 = True
         while True:
-            if first_pass3207: first_pass3207 = False
+            if first_pass3898: first_pass3898 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.begin_char == 8923): 
@@ -540,7 +540,7 @@ class ParticipantToken(MetaToken):
                 continue
             if (t.is_char_of("_/\\")): 
                 spec_chars += 1
-                if ((spec_chars) > 10 and rt is None): 
+                if (spec_chars > 10 and rt is None): 
                     rt = ReferentToken(cur, t0, t)
                 if (rt is not None): 
                     rt.end_token = t
@@ -583,9 +583,9 @@ class ParticipantToken(MetaToken):
         tt0 = self.begin_token
         refs = list()
         t = tt0.previous
-        first_pass3208 = True
+        first_pass3899 = True
         while True:
-            if first_pass3208: first_pass3208 = False
+            if first_pass3899: first_pass3899 = False
             else: t = t.previous
             if (not (t is not None and t.begin_char >= min_char)): break
             if (t.is_newline_after): 
@@ -613,9 +613,9 @@ class ParticipantToken(MetaToken):
             t = t.next0_
         if (t is not None and t.is_char(',')): 
             t = t.next0_
-        first_pass3209 = True
+        first_pass3900 = True
         while True:
-            if first_pass3209: first_pass3209 = False
+            if first_pass3900: first_pass3900 = False
             else: t = t.next0_
             if (not (t is not None and ((max_char == 0 or t.begin_char <= max_char)))): break
             if (t.is_value("СТОРОНА", None)): 
@@ -684,9 +684,9 @@ class ParticipantToken(MetaToken):
     @staticmethod
     def __try_attach_contract_ground(t : 'Token', ip : 'InstrumentParticipant', can_be_passport : bool=False) -> 'Token':
         ok = False
-        first_pass3210 = True
+        first_pass3901 = True
         while True:
-            if first_pass3210: first_pass3210 = False
+            if first_pass3901: first_pass3901 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char(',') or t.morph.class0_.is_preposition): 
@@ -713,16 +713,16 @@ class ParticipantToken(MetaToken):
                     ip.ground = pir
                     return t
             if (t.is_value("УСТАВ", None)): 
-                ip.ground = t.get_normal_case_text(MorphClass.NOUN, True, MorphGender.UNDEFINED, False)
+                ip.ground = t.get_normal_case_text(MorphClass.NOUN, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False)
                 return t
             if (t.is_value("ДОВЕРЕННОСТЬ", None)): 
                 dts = DecreeToken.try_attach_list(t.next0_, None, 10, False)
                 if (dts is None): 
                     has_spec = False
                     ttt = t.next0_
-                    first_pass3211 = True
+                    first_pass3902 = True
                     while True:
-                        if first_pass3211: first_pass3211 = False
+                        if first_pass3902: first_pass3902 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None and ((ttt.end_char - t.end_char) < 200))): break
                         if (ttt.is_comma): 
@@ -735,7 +735,7 @@ class ParticipantToken(MetaToken):
                             if (dt.typ == DecreeToken.ItemType.DATE or dt.typ == DecreeToken.ItemType.NUMBER): 
                                 dts = DecreeToken.try_attach_list(ttt, None, 10, False)
                                 break
-                        npt = NounPhraseHelper.try_parse(ttt, NounPhraseParseAttr.NO, 0)
+                        npt = NounPhraseHelper.try_parse(ttt, NounPhraseParseAttr.NO, 0, None)
                         if (npt is not None): 
                             if (npt.end_token.is_value("НОТАРИУС", None)): 
                                 ttt = npt.end_token
@@ -810,11 +810,11 @@ class ParticipantToken(MetaToken):
             return
         ParticipantToken.M_ONTOLOGY = TerminCollection()
         for s in ["АРЕНДОДАТЕЛЬ", "АРЕНДАТОР", "СУБАРЕНДАТОР", "НАЙМОДАТЕЛЬ", "НАНИМАТЕЛЬ", "АГЕНТ", "ПРИНЦИПАЛ", "ПРОДАВЕЦ", "ПОКУПАТЕЛЬ", "ЗАКАЗЧИК", "ИСПОЛНИТЕЛЬ", "ПОСТАВЩИК", "ПОДРЯДЧИК", "СУБПОДРЯДЧИК", "СТОРОНА", "ЛИЦЕНЗИАР", "ЛИЦЕНЗИАТ", "СТРАХОВЩИК", "СТРАХОВАТЕЛЬ", "ПРОВАЙДЕР", "АБОНЕНТ", "ЗАСТРОЙЩИК", "УЧАСТНИК ДОЛЕВОГО СТРОИТЕЛЬСТВА", "КЛИЕНТ", "ЗАЕМЩИК", "УПРАВЛЯЮЩИЙ"]: 
-            ParticipantToken.M_ONTOLOGY.add(Termin._new135(s, ParticipantToken.M_ONTOLOGY))
-        t = Termin._new135("ГЕНПОДРЯДЧИК", ParticipantToken.M_ONTOLOGY)
+            ParticipantToken.M_ONTOLOGY.add(Termin._new119(s, ParticipantToken.M_ONTOLOGY))
+        t = Termin._new119("ГЕНПОДРЯДЧИК", ParticipantToken.M_ONTOLOGY)
         t.add_variant("ГЕНЕРАЛЬНЫЙ ПОДРЯДЧИК", False)
         ParticipantToken.M_ONTOLOGY.add(t)
-        t = Termin._new135("ЗАИМОДАТЕЛЬ", ParticipantToken.M_ONTOLOGY)
+        t = Termin._new119("ЗАИМОДАТЕЛЬ", ParticipantToken.M_ONTOLOGY)
         t.add_variant("ЗАЙМОДАТЕЛЬ", False)
         t.add_variant("ЗАЙМОДАВЕЦ", False)
         t.add_variant("ЗАИМОДАВЕЦ", False)
@@ -828,19 +828,19 @@ class ParticipantToken(MetaToken):
         ParticipantToken.M_ONTOLOGY.add(t)
     
     @staticmethod
-    def _new1415(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'ParticipantToken':
+    def _new1499(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'ParticipantToken':
         res = ParticipantToken(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new1586(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Kinds') -> 'ParticipantToken':
+    def _new1635(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Kinds') -> 'ParticipantToken':
         res = ParticipantToken(_arg1, _arg2)
         res.kind = _arg3
         return res
     
     @staticmethod
-    def _new1591(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Kinds', _arg4 : str) -> 'ParticipantToken':
+    def _new1640(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Kinds', _arg4 : str) -> 'ParticipantToken':
         res = ParticipantToken(_arg1, _arg2)
         res.kind = _arg3
         res.typ = _arg4

@@ -38,9 +38,9 @@ class LanguageHelper:
         ru_chars = 0
         en_chars = 0
         i = 0
-        first_pass2902 = True
+        first_pass3587 = True
         while True:
-            if first_pass2902: first_pass2902 = False
+            if first_pass3587: first_pass3587 = False
             else: i += 1
             if (not (i < len(text))): break
             ch = text[i]
@@ -174,9 +174,9 @@ class LanguageHelper:
         y = False
         udaren = False
         i = 0
-        first_pass2903 = True
+        first_pass3588 = True
         while True:
-            if first_pass2903: first_pass2903 = False
+            if first_pass3588: first_pass3588 = False
             else: i += 1
             if (not (i < len(value))): break
             ch = value[i]
@@ -229,9 +229,9 @@ class LanguageHelper:
                 return value
         tmp = Utils.newStringIO(value)
         i = 0
-        first_pass2904 = True
+        first_pass3589 = True
         while True:
-            if first_pass2904: first_pass2904 = False
+            if first_pass3589: first_pass3589 = False
             else: i += 1
             if (not (i < tmp.tell())): break
             if (Utils.getCharAtStringIO(tmp, i) == 'Ь' and ((i + 1) < tmp.tell()) and Utils.getCharAtStringIO(tmp, i + 1) == 'I'): 
@@ -296,10 +296,10 @@ class LanguageHelper:
             prep(str): предлог
         
         """
-        wrapmc60 = RefOutArgWrapper(None)
-        inoutres61 = Utils.tryGetValue(LanguageHelper.__m_prep_cases, prep, wrapmc60)
-        mc = wrapmc60.value
-        if (inoutres61): 
+        wrapmc44 = RefOutArgWrapper(None)
+        inoutres45 = Utils.tryGetValue(LanguageHelper.__m_prep_cases, prep, wrapmc44)
+        mc = wrapmc44.value
+        if (inoutres45): 
             return mc
         else: 
             return MorphCase.UNDEFINED
@@ -310,10 +310,10 @@ class LanguageHelper:
     
     @staticmethod
     def normalize_preposition(prep : str) -> str:
-        wrapres62 = RefOutArgWrapper(None)
-        inoutres63 = Utils.tryGetValue(LanguageHelper.__m_prep_norms, prep, wrapres62)
-        res = wrapres62.value
-        if (inoutres63): 
+        wrapres46 = RefOutArgWrapper(None)
+        inoutres47 = Utils.tryGetValue(LanguageHelper.__m_prep_norms, prep, wrapres46)
+        res = wrapres46.value
+        if (inoutres47): 
             return res
         else: 
             return prep
@@ -354,20 +354,21 @@ class LanguageHelper:
         if (str0_ is None): 
             return False
         for k in range(4):
+            s = substr
             if (k == 1): 
-                substr = substr2
+                s = substr2
             elif (k == 2): 
-                substr = substr3
+                s = substr3
             elif (k == 3): 
-                substr = substr4
-            if (substr is None): 
+                s = substr4
+            if (s is None): 
                 continue
             i = len(str0_) - 1
-            j = len(substr) - 1
+            j = len(s) - 1
             if (j > i or (j < 0)): 
                 continue
             while j >= 0: 
-                if (str0_[i] != substr[j]): 
+                if (str0_[i] != s[j]): 
                     break
                 j -= 1; i -= 1
             if (j < 0): 
@@ -503,29 +504,29 @@ class LanguageHelper:
         """
         if (w is None): 
             return None
-        w = w.upper()
-        for ch in w: 
+        res = w.upper()
+        for ch in res: 
             if (LanguageHelper.__m_rus0.find(ch) >= 0): 
                 tmp = io.StringIO()
-                print(w, end="", file=tmp)
+                print(res, end="", file=tmp)
                 i = 0
                 while i < tmp.tell(): 
                     j = LanguageHelper.__m_rus0.find(Utils.getCharAtStringIO(tmp, i))
                     if (j >= 0): 
                         Utils.setCharAtStringIO(tmp, i, LanguageHelper.__m_rus1[j])
                     i += 1
-                w = Utils.toStringStringIO(tmp)
+                res = (Utils.toStringStringIO(tmp))
                 break
-        if (w.find(chr(0x00AD)) >= 0): 
-            w = w.replace(chr(0x00AD), '-')
-        if (w.startswith("АГЕНС")): 
-            w = ("АГЕНТС" + w[5:])
-        return w
+        if (res.find(chr(0x00AD)) >= 0): 
+            res = (res.replace(chr(0x00AD), '-'))
+        if (res.startswith("АГЕНС")): 
+            res = ("АГЕНТС" + res[5:])
+        return res
     
     # static constructor for class LanguageHelper
     @staticmethod
     def _static_ctor():
-        LanguageHelper.__m_preps = [("БЕЗ;ДО;ИЗ;ИЗЗА;ОТ;У;ДЛЯ;РАДИ;ВОЗЛЕ;ПОЗАДИ;ВПЕРЕДИ;БЛИЗ;ВБЛИЗИ;ВГЛУБЬ;ВВИДУ;ВДОЛЬ;ВЗАМЕН;ВКРУГ;ВМЕСТО;" + "ВНЕ;ВНИЗУ;ВНУТРИ;ВНУТРЬ;ВОКРУГ;ВРОДЕ;ВСЛЕД;ВСЛЕДСТВИЕ;ЗАМЕСТО;ИЗНУТРИ;КАСАТЕЛЬНО;КРОМЕ;" + "МИМО;НАВРОДЕ;НАЗАД;НАКАНУНЕ;НАПОДОБИЕ;НАПРОТИВ;НАСЧЕТ;ОКОЛО;ОТНОСИТЕЛЬНО;") + "ПОВЕРХ;ПОДЛЕ;ПОМИМО;ПОПЕРЕК;ПОРЯДКА;ПОСЕРЕДИНЕ;ПОСРЕДИ;ПОСЛЕ;ПРЕВЫШЕ;ПРЕЖДЕ;ПРОТИВ;СВЕРХ;" + "СВЫШЕ;СНАРУЖИ;СРЕДИ;СУПРОТИВ", "К;БЛАГОДАРЯ;ВОПРЕКИ;НАВСТРЕЧУ;СОГЛАСНО;СООБРАЗНО;ПАРАЛЛЕЛЬНО;ПОДОБНО;СООТВЕТСТВЕННО;СОРАЗМЕРНО", "ПРО;ЧЕРЕЗ;СКВОЗЬ;СПУСТЯ", "НАД;ПЕРЕД;ПРЕД", "ПРИ", "В;НА;О;ВКЛЮЧАЯ", "МЕЖДУ", "ЗА;ПОД", "ПО", "С"]
+        LanguageHelper.__m_preps = [("БЕЗ;ДО;ИЗ;ИЗЗА;ОТ;У;ДЛЯ;РАДИ;ВОЗЛЕ;ПОЗАДИ;ВПЕРЕДИ;БЛИЗ;ВБЛИЗИ;ВГЛУБЬ;ВВИДУ;ВДОЛЬ;ВЗАМЕН;ВКРУГ;ВМЕСТО;" + "ВНЕ;ВНИЗУ;ВНУТРИ;ВНУТРЬ;ВОКРУГ;ВРОДЕ;ВСЛЕД;ВСЛЕДСТВИЕ;ЗАМЕСТО;ИЗНУТРИ;КАСАТЕЛЬНО;КРОМЕ;" + "МИМО;НАВРОДЕ;НАЗАД;НАКАНУНЕ;НАПОДОБИЕ;НАПРОТИВ;НАСЧЕТ;ОКОЛО;ОТНОСИТЕЛЬНО;") + "ПОВЕРХ;ПОДЛЕ;ПОМИМО;ПОПЕРЕК;ПОРЯДКА;ПОСЕРЕДИНЕ;ПОСРЕДИ;ПОСЛЕ;ПРЕВЫШЕ;ПРЕЖДЕ;ПРОТИВ;СВЕРХ;" + "СВЫШЕ;СНАРУЖИ;СРЕДИ;СУПРОТИВ;ПУТЕМ;ПОСРЕДСТВОМ", "К;БЛАГОДАРЯ;ВОПРЕКИ;НАВСТРЕЧУ;СОГЛАСНО;СООБРАЗНО;ПАРАЛЛЕЛЬНО;ПОДОБНО;СООТВЕТСТВЕННО;СОРАЗМЕРНО", "ПРО;ЧЕРЕЗ;СКВОЗЬ;СПУСТЯ", "НАД;ПЕРЕД;ПРЕД", "ПРИ", "В;НА;О;ВКЛЮЧАЯ", "МЕЖДУ", "ЗА;ПОД", "ПО", "С"]
         LanguageHelper.__m_cases = [MorphCase.GENITIVE, MorphCase.DATIVE, MorphCase.ACCUSATIVE, MorphCase.INSTRUMENTAL, MorphCase.PREPOSITIONAL, (MorphCase.ACCUSATIVE) | MorphCase.PREPOSITIONAL, (MorphCase.GENITIVE) | MorphCase.INSTRUMENTAL, (MorphCase.ACCUSATIVE) | MorphCase.INSTRUMENTAL, (MorphCase.DATIVE) | MorphCase.ACCUSATIVE | MorphCase.PREPOSITIONAL, (MorphCase.GENITIVE) | MorphCase.ACCUSATIVE | MorphCase.INSTRUMENTAL]
         LanguageHelper.__m_prep_norms_src = ["БЕЗ;БЕЗО", "ВБЛИЗИ;БЛИЗ", "В;ВО", "ВОКРУГ;ВКРУГ", "ВНУТРИ;ВНУТРЬ;ВОВНУТРЬ", "ВПЕРЕДИ;ВПЕРЕД", "ВСЛЕД;ВОСЛЕД", "ВМЕСТО;ЗАМЕСТО", "ИЗ;ИЗО", "К;КО", "МЕЖДУ;МЕЖ;ПРОМЕЖДУ;ПРОМЕЖ", "НАД;НАДО", "О;ОБ;ОБО", "ОТ;ОТО", "ПЕРЕД;ПРЕД;ПРЕДО;ПЕРЕДО", "ПОД;ПОДО", "ПОСЕРЕДИНЕ;ПОСРЕДИ;ПОСЕРЕДЬ", "С;СО", "СРЕДИ;СРЕДЬ;СЕРЕДЬ", "ЧЕРЕЗ;ЧРЕЗ"]
         LanguageHelper.__m_prep_cases = dict()

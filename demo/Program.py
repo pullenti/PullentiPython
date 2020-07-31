@@ -7,10 +7,11 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import Stopwatch
 
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.keyword.KeywordReferent import KeywordReferent
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
@@ -39,18 +40,18 @@ class Program:
         print("Noun groups: ", end="", flush=True)
         t = are.first_token
         # перебираем токены
-        first_pass2885 = True
+        first_pass3571 = True
         while True:
-            if first_pass2885: first_pass2885 = False
+            if first_pass3571: first_pass3571 = False
             else: t = t.next0_
             if (not (t is not None)): break
             # выделяем именную группу с текущего токена
-            npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
+            npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0, None)
             # не получилось
             if (npt is None): 
                 continue
             # получилось, выводим в нормализованном виде
-            print("[{0}=>{1}] ".format(npt.get_source_text(), npt.get_normal_case_text(None, True, MorphGender.UNDEFINED, False)), end="", flush=True)
+            print("[{0}=>{1}] ".format(npt.get_source_text(), npt.get_normal_case_text(None, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False)), end="", flush=True)
             # указатель на последний токен именной группы
             t = npt.end_token
         with ProcessorService.create_processor() as proc: 
@@ -65,16 +66,16 @@ class Program:
             # пример выделения именных групп
             print("\r\n==========================================\r\nNoun groups: ", flush=True)
             t = ar.first_token
-            first_pass2886 = True
+            first_pass3572 = True
             while True:
-                if first_pass2886: first_pass2886 = False
+                if first_pass3572: first_pass3572 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 # токены с сущностями игнорируем
                 if (t.get_referent() is not None): 
                     continue
                 # пробуем создать именную группу
-                npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.ADJECTIVECANBELAST, 0)
+                npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.ADJECTIVECANBELAST, 0, None)
                 # не получилось
                 if (npt is None): 
                     continue
@@ -89,9 +90,9 @@ class Program:
                     print(e0_, flush=True)
             print("\r\n==========================================\r\nKeywords2: ", flush=True)
             t = ar.first_token
-            first_pass2887 = True
+            first_pass3573 = True
             while True:
-                if first_pass2887: first_pass2887 = False
+                if first_pass3573: first_pass3573 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (isinstance(t, ReferentToken)): 

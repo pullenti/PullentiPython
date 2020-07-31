@@ -6,12 +6,13 @@ import io
 import typing
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphPerson import MorphPerson
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphCase import MorphCase
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphMiscInfo import MorphMiscInfo
 
 class MorphWordForm(MorphBaseInfo):
     """ Словоформа (вариант морфанализа лексемы) """
@@ -21,31 +22,28 @@ class MorphWordForm(MorphBaseInfo):
         """ Находится ли словоформа в словаре (если false, то восстановлена по аналогии) """
         return self.undef_coef == (0)
     
-    def clone(self) -> object:
+    def clone(self) -> 'MorphBaseInfo':
         res = MorphWordForm()
-        self.copy_to_word_form(res)
+        res.copy_from_word_form(self)
         return res
     
-    def copy_to_word_form(self, dst : 'MorphWordForm') -> None:
-        super().copy_to(dst)
-        dst.undef_coef = self.undef_coef
-        dst.normal_case = self.normal_case
-        dst.normal_full = self.normal_full
-        dst.misc = self.misc
-        dst.tag = self.tag
+    def copy_from_word_form(self, src : 'MorphWordForm') -> None:
+        super().copy_from(src)
+        self.undef_coef = src.undef_coef
+        self.normal_case = src.normal_case
+        self.normal_full = src.normal_full
+        self.misc = src.misc
     
     def __init__(self, v : 'MorphRuleVariant'=None, word : str=None) -> None:
-        super().__init__(None)
+        super().__init__()
         self.normal_full = None;
         self.normal_case = None;
         self.misc = None;
         self.undef_coef = 0
-        self.tag = None;
         if (v is None): 
             return
-        v.copy_to(self)
-        self.misc = v.misc_info
-        self.tag = (v)
+        self.copy_from(v)
+        self.misc = (v.misc_info)
         if (v.normal_tail is not None and word is not None): 
             word_begin = word
             if (LanguageHelper.ends_with(word, v.tail)): 
@@ -108,7 +106,7 @@ class MorphWordForm(MorphBaseInfo):
         return False
     
     @staticmethod
-    def _new16(_arg1 : str, _arg2 : 'MorphClass', _arg3 : int) -> 'MorphWordForm':
+    def _new6(_arg1 : str, _arg2 : 'MorphClass', _arg3 : int) -> 'MorphWordForm':
         res = MorphWordForm()
         res.normal_case = _arg1
         res.class0_ = _arg2
@@ -116,9 +114,25 @@ class MorphWordForm(MorphBaseInfo):
         return res
     
     @staticmethod
-    def _new684(_arg1 : 'MorphCase', _arg2 : 'MorphNumber', _arg3 : 'MorphGender') -> 'MorphWordForm':
+    def _new670(_arg1 : 'MorphCase', _arg2 : 'MorphNumber', _arg3 : 'MorphGender') -> 'MorphWordForm':
         res = MorphWordForm()
         res.case_ = _arg1
         res.number = _arg2
         res.gender = _arg3
+        return res
+    
+    @staticmethod
+    def _new671(_arg1 : 'MorphClass', _arg2 : 'MorphMiscInfo') -> 'MorphWordForm':
+        res = MorphWordForm()
+        res.class0_ = _arg1
+        res.misc = _arg2
+        return res
+    
+    @staticmethod
+    def _new3005(_arg1 : 'MorphClass', _arg2 : 'MorphNumber', _arg3 : 'MorphGender', _arg4 : 'MorphCase') -> 'MorphWordForm':
+        res = MorphWordForm()
+        res.class0_ = _arg1
+        res.number = _arg2
+        res.gender = _arg3
+        res.case_ = _arg4
         return res

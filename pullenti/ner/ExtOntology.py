@@ -36,7 +36,7 @@ class ExtOntology:
         if (rs is None): 
             return None
         self.__m_hash = (None)
-        res = ExtOntologyItem._new2819(ext_id, rs[0], type_name)
+        res = ExtOntologyItem._new2869(ext_id, rs[0], type_name)
         if (len(rs) > 1): 
             del rs[0]
             res._refs = rs
@@ -54,16 +54,16 @@ class ExtOntology:
         if (referent is None): 
             return None
         self.__m_hash = (None)
-        res = ExtOntologyItem._new2819(ext_id, referent, referent.type_name)
+        res = ExtOntologyItem._new2869(ext_id, referent, referent.type_name)
         self.items.append(res)
         return res
     
     def __create_referent(self, type_name : str, definition_ : str) -> typing.List['Referent']:
         analyzer = None
-        wrapanalyzer2821 = RefOutArgWrapper(None)
-        inoutres2822 = Utils.tryGetValue(self.__m_anal_by_type, type_name, wrapanalyzer2821)
-        analyzer = wrapanalyzer2821.value
-        if (not inoutres2822): 
+        wrapanalyzer2871 = RefOutArgWrapper(None)
+        inoutres2872 = Utils.tryGetValue(self.__m_anal_by_type, type_name, wrapanalyzer2871)
+        analyzer = wrapanalyzer2871.value
+        if (not inoutres2872): 
             return None
         sf = SourceOfAnalysis(definition_)
         ar = self.__m_processor._process(sf, True, True, None, None)
@@ -83,9 +83,9 @@ class ExtOntology:
             r0 = rt.referent
             t = rt.end_token
         t = t.next0_
-        first_pass3355 = True
+        first_pass4046 = True
         while True:
-            if first_pass3355: first_pass3355 = False
+            if first_pass4046: first_pass4046 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char(';') and t.next0_ is not None): 
@@ -125,10 +125,10 @@ class ExtOntology:
         if (isinstance(definition_, str)): 
             new_referent = (self.__create_referent(item.type_name, Utils.asObjectOrNull(definition_, str)))
         analyzer = None
-        wrapanalyzer2823 = RefOutArgWrapper(None)
-        inoutres2824 = Utils.tryGetValue(self.__m_anal_by_type, item.type_name, wrapanalyzer2823)
-        analyzer = wrapanalyzer2823.value
-        if (not inoutres2824): 
+        wrapanalyzer2873 = RefOutArgWrapper(None)
+        inoutres2874 = Utils.tryGetValue(self.__m_anal_by_type, item.type_name, wrapanalyzer2873)
+        analyzer = wrapanalyzer2873.value
+        if (not inoutres2874): 
             return False
         if (analyzer._persist_analizer_data is None): 
             return True
@@ -156,6 +156,7 @@ class ExtOntology:
         self.__m_specs = None;
         self.__m_anal_by_type = None;
         self.__m_hash = None
+        self.tag = None;
         self.__m_specs = spec_names
         self.__init()
     
@@ -205,10 +206,10 @@ class ExtOntology:
             type_name(str): 
         
         """
-        wrapa2825 = RefOutArgWrapper(None)
-        inoutres2826 = Utils.tryGetValue(self.__m_anal_by_type, type_name, wrapa2825)
-        a = wrapa2825.value
-        if (not inoutres2826): 
+        wrapa2875 = RefOutArgWrapper(None)
+        inoutres2876 = Utils.tryGetValue(self.__m_anal_by_type, type_name, wrapa2875)
+        a = wrapa2875.value
+        if (not inoutres2876): 
             return None
         return a._persist_analizer_data
     
@@ -219,11 +220,11 @@ class ExtOntology:
                 it.referent.ontology_items = (None)
         for it in self.items: 
             if (it.referent is not None): 
-                wrapont2828 = RefOutArgWrapper(None)
-                inoutres2829 = Utils.tryGetValue(self.__m_hash, it.referent.type_name, wrapont2828)
-                ont = wrapont2828.value
-                if (not inoutres2829): 
-                    ont = IntOntologyCollection._new2827(True)
+                wrapont2878 = RefOutArgWrapper(None)
+                inoutres2879 = Utils.tryGetValue(self.__m_hash, it.referent.type_name, wrapont2878)
+                ont = wrapont2878.value
+                if (not inoutres2879): 
+                    ont = IntOntologyCollection._new2877(True)
                     self.__m_hash[it.referent.type_name] = ont
                 if (it.referent.ontology_items is None): 
                     it.referent.ontology_items = list()
@@ -242,10 +243,10 @@ class ExtOntology:
         """
         if (self.__m_hash is None): 
             self.__init_hash()
-        wraponto2830 = RefOutArgWrapper(None)
-        inoutres2831 = Utils.tryGetValue(self.__m_hash, r.type_name, wraponto2830)
-        onto = wraponto2830.value
-        if (not inoutres2831): 
+        wraponto2880 = RefOutArgWrapper(None)
+        inoutres2881 = Utils.tryGetValue(self.__m_hash, r.type_name, wraponto2880)
+        onto = wraponto2880.value
+        if (not inoutres2881): 
             return None
         li = onto.try_attach_by_referent(r, None, False)
         if (li is None or len(li) == 0): 
@@ -268,9 +269,9 @@ class ExtOntology:
         """
         if (self.__m_hash is None): 
             self.__init_hash()
-        wraponto2832 = RefOutArgWrapper(None)
-        inoutres2833 = Utils.tryGetValue(self.__m_hash, type_name, wraponto2832)
-        onto = wraponto2832.value
-        if (not inoutres2833): 
+        wraponto2882 = RefOutArgWrapper(None)
+        inoutres2883 = Utils.tryGetValue(self.__m_hash, type_name, wraponto2882)
+        onto = wraponto2882.value
+        if (not inoutres2883): 
             return None
         return onto.try_attach(t, None, False)

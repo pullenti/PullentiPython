@@ -6,26 +6,27 @@ import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.MorphWordForm import MorphWordForm
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.MorphCollection import MorphCollection
-from pullenti.morph.MorphCase import MorphCase
-from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.morph.Morphology import Morphology
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.morph.Morphology import Morphology
-from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.internal.NounPhraseItemTextVar import NounPhraseItemTextVar
 
 class NounPhraseItem(MetaToken):
@@ -89,19 +90,21 @@ class NounPhraseItem(MetaToken):
             return MiscHelper.convert_first_char_upper_and_other_lower(str0_)
         return str0_
     
-    def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def get_normal_case_text(self, mc : 'MorphClass'=None, num : 'MorphNumber'=MorphNumber.UNDEFINED, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         if ((isinstance(self.begin_token, ReferentToken)) and self.begin_token == self.end_token): 
-            return self.begin_token.get_normal_case_text(mc, single_number, gender, keep_chars)
+            return self.begin_token.get_normal_case_text(mc, num, gender, keep_chars)
         res = None
         max_coef = 0
         def_coef = -1
         for it in self.morph.items: 
             v = Utils.asObjectOrNull(it, NounPhraseItemTextVar)
+            if (v is None): 
+                continue
             if (v.undef_coef > 0 and (((v.undef_coef < max_coef) or def_coef >= 0))): 
                 continue
-            if (single_number and v.single_number_value is not None): 
+            if (num == MorphNumber.SINGULAR and v.single_number_value is not None): 
                 if (mc is not None and ((gender == MorphGender.NEUTER or gender == MorphGender.FEMINIE)) and mc.is_adjective): 
-                    bi = MorphBaseInfo._new484(MorphClass(mc), gender, MorphNumber.SINGULAR, MorphCase.NOMINATIVE, self.morph.language)
+                    bi = MorphBaseInfo._new469(MorphClass._new72(mc.value), gender, MorphNumber.SINGULAR, MorphCase.NOMINATIVE, self.morph.language)
                     str0_ = Morphology.get_wordform(v.single_number_value, bi)
                     if (str0_ is not None): 
                         res = str0_
@@ -114,11 +117,11 @@ class NounPhraseItem(MetaToken):
             if (Utils.isNullOrEmpty(v.normal_value)): 
                 continue
             if (str.isdigit(v.normal_value[0]) and mc is not None and mc.is_adjective): 
-                wrapval485 = RefOutArgWrapper(0)
-                inoutres486 = Utils.tryParseInt(v.normal_value, wrapval485)
-                val = wrapval485.value
-                if (inoutres486): 
-                    str0_ = NumberHelper.get_number_adjective(val, gender, (MorphNumber.SINGULAR if single_number or val == 1 else MorphNumber.PLURAL))
+                wrapval470 = RefOutArgWrapper(0)
+                inoutres471 = Utils.tryParseInt(v.normal_value, wrapval470)
+                val = wrapval470.value
+                if (inoutres471): 
+                    str0_ = NumberHelper.get_number_adjective(val, gender, (MorphNumber.SINGULAR if num == MorphNumber.SINGULAR or val == 1 else MorphNumber.PLURAL))
                     if (str0_ is not None): 
                         res = str0_
                         if (v.undef_coef == 0): 
@@ -126,7 +129,7 @@ class NounPhraseItem(MetaToken):
                         max_coef = v.undef_coef
                         continue
             res1 = (it).normal_value
-            if (single_number): 
+            if (num == MorphNumber.SINGULAR): 
                 if (res1 == "ДЕТИ"): 
                     res1 = "РЕБЕНОК"
                 elif (res1 == "ЛЮДИ"): 
@@ -140,6 +143,8 @@ class NounPhraseItem(MetaToken):
                 pass
             elif (((isinstance(self.begin_token, TextToken)) and res1 == (self.begin_token).term and it.case_.is_nominative) and it.number == MorphNumber.SINGULAR): 
                 def_co = 1
+            if (num == MorphNumber.PLURAL and (((v.number) & (MorphNumber.PLURAL))) == (MorphNumber.PLURAL)): 
+                def_co += 3
             if (res is None or def_co > def_coef): 
                 res = res1
                 def_coef = def_co
@@ -148,7 +153,13 @@ class NounPhraseItem(MetaToken):
         if (res is not None): 
             return self.__corr_chars(res, keep_chars)
         if (res is None and self.begin_token == self.end_token): 
-            res = self.begin_token.get_normal_case_text(mc, single_number, gender, keep_chars)
+            res = self.begin_token.get_normal_case_text(mc, num, gender, keep_chars)
+        elif (res is None): 
+            res = self.begin_token.get_normal_case_text(mc, num, gender, keep_chars)
+            if (res is None): 
+                res = MiscHelper.get_text_value_of_meta_token(self, (GetTextAttr.KEEPREGISTER if keep_chars else GetTextAttr.NO))
+            else: 
+                res = "{0} {1}".format(res, MiscHelper.get_text_value(self.begin_token.next0_, self.end_token, (GetTextAttr.KEEPREGISTER if keep_chars else GetTextAttr.NO)))
         return Utils.ifNotNull(res, "?")
     
     def is_value(self, term : str, term2 : str=None) -> bool:
@@ -165,12 +176,13 @@ class NounPhraseItem(MetaToken):
         _can_be_surname = False
         _is_doubt_adj = False
         rt = Utils.asObjectOrNull(t, ReferentToken)
-        if (rt is not None and rt.begin_token == rt.end_token): 
+        if (rt is not None and rt.begin_token == rt.end_token and (isinstance(rt.begin_token, TextToken))): 
             res = NounPhraseItem.try_parse(rt.begin_token, items, attrs)
             if (res is not None): 
                 res.begin_token = res.end_token = t
+                res.can_be_noun = True
                 return res
-        if (rt is not None and items is not None and len(items) > 0): 
+        if (rt is not None): 
             res = NounPhraseItem(t, t)
             for m in t.morph.items: 
                 v = NounPhraseItemTextVar(m, None)
@@ -263,7 +275,7 @@ class NounPhraseItem(MetaToken):
                             t = t0.next0_.next0_
                         elif (t0.next0_.next0_.chars.is_all_lower and LanguageHelper.ends_with((t0).term, "О")): 
                             t = t0.next0_.next0_
-            it = NounPhraseItem._new487(t0, t, _can_be_surname)
+            it = NounPhraseItem._new472(t0, t, _can_be_surname)
             if (t0 == t and (isinstance(t0, ReferentToken))): 
                 it.can_be_noun = True
                 it.morph = MorphCollection(t0.morph)
@@ -276,7 +288,7 @@ class NounPhraseItem(MetaToken):
                     continue
                 if (v.class0_.is_preposition): 
                     can_be_prepos = True
-                if (v.class0_.is_adjective or ((v.class0_.is_pronoun and not v.class0_.is_personal_pronoun)) or ((v.class0_.is_noun and (isinstance(t, NumberToken))))): 
+                if (v.class0_.is_adjective or ((v.class0_.is_pronoun and not v.class0_.is_personal_pronoun and not v.contains_attr("неизм.", None))) or ((v.class0_.is_noun and (isinstance(t, NumberToken))))): 
                     if (NounPhraseItem.try_accord_variant(items, (0 if items is None else len(items)), v, False)): 
                         is_doub = False
                         if (v.contains_attr("к.ф.", None)): 
@@ -306,6 +318,9 @@ class NounPhraseItem(MetaToken):
                                 it.is_doubt_adjective = True
                             if (has_legal_verb and wf is not None and wf.is_in_dictionary): 
                                 it.can_be_noun = True
+                            if (wf is not None and wf.class0_.is_pronoun): 
+                                it.can_be_noun = True
+                                it.noun_morph.append(NounPhraseItemTextVar(v, t))
                 can_be_noun_ = False
                 if (isinstance(t, NumberToken)): 
                     pass
@@ -317,7 +332,10 @@ class NounPhraseItem(MetaToken):
                     else: 
                         for it1 in items: 
                             if (it1.is_verb): 
-                                return None
+                                if (len(items) == 1 and not v.case_.is_nominative): 
+                                    can_be_noun_ = True
+                                else: 
+                                    return None
                         if (len(items) == 1): 
                             if (items[0].can_be_adj_for_personal_pronoun): 
                                 can_be_noun_ = True
@@ -351,6 +369,20 @@ class NounPhraseItem(MetaToken):
                         if (NounPhraseItem.try_accord_variant(items, (0 if items is None else len(items)), v, False)): 
                             it.noun_morph.append(NounPhraseItemTextVar(v, t))
                             it.can_be_noun = True
+                            if (v.class0_.is_personal_pronoun and t.morph.contains_attr("неизм.", None) and not it.can_be_adj): 
+                                itt = NounPhraseItemTextVar(v, t)
+                                itt.case_ = MorphCase.ALL_CASES
+                                itt.number = MorphNumber.UNDEFINED
+                                if (itt.normal_value is None): 
+                                    pass
+                                it.adj_morph.append(itt)
+                                it.can_be_adj = True
+                        elif ((len(items) > 0 and len(items[0].adj_morph) > 0 and items[0].adj_morph[0].number == MorphNumber.PLURAL) and not ((items[0].adj_morph[0].case_) & v.case_).is_undefined and not items[0].adj_morph[0].class0_.is_verb): 
+                            if (t.next0_ is not None and t.next0_.is_comma_and and (isinstance(t.next0_.next0_, TextToken))): 
+                                npt2 = NounPhraseHelper.try_parse(t.next0_.next0_, attrs, 0, None)
+                                if (npt2 is not None and npt2.preposition is None and not ((npt2.morph.case_) & v.case_ & items[0].adj_morph[0].case_).is_undefined): 
+                                    it.noun_morph.append(NounPhraseItemTextVar(v, t))
+                                    it.can_be_noun = True
             if (t0 != t): 
                 for v in it.adj_morph: 
                     v.correct_prefix(Utils.asObjectOrNull(t0, TextToken), False)
@@ -363,17 +395,17 @@ class NounPhraseItem(MetaToken):
                     it.end_token = t0.next0_.next0_
                 for v in it.noun_morph: 
                     if (v.normal_value is not None and (v.normal_value.find('-') < 0)): 
-                        v.normal_value = "{0}-{1}".format(v.normal_value, it.end_token.get_normal_case_text(None, False, MorphGender.UNDEFINED, False))
+                        v.normal_value = "{0}-{1}".format(v.normal_value, it.end_token.get_normal_case_text(None, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False))
             if (it.can_be_adj): 
                 if (NounPhraseItem.__m_std_adjectives.try_parse(it.begin_token, TerminParseAttr.NO) is not None): 
                     it.is_std_adjective = True
             if (can_be_prepos and it.can_be_noun): 
                 if (items is not None and len(items) > 0): 
-                    npt1 = NounPhraseHelper.try_parse(t, Utils.valToEnum((NounPhraseParseAttr.PARSEPREPOSITION) | (NounPhraseParseAttr.PARSEPRONOUNS) | (NounPhraseParseAttr.PARSEVERBS), NounPhraseParseAttr), 0)
+                    npt1 = NounPhraseHelper.try_parse(t, Utils.valToEnum((NounPhraseParseAttr.PARSEPREPOSITION) | (NounPhraseParseAttr.PARSEPRONOUNS) | (NounPhraseParseAttr.PARSEVERBS), NounPhraseParseAttr), 0, None)
                     if (npt1 is not None and npt1.end_char > t.end_char): 
                         return None
                 else: 
-                    npt1 = NounPhraseHelper.try_parse(t.next0_, Utils.valToEnum((NounPhraseParseAttr.PARSEPRONOUNS) | (NounPhraseParseAttr.PARSEVERBS), NounPhraseParseAttr), 0)
+                    npt1 = NounPhraseHelper.try_parse(t.next0_, Utils.valToEnum((NounPhraseParseAttr.PARSEPRONOUNS) | (NounPhraseParseAttr.PARSEVERBS), NounPhraseParseAttr), 0, None)
                     if (npt1 is not None): 
                         mc = LanguageHelper.get_case_after_preposition((t).lemma)
                         if (not ((mc) & npt1.morph.case_).is_undefined): 
@@ -430,6 +462,8 @@ class NounPhraseItem(MetaToken):
                 term = (v).normal_value
             if (term == "ЛЕТ" or term == "ЧЕЛОВЕК"): 
                 return True
+        if (len(self.adj_morph) > 0 and self.begin_token.morph.class0_.is_personal_pronoun and self.begin_token.morph.contains_attr("3 л.", None)): 
+            return True
         return False
     
     @staticmethod
@@ -463,7 +497,7 @@ class NounPhraseItem(MetaToken):
     __m_std_adjectives = None
     
     @staticmethod
-    def _new487(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'NounPhraseItem':
+    def _new472(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'NounPhraseItem':
         res = NounPhraseItem(_arg1, _arg2)
         res.can_be_surname = _arg3
         return res

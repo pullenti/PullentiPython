@@ -1,8 +1,4 @@
 ﻿pullenti.morph.CharsInfo: Информация о символах токена
-pullenti.morph.DerivateGroup: Дериватная группа
-pullenti.morph.DerivateWord: Слово толкового словаря
-pullenti.morph.Explanatory: Сервис для получение толковой информации о словах.   В настоящий момент поддержаны русский и украинский языки.
-pullenti.morph.ExplanWordAttr: Дополнительные характеристики слова
 pullenti.morph.LanguageHelper: Служба подержки языков.    В качестве универсальных идентификаторов языков выступает 2-х символьный идентификатор ISO 639-1.   Также содержит некоторые полезные функции.
 pullenti.morph.MorphAspect: Аспект (для глаголов)
 pullenti.morph.MorphBaseInfo: Базовая часть морфологической информации
@@ -56,6 +52,7 @@ pullenti.ner.core.IntOntologyCollection: Онтологический слова
 pullenti.ner.core.IntOntologyItem: Элемент онтологического словаря
 pullenti.ner.core.IntOntologyToken: Это привязка элемента отнологии к тексту
 pullenti.ner.core.MiscHelper: Разные полезные процедурки
+pullenti.ner.core.NormalizeTextAttr: Атрибуты нормализации текста
 pullenti.ner.core.NounPhraseHelper: Выделение именных групп (существительсно с согласованными прилагательными (если они есть).
 pullenti.ner.core.NounPhraseMultivarToken: Вариант расщепления именной группы, у которой слиплись существительные
 pullenti.ner.core.NounPhraseParseAttr: Параметры выделения
@@ -161,3 +158,35 @@ pullenti.ner.uri.UriAnalyzer: Анализатор для выделения URI
 pullenti.ner.uri.UriReferent: URI, а также ISBN, УДК, ББК, ICQ и пр. (всё, что укладывается в СХЕМА:ЗНАЧЕНИЕ)
 pullenti.ner.weapon.WeaponAnalyzer: Анализатор выделения оружия
 pullenti.ner.weapon.WeaponReferent: Оружие
+pullenti.semantic.core.ISemanticOnto: Интерфейс внешней дополнительной онтологии   (для улучшения качества семантичсекой обработки)
+pullenti.semantic.core.SemanticAbstractSlave
+pullenti.semantic.core.SemanticHelper: Полезные фукнции для семантического анализа
+pullenti.semantic.core.SemanticLink: Семантическая связь двух элементов
+pullenti.semantic.core.SemanticRole: Семантические роли
+pullenti.semantic.ISemContainer: Интерфейс того, кто владеет графом объектов
+pullenti.semantic.Quantity: Количественная характеристика.   Тут предстоит очень много сделать (сложная модель диапазонов, составных значений и пр.)
+pullenti.semantic.SemanticService: Сервис семантического анализа
+pullenti.semantic.SemAttribute: Семантический атрибут
+pullenti.semantic.SemAttributeType: Типы семантических атрибутов
+pullenti.semantic.SemBlock: Блок документа (абзац)
+pullenti.semantic.SemDocument: Документ
+pullenti.semantic.SemFraglink: Связь между самантическими фрагментами
+pullenti.semantic.SemFraglinkType: Типы связей между фрагментами
+pullenti.semantic.SemFragment: Фрагмент блока (предложения)
+pullenti.semantic.SemFragmentType: Типы фрагментов
+pullenti.semantic.SemGraph: Семантический граф
+pullenti.semantic.SemLink: Семантическая связь между объектами
+pullenti.semantic.SemLinkType: Тип семантической связи
+pullenti.semantic.SemObject: Семантический объект
+pullenti.semantic.SemObjectType: Типы семантических объектов
+pullenti.semantic.SemProcessParams: Дополнительные параметры
+pullenti.semantic.utils.ControlModel: Новая модель управления
+pullenti.semantic.utils.ControlModelItem
+pullenti.semantic.utils.ControlModelItemType
+pullenti.semantic.utils.ControlModelLink
+pullenti.semantic.utils.ControlModelQuestion
+pullenti.semantic.utils.DerivateGroup: Дериватная группа
+pullenti.semantic.utils.DerivateWord: Слово толкового словаря
+pullenti.semantic.utils.Explanatory: Сервис для получение толковой информации о словах.   В настоящий момент поддержаны русский и украинский языки.
+pullenti.semantic.utils.ExplanWordAttr: Дополнительные характеристики слова
+pullenti.semantic.utils.QuestionType: Основные вопросы модели управления

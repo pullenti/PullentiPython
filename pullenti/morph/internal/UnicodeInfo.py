@@ -2,6 +2,7 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
+import io
 from pullenti.unisharp.Utils import Utils
 
 class UnicodeInfo:
@@ -9,9 +10,50 @@ class UnicodeInfo:
     
     ALL_CHARS = None
     
+    __m_inited = None
+    
     @staticmethod
     def initialize() -> None:
-        pass
+        if (UnicodeInfo.__m_inited): 
+            return
+        UnicodeInfo.__m_inited = True
+        UnicodeInfo.ALL_CHARS = list()
+        cyrvowel = "АЕЁИОУЮЯЫЭЄІЇЎӘӨҰҮІ"
+        cyrvowel += cyrvowel.lower()
+        for i in range(0x10000):
+            ch = chr(i)
+            ui = UnicodeInfo(i)
+            if (Utils.isWhitespace(ch)): 
+                ui.is_whitespace = True
+            elif (str.isdigit(ch)): 
+                ui.is_digit = True
+            elif (ch == 'º' or ch == '°'): 
+                pass
+            elif (str.isalpha(ch)): 
+                ui.is_letter = True
+                if (i >= 0x400 and (i < 0x500)): 
+                    ui.is_cyrillic = True
+                    if (cyrvowel.find(ch) >= 0): 
+                        ui.is_vowel = True
+                elif (i < 0x200): 
+                    ui.is_latin = True
+                    if ("AEIOUYaeiouy".find(ch) >= 0): 
+                        ui.is_vowel = True
+                if (str.isupper(ch)): 
+                    ui.is_upper = True
+                if (str.islower(ch)): 
+                    ui.is_lower = True
+            else: 
+                if (((((ch == '-' or ch == '–' or ch == '¬') or ch == '-' or ch == (chr(0x00AD))) or ch == (chr(0x2011)) or ch == '-') or ch == '—' or ch == '–') or ch == '−' or ch == '-'): 
+                    ui.is_hiphen = True
+                if ("\"'`“”’".find(ch) >= 0): 
+                    ui.is_quot = True
+                if ("'`’".find(ch) >= 0): 
+                    ui.is_apos = True
+                    ui.is_quot = True
+            if (i >= 0x300 and (i < 0x370)): 
+                ui.is_udaren = True
+            UnicodeInfo.ALL_CHARS.append(ui)
     
     def __init__(self, v : int=0) -> None:
         self.__m_value = 0
@@ -20,6 +62,35 @@ class UnicodeInfo:
         self.uni_char = (chr(v))
         self.code = (v)
         self.__m_value = (0)
+    
+    def __str__(self) -> str:
+        res = io.StringIO()
+        print("'{0}'({1})".format(self.uni_char, self.code), end="", file=res, flush=True)
+        if (self.is_whitespace): 
+            print(", whitespace", end="", file=res)
+        if (self.is_digit): 
+            print(", digit", end="", file=res)
+        if (self.is_letter): 
+            print(", letter", end="", file=res)
+        if (self.is_latin): 
+            print(", latin", end="", file=res)
+        if (self.is_cyrillic): 
+            print(", cyrillic", end="", file=res)
+        if (self.is_upper): 
+            print(", upper", end="", file=res)
+        if (self.is_lower): 
+            print(", lower", end="", file=res)
+        if (self.is_hiphen): 
+            print(", hiphen", end="", file=res)
+        if (self.is_quot): 
+            print(", quot", end="", file=res)
+        if (self.is_apos): 
+            print(", apos", end="", file=res)
+        if (self.is_vowel): 
+            print(", vowel", end="", file=res)
+        if (self.is_udaren): 
+            print(", udaren", end="", file=res)
+        return Utils.toStringStringIO(res)
     
     def __get_value(self, i : int) -> bool:
         return (((((self.__m_value) >> i)) & 1)) != 0
@@ -125,46 +196,3 @@ class UnicodeInfo:
     def is_udaren(self, value) -> bool:
         self.__set_value(11, value)
         return value
-    
-    # static constructor for class UnicodeInfo
-    @staticmethod
-    def _static_ctor():
-        UnicodeInfo.ALL_CHARS = list()
-        cyrvowel = "АЕЁИОУЮЯЫЭЄІЇЎӘӨҰҮІ"
-        cyrvowel += cyrvowel.lower()
-        for i in range(0x10000):
-            ch = chr(i)
-            ui = UnicodeInfo(i)
-            if (Utils.isWhitespace(ch)): 
-                ui.is_whitespace = True
-            elif (str.isdigit(ch)): 
-                ui.is_digit = True
-            elif (ch == 'º' or ch == '°'): 
-                pass
-            elif (str.isalpha(ch)): 
-                ui.is_letter = True
-                if (i >= 0x400 and (i < 0x500)): 
-                    ui.is_cyrillic = True
-                    if (cyrvowel.find(ch) >= 0): 
-                        ui.is_vowel = True
-                elif (i < 0x200): 
-                    ui.is_latin = True
-                    if ("AEIOUYaeiouy".find(ch) >= 0): 
-                        ui.is_vowel = True
-                if (str.isupper(ch)): 
-                    ui.is_upper = True
-                if (str.islower(ch)): 
-                    ui.is_lower = True
-            else: 
-                if (((((ch == '-' or ch == '–' or ch == '¬') or ch == '-' or ch == (chr(0x00AD))) or ch == (chr(0x2011)) or ch == '-') or ch == '—' or ch == '–') or ch == '−' or ch == '-'): 
-                    ui.is_hiphen = True
-                if ("\"'`“”’".find(ch) >= 0): 
-                    ui.is_quot = True
-                if ("'`’".find(ch) >= 0): 
-                    ui.is_apos = True
-                    ui.is_quot = True
-            if (i >= 0x300 and (i < 0x370)): 
-                ui.is_udaren = True
-            UnicodeInfo.ALL_CHARS.append(ui)
-
-UnicodeInfo._static_ctor()

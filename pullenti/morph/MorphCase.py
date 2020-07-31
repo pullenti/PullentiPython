@@ -8,11 +8,8 @@ from pullenti.unisharp.Utils import Utils
 class MorphCase:
     """ Падеж """
     
-    def __init__(self, val : 'MorphCase'=None) -> None:
+    def __init__(self) -> None:
         self.value = 0
-        self.value = (0)
-        if (val is not None): 
-            self.value = val.value
     
     @property
     def is_undefined(self) -> bool:
@@ -45,26 +42,37 @@ class MorphCase:
     UNDEFINED = None
     
     NOMINATIVE = None
+    """ Именительный падеж """
     
     GENITIVE = None
+    """ Родительный падеж """
     
     DATIVE = None
+    """ Дательный падеж """
     
     ACCUSATIVE = None
+    """ Винительный падеж """
     
     INSTRUMENTAL = None
+    """ Творительный падеж """
     
     PREPOSITIONAL = None
+    """ Предложный падеж """
     
     VOCATIVE = None
+    """ Звательный падеж """
     
     PARTIAL = None
+    """ Частичный падеж """
     
     COMMON = None
+    """ Общий падеж """
     
     POSSESSIVE = None
+    """ Притяжательный падеж """
     
     ALL_CASES = None
+    """ Все падежи одновременно """
     
     @property
     def is_nominative(self) -> bool:
@@ -156,18 +164,33 @@ class MorphCase:
         self.__set_value(9, value_)
         return value_
     
-    __m_names = None
-    
     def __str__(self) -> str:
         tmp_str = io.StringIO()
-        i = 0
-        while i < len(MorphCase.__m_names): 
-            if (self.__get_value(i)): 
-                if (tmp_str.tell() > 0): 
-                    print("|", end="", file=tmp_str)
-                print(MorphCase.__m_names[i], end="", file=tmp_str)
-            i += 1
+        if (self.is_nominative): 
+            print("именит.|", end="", file=tmp_str)
+        if (self.is_genitive): 
+            print("родит.|", end="", file=tmp_str)
+        if (self.is_dative): 
+            print("дател.|", end="", file=tmp_str)
+        if (self.is_accusative): 
+            print("винит.|", end="", file=tmp_str)
+        if (self.is_instrumental): 
+            print("творит.|", end="", file=tmp_str)
+        if (self.is_prepositional): 
+            print("предлож.|", end="", file=tmp_str)
+        if (self.is_vocative): 
+            print("зват.|", end="", file=tmp_str)
+        if (self.is_partial): 
+            print("частич.|", end="", file=tmp_str)
+        if (self.is_common): 
+            print("общ.|", end="", file=tmp_str)
+        if (self.is_possessive): 
+            print("притяж.|", end="", file=tmp_str)
+        if (tmp_str.tell() > 0): 
+            Utils.setLengthStringIO(tmp_str, tmp_str.tell() - 1)
         return Utils.toStringStringIO(tmp_str)
+    
+    __m_names = None
     
     @staticmethod
     def parse(str0_ : str) -> 'MorphCase':
@@ -204,7 +227,7 @@ class MorphCase:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphCase._new64(((val1) & (val2)))
+        return MorphCase._new48(((val1) & (val2)))
     
     def __or__(self : 'MorphCase', arg2 : 'MorphCase') -> 'MorphCase':
         val1 = 0
@@ -213,7 +236,7 @@ class MorphCase:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphCase._new64(((val1) | (val2)))
+        return MorphCase._new48(((val1) | (val2)))
     
     def __xor__(self : 'MorphCase', arg2 : 'MorphCase') -> 'MorphCase':
         val1 = 0
@@ -222,7 +245,7 @@ class MorphCase:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphCase._new64(((val1) ^ (val2)))
+        return MorphCase._new48(((val1) ^ (val2)))
     
     def __eq__(self : 'MorphCase', arg2 : 'MorphCase') -> bool:
         val1 = 0
@@ -243,7 +266,7 @@ class MorphCase:
         return val1 != val2
     
     @staticmethod
-    def _new64(_arg1 : int) -> 'MorphCase':
+    def _new48(_arg1 : int) -> 'MorphCase':
         res = MorphCase()
         res.value = _arg1
         return res
@@ -251,18 +274,18 @@ class MorphCase:
     # static constructor for class MorphCase
     @staticmethod
     def _static_ctor():
-        MorphCase.UNDEFINED = MorphCase._new64(0)
-        MorphCase.NOMINATIVE = MorphCase._new64(1)
-        MorphCase.GENITIVE = MorphCase._new64(2)
-        MorphCase.DATIVE = MorphCase._new64(4)
-        MorphCase.ACCUSATIVE = MorphCase._new64(8)
-        MorphCase.INSTRUMENTAL = MorphCase._new64(0x10)
-        MorphCase.PREPOSITIONAL = MorphCase._new64(0x20)
-        MorphCase.VOCATIVE = MorphCase._new64(0x40)
-        MorphCase.PARTIAL = MorphCase._new64(0x80)
-        MorphCase.COMMON = MorphCase._new64(0x100)
-        MorphCase.POSSESSIVE = MorphCase._new64(0x200)
-        MorphCase.ALL_CASES = MorphCase._new64(0x3FF)
+        MorphCase.UNDEFINED = MorphCase._new48(0)
+        MorphCase.NOMINATIVE = MorphCase._new48(1)
+        MorphCase.GENITIVE = MorphCase._new48(2)
+        MorphCase.DATIVE = MorphCase._new48(4)
+        MorphCase.ACCUSATIVE = MorphCase._new48(8)
+        MorphCase.INSTRUMENTAL = MorphCase._new48(0x10)
+        MorphCase.PREPOSITIONAL = MorphCase._new48(0x20)
+        MorphCase.VOCATIVE = MorphCase._new48(0x40)
+        MorphCase.PARTIAL = MorphCase._new48(0x80)
+        MorphCase.COMMON = MorphCase._new48(0x100)
+        MorphCase.POSSESSIVE = MorphCase._new48(0x200)
+        MorphCase.ALL_CASES = MorphCase._new48(0x3FF)
         MorphCase.__m_names = ["именит.", "родит.", "дател.", "винит.", "творит.", "предлож.", "зват.", "частич.", "общ.", "притяж."]
 
 MorphCase._static_ctor()

@@ -8,11 +8,11 @@ import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.morph.DerivateGroup import DerivateGroup
+from pullenti.semantic.utils.DerivateGroup import DerivateGroup
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.morph.MorphLang import MorphLang
-from pullenti.morph.internal.ExplanTreeNode import ExplanTreeNode
-from pullenti.morph.internal.DeserializeHelper import DeserializeHelper
+from pullenti.semantic.internal.ExplanTreeNode import ExplanTreeNode
+from pullenti.semantic.internal.DeserializeHelper import DeserializeHelper
 
 class DerivateDictionary:
     
@@ -24,18 +24,25 @@ class DerivateDictionary:
         self._m_all_groups = list()
         self._m_lock = threading.Lock()
     
+    def load(self, dat : bytearray) -> None:
+        with io.BytesIO(dat) as mem: 
+            self._m_all_groups.clear()
+            self._m_root = ExplanTreeNode()
+            self.__m_buf = DeserializeHelper.deserializedd(mem, self, True)
+            self.__m_inited = True
+    
     def init(self, lang_ : 'MorphLang') -> bool:
         if (self.__m_inited): 
             return True
         # ignored: assembly = 
         rsname = "d_{0}.dat".format(str(lang_))
-        names = Utils.getResourcesNames('pullenti.morph.properties', '.dat')
+        names = Utils.getResourcesNames('pullenti.semantic.utils.properties', '.dat')
         for n in names: 
             if (Utils.endsWithString(n, rsname, True)): 
-                inf = Utils.getResourceInfo('pullenti.morph.properties', n)
+                inf = Utils.getResourceInfo('pullenti.semantic.utils.properties', n)
                 if (inf is None): 
                     continue
-                with Utils.getResourceStream('pullenti.morph.properties', n) as stream: 
+                with Utils.getResourceStream('pullenti.semantic.utils.properties', n) as stream: 
                     stream.seek(0, io.SEEK_SET)
                     self._m_all_groups.clear()
                     self.__m_buf = DeserializeHelper.deserializedd(stream, self, True)
@@ -61,10 +68,10 @@ class DerivateDictionary:
                 tn1 = None
                 if (tn.nodes is None): 
                     tn.nodes = dict()
-                wraptn11 = RefOutArgWrapper(None)
-                inoutres2 = Utils.tryGetValue(tn.nodes, k, wraptn11)
-                tn1 = wraptn11.value
-                if (not inoutres2): 
+                wraptn12985 = RefOutArgWrapper(None)
+                inoutres2986 = Utils.tryGetValue(tn.nodes, k, wraptn12985)
+                tn1 = wraptn12985.value
+                if (not inoutres2986): 
                     tn1 = ExplanTreeNode()
                     tn.nodes[k] = tn1
                 tn = tn1
@@ -75,9 +82,9 @@ class DerivateDictionary:
         with self._m_lock: 
             pos = tn.lazy_pos
             if (pos > 0): 
-                wrappos3 = RefOutArgWrapper(pos)
-                DeserializeHelper.deserialize_tree_node(self.__m_buf, self, tn, True, wrappos3)
-                pos = wrappos3.value
+                wrappos2987 = RefOutArgWrapper(pos)
+                DeserializeHelper.deserialize_tree_node(self.__m_buf, self, tn, True, wrappos2987)
+                pos = wrappos2987.value
             tn.lazy_pos = 0
     
     def find(self, word : str, try_create : bool, lang_ : 'MorphLang') -> typing.List['DerivateGroup']:
@@ -90,10 +97,10 @@ class DerivateDictionary:
             tn1 = None
             if (tn.nodes is None): 
                 break
-            wraptn14 = RefOutArgWrapper(None)
-            inoutres5 = Utils.tryGetValue(tn.nodes, k, wraptn14)
-            tn1 = wraptn14.value
-            if (not inoutres5): 
+            wraptn12988 = RefOutArgWrapper(None)
+            inoutres2989 = Utils.tryGetValue(tn.nodes, k, wraptn12988)
+            tn1 = wraptn12988.value
+            if (not inoutres2989): 
                 break
             tn = tn1
             if (tn.lazy_pos > 0): 
@@ -178,9 +185,9 @@ class DerivateDictionary:
             return None
         len0_ = len(word) - 4
         i = 1
-        first_pass2889 = True
+        first_pass4054 = True
         while True:
-            if first_pass2889: first_pass2889 = False
+            if first_pass4054: first_pass4054 = False
             else: i += 1
             if (not (i <= len0_)): break
             rest = word[i:]

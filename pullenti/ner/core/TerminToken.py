@@ -14,25 +14,25 @@ class TerminToken(MetaToken):
         self.abridge_without_point = False
     
     @staticmethod
-    def _new643(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'TerminToken':
+    def _new629(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'TerminToken':
         res = TerminToken(_arg1, _arg2)
         res.abridge_without_point = _arg3
         return res
     
     @staticmethod
-    def _new646(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Termin') -> 'TerminToken':
+    def _new632(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Termin') -> 'TerminToken':
         res = TerminToken(_arg1, _arg2)
         res.termin = _arg3
         return res
     
     @staticmethod
-    def _new651(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'TerminToken':
+    def _new637(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'TerminToken':
         res = TerminToken(_arg1, _arg2)
         res.morph = _arg3
         return res
     
     @staticmethod
-    def _new657(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : 'Termin') -> 'TerminToken':
+    def _new643(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : 'Termin') -> 'TerminToken':
         res = TerminToken(_arg1, _arg2)
         res.morph = _arg3
         res.termin = _arg4

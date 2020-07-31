@@ -131,6 +131,15 @@ class ExplanWordAttr:
         self.__set_value(10, value_)
         return value_
     
+    @property
+    def is_verb_noun(self) -> bool:
+        """ Временной объект """
+        return self.__get_value(11)
+    @is_verb_noun.setter
+    def is_verb_noun(self, value_) -> bool:
+        self.__set_value(11, value_)
+        return value_
+    
     def __str__(self) -> str:
         tmp_str = io.StringIO()
         if (self.is_animated): 
@@ -155,6 +164,8 @@ class ExplanWordAttr:
             print("негатив.", end="", file=tmp_str)
         if (self.is_can_person_after): 
             print("персона_за_родит.", end="", file=tmp_str)
+        if (self.is_verb_noun): 
+            print("глаг.сущ.", end="", file=tmp_str)
         return Utils.toStringStringIO(tmp_str)
     
     def equals(self, obj : object) -> bool:
@@ -172,7 +183,7 @@ class ExplanWordAttr:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return ExplanWordAttr._new58(((val1) & (val2)))
+        return ExplanWordAttr._new3051(((val1) & (val2)))
     
     def __or__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> 'ExplanWordAttr':
         val1 = 0
@@ -181,7 +192,7 @@ class ExplanWordAttr:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return ExplanWordAttr._new58(((val1) | (val2)))
+        return ExplanWordAttr._new3051(((val1) | (val2)))
     
     def __eq__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> bool:
         val1 = 0
@@ -202,9 +213,10 @@ class ExplanWordAttr:
         return val1 != val2
     
     UNDEFINED = None
+    """ Неопределённое """
     
     @staticmethod
-    def _new58(_arg1 : int) -> 'ExplanWordAttr':
+    def _new3051(_arg1 : int) -> 'ExplanWordAttr':
         res = ExplanWordAttr()
         res.value = _arg1
         return res

@@ -4,34 +4,35 @@
 
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphCase import MorphCase
 from pullenti.morph.MorphClass import MorphClass
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.ner.core.VerbPhraseToken import VerbPhraseToken
 from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.core.PrepositionHelper import PrepositionHelper
 from pullenti.ner.MorphCollection import MorphCollection
+from pullenti.ner.TextToken import TextToken
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.ner.core.VerbPhraseItemToken import VerbPhraseItemToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.Token import Token
 from pullenti.morph.Morphology import Morphology
-from pullenti.ner.core.VerbPhraseToken import VerbPhraseToken
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-from pullenti.ner.core.PrepositionHelper import PrepositionHelper
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.core.VerbPhraseItemToken import VerbPhraseItemToken
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.semantic.utils.Explanatory import Explanatory
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.morph.Explanatory import Explanatory
 
 class VerbPhraseHelper:
     """ Работа с глагольными группами (последовательность из глаголов и наречий) """
     
     @staticmethod
-    def try_parse(t : 'Token', can_be_partition : bool=False) -> 'VerbPhraseToken':
+    def try_parse(t : 'Token', can_be_partition : bool=False, can_be_adj_partition : bool=False, force_parse : bool=False) -> 'VerbPhraseToken':
         """ Создать глагольную группу
         
         Args:
             t(Token): первый токен группы
             can_be_partition(bool): выделять ли причастия
+            can_be_adj_partition(bool): это бывают чистые прилагательные используются в режиме причастий (действия, опасные для жизни)
         
         Returns:
             VerbPhraseToken: группа или null
@@ -41,21 +42,20 @@ class VerbPhraseHelper:
         if (not t.chars.is_letter): 
             return None
         if (t.chars.is_cyrillic_letter): 
-            return VerbPhraseHelper.__try_parse_ru(t, can_be_partition)
+            return VerbPhraseHelper.__try_parse_ru(t, can_be_partition, can_be_adj_partition, force_parse)
         return None
     
     @staticmethod
-    def __try_parse_ru(t : 'Token', can_be_partition : bool) -> 'VerbPhraseToken':
+    def __try_parse_ru(t : 'Token', can_be_partition : bool, can_be_adj_partition : bool, force_parse : bool) -> 'VerbPhraseToken':
         res = None
         t0 = t
         not0_ = None
         has_verb = False
         verb_be_before = False
-        norm = None
         prep = None
-        first_pass2996 = True
+        first_pass3683 = True
         while True:
-            if first_pass2996: first_pass2996 = False
+            if first_pass3683: first_pass3683 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not ((isinstance(t, TextToken)))): 
@@ -66,11 +66,14 @@ class VerbPhraseHelper:
                 not0_ = t
                 continue
             ty = 0
+            norm = None
             mc = tt.get_morph_class_in_dictionary()
             if (tt.term == "НЕТ"): 
                 if (has_verb): 
                     break
                 ty = 1
+            elif (tt.term == "ДОПУСТИМО"): 
+                ty = 3
             elif (mc.is_adverb and not mc.is_verb): 
                 ty = 2
             elif (tt.is_pure_verb or tt.is_verb_be): 
@@ -91,6 +94,8 @@ class VerbPhraseHelper:
                         ty = 1
                     elif (mc.is_adjective and can_be_partition): 
                         ty = 1
+                    elif (force_parse): 
+                        ty = 1
                 elif (mc.is_proper): 
                     if (tt.chars.is_all_lower): 
                         ty = 1
@@ -103,14 +108,18 @@ class VerbPhraseHelper:
                 if (not can_be_partition and is_participle): 
                     break
                 if (has_verb): 
-                    if (not tt.morph.contains_attr("инф.", None) or is_participle): 
+                    if (tt.morph.contains_attr("инф.", None)): 
+                        pass
+                    elif (not is_participle): 
+                        pass
+                    else: 
                         break
-            elif ((mc.is_adjective and tt.morph.contains_attr("к.ф.", None) and tt.term.endswith("О")) and NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0) is None): 
+            elif ((mc.is_adjective and tt.morph.contains_attr("к.ф.", None) and tt.term.endswith("О")) and NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0, None) is None): 
                 ty = 2
-            elif (mc.is_adjective and can_be_partition): 
-                if (tt.morph.contains_attr("к.ф.", None)): 
+            elif (mc.is_adjective and ((can_be_partition or can_be_adj_partition))): 
+                if (tt.morph.contains_attr("к.ф.", None) and not can_be_adj_partition): 
                     break
-                norm = tt.get_normal_case_text(MorphClass.ADJECTIVE, True, MorphGender.MASCULINE, False)
+                norm = tt.get_normal_case_text(MorphClass.ADJECTIVE, MorphNumber.SINGULAR, MorphGender.MASCULINE, False)
                 if (norm.endswith("ЙШИЙ")): 
                     pass
                 else: 
@@ -126,6 +135,8 @@ class VerbPhraseHelper:
                                 elif (w.class0_.is_verb): 
                                     hverb = True
                         if (hpart and hverb): 
+                            ty = 3
+                        elif (can_be_adj_partition): 
                             ty = 3
                         if (ty != 3 and not Utils.isNullOrEmpty(grs[0].prefix) and norm.startswith(grs[0].prefix)): 
                             hverb = False
@@ -152,7 +163,7 @@ class VerbPhraseHelper:
             if (res is None): 
                 res = VerbPhraseToken(t0, t)
             res.end_token = t
-            it = VerbPhraseItemToken._new683(t, t, MorphCollection(t.morph))
+            it = VerbPhraseItemToken._new669(t, t, MorphCollection(t.morph))
             if (not0_ is not None): 
                 it.begin_token = not0_
                 it.not0_ = True
@@ -164,9 +175,9 @@ class VerbPhraseHelper:
                 it.morph.remove_items(prep.next_case, False)
                 res.preposition = prep
             if (norm is None): 
-                norm = t.get_normal_case_text((MorphClass.ADJECTIVE if ty == 3 else (MorphClass.ADVERB if ty == 2 else MorphClass.VERB)), True, MorphGender.MASCULINE, False)
+                norm = t.get_normal_case_text((MorphClass.ADJECTIVE if ty == 3 else (MorphClass.ADVERB if ty == 2 else MorphClass.VERB)), MorphNumber.SINGULAR, MorphGender.MASCULINE, False)
                 if (ty == 1 and not tt.morph.case_.is_undefined): 
-                    mi = MorphWordForm._new684(MorphCase.NOMINATIVE, MorphNumber.SINGULAR, MorphGender.MASCULINE)
+                    mi = MorphWordForm._new670(MorphCase.NOMINATIVE, MorphNumber.SINGULAR, MorphGender.MASCULINE)
                     for mit in tt.morph.items: 
                         if (isinstance(mit, MorphWordForm)): 
                             mi.misc = (mit).misc

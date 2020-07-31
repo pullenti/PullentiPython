@@ -31,9 +31,9 @@ class MiscLocationHelper:
         if (t is None): 
             return False
         tt = t.previous
-        first_pass3079 = True
+        first_pass3769 = True
         while True:
-            if first_pass3079: first_pass3079 = False
+            if first_pass3769: first_pass3769 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             if ((tt.is_char_of(",.;:") or tt.is_hiphen or tt.is_and) or tt.morph.class0_.is_conjunction or tt.morph.class0_.is_preposition): 
@@ -76,9 +76,9 @@ class MiscLocationHelper:
             return False
         cou = 0
         tt = t.next0_
-        first_pass3080 = True
+        first_pass3770 = True
         while True:
-            if first_pass3080: first_pass3080 = False
+            if first_pass3770: first_pass3770 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_char_of(",.;") or tt.is_hiphen or tt.morph.class0_.is_conjunction): 
@@ -138,7 +138,7 @@ class MiscLocationHelper:
         from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         if (not ((isinstance(t, TextToken)))): 
             return None
-        npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
+        npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0, None)
         if (npt is None): 
             return None
         if (TerrItemToken._m_unknown_regions.try_parse(npt.end_token, TerminParseAttr.FULLWORDSONLY) is not None): 
@@ -318,10 +318,10 @@ class MiscLocationHelper:
         """
         from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         res = None
-        wrapres1188 = RefOutArgWrapper(None)
-        inoutres1189 = Utils.tryGetValue(MiscLocationHelper.__m_geo_ref_by_name, name, wrapres1188)
-        res = wrapres1188.value
-        if (inoutres1189): 
+        wrapres1234 = RefOutArgWrapper(None)
+        inoutres1235 = Utils.tryGetValue(MiscLocationHelper.__m_geo_ref_by_name, name, wrapres1234)
+        res = wrapres1234.value
+        if (inoutres1235): 
             return res
         for r in TerrItemToken._m_all_states: 
             if (r.find_slot(None, name, True) is not None): 
@@ -345,7 +345,7 @@ class MiscLocationHelper:
         tok = MiscLocationHelper.__m_nords.try_parse(t, TerminParseAttr.NO)
         if (tok is None): 
             return None
-        res = MetaToken._new594(t, t, t.morph)
+        res = MetaToken._new580(t, t, t.morph)
         t1 = None
         if ((t.next0_ is not None and t.next0_.is_hiphen and not t.is_whitespace_after) and not t.is_whitespace_after): 
             t1 = t.next0_.next0_

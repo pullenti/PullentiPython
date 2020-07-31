@@ -6,13 +6,16 @@ import datetime
 import math
 import io
 from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.date.DatePointerType import DatePointerType
-from pullenti.ner.ReferentClass import ReferentClass
-from pullenti.ner.date.internal.MetaDate import MetaDate
 from pullenti.ner.Referent import Referent
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.date.DatePointerType import DatePointerType
+from pullenti.ner.date.internal.MetaDate import MetaDate
 
 class DateReferent(Referent):
     """ Сущность, представляющая дату """
@@ -27,7 +30,11 @@ class DateReferent(Referent):
     
     ATTR_YEAR = "YEAR"
     
+    ATTR_QUARTAL = "QUARTAL"
+    
     ATTR_MONTH = "MONTH"
+    
+    ATTR_WEEK = "WEEK"
     
     ATTR_DAY = "DAY"
     
@@ -42,6 +49,8 @@ class DateReferent(Referent):
     ATTR_HIGHER = "HIGHER"
     
     ATTR_POINTER = "POINTER"
+    
+    ATTR_ISRELATIVE = "ISRELATIVE"
     
     @property
     def dt(self) -> datetime.datetime:
@@ -68,6 +77,53 @@ class DateReferent(Referent):
     @dt.setter
     def dt(self, value) -> datetime.datetime:
         return value
+    
+    @property
+    def is_relative(self) -> bool:
+        """ Элемент даты относителен (послезавтра, пару лет назад ...) """
+        if (self.get_string_value(DateReferent.ATTR_ISRELATIVE) == "true"): 
+            return True
+        if (self.pointer == DatePointerType.TODAY): 
+            return True
+        if (self.higher is None): 
+            return False
+        return self.higher.is_relative
+    @is_relative.setter
+    def is_relative(self, value) -> bool:
+        self.add_slot(DateReferent.ATTR_ISRELATIVE, ("true" if value else None), True, 0)
+        return value
+    
+    def calculate_date(self, now : datetime.datetime, tense : int=0) -> datetime.datetime:
+        """ Вычислить дату-время (одну)
+        
+        Args:
+            now(datetime.datetime): текущая дата (для относительных дат)
+            tense(int): время (-1 - прошлое, 0 - любое, 1 - будущее) - испрользуется
+         при неоднозначных случаях
+        
+        Returns:
+            datetime.datetime: дата-время или null
+        """
+        from pullenti.ner.date.internal.DateRelHelper import DateRelHelper
+        return DateRelHelper.calculate_date(self, now, tense)
+    
+    def calculate_date_range(self, now : datetime.datetime, from0_ : datetime.datetime, to : datetime.datetime, tense : int=0) -> bool:
+        """ Вычислить диапазон дат (если не диапазон, то from = to)
+        
+        Args:
+            now(datetime.datetime): текущая дата-время
+            from0_(datetime.datetime): результирующее начало диапазона
+            to(datetime.datetime): результирующий конец диапазона
+            tense(int): время (-1 - прошлое, 0 - любое, 1 - будущее) - испрользуется
+         при неоднозначных случаях
+         Например, 7 сентября, а сейчас лето, то какой это год? При true - этот, при false - предыдущий
+        
+        Returns:
+            bool: признак корректности
+        """
+        from pullenti.ner.date.internal.DateRelHelper import DateRelHelper
+        inoutres848 = DateRelHelper.calculate_date_range(self, now, from0_, to, tense)
+        return inoutres848
     
     @property
     def century(self) -> int:
@@ -105,6 +161,18 @@ class DateReferent(Referent):
         return value
     
     @property
+    def quartal(self) -> int:
+        """ Квартал (0 - неопределён) """
+        if (self.find_slot(DateReferent.ATTR_QUARTAL, None, True) is None and self.higher is not None): 
+            return self.higher.quartal
+        else: 
+            return self.get_int_value(DateReferent.ATTR_QUARTAL, 0)
+    @quartal.setter
+    def quartal(self, value) -> int:
+        self.add_slot(DateReferent.ATTR_QUARTAL, value, True, 0)
+        return value
+    
+    @property
     def month(self) -> int:
         """ Месяц (0 - неопределён) """
         if (self.find_slot(DateReferent.ATTR_MONTH, None, True) is None and self.higher is not None): 
@@ -114,6 +182,18 @@ class DateReferent(Referent):
     @month.setter
     def month(self, value) -> int:
         self.add_slot(DateReferent.ATTR_MONTH, value, True, 0)
+        return value
+    
+    @property
+    def week(self) -> int:
+        """ Неделя (0 - неопределён) """
+        if (self.find_slot(DateReferent.ATTR_WEEK, None, True) is None and self.higher is not None): 
+            return self.higher.week
+        else: 
+            return self.get_int_value(DateReferent.ATTR_WEEK, 0)
+    @week.setter
+    def week(self, value) -> int:
+        self.add_slot(DateReferent.ATTR_WEEK, value, True, 0)
         return value
     
     @property
@@ -186,7 +266,7 @@ class DateReferent(Referent):
             res = Utils.valToEnum(s, DatePointerType)
             if (isinstance(res, DatePointerType)): 
                 return Utils.valToEnum(res, DatePointerType)
-        except Exception as ex813: 
+        except Exception as ex849: 
             pass
         return DatePointerType.NO
     @pointer.setter
@@ -225,10 +305,100 @@ class DateReferent(Referent):
         return self._to_string(short_variant, lang, lev, 0)
     
     def _to_string(self, short_variant : bool, lang : 'MorphLang', lev : int, from_range : int) -> str:
+        from pullenti.ner.date.internal.DateRelHelper import DateRelHelper
         res = io.StringIO()
         p = self.pointer
         if (lang is None): 
             lang = MorphLang.RU
+        if (self.is_relative): 
+            if (self.pointer == DatePointerType.TODAY): 
+                print("сейчас".format(), end="", file=res, flush=True)
+                if (not short_variant): 
+                    DateRelHelper.append_to_string(self, res)
+                return Utils.toStringStringIO(res)
+            word = None
+            val = 0
+            back = False
+            is_local_rel = self.get_string_value(DateReferent.ATTR_ISRELATIVE) == "true"
+            for s in self.slots: 
+                if (s.type_name == DateReferent.ATTR_CENTURY): 
+                    word = "век"
+                    wrapval850 = RefOutArgWrapper(0)
+                    Utils.tryParseInt(Utils.asObjectOrNull(s.value, str), wrapval850)
+                    val = wrapval850.value
+                elif (s.type_name == DateReferent.ATTR_YEAR): 
+                    word = "год"
+                    wrapval851 = RefOutArgWrapper(0)
+                    Utils.tryParseInt(Utils.asObjectOrNull(s.value, str), wrapval851)
+                    val = wrapval851.value
+                elif (s.type_name == DateReferent.ATTR_MONTH): 
+                    word = "месяц"
+                    wrapval852 = RefOutArgWrapper(0)
+                    Utils.tryParseInt(Utils.asObjectOrNull(s.value, str), wrapval852)
+                    val = wrapval852.value
+                    if (not is_local_rel and val >= 1 and val <= 12): 
+                        print(DateReferent.__m_month0[val - 1], end="", file=res)
+                elif (s.type_name == DateReferent.ATTR_DAY): 
+                    word = "день"
+                    wrapval853 = RefOutArgWrapper(0)
+                    Utils.tryParseInt(Utils.asObjectOrNull(s.value, str), wrapval853)
+                    val = wrapval853.value
+                    if ((not is_local_rel and self.month > 0 and self.month <= 12) and self.higher is not None and self.higher.get_string_value(DateReferent.ATTR_ISRELATIVE) != "true"): 
+                        print("{0} {1}".format(val, DateReferent.__m_month[self.month - 1]), end="", file=res, flush=True)
+                    elif (not is_local_rel): 
+                        print("{0} число".format(val), end="", file=res, flush=True)
+                elif (s.type_name == DateReferent.ATTR_QUARTAL): 
+                    word = "квартал"
+                    wrapval854 = RefOutArgWrapper(0)
+                    Utils.tryParseInt(Utils.asObjectOrNull(s.value, str), wrapval854)
+                    val = wrapval854.value
+                elif (s.type_name == DateReferent.ATTR_WEEK): 
+                    word = "неделя"
+                    wrapval855 = RefOutArgWrapper(0)
+                    Utils.tryParseInt(Utils.asObjectOrNull(s.value, str), wrapval855)
+                    val = wrapval855.value
+                elif (s.type_name == DateReferent.ATTR_HOUR): 
+                    word = "час"
+                    wrapval856 = RefOutArgWrapper(0)
+                    Utils.tryParseInt(Utils.asObjectOrNull(s.value, str), wrapval856)
+                    val = wrapval856.value
+                    if (not is_local_rel): 
+                        print("{0}:{1}".format("{:02d}".format(val), "{:02d}".format(self.minute)), end="", file=res, flush=True)
+                elif (s.type_name == DateReferent.ATTR_MINUTE): 
+                    word = "минута"
+                    wrapval857 = RefOutArgWrapper(0)
+                    Utils.tryParseInt(Utils.asObjectOrNull(s.value, str), wrapval857)
+                    val = wrapval857.value
+                elif (s.type_name == DateReferent.ATTR_DAYOFWEEK): 
+                    wrapval858 = RefOutArgWrapper(0)
+                    Utils.tryParseInt(Utils.asObjectOrNull(s.value, str), wrapval858)
+                    val = wrapval858.value
+                    if (not is_local_rel): 
+                        print((DateReferent.__m_week_day_ex[val - 1] if val >= 1 and val <= 7 else "?"), end="", file=res)
+                    else: 
+                        if (val < 0): 
+                            val = (- val)
+                            back = True
+                        if (val >= 0 and val <= 7): 
+                            print("{0} {1}".format(((("прошлое" if back else "будущее")) if val == 7 else ((("прошлая" if back else "будущая")) if (val == 3 or val == 6) else (("прошлый" if back else "будущий")))), DateReferent.__m_week_day_ex[val - 1]), end="", file=res, flush=True)
+                            break
+            if (word is not None and is_local_rel): 
+                if (val == 0): 
+                    print("{0} {1}".format(("текущая" if word == "неделя" or word == "минута" else "текущий"), word), end="", file=res, flush=True)
+                elif (val > 0 and not back): 
+                    print("{0} {1} вперёд".format(val, MiscHelper.get_text_morph_var_by_case_and_number_ex(word, None, MorphNumber.UNDEFINED, str(val))), end="", file=res, flush=True)
+                else: 
+                    val = (- val)
+                    print("{0} {1} назад".format(val, MiscHelper.get_text_morph_var_by_case_and_number_ex(word, None, MorphNumber.UNDEFINED, str(val))), end="", file=res, flush=True)
+            elif (not is_local_rel and res.tell() == 0): 
+                print("{0} {1}".format(val, MiscHelper.get_text_morph_var_by_case_and_number_ex(word, None, MorphNumber.UNDEFINED, str(val))), end="", file=res, flush=True)
+            if (not short_variant): 
+                DateRelHelper.append_to_string(self, res)
+            if (from_range == 1): 
+                Utils.insertStringIO(res, 0, "{0} ".format(("з" if lang.is_ua else ("from" if lang.is_en else "с"))))
+            elif (from_range == 2): 
+                Utils.insertStringIO(res, 0, ("to " if lang.is_en else "по "))
+            return Utils.toStringStringIO(res)
         if (from_range == 1): 
             print("{0} ".format(("з" if lang.is_ua else ("from" if lang.is_en else "с"))), end="", file=res, flush=True)
         elif (from_range == 2): 
@@ -316,9 +486,14 @@ class DateReferent(Referent):
             if (se >= 0): 
                 print(":{0}".format("{:02d}".format(se)), end="", file=res, flush=True)
         if (res.tell() == 0): 
+            if (self.quartal != 0): 
+                print("{0}-й квартал".format(self.quartal), end="", file=res, flush=True)
+        if (res.tell() == 0): 
             return "?"
         while Utils.getCharAtStringIO(res, res.tell() - 1) == ' ' or Utils.getCharAtStringIO(res, res.tell() - 1) == ',':
             Utils.setLengthStringIO(res, res.tell() - 1)
+        if (not short_variant and self.is_relative): 
+            DateRelHelper.append_to_string(self, res)
         return Utils.toStringStringIO(res).strip()
     
     __m_month = None
@@ -333,11 +508,15 @@ class DateReferent(Referent):
     
     __m_week_day = None
     
+    __m_week_day_ex = None
+    
     __m_week_day_en = None
     
     def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
         sd = Utils.asObjectOrNull(obj, DateReferent)
         if (sd is None): 
+            return False
+        if (sd.is_relative != self.is_relative): 
             return False
         if (sd.century != self.century): 
             return False
@@ -412,85 +591,85 @@ class DateReferent(Referent):
         return False
     
     @staticmethod
-    def _new750(_arg1 : 'DateReferent', _arg2 : int) -> 'DateReferent':
+    def _new782(_arg1 : 'DateReferent', _arg2 : int) -> 'DateReferent':
         res = DateReferent()
         res.higher = _arg1
         res.day = _arg2
         return res
     
     @staticmethod
-    def _new751(_arg1 : int, _arg2 : int) -> 'DateReferent':
+    def _new783(_arg1 : int, _arg2 : int) -> 'DateReferent':
         res = DateReferent()
         res.month = _arg1
         res.day = _arg2
         return res
     
     @staticmethod
-    def _new752(_arg1 : int) -> 'DateReferent':
+    def _new784(_arg1 : int) -> 'DateReferent':
         res = DateReferent()
         res.year = _arg1
         return res
     
     @staticmethod
-    def _new755(_arg1 : int, _arg2 : int) -> 'DateReferent':
+    def _new788(_arg1 : int, _arg2 : int) -> 'DateReferent':
         res = DateReferent()
         res.hour = _arg1
         res.minute = _arg2
         return res
     
     @staticmethod
-    def _new756(_arg1 : 'DatePointerType') -> 'DateReferent':
+    def _new789(_arg1 : 'DatePointerType') -> 'DateReferent':
         res = DateReferent()
         res.pointer = _arg1
         return res
     
     @staticmethod
-    def _new768(_arg1 : int, _arg2 : 'DateReferent') -> 'DateReferent':
+    def _new801(_arg1 : int, _arg2 : 'DateReferent') -> 'DateReferent':
         res = DateReferent()
         res.month = _arg1
         res.higher = _arg2
         return res
     
     @staticmethod
-    def _new773(_arg1 : int, _arg2 : 'DateReferent') -> 'DateReferent':
+    def _new806(_arg1 : int, _arg2 : 'DateReferent') -> 'DateReferent':
         res = DateReferent()
         res.day = _arg1
         res.higher = _arg2
         return res
     
     @staticmethod
-    def _new789(_arg1 : int) -> 'DateReferent':
+    def _new822(_arg1 : int) -> 'DateReferent':
         res = DateReferent()
         res.month = _arg1
         return res
     
     @staticmethod
-    def _new790(_arg1 : int) -> 'DateReferent':
+    def _new823(_arg1 : int) -> 'DateReferent':
         res = DateReferent()
         res.century = _arg1
         return res
     
     @staticmethod
-    def _new796(_arg1 : int) -> 'DateReferent':
+    def _new830(_arg1 : int) -> 'DateReferent':
         res = DateReferent()
         res.day = _arg1
         return res
     
     @staticmethod
-    def _new798(_arg1 : 'DateReferent') -> 'DateReferent':
+    def _new832(_arg1 : 'DateReferent') -> 'DateReferent':
         res = DateReferent()
         res.higher = _arg1
         return res
     
     @staticmethod
-    def _new799(_arg1 : 'DateReferent', _arg2 : int) -> 'DateReferent':
+    def _new833(_arg1 : 'DateReferent', _arg2 : int) -> 'DateReferent':
         res = DateReferent()
         res.higher = _arg1
         res.month = _arg2
         return res
     
     @staticmethod
-    def _new808(_arg1 : int) -> 'DateReferent':
+    def _new842(_arg1 : int) -> 'DateReferent':
         res = DateReferent()
         res.day_of_week = _arg1
         return res
@@ -504,6 +683,7 @@ class DateReferent(Referent):
         DateReferent.__m_monthua = ["січня", "лютого", "березня", "квітня", "травня", "червня", "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"]
         DateReferent.__m_month0ua = ["січень", "лютий", "березень", "квітень", "травень", "червень", "липень", "серпень", "вересень", "жовтень", "листопад", "грудень"]
         DateReferent.__m_week_day = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+        DateReferent.__m_week_day_ex = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
         DateReferent.__m_week_day_en = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
 DateReferent._static_ctor()

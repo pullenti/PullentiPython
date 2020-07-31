@@ -40,7 +40,7 @@ class MoneyReferent(Referent):
             cou = 0
             for i in range(res.tell() - 1, 0, -1):
                 cou += 1
-                if ((cou) == 3): 
+                if (cou == 3): 
                     Utils.insertStringIO(res, i, '.')
                     cou = 0
         else: 
@@ -65,10 +65,10 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_VALUE)
         if (val is None): 
             return 0
-        wrapv1760 = RefOutArgWrapper(0)
-        inoutres1761 = Utils.tryParseFloat(val, wrapv1760)
-        v = wrapv1760.value
-        if (not inoutres1761): 
+        wrapv1809 = RefOutArgWrapper(0)
+        inoutres1810 = Utils.tryParseFloat(val, wrapv1809)
+        v = wrapv1809.value
+        if (not inoutres1810): 
             return 0
         return v
     
@@ -79,10 +79,10 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_ALTVALUE)
         if (val is None): 
             return None
-        wrapv1762 = RefOutArgWrapper(0)
-        inoutres1763 = Utils.tryParseFloat(val, wrapv1762)
-        v = wrapv1762.value
-        if (not inoutres1763): 
+        wrapv1811 = RefOutArgWrapper(0)
+        inoutres1812 = Utils.tryParseFloat(val, wrapv1811)
+        v = wrapv1811.value
+        if (not inoutres1812): 
             return None
         return v
     
@@ -92,10 +92,10 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_REST)
         if (val is None): 
             return 0
-        wrapv1764 = RefOutArgWrapper(0)
-        inoutres1765 = Utils.tryParseInt(val, wrapv1764)
-        v = wrapv1764.value
-        if (not inoutres1765): 
+        wrapv1813 = RefOutArgWrapper(0)
+        inoutres1814 = Utils.tryParseInt(val, wrapv1813)
+        v = wrapv1813.value
+        if (not inoutres1814): 
             return 0
         return v
     
@@ -105,10 +105,10 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_ALTREST)
         if (val is None): 
             return None
-        wrapv1766 = RefOutArgWrapper(0)
-        inoutres1767 = Utils.tryParseInt(val, wrapv1766)
-        v = wrapv1766.value
-        if (not inoutres1767): 
+        wrapv1815 = RefOutArgWrapper(0)
+        inoutres1816 = Utils.tryParseInt(val, wrapv1815)
+        v = wrapv1815.value
+        if (not inoutres1816): 
             return None
         return v
     
@@ -144,7 +144,7 @@ class MoneyReferent(Referent):
         return True
     
     @staticmethod
-    def _new859(_arg1 : str, _arg2 : float) -> 'MoneyReferent':
+    def _new904(_arg1 : str, _arg2 : float) -> 'MoneyReferent':
         res = MoneyReferent()
         res.currency = _arg1
         res.real_value = _arg2

@@ -5,16 +5,11 @@
 import io
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.MorphClass import MorphClass
-
 class CharsInfo:
     """ Информация о символах токена """
     
-    def __init__(self, ci : 'CharsInfo'=None) -> None:
+    def __init__(self) -> None:
         self.value = 0
-        self.value = (0)
-        if (ci is not None): 
-            self.value = ci.value
     
     def __get_value(self, i : int) -> bool:
         return (((((self.value) >> i)) & 1)) != 0
@@ -45,7 +40,7 @@ class CharsInfo:
     
     @property
     def is_capital_upper(self) -> bool:
-        """ ПЕрвый символ в верхнем регистре, остальные в нижнем.
+        """ Первый символ в верхнем регистре, остальные в нижнем.
          Для однобуквенной комбинации false. """
         return self.__get_value(2)
     @is_capital_upper.setter
@@ -55,7 +50,7 @@ class CharsInfo:
     
     @property
     def is_last_lower(self) -> bool:
-        """ Все символы в верхнеи регистре, кроме последнего (длина >= 3) """
+        """ Все символы в верхнем регистре, кроме последнего (длина >= 3) """
         return self.__get_value(3)
     @is_last_lower.setter
     def is_last_lower(self, value_) -> bool:
@@ -112,7 +107,7 @@ class CharsInfo:
         return Utils.toStringStringIO(tmp_str)
     
     def equals(self, obj : object) -> bool:
-        if (not ((isinstance(obj, MorphClass)))): 
+        if (not ((isinstance(obj, CharsInfo)))): 
             return False
         return self.value == (obj).value
     
@@ -135,26 +130,26 @@ class CharsInfo:
         return val1 != val2
     
     @staticmethod
-    def _new2378(_arg1 : bool) -> 'CharsInfo':
+    def _new2416(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_capital_upper = _arg1
         return res
     
     @staticmethod
-    def _new2553(_arg1 : bool) -> 'CharsInfo':
+    def _new2602(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_cyrillic_letter = _arg1
         return res
     
     @staticmethod
-    def _new2559(_arg1 : bool, _arg2 : bool) -> 'CharsInfo':
+    def _new2608(_arg1 : bool, _arg2 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_cyrillic_letter = _arg1
         res.is_capital_upper = _arg2
         return res
     
     @staticmethod
-    def _new2564(_arg1 : bool, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'CharsInfo':
+    def _new2613(_arg1 : bool, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_capital_upper = _arg1
         res.is_cyrillic_letter = _arg2
@@ -163,13 +158,13 @@ class CharsInfo:
         return res
     
     @staticmethod
-    def _new2587(_arg1 : bool) -> 'CharsInfo':
+    def _new2618(_arg1 : int) -> 'CharsInfo':
         res = CharsInfo()
-        res.is_latin_letter = _arg1
+        res.value = _arg1
         return res
     
     @staticmethod
-    def _new2834(_arg1 : int) -> 'CharsInfo':
+    def _new2637(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
-        res.value = _arg1
+        res.is_latin_letter = _arg1
         return res

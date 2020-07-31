@@ -54,25 +54,25 @@ class ParenthesisToken(MetaToken):
             if (t.next0_.is_value("СИЛА", None)): 
                 t1 = t.next0_.next0_
             elif (t.next0_.morph.class0_.is_adjective or t.next0_.morph.class0_.is_pronoun): 
-                npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0)
+                npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0, None)
                 if (npt is not None): 
                     if (npt.noun.is_value("ВИД", None) or npt.noun.is_value("СЛУЧАЙ", None) or npt.noun.is_value("СФЕРА", None)): 
                         return ParenthesisToken(t, npt.end_token)
         if (t1 is not None): 
             if (t1.next0_ is not None): 
-                npt1 = NounPhraseHelper.try_parse(t1, NounPhraseParseAttr.NO, 0)
+                npt1 = NounPhraseHelper.try_parse(t1, NounPhraseParseAttr.NO, 0, None)
                 if (npt1 is not None): 
                     if (npt1.noun.is_value("НОРМА", None) or npt1.noun.is_value("ПОЛОЖЕНИЕ", None) or npt1.noun.is_value("УКАЗАНИЕ", None)): 
                         t1 = npt1.end_token.next0_
             r = t1.get_referent()
             if (r is not None): 
-                res = ParenthesisToken._new1136(t, t1, r)
+                res = ParenthesisToken._new1181(t, t1, r)
                 if (t1.next0_ is not None and t1.next0_.is_comma): 
                     sila = False
                     ttt = t1.next0_.next0_
-                    first_pass3056 = True
+                    first_pass3746 = True
                     while True:
-                        if first_pass3056: first_pass3056 = False
+                        if first_pass3746: first_pass3746 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_value("СИЛА", None) or ttt.is_value("ДЕЙСТВИЕ", None)): 
@@ -85,7 +85,7 @@ class ParenthesisToken(MetaToken):
                         if (BracketHelper.can_be_start_of_sequence(ttt, False, False)): 
                             break
                 return res
-            npt = NounPhraseHelper.try_parse(t1, NounPhraseParseAttr.NO, 0)
+            npt = NounPhraseHelper.try_parse(t1, NounPhraseParseAttr.NO, 0, None)
             if (npt is not None): 
                 return ParenthesisToken(t, npt.end_token)
         tt = t
@@ -93,7 +93,7 @@ class ParenthesisToken(MetaToken):
             tt = tt.next0_
         if (tt.morph.class0_.is_preposition and tt is not None): 
             tt = tt.next0_
-            npt1 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
+            npt1 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0, None)
             if (npt1 is not None): 
                 tt = npt1.end_token
                 if (tt.next0_ is not None and tt.next0_.is_comma): 
@@ -115,7 +115,7 @@ class ParenthesisToken(MetaToken):
     __m_termins = None
     
     @staticmethod
-    def _new1136(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent') -> 'ParenthesisToken':
+    def _new1181(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent') -> 'ParenthesisToken':
         res = ParenthesisToken(_arg1, _arg2)
         res.ref = _arg3
         return res

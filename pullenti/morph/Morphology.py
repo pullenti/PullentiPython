@@ -231,6 +231,9 @@ class Morphology:
         return Utils.ifNotNull(Morphology.__m_inner.get_wordform(var, MorphClass.ADJECTIVE, bi.gender, bi.case_, bi.number, MorphLang.UNKNOWN, None), var)
     
     LAZY_LOAD = True
+    """ При и нициализации не грузить всю морфологиюю сразу в память, а подгружать по мере необходимости.
+     Сильно экономит время и память. Но выяснилось, что при работе из разных потоков какие-то непонятные проблемы.
+     Пока не разобрались, приходится это использовать (ставьте false перед инициализацией, чтобы грузилось сразу всё). """
     
     # static constructor for class Morphology
     @staticmethod

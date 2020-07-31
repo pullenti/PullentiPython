@@ -113,6 +113,9 @@ class Utils:
     def getHashtabVal(dic, ind):
         if(ind in dic): return dic[ind]
         return None
+    @staticmethod
+    def setHashtabVal(dic, ind, val):
+        dic[ind] = val
 
     @staticmethod
     def ifNotNull(v, altv):

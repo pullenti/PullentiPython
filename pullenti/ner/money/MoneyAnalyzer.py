@@ -56,7 +56,7 @@ class MoneyAnalyzer(Analyzer):
     
     @property
     def used_extern_object_types(self) -> typing.List[str]:
-        return ["GEO"]
+        return ["GEO", "DATE"]
     
     def create_referent(self, type0_ : str) -> 'Referent':
         if (type0_ == MoneyReferent.OBJ_TYPENAME): 
@@ -73,9 +73,9 @@ class MoneyAnalyzer(Analyzer):
         """
         ad = kit.get_analyzer_data(self)
         t = kit.first_token
-        first_pass3231 = True
+        first_pass3922 = True
         while True:
-            if first_pass3231: first_pass3231 = False
+            if first_pass3922: first_pass3922 = False
             else: t = t.next0_
             if (not (t is not None)): break
             mon = MoneyAnalyzer.try_parse(t)

@@ -6,9 +6,10 @@ import gc
 import typing
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.internal.DerivateDictionary import DerivateDictionary
-from pullenti.morph.internal.NextModelHelper import NextModelHelper
+from pullenti.semantic.utils.ControlModelQuestion import ControlModelQuestion
+from pullenti.semantic.internal.DerivateDictionary import DerivateDictionary
 from pullenti.morph.MorphLang import MorphLang
+from pullenti.semantic.internal.NextModelHelper import NextModelHelper
 
 class Explanatory:
     """ Сервис для получение толковой информации о словах.
@@ -26,6 +27,7 @@ class Explanatory:
         if (langs is None or langs.is_undefined): 
             langs = MorphLang.RU
         NextModelHelper.initialize()
+        ControlModelQuestion.initialize()
         Explanatory.load_languages(langs)
     
     __m_der_ru = None
@@ -49,6 +51,10 @@ class Explanatory:
                 raise Utils.newException("Not found resource file e_ru.dat in Enplanatory", None)
         if (langs.is_ua): 
             pass
+    
+    @staticmethod
+    def load_dictionary_ru(dat : bytearray) -> None:
+        Explanatory.__m_der_ru.load(dat)
     
     @staticmethod
     def unload_languages(langs : 'MorphLang') -> None:
@@ -157,6 +163,15 @@ class Explanatory:
         return False
     
     _m_lock = None
+    
+    @staticmethod
+    def set_dictionary(dic : 'DerivateDictionary') -> None:
+        """ Не использовать!!!
+        
+        Args:
+            dic(DerivateDictionary): 
+        """
+        Explanatory.__m_der_ru = dic
     
     # static constructor for class Explanatory
     @staticmethod

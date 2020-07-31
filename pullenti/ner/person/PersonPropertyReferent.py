@@ -139,7 +139,7 @@ class PersonPropertyReferent(Referent):
             hi = self.higher
             while hi is not None: 
                 PersonPropertyReferent.__tmp_stack += 1
-                if ((PersonPropertyReferent.__tmp_stack) > 20): 
+                if (PersonPropertyReferent.__tmp_stack > 20): 
                     pass
                 elif (hi.can_be_equals(pr, typ)): 
                     PersonPropertyReferent.__tmp_stack -= 1
@@ -149,7 +149,7 @@ class PersonPropertyReferent(Referent):
             hi = pr.higher
             while hi is not None: 
                 PersonPropertyReferent.__tmp_stack += 1
-                if ((PersonPropertyReferent.__tmp_stack) > 20): 
+                if (PersonPropertyReferent.__tmp_stack > 20): 
                     pass
                 elif (hi.can_be_equals(self, typ)): 
                     PersonPropertyReferent.__tmp_stack -= 1
@@ -158,7 +158,7 @@ class PersonPropertyReferent(Referent):
                 hi = hi.higher
         if (self.higher is not None and pr.higher is not None): 
             PersonPropertyReferent.__tmp_stack += 1
-            if ((PersonPropertyReferent.__tmp_stack) > 20): 
+            if (PersonPropertyReferent.__tmp_stack > 20): 
                 pass
             elif (not self.higher.can_be_equals(pr.higher, typ)): 
                 PersonPropertyReferent.__tmp_stack -= 1
@@ -178,9 +178,9 @@ class PersonPropertyReferent(Referent):
             eq = False
             noeq = False
             i = 0
-            first_pass3305 = True
+            first_pass3996 = True
             while True:
-                if first_pass3305: first_pass3305 = False
+                if first_pass3996: first_pass3996 = False
                 else: i += 1
                 if (not (i < len(refs1))): break
                 if (refs1[i] in refs2): 
@@ -195,9 +195,9 @@ class PersonPropertyReferent(Referent):
                                 eq = True
                                 break
             i = 0
-            first_pass3306 = True
+            first_pass3997 = True
             while True:
-                if first_pass3306: first_pass3306 = False
+                if first_pass3997: first_pass3997 = False
                 else: i += 1
                 if (not (i < len(refs2))): break
                 if (refs2[i] in refs1): 
@@ -306,7 +306,7 @@ class PersonPropertyReferent(Referent):
         return False
     
     @staticmethod
-    def _new2454(_arg1 : str) -> 'PersonPropertyReferent':
+    def _new2503(_arg1 : str) -> 'PersonPropertyReferent':
         res = PersonPropertyReferent()
         res.name = _arg1
         return res

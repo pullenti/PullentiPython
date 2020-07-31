@@ -81,9 +81,9 @@ class DenominationAnalyzer(Analyzer):
             detect_new_denoms = False
             dt = datetime.datetime.now()
             t = kit.first_token
-            first_pass3070 = True
+            first_pass3760 = True
             while True:
-                if first_pass3070: first_pass3070 = False
+                if first_pass3760: first_pass3760 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_whitespace_before): 
@@ -177,9 +177,9 @@ class DenominationAnalyzer(Analyzer):
         nums = 0
         chars = 0
         w = t1.next0_
-        first_pass3071 = True
+        first_pass3761 = True
         while True:
-            if first_pass3071: first_pass3071 = False
+            if first_pass3761: first_pass3761 = False
             else: w = w.next0_
             if (not (w is not None)): break
             if (w.is_whitespace_before and not for_ontology): 

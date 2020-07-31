@@ -61,9 +61,9 @@ class SourceOfAnalysis:
         cou = 0
         total_len = 0
         i = 0
-        first_pass3359 = True
+        first_pass4050 = True
         while True:
-            if first_pass3359: first_pass3359 = False
+            if first_pass4050: first_pass4050 = False
             else: i += 1
             if (not (i < len(txt))): break
             ch = txt[i]
@@ -277,7 +277,7 @@ class SourceOfAnalysis:
         self.text = SerializerHelper.deserialize_string(stream)
     
     @staticmethod
-    def _new579(_arg1 : str, _arg2 : bool) -> 'SourceOfAnalysis':
+    def _new565(_arg1 : str, _arg2 : bool) -> 'SourceOfAnalysis':
         res = SourceOfAnalysis(_arg1)
         res.create_number_tokens = _arg2
         return res

@@ -8,28 +8,31 @@ import unicodedata
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
+from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.morph.MorphCase import MorphCase
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.core.internal.RusLatAccord import RusLatAccord
+from pullenti.semantic.utils.Explanatory import Explanatory
+from pullenti.morph.MorphPerson import MorphPerson
 from pullenti.morph.MorphClass import MorphClass
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.NormalizeTextAttr import NormalizeTextAttr
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.Token import Token
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.Token import Token
 from pullenti.morph.Morphology import Morphology
-from pullenti.ner.core.CanBeEqualsAttrs import CanBeEqualsAttrs
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.ProcessorService import ProcessorService
-from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
 from pullenti.ner.core.AnalysisKit import AnalysisKit
+from pullenti.ner.core.CanBeEqualsAttrs import CanBeEqualsAttrs
+from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
 
 class MiscHelper:
     """ Разные полезные процедурки """
@@ -76,7 +79,7 @@ class MiscHelper:
                         return True
         elif ((isinstance(t, MetaToken)) and (t).begin_token == (t).end_token): 
             return MiscHelper.is_not_more_than_one_error(value, (t).begin_token)
-        elif (MiscHelper.__is_not_more_than_one_error(value, t.get_normal_case_text(None, False, MorphGender.UNDEFINED, False), True)): 
+        elif (MiscHelper.__is_not_more_than_one_error(value, t.get_normal_case_text(None, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False), True)): 
             return True
         return False
     
@@ -90,7 +93,7 @@ class MiscHelper:
             while i < len(pattern): 
                 if (pattern[i] != test[i]): 
                     cou += 1
-                    if ((cou) > 1): 
+                    if (cou > 1): 
                         return False
                 i += 1
             return True
@@ -758,6 +761,27 @@ class MiscHelper:
         return ret
     
     @staticmethod
+    def is_token_animate(t : 'Token') -> bool:
+        """ Проверка, что это - одушевлённое
+        
+        Args:
+            t(Token): 
+        
+        """
+        if (not ((isinstance(t, TextToken)))): 
+            if (isinstance(t, MetaToken)): 
+                return MiscHelper.is_token_animate((t).end_token)
+            return False
+        if (t.morph.contains_attr("одуш.", None)): 
+            return True
+        ww = Explanatory.find_words((t).lemma, None)
+        if (ww is not None): 
+            for w in ww: 
+                if (w.attrs.is_animal or w.attrs.is_animated or w.attrs.is_man): 
+                    return True
+        return False
+    
+    @staticmethod
     def is_all_characters_lower(begin : 'Token', end : 'Token', error_if_not_text : bool=False) -> bool:
         """ Проверка, что все в заданном диапазоне в нижнем регистре
         
@@ -963,7 +987,10 @@ class MiscHelper:
             res = io.StringIO()
             if (nt.source.preposition is not None): 
                 print("{0} ".format(MiscHelper.__get_text_value_(nt.source.preposition.begin_token, nt.source.preposition.end_token, attrs, None)), end="", file=res, flush=True)
-            print("{0} ".format(MiscHelper.__get_text_value_(nt.source.adjectives[nt.adj_index].begin_token, nt.source.adjectives[nt.adj_index].end_token, attrs, None)), end="", file=res, flush=True)
+            k = nt.adj_index1
+            while k <= nt.adj_index2: 
+                print("{0} ".format(MiscHelper.__get_text_value_(nt.source.adjectives[k].begin_token, nt.source.adjectives[k].end_token, attrs, None)), end="", file=res, flush=True)
+                k += 1
             print(MiscHelper.__get_text_value_(nt.source.noun.begin_token, nt.source.noun.end_token, attrs, None), end="", file=res)
             return Utils.toStringStringIO(res)
         return MiscHelper.__get_text_value_(mt.begin_token, mt.end_token, attrs, mt.get_referent())
@@ -1010,7 +1037,7 @@ class MiscHelper:
                         str0 = MiscHelper.__get_text_value_((begin).begin_token, (begin).end_token, attrs1, begin.get_referent())
                         str1 = MiscHelper.__get_text_value_((end).begin_token, (end).end_token, attrs1, begin.get_referent())
                         ar0 = ProcessorService.get_empty_processor().process(SourceOfAnalysis("{0} {1}".format(str0, str1)), None, None)
-                        npt1 = NounPhraseHelper.try_parse(ar0.first_token, NounPhraseParseAttr.NO, 0)
+                        npt1 = NounPhraseHelper.try_parse(ar0.first_token, NounPhraseParseAttr.NO, 0, None)
                         if (npt1 is not None and npt1.end_token.next0_ is None): 
                             return MiscHelper.__get_text_value_(npt1.begin_token, npt1.end_token, attrs, r)
                 print(str0_, end="", file=res)
@@ -1035,9 +1062,9 @@ class MiscHelper:
                         break
                     tt1 = tt1.next0_
         if ((((attrs) & (((GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE) | (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE))))) != (GetTextAttr.NO)): 
-            npt = NounPhraseHelper.try_parse(begin, NounPhraseParseAttr.NO, 0)
+            npt = NounPhraseHelper.try_parse(begin, NounPhraseParseAttr.PARSEPRONOUNS, 0, None)
             if (npt is not None and npt.end_char <= end.end_char): 
-                str0_ = npt.get_normal_case_text(None, (((attrs) & (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE))) != (GetTextAttr.NO), npt.morph.gender, keep_chars)
+                str0_ = npt.get_normal_case_text(None, (MorphNumber.SINGULAR if (((attrs) & (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE))) != (GetTextAttr.NO) else MorphNumber.UNDEFINED), npt.morph.gender, keep_chars)
                 if (str0_ is not None): 
                     begin = npt.end_token.next0_
                     print(str0_, end="", file=res)
@@ -1050,7 +1077,7 @@ class MiscHelper:
                                         var = (te.next0_).term
                                         if (isinstance(it, MorphWordForm)): 
                                             var = (it).normal_case
-                                        bi = MorphBaseInfo._new577(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
+                                        bi = MorphBaseInfo._new563(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
                                         var = Morphology.get_wordform(var, bi)
                                         if (var is not None): 
                                             var = MiscHelper.__corr_chars(var, te.next0_.chars, keep_chars, Utils.asObjectOrNull(te.next0_, TextToken))
@@ -1065,9 +1092,9 @@ class MiscHelper:
         if (begin is None or begin.end_char > end.end_char): 
             return Utils.toStringStringIO(res)
         t = begin
-        first_pass2987 = True
+        first_pass3673 = True
         while True:
-            if first_pass2987: first_pass2987 = False
+            if first_pass3673: first_pass3673 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             last = (Utils.getCharAtStringIO(res, res.tell() - 1) if res.tell() > 0 else ' ')
@@ -1273,13 +1300,13 @@ class MiscHelper:
         """
         if (Utils.isNullOrEmpty(txt)): 
             return txt
-        npt = NounPhraseHelper.try_parse(begin_sample, NounPhraseParseAttr.NO, 0)
+        npt = NounPhraseHelper.try_parse(begin_sample, NounPhraseParseAttr.NO, 0, None)
         if (npt is not None and begin_sample.previous is not None): 
             tt = begin_sample.previous
             while tt is not None: 
                 if (tt.whitespaces_after_count > 2): 
                     break
-                npt0 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
+                npt0 = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0, None)
                 if (npt0 is not None): 
                     if (npt0.end_token == npt.end_token): 
                         npt.morph = npt0.morph
@@ -1291,7 +1318,7 @@ class MiscHelper:
         ar = ProcessorService.get_empty_processor().process(SourceOfAnalysis(txt), None, None)
         if (ar is None or ar.first_token is None): 
             return txt
-        npt1 = NounPhraseHelper.try_parse(ar.first_token, NounPhraseParseAttr.NO, 0)
+        npt1 = NounPhraseHelper.try_parse(ar.first_token, NounPhraseParseAttr.NO, 0, None)
         t0 = begin_sample
         res = io.StringIO()
         t = ar.first_token
@@ -1341,42 +1368,70 @@ class MiscHelper:
             return txt
         res = io.StringIO()
         t0 = ar.first_token
-        npt = NounPhraseHelper.try_parse(ar.first_token, NounPhraseParseAttr.NO, 0)
+        npt = NounPhraseHelper.try_parse(ar.first_token, NounPhraseParseAttr.PARSEVERBS, 0, None)
         if (npt is not None): 
+            acc_corr = False
+            if (cas.is_accusative and plural_number): 
+                acc_corr = True
+                if (MiscHelper.is_token_animate(npt.noun.end_token)): 
+                    cas = MorphCase.GENITIVE
             t = npt.begin_token
             while t is not None and t.end_char <= npt.end_char: 
                 is_noun = t.begin_char >= npt.noun.begin_char
+                not_case = False
+                if (npt.internal_noun is not None): 
+                    if (t.begin_char >= npt.internal_noun.begin_char and t.end_char <= npt.internal_noun.end_char): 
+                        not_case = True
+                for a in npt.adjectives: 
+                    if (a.begin_token != a.end_token and a.end_token.get_morph_class_in_dictionary().is_noun): 
+                        if (t.begin_char >= a.begin_token.next0_.begin_char and t.end_char <= a.end_char): 
+                            not_case = True
+                    if ((t == a.begin_token and t.next0_ is not None and t.next0_.is_hiphen) and a.end_char > t.next0_.end_char): 
+                        not_case = True
                 word = None
                 if (isinstance(t, NumberToken)): 
                     word = t.get_source_text()
                 elif (isinstance(t, TextToken)): 
                     for it in t.morph.items: 
+                        if (not_case): 
+                            break
                         wf = Utils.asObjectOrNull(it, MorphWordForm)
                         if (wf is None): 
                             continue
+                        if (t == npt.anafor): 
+                            if (wf.misc.person == MorphPerson.THIRD): 
+                                not_case = True
+                                break
                         if (not npt.morph.case_.is_undefined): 
                             if (((npt.morph.case_) & wf.case_).is_undefined): 
                                 continue
+                        if (plural_number and wf.number == MorphNumber.SINGULAR and t != npt.anafor): 
+                            continue
                         if (is_noun): 
                             if ((wf.class0_.is_noun or wf.class0_.is_personal_pronoun or wf.class0_.is_pronoun) or wf.class0_.is_proper): 
                                 word = wf.normal_case
                                 break
                         elif (wf.class0_.is_adjective or wf.class0_.is_pronoun or wf.class0_.is_personal_pronoun): 
                             word = wf.normal_case
+                            if (acc_corr and cas.is_accusative and word.endswith("Х")): 
+                                word = (word[0:0+len(word) - 1] + "Е")
                             break
                     if (word is None): 
-                        word = (t).lemma
+                        word = ((t).term if not_case else (t).lemma)
                     if (not t.chars.is_letter): 
                         pass
-                    elif ((t.next0_ is not None and t.next0_.is_hiphen and t.is_value("ГЕНЕРАЛ", None)) or t.is_value("КАПИТАН", None)): 
-                        pass
-                    else: 
-                        mbi = MorphBaseInfo._new578(npt.morph.gender, cas, MorphNumber.SINGULAR)
-                        if (plural_number): 
-                            mbi.number = MorphNumber.PLURAL
-                        wcas = Morphology.get_wordform(word, mbi)
-                        if (wcas is not None): 
-                            word = wcas
+                    elif (not not_case): 
+                        if ((t.next0_ is not None and t.next0_.is_hiphen and t.is_value("ГЕНЕРАЛ", None)) or t.is_value("КАПИТАН", None)): 
+                            pass
+                        else: 
+                            mbi = MorphBaseInfo._new564(npt.morph.gender, cas, MorphNumber.SINGULAR)
+                            if (plural_number): 
+                                mbi.number = MorphNumber.PLURAL
+                            wcas = Morphology.get_wordform(word, mbi)
+                            if (wcas is not None): 
+                                word = wcas
+                                if ((not is_noun and acc_corr and cas.is_accusative) and word.endswith("Х") and word != "ИХ"): 
+                                    word = (word[0:0+len(word) - 1] + "Е")
                 if (t.chars.is_all_lower): 
                     word = word.lower()
                 elif (t.chars.is_capital_upper): 
@@ -1410,10 +1465,10 @@ class MiscHelper:
             return str0_
         if (str0_ == "лет"): 
             str0_ = "год"
-        ar = ProcessorService.get_empty_processor().process(SourceOfAnalysis._new579(str0_, False), None, None)
+        ar = ProcessorService.get_empty_processor().process(SourceOfAnalysis._new565(str0_, False), None, None)
         if (ar is None or ar.first_token is None): 
             return str0_
-        npt = NounPhraseHelper.try_parse(ar.first_token, NounPhraseParseAttr.PARSENUMERICASADJECTIVE, 0)
+        npt = NounPhraseHelper.try_parse(ar.first_token, NounPhraseParseAttr.PARSENUMERICASADJECTIVE, 0, None)
         if (npt is None and ((str0_ == "раз" or ar.first_token.get_morph_class_in_dictionary().is_proper_name))): 
             npt = NounPhraseToken(ar.first_token, ar.first_token)
             npt.noun = MetaToken(ar.first_token, ar.first_token)
@@ -1429,8 +1484,8 @@ class MiscHelper:
                     num = MorphNumber.SINGULAR
                 else: 
                     num = MorphNumber.PLURAL
-        adj_bi = MorphBaseInfo._new580((MorphClass.ADJECTIVE) | MorphClass.NOUN, cas, num, npt.morph.gender)
-        noun_bi = MorphBaseInfo._new581(npt.noun.morph.class0_, cas, num)
+        adj_bi = MorphBaseInfo._new566((MorphClass.ADJECTIVE) | MorphClass.NOUN, cas, num, npt.morph.gender)
+        noun_bi = MorphBaseInfo._new567(npt.noun.morph.class0_, cas, num)
         if (npt.noun.morph.class0_.is_noun): 
             noun_bi.class0_ = MorphClass.NOUN
         year = None
@@ -1438,9 +1493,9 @@ class MiscHelper:
         if (not Utils.isNullOrEmpty(num_val) and num == MorphNumber.UNDEFINED): 
             ch = num_val[len(num_val) - 1]
             n = 0
-            wrapn582 = RefOutArgWrapper(0)
-            Utils.tryParseInt(num_val, wrapn582)
-            n = wrapn582.value
+            wrapn568 = RefOutArgWrapper(0)
+            Utils.tryParseInt(num_val, wrapn568)
+            n = wrapn568.value
             if (num_val == "1" or ((ch == '1' and n > 20 and ((n % 100)) != 11))): 
                 adj_bi.number = noun_bi.number = MorphNumber.SINGULAR
                 if (str0_ == "год" or str0_ == "раз"): 
@@ -1475,7 +1530,7 @@ class MiscHelper:
                     year = "стульев"
         res = io.StringIO()
         for a in npt.adjectives: 
-            norm = a.get_normal_case_text(MorphClass.ADJECTIVE, False, MorphGender.UNDEFINED, False)
+            norm = a.get_normal_case_text(MorphClass.ADJECTIVE, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False)
             val = Morphology.get_wordform(norm, adj_bi)
             if (val is None): 
                 val = a.get_source_text()
@@ -1486,7 +1541,7 @@ class MiscHelper:
             if (res.tell() > 0): 
                 print(' ', end="", file=res)
             print(val, end="", file=res)
-        norm = npt.noun.get_normal_case_text(noun_bi.class0_, True, MorphGender.UNDEFINED, False)
+        norm = npt.noun.get_normal_case_text(noun_bi.class0_, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False)
         if (year is not None): 
             val = year
         elif (pair is not None): 
@@ -1515,4 +1570,54 @@ class MiscHelper:
         if (npt.end_token.next0_ is not None): 
             print(" ", end="", file=res)
             print(str0_[npt.end_token.next0_.begin_char:], end="", file=res)
+        return Utils.toStringStringIO(res)
+    
+    @staticmethod
+    def normalize_text(text : str, attr : 'NormalizeTextAttr'=NormalizeTextAttr.NO) -> str:
+        """ Нормализация текста
+        
+        Args:
+            text(str): исходный текст
+            attr(NormalizeTextAttr): атрибуты нормализации
+        
+        """
+        from pullenti.ner.core.BracketHelper import BracketHelper
+        if (Utils.isNullOrEmpty(text)): 
+            return text
+        res = io.StringIO()
+        if ((((attr) & (NormalizeTextAttr.NERPROCESS))) == (NormalizeTextAttr.NERPROCESS)): 
+            with ProcessorService.create_processor() as proc: 
+                ar = proc.process(SourceOfAnalysis(text), None, None)
+        else: 
+            ar = ProcessorService.get_empty_processor().process(SourceOfAnalysis(text), None, None)
+        t = ar.first_token
+        first_pass3674 = True
+        while True:
+            if first_pass3674: first_pass3674 = False
+            else: t = t.next0_
+            if (not (t is not None)): break
+            if (res.tell() > 0 and Utils.getCharAtStringIO(res, res.tell() - 1) != ' '): 
+                print(' ', end="", file=res)
+            if (isinstance(t, TextToken)): 
+                if (not t.chars.is_letter and t.length_char == 1): 
+                    if ((((attr) & (NormalizeTextAttr.KEEPPUNCTUATION))) == (NormalizeTextAttr.NO)): 
+                        continue
+                    if (t.is_hiphen): 
+                        print('-', end="", file=res)
+                    elif (BracketHelper.is_bracket(t, True)): 
+                        print('"', end="", file=res)
+                    else: 
+                        print((t).term, end="", file=res)
+                    continue
+                lem = (t).lemma
+                if ((((attr) & (NormalizeTextAttr.KEEPREGISTER))) == (NormalizeTextAttr.KEEPREGISTER)): 
+                    if (t.chars.is_all_lower): 
+                        lem = lem.lower()
+                    elif (t.chars.is_capital_upper): 
+                        lem = MiscHelper.convert_first_char_upper_and_other_lower(lem)
+                print(lem, end="", file=res)
+            elif (isinstance(t, NumberToken)): 
+                print((t).value, end="", file=res)
+            elif (t.get_referent() is not None): 
+                print(t.get_referent().to_string(True, None, 0), end="", file=res)
         return Utils.toStringStringIO(res)

@@ -6,14 +6,14 @@ import io
 import datetime
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.date.DatePointerType import DatePointerType
-from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.decree.internal.DecreeToken import DecreeToken
 from pullenti.ner.instrument.internal.MetaInstrument import MetaInstrument
+from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
 from pullenti.ner.decree.internal.DecreeHelper import DecreeHelper
 

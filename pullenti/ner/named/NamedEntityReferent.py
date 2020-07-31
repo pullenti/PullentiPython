@@ -59,7 +59,7 @@ class NamedEntityReferent(Referent):
             return NamedEntityKind.UNDEFINED
         try: 
             return Utils.valToEnum(str0_, NamedEntityKind)
-        except Exception as ex1776: 
+        except Exception as ex1825: 
             pass
         return NamedEntityKind.UNDEFINED
     @kind.setter
@@ -163,14 +163,14 @@ class NamedEntityReferent(Referent):
             if (len(v) >= min_len): 
                 oi.termins.append(Termin(v))
                 cou += 1
-                if ((cou) >= max0_): 
+                if (cou >= max0_): 
                     break
         if (len(oi.termins) == 0): 
             return None
         return oi
     
     @staticmethod
-    def _new1775(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
+    def _new1824(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
         res = NamedEntityReferent()
         res.kind = _arg1
         return res

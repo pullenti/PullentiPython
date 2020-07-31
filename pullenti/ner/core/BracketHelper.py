@@ -5,15 +5,15 @@
 import io
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.Token import Token
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.TextToken import TextToken
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.BracketSequenceToken import BracketSequenceToken
 
@@ -176,6 +176,7 @@ class BracketHelper:
             max_tokens(int): максимально токенов (вдруг забыли закрывающую ккавычку)
         
         """
+        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         t0 = t
         cou = 0
         if (not BracketHelper.can_be_start_of_sequence(t0, False, False)): 
@@ -188,9 +189,9 @@ class BracketHelper:
         lev = 1
         is_assim = br_list[0].char0_ != '«' and BracketHelper.M_ASSYMOPEN_CHARS.find(br_list[0].char0_) >= 0
         t = t0.next0_
-        first_pass2984 = True
+        first_pass3670 = True
         while True:
-            if first_pass2984: first_pass2984 = False
+            if first_pass3670: first_pass3670 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -243,14 +244,14 @@ class BracketHelper:
                             break
             else: 
                 cou += 1
-                if ((cou) > max_tokens): 
+                if (cou > max_tokens): 
                     break
                 if ((((typ) & (BracketParseAttr.CANCONTAINSVERBS))) == (BracketParseAttr.NO)): 
                     if (t.morph.language.is_cyrillic): 
                         if (t.get_morph_class_in_dictionary() == MorphClass.VERB): 
                             if (not t.morph.class0_.is_adjective and not t.morph.contains_attr("страд.з.", None)): 
                                 if (t.chars.is_all_lower): 
-                                    norm = t.get_normal_case_text(None, False, MorphGender.UNDEFINED, False)
+                                    norm = t.get_normal_case_text(None, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False)
                                     if (not LanguageHelper.ends_with(norm, "СЯ")): 
                                         if (len(br_list) > 1): 
                                             break
@@ -347,7 +348,7 @@ class BracketHelper:
                     if (t.chars.is_letter and t.chars.is_all_lower): 
                         ok = False
                         break
-                    npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
+                    npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0, None)
                     if (npt is not None): 
                         t = npt.end_token
                     t = t.next0_
@@ -359,9 +360,9 @@ class BracketHelper:
                         t = t.next0_
                 lev1 = 0
                 tt = br_list[0].source.previous
-                first_pass2985 = True
+                first_pass3671 = True
                 while True:
-                    if first_pass2985: first_pass2985 = False
+                    if first_pass3671: first_pass3671 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.is_newline_after or tt.is_table_control_char): 
@@ -401,9 +402,9 @@ class BracketHelper:
         if (res is None): 
             cou = 0
             tt = t0.next0_
-            first_pass2986 = True
+            first_pass3672 = True
             while True:
-                if first_pass2986: first_pass2986 = False
+                if first_pass3672: first_pass3672 = False
                 else: tt = tt.next0_; cou += 1
                 if (not (tt is not None)): break
                 if (tt.is_table_control_char): 

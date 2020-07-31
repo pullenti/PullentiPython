@@ -14,7 +14,7 @@ class IntOntologyToken(MetaToken):
         self.termin = None;
     
     @staticmethod
-    def _new576(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'IntOntologyItem', _arg4 : 'Termin', _arg5 : 'MorphCollection') -> 'IntOntologyToken':
+    def _new562(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'IntOntologyItem', _arg4 : 'Termin', _arg5 : 'MorphCollection') -> 'IntOntologyToken':
         res = IntOntologyToken(_arg1, _arg2)
         res.item = _arg3
         res.termin = _arg4

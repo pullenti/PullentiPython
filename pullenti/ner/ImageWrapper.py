@@ -13,7 +13,7 @@ class ImageWrapper:
         self.image = None;
     
     @staticmethod
-    def _new2859(_arg1 : str, _arg2 : bytearray) -> 'ImageWrapper':
+    def _new2915(_arg1 : str, _arg2 : bytearray) -> 'ImageWrapper':
         res = ImageWrapper()
         res.id0_ = _arg1
         res.content = _arg2

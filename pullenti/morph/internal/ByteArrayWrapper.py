@@ -19,9 +19,9 @@ class ByteArrayWrapper:
     def deserialize_byte(self, pos : int) -> int:
         if (pos.value >= self.__m_len): 
             return 0
-        retVal2888 = self.__m_array[pos.value]
+        retVal3574 = self.__m_array[pos.value]
         pos.value += 1
-        return retVal2888
+        return retVal3574
     
     def deserialize_short(self, pos : int) -> int:
         if ((pos.value + 1) >= self.__m_len): 

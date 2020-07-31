@@ -78,18 +78,18 @@ class TitlePageAnalyzer(Analyzer):
         return None
     
     def process_referent1(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        wrapet2683 = RefOutArgWrapper(None)
-        tpr = TitlePageAnalyzer._process(begin, (0 if end is None else end.end_char), begin.kit, wrapet2683)
-        et = wrapet2683.value
+        wrapet2733 = RefOutArgWrapper(None)
+        tpr = TitlePageAnalyzer._process(begin, (0 if end is None else end.end_char), begin.kit, wrapet2733)
+        et = wrapet2733.value
         if (tpr is None): 
             return None
         return ReferentToken(tpr, begin, et)
     
     def process(self, kit : 'AnalysisKit') -> None:
         ad = kit.get_analyzer_data(self)
-        wrapet2684 = RefOutArgWrapper(None)
-        tpr = TitlePageAnalyzer._process(kit.first_token, 0, kit, wrapet2684)
-        et = wrapet2684.value
+        wrapet2734 = RefOutArgWrapper(None)
+        tpr = TitlePageAnalyzer._process(kit.first_token, 0, kit, wrapet2734)
+        et = wrapet2734.value
         if (tpr is not None): 
             ad.register_referent(tpr)
     
@@ -176,9 +176,9 @@ class TitlePageAnalyzer(Analyzer):
                 begin = (rt)
         if (term is not None and kit is not None): 
             t = kit.first_token
-            first_pass3320 = True
+            first_pass4011 = True
             while True:
-                if first_pass3320: first_pass3320 = False
+                if first_pass4011: first_pass4011 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 tok = term.try_parse(t, TerminParseAttr.NO, 0)
@@ -198,9 +198,9 @@ class TitlePageAnalyzer(Analyzer):
         pers_typ = TitleItemToken.Types.UNDEFINED
         pers_types = pr.rel_types
         t = begin
-        first_pass3321 = True
+        first_pass4012 = True
         while True:
-            if first_pass3321: first_pass3321 = False
+            if first_pass4012: first_pass4012 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char_pos > 0 and t.begin_char > max_char_pos): 
@@ -276,9 +276,9 @@ class TitlePageAnalyzer(Analyzer):
                         pr.add(p, pers_typ, 1)
                     else: 
                         tt = t.next0_
-                        first_pass3322 = True
+                        first_pass4013 = True
                         while True:
-                            if first_pass3322: first_pass3322 = False
+                            if first_pass4013: first_pass4013 = False
                             else: tt = tt.next0_
                             if (not (tt is not None)): break
                             rr = tt.get_referent()
@@ -338,10 +338,10 @@ class TitlePageAnalyzer(Analyzer):
                 if (isinstance(r, OrganizationReferent)): 
                     org0_ = Utils.asObjectOrNull(r, OrganizationReferent)
                     if ("курс" in org0_.types and org0_.number is not None): 
-                        wrapi2685 = RefOutArgWrapper(0)
-                        inoutres2686 = Utils.tryParseInt(org0_.number, wrapi2685)
-                        i = wrapi2685.value
-                        if (inoutres2686): 
+                        wrapi2735 = RefOutArgWrapper(0)
+                        inoutres2736 = Utils.tryParseInt(org0_.number, wrapi2735)
+                        i = wrapi2735.value
+                        if (inoutres2736): 
                             if (i > 0 and (i < 8)): 
                                 res.student_year = i
                     while org0_.higher is not None: 
@@ -373,9 +373,9 @@ class TitlePageAnalyzer(Analyzer):
                     res.city = Utils.asObjectOrNull(s.value, GeoReferent)
         if (res.date is None): 
             t = begin
-            first_pass3323 = True
+            first_pass4014 = True
             while True:
-                if first_pass3323: first_pass3323 = False
+                if first_pass4014: first_pass4014 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= end_char)): break
                 city = Utils.asObjectOrNull(t.get_referent(), GeoReferent)

@@ -5,6 +5,7 @@
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.MiscHelper import MiscHelper
@@ -34,9 +35,9 @@ class BracketSequenceToken(MetaToken):
     def __str__(self) -> str:
         return super().__str__()
     
-    def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def get_normal_case_text(self, mc : 'MorphClass'=None, num : 'MorphNumber'=MorphNumber.UNDEFINED, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         attr = GetTextAttr.NO
-        if (single_number): 
+        if (num == MorphNumber.SINGULAR): 
             attr = (Utils.valToEnum((attr) | (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVESINGLE), GetTextAttr))
         else: 
             attr = (Utils.valToEnum((attr) | (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE), GetTextAttr))

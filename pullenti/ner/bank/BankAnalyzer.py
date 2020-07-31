@@ -107,9 +107,9 @@ class BankAnalyzer(Analyzer):
         org_is_bank = False
         empty = 0
         last_uri = None
-        first_pass2931 = True
+        first_pass3615 = True
         while True:
-            if first_pass2931: first_pass2931 = False
+            if first_pass3615: first_pass3615 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char and t != t0): 
@@ -125,7 +125,7 @@ class BankAnalyzer(Analyzer):
                 if ((isinstance(t, ReferentToken)) and t.get_referent().type_name == "ORGANIZATION"): 
                     bank_keyword = True
                 tt = t.next0_
-                npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0)
+                npt = NounPhraseHelper.try_parse(tt, NounPhraseParseAttr.NO, 0, None)
                 if (npt is not None): 
                     tt = npt.end_token.next0_
                 if (tt is not None and tt.is_char(':')): 
@@ -201,7 +201,7 @@ class BankAnalyzer(Analyzer):
                     else: 
                         empty += 1
                         if (t.is_newline_before): 
-                            nnn = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
+                            nnn = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0, None)
                             if (nnn is not None and nnn.end_token.next0_ is not None and nnn.end_token.next0_.is_char(':')): 
                                 break
                     if (uris is None): 

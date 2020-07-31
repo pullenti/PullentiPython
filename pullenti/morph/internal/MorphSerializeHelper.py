@@ -52,50 +52,50 @@ class MorphSerializeHelper:
         me.m_root = MorphTreeNode()
         me.m_root_reverce = MorphTreeNode()
         pos = 0
-        wrappos50 = RefOutArgWrapper(pos)
-        cou = buf.deserialize_int(wrappos50)
-        pos = wrappos50.value
+        wrappos40 = RefOutArgWrapper(pos)
+        cou = buf.deserialize_int(wrappos40)
+        pos = wrappos40.value
         while cou > 0: 
             mi = MorphMiscInfo()
-            wrappos42 = RefOutArgWrapper(pos)
-            MorphSerializeHelper.__deserialize_morph_misc_info(buf, mi, wrappos42)
-            pos = wrappos42.value
+            wrappos32 = RefOutArgWrapper(pos)
+            MorphSerializeHelper.__deserialize_morph_misc_info(buf, mi, wrappos32)
+            pos = wrappos32.value
             me._m_vars.append(mi)
             cou -= 1
-        wrappos49 = RefOutArgWrapper(pos)
-        cou = buf.deserialize_int(wrappos49)
-        pos = wrappos49.value
+        wrappos39 = RefOutArgWrapper(pos)
+        cou = buf.deserialize_int(wrappos39)
+        pos = wrappos39.value
         while cou > 0: 
-            wrappos44 = RefOutArgWrapper(pos)
-            p1 = buf.deserialize_int(wrappos44)
-            pos = wrappos44.value
+            wrappos34 = RefOutArgWrapper(pos)
+            p1 = buf.deserialize_int(wrappos34)
+            pos = wrappos34.value
             r = MorphRule()
             if (lazy_load): 
                 r.lazy_pos = pos
                 pos = p1
             else: 
-                wrappos43 = RefOutArgWrapper(pos)
-                MorphSerializeHelper.__deserialize_morph_rule(buf, r, me, wrappos43)
-                pos = wrappos43.value
+                wrappos33 = RefOutArgWrapper(pos)
+                MorphSerializeHelper.__deserialize_morph_rule(buf, r, me, wrappos33)
+                pos = wrappos33.value
             me.m_rules.append(r)
             cou -= 1
         if (lazy_load): 
-            wrappos45 = RefOutArgWrapper(pos)
-            MorphSerializeHelper._deserialize_morph_tree_node_lazy(buf, me.m_root, me, wrappos45)
-            pos = wrappos45.value
+            wrappos35 = RefOutArgWrapper(pos)
+            MorphSerializeHelper._deserialize_morph_tree_node_lazy(buf, me.m_root, me, wrappos35)
+            pos = wrappos35.value
         else: 
-            wrappos46 = RefOutArgWrapper(pos)
-            MorphSerializeHelper.__deserialize_morph_tree_node(buf, me.m_root, me, wrappos46)
-            pos = wrappos46.value
+            wrappos36 = RefOutArgWrapper(pos)
+            MorphSerializeHelper.__deserialize_morph_tree_node(buf, me.m_root, me, wrappos36)
+            pos = wrappos36.value
         if (not ignore_rev_tree): 
             if (lazy_load): 
-                wrappos47 = RefOutArgWrapper(pos)
-                MorphSerializeHelper._deserialize_morph_tree_node_lazy(buf, me.m_root_reverce, me, wrappos47)
-                pos = wrappos47.value
+                wrappos37 = RefOutArgWrapper(pos)
+                MorphSerializeHelper._deserialize_morph_tree_node_lazy(buf, me.m_root_reverce, me, wrappos37)
+                pos = wrappos37.value
             else: 
-                wrappos48 = RefOutArgWrapper(pos)
-                MorphSerializeHelper.__deserialize_morph_tree_node(buf, me.m_root_reverce, me, wrappos48)
-                pos = wrappos48.value
+                wrappos38 = RefOutArgWrapper(pos)
+                MorphSerializeHelper.__deserialize_morph_tree_node(buf, me.m_root_reverce, me, wrappos38)
+                pos = wrappos38.value
         tmp.close()
         return buf
     
@@ -170,7 +170,7 @@ class MorphSerializeHelper:
                 if (mrv is None): 
                     break
                 mrv.tail = key
-                mrv.rule = r
+                mrv.rule = (r)
                 li.append(mrv)
     
     @staticmethod
@@ -188,7 +188,7 @@ class MorphSerializeHelper:
         id0_ = str0_.deserialize_short(pos) - 1
         if ((id0_ < 0) or id0_ >= len(me._m_vars)): 
             return None
-        mrv = MorphRuleVariant._new51(me._m_vars[id0_])
+        mrv = MorphRuleVariant._new41(me._m_vars[id0_])
         mc = MorphClass()
         mc.value = (str0_.deserialize_short(pos))
         if (mc.is_misc and mc.is_proper): 
@@ -252,7 +252,7 @@ class MorphSerializeHelper:
                 break
             v.tail = tail
             if (rule_id > 0 and rule_id <= len(me.m_rules)): 
-                v.rule = me.m_rules[rule_id - 1]
+                v.rule = (me.m_rules[rule_id - 1])
             else: 
                 pass
             if (tn.reverce_variants is None): 
@@ -312,9 +312,9 @@ class MorphSerializeHelper:
                         continue
                     rtn = root
                     lev = 0
-                    first_pass2901 = True
+                    first_pass3586 = True
                     while True:
-                        if first_pass2901: first_pass2901 = False
+                        if first_pass3586: first_pass3586 = False
                         else: lev += 1
                         if (not (lev < MorphSerializeHelper.__max_tail_len)): break
                         i = len(wf) - 1 - lev
@@ -324,10 +324,10 @@ class MorphSerializeHelper:
                         if (rtn.nodes is None): 
                             rtn.nodes = dict()
                         next0_ = None
-                        wrapnext52 = RefOutArgWrapper(None)
-                        inoutres53 = Utils.tryGetValue(rtn.nodes, ch, wrapnext52)
-                        next0_ = wrapnext52.value
-                        if (not inoutres53): 
+                        wrapnext42 = RefOutArgWrapper(None)
+                        inoutres43 = Utils.tryGetValue(rtn.nodes, ch, wrapnext42)
+                        next0_ = wrapnext42.value
+                        if (not inoutres43): 
                             next0_ = MorphTreeNode()
                             rtn.nodes[ch] = next0_
                         rtn = next0_

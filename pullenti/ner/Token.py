@@ -6,9 +6,10 @@ import typing
 import io
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.morph.CharsInfo import CharsInfo
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.MorphCollection import MorphCollection
 
 class Token:
@@ -16,8 +17,8 @@ class Token:
     
     def __init__(self, kit_ : 'AnalysisKit', begin : int, end : int) -> None:
         self.kit = None;
-        self.begin_char = 0
-        self.end_char = 0
+        self.__m_begin_char = 0
+        self.__m_end_char = 0
         self.tag = None;
         self._m_previous = None;
         self._m_next = None;
@@ -25,8 +26,18 @@ class Token:
         self.chars = None;
         self.__m_attrs = 0
         self.kit = kit_
-        self.begin_char = begin
-        self.end_char = end
+        self.__m_begin_char = begin
+        self.__m_end_char = end
+    
+    @property
+    def begin_char(self) -> int:
+        """ Начальная позиция """
+        return self.__m_begin_char
+    
+    @property
+    def end_char(self) -> int:
+        """ Конечная позиция """
+        return self.__m_end_char
     
     @property
     def length_char(self) -> int:
@@ -327,12 +338,14 @@ class Token:
         """
         return None
     
-    def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def get_normal_case_text(self, mc : 'MorphClass'=None, num : 'MorphNumber'=MorphNumber.UNDEFINED, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         """ Получить связанный с токеном текст в именительном падеже
         
         Args:
-            mc(MorphClass): 
-            single_number(bool): переводить ли в единственное число
+            mc(MorphClass): желательная часть речи
+            num(MorphNumber): желательное число
+            gender(MorphGender): желательный пол
+            keep_chars(bool): сохранять регистр символов (по умолчанию, всё в верхний)
         
         """
         return str(self)
@@ -370,9 +383,9 @@ class Token:
     def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit', vers : int) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         self.kit = kit_
-        self.begin_char = SerializerHelper.deserialize_int(stream)
-        self.end_char = SerializerHelper.deserialize_int(stream)
+        self.__m_begin_char = SerializerHelper.deserialize_int(stream)
+        self.__m_end_char = SerializerHelper.deserialize_int(stream)
         self.__m_attrs = (SerializerHelper.deserialize_int(stream))
-        self.chars = CharsInfo._new2834(SerializerHelper.deserialize_int(stream))
+        self.chars = CharsInfo._new2618(SerializerHelper.deserialize_int(stream))
         self.__m_morph = MorphCollection()
         self.__m_morph._deserialize(stream)

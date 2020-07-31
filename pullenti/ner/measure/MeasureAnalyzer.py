@@ -6,24 +6,24 @@ import typing
 import threading
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.Token import Token
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.core.Termin import Termin
-from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.measure.internal.UnitToken import UnitToken
 from pullenti.ner.Referent import Referent
-from pullenti.ner.measure.internal.UnitsHelper import UnitsHelper
-from pullenti.ner.measure.UnitReferent import UnitReferent
-from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.measure.UnitReferent import UnitReferent
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.measure.MeasureReferent import MeasureReferent
+from pullenti.ner.measure.internal.UnitsHelper import UnitsHelper
+from pullenti.ner.measure.internal.UnitToken import UnitToken
+from pullenti.ner.measure.internal.NumbersWithUnitToken import NumbersWithUnitToken
+from pullenti.ner.Token import Token
+from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
 from pullenti.ner.measure.internal.UnitMeta import UnitMeta
 from pullenti.ner.measure.internal.MeasureMeta import MeasureMeta
-from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
-from pullenti.ner.measure.internal.MeasureToken import MeasureToken
 from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.measure.internal.MeasureToken import MeasureToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.TerminCollection import TerminCollection
 
 class MeasureAnalyzer(Analyzer):
     """ Аналозатор для измеряемых величин """
@@ -91,11 +91,11 @@ class MeasureAnalyzer(Analyzer):
                     continue
                 for s in uu.slots: 
                     if (s.type_name == UnitReferent.ATTR_NAME or s.type_name == UnitReferent.ATTR_FULLNAME): 
-                        addunits.add(Termin._new135(Utils.asObjectOrNull(s.value, str), uu))
+                        addunits.add(Termin._new119(Utils.asObjectOrNull(s.value, str), uu))
         t = kit.first_token
-        first_pass3230 = True
+        first_pass3921 = True
         while True:
-            if first_pass3230: first_pass3230 = False
+            if first_pass3921: first_pass3921 = False
             else: t = t.next0_
             if (not (t is not None)): break
             mt = MeasureToken.try_parse_minimal(t, addunits, False)

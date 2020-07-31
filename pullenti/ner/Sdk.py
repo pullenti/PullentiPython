@@ -42,7 +42,9 @@ class Sdk:
         Args:
             lang(MorphLang): по умолчанию, русский и английский
         """
+        # сначала инициализация всего сервиса
         ProcessorService.initialize(lang)
+        # а затем конкретные анализаторы (какие нужно, в данном случае - все)
         MoneyAnalyzer.initialize()
         UriAnalyzer.initialize()
         PhoneAnalyzer.initialize()

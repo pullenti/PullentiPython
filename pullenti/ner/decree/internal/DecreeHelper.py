@@ -19,10 +19,10 @@ from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.decree.internal.CanonicDecreeRefUri import CanonicDecreeRefUri
 from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
 from pullenti.ner.decree.DecreeKind import DecreeKind
-from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.ner.decree.internal.DecreeToken import DecreeToken
 from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.decree.internal.PartToken import PartToken
+from pullenti.ner.decree.internal.DecreeToken import DecreeToken
 
 class DecreeHelper:
     """ Некоторые полезные функции для НПА """
@@ -33,22 +33,22 @@ class DecreeHelper:
             return None
         try: 
             prts = Utils.splitString(str0_, '.', False)
-            wrapy852 = RefOutArgWrapper(0)
-            inoutres853 = Utils.tryParseInt(prts[0], wrapy852)
-            y = wrapy852.value
-            if (not inoutres853): 
+            wrapy897 = RefOutArgWrapper(0)
+            inoutres898 = Utils.tryParseInt(prts[0], wrapy897)
+            y = wrapy897.value
+            if (not inoutres898): 
                 return None
             mon = 0
             day = 0
             if (len(prts) > 1): 
-                wrapmon850 = RefOutArgWrapper(0)
-                inoutres851 = Utils.tryParseInt(prts[1], wrapmon850)
-                mon = wrapmon850.value
-                if (inoutres851): 
+                wrapmon895 = RefOutArgWrapper(0)
+                inoutres896 = Utils.tryParseInt(prts[1], wrapmon895)
+                mon = wrapmon895.value
+                if (inoutres896): 
                     if (len(prts) > 2): 
-                        wrapday849 = RefOutArgWrapper(0)
-                        Utils.tryParseInt(prts[2], wrapday849)
-                        day = wrapday849.value
+                        wrapday894 = RefOutArgWrapper(0)
+                        Utils.tryParseInt(prts[2], wrapday894)
+                        day = wrapday894.value
             if (mon <= 0): 
                 mon = 1
             if (day <= 0): 
@@ -75,14 +75,14 @@ class DecreeHelper:
         if (dr is not None): 
             if (dr.kind == DecreeKind.PUBLISHER): 
                 return None
-            res = CanonicDecreeRefUri._new854(t.kit.sofa.text, dr, t.begin_char, t.end_char)
+            res = CanonicDecreeRefUri._new899(t.kit.sofa.text, dr, t.begin_char, t.end_char)
             if ((t.previous is not None and t.previous.is_char('(') and t.next0_ is not None) and t.next0_.is_char(')')): 
                 return res
             if ((t).misc_attrs != 0): 
                 return res
             rt = Utils.asObjectOrNull(t, ReferentToken)
             if (rt.begin_token.is_char('(') and rt.end_token.is_char(')')): 
-                res = CanonicDecreeRefUri._new854(t.kit.sofa.text, dr, rt.begin_token.next0_.begin_char, rt.end_token.previous.end_char)
+                res = CanonicDecreeRefUri._new899(t.kit.sofa.text, dr, rt.begin_token.next0_.begin_char, rt.end_token.previous.end_char)
                 return res
             next_decree_items = None
             if ((t.next0_ is not None and t.next0_.is_comma_and and (isinstance(t.next0_.next0_, ReferentToken))) and (isinstance(t.next0_.next0_.get_referent(), DecreeReferent))): 
@@ -97,9 +97,9 @@ class DecreeHelper:
             was_typ = False
             was_num = False
             tt = (t).begin_token
-            first_pass3014 = True
+            first_pass3703 = True
             while True:
-                if first_pass3014: first_pass3014 = False
+                if first_pass3703: first_pass3703 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= t.end_char)): break
                 if (tt.begin_char == t.begin_char and tt.is_char('(') and tt.next0_ is not None): 
@@ -141,9 +141,9 @@ class DecreeHelper:
                         res.begin_char = li[len(li) - 1].begin_char
                         res.end_char = li[len(li) - 1].end_char
                     i = 0
-                    first_pass3015 = True
+                    first_pass3704 = True
                     while True:
-                        if first_pass3015: first_pass3015 = False
+                        if first_pass3704: first_pass3704 = False
                         else: i += 1
                         if (not (i < len(li))): break
                         l_ = li[i]
@@ -216,7 +216,7 @@ class DecreeHelper:
                 has_diap = True
                 t1 = t.next0_.next0_
                 diap_ref = (Utils.asObjectOrNull(t1, ReferentToken))
-        res = CanonicDecreeRefUri._new856(t.kit.sofa.text, dpr, t.begin_char, t1.end_char, has_diap)
+        res = CanonicDecreeRefUri._new901(t.kit.sofa.text, dpr, t.begin_char, t1.end_char, has_diap)
         if ((t.previous is not None and t.previous.is_char('(') and t1.next0_ is not None) and t1.next0_.is_char(')')): 
             return res
         tt = (t).begin_token
@@ -291,9 +291,9 @@ class DecreeHelper:
                 return res
         if (((has_same_before or has_same_after)) and ptmin != PartToken.ItemType.PREFIX): 
             tt = (t).begin_token
-            first_pass3016 = True
+            first_pass3705 = True
             while True:
-                if first_pass3016: first_pass3016 = False
+                if first_pass3705: first_pass3705 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= res.end_char)): break
                 if (tt.begin_char >= res.begin_char): 
@@ -416,9 +416,9 @@ class DecreeHelper:
         ndst0 = None
         ndst1 = None
         tt = t.next0_
-        first_pass3017 = True
+        first_pass3706 = True
         while True:
-            if first_pass3017: first_pass3017 = False
+            if first_pass3706: first_pass3706 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_value("НДС", None)): 
@@ -437,7 +437,7 @@ class DecreeHelper:
                         if (has_nds): 
                             ok = True
                         if (ok): 
-                            return MetaToken._new857(tt, ne.end_token, "Размер НДС должен быть {0}%, а не {1}%".format(nds, ne.real_value))
+                            return MetaToken._new902(tt, ne.end_token, "Размер НДС должен быть {0}%, а не {1}%".format(nds, ne.real_value))
                     ndst1 = ne.end_token
                     tt = ndst1
                     has_nds_perc = True
@@ -461,7 +461,7 @@ class DecreeHelper:
             return None
         if (m1 is None): 
             if (nds_mustbe_money): 
-                return MetaToken._new857(ndst0, ndst1, "Размер НДС должен быть в денежном выражении")
+                return MetaToken._new902(ndst0, ndst1, "Размер НДС должен быть в денежном выражении")
             return None
         if (has_all): 
             return None
@@ -483,16 +483,16 @@ class DecreeHelper:
             if ((delta < 1) and m1.rest == 0 and m.rest == 0): 
                 pass
             else: 
-                mr = MoneyReferent._new859(m1.currency, must_be)
-                return MetaToken._new857(t, tt, "Размер НДС должен быть {0}, а не {1}".format(DecreeHelper.__out_money(mr), DecreeHelper.__out_money(m1)))
+                mr = MoneyReferent._new904(m1.currency, must_be)
+                return MetaToken._new902(t, tt, "Размер НДС должен быть {0}, а не {1}".format(DecreeHelper.__out_money(mr), DecreeHelper.__out_money(m1)))
         if (incl): 
             return None
         m2 = None
         has_all = False
         tt = tt.next0_
-        first_pass3018 = True
+        first_pass3707 = True
         while True:
-            if first_pass3018: first_pass3018 = False
+            if first_pass3707: first_pass3707 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (isinstance(tt, ReferentToken)): 
@@ -512,7 +512,7 @@ class DecreeHelper:
             if (delta < 0): 
                 delta = (- delta)
             if (delta > 0.01): 
-                mr = MoneyReferent._new859(m1.currency, must_be)
+                mr = MoneyReferent._new904(m1.currency, must_be)
                 err = "Всего с НДС должно быть {0}, а не {1}".format(DecreeHelper.__out_money(mr), DecreeHelper.__out_money(m2))
-                return MetaToken._new857(t, tt, err)
+                return MetaToken._new902(t, tt, err)
         return None

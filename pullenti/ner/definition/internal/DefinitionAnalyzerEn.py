@@ -24,9 +24,9 @@ class DefinitionAnalyzerEn:
     @staticmethod
     def process(kit : 'AnalysisKit', ad : 'AnalyzerData') -> None:
         t = kit.first_token
-        first_pass3053 = True
+        first_pass3743 = True
         while True:
-            if first_pass3053: first_pass3053 = False
+            if first_pass3743: first_pass3743 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not MiscHelper.can_be_start_of_sentence(t)): 
@@ -53,9 +53,9 @@ class DefinitionAnalyzerEn:
         if (mc.is_preposition or mc.is_misc or mc.is_adverb): 
             if (not MiscHelper.is_eng_article(tt)): 
                 tt = tt.next0_
-                first_pass3054 = True
+                first_pass3744 = True
                 while True:
-                    if first_pass3054: first_pass3054 = False
+                    if first_pass3744: first_pass3744 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_comma): 
@@ -67,7 +67,7 @@ class DefinitionAnalyzerEn:
                             continue
                     if (MiscHelper.can_be_start_of_sentence(tt)): 
                         break
-                    npt0 = NounPhraseHelper.try_parse(tt, Utils.valToEnum((NounPhraseParseAttr.PARSENUMERICASADJECTIVE) | (NounPhraseParseAttr.REFERENTCANBENOUN), NounPhraseParseAttr), 0)
+                    npt0 = NounPhraseHelper.try_parse(tt, Utils.valToEnum((NounPhraseParseAttr.PARSENUMERICASADJECTIVE) | (NounPhraseParseAttr.REFERENTCANBENOUN), NounPhraseParseAttr), 0, None)
                     if (npt0 is not None): 
                         tt = npt0.end_token
                         continue
@@ -79,7 +79,7 @@ class DefinitionAnalyzerEn:
                 tt = tt.next0_
         t1 = tt
         mc = tt.get_morph_class_in_dictionary()
-        npt = NounPhraseHelper.try_parse(tt, Utils.valToEnum((NounPhraseParseAttr.PARSENUMERICASADJECTIVE) | (NounPhraseParseAttr.REFERENTCANBENOUN) | (NounPhraseParseAttr.PARSEADVERBS), NounPhraseParseAttr), 0)
+        npt = NounPhraseHelper.try_parse(tt, Utils.valToEnum((NounPhraseParseAttr.PARSENUMERICASADJECTIVE) | (NounPhraseParseAttr.REFERENTCANBENOUN) | (NounPhraseParseAttr.PARSEADVERBS), NounPhraseParseAttr), 0, None)
         if (npt is None and (isinstance(tt, TextToken))): 
             if (tt.chars.is_all_upper): 
                 npt = NounPhraseToken(tt, tt)
@@ -101,9 +101,9 @@ class DefinitionAnalyzerEn:
             if (not tt.get_morph_class_in_dictionary().is_verb): 
                 break
             tt = tt.next0_
-        first_pass3055 = True
+        first_pass3745 = True
         while True:
-            if first_pass3055: first_pass3055 = False
+            if first_pass3745: first_pass3745 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.next0_ is None): 

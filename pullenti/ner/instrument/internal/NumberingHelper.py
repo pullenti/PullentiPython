@@ -7,14 +7,15 @@ import math
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.instrument.internal.NumberTypes import NumberTypes
 from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.instrument.internal.NumberTypes import NumberTypes
+from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.instrument.InstrumentKind import InstrumentKind
 from pullenti.ner.decree.internal.PartToken import PartToken
+from pullenti.ner.instrument.internal.FragToken import FragToken
 from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
 
 class NumberingHelper:
@@ -92,10 +93,10 @@ class NumberingHelper:
                 if (prev.numbers[i] != next0_.numbers[i]): 
                     return 0
                 i += 1
-            wrapn11569 = RefOutArgWrapper(0)
-            inoutres1570 = Utils.tryParseInt(prev.numbers[len(prev.numbers) - 2], wrapn11569)
-            n1 = wrapn11569.value
-            if (not inoutres1570): 
+            wrapn11618 = RefOutArgWrapper(0)
+            inoutres1619 = Utils.tryParseInt(prev.numbers[len(prev.numbers) - 2], wrapn11618)
+            n1 = wrapn11618.value
+            if (not inoutres1619): 
                 if (len(prev.numbers) == 2): 
                     n1 = prev.first_number
                 else: 
@@ -117,10 +118,10 @@ class NumberingHelper:
                 if (prev.numbers[i] != next0_.numbers[i]): 
                     return 0
                 i += 1
-            wrapn11571 = RefOutArgWrapper(0)
-            inoutres1572 = Utils.tryParseInt(prev.numbers[len(prev.numbers) - 3], wrapn11571)
-            n1 = wrapn11571.value
-            if (not inoutres1572): 
+            wrapn11620 = RefOutArgWrapper(0)
+            inoutres1621 = Utils.tryParseInt(prev.numbers[len(prev.numbers) - 3], wrapn11620)
+            n1 = wrapn11620.value
+            if (not inoutres1621): 
                 return 0
             if ((n1 + 1) != n2): 
                 return 0
@@ -137,10 +138,10 @@ class NumberingHelper:
                 if (prev.numbers[i] != next0_.numbers[i]): 
                     return 0
                 i += 1
-            wrapn11573 = RefOutArgWrapper(0)
-            inoutres1574 = Utils.tryParseInt(prev.numbers[len(prev.numbers) - 4], wrapn11573)
-            n1 = wrapn11573.value
-            if (not inoutres1574): 
+            wrapn11622 = RefOutArgWrapper(0)
+            inoutres1623 = Utils.tryParseInt(prev.numbers[len(prev.numbers) - 4], wrapn11622)
+            n1 = wrapn11622.value
+            if (not inoutres1623): 
                 return 0
             if ((n1 + 1) != n2): 
                 return 0
@@ -162,9 +163,9 @@ class NumberingHelper:
         res = None
         many_spec_char_lines = 0
         i = 0
-        first_pass3200 = True
+        first_pass3891 = True
         while True:
-            if first_pass3200: first_pass3200 = False
+            if first_pass3891: first_pass3891 = False
             else: i += 1
             if (not (i < len(lines))): break
             li = lines[i]
@@ -240,9 +241,9 @@ class NumberingHelper:
         while ch:
             ch = False
             i = 1
-            first_pass3201 = True
+            first_pass3892 = True
             while True:
-                if first_pass3201: first_pass3201 = False
+                if first_pass3892: first_pass3892 = False
                 else: i += 1
                 if (not (i < len(res))): break
                 d = NumberingHelper.calc_delta(res[i - 1], res[i], False)
@@ -397,10 +398,9 @@ class NumberingHelper:
             owner(FragToken): 
             itok(InstrToken1): 
         """
-        from pullenti.ner.instrument.internal.FragToken import FragToken
         if (itok.num_begin_token is None or itok.num_end_token is None): 
             return
-        num = FragToken._new1575(itok.num_begin_token, itok.num_end_token, InstrumentKind.NUMBER, True, itok)
+        num = FragToken._new1624(itok.num_begin_token, itok.num_end_token, InstrumentKind.NUMBER, True, itok)
         owner.children.append(num)
         if (itok.num_typ == NumberTypes.TWODIGITS): 
             owner.number = itok.first_number
@@ -502,9 +502,9 @@ class NumberingHelper:
             res.end_token = res.num_end_token
             res.num_suffix = (None)
             ttt = t.next0_
-            first_pass3202 = True
+            first_pass3893 = True
             while True:
-                if first_pass3202: first_pass3202 = False
+                if first_pass3893: first_pass3893 = False
                 else: ttt = ttt.next0_
                 if (not (ttt is not None and (len(res.numbers) < 4))): break
                 ok1 = False
@@ -698,10 +698,10 @@ class NumberingHelper:
         if (s2.startswith(s1)): 
             i = len(s1)
             if (((i + 1) < len(s2)) and s2[i] == '.' and str.isdigit(s2[i + 1])): 
-                wrapn21576 = RefOutArgWrapper(0)
-                inoutres1577 = Utils.tryParseInt(s2[i + 1:], wrapn21576)
-                n2 = wrapn21576.value
-                if (inoutres1577): 
+                wrapn21625 = RefOutArgWrapper(0)
+                inoutres1626 = Utils.tryParseInt(s2[i + 1:], wrapn21625)
+                n2 = wrapn21625.value
+                if (inoutres1626): 
                     res0 = list()
                     res0.append(s1)
                     i = 1
@@ -712,28 +712,28 @@ class NumberingHelper:
         i = s1.rfind('.')
         if (((i)) > 0): 
             pref = s1[0:0+i + 1]
-            wrapn11580 = RefOutArgWrapper(0)
-            inoutres1581 = Utils.tryParseInt(s1[i + 1:], wrapn11580)
-            n1 = wrapn11580.value
-            if (not inoutres1581): 
+            wrapn11629 = RefOutArgWrapper(0)
+            inoutres1630 = Utils.tryParseInt(s1[i + 1:], wrapn11629)
+            n1 = wrapn11629.value
+            if (not inoutres1630): 
                 return None
             if (not s2.startswith(pref)): 
                 return None
-            wrapn21578 = RefOutArgWrapper(0)
-            inoutres1579 = Utils.tryParseInt(s2[i + 1:], wrapn21578)
-            n2 = wrapn21578.value
-            if (not inoutres1579): 
+            wrapn21627 = RefOutArgWrapper(0)
+            inoutres1628 = Utils.tryParseInt(s2[i + 1:], wrapn21627)
+            n2 = wrapn21627.value
+            if (not inoutres1628): 
                 return None
         else: 
-            wrapn11584 = RefOutArgWrapper(0)
-            inoutres1585 = Utils.tryParseInt(s1, wrapn11584)
-            n1 = wrapn11584.value
-            if (not inoutres1585): 
+            wrapn11633 = RefOutArgWrapper(0)
+            inoutres1634 = Utils.tryParseInt(s1, wrapn11633)
+            n1 = wrapn11633.value
+            if (not inoutres1634): 
                 return None
-            wrapn21582 = RefOutArgWrapper(0)
-            inoutres1583 = Utils.tryParseInt(s2, wrapn21582)
-            n2 = wrapn21582.value
-            if (not inoutres1583): 
+            wrapn21631 = RefOutArgWrapper(0)
+            inoutres1632 = Utils.tryParseInt(s2, wrapn21631)
+            n2 = wrapn21631.value
+            if (not inoutres1632): 
                 return None
         if (n2 <= n1): 
             return None

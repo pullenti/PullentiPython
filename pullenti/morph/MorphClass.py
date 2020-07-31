@@ -8,11 +8,8 @@ from pullenti.unisharp.Utils import Utils
 class MorphClass:
     """ Часть речи """
     
-    def __init__(self, val : 'MorphClass'=None) -> None:
+    def __init__(self) -> None:
         self.value = 0
-        self.value = (0)
-        if (val is not None): 
-            self.value = val.value
     
     def __get_value(self, i : int) -> bool:
         return (((((self.value) >> i)) & 1)) != 0
@@ -43,10 +40,6 @@ class MorphClass:
         self.__set_value(0, value_)
         return value_
     
-    @staticmethod
-    def is_noun_int(val : int) -> bool:
-        return ((val & 1)) != 0
-    
     @property
     def is_adjective(self) -> bool:
         """ Прилагательное """
@@ -57,10 +50,6 @@ class MorphClass:
             self.value = (0)
         self.__set_value(1, value_)
         return value_
-    
-    @staticmethod
-    def is_adjective_int(val : int) -> bool:
-        return ((val & 2)) != 0
     
     @property
     def is_verb(self) -> bool:
@@ -73,10 +62,6 @@ class MorphClass:
         self.__set_value(2, value_)
         return value_
     
-    @staticmethod
-    def is_verb_int(val : int) -> bool:
-        return ((val & 4)) != 0
-    
     @property
     def is_adverb(self) -> bool:
         """ Наречие """
@@ -87,10 +72,6 @@ class MorphClass:
             self.value = (0)
         self.__set_value(3, value_)
         return value_
-    
-    @staticmethod
-    def is_adverb_int(val : int) -> bool:
-        return ((val & 8)) != 0
     
     @property
     def is_pronoun(self) -> bool:
@@ -103,10 +84,6 @@ class MorphClass:
         self.__set_value(4, value_)
         return value_
     
-    @staticmethod
-    def is_pronoun_int(val : int) -> bool:
-        return ((val & 0x10)) != 0
-    
     @property
     def is_misc(self) -> bool:
         """ Всякая ерунда (частицы, междометия) """
@@ -118,10 +95,6 @@ class MorphClass:
         self.__set_value(5, value_)
         return value_
     
-    @staticmethod
-    def is_misc_int(val : int) -> bool:
-        return ((val & 0x20)) != 0
-    
     @property
     def is_preposition(self) -> bool:
         """ Предлог """
@@ -130,10 +103,6 @@ class MorphClass:
     def is_preposition(self, value_) -> bool:
         self.__set_value(6, value_)
         return value_
-    
-    @staticmethod
-    def is_preposition_int(val : int) -> bool:
-        return ((val & 0x40)) != 0
     
     @property
     def is_conjunction(self) -> bool:
@@ -144,10 +113,6 @@ class MorphClass:
         self.__set_value(7, value_)
         return value_
     
-    @staticmethod
-    def is_conjunction_int(val : int) -> bool:
-        return ((val & 0x80)) != 0
-    
     @property
     def is_proper(self) -> bool:
         """ Собственное имя (фамилия, имя, отчество, геогр.название и др.) """
@@ -156,10 +121,6 @@ class MorphClass:
     def is_proper(self, value_) -> bool:
         self.__set_value(8, value_)
         return value_
-    
-    @staticmethod
-    def is_proper_int(val : int) -> bool:
-        return ((val & 0x100)) != 0
     
     @property
     def is_proper_surname(self) -> bool:
@@ -172,10 +133,6 @@ class MorphClass:
         self.__set_value(9, value_)
         return value_
     
-    @staticmethod
-    def is_proper_surname_int(val : int) -> bool:
-        return ((val & 0x200)) != 0
-    
     @property
     def is_proper_name(self) -> bool:
         """ Фамилия """
@@ -186,10 +143,6 @@ class MorphClass:
             self.is_proper = True
         self.__set_value(10, value_)
         return value_
-    
-    @staticmethod
-    def is_proper_name_int(val : int) -> bool:
-        return ((val & 0x400)) != 0
     
     @property
     def is_proper_secname(self) -> bool:
@@ -202,10 +155,6 @@ class MorphClass:
         self.__set_value(11, value_)
         return value_
     
-    @staticmethod
-    def is_proper_secname_int(val : int) -> bool:
-        return ((val & 0x800)) != 0
-    
     @property
     def is_proper_geo(self) -> bool:
         """ Географическое название """
@@ -217,10 +166,6 @@ class MorphClass:
         self.__set_value(12, value_)
         return value_
     
-    @staticmethod
-    def is_proper_geo_int(val : int) -> bool:
-        return ((val & 0x1000)) != 0
-    
     @property
     def is_personal_pronoun(self) -> bool:
         """ Личное местоимение (я, мой, ты, он ...) """
@@ -230,28 +175,71 @@ class MorphClass:
         self.__set_value(13, value_)
         return value_
     
-    @staticmethod
-    def is_personal_pronoun_int(val : int) -> bool:
-        return ((val & 0x2000)) != 0
-    
     __m_names = None
     
     def __str__(self) -> str:
         tmp_str = io.StringIO()
-        i = 0
-        first_pass2905 = True
-        while True:
-            if first_pass2905: first_pass2905 = False
-            else: i += 1
-            if (not (i < len(MorphClass.__m_names))): break
-            if (self.__get_value(i)): 
-                if (i == 5): 
-                    if (self.is_conjunction or self.is_preposition or self.is_proper): 
-                        continue
-                if (tmp_str.tell() > 0): 
-                    print("|", end="", file=tmp_str)
-                print(MorphClass.__m_names[i], end="", file=tmp_str)
+        if (self.is_noun): 
+            print("существ.|", end="", file=tmp_str)
+        if (self.is_adjective): 
+            print("прилаг.|", end="", file=tmp_str)
+        if (self.is_verb): 
+            print("глагол|", end="", file=tmp_str)
+        if (self.is_adverb): 
+            print("наречие|", end="", file=tmp_str)
+        if (self.is_pronoun): 
+            print("местоим.|", end="", file=tmp_str)
+        if (self.is_misc): 
+            if (self.is_conjunction or self.is_preposition or self.is_proper): 
+                pass
+            else: 
+                print("разное|", end="", file=tmp_str)
+        if (self.is_preposition): 
+            print("предлог|", end="", file=tmp_str)
+        if (self.is_conjunction): 
+            print("союз|", end="", file=tmp_str)
+        if (self.is_proper): 
+            print("собств.|", end="", file=tmp_str)
+        if (self.is_proper_surname): 
+            print("фамилия|", end="", file=tmp_str)
+        if (self.is_proper_name): 
+            print("имя|", end="", file=tmp_str)
+        if (self.is_proper_secname): 
+            print("отч.|", end="", file=tmp_str)
+        if (self.is_proper_geo): 
+            print("геогр.|", end="", file=tmp_str)
+        if (self.is_personal_pronoun): 
+            print("личн.местоим.|", end="", file=tmp_str)
+        if (tmp_str.tell() > 0): 
+            Utils.setLengthStringIO(tmp_str, tmp_str.tell() - 1)
         return Utils.toStringStringIO(tmp_str)
+    
+    UNDEFINED = None
+    """ Неопределённое """
+    
+    NOUN = None
+    """ Существительное """
+    
+    PRONOUN = None
+    """ Местоимение """
+    
+    PERSONAL_PRONOUN = None
+    """ Личное местоимение """
+    
+    VERB = None
+    """ Глагол """
+    
+    ADJECTIVE = None
+    """ Прилагательное """
+    
+    ADVERB = None
+    """ Наречие """
+    
+    PREPOSITION = None
+    """ Предлог """
+    
+    CONJUNCTION = None
+    """ Союз """
     
     def equals(self, obj : object) -> bool:
         if (not ((isinstance(obj, MorphClass)))): 
@@ -268,7 +256,7 @@ class MorphClass:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphClass._new79(((val1) & (val2)))
+        return MorphClass._new72(((val1) & (val2)))
     
     def __or__(self : 'MorphClass', arg2 : 'MorphClass') -> 'MorphClass':
         val1 = 0
@@ -277,7 +265,7 @@ class MorphClass:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphClass._new79(((val1) | (val2)))
+        return MorphClass._new72(((val1) | (val2)))
     
     def __xor__(self : 'MorphClass', arg2 : 'MorphClass') -> 'MorphClass':
         val1 = 0
@@ -286,7 +274,7 @@ class MorphClass:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphClass._new79(((val1) ^ (val2)))
+        return MorphClass._new72(((val1) ^ (val2)))
     
     def __eq__(self : 'MorphClass', arg2 : 'MorphClass') -> bool:
         val1 = 0
@@ -306,86 +294,68 @@ class MorphClass:
             val2 = arg2.value
         return val1 != val2
     
-    UNDEFINED = None
-    
-    NOUN = None
-    
-    PRONOUN = None
-    
-    PERSONAL_PRONOUN = None
-    
-    VERB = None
-    
-    ADJECTIVE = None
-    
-    ADVERB = None
-    
-    PREPOSITION = None
-    
-    CONJUNCTION = None
-    
     @staticmethod
-    def _new79(_arg1 : int) -> 'MorphClass':
-        res = MorphClass()
-        res.value = _arg1
-        return res
-    
-    @staticmethod
-    def _new82(_arg1 : bool) -> 'MorphClass':
+    def _new63(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_undefined = _arg1
         return res
     
     @staticmethod
-    def _new83(_arg1 : bool) -> 'MorphClass':
+    def _new64(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_noun = _arg1
         return res
     
     @staticmethod
-    def _new84(_arg1 : bool) -> 'MorphClass':
+    def _new65(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_pronoun = _arg1
         return res
     
     @staticmethod
-    def _new85(_arg1 : bool) -> 'MorphClass':
+    def _new66(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_personal_pronoun = _arg1
         return res
     
     @staticmethod
-    def _new86(_arg1 : bool) -> 'MorphClass':
+    def _new67(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_verb = _arg1
         return res
     
     @staticmethod
-    def _new87(_arg1 : bool) -> 'MorphClass':
+    def _new68(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_adjective = _arg1
         return res
     
     @staticmethod
-    def _new88(_arg1 : bool) -> 'MorphClass':
+    def _new69(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_adverb = _arg1
         return res
     
     @staticmethod
-    def _new89(_arg1 : bool) -> 'MorphClass':
+    def _new70(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_preposition = _arg1
         return res
     
     @staticmethod
-    def _new90(_arg1 : bool) -> 'MorphClass':
+    def _new71(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_conjunction = _arg1
         return res
     
     @staticmethod
-    def _new2579(_arg1 : bool) -> 'MorphClass':
+    def _new72(_arg1 : int) -> 'MorphClass':
+        res = MorphClass()
+        res.value = _arg1
+        return res
+    
+    @staticmethod
+    def _new2629(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_proper_surname = _arg1
         return res
@@ -394,14 +364,14 @@ class MorphClass:
     @staticmethod
     def _static_ctor():
         MorphClass.__m_names = ["существ.", "прилаг.", "глагол", "наречие", "местоим.", "разное", "предлог", "союз", "собств.", "фамилия", "имя", "отч.", "геогр.", "личн.местоим."]
-        MorphClass.UNDEFINED = MorphClass._new82(True)
-        MorphClass.NOUN = MorphClass._new83(True)
-        MorphClass.PRONOUN = MorphClass._new84(True)
-        MorphClass.PERSONAL_PRONOUN = MorphClass._new85(True)
-        MorphClass.VERB = MorphClass._new86(True)
-        MorphClass.ADJECTIVE = MorphClass._new87(True)
-        MorphClass.ADVERB = MorphClass._new88(True)
-        MorphClass.PREPOSITION = MorphClass._new89(True)
-        MorphClass.CONJUNCTION = MorphClass._new90(True)
+        MorphClass.UNDEFINED = MorphClass._new63(True)
+        MorphClass.NOUN = MorphClass._new64(True)
+        MorphClass.PRONOUN = MorphClass._new65(True)
+        MorphClass.PERSONAL_PRONOUN = MorphClass._new66(True)
+        MorphClass.VERB = MorphClass._new67(True)
+        MorphClass.ADJECTIVE = MorphClass._new68(True)
+        MorphClass.ADVERB = MorphClass._new69(True)
+        MorphClass.PREPOSITION = MorphClass._new70(True)
+        MorphClass.CONJUNCTION = MorphClass._new71(True)
 
 MorphClass._static_ctor()

@@ -6,12 +6,12 @@ import typing
 import io
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.Token import Token
-from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.Referent import Referent
+from pullenti.ner.Token import Token
 from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.named.NamedEntityKind import NamedEntityKind
 from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
 from pullenti.ner.named.internal.MetaNamedEntity import MetaNamedEntity
@@ -76,9 +76,9 @@ class NamedEntityAnalyzer(Analyzer):
     def process(self, kit : 'AnalysisKit') -> None:
         ad = Utils.asObjectOrNull(kit.get_analyzer_data(self), AnalyzerDataWithOntology)
         t = kit.first_token
-        first_pass3232 = True
+        first_pass3923 = True
         while True:
-            if first_pass3232: first_pass3232 = False
+            if first_pass3923: first_pass3923 = False
             else: t = t.next0_
             if (not (t is not None)): break
             li = NamedItemToken.try_parse_list(t, ad.local_ontology)
@@ -174,7 +174,7 @@ class NamedEntityAnalyzer(Analyzer):
                 ok = True
         if (not ok or ki == NamedEntityKind.UNDEFINED): 
             return None
-        nam = NamedEntityReferent._new1775(ki)
+        nam = NamedEntityReferent._new1824(ki)
         if (typ is not None): 
             nam.add_slot(NamedEntityReferent.ATTR_TYPE, typ.type_value.lower(), False, 0)
         if (nams is not None): 

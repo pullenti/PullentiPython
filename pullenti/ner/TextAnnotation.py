@@ -73,7 +73,7 @@ class TextAnnotation:
             self.essential_for_occurence = True
     
     @staticmethod
-    def _new561(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int) -> 'TextAnnotation':
+    def _new545(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int) -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.begin_char = _arg2
@@ -81,7 +81,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new748(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int, _arg4 : 'Referent') -> 'TextAnnotation':
+    def _new780(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int, _arg4 : 'Referent') -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.begin_char = _arg2
@@ -90,7 +90,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new1607(_arg1 : int, _arg2 : int, _arg3 : 'Referent', _arg4 : 'SourceOfAnalysis') -> 'TextAnnotation':
+    def _new1656(_arg1 : int, _arg2 : int, _arg3 : 'Referent', _arg4 : 'SourceOfAnalysis') -> 'TextAnnotation':
         res = TextAnnotation()
         res.begin_char = _arg1
         res.end_char = _arg2
@@ -99,7 +99,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2867(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
+    def _new2923(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
         res = TextAnnotation()
         res.begin_char = _arg1
         res.end_char = _arg2
@@ -107,7 +107,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2869(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
+    def _new2925(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.occurence_of = _arg2

@@ -33,7 +33,7 @@ class PersonMorphCollection:
             return Utils.toStringStringIO(res)
         
         @staticmethod
-        def _new2598(_arg1 : str, _arg2 : 'MorphGender', _arg3 : str) -> 'PersonMorphVariant':
+        def _new2648(_arg1 : str, _arg2 : 'MorphGender', _arg3 : str) -> 'PersonMorphVariant':
             res = PersonMorphCollection.PersonMorphVariant()
             res.value = _arg1
             res.gender = _arg2
@@ -101,12 +101,12 @@ class PersonMorphCollection:
             for it in self.items: 
                 if (it.value == val and it.gender == gen): 
                     return
-            self.items.append(PersonMorphCollection.PersonMorphVariant._new2598(val, gen, shortval))
+            self.items.append(PersonMorphCollection.PersonMorphVariant._new2648(val, gen, shortval))
             if (add_other_gender_var): 
                 g0 = (MorphGender.MASCULINE if gen == MorphGender.FEMINIE else MorphGender.FEMINIE)
-                v = Morphology.get_wordform(val, MorphBaseInfo._new228(MorphClass._new2579(True), g0))
+                v = Morphology.get_wordform(val, MorphBaseInfo._new212(MorphClass._new2629(True), g0))
                 if (v is not None): 
-                    self.items.append(PersonMorphCollection.PersonMorphVariant._new2598(v, g0, shortval))
+                    self.items.append(PersonMorphCollection.PersonMorphVariant._new2648(v, g0, shortval))
         else: 
             self.add(val, shortval, MorphGender.MASCULINE, False)
             self.add(val, shortval, MorphGender.FEMINIE, False)

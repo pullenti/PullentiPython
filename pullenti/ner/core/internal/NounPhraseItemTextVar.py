@@ -14,10 +14,12 @@ class NounPhraseItemTextVar(MorphBaseInfo):
     """ Морфологический вариант для элемента именной группы """
     
     def __init__(self, src : 'MorphBaseInfo'=None, t : 'Token'=None) -> None:
-        super().__init__(src)
+        super().__init__()
         self.normal_value = None;
         self.single_number_value = None;
         self.undef_coef = 0
+        if (src is not None): 
+            self.copy_from(src)
         wf = Utils.asObjectOrNull(src, MorphWordForm)
         if (wf is not None): 
             self.normal_value = wf.normal_case
@@ -25,7 +27,7 @@ class NounPhraseItemTextVar(MorphBaseInfo):
                 self.single_number_value = wf.normal_full
             self.undef_coef = (wf.undef_coef)
         elif (t is not None): 
-            self.normal_value = t.get_normal_case_text(None, False, MorphGender.UNDEFINED, False)
+            self.normal_value = t.get_normal_case_text(None, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False)
         if (self.case_.is_undefined and src is not None): 
             if (src.contains_attr("неизм.", None)): 
                 self.case_ = MorphCase.ALL_CASES
@@ -33,9 +35,9 @@ class NounPhraseItemTextVar(MorphBaseInfo):
     def __str__(self) -> str:
         return "{0} {1}".format(self.normal_value, super().__str__())
     
-    def clone(self) -> object:
+    def clone(self) -> 'MorphBaseInfo':
         res = NounPhraseItemTextVar()
-        self.copy_to(res)
+        res.copy_from(self)
         res.normal_value = self.normal_value
         res.single_number_value = self.single_number_value
         res.undef_coef = self.undef_coef

@@ -5,9 +5,9 @@
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.morph.internal.NextModelQuestion import NextModelQuestion
-from pullenti.morph.internal.NextModelItem import NextModelItem
+from pullenti.semantic.utils.QuestionType import QuestionType
 from pullenti.morph.MorphCase import MorphCase
+from pullenti.semantic.internal.NextModelItem import NextModelItem
 
 class NextModelHelper:
     
@@ -20,34 +20,35 @@ class NextModelHelper:
         if (NextModelHelper.ITEMS is not None): 
             return
         NextModelHelper.ITEMS = list()
+        NextModelHelper.ITEMS.append(NextModelItem("", MorphCase.NOMINATIVE))
         NextModelHelper.ITEMS.append(NextModelItem("", MorphCase.GENITIVE))
         NextModelHelper.ITEMS.append(NextModelItem("", MorphCase.DATIVE))
         NextModelHelper.ITEMS.append(NextModelItem("", MorphCase.ACCUSATIVE))
         NextModelHelper.ITEMS.append(NextModelItem("", MorphCase.INSTRUMENTAL))
         NextModelHelper.ITEMS.append(NextModelItem("", MorphCase.PREPOSITIONAL))
         for s in ["ИЗ", "ОТ", "С", "ИЗНУТРИ"]: 
-            NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.GENITIVE, None, NextModelQuestion.WHEREFROM))
-        NextModelHelper.ITEMS.append(NextModelItem("В", MorphCase.ACCUSATIVE, None, NextModelQuestion.WHERETO))
-        NextModelHelper.ITEMS.append(NextModelItem("НА", MorphCase.ACCUSATIVE, None, NextModelQuestion.WHERETO))
-        NextModelHelper.ITEMS.append(NextModelItem("ПО", MorphCase.ACCUSATIVE, None, NextModelQuestion.WHERETO))
-        NextModelHelper.ITEMS.append(NextModelItem("К", MorphCase.DATIVE, None, NextModelQuestion.WHERETO))
-        NextModelHelper.ITEMS.append(NextModelItem("НАВСТРЕЧУ", MorphCase.DATIVE, None, NextModelQuestion.WHERETO))
-        NextModelHelper.ITEMS.append(NextModelItem("ДО", MorphCase.GENITIVE, None, NextModelQuestion.WHERETO))
+            NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.GENITIVE, None, QuestionType.WHEREFROM))
+        NextModelHelper.ITEMS.append(NextModelItem("В", MorphCase.ACCUSATIVE, None, QuestionType.WHERETO))
+        NextModelHelper.ITEMS.append(NextModelItem("НА", MorphCase.ACCUSATIVE, None, QuestionType.WHERETO))
+        NextModelHelper.ITEMS.append(NextModelItem("ПО", MorphCase.ACCUSATIVE, None, QuestionType.WHERETO))
+        NextModelHelper.ITEMS.append(NextModelItem("К", MorphCase.DATIVE, None, QuestionType.WHERETO))
+        NextModelHelper.ITEMS.append(NextModelItem("НАВСТРЕЧУ", MorphCase.DATIVE, None, QuestionType.WHERETO))
+        NextModelHelper.ITEMS.append(NextModelItem("ДО", MorphCase.GENITIVE, None, QuestionType.WHERETO))
         for s in ["У", "ОКОЛО", "ВОКРУГ", "ВОЗЛЕ", "ВБЛИЗИ", "МИМО", "ПОЗАДИ", "ВПЕРЕДИ", "ВГЛУБЬ", "ВДОЛЬ", "ВНЕ", "КРОМЕ", "МЕЖДУ", "НАПРОТИВ", "ПОВЕРХ", "ПОДЛЕ", "ПОПЕРЕК", "ПОСЕРЕДИНЕ", "СВЕРХ", "СРЕДИ", "СНАРУЖИ", "ВНУТРИ"]: 
-            NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.GENITIVE, None, NextModelQuestion.WHERE))
+            NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.GENITIVE, None, QuestionType.WHERE))
         for s in ["ПАРАЛЛЕЛЬНО"]: 
-            NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.DATIVE, None, NextModelQuestion.WHERE))
+            NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.DATIVE, None, QuestionType.WHERE))
         for s in ["СКВОЗЬ", "ЧЕРЕЗ", "ПОД"]: 
-            NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.ACCUSATIVE, None, NextModelQuestion.WHERE))
+            NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.ACCUSATIVE, None, QuestionType.WHERE))
         for s in ["МЕЖДУ", "НАД", "ПОД", "ПЕРЕД", "ЗА"]: 
-            NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.INSTRUMENTAL, None, NextModelQuestion.WHERE))
+            NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.INSTRUMENTAL, None, QuestionType.WHERE))
         for s in ["В", "НА", "ПРИ"]: 
-            NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.PREPOSITIONAL, None, NextModelQuestion.WHERE))
-        NextModelHelper.ITEMS.append(NextModelItem("ПРЕЖДЕ", MorphCase.GENITIVE, None, NextModelQuestion.WHEN))
-        NextModelHelper.ITEMS.append(NextModelItem("ПОСЛЕ", MorphCase.GENITIVE, None, NextModelQuestion.WHEN))
-        NextModelHelper.ITEMS.append(NextModelItem("НАКАНУНЕ", MorphCase.GENITIVE, None, NextModelQuestion.WHEN))
-        NextModelHelper.ITEMS.append(NextModelItem("СПУСТЯ", MorphCase.ACCUSATIVE, None, NextModelQuestion.WHEN))
-        for s in ["БЕЗ", "ДЛЯ", "РАДИ", "ИЗЗА", "ВВИДУ", "ВЗАМЕН", "ВМЕСТО", "ПРОТИВ", "СВЫШЕ", "ВСЛЕДСТВИЕ", "ПОМИМО"]: 
+            NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.PREPOSITIONAL, None, QuestionType.WHERE))
+        NextModelHelper.ITEMS.append(NextModelItem("ПРЕЖДЕ", MorphCase.GENITIVE, None, QuestionType.WHEN))
+        NextModelHelper.ITEMS.append(NextModelItem("ПОСЛЕ", MorphCase.GENITIVE, None, QuestionType.WHEN))
+        NextModelHelper.ITEMS.append(NextModelItem("НАКАНУНЕ", MorphCase.GENITIVE, None, QuestionType.WHEN))
+        NextModelHelper.ITEMS.append(NextModelItem("СПУСТЯ", MorphCase.ACCUSATIVE, None, QuestionType.WHEN))
+        for s in ["БЕЗ", "ДЛЯ", "РАДИ", "ИЗЗА", "ВВИДУ", "ВЗАМЕН", "ВМЕСТО", "ПРОТИВ", "СВЫШЕ", "ВСЛЕДСТВИЕ", "ПОМИМО", "ПОСРЕДСТВОМ"]: 
             NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.GENITIVE))
         for s in ["ПО", "ПОДОБНО", "СОГЛАСНО", "СООТВЕТСТВЕННО", "СОРАЗМЕРНО", "ВОПРЕКИ"]: 
             NextModelHelper.ITEMS.append(NextModelItem(s, MorphCase.DATIVE))
@@ -73,9 +74,9 @@ class NextModelHelper:
     
     @staticmethod
     def find_by_spel(spel : str) -> 'NextModelItem':
-        wrapres54 = RefOutArgWrapper(None)
-        inoutres55 = Utils.tryGetValue(NextModelHelper.__m_hash_by_spel, spel, wrapres54)
-        res = wrapres54.value
-        if (not inoutres55): 
+        wrapres2995 = RefOutArgWrapper(None)
+        inoutres2996 = Utils.tryGetValue(NextModelHelper.__m_hash_by_spel, spel, wrapres2995)
+        res = wrapres2995.value
+        if (not inoutres2996): 
             return None
         return res

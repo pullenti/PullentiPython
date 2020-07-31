@@ -4,19 +4,9 @@
 
 from enum import IntEnum
 
-class NextModelQuestion(IntEnum):
-    """ Основные вопросы модели управления """
+class SemFragmentType(IntEnum):
+    """ Типы фрагментов """
     UNDEFINED = 0
-    WHERE = 1
-    """ Где """
-    WHEREFROM = 2
-    """ Откуда """
-    WHERETO = 4
-    """ Куда """
-    WHEN = 8
-    """ Когда """
-    WHATTODO = 0x10
-    """ Что делать (инфинитив за группой) """
     
     @classmethod
     def has_value(cls, value):

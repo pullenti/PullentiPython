@@ -23,7 +23,9 @@ class DatePointerType(IntEnum):
     """ Летом """
     AUTUMN = 8
     """ Осенью """
-    UNDEFINED = 9
+    ABOUT = 9
+    """ Около, примерно """
+    UNDEFINED = 10
     """ Неопределено (например, 20__ года ) """
     
     @classmethod

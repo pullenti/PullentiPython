@@ -14,23 +14,21 @@ from pullenti.morph.MorphMood import MorphMood
 class MorphRuleVariant(MorphBaseInfo):
     
     def __init__(self, src : 'MorphRuleVariant'=None) -> None:
-        super().__init__(None)
+        super().__init__()
         self.coef = 0
         self.tail = None;
         self.misc_info = None;
         self.rule = None;
         self.normal_tail = None;
         self.full_normal_tail = None;
-        self.tag = None;
         if (src is None): 
             return
         self.tail = src.tail
-        src.copy_to(self)
+        self.copy_from(src)
         self.misc_info = src.misc_info
         self.normal_tail = src.normal_tail
         self.full_normal_tail = src.full_normal_tail
         self.rule = src.rule
-        self.tag = src.tag
     
     def __str__(self) -> str:
         return self.to_string_ex(False)
@@ -78,7 +76,7 @@ class MorphRuleVariant(MorphBaseInfo):
         return 1
     
     @staticmethod
-    def _new51(_arg1 : 'MorphMiscInfo') -> 'MorphRuleVariant':
+    def _new41(_arg1 : 'MorphMiscInfo') -> 'MorphRuleVariant':
         res = MorphRuleVariant()
         res.misc_info = _arg1
         return res

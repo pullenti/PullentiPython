@@ -7,10 +7,11 @@ import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.morph.MorphNumber import MorphNumber
 
 class NumberToken(MetaToken):
     """ Числовой токен (числительное) """
@@ -36,10 +37,10 @@ class NumberToken(MetaToken):
             self.__m_value = self.__m_value[0:0+len(self.__m_value) - 2]
         while len(self.__m_value) > 1 and self.__m_value[0] == '0' and self.__m_value[1] != '.':
             self.__m_value = self.__m_value[1:]
-        wrapn2842 = RefOutArgWrapper(0)
-        inoutres2843 = Utils.tryParseInt(self.__m_value, wrapn2842)
-        n = wrapn2842.value
-        if (inoutres2843): 
+        wrapn2898 = RefOutArgWrapper(0)
+        inoutres2899 = Utils.tryParseInt(self.__m_value, wrapn2898)
+        n = wrapn2898.value
+        if (inoutres2899): 
             self.__m_int_val = n
         else: 
             self.__m_int_val = (None)
@@ -83,7 +84,7 @@ class NumberToken(MetaToken):
             print(" {0}".format(str(self.morph)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
-    def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+    def get_normal_case_text(self, mc : 'MorphClass'=None, num : 'MorphNumber'=MorphNumber.UNDEFINED, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         return str(self.value)
     
     def _serialize(self, stream : io.IOBase) -> None:
@@ -103,7 +104,7 @@ class NumberToken(MetaToken):
         self.typ = (Utils.valToEnum(SerializerHelper.deserialize_int(stream), NumberSpellingType))
     
     @staticmethod
-    def _new589(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'MorphCollection') -> 'NumberToken':
+    def _new575(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'MorphCollection') -> 'NumberToken':
         res = NumberToken(_arg1, _arg2, _arg3, _arg4)
         res.morph = _arg5
         return res

@@ -130,7 +130,7 @@ class Slot:
             self.owner = None
     
     @staticmethod
-    def _new1128(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
+    def _new1163(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
         res = Slot()
         res.type_name = _arg1
         res.tag = _arg2
@@ -138,7 +138,7 @@ class Slot:
         return res
     
     @staticmethod
-    def _new2868(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
+    def _new2924(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
         res = Slot()
         res.type_name = _arg1
         res.value = _arg2

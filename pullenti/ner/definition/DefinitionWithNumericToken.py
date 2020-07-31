@@ -7,10 +7,11 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.morph.MorphCase import MorphCase
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.core.GetTextAttr import GetTextAttr
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.Token import Token
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.MiscHelper import MiscHelper
 
@@ -43,9 +44,9 @@ class DefinitionWithNumericToken(MetaToken):
         tt = t
         noun_ = None
         num = None
-        first_pass3069 = True
+        first_pass3759 = True
         while True:
-            if first_pass3069: first_pass3069 = False
+            if first_pass3759: first_pass3759 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt != t and MiscHelper.can_be_start_of_sentence(tt)): 
@@ -56,7 +57,7 @@ class DefinitionWithNumericToken(MetaToken):
                 continue
             if (tt.morph.class0_.is_adjective): 
                 continue
-            nn = NounPhraseHelper.try_parse(tt.next0_, NounPhraseParseAttr.NO, 0)
+            nn = NounPhraseHelper.try_parse(tt.next0_, NounPhraseParseAttr.NO, 0, None)
             if (nn is None): 
                 continue
             num = (Utils.asObjectOrNull(tt, NumberToken))
@@ -68,7 +69,7 @@ class DefinitionWithNumericToken(MetaToken):
         res.number = num.int_value
         res.number_begin_char = num.begin_char
         res.number_end_char = num.end_char
-        res.noun = noun_.get_normal_case_text(None, True, MorphGender.UNDEFINED, False)
+        res.noun = noun_.get_normal_case_text(None, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False)
         res.nouns_genetive = (Utils.ifNotNull(noun_.get_morph_variant(MorphCase.GENITIVE, True), (res.noun if res is not None else None)))
         res.text = MiscHelper.get_text_value(t, num.previous, Utils.valToEnum((GetTextAttr.KEEPQUOTES) | (GetTextAttr.KEEPREGISTER), GetTextAttr))
         if (num.is_whitespace_before): 

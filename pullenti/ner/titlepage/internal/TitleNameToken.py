@@ -12,14 +12,14 @@ from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.geo.GeoReferent import GeoReferent
 from pullenti.ner.person.PersonReferent import PersonReferent
 from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.TextToken import TextToken
 from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.uri.UriReferent import UriReferent
 from pullenti.ner.phone.PhoneReferent import PhoneReferent
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.booklink.internal.BookLinkTyp import BookLinkTyp
-from pullenti.ner.MetaToken import MetaToken
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.titlepage.internal.TitleItemToken import TitleItemToken
 from pullenti.ner.org.internal.OrgItemTypeToken import OrgItemTypeToken
 from pullenti.ner.person.internal.FioTemplateType import FioTemplateType
@@ -111,9 +111,9 @@ class TitleNameToken(MetaToken):
         tstart = self.begin_token
         tend = self.end_token
         t = self.begin_token
-        first_pass3319 = True
+        first_pass4010 = True
         while True:
-            if first_pass3319: first_pass3319 = False
+            if first_pass4010: first_pass4010 = False
             else: t = t.next0_
             if (not (t != self.end_token.next0_ and t is not None and t.end_char <= self.end_token.end_char)): break
             if (t.is_newline_before): 
@@ -187,7 +187,7 @@ class TitleNameToken(MetaToken):
                 elif (t.previous.is_char_of(",-")): 
                     self.rank += 10
                 else: 
-                    npt = NounPhraseHelper.try_parse(t.previous, NounPhraseParseAttr.NO, 0)
+                    npt = NounPhraseHelper.try_parse(t.previous, NounPhraseParseAttr.NO, 0, None)
                     if (npt is not None and npt.end_char >= t.end_char): 
                         self.rank += 10
             if (t != self.begin_token and t.newlines_before_count > min_newlines_count): 

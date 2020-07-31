@@ -25,7 +25,13 @@ class MetaDateRange(ReferentClass):
     
     DATE_RANGE_IMAGE_ID = "daterange"
     
+    DATE_RANGE_REL_IMAGE_ID = "daterangerel"
+    
     def get_image_id(self, obj : 'Referent'=None) -> str:
+        from pullenti.ner.date.DateRangeReferent import DateRangeReferent
+        if (isinstance(obj, DateRangeReferent)): 
+            if ((obj).is_relative): 
+                return MetaDateRange.DATE_RANGE_REL_IMAGE_ID
         return MetaDateRange.DATE_RANGE_IMAGE_ID
     
     GLOBAL_META = None

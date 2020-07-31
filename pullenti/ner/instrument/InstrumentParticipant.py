@@ -79,7 +79,7 @@ class InstrumentParticipant(Referent):
         return False
     
     @staticmethod
-    def _new1408(_arg1 : str) -> 'InstrumentParticipant':
+    def _new1492(_arg1 : str) -> 'InstrumentParticipant':
         res = InstrumentParticipant()
         res.typ = _arg1
         return res

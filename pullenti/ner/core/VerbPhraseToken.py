@@ -5,6 +5,7 @@
 import io
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphVoice import MorphVoice
@@ -42,6 +43,10 @@ class VerbPhraseToken(MetaToken):
             return False
         return fi.verb_morph.misc.voice == MorphVoice.PASSIVE
     
+    def merge_with(self, v : 'VerbPhraseToken') -> None:
+        self.items.extend(v.items)
+        self.end_token = v.end_token
+    
     def __str__(self) -> str:
         if (len(self.items) == 1): 
             return "{0}, {1}".format(str(self.items[0]), str(self.morph))
@@ -53,5 +58,5 @@ class VerbPhraseToken(MetaToken):
         print(", {0}".format(str(self.morph)), end="", file=tmp, flush=True)
         return Utils.toStringStringIO(tmp)
     
-    def get_normal_case_text(self, mc : 'MorphClass'=None, single_number : bool=False, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
-        return super().get_normal_case_text(MorphClass.VERB, single_number, gender, keep_chars)
+    def get_normal_case_text(self, mc : 'MorphClass'=None, num : 'MorphNumber'=MorphNumber.UNDEFINED, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
+        return super().get_normal_case_text(MorphClass.VERB, num, gender, keep_chars)

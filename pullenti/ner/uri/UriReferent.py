@@ -69,14 +69,14 @@ class UriReferent(Referent):
         return Utils.compareStrings(self.value, uri_.value, True) == 0
     
     @staticmethod
-    def _new2726(_arg1 : str, _arg2 : str) -> 'UriReferent':
+    def _new2776(_arg1 : str, _arg2 : str) -> 'UriReferent':
         res = UriReferent()
         res.scheme = _arg1
         res.value = _arg2
         return res
     
     @staticmethod
-    def _new2729(_arg1 : str, _arg2 : str) -> 'UriReferent':
+    def _new2779(_arg1 : str, _arg2 : str) -> 'UriReferent':
         res = UriReferent()
         res.value = _arg1
         res.scheme = _arg2

@@ -31,6 +31,8 @@ class KeywordReferent(Referent):
     ATTR_REF = "REF"
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
+        if (lev > 10): 
+            return "?"
         rank_ = self.rank
         val = self.get_string_value(KeywordReferent.ATTR_VALUE)
         if (val is None): 
@@ -148,7 +150,7 @@ class KeywordReferent(Referent):
         return res
     
     @staticmethod
-    def _new1608(_arg1 : 'KeywordType') -> 'KeywordReferent':
+    def _new1657(_arg1 : 'KeywordType') -> 'KeywordReferent':
         res = KeywordReferent()
         res.typ = _arg1
         return res

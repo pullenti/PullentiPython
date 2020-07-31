@@ -121,9 +121,9 @@ class MailLine(MetaToken):
         res = MailLine(t0, t0)
         pr = True
         t = t0
-        first_pass3216 = True
+        first_pass3907 = True
         while True:
-            if first_pass3216: first_pass3216 = False
+            if first_pass3907: first_pass3907 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before and t0 != t): 
@@ -156,9 +156,9 @@ class MailLine(MetaToken):
             nams = 0
             oth = 0
             last_comma = None
-            first_pass3217 = True
+            first_pass3908 = True
             while True:
-                if first_pass3217: first_pass3217 = False
+                if first_pass3908: first_pass3908 = False
                 else: t = t.next0_
                 if (not (t is not None and (t.end_char < res.end_char))): break
                 if (isinstance(t.get_referent(), PersonReferent)): 
@@ -182,7 +182,7 @@ class MailLine(MetaToken):
                         t = pit.end_token
                         continue
                 oth += 1
-                if ((oth) > 3): 
+                if (oth > 3): 
                     if (ok > 0 and last_comma is not None): 
                         res.end_token = last_comma
                         oth = 0
@@ -194,9 +194,9 @@ class MailLine(MetaToken):
             if (t0.is_value("HAVE", None)): 
                 pass
             t = t0
-            first_pass3218 = True
+            first_pass3909 = True
             while True:
-                if first_pass3218: first_pass3218 = False
+                if first_pass3909: first_pass3909 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= res.end_char)): break
                 if (not ((isinstance(t, TextToken)))): 
@@ -217,14 +217,14 @@ class MailLine(MetaToken):
                     t = tok.end_token
                     if ((isinstance(t.next0_, TextToken)) and t.next0_.morph.case_.is_genitive): 
                         t = t.next0_
-                        first_pass3219 = True
+                        first_pass3910 = True
                         while True:
-                            if first_pass3219: first_pass3219 = False
+                            if first_pass3910: first_pass3910 = False
                             else: t = t.next0_
                             if (not (t.end_char <= res.end_char)): break
                             if (t.morph.class0_.is_conjunction): 
                                 continue
-                            npt1 = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
+                            npt1 = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0, None)
                             if (npt1 is None): 
                                 break
                             if (not npt1.morph.case_.is_genitive): 
@@ -239,7 +239,7 @@ class MailLine(MetaToken):
                 if ((ok_words > 0 and t.previous is not None and t.previous.is_comma) and t.previous.begin_char > t0.begin_char and not t.chars.is_all_lower): 
                     res.end_token = t.previous
                     break
-                npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0)
+                npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0, None)
                 if (npt is None): 
                     if ((res.end_char - t.end_char) > 10): 
                         ok_words = 0

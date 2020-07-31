@@ -6,18 +6,17 @@ import typing
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.Termin import Termin
-from pullenti.ner.instrument.InstrumentArtefact import InstrumentArtefact
 from pullenti.ner.instrument.InstrumentKind import InstrumentKind
+from pullenti.ner.instrument.InstrumentArtefact import InstrumentArtefact
+from pullenti.ner.core.Termin import Termin
 from pullenti.ner.instrument.internal.MetaInstrumentBlock import MetaInstrumentBlock
 from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
-from pullenti.ner.instrument.internal.InstrToken import InstrToken
 from pullenti.ner.ProcessorService import ProcessorService
-from pullenti.ner.instrument.internal.InstrumentArtefactMeta import InstrumentArtefactMeta
-from pullenti.ner.instrument.internal.MetaInstrument import MetaInstrument
 from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
 from pullenti.ner.instrument.internal.InstrumentParticipantMeta import InstrumentParticipantMeta
+from pullenti.ner.instrument.internal.InstrumentArtefactMeta import InstrumentArtefactMeta
+from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.instrument.internal.MetaInstrument import MetaInstrument
 from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
 
 class InstrumentAnalyzer(Analyzer):
@@ -89,6 +88,7 @@ class InstrumentAnalyzer(Analyzer):
     
     @staticmethod
     def initialize() -> None:
+        from pullenti.ner.instrument.internal.InstrToken import InstrToken
         from pullenti.ner.instrument.internal.ParticipantToken import ParticipantToken
         if (InstrumentAnalyzer.__m_inited): 
             return

@@ -185,6 +185,7 @@ class PersonReferent(Referent):
             return super().get_compare_strings()
     
     SHOW_LASTNAME_ON_FIRST_POSITION = False
+    """ При выводе в ToString() первым ставить фамилию, а не имя """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         if (short_variant): 
@@ -691,9 +692,9 @@ class PersonReferent(Referent):
                 v = str(self.slots[i].value)
                 if (not v in vars0_): 
                     j = 0
-                    first_pass3307 = True
+                    first_pass3998 = True
                     while True:
-                        if first_pass3307: first_pass3307 = False
+                        if first_pass3998: first_pass3998 = False
                         else: j += 1
                         if (not (j < len(self.slots))): break
                         if (j != i and self.slots[j].type_name == self.slots[i].type_name): 
@@ -753,7 +754,7 @@ class PersonReferent(Referent):
         tit = self.__find_shortest_king_titul(False)
         for a in self.slots: 
             if (a.type_name == PersonReferent.ATTR_IDENTITY): 
-                oi.termins.append(Termin._new2627(str(a.value), True))
+                oi.termins.append(Termin._new2677(str(a.value), True))
             elif (a.type_name == PersonReferent.ATTR_LASTNAME): 
                 t = Termin(str(a.value))
                 if (len(t.terms) > 20): 

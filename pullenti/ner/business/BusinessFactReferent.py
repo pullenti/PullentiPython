@@ -45,7 +45,7 @@ class BusinessFactReferent(Referent):
             res = Utils.valToEnum(s, BusinessFactKind)
             if (isinstance(res, BusinessFactKind)): 
                 return Utils.valToEnum(res, BusinessFactKind)
-        except Exception as ex465: 
+        except Exception as ex449: 
             pass
         return BusinessFactKind.UNDEFINED
     @kind.setter
@@ -87,7 +87,7 @@ class BusinessFactReferent(Referent):
         for s in self.slots: 
             if (s.type_name == BusinessFactReferent.ATTR_WHO): 
                 i -= 1
-                if ((i) == 0): 
+                if (i == 0): 
                     return Utils.asObjectOrNull(s.value, Referent)
         return None
     @who2.setter
@@ -171,13 +171,13 @@ class BusinessFactReferent(Referent):
         return True
     
     @staticmethod
-    def _new453(_arg1 : 'BusinessFactKind') -> 'BusinessFactReferent':
+    def _new437(_arg1 : 'BusinessFactKind') -> 'BusinessFactReferent':
         res = BusinessFactReferent()
         res.kind = _arg1
         return res
     
     @staticmethod
-    def _new464(_arg1 : 'BusinessFactKind', _arg2 : str) -> 'BusinessFactReferent':
+    def _new448(_arg1 : 'BusinessFactKind', _arg2 : str) -> 'BusinessFactReferent':
         res = BusinessFactReferent()
         res.kind = _arg1
         res.typ = _arg2

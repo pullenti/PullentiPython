@@ -17,6 +17,8 @@ class ConjunctionType(IntEnum):
     LET = 9
     WHEN = 10
     BECAUSE = 11
+    INCLUDE = 12
+    EXCEPT = 13
     
     @classmethod
     def has_value(cls, value):

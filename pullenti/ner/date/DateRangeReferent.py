@@ -2,6 +2,8 @@
 # This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
 # See www.pullenti.ru/downloadpage.aspx.
 
+import datetime
+import io
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.ner.Referent import Referent
@@ -40,7 +42,40 @@ class DateRangeReferent(Referent):
         self.add_slot(DateRangeReferent.ATTR_TO, value, True, 0)
         return value
     
+    @property
+    def is_relative(self) -> bool:
+        """ Диапазон относителен (с 10 по 20 февраля прошлого года) """
+        if (self.date_from is not None and self.date_from.is_relative): 
+            return True
+        if (self.date_to is not None and self.date_to.is_relative): 
+            return True
+        return False
+    
+    def calculate_date_range(self, now : datetime.datetime, from0_ : datetime.datetime, to : datetime.datetime, tense : int=0) -> bool:
+        """ Вычислить диапазон дат (если не диапазон, то from = to)
+        
+        Args:
+            now(datetime.datetime): текущая дата-время
+            from0_(datetime.datetime): результирующее начало диапазона
+            to(datetime.datetime): результирующий конец диапазона
+            tense(int): время (-1 - прошлое, 0 - любое, 1 - будущее) - испрользуется
+         при неоднозначных случаях
+         Например, 7 сентября, а сейчас лето, то какой это год? При true - этот, при false - предыдущий
+        
+        Returns:
+            bool: признак корректности
+        """
+        from pullenti.ner.date.internal.DateRelHelper import DateRelHelper
+        inoutres847 = DateRelHelper.calculate_date_range2(self, now, from0_, to, tense)
+        return inoutres847
+    
     def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
+        from pullenti.ner.date.internal.DateRelHelper import DateRelHelper
+        if (self.is_relative and not short_variant): 
+            res = io.StringIO()
+            print(self.to_string(True, lang, lev), end="", file=res)
+            DateRelHelper.append_to_string2(self, res)
+            return Utils.toStringStringIO(res)
         fr = (None if self.date_from is None else self.date_from._to_string(short_variant, lang, lev, 1))
         to = (None if self.date_to is None else self.date_to._to_string(short_variant, lang, lev, 2))
         if (fr is not None and to is not None): 
@@ -98,14 +133,14 @@ class DateRangeReferent(Referent):
         return 0
     
     @staticmethod
-    def _new749(_arg1 : 'DateReferent', _arg2 : 'DateReferent') -> 'DateRangeReferent':
+    def _new781(_arg1 : 'DateReferent', _arg2 : 'DateReferent') -> 'DateRangeReferent':
         res = DateRangeReferent()
         res.date_from = _arg1
         res.date_to = _arg2
         return res
     
     @staticmethod
-    def _new754(_arg1 : 'DateReferent') -> 'DateRangeReferent':
+    def _new787(_arg1 : 'DateReferent') -> 'DateRangeReferent':
         res = DateRangeReferent()
         res.date_to = _arg1
         return res

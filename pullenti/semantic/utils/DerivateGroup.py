@@ -3,9 +3,10 @@
 # See www.pullenti.ru/downloadpage.aspx.
 
 
-from pullenti.morph.DerivateWord import DerivateWord
 from pullenti.morph.MorphLang import MorphLang
-from pullenti.morph.internal.NextModelQuestion import NextModelQuestion
+from pullenti.semantic.utils.DerivateWord import DerivateWord
+from pullenti.semantic.utils.ControlModel import ControlModel
+from pullenti.semantic.internal.ControlModelOld import ControlModelOld
 
 class DerivateGroup:
     """ Дериватная группа """
@@ -16,28 +17,11 @@ class DerivateGroup:
         self.is_dummy = False
         self.not_generate = False
         self.is_generated = False
-        self.m_transitive = -1
-        self.m_rev_agent_case = -1
-        self.nexts = None;
-        self.nexts_ref = None;
-        self.questions = NextModelQuestion.UNDEFINED
-        self.questions_ref = NextModelQuestion.UNDEFINED
+        self.model = ControlModel()
+        self.cm = ControlModelOld()
+        self.cm_rev = ControlModelOld()
         self._lazy_pos = 0
         self.tag = None;
-    
-    @property
-    def transitive(self) -> int:
-        """ Признак транзитивности группы (не только глаголов!) """
-        if (self.m_transitive >= 0): 
-            return self.m_transitive
-        return -1
-    
-    @property
-    def rev_agent_case(self) -> int:
-        """ Падеж агенса для возвратного глагола (0 - именит, 1 - дател, 2 - творит) """
-        if (self.m_rev_agent_case >= 0): 
-            return self.m_rev_agent_case
-        return -1
     
     def contains_word(self, word : str, lang : 'MorphLang') -> bool:
         """ Содержит ли группа слово
@@ -66,16 +50,16 @@ class DerivateGroup:
         return res
     
     def create_by_prefix(self, pref : str, lang : 'MorphLang') -> 'DerivateGroup':
-        res = DerivateGroup._new56(True, pref)
+        res = DerivateGroup._new3045(True, pref)
         for w in self.words: 
             if (lang is not None and not lang.is_undefined and ((w.lang) & lang).is_undefined): 
                 continue
-            rw = DerivateWord._new57(res, pref + w.spelling, w.lang, w.class0_, w.aspect, w.reflexive, w.tense, w.voice, w.attrs)
+            rw = DerivateWord._new3046(res, pref + w.spelling, w.lang, w.class0_, w.aspect, w.reflexive, w.tense, w.voice, w.attrs)
             res.words.append(rw)
         return res
     
     @staticmethod
-    def _new56(_arg1 : bool, _arg2 : str) -> 'DerivateGroup':
+    def _new3045(_arg1 : bool, _arg2 : str) -> 'DerivateGroup':
         res = DerivateGroup()
         res.is_generated = _arg1
         res.prefix = _arg2

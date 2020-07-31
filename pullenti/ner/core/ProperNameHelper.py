@@ -5,22 +5,22 @@
 import io
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-from pullenti.ner.Token import Token
-from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.morph.Morphology import Morphology
+from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.Token import Token
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphWordForm import MorphWordForm
 from pullenti.ner.NumberToken import NumberToken
-from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.morph.MorphCase import MorphCase
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.BracketHelper import BracketHelper
 
@@ -54,14 +54,14 @@ class ProperNameHelper:
             begin = begin.next0_
             end = end.previous
         if (normalize_first_noun_group and not begin.morph.class0_.is_preposition): 
-            npt = NounPhraseHelper.try_parse(begin, NounPhraseParseAttr.REFERENTCANBENOUN, 0)
+            npt = NounPhraseHelper.try_parse(begin, NounPhraseParseAttr.REFERENTCANBENOUN, 0, None)
             if (npt is not None): 
                 if (npt.noun.get_morph_class_in_dictionary().is_undefined and len(npt.adjectives) == 0): 
                     npt = (None)
             if (npt is not None and npt.end_token.end_char > end.end_char): 
                 npt = (None)
             if (npt is not None): 
-                res = npt.get_normal_case_text(None, normal_first_group_single, MorphGender.UNDEFINED, False)
+                res = npt.get_normal_case_text(None, (MorphNumber.SINGULAR if normal_first_group_single else MorphNumber.UNDEFINED), MorphGender.UNDEFINED, False)
                 te = npt.end_token.next0_
                 if (((te is not None and te.next0_ is not None and te.is_comma) and (isinstance(te.next0_, TextToken)) and te.next0_.end_char <= end.end_char) and te.next0_.morph.class0_.is_verb and te.next0_.morph.class0_.is_adjective): 
                     for it in te.next0_.morph.items: 
@@ -71,7 +71,7 @@ class ProperNameHelper:
                                     var = (te.next0_).term
                                     if (isinstance(it, MorphWordForm)): 
                                         var = (it).normal_case
-                                    bi = MorphBaseInfo._new577(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
+                                    bi = MorphBaseInfo._new563(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
                                     var = Morphology.get_wordform(var, bi)
                                     if (var is not None): 
                                         res = "{0}, {1}".format(res, var)
@@ -87,7 +87,7 @@ class ProperNameHelper:
             elif ((isinstance(begin, TextToken)) and begin.chars.is_cyrillic_letter): 
                 mm = begin.get_morph_class_in_dictionary()
                 if (not mm.is_undefined): 
-                    res = begin.get_normal_case_text(mm, False, MorphGender.UNDEFINED, False)
+                    res = begin.get_normal_case_text(mm, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False)
                     if (begin.end_char < end.end_char): 
                         res = "{0} {1}".format(res, ProperNameHelper.get_name_ex(begin.next0_, end, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, True, False))
         if (res is None): 
@@ -128,9 +128,9 @@ class ProperNameHelper:
         res = io.StringIO()
         prefix = None
         t = begin
-        first_pass2991 = True
+        first_pass3678 = True
         while True:
-            if first_pass2991: first_pass2991 = False
+            if first_pass3678: first_pass3678 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             if (res.tell() > 1000): 
