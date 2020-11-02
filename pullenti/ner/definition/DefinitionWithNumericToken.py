@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -12,11 +11,11 @@ from pullenti.ner.Token import Token
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 
 class DefinitionWithNumericToken(MetaToken):
-    """ Для поддержки выделений тезисов с числовыми данными """
+    # Для поддержки выделений тезисов с числовыми данными
     
     def __str__(self) -> str:
         return "{0} {1} ({2})".format(self.number, Utils.ifNotNull(self.noun, "?"), Utils.ifNotNull(self.nouns_genetive, "?"))
@@ -44,14 +43,14 @@ class DefinitionWithNumericToken(MetaToken):
         tt = t
         noun_ = None
         num = None
-        first_pass3759 = True
+        first_pass3639 = True
         while True:
-            if first_pass3759: first_pass3759 = False
+            if first_pass3639: first_pass3639 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt != t and MiscHelper.can_be_start_of_sentence(tt)): 
                 return None
-            if (not ((isinstance(tt, NumberToken)))): 
+            if (not (isinstance(tt, NumberToken))): 
                 continue
             if (tt.whitespaces_after_count > 2 or tt == t): 
                 continue

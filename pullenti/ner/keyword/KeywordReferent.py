@@ -1,19 +1,21 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.keyword.KeywordType import KeywordType
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 from pullenti.ner.core.Termin import Termin
-from pullenti.ner.ReferentClass import ReferentClass
-from pullenti.ner.keyword.internal.KeywordMeta import KeywordMeta
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.ner.keyword.KeywordType import KeywordType
+from pullenti.ner.metadata.ReferentClass import ReferentClass
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.ner.Referent import Referent
+from pullenti.ner.keyword.internal.KeywordMeta import KeywordMeta
 
 class KeywordReferent(Referent):
-    """ Оформление ключевых слов и комбинаций """
+    """ Ключевая комбинация
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(KeywordReferent.OBJ_TYPENAME)
@@ -21,14 +23,19 @@ class KeywordReferent(Referent):
         self.instance_of = KeywordMeta.GLOBAL_META
     
     OBJ_TYPENAME = "KEYWORD"
+    """ Имя типа сущности TypeName ("KEYWORD") """
     
     ATTR_TYPE = "TYPE"
+    """ Имя атрибута - тип (KeywordType) """
     
     ATTR_VALUE = "VALUE"
+    """ Имя атрибута - значение """
     
     ATTR_NORMAL = "NORMAL"
+    """ Имя атрибута - нормализованное значение """
     
     ATTR_REF = "REF"
+    """ Имя атрибута - ссылка на сущность, если это она """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         if (lev > 10): 
@@ -51,6 +58,7 @@ class KeywordReferent(Referent):
     
     @property
     def typ(self) -> 'KeywordType':
+        """ Тип ключевой комбинации """
         str0_ = self.get_string_value(KeywordReferent.ATTR_TYPE)
         if (str0_ is None): 
             return KeywordType.UNDEFINED
@@ -59,9 +67,27 @@ class KeywordReferent(Referent):
         except Exception as ex: 
             return KeywordType.UNDEFINED
     @typ.setter
-    def typ(self, value) -> 'KeywordType':
-        self.add_slot(KeywordReferent.ATTR_TYPE, Utils.enumToString(value), True, 0)
-        return value
+    def typ(self, value_) -> 'KeywordType':
+        self.add_slot(KeywordReferent.ATTR_TYPE, Utils.enumToString(value_), True, 0)
+        return value_
+    
+    @property
+    def value(self) -> str:
+        """ Ненормализованное значение """
+        return self.get_string_value(KeywordReferent.ATTR_VALUE)
+    @value.setter
+    def value(self, value_) -> str:
+        self.add_slot(KeywordReferent.ATTR_VALUE, value_, False, 0)
+        return value_
+    
+    @property
+    def normal_value(self) -> str:
+        """ Нормализованное значение """
+        return self.get_string_value(KeywordReferent.ATTR_NORMAL)
+    @normal_value.setter
+    def normal_value(self, value_) -> str:
+        self.add_slot(KeywordReferent.ATTR_NORMAL, value_, False, 0)
+        return value_
     
     @property
     def child_words(self) -> int:
@@ -75,12 +101,12 @@ class KeywordReferent(Referent):
             if (s.type_name == KeywordReferent.ATTR_REF and (isinstance(s.value, KeywordReferent))): 
                 if (s.value == root): 
                     return 0
-                res += (s.value).__get_child_words(root, lev + 1)
+                res += s.value.__get_child_words(root, lev + 1)
         if (res == 0): 
             res = 1
         return res
     
-    def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ_ : 'ReferentsEqualType'=ReferentsEqualType.WITHINONETEXT) -> bool:
         kw = Utils.asObjectOrNull(obj, KeywordReferent)
         if (kw is None): 
             return False
@@ -105,7 +131,7 @@ class KeywordReferent(Referent):
         return False
     
     def merge_slots(self, obj : 'Referent', merge_statistic : bool=True) -> None:
-        r1 = self.rank + (obj).rank
+        r1 = self.rank + obj.rank
         super().merge_slots(obj, merge_statistic)
         if (len(self.slots) > 50): 
             pass
@@ -150,7 +176,7 @@ class KeywordReferent(Referent):
         return res
     
     @staticmethod
-    def _new1657(_arg1 : 'KeywordType') -> 'KeywordReferent':
+    def _new1591(_arg1 : 'KeywordType') -> 'KeywordReferent':
         res = KeywordReferent()
         res.typ = _arg1
         return res

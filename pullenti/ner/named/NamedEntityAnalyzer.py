@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -13,7 +12,7 @@ from pullenti.ner.Token import Token
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.named.NamedEntityKind import NamedEntityKind
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.core.internal.PullentiNerCoreInternalResourceHelper import PullentiNerCoreInternalResourceHelper
 from pullenti.ner.named.internal.MetaNamedEntity import MetaNamedEntity
 from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.Termin import Termin
@@ -25,9 +24,10 @@ from pullenti.ner.named.NamedEntityReferent import NamedEntityReferent
 from pullenti.ner.geo.GeoReferent import GeoReferent
 
 class NamedEntityAnalyzer(Analyzer):
-    """ Анализатор мелких именованных сущностей (планеты, памятники, здания, местоположения, планеты и пр.) """
+    """ Анализатор именованных сущностей "тип" + "имя": планеты, памятники, здания, местоположения, планеты и пр. """
     
     ANALYZER_NAME = "NAMEDENTITY"
+    """ Имя анализатора ("NAMEDENTITY") """
     
     @property
     def name(self) -> str:
@@ -51,10 +51,10 @@ class NamedEntityAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[Utils.enumToString(NamedEntityKind.MONUMENT)] = EpNerCoreInternalResourceHelper.get_bytes("monument.png")
-        res[Utils.enumToString(NamedEntityKind.PLANET)] = EpNerCoreInternalResourceHelper.get_bytes("planet.png")
-        res[Utils.enumToString(NamedEntityKind.LOCATION)] = EpNerCoreInternalResourceHelper.get_bytes("location.png")
-        res[Utils.enumToString(NamedEntityKind.BUILDING)] = EpNerCoreInternalResourceHelper.get_bytes("building.png")
+        res[Utils.enumToString(NamedEntityKind.MONUMENT)] = PullentiNerCoreInternalResourceHelper.get_bytes("monument.png")
+        res[Utils.enumToString(NamedEntityKind.PLANET)] = PullentiNerCoreInternalResourceHelper.get_bytes("planet.png")
+        res[Utils.enumToString(NamedEntityKind.LOCATION)] = PullentiNerCoreInternalResourceHelper.get_bytes("location.png")
+        res[Utils.enumToString(NamedEntityKind.BUILDING)] = PullentiNerCoreInternalResourceHelper.get_bytes("building.png")
         return res
     
     def create_referent(self, type0_ : str) -> 'Referent':
@@ -76,9 +76,9 @@ class NamedEntityAnalyzer(Analyzer):
     def process(self, kit : 'AnalysisKit') -> None:
         ad = Utils.asObjectOrNull(kit.get_analyzer_data(self), AnalyzerDataWithOntology)
         t = kit.first_token
-        first_pass3923 = True
+        first_pass3803 = True
         while True:
-            if first_pass3923: first_pass3923 = False
+            if first_pass3803: first_pass3803 = False
             else: t = t.next0_
             if (not (t is not None)): break
             li = NamedItemToken.try_parse_list(t, ad.local_ontology)
@@ -91,7 +91,7 @@ class NamedEntityAnalyzer(Analyzer):
                 t = (rt)
                 continue
     
-    def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
+    def process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
         li = NamedItemToken.try_parse_list(begin, None)
         if (li is None or len(li) == 0): 
             return None
@@ -174,7 +174,7 @@ class NamedEntityAnalyzer(Analyzer):
                 ok = True
         if (not ok or ki == NamedEntityKind.UNDEFINED): 
             return None
-        nam = NamedEntityReferent._new1824(ki)
+        nam = NamedEntityReferent._new1761(ki)
         if (typ is not None): 
             nam.add_slot(NamedEntityReferent.ATTR_TYPE, typ.type_value.lower(), False, 0)
         if (nams is not None): 

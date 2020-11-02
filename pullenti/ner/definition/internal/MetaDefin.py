@@ -1,10 +1,9 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.definition.DefinitionKind import DefinitionKind
 
 class MetaDefin(ReferentClass):
@@ -39,7 +38,7 @@ class MetaDefin(ReferentClass):
     def get_image_id(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
         if (isinstance(obj, DefinitionReferent)): 
-            ki = (obj).kind
+            ki = obj.kind
             if (ki == DefinitionKind.DEFINITION): 
                 return MetaDefin.IMAGE_DEF_ID
         return MetaDefin.IMAGE_ASS_ID

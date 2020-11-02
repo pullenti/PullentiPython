@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -11,12 +10,14 @@ from pullenti.ner.TextToken import TextToken
 from pullenti.ner.Referent import Referent
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 from pullenti.ner.core.Termin import Termin
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.denomination.internal.MetaDenom import MetaDenom
 
 class DenominationReferent(Referent):
-    """ Сущность, моделирующая непонятные комбинации (например, Си++, СС-300) """
+    """ Сущность, моделирующая буквенно-цифровые комбинации (например, Си++, СС-300)
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(DenominationReferent.OBJ_TYPENAME)
@@ -24,8 +25,10 @@ class DenominationReferent(Referent):
         self.instance_of = MetaDenom._global_meta
     
     OBJ_TYPENAME = "DENOMINATION"
+    """ Имя типа сущности TypeName ("DENOMINATION") """
     
     ATTR_VALUE = "VALUE"
+    """ Имя атрибута - значение """
     
     @property
     def value(self) -> str:
@@ -38,16 +41,16 @@ class DenominationReferent(Referent):
     def _add_value(self, begin : 'Token', end : 'Token') -> None:
         tmp = io.StringIO()
         t = begin
-        first_pass3762 = True
+        first_pass3642 = True
         while True:
-            if first_pass3762: first_pass3762 = False
+            if first_pass3642: first_pass3642 = False
             else: t = t.next0_
             if (not (t is not None and t.previous != end)): break
             if (isinstance(t, NumberToken)): 
                 print(t.get_source_text(), end="", file=tmp)
                 continue
             if (isinstance(t, TextToken)): 
-                s = (t).term
+                s = t.term
                 if (t.is_char_of("-\\/")): 
                     s = "-"
                 print(s, end="", file=tmp)
@@ -65,7 +68,7 @@ class DenominationReferent(Referent):
         self.add_slot(DenominationReferent.ATTR_VALUE, Utils.toStringStringIO(tmp), False, 0)
         self.__m_names = (None)
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType') -> bool:
         dr = Utils.asObjectOrNull(obj, DenominationReferent)
         if (dr is None): 
             return False
@@ -147,10 +150,10 @@ class DenominationReferent(Referent):
             tmp = io.StringIO()
             i = 0
             while i < len(str0_): 
-                wrapv1189 = RefOutArgWrapper(None)
-                inoutres1190 = Utils.tryGetValue(DenominationReferent.__m_var_chars, str0_[i], wrapv1189)
-                v = wrapv1189.value
-                if (not inoutres1190): 
+                wrapv1123 = RefOutArgWrapper(None)
+                inoutres1124 = Utils.tryGetValue(DenominationReferent.__m_var_chars, str0_[i], wrapv1123)
+                v = wrapv1123.value
+                if (not inoutres1124): 
                     break
                 if ((len(v) < 2) or v[k] == '-'): 
                     break

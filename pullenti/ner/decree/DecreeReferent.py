@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -9,42 +8,55 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.ner.Referent import Referent
-from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.date.DateReferent import DateReferent
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 from pullenti.ner.core.Termin import Termin
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.decree.internal.MetaDecree import MetaDecree
-from pullenti.ner.date.DateReferent import DateReferent
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.ner.decree.DecreeKind import DecreeKind
+from pullenti.ner.decree.internal.MetaDecree import MetaDecree
 from pullenti.ner.date.DateRangeReferent import DateRangeReferent
+from pullenti.ner.core.MiscHelper import MiscHelper
 
 class DecreeReferent(Referent):
-    """ Сущность, представляющая ссылку на НПА """
+    """ Сущность - ссылка на НПА (закон, приказ, договор, постановление...)
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(DecreeReferent.OBJ_TYPENAME)
         self.instance_of = MetaDecree.GLOBAL_META
     
     OBJ_TYPENAME = "DECREE"
+    """ Имя типа сущности TypeName ("DECREE") """
     
     ATTR_TYPE = "TYPE"
+    """ Имя атрибута - тип """
     
     ATTR_NAME = "NAME"
+    """ Имя атрибута - наименование """
     
     ATTR_NUMBER = "NUMBER"
+    """ Имя атрибута - регистрационный номер """
     
     ATTR_DATE = "DATE"
+    """ Имя атрибута - дата принятия """
     
     ATTR_SOURCE = "SOURCE"
+    """ Имя атрибута - публикующий орган """
     
     ATTR_GEO = "GEO"
+    """ Имя атрибута - географический объект (GeoReferent) """
     
     ATTR_READING = "READING"
+    """ Имя атрибута - номер чтения """
     
     ATTR_CASENUMBER = "CASENUMBER"
+    """ Имя атрибута - номер судебного дела (для судебных документов) """
     
     ATTR_EDITION = "EDITION"
+    """ Имя атрибута - редакция """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
@@ -190,16 +202,16 @@ class DecreeReferent(Referent):
                 i = str0_.find('.')
                 if (i == 4): 
                     str0_ = str0_[0:0+4]
-                wrapi1179 = RefOutArgWrapper(0)
-                inoutres1180 = Utils.tryParseInt(str0_, wrapi1179)
-                i = wrapi1179.value
-                if (inoutres1180): 
+                wrapi1113 = RefOutArgWrapper(0)
+                inoutres1114 = Utils.tryParseInt(str0_, wrapi1113)
+                i = wrapi1113.value
+                if (inoutres1114): 
                     res.append(i)
         return res
     
     @property
     def typ(self) -> str:
-        """ Тип """
+        """ Тип НПА """
         return self.get_string_value(DecreeReferent.ATTR_TYPE)
     @typ.setter
     def typ(self, value) -> str:
@@ -208,13 +220,14 @@ class DecreeReferent(Referent):
     
     @property
     def kind(self) -> 'DecreeKind':
+        """ Класс НПА """
         from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         return DecreeToken.get_kind(self.typ)
     
     @property
     def is_law(self) -> bool:
         """ Признак того, что это именно закон, а не подзаконный акт.
-         Для законов возможны несколько номеров и дат (редакций) """
+        Для законов возможны несколько номеров и дат (редакций) """
         from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         return DecreeToken.is_law(self.typ)
     
@@ -240,15 +253,16 @@ class DecreeReferent(Referent):
     
     @property
     def case_number(self) -> str:
+        """ Номер судебного дела """
         return self.get_string_value(DecreeReferent.ATTR_CASENUMBER)
     
     def add_slot(self, attr_name : str, attr_value : object, clear_old_value : bool, stat_count : int=0) -> 'Slot':
         from pullenti.ner.decree.internal.PartToken import PartToken
         if (isinstance(attr_value, PartToken.PartValue)): 
-            attr_value = ((attr_value).value)
+            attr_value = (attr_value.value)
         s = super().add_slot(attr_name, attr_value, clear_old_value, stat_count)
         if (isinstance(attr_value, PartToken.PartValue)): 
-            s.tag = (attr_value).source_value
+            s.tag = attr_value.source_value
         return s
     
     def _add_number(self, dt : 'DecreeToken') -> None:
@@ -318,11 +332,11 @@ class DecreeReferent(Referent):
                     res.append(dt)
         return res
     
-    def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType') -> bool:
+    def can_be_equals(self, obj : 'Referent', typ_ : 'ReferentsEqualType') -> bool:
         b = self.__can_be_equals(obj, typ_, False)
         return b
     
-    def __can_be_equals(self, obj : 'Referent', typ_ : 'EqualType', ignore_geo : bool) -> bool:
+    def __can_be_equals(self, obj : 'Referent', typ_ : 'ReferentsEqualType', ignore_geo : bool) -> bool:
         from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         dr = Utils.asObjectOrNull(obj, DecreeReferent)
         if (dr is None): 
@@ -401,7 +415,7 @@ class DecreeReferent(Referent):
                         return False
                 else: 
                     return False
-            elif (typ_ == Referent.EqualType.DIFFERENTTEXTS or self.kind == DecreeKind.PUBLISHER): 
+            elif (typ_ == ReferentsEqualType.DIFFERENTTEXTS or self.kind == DecreeKind.PUBLISHER): 
                 date_not_eq = True
         if (self.find_slot(DecreeReferent.ATTR_NAME, None, True) is not None and dr.find_slot(DecreeReferent.ATTR_NAME, None, True) is not None): 
             for s in self.slots: 
@@ -421,7 +435,7 @@ class DecreeReferent(Referent):
             if (num_eq > 0): 
                 if (src_eq): 
                     return True
-                if (src_not_eq and typ_ == Referent.EqualType.DIFFERENTTEXTS): 
+                if (src_not_eq and typ_ == ReferentsEqualType.DIFFERENTTEXTS): 
                     return False
                 elif ((not src_not_eq and num_eq > 1 and self.date is None) and dr.date is None): 
                     return True
@@ -443,7 +457,7 @@ class DecreeReferent(Referent):
         return False
     
     def can_be_general_for(self, obj : 'Referent') -> bool:
-        if (not self.__can_be_equals(obj, Referent.EqualType.WITHINONETEXT, True)): 
+        if (not self.__can_be_equals(obj, ReferentsEqualType.WITHINONETEXT, True)): 
             return False
         g1 = Utils.asObjectOrNull(self.get_slot_value(DecreeReferent.ATTR_GEO), GeoReferent)
         g2 = Utils.asObjectOrNull(obj.get_slot_value(DecreeReferent.ATTR_GEO), GeoReferent)
@@ -550,7 +564,7 @@ class DecreeReferent(Referent):
         return oi
     
     @staticmethod
-    def _new1167(_arg1 : str) -> 'DecreeReferent':
+    def _new1101(_arg1 : str) -> 'DecreeReferent':
         res = DecreeReferent()
         res.typ = _arg1
         return res

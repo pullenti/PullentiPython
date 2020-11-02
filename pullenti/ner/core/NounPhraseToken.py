@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -13,15 +12,19 @@ from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.core.NounPhraseMultivarToken import NounPhraseMultivarToken
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-from pullenti.morph.Morphology import Morphology
+from pullenti.morph.MorphologyService import MorphologyService
 from pullenti.ner.core.internal.NounPhraseItemTextVar import NounPhraseItemTextVar
-from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.TextToken import TextToken
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.MiscHelper import MiscHelper
 
 class NounPhraseToken(MetaToken):
-    """ Токен для представления именной группы """
+    """ Метатокен - именная группа (это существительное с возможными прилагательными, морфологичски согласованными).
+    Выделяется методом TryParse() класса NounPhraseHelper.
+    
+    Именная группа
+    """
     
     def __init__(self, begin : 'Token', end : 'Token') -> None:
         super().__init__(begin, end, None)
@@ -36,13 +39,15 @@ class NounPhraseToken(MetaToken):
     
     def get_multivars(self) -> typing.List['NounPhraseMultivarToken']:
         """ Это если MultiNouns = true, то можно как бы расщепить на варианты
-         (грузовой и легковой автомобили -> грузовой автомобиль и легковой автомобиль)
+        (грузовой и легковой автомобили -> грузовой автомобиль и легковой автомобиль)
         
+        Returns:
+            typing.List[NounPhraseMultivarToken]: список NounPhraseMultivarToken
         """
         res = list()
         i = 0
         while i < len(self.adjectives): 
-            v = NounPhraseMultivarToken._new569(self.adjectives[i].begin_token, self.adjectives[i].end_token, self, i, i)
+            v = NounPhraseMultivarToken._new498(self.adjectives[i].begin_token, self.adjectives[i].end_token, self, i, i)
             while i < (len(self.adjectives) - 1): 
                 if (self.adjectives[i + 1].begin_token == self.adjectives[i].end_token.next0_): 
                     v.end_token = self.adjectives[i + 1].end_token
@@ -112,11 +117,13 @@ class NounPhraseToken(MetaToken):
         """ Сгенерировать текст именной группы в нужном падеже и числе
         
         Args:
-            cas(MorphCase): 
-            plural(bool): 
+            cas(MorphCase): нужный падеж
+            plural(bool): нужное число
         
+        Returns:
+            str: результирующая строка
         """
-        mi = MorphBaseInfo._new570(cas, MorphLang.RU)
+        mi = MorphBaseInfo._new499(cas, MorphLang.RU)
         if (plural): 
             mi.number = MorphNumber.PLURAL
         else: 
@@ -124,10 +131,10 @@ class NounPhraseToken(MetaToken):
         res = None
         for a in self.adjectives: 
             tt = MiscHelper.get_text_value_of_meta_token(a, GetTextAttr.NO)
-            if (a.begin_token != a.end_token or not ((isinstance(a.begin_token, TextToken)))): 
+            if (a.begin_token != a.end_token or not (isinstance(a.begin_token, TextToken))): 
                 pass
             else: 
-                tt2 = Morphology.get_wordform(tt, mi)
+                tt2 = MorphologyService.get_wordform(tt, mi)
                 if (tt2 is not None): 
                     tt = tt2
             if (res is None): 
@@ -136,10 +143,10 @@ class NounPhraseToken(MetaToken):
                 res = "{0} {1}".format(res, tt)
         if (self.noun is not None): 
             tt = MiscHelper.get_text_value_of_meta_token(self.noun, GetTextAttr.NO)
-            if (self.noun.begin_token != self.noun.end_token or not ((isinstance(self.noun.begin_token, TextToken)))): 
+            if (self.noun.begin_token != self.noun.end_token or not (isinstance(self.noun.begin_token, TextToken))): 
                 pass
             else: 
-                tt2 = Morphology.get_wordform(tt, mi)
+                tt2 = MorphologyService.get_wordform(tt, mi)
                 if (tt2 is not None): 
                     tt = tt2
             if (res is None): 
@@ -169,13 +176,13 @@ class NounPhraseToken(MetaToken):
                         ii.single_number_value = ii.single_number_value[0:0+j]
     
     @staticmethod
-    def _new537(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PrepositionToken') -> 'NounPhraseToken':
+    def _new466(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'PrepositionToken') -> 'NounPhraseToken':
         res = NounPhraseToken(_arg1, _arg2)
         res.preposition = _arg3
         return res
     
     @staticmethod
-    def _new3024(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'NounPhraseToken':
+    def _new2949(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'NounPhraseToken':
         res = NounPhraseToken(_arg1, _arg2)
         res.morph = _arg3
         return res

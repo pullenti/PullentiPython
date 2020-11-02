@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -8,7 +7,7 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.morph.LanguageHelper import LanguageHelper
 
 class IntOntologyItem:
-    """ Элемент онтологического словаря """
+    # Элемент внутреннего онтологического словаря
     
     def __init__(self, r : 'Referent') -> None:
         self.termins = list()

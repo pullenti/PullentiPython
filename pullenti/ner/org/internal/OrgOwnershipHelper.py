@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.org.OrganizationKind import OrganizationKind
 from pullenti.ner.org.OrgProfile import OrgProfile
+from pullenti.ner.org.OrganizationKind import OrganizationKind
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.ner.Referent import Referent
 from pullenti.ner.org.OrganizationReferent import OrganizationReferent
 
@@ -27,7 +27,7 @@ class OrgOwnershipHelper:
             return False
         hk = higher.kind
         lk = lower.kind
-        if (higher.can_be_equals(lower, Referent.EqualType.WITHINONETEXT)): 
+        if (higher.can_be_equals(lower, ReferentsEqualType.WITHINONETEXT)): 
             return False
         if (lower.higher is None and lower.find_slot(OrganizationReferent.ATTR_HIGHER, None, True) is not None): 
             return False

@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -16,7 +15,7 @@ from pullenti.morph.MorphVoice import MorphVoice
 from pullenti.morph.MorphMood import MorphMood
 from pullenti.semantic.utils.QuestionType import QuestionType
 from pullenti.ner.measure.MeasureKind import MeasureKind
-from pullenti.semantic.utils.Explanatory import Explanatory
+from pullenti.semantic.utils.DerivateService import DerivateService
 from pullenti.semantic.internal.SentItemType import SentItemType
 from pullenti.semantic.internal.NGLinkType import NGLinkType
 from pullenti.ner.measure.internal.UnitsHelper import UnitsHelper
@@ -139,7 +138,7 @@ class NGLink(object):
             if (isinstance(self.to.source.source, NumbersWithUnitToken)): 
                 return
         non_gen_text = False
-        if (Utils.isNullOrEmpty(self.from_prep) and not ((isinstance(self.from0_.source.source, VerbPhraseToken)))): 
+        if (Utils.isNullOrEmpty(self.from_prep) and not (isinstance(self.from0_.source.source, VerbPhraseToken))): 
             if (self.from0_.order != (self.to.order + 1)): 
                 non_gen_text = True
         if (self.to.source.dr_groups is not None): 
@@ -204,11 +203,11 @@ class NGLink(object):
     def __calc_name(self, noplural : bool) -> None:
         if (not Utils.isNullOrEmpty(self.from_prep)): 
             return
-        if (not ((isinstance(self.from0_.source.source, NounPhraseToken))) or self.from0_.source.typ != SentItemType.NOUN): 
+        if (not (isinstance(self.from0_.source.source, NounPhraseToken)) or self.from0_.source.typ != SentItemType.NOUN): 
             return
         if (self.from0_.source.begin_token.chars.is_all_lower): 
             return
-        if (not ((isinstance(self.to.source.source, NounPhraseToken))) or self.to.source.typ != SentItemType.NOUN): 
+        if (not (isinstance(self.to.source.source, NounPhraseToken)) or self.to.source.typ != SentItemType.NOUN): 
             return
         if (self.from0_.order != (self.to.order + 1) and not noplural): 
             return
@@ -221,7 +220,7 @@ class NGLink(object):
             if (noplural): 
                 if (self.from_is_plural): 
                     pass
-                elif ((((tm.number) & (MorphNumber.SINGULAR))) != (MorphNumber.UNDEFINED)): 
+                elif (((tm.number) & (MorphNumber.SINGULAR)) != (MorphNumber.UNDEFINED)): 
                     return
             self.plural = 1
             self.coef = SemanticService.PARAMS.verb_plural
@@ -303,7 +302,7 @@ class NGLink(object):
             if (noplural): 
                 if (self.from_is_plural): 
                     pass
-                elif ((((tm.number) & (MorphNumber.PLURAL))) == (MorphNumber.UNDEFINED)): 
+                elif (((tm.number) & (MorphNumber.PLURAL)) == (MorphNumber.UNDEFINED)): 
                     self.coef = -1
                     return self.coef
             self.plural = 1
@@ -316,7 +315,7 @@ class NGLink(object):
                     if (NGLink.__check_morph_accord(tm, False, wf)): 
                         self.coef = SemanticService.PARAMS.morph_accord
                         if (tm.gender != MorphGender.UNDEFINED and wf.gender != MorphGender.UNDEFINED): 
-                            if ((((tm.gender) & (wf.gender))) == (MorphGender.UNDEFINED)): 
+                            if (((tm.gender) & (wf.gender)) == (MorphGender.UNDEFINED)): 
                                 self.coef /= (2)
                         break
         return self.coef
@@ -353,7 +352,7 @@ class NGLink(object):
             return self.coef
         if (NGLink.__is_rev_verb(vf2)): 
             ag_case = MorphCase.UNDEFINED
-            grs = Explanatory.find_derivates(Utils.ifNotNull(vf2.normal_full, vf2.normal_case), True, None)
+            grs = DerivateService.find_derivates(Utils.ifNotNull(vf2.normal_full, vf2.normal_case), True, None)
             if (grs is not None): 
                 for gr in grs: 
                     if (gr.cm_rev.agent is not None): 
@@ -395,7 +394,7 @@ class NGLink(object):
             if (noplural): 
                 if (self.from_is_plural): 
                     pass
-                elif ((((morph_.number) & (MorphNumber.PLURAL))) == (MorphNumber.UNDEFINED)): 
+                elif (((morph_.number) & (MorphNumber.PLURAL)) == (MorphNumber.UNDEFINED)): 
                     self.coef = -1
                     return self.coef
                 elif (not NGLink.__check_morph_accord(morph_, False, vf)): 
@@ -404,7 +403,7 @@ class NGLink(object):
                 elif (len(morph_.items) > 0 and not vf.case_.is_undefined): 
                     ok = False
                     for it in morph_.items: 
-                        if ((((it.number) & (MorphNumber.PLURAL))) == (MorphNumber.PLURAL)): 
+                        if (((it.number) & (MorphNumber.PLURAL)) == (MorphNumber.PLURAL)): 
                             if (not it.case_.is_undefined and ((it.case_) & vf.case_).is_undefined): 
                                 continue
                             ok = True
@@ -434,12 +433,12 @@ class NGLink(object):
                         self.coef = -1
                         return self.coef
             if (vf.misc.person != MorphPerson.UNDEFINED): 
-                if ((((vf.misc.person) & (MorphPerson.THIRD))) == (MorphPerson.UNDEFINED)): 
-                    if ((((vf.misc.person) & (MorphPerson.FIRST))) == (MorphPerson.FIRST)): 
+                if (((vf.misc.person) & (MorphPerson.THIRD)) == (MorphPerson.UNDEFINED)): 
+                    if (((vf.misc.person) & (MorphPerson.FIRST)) == (MorphPerson.FIRST)): 
                         if (not morph_.contains_attr("1 л.", None)): 
                             self.coef = -1
                             return self.coef
-                    if ((((vf.misc.person) & (MorphPerson.SECOND))) == (MorphPerson.SECOND)): 
+                    if (((vf.misc.person) & (MorphPerson.SECOND)) == (MorphPerson.SECOND)): 
                         if (not morph_.contains_attr("2 л.", None)): 
                             self.coef = -1
                             return self.coef
@@ -478,7 +477,7 @@ class NGLink(object):
                     elif (len(morph_.items) > 0 and not vf.case_.is_undefined): 
                         ok = False
                         for it in morph_.items: 
-                            if ((((it.number) & (MorphNumber.PLURAL))) == (MorphNumber.PLURAL)): 
+                            if (((it.number) & (MorphNumber.PLURAL)) == (MorphNumber.PLURAL)): 
                                 if (not it.case_.is_undefined and ((it.case_) & vf.case_).is_undefined): 
                                     continue
                                 ok = True
@@ -499,7 +498,7 @@ class NGLink(object):
             return self.coef
         is_trans = False
         is_ref_dative = False
-        grs = Explanatory.find_derivates(Utils.ifNotNull(vf2.normal_full, vf2.normal_case), True, None)
+        grs = DerivateService.find_derivates(Utils.ifNotNull(vf2.normal_full, vf2.normal_case), True, None)
         if (grs is not None): 
             for gr in grs: 
                 if (gr.cm.transitive): 
@@ -521,7 +520,7 @@ class NGLink(object):
             self.coef = 0
             return self.coef
         if (vf2 != vf and not is_trans): 
-            grs = Explanatory.find_derivates(Utils.ifNotNull(vf.normal_full, vf.normal_case), True, None)
+            grs = DerivateService.find_derivates(Utils.ifNotNull(vf.normal_full, vf.normal_case), True, None)
             if (grs is not None): 
                 for gr in grs: 
                     if (gr.cm.transitive): 
@@ -570,7 +569,7 @@ class NGLink(object):
             self.coef = 0
             return self.coef
         fm = self.from0_.source.source.morph
-        grs = Explanatory.find_derivates(Utils.ifNotNull(vf2.normal_full, vf2.normal_case), True, None)
+        grs = DerivateService.find_derivates(Utils.ifNotNull(vf2.normal_full, vf2.normal_case), True, None)
         if (grs is not None): 
             for gr in grs: 
                 if (gr.cm.nexts is None or not self.from_prep in gr.cm.nexts): 
@@ -596,7 +595,7 @@ class NGLink(object):
             if (plural_): 
                 coef_ += 1
             elif (m.number != MorphNumber.UNDEFINED): 
-                if ((((m.number) & (MorphNumber.PLURAL))) == (MorphNumber.PLURAL)): 
+                if (((m.number) & (MorphNumber.PLURAL)) == (MorphNumber.PLURAL)): 
                     coef_ += 1
                 else: 
                     return False
@@ -604,18 +603,18 @@ class NGLink(object):
             if (plural_): 
                 return False
             if (m.number != MorphNumber.UNDEFINED): 
-                if ((((m.number) & (MorphNumber.SINGULAR))) == (MorphNumber.SINGULAR)): 
+                if (((m.number) & (MorphNumber.SINGULAR)) == (MorphNumber.SINGULAR)): 
                     coef_ += 1
                 else: 
                     return False
             if (m.gender != MorphGender.UNDEFINED): 
                 if (vf.gender != MorphGender.UNDEFINED): 
                     if (m.gender == MorphGender.FEMINIE): 
-                        if ((((vf.gender) & (MorphGender.FEMINIE))) != (MorphGender.UNDEFINED)): 
+                        if (((vf.gender) & (MorphGender.FEMINIE)) != (MorphGender.UNDEFINED)): 
                             coef_ += 1
                         else: 
                             return False
-                    elif ((((m.gender) & (vf.gender))) != (MorphGender.UNDEFINED)): 
+                    elif (((m.gender) & (vf.gender)) != (MorphGender.UNDEFINED)): 
                         coef_ += 1
                     elif (m.gender == MorphGender.MASCULINE and vf.gender == MorphGender.FEMINIE): 
                         pass
@@ -624,7 +623,7 @@ class NGLink(object):
         return coef_ >= 0
     
     @staticmethod
-    def _new2999(_arg1 : 'NGLinkType', _arg2 : 'NGItem', _arg3 : 'NGItem', _arg4 : bool) -> 'NGLink':
+    def _new2924(_arg1 : 'NGLinkType', _arg2 : 'NGItem', _arg3 : 'NGItem', _arg4 : bool) -> 'NGLink':
         res = NGLink()
         res.typ = _arg1
         res.from0_ = _arg2
@@ -633,20 +632,20 @@ class NGLink(object):
         return res
     
     @staticmethod
-    def _new3001(_arg1 : 'NGLinkType') -> 'NGLink':
+    def _new2926(_arg1 : 'NGLinkType') -> 'NGLink':
         res = NGLink()
         res.typ = _arg1
         return res
     
     @staticmethod
-    def _new3002(_arg1 : 'NGItem', _arg2 : 'NGLinkType') -> 'NGLink':
+    def _new2927(_arg1 : 'NGItem', _arg2 : 'NGLinkType') -> 'NGLink':
         res = NGLink()
         res.from0_ = _arg1
         res.typ = _arg2
         return res
     
     @staticmethod
-    def _new3010(_arg1 : 'NGItem', _arg2 : 'VerbPhraseToken', _arg3 : 'NGLinkType') -> 'NGLink':
+    def _new2935(_arg1 : 'NGItem', _arg2 : 'VerbPhraseToken', _arg3 : 'NGLinkType') -> 'NGLink':
         res = NGLink()
         res.from0_ = _arg1
         res.to_verb = _arg2
@@ -654,7 +653,7 @@ class NGLink(object):
         return res
     
     @staticmethod
-    def _new3026(_arg1 : 'NGLinkType', _arg2 : 'NGItem', _arg3 : 'VerbPhraseToken') -> 'NGLink':
+    def _new2951(_arg1 : 'NGLinkType', _arg2 : 'NGItem', _arg3 : 'VerbPhraseToken') -> 'NGLink':
         res = NGLink()
         res.typ = _arg1
         res.from0_ = _arg2

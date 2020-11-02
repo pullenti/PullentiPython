@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import math
 from pullenti.unisharp.Utils import Utils
@@ -14,8 +13,8 @@ from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.internal.BlkTyps import BlkTyps
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 
 class BlockLine(MetaToken):
     
@@ -140,7 +139,7 @@ class BlockLine(MetaToken):
                     t1 = t1.previous
         res.is_all_upper = True
         while t is not None and t.end_char <= t1.end_char: 
-            if (not ((isinstance(t, TextToken))) or not t.chars.is_letter): 
+            if (not (isinstance(t, TextToken)) or not t.chars.is_letter): 
                 res.not_words += 1
             else: 
                 mc = t.get_morph_class_in_dictionary()
@@ -150,8 +149,8 @@ class BlockLine(MetaToken):
                     res.words += 1
                 if (not t.chars.is_all_upper): 
                     res.is_all_upper = False
-                if ((t).is_pure_verb): 
-                    if (not (t).term.endswith("ING")): 
+                if (t.is_pure_verb): 
+                    if (not t.term.endswith("ING")): 
                         res.has_verb = True
             t = t.next0_
         if (res.typ == BlkTyps.UNDEFINED): 
@@ -160,9 +159,9 @@ class BlockLine(MetaToken):
                 if (npt.noun.is_value("ХАРАКТЕРИСТИКА", None) or npt.noun.is_value("СОДЕРЖАНИЕ", "ЗМІСТ")): 
                     ok = True
                     tt = npt.end_token.next0_
-                    first_pass3645 = True
+                    first_pass3525 = True
                     while True:
-                        if first_pass3645: first_pass3645 = False
+                        if first_pass3525: first_pass3525 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.end_char <= res.end_char)): break
                         if (tt.is_char('.')): 
@@ -185,9 +184,9 @@ class BlockLine(MetaToken):
                 elif (npt.noun.is_value("ВЫВОД", "ВИСНОВОК") or npt.noun.is_value("РЕЗУЛЬТАТ", "ДОСЛІДЖЕННЯ")): 
                     ok = True
                     tt = npt.end_token.next0_
-                    first_pass3646 = True
+                    first_pass3526 = True
                     while True:
-                        if first_pass3646: first_pass3646 = False
+                        if first_pass3526: first_pass3526 = False
                         else: tt = tt.next0_
                         if (not (tt is not None and tt.end_char <= res.end_char)): break
                         if (tt.is_char_of(",.") or tt.is_and): 
@@ -223,9 +222,9 @@ class BlockLine(MetaToken):
                         if (npt.begin_token == npt.end_token and npt.noun.is_value("СПИСОК", None) and npt.end_char == res.end_char): 
                             ok = False
                         tt = npt.end_token.next0_
-                        first_pass3647 = True
+                        first_pass3527 = True
                         while True:
-                            if first_pass3647: first_pass3647 = False
+                            if first_pass3527: first_pass3527 = False
                             else: tt = tt.next0_
                             if (not (tt is not None and tt.end_char <= res.end_char)): break
                             if (tt.is_char_of(",.:") or tt.is_and or tt.morph.class0_.is_preposition): 
@@ -279,16 +278,16 @@ class BlockLine(MetaToken):
             return
         BlockLine.__m_ontology = TerminCollection()
         for s in ["СОДЕРЖАНИЕ", "СОДЕРЖИМОЕ", "ОГЛАВЛЕНИЕ", "ПЛАН", "PLAN", "ЗМІСТ", "CONTENTS", "INDEX"]: 
-            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.INDEX))
+            BlockLine.__m_ontology.add(Termin._new100(s, BlkTyps.INDEX))
         for s in ["ГЛАВА", "CHAPTER", "РАЗДЕЛ", "ПАРАГРАФ", "VOLUME", "SECTION", "РОЗДІЛ"]: 
-            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.CHAPTER))
+            BlockLine.__m_ontology.add(Termin._new100(s, BlkTyps.CHAPTER))
         for s in ["ВВЕДЕНИЕ", "ВСТУПЛЕНИЕ", "ПРЕДИСЛОВИЕ", "INTRODUCTION"]: 
-            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.INTRO))
+            BlockLine.__m_ontology.add(Termin._new100(s, BlkTyps.INTRO))
         for s in ["ВСТУП", "ПЕРЕДМОВА"]: 
-            BlockLine.__m_ontology.add(Termin._new456(s, MorphLang.UA, BlkTyps.INTRO))
+            BlockLine.__m_ontology.add(Termin._new388(s, MorphLang.UA, BlkTyps.INTRO))
         for s in ["ВЫВОДЫ", "ВЫВОД", "ЗАКЛЮЧЕНИЕ", "CONCLUSION", "ВИСНОВОК", "ВИСНОВКИ"]: 
-            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.CONSLUSION))
+            BlockLine.__m_ontology.add(Termin._new100(s, BlkTyps.CONSLUSION))
         for s in ["ПРИЛОЖЕНИЕ", "APPENDIX", "ДОДАТОК"]: 
-            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.APPENDIX))
+            BlockLine.__m_ontology.add(Termin._new100(s, BlkTyps.APPENDIX))
         for s in ["СПИСОК СОКРАЩЕНИЙ", "СПИСОК УСЛОВНЫХ СОКРАЩЕНИЙ", "СПИСОК ИСПОЛЬЗУЕМЫХ СОКРАЩЕНИЙ", "УСЛОВНЫЕ СОКРАЩЕНИЯ", "ОБЗОР ЛИТЕРАТУРЫ", "АННОТАЦИЯ", "ANNOTATION", "БЛАГОДАРНОСТИ", "SUPPLEMENT", "ABSTRACT", "СПИСОК СКОРОЧЕНЬ", "ПЕРЕЛІК УМОВНИХ СКОРОЧЕНЬ", "СПИСОК ВИКОРИСТОВУВАНИХ СКОРОЧЕНЬ", "УМОВНІ СКОРОЧЕННЯ", "ОГЛЯД ЛІТЕРАТУРИ", "АНОТАЦІЯ", "ПОДЯКИ"]: 
-            BlockLine.__m_ontology.add(Termin._new119(s, BlkTyps.MISC))
+            BlockLine.__m_ontology.add(Termin._new100(s, BlkTyps.MISC))

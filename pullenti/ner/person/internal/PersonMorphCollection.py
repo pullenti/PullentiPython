@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -9,7 +8,7 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-from pullenti.morph.Morphology import Morphology
+from pullenti.morph.MorphologyService import MorphologyService
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
 
@@ -33,7 +32,7 @@ class PersonMorphCollection:
             return Utils.toStringStringIO(res)
         
         @staticmethod
-        def _new2648(_arg1 : str, _arg2 : 'MorphGender', _arg3 : str) -> 'PersonMorphVariant':
+        def _new2587(_arg1 : str, _arg2 : 'MorphGender', _arg3 : str) -> 'PersonMorphVariant':
             res = PersonMorphCollection.PersonMorphVariant()
             res.value = _arg1
             res.gender = _arg2
@@ -101,12 +100,12 @@ class PersonMorphCollection:
             for it in self.items: 
                 if (it.value == val and it.gender == gen): 
                     return
-            self.items.append(PersonMorphCollection.PersonMorphVariant._new2648(val, gen, shortval))
+            self.items.append(PersonMorphCollection.PersonMorphVariant._new2587(val, gen, shortval))
             if (add_other_gender_var): 
                 g0 = (MorphGender.MASCULINE if gen == MorphGender.FEMINIE else MorphGender.FEMINIE)
-                v = Morphology.get_wordform(val, MorphBaseInfo._new212(MorphClass._new2629(True), g0))
+                v = MorphologyService.get_wordform(val, MorphBaseInfo._new193(MorphClass._new2568(True), g0))
                 if (v is not None): 
-                    self.items.append(PersonMorphCollection.PersonMorphVariant._new2648(v, g0, shortval))
+                    self.items.append(PersonMorphCollection.PersonMorphVariant._new2587(v, g0, shortval))
         else: 
             self.add(val, shortval, MorphGender.MASCULINE, False)
             self.add(val, shortval, MorphGender.FEMINIE, False)

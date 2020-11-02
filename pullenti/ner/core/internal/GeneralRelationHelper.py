@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
@@ -55,7 +54,7 @@ class GeneralRelationHelper:
                         i += 1
         
         @staticmethod
-        def _new463(_arg1 : 'Referent', _arg2 : 'AnalyzerData') -> 'Node':
+        def _new395(_arg1 : 'Referent', _arg2 : 'AnalyzerData') -> 'Node':
             res = GeneralRelationHelper.Node()
             res.ref = _arg1
             res.ad = _arg2
@@ -70,13 +69,13 @@ class GeneralRelationHelper:
             if (ad is None): 
                 continue
             for r in ad.referents: 
-                nod = GeneralRelationHelper.Node._new463(r, ad)
+                nod = GeneralRelationHelper.Node._new395(r, ad)
                 all_refs.append(nod)
                 r.tag = nod
-                wrapsi466 = RefOutArgWrapper(None)
-                inoutres467 = Utils.tryGetValue(all0_, a.name, wrapsi466)
-                si = wrapsi466.value
-                if (not inoutres467): 
+                wrapsi398 = RefOutArgWrapper(None)
+                inoutres399 = Utils.tryGetValue(all0_, a.name, wrapsi398)
+                si = wrapsi398.value
+                if (not inoutres399): 
                     si = dict()
                     all0_[a.name] = si
                 strs = r.get_compare_strings()
@@ -86,10 +85,10 @@ class GeneralRelationHelper:
                     if (s is None): 
                         continue
                     li = [ ]
-                    wrapli464 = RefOutArgWrapper(None)
-                    inoutres465 = Utils.tryGetValue(si, s, wrapli464)
-                    li = wrapli464.value
-                    if (not inoutres465): 
+                    wrapli396 = RefOutArgWrapper(None)
+                    inoutres397 = Utils.tryGetValue(si, s, wrapli396)
+                    li = wrapli396.value
+                    if (not inoutres397): 
                         li = list()
                         si[s] = li
                     li.append(r)

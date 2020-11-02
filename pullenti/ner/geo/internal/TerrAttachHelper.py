@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -20,8 +19,8 @@ from pullenti.ner.Referent import Referent
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
 from pullenti.ner.Token import Token
 from pullenti.ner.core.BracketHelper import BracketHelper
@@ -76,7 +75,7 @@ class TerrAttachHelper:
                     if (aid is None): 
                         rt0 = TerrAttachHelper.try_attach_territory(tmp, ad, True, None, None)
             if (rt0 is not None): 
-                if ((rt0.referent).is_state): 
+                if (rt0.referent.is_state): 
                     return None
                 rt0.begin_token = li[0].begin_token
                 rt0.morph = li[0].morph
@@ -141,7 +140,7 @@ class TerrAttachHelper:
                     if (k == 1): 
                         if (noun.termin_item.canonic_text == "РАЙОН" or noun.termin_item.canonic_text == "ОБЛАСТЬ" or noun.termin_item.canonic_text == "СОЮЗ"): 
                             if (isinstance(li[k].onto_item.referent, GeoReferent)): 
-                                if ((li[k].onto_item.referent).is_state): 
+                                if (li[k].onto_item.referent.is_state): 
                                     break
                             ok = False
                             tt = li[k].end_token.next0_
@@ -411,16 +410,16 @@ class TerrAttachHelper:
                     elif (tyy.endswith("район") and g.find_slot(GeoReferent.ATTR_TYPE, "район", True) is not None): 
                         ooo = True
                     if (ooo): 
-                        return ReferentToken._new800(g, noun.begin_token, noun.end_token.next0_, noun.begin_token.morph)
+                        return ReferentToken._new734(g, noun.begin_token, noun.end_token.next0_, noun.begin_token.morph)
             if ((len(li) == 1 and noun == li[0] and li[0].termin_item is not None) and TerrItemToken.try_parse(li[0].end_token.next0_, None, True, False, None) is None and TerrItemToken.try_parse(li[0].begin_token.previous, None, True, False, None) is None): 
                 if (li[0].morph.number == MorphNumber.PLURAL): 
                     return None
                 cou = 0
                 str0_ = li[0].termin_item.canonic_text.lower()
                 tt = li[0].begin_token.previous
-                first_pass3771 = True
+                first_pass3651 = True
                 while True:
-                    if first_pass3771: first_pass3771 = False
+                    if first_pass3651: first_pass3651 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.is_newline_after): 
@@ -435,9 +434,9 @@ class TerrAttachHelper:
                     ok = True
                     cou = 0
                     tt = li[0].end_token.next0_
-                    first_pass3772 = True
+                    first_pass3652 = True
                     while True:
-                        if first_pass3772: first_pass3772 = False
+                        if first_pass3652: first_pass3652 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.is_newline_before): 
@@ -455,7 +454,7 @@ class TerrAttachHelper:
                         ii = 0
                         while g is not None and (ii < 3): 
                             if (g.find_slot(GeoReferent.ATTR_TYPE, str0_, True) is not None): 
-                                return ReferentToken._new800(g, li[0].begin_token, li[0].end_token, noun.begin_token.morph)
+                                return ReferentToken._new734(g, li[0].begin_token, li[0].end_token, noun.begin_token.morph)
                             g = g.higher; ii += 1
                     break
             return None
@@ -487,7 +486,7 @@ class TerrAttachHelper:
                     ter._add_typ(add_noun.termin_item.canonic_text)
                 else: 
                     if (noun.termin_item.canonic_text == "СОЮЗ" and ex_obj is not None and ex_obj.end_char > noun.end_char): 
-                        return ReferentToken._new800(ter, ex_obj.begin_token, ex_obj.end_token, ex_obj.morph)
+                        return ReferentToken._new734(ter, ex_obj.begin_token, ex_obj.end_token, ex_obj.morph)
                     ter._add_typ(noun.termin_item.canonic_text)
                     if (noun.termin_item.is_region and ter.is_state): 
                         ter._add_typ_reg(li[0].kit.base_language)

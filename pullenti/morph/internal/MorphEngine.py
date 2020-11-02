@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import threading
 import io
@@ -8,30 +7,68 @@ import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
+from pullenti.morph.MorphTense import MorphTense
+from pullenti.morph.MorphVoice import MorphVoice
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.morph.MorphMood import MorphMood
+from pullenti.morph.MorphPerson import MorphPerson
+from pullenti.morph.internal.ByteArrayWrapper import ByteArrayWrapper
+from pullenti.morph.internal.MorphDeserializer import MorphDeserializer
+from pullenti.morph.internal.MorphRule import MorphRule
+from pullenti.morph.internal.MorphTreeNode import MorphTreeNode
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphCase import MorphCase
-from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.MorphMiscInfo import MorphMiscInfo
 from pullenti.morph.MorphWordForm import MorphWordForm
-from pullenti.morph.internal.MorphTreeNode import MorphTreeNode
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
 
 class MorphEngine:
     
     def __init__(self) -> None:
         self._m_lock = threading.Lock()
         self.__m_lazy_buf = None;
-        self.language = MorphLang()
         self.m_root = MorphTreeNode()
         self.m_root_reverce = MorphTreeNode()
-        self._m_vars_hash = dict()
-        self._m_vars = list()
-        self.m_rules = list()
+        self.__m_rules = list()
+        self.__m_misc_infos = list()
+        self.language = MorphLang()
     
-    def initialize(self, lang : 'MorphLang') -> bool:
-        from pullenti.morph.Morphology import Morphology
+    def __get_lazy_buf(self) -> 'ByteArrayWrapper':
+        return self.__m_lazy_buf
+    
+    def add_rule(self, r : 'MorphRule') -> None:
+        self.__m_rules.append(r)
+    
+    def get_rule(self, id0_ : int) -> 'MorphRule':
+        if (id0_ > 0 and id0_ <= len(self.__m_rules)): 
+            return self.__m_rules[id0_ - 1]
+        return None
+    
+    def get_mut_rule(self, id0_ : int) -> 'MorphRule':
+        if (id0_ > 0 and id0_ <= len(self.__m_rules)): 
+            return self.__m_rules[id0_ - 1]
+        return None
+    
+    def get_rule_var(self, rid : int, vid : int) -> 'MorphRuleVariant':
+        r = self.get_rule(rid)
+        if (r is None): 
+            return None
+        return r.find_var(vid)
+    
+    def add_misc_info(self, mi : 'MorphMiscInfo') -> None:
+        if (mi.id0_ == 0): 
+            mi.id0_ = (len(self.__m_misc_infos) + 1)
+        self.__m_misc_infos.append(mi)
+    
+    def get_misc_info(self, id0_ : int) -> 'MorphMiscInfo':
+        if (id0_ > 0 and id0_ <= len(self.__m_misc_infos)): 
+            return self.__m_misc_infos[id0_ - 1]
+        return None
+    
+    def initialize(self, lang : 'MorphLang', lazy_load : bool) -> bool:
         if (not self.language.is_undefined): 
             return False
         with self._m_lock: 
@@ -48,7 +85,7 @@ class MorphEngine:
                         continue
                     with Utils.getResourceStream('pullenti.morph.internal.properties', n) as stream: 
                         stream.seek(0, io.SEEK_SET)
-                        self.__m_lazy_buf = MorphSerializeHelper.deserialize_all(stream, self, False, Morphology.LAZY_LOAD)
+                        self.deserialize(stream, False, lazy_load)
                     return True
             return False
     
@@ -56,9 +93,9 @@ class MorphEngine:
         with self._m_lock: 
             pos = tn.lazy_pos
             if (pos > 0): 
-                wrappos9 = RefOutArgWrapper(pos)
-                MorphSerializeHelper._deserialize_morph_tree_node_lazy(self.__m_lazy_buf, tn, self, wrappos9)
-                pos = wrappos9.value
+                wrappos8 = RefOutArgWrapper(pos)
+                tn._deserialize_lazy(self.__m_lazy_buf, self, wrappos8)
+                pos = wrappos8.value
             tn.lazy_pos = 0
     
     def process(self, word : str) -> typing.List['MorphWordForm']:
@@ -86,7 +123,7 @@ class MorphEngine:
         while i <= len(word): 
             if (tn.lazy_pos > 0): 
                 self.__load_tree_node(tn)
-            if (tn.rules is not None): 
+            if (tn.rule_ids is not None): 
                 word_begin = None
                 word_end = None
                 if (i == 0): 
@@ -97,26 +134,26 @@ class MorphEngine:
                     word_end = ""
                 if (res is None): 
                     res = list()
-                for r in tn.rules: 
-                    wrapmvs10 = RefOutArgWrapper(None)
-                    inoutres11 = Utils.tryGetValue(r.variants, word_end, wrapmvs10)
-                    mvs = wrapmvs10.value
-                    if (inoutres11): 
-                        if (word_begin is None): 
-                            if (i == len(word)): 
-                                word_begin = word
-                            elif (i > 0): 
-                                word_begin = word[0:0+i]
-                            else: 
-                                word_begin = ""
-                        MorphEngine.__process_result(res, word_begin, mvs)
+                for rid in tn.rule_ids: 
+                    r = self.get_rule(rid)
+                    mvs = r.get_vars(word_end)
+                    if (mvs is None): 
+                        continue
+                    if (word_begin is None): 
+                        if (i == len(word)): 
+                            word_begin = word
+                        elif (i > 0): 
+                            word_begin = word[0:0+i]
+                        else: 
+                            word_begin = ""
+                    self.__process_result(res, word_begin, mvs)
             if (tn.nodes is None or i >= len(word)): 
                 break
             ch = ord(word[i])
-            wraptn12 = RefOutArgWrapper(None)
-            inoutres13 = Utils.tryGetValue(tn.nodes, ch, wraptn12)
-            tn = wraptn12.value
-            if (not inoutres13): 
+            wraptn9 = RefOutArgWrapper(None)
+            inoutres10 = Utils.tryGetValue(tn.nodes, ch, wraptn9)
+            tn = wraptn9.value
+            if (not inoutres10): 
                 break
             i += 1
         need_test_unknown_vars = True
@@ -165,26 +202,23 @@ class MorphEngine:
             if (self.m_root_reverce is None): 
                 return res
             tn = self.m_root_reverce
-            tn0 = None
+            tn0 = self.m_root_reverce
             for i in range(len(word) - 1, -1, -1):
                 if (tn.lazy_pos > 0): 
                     self.__load_tree_node(tn)
                 ch = ord(word[i])
                 if (tn.nodes is None): 
                     break
-                wrapnext14 = RefOutArgWrapper(None)
-                inoutres15 = Utils.tryGetValue(tn.nodes, ch, wrapnext14)
-                next0_ = wrapnext14.value
-                if (not inoutres15): 
+                if (not ch in tn.nodes): 
                     break
-                tn = next0_
+                tn = tn.nodes[ch]
                 if (tn.lazy_pos > 0): 
                     self.__load_tree_node(tn)
                 if (tn.reverce_variants is not None): 
                     tn0 = tn
                     break
             else: i = -1
-            if (tn0 is not None): 
+            if (tn0 != self.m_root_reverce): 
                 glas = i < 4
                 while i >= 0: 
                     if (LanguageHelper.is_cyrillic_vowel(word[i]) or LanguageHelper.is_latin_vowel(word[i])): 
@@ -192,7 +226,10 @@ class MorphEngine:
                         break
                     i -= 1
                 if (glas): 
-                    for mv in tn0.reverce_variants: 
+                    for mvref in tn0.reverce_variants: 
+                        mv = self.get_rule_var(mvref.rule_id, mvref.variant_id)
+                        if (mv is None): 
+                            continue
                         if (((not mv.class0_.is_verb and not mv.class0_.is_adjective and not mv.class0_.is_noun) and not mv.class0_.is_proper_surname and not mv.class0_.is_proper_geo) and not mv.class0_.is_proper_secname): 
                             continue
                         ok = False
@@ -208,9 +245,9 @@ class MorphEngine:
                             continue
                         if (len(mv.tail) > 0 and not LanguageHelper.ends_with(word, mv.tail)): 
                             continue
-                        r = MorphWordForm(mv, word)
-                        if (not MorphWordForm._has_morph_equals(res, r)): 
-                            r.undef_coef = mv.coef
+                        r = MorphWordForm(mv, word, self.get_misc_info(mv.misc_info_id))
+                        if (not r._has_morph_equals(res)): 
+                            r.undef_coef = mvref.coef
                             if (res is None): 
                                 res = list()
                             res.append(r)
@@ -221,7 +258,7 @@ class MorphEngine:
             else: i = -1
         if (res is None or len(res) == 0): 
             return None
-        MorphEngine.__sort(res, word)
+        self.__sort(res, word)
         for v in res: 
             if (v.normal_case is None): 
                 v.normal_case = word
@@ -248,6 +285,22 @@ class MorphEngine:
             return None
         return res
     
+    def __process_result(self, res : typing.List['MorphWordForm'], word_begin : str, mvs : typing.List['MorphRuleVariant']) -> None:
+        for mv in mvs: 
+            r = MorphWordForm(mv, None, self.get_misc_info(mv.misc_info_id))
+            if (mv.normal_tail is not None and len(mv.normal_tail) > 0 and mv.normal_tail[0] != '-'): 
+                r.normal_case = (word_begin + mv.normal_tail)
+            else: 
+                r.normal_case = word_begin
+            if (mv.full_normal_tail is not None): 
+                if (len(mv.full_normal_tail) > 0 and mv.full_normal_tail[0] != '-'): 
+                    r.normal_full = (word_begin + mv.full_normal_tail)
+                else: 
+                    r.normal_full = word_begin
+            if (not r._has_morph_equals(res)): 
+                r.undef_coef = (0)
+                res.append(r)
+    
     def get_all_wordforms(self, word : str) -> typing.List['MorphWordForm']:
         res = list()
         tn = self.m_root
@@ -255,7 +308,7 @@ class MorphEngine:
         while i <= len(word): 
             if (tn.lazy_pos > 0): 
                 self.__load_tree_node(tn)
-            if (tn.rules is not None): 
+            if (tn.rule_ids is not None): 
                 word_begin = ""
                 word_end = ""
                 if (i > 0): 
@@ -266,59 +319,63 @@ class MorphEngine:
                     word_end = word[i:]
                 else: 
                     word_begin = word
-                for r in tn.rules: 
-                    if (word_end in r.variants): 
-                        for vl in r.variants_list: 
+                for rid in tn.rule_ids: 
+                    r = self.get_rule(rid)
+                    if (r.contains_var(word_end)): 
+                        for vl in r.morph_vars: 
                             for v in vl: 
-                                wf = MorphWordForm(v, None)
-                                if (not MorphWordForm._has_morph_equals(res, wf)): 
+                                wf = MorphWordForm(v, None, self.get_misc_info(v.misc_info_id))
+                                if (not wf._has_morph_equals(res)): 
                                     wf.normal_case = (word_begin + v.tail)
                                     wf.undef_coef = (0)
                                     res.append(wf)
             if (tn.nodes is None or i >= len(word)): 
                 break
             ch = ord(word[i])
-            wraptn16 = RefOutArgWrapper(None)
-            inoutres17 = Utils.tryGetValue(tn.nodes, ch, wraptn16)
-            tn = wraptn16.value
-            if (not inoutres17): 
+            wraptn11 = RefOutArgWrapper(None)
+            inoutres12 = Utils.tryGetValue(tn.nodes, ch, wraptn11)
+            tn = wraptn11.value
+            if (not inoutres12): 
                 break
             i += 1
         i = 0
-        first_pass3580 = True
+        first_pass3476 = True
         while True:
-            if first_pass3580: first_pass3580 = False
+            if first_pass3476: first_pass3476 = False
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
             if (wf.contains_attr("инф.", None)): 
                 continue
+            cas = wf.case_
             j = i + 1
-            first_pass3581 = True
+            first_pass3477 = True
             while True:
-                if first_pass3581: first_pass3581 = False
+                if first_pass3477: first_pass3477 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
                 if (wf1.contains_attr("инф.", None)): 
                     continue
                 if ((wf.class0_ == wf1.class0_ and wf.gender == wf1.gender and wf.number == wf1.number) and wf.normal_case == wf1.normal_case): 
-                    wf.case_ = (wf.case_) | wf1.case_
+                    cas |= wf1.case_
                     del res[j]
                     j -= 1
+            if (cas != wf.case_): 
+                res[i].case_ = cas
         i = 0
-        first_pass3582 = True
+        first_pass3478 = True
         while True:
-            if first_pass3582: first_pass3582 = False
+            if first_pass3478: first_pass3478 = False
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
             if (wf.contains_attr("инф.", None)): 
                 continue
             j = i + 1
-            first_pass3583 = True
+            first_pass3479 = True
             while True:
-                if first_pass3583: first_pass3583 = False
+                if first_pass3479: first_pass3479 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
@@ -330,23 +387,6 @@ class MorphEngine:
                     j -= 1
         return res
     
-    @staticmethod
-    def __process_result(res : typing.List['MorphWordForm'], word_begin : str, mvs : typing.List['MorphRuleVariant']) -> None:
-        for mv in mvs: 
-            r = MorphWordForm(mv, None)
-            if (mv.normal_tail is not None and len(mv.normal_tail) > 0 and mv.normal_tail[0] != '-'): 
-                r.normal_case = (word_begin + mv.normal_tail)
-            else: 
-                r.normal_case = word_begin
-            if (mv.full_normal_tail is not None): 
-                if (len(mv.full_normal_tail) > 0 and mv.full_normal_tail[0] != '-'): 
-                    r.normal_full = (word_begin + mv.full_normal_tail)
-                else: 
-                    r.normal_full = word_begin
-            if (not MorphWordForm._has_morph_equals(res, r)): 
-                r.undef_coef = (0)
-                res.append(r)
-    
     def get_wordform(self, word : str, cla : 'MorphClass', gender : 'MorphGender', cas : 'MorphCase', num : 'MorphNumber', add_info : 'MorphWordForm') -> str:
         tn = self.m_root
         find = False
@@ -356,7 +396,7 @@ class MorphEngine:
         while i <= len(word): 
             if (tn.lazy_pos > 0): 
                 self.__load_tree_node(tn)
-            if (tn.rules is not None): 
+            if (tn.rule_ids is not None): 
                 word_begin = ""
                 word_end = ""
                 if (i > 0): 
@@ -367,9 +407,10 @@ class MorphEngine:
                     word_end = word[i:]
                 else: 
                     word_begin = word
-                for r in tn.rules: 
-                    if (word_end in r.variants): 
-                        for li in r.variants_list: 
+                for rid in tn.rule_ids: 
+                    r = self.get_rule(rid)
+                    if (r is not None and r.contains_var(word_end)): 
+                        for li in r.morph_vars: 
                             for v in li: 
                                 if ((((cla.value) & (v.class0_.value))) != 0 and v.normal_tail is not None): 
                                     if (cas.is_undefined): 
@@ -386,63 +427,66 @@ class MorphEngine:
                                             continue
                                     find = True
                                     if (gender != MorphGender.UNDEFINED): 
-                                        if ((((gender) & (v.gender))) == (MorphGender.UNDEFINED)): 
-                                            if (num is not None and num == MorphNumber.PLURAL): 
+                                        if (((gender) & (v.gender)) == (MorphGender.UNDEFINED)): 
+                                            if (num == MorphNumber.PLURAL): 
                                                 pass
                                             else: 
                                                 continue
                                     if (num != MorphNumber.UNDEFINED): 
-                                        if ((((num) & (v.number))) == (MorphNumber.UNDEFINED)): 
+                                        if (((num) & (v.number)) == (MorphNumber.UNDEFINED)): 
                                             continue
                                     re = word_begin + v.tail
                                     co = 0
                                     if (add_info is not None): 
-                                        co = v.calc_eq_coef(add_info)
+                                        co = self.__calc_eq_coef(v, add_info)
                                     if (res is None or co > max_coef): 
                                         res = re
                                         max_coef = co
                                     if (max_coef == 0): 
                                         if ((word_begin + v.normal_tail) == word): 
-                                            return re
+                                            return word_begin + v.tail
             if (tn.nodes is None or i >= len(word)): 
                 break
             ch = ord(word[i])
-            wraptn18 = RefOutArgWrapper(None)
-            inoutres19 = Utils.tryGetValue(tn.nodes, ch, wraptn18)
-            tn = wraptn18.value
-            if (not inoutres19): 
+            wraptn13 = RefOutArgWrapper(None)
+            inoutres14 = Utils.tryGetValue(tn.nodes, ch, wraptn13)
+            tn = wraptn13.value
+            if (not inoutres14): 
                 break
             i += 1
         if (find): 
             return res
         tn = self.m_root_reverce
-        tn0 = None
+        tn0 = self.m_root_reverce
         for i in range(len(word) - 1, -1, -1):
             if (tn.lazy_pos > 0): 
                 self.__load_tree_node(tn)
             ch = ord(word[i])
             if (tn.nodes is None): 
                 break
-            wrapnext20 = RefOutArgWrapper(None)
-            inoutres21 = Utils.tryGetValue(tn.nodes, ch, wrapnext20)
-            next0_ = wrapnext20.value
-            if (not inoutres21): 
+            if (not ch in tn.nodes): 
                 break
-            tn = next0_
+            tn = tn.nodes[ch]
             if (tn.lazy_pos > 0): 
                 self.__load_tree_node(tn)
             if (tn.reverce_variants is not None): 
                 tn0 = tn
                 break
         else: i = -1
-        if (tn0 is None): 
+        if (tn0 == self.m_root_reverce): 
             return None
-        for mv in tn0.reverce_variants: 
-            if ((((mv.class0_.value) & (cla.value))) != 0 and mv.rule is not None): 
+        for mvr in tn0.reverce_variants: 
+            rule = self.get_rule(mvr.rule_id)
+            if (rule is None): 
+                continue
+            mv = rule.find_var(mvr.variant_id)
+            if (mv is None): 
+                continue
+            if ((((mv.class0_.value) & (cla.value))) != 0): 
                 if (len(mv.tail) > 0 and not LanguageHelper.ends_with(word, mv.tail)): 
                     continue
                 word_begin = word[0:0+len(word) - len(mv.tail)]
-                for liv in mv.rule.variants_list: 
+                for liv in rule.morph_vars: 
                     for v in liv: 
                         if ((((v.class0_.value) & (cla.value))) != 0): 
                             sur = cla.is_proper_surname
@@ -455,14 +499,14 @@ class MorphEngine:
                                     continue
                             if (num != MorphNumber.UNDEFINED): 
                                 if (v.number != MorphNumber.UNDEFINED): 
-                                    if ((((v.number) & (num))) == (MorphNumber.UNDEFINED)): 
+                                    if (((v.number) & (num)) == (MorphNumber.UNDEFINED)): 
                                         continue
                             if (gender != MorphGender.UNDEFINED): 
                                 if (v.gender != MorphGender.UNDEFINED): 
-                                    if ((((v.gender) & (gender))) == (MorphGender.UNDEFINED)): 
+                                    if (((v.gender) & (gender)) == (MorphGender.UNDEFINED)): 
                                         continue
                             if (add_info is not None): 
-                                if (v.calc_eq_coef(add_info) < 0): 
+                                if (self.__calc_eq_coef(v, add_info) < 0): 
                                     continue
                             res = (word_begin + v.tail)
                             if (res == word): 
@@ -526,14 +570,14 @@ class MorphEngine:
         return vars0_[0]
     
     def __check_corr_var(self, word : str, tn : 'MorphTreeNode', i : int) -> str:
-        first_pass3584 = True
+        first_pass3480 = True
         while True:
-            if first_pass3584: first_pass3584 = False
+            if first_pass3480: first_pass3480 = False
             else: i += 1
             if (not (i <= len(word))): break
             if (tn.lazy_pos > 0): 
                 self.__load_tree_node(tn)
-            if (tn.rules is not None): 
+            if (tn.rule_ids is not None): 
                 word_begin = ""
                 word_end = ""
                 if (i > 0): 
@@ -544,11 +588,12 @@ class MorphEngine:
                     word_end = word[i:]
                 else: 
                     word_begin = word
-                for r in tn.rules: 
-                    if (word_end in r.variants): 
+                for rid in tn.rule_ids: 
+                    r = self.get_rule(rid)
+                    if (r.contains_var(word_end)): 
                         return word_begin + word_end
                     if (word_end.find('*') >= 0): 
-                        for v in r.variants_key: 
+                        for v in r.tails: 
                             if (len(v) == len(word_end)): 
                                 j = 0
                                 while j < len(v): 
@@ -563,12 +608,10 @@ class MorphEngine:
                 break
             ch = ord(word[i])
             if (ch != (0x2A)): 
-                wraptn22 = RefOutArgWrapper(None)
-                inoutres23 = Utils.tryGetValue(tn.nodes, ch, wraptn22)
-                tn = wraptn22.value
-                if (inoutres23): 
-                    continue
-                break
+                if (not ch in tn.nodes): 
+                    break
+                tn = tn.nodes[ch]
+                continue
             if (tn.nodes is not None): 
                 for tnn in tn.nodes.items(): 
                     ww = word.replace('*', chr(tnn[0]))
@@ -586,7 +629,6 @@ class MorphEngine:
     
     def __process_proper_variants(self, word : str, res : typing.List['MorphWordForm'], geo : bool) -> None:
         tn = self.m_root_reverce
-        tn0 = None
         nodes_with_vars = None
         for i in range(len(word) - 1, -1, -1):
             if (tn.lazy_pos > 0): 
@@ -594,19 +636,15 @@ class MorphEngine:
             ch = ord(word[i])
             if (tn.nodes is None): 
                 break
-            wrapnext24 = RefOutArgWrapper(None)
-            inoutres25 = Utils.tryGetValue(tn.nodes, ch, wrapnext24)
-            next0_ = wrapnext24.value
-            if (not inoutres25): 
+            if (not ch in tn.nodes): 
                 break
-            tn = next0_
+            tn = tn.nodes[ch]
             if (tn.lazy_pos > 0): 
                 self.__load_tree_node(tn)
             if (tn.reverce_variants is not None): 
                 if (nodes_with_vars is None): 
                     nodes_with_vars = list()
                 nodes_with_vars.append(tn)
-                tn0 = tn
         else: i = -1
         if (nodes_with_vars is None): 
             return
@@ -615,23 +653,25 @@ class MorphEngine:
             if (tn.lazy_pos > 0): 
                 self.__load_tree_node(tn)
             ok = False
-            for v in tn.reverce_variants: 
+            for vr in tn.reverce_variants: 
+                v = self.get_rule_var(vr.rule_id, vr.variant_id)
+                if (v is None): 
+                    continue
                 if (geo and v.class0_.is_proper_geo): 
                     pass
                 elif (not geo and v.class0_.is_proper_surname): 
                     pass
                 else: 
                     continue
-                r = MorphWordForm(v, word)
-                if (not MorphWordForm._has_morph_equals(res, r)): 
-                    r.undef_coef = v.coef
+                r = MorphWordForm(v, word, self.get_misc_info(v.misc_info_id))
+                if (not r._has_morph_equals(res)): 
+                    r.undef_coef = vr.coef
                     res.append(r)
                 ok = True
             if (ok): 
                 break
     
-    @staticmethod
-    def __compare(x : 'MorphWordForm', y : 'MorphWordForm') -> int:
+    def __compare(self, x : 'MorphWordForm', y : 'MorphWordForm') -> int:
         if (x.is_in_dictionary and not y.is_in_dictionary): 
             return -1
         if (not x.is_in_dictionary and y.is_in_dictionary): 
@@ -654,8 +694,8 @@ class MorphEngine:
                 return -1
             if (y.class0_.is_noun): 
                 return 1
-        cx = MorphEngine.__calc_coef(x)
-        cy = MorphEngine.__calc_coef(y)
+        cx = self.__calc_coef(x)
+        cy = self.__calc_coef(y)
         if (cx > cy): 
             return -1
         if (cx < cy): 
@@ -666,8 +706,7 @@ class MorphEngine:
             return -1
         return 0
     
-    @staticmethod
-    def __calc_coef(wf : 'MorphWordForm') -> int:
+    def __calc_coef(self, wf : 'MorphWordForm') -> int:
         k = 0
         if (not wf.case_.is_undefined): 
             k += 1
@@ -704,8 +743,30 @@ class MorphEngine:
                 k += 1
         return k
     
-    @staticmethod
-    def __sort(res : typing.List['MorphWordForm'], word : str) -> None:
+    def __calc_eq_coef(self, v : 'MorphRuleVariant', wf : 'MorphWordForm') -> int:
+        if (wf.class0_.value != (0)): 
+            if ((((v.class0_.value) & (wf.class0_.value))) == 0): 
+                return -1
+        if (v.misc_info_id != wf.misc.id0_): 
+            vi = self.get_misc_info(v.misc_info_id)
+            if (vi.mood != MorphMood.UNDEFINED and wf.misc.mood != MorphMood.UNDEFINED): 
+                if (vi.mood != wf.misc.mood): 
+                    return -1
+            if (vi.tense != MorphTense.UNDEFINED and wf.misc.tense != MorphTense.UNDEFINED): 
+                if (((vi.tense) & (wf.misc.tense)) == (MorphTense.UNDEFINED)): 
+                    return -1
+            if (vi.voice != MorphVoice.UNDEFINED and wf.misc.voice != MorphVoice.UNDEFINED): 
+                if (vi.voice != wf.misc.voice): 
+                    return -1
+            if (vi.person != MorphPerson.UNDEFINED and wf.misc.person != MorphPerson.UNDEFINED): 
+                if (((vi.person) & (wf.misc.person)) == (MorphPerson.UNDEFINED)): 
+                    return -1
+            return 0
+        if (not v.check_accord(wf, False, False)): 
+            return -1
+        return 1
+    
+    def __sort(self, res : typing.List['MorphWordForm'], word : str) -> None:
         if (res is None or (len(res) < 2)): 
             return
         k = 0
@@ -713,11 +774,12 @@ class MorphEngine:
             ch = False
             i = 0
             while i < (len(res) - 1): 
-                j = MorphEngine.__compare(res[i], res[i + 1])
+                j = self.__compare(res[i], res[i + 1])
                 if (j > 0): 
-                    r = res[i]
-                    res[i] = res[i + 1]
-                    res[i + 1] = r
+                    r1 = res[i]
+                    r2 = res[i + 1]
+                    res[i] = r2
+                    res[i + 1] = r1
                     ch = True
                 i += 1
             if (not ch): 
@@ -726,12 +788,12 @@ class MorphEngine:
         i = 0
         while i < (len(res) - 1): 
             j = i + 1
-            first_pass3585 = True
+            first_pass3481 = True
             while True:
-                if first_pass3585: first_pass3585 = False
+                if first_pass3481: first_pass3481 = False
                 else: j += 1
                 if (not (j < len(res))): break
-                if (MorphEngine.__comp1(res[i], res[j])): 
+                if (self.__comp1(res[i], res[j])): 
                     if ((res[i].class0_.is_adjective and res[j].class0_.is_noun and not res[j].is_in_dictionary) and not res[i].is_in_dictionary): 
                         del res[j]
                     elif ((res[i].class0_.is_noun and res[j].class0_.is_adjective and not res[j].is_in_dictionary) and not res[i].is_in_dictionary): 
@@ -748,8 +810,7 @@ class MorphEngine:
                     break
             i += 1
     
-    @staticmethod
-    def __comp1(r1 : 'MorphWordForm', r2 : 'MorphWordForm') -> bool:
+    def __comp1(self, r1 : 'MorphWordForm', r2 : 'MorphWordForm') -> bool:
         if (r1.number != r2.number or r1.gender != r2.gender): 
             return False
         if (r1.case_ != r2.case_): 
@@ -758,20 +819,60 @@ class MorphEngine:
             return False
         return True
     
-    def register_morph_info(self, var : 'MorphMiscInfo') -> 'MorphMiscInfo':
-        key = str(var)
-        wrapv26 = RefOutArgWrapper(None)
-        inoutres27 = Utils.tryGetValue(self._m_vars_hash, key, wrapv26)
-        v = wrapv26.value
-        if (inoutres27): 
-            return v
-        self._m_vars_hash[key] = var
-        self._m_vars.append(var)
-        return var
-    
-    def _reset(self) -> None:
-        self.m_root = MorphTreeNode()
-        self.m_root_reverce = MorphTreeNode()
-        self._m_vars = list()
-        self._m_vars_hash = dict()
-        self.language = MorphLang()
+    def deserialize(self, str0 : io.IOBase, ignore_rev_tree : bool, lazy_load : bool) -> None:
+        tmp = io.BytesIO()
+        MorphDeserializer.deflate_gzip(str0, tmp)
+        arr = bytearray(tmp.getvalue())
+        buf = ByteArrayWrapper(arr)
+        pos = 0
+        wrappos23 = RefOutArgWrapper(pos)
+        cou = buf.deserialize_int(wrappos23)
+        pos = wrappos23.value
+        while cou > 0: 
+            mi = MorphMiscInfo()
+            wrappos15 = RefOutArgWrapper(pos)
+            mi._deserialize(buf, wrappos15)
+            pos = wrappos15.value
+            self.add_misc_info(mi)
+            cou -= 1
+        wrappos22 = RefOutArgWrapper(pos)
+        cou = buf.deserialize_int(wrappos22)
+        pos = wrappos22.value
+        while cou > 0: 
+            wrappos17 = RefOutArgWrapper(pos)
+            p1 = buf.deserialize_int(wrappos17)
+            pos = wrappos17.value
+            r = MorphRule()
+            if (lazy_load): 
+                r.lazy_pos = pos
+                pos = p1
+            else: 
+                wrappos16 = RefOutArgWrapper(pos)
+                r._deserialize(buf, wrappos16)
+                pos = wrappos16.value
+            self.add_rule(r)
+            cou -= 1
+        root = MorphTreeNode()
+        if (lazy_load): 
+            wrappos18 = RefOutArgWrapper(pos)
+            root._deserialize_lazy(buf, self, wrappos18)
+            pos = wrappos18.value
+        else: 
+            wrappos19 = RefOutArgWrapper(pos)
+            root._deserialize(buf, wrappos19)
+            pos = wrappos19.value
+        self.m_root = root
+        if (not ignore_rev_tree): 
+            root_rev = MorphTreeNode()
+            if (lazy_load): 
+                wrappos20 = RefOutArgWrapper(pos)
+                root_rev._deserialize_lazy(buf, self, wrappos20)
+                pos = wrappos20.value
+            else: 
+                wrappos21 = RefOutArgWrapper(pos)
+                root_rev._deserialize(buf, wrappos21)
+                pos = wrappos21.value
+            self.m_root_reverce = root_rev
+        tmp.close()
+        if (lazy_load): 
+            self.__m_lazy_buf = buf

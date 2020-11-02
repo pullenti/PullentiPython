@@ -1,9 +1,8 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 
 class MetaDateRange(ReferentClass):
     
@@ -30,7 +29,7 @@ class MetaDateRange(ReferentClass):
     def get_image_id(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.date.DateRangeReferent import DateRangeReferent
         if (isinstance(obj, DateRangeReferent)): 
-            if ((obj).is_relative): 
+            if (obj.is_relative): 
                 return MetaDateRange.DATE_RANGE_REL_IMAGE_ID
         return MetaDateRange.DATE_RANGE_IMAGE_ID
     

@@ -1,51 +1,66 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.Referent import Referent
-from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.ReferentClass import ReferentClass
-from pullenti.ner.transport.TransportKind import TransportKind
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.transport.internal.MetaTransport import MetaTransport
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.transport.TransportKind import TransportKind
+from pullenti.ner.geo.GeoReferent import GeoReferent
 
 class TransportReferent(Referent):
-    """ Транспортное средство """
+    """ Сущность - транспортное средство
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(TransportReferent.OBJ_TYPENAME)
         self.instance_of = MetaTransport._global_meta
     
     OBJ_TYPENAME = "TRANSPORT"
+    """ Имя типа сущности TypeName ("TRANSPORT") """
     
     ATTR_TYPE = "TYPE"
+    """ Имя атрибута - тип """
     
     ATTR_BRAND = "BRAND"
+    """ Имя атрибута - марка (производитель, бренд) """
     
     ATTR_MODEL = "MODEL"
+    """ Имя атрибута - модель """
     
     ATTR_CLASS = "CLASS"
+    """ Имя атрибута - класс """
     
     ATTR_NAME = "NAME"
+    """ Имя атрибута - собственное имя (если есть, например, у кораблей) """
     
     ATTR_NUMBER = "NUMBER"
+    """ Имя атрибута - номер """
     
     ATTR_NUMBER_REGION = "NUMBER_REG"
+    """ Имя атрибута - номер региона """
     
     ATTR_KIND = "KIND"
+    """ Имя атрибута - категория (TransportKind) """
     
     ATTR_GEO = "GEO"
+    """ Имя атрибута - географический объект (GeoReferent) """
     
     ATTR_ORG = "ORG"
+    """ Имя атрибута - организация (OrganizationReferent) """
     
     ATTR_DATE = "DATE"
+    """ Имя атрибута - дата выпуска """
     
     ATTR_ROUTEPOINT = "ROUTEPOINT"
+    """ Имя атрибута - пункт назначения """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         res = io.StringIO()
@@ -78,7 +93,7 @@ class TransportReferent(Referent):
             print(" \"{0}\"".format(MiscHelper.convert_first_char_upper_and_other_lower(str0_)), end="", file=res, flush=True)
             for s in self.slots: 
                 if (s.type_name == TransportReferent.ATTR_NAME and str0_ != (s.value)): 
-                    if (LanguageHelper.is_cyrillic_char(str0_[0]) != LanguageHelper.is_cyrillic_char((s.value)[0])): 
+                    if (LanguageHelper.is_cyrillic_char(str0_[0]) != LanguageHelper.is_cyrillic_char(s.value[0])): 
                         print(" ({0})".format(MiscHelper.convert_first_char_upper_and_other_lower(s.value)), end="", file=res, flush=True)
                         break
         str0_ = self.get_string_value(TransportReferent.ATTR_CLASS)
@@ -100,7 +115,7 @@ class TransportReferent(Referent):
                     else: 
                         print(" - ", end="", file=res)
                     if (isinstance(s.value, Referent)): 
-                        print((s.value).to_string(True, lang, 0), end="", file=res)
+                        print(s.value.to_string(True, lang, 0), end="", file=res)
                     else: 
                         print(s.value, end="", file=res)
             print(")", end="", file=res)
@@ -115,7 +130,7 @@ class TransportReferent(Referent):
     
     @property
     def kind(self) -> 'TransportKind':
-        """ Класс сущности (авто, авиа, аква ...) """
+        """ Категория транспорта (авто, авиа, аква ...) """
         return self.__get_kind(self.get_string_value(TransportReferent.ATTR_KIND))
     @kind.setter
     def kind(self, value) -> 'TransportKind':
@@ -130,7 +145,7 @@ class TransportReferent(Referent):
             res = Utils.valToEnum(s, TransportKind)
             if (isinstance(res, TransportKind)): 
                 return Utils.valToEnum(res, TransportKind)
-        except Exception as ex2767: 
+        except Exception as ex2701: 
             pass
         return TransportKind.UNDEFINED
     
@@ -138,11 +153,11 @@ class TransportReferent(Referent):
         if (isinstance(r, GeoReferent)): 
             self.add_slot(TransportReferent.ATTR_GEO, r, False, 0)
         elif (isinstance(r, ReferentToken)): 
-            if (isinstance((r).get_referent(), GeoReferent)): 
-                self.add_slot(TransportReferent.ATTR_GEO, (r).get_referent(), False, 0)
+            if (isinstance(r.get_referent(), GeoReferent)): 
+                self.add_slot(TransportReferent.ATTR_GEO, r.get_referent(), False, 0)
                 self.add_ext_referent(Utils.asObjectOrNull(r, ReferentToken))
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType'=ReferentsEqualType.WITHINONETEXT) -> bool:
         tr = Utils.asObjectOrNull(obj, TransportReferent)
         if (tr is None): 
             return False
@@ -167,7 +182,7 @@ class TransportReferent(Referent):
         s2 = tr.get_string_value(TransportReferent.ATTR_NUMBER)
         if (s1 is not None or s2 is not None): 
             if (s1 is None or s2 is None): 
-                if (typ == Referent.EqualType.DIFFERENTTEXTS): 
+                if (typ == ReferentsEqualType.DIFFERENTTEXTS): 
                     return False
             else: 
                 if (s1 != s2): 
@@ -176,7 +191,7 @@ class TransportReferent(Referent):
                 s2 = tr.get_string_value(TransportReferent.ATTR_NUMBER_REGION)
                 if (s1 is not None or s2 is not None): 
                     if (s1 is None or s2 is None): 
-                        if (typ == Referent.EqualType.DIFFERENTTEXTS): 
+                        if (typ == ReferentsEqualType.DIFFERENTTEXTS): 
                             return False
                     elif (s1 != s2): 
                         return False
@@ -184,7 +199,7 @@ class TransportReferent(Referent):
         s2 = tr.get_string_value(TransportReferent.ATTR_BRAND)
         if (s1 is not None or s2 is not None): 
             if (s1 is None or s2 is None): 
-                if (typ == Referent.EqualType.DIFFERENTTEXTS): 
+                if (typ == ReferentsEqualType.DIFFERENTTEXTS): 
                     return False
             elif (s1 != s2): 
                 return False
@@ -192,7 +207,7 @@ class TransportReferent(Referent):
         s2 = tr.get_string_value(TransportReferent.ATTR_MODEL)
         if (s1 is not None or s2 is not None): 
             if (s1 is None or s2 is None): 
-                if (typ == Referent.EqualType.DIFFERENTTEXTS): 
+                if (typ == ReferentsEqualType.DIFFERENTTEXTS): 
                     return False
             elif (s1 != s2): 
                 return False

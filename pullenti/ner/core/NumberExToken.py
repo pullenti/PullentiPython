@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
@@ -9,7 +8,8 @@ from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.NumberExType import NumberExType
 
 class NumberExToken(NumberToken):
-    """ Число с стандартный постфиксом (мерой длины, вес, деньги и т.п.) """
+    # Число с стандартный постфиксом (мерой длины, вес, деньги и т.п.)
+    # Устарело, вместо этого лучше использовать MeasureReferent или NumbersWithUnitToken
     
     def __init__(self, begin : 'Token', end : 'Token', val : str, typ_ : 'NumberSpellingType', ex_typ_ : 'NumberExType'=NumberExType.UNDEFINED) -> None:
         super().__init__(begin, end, val, typ_, None)
@@ -126,10 +126,10 @@ class NumberExToken(NumberToken):
         from pullenti.ner.core.internal.NumberExHelper import NumberExHelper
         if (ty2 != NumberExType.UNDEFINED): 
             return "{0}/{1}".format(NumberExToken.ex_typ_to_string(ty, NumberExType.UNDEFINED), NumberExToken.ex_typ_to_string(ty2, NumberExType.UNDEFINED))
-        wrapres571 = RefOutArgWrapper(None)
-        inoutres572 = Utils.tryGetValue(NumberExHelper._m_normals_typs, ty, wrapres571)
-        res = wrapres571.value
-        if (inoutres572): 
+        wrapres500 = RefOutArgWrapper(None)
+        inoutres501 = Utils.tryGetValue(NumberExHelper._m_normals_typs, ty, wrapres500)
+        res = wrapres500.value
+        if (inoutres501): 
             return res
         return "?"
     
@@ -137,20 +137,20 @@ class NumberExToken(NumberToken):
         return "{0}{1}".format(self.real_value, Utils.ifNotNull(self.ex_typ_param, NumberExToken.ex_typ_to_string(self.ex_typ, self.ex_typ2)))
     
     @staticmethod
-    def _new473(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float, _arg7 : 'MorphCollection') -> 'NumberExToken':
+    def _new405(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float, _arg7 : 'MorphCollection') -> 'NumberExToken':
         res = NumberExToken(_arg1, _arg2, _arg3, _arg4, _arg5)
         res.alt_real_value = _arg6
         res.morph = _arg7
         return res
     
     @staticmethod
-    def _new474(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : 'MorphCollection') -> 'NumberExToken':
+    def _new406(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : 'MorphCollection') -> 'NumberExToken':
         res = NumberExToken(_arg1, _arg2, _arg3, _arg4, _arg5)
         res.morph = _arg6
         return res
     
     @staticmethod
-    def _new475(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float, _arg7 : float, _arg8 : 'MorphCollection') -> 'NumberExToken':
+    def _new407(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float, _arg7 : float, _arg8 : 'MorphCollection') -> 'NumberExToken':
         res = NumberExToken(_arg1, _arg2, _arg3, _arg4, _arg5)
         res.real_value = _arg6
         res.alt_real_value = _arg7
@@ -158,7 +158,7 @@ class NumberExToken(NumberToken):
         return res
     
     @staticmethod
-    def _new476(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float, _arg7 : float, _arg8 : str) -> 'NumberExToken':
+    def _new408(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float, _arg7 : float, _arg8 : str) -> 'NumberExToken':
         res = NumberExToken(_arg1, _arg2, _arg3, _arg4, _arg5)
         res.real_value = _arg6
         res.alt_real_value = _arg7
@@ -166,7 +166,16 @@ class NumberExToken(NumberToken):
         return res
     
     @staticmethod
-    def _new478(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float, _arg7 : float, _arg8 : 'NumberExType', _arg9 : str) -> 'NumberExToken':
+    def _new410(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float, _arg7 : float, _arg8 : 'MorphCollection', _arg9 : str) -> 'NumberExToken':
+        res = NumberExToken(_arg1, _arg2, _arg3, _arg4, _arg5)
+        res.real_value = _arg6
+        res.alt_real_value = _arg7
+        res.morph = _arg8
+        res.ex_typ_param = _arg9
+        return res
+    
+    @staticmethod
+    def _new412(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float, _arg7 : float, _arg8 : 'NumberExType', _arg9 : str) -> 'NumberExToken':
         res = NumberExToken(_arg1, _arg2, _arg3, _arg4, _arg5)
         res.real_value = _arg6
         res.alt_real_value = _arg7
@@ -175,7 +184,7 @@ class NumberExToken(NumberToken):
         return res
     
     @staticmethod
-    def _new479(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float, _arg7 : float, _arg8 : bool) -> 'NumberExToken':
+    def _new413(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float, _arg7 : float, _arg8 : bool) -> 'NumberExToken':
         res = NumberExToken(_arg1, _arg2, _arg3, _arg4, _arg5)
         res.real_value = _arg6
         res.alt_real_value = _arg7
@@ -183,19 +192,19 @@ class NumberExToken(NumberToken):
         return res
     
     @staticmethod
-    def _new480(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : object) -> 'NumberExToken':
+    def _new414(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : object) -> 'NumberExToken':
         res = NumberExToken(_arg1, _arg2, _arg3, _arg4, _arg5)
         res.tag = _arg6
         return res
     
     @staticmethod
-    def _new481(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : str) -> 'NumberExToken':
+    def _new415(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : str) -> 'NumberExToken':
         res = NumberExToken(_arg1, _arg2, _arg3, _arg4, _arg5)
         res.ex_typ_param = _arg6
         return res
     
     @staticmethod
-    def _new590(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float) -> 'NumberExToken':
+    def _new519(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'NumberExType', _arg6 : float) -> 'NumberExToken':
         res = NumberExToken(_arg1, _arg2, _arg3, _arg4, _arg5)
         res.real_value = _arg6
         return res

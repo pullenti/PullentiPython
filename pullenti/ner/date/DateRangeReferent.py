@@ -1,28 +1,32 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import datetime
 import io
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.ner.Referent import Referent
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.date.DateReferent import DateReferent
 from pullenti.ner.date.internal.MetaDateRange import MetaDateRange
 
 class DateRangeReferent(Referent):
-    """ Сущность, представляющая диапазон дат """
+    """ Сущность, представляющая диапазон дат
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(DateRangeReferent.OBJ_TYPENAME)
         self.instance_of = MetaDateRange.GLOBAL_META
     
     OBJ_TYPENAME = "DATERANGE"
+    """ Имя типа сущности TypeName ("DATERANGE") """
     
     ATTR_FROM = "FROM"
+    """ Имя атрибута - дата начала диапазона (DateReferent) """
     
     ATTR_TO = "TO"
+    """ Имя атрибута - дата окончания диапазона (DateReferent) """
     
     @property
     def date_from(self) -> 'DateReferent':
@@ -44,7 +48,7 @@ class DateRangeReferent(Referent):
     
     @property
     def is_relative(self) -> bool:
-        """ Диапазон относителен (с 10 по 20 февраля прошлого года) """
+        """ Признак относительности диапазона (с 10 по 20 февраля прошлого года) """
         if (self.date_from is not None and self.date_from.is_relative): 
             return True
         if (self.date_to is not None and self.date_to.is_relative): 
@@ -58,16 +62,16 @@ class DateRangeReferent(Referent):
             now(datetime.datetime): текущая дата-время
             from0_(datetime.datetime): результирующее начало диапазона
             to(datetime.datetime): результирующий конец диапазона
-            tense(int): время (-1 - прошлое, 0 - любое, 1 - будущее) - испрользуется
-         при неоднозначных случаях
-         Например, 7 сентября, а сейчас лето, то какой это год? При true - этот, при false - предыдущий
+            tense(int): время (-1 - прошлое, 0 - любое, 1 - будущее) - используется
+        при неоднозначных случаях.
+        Например, 7 сентября, а сейчас лето, то какой это год? При +1 - этот, при -1 - предыдущий
         
         Returns:
             bool: признак корректности
         """
         from pullenti.ner.date.internal.DateRelHelper import DateRelHelper
-        inoutres847 = DateRelHelper.calculate_date_range2(self, now, from0_, to, tense)
-        return inoutres847
+        inoutres781 = DateRelHelper.calculate_date_range2(self, now, from0_, to, tense)
+        return inoutres781
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         from pullenti.ner.date.internal.DateRelHelper import DateRelHelper
@@ -86,7 +90,7 @@ class DateRangeReferent(Referent):
             return to
         return "{0} ? по ?".format(('з' if lang.is_ua else 'с'))
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType') -> bool:
         dr = Utils.asObjectOrNull(obj, DateRangeReferent)
         if (dr is None): 
             return False
@@ -133,14 +137,14 @@ class DateRangeReferent(Referent):
         return 0
     
     @staticmethod
-    def _new781(_arg1 : 'DateReferent', _arg2 : 'DateReferent') -> 'DateRangeReferent':
+    def _new715(_arg1 : 'DateReferent', _arg2 : 'DateReferent') -> 'DateRangeReferent':
         res = DateRangeReferent()
         res.date_from = _arg1
         res.date_to = _arg2
         return res
     
     @staticmethod
-    def _new787(_arg1 : 'DateReferent') -> 'DateRangeReferent':
+    def _new721(_arg1 : 'DateReferent') -> 'DateRangeReferent':
         res = DateRangeReferent()
         res.date_to = _arg1
         return res

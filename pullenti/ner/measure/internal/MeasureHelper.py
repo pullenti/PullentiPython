@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -13,11 +12,11 @@ class MeasureHelper:
         f.value = (0)
         if (Utils.isNullOrEmpty(val)): 
             return False
-        inoutres1673 = Utils.tryParseFloat(val.replace(',', '.'), f)
-        if (val.find(',') >= 0 and inoutres1673): 
+        inoutres1607 = Utils.tryParseFloat(val.replace(',', '.'), f)
+        if (val.find(',') >= 0 and inoutres1607): 
             return True
-        inoutres1672 = Utils.tryParseFloat(val, f)
-        if (inoutres1672): 
+        inoutres1606 = Utils.tryParseFloat(val, f)
+        if (inoutres1606): 
             return True
         return False
     

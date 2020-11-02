@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 
 from pullenti.ner.core.Termin import Termin
@@ -21,122 +20,122 @@ class TerrTermin(Termin):
         self.init_by_normal_text(source, lang_)
     
     @staticmethod
-    def _new1259(_arg1 : str, _arg2 : bool) -> 'TerrTermin':
+    def _new1193(_arg1 : str, _arg2 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1)
         res.is_state = _arg2
         return res
     
     @staticmethod
-    def _new1260(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool) -> 'TerrTermin':
+    def _new1194(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1, _arg2)
         res.is_state = _arg3
         return res
     
     @staticmethod
-    def _new1261(_arg1 : str, _arg2 : bool, _arg3 : bool) -> 'TerrTermin':
+    def _new1195(_arg1 : str, _arg2 : bool, _arg3 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1)
         res.is_state = _arg2
         res.is_doubt = _arg3
         return res
     
     @staticmethod
-    def _new1262(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : bool) -> 'TerrTermin':
+    def _new1196(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1, _arg2)
         res.is_state = _arg3
         res.is_doubt = _arg4
         return res
     
     @staticmethod
-    def _new1265(_arg1 : str, _arg2 : bool, _arg3 : bool) -> 'TerrTermin':
+    def _new1199(_arg1 : str, _arg2 : bool, _arg3 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1)
         res.is_state = _arg2
         res.is_adjective = _arg3
         return res
     
     @staticmethod
-    def _new1266(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : bool) -> 'TerrTermin':
+    def _new1200(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1, _arg2)
         res.is_state = _arg3
         res.is_adjective = _arg4
         return res
     
     @staticmethod
-    def _new1267(_arg1 : str, _arg2 : bool) -> 'TerrTermin':
+    def _new1201(_arg1 : str, _arg2 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1)
         res.is_region = _arg2
         return res
     
     @staticmethod
-    def _new1270(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool) -> 'TerrTermin':
+    def _new1204(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1, _arg2)
         res.is_region = _arg3
         return res
     
     @staticmethod
-    def _new1271(_arg1 : str, _arg2 : bool, _arg3 : str) -> 'TerrTermin':
+    def _new1205(_arg1 : str, _arg2 : bool, _arg3 : str) -> 'TerrTermin':
         res = TerrTermin(_arg1)
         res.is_region = _arg2
         res.acronym = _arg3
         return res
     
     @staticmethod
-    def _new1272(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : str) -> 'TerrTermin':
+    def _new1206(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : str) -> 'TerrTermin':
         res = TerrTermin(_arg1, _arg2)
         res.is_region = _arg3
         res.acronym = _arg4
         return res
     
     @staticmethod
-    def _new1278(_arg1 : str, _arg2 : bool, _arg3 : bool) -> 'TerrTermin':
+    def _new1212(_arg1 : str, _arg2 : bool, _arg3 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1)
         res.is_region = _arg2
         res.is_always_prefix = _arg3
         return res
     
     @staticmethod
-    def _new1282(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : bool) -> 'TerrTermin':
+    def _new1216(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1, _arg2)
         res.is_region = _arg3
         res.is_always_prefix = _arg4
         return res
     
     @staticmethod
-    def _new1291(_arg1 : str, _arg2 : bool, _arg3 : bool) -> 'TerrTermin':
+    def _new1225(_arg1 : str, _arg2 : bool, _arg3 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1)
         res.is_region = _arg2
         res.is_strong = _arg3
         return res
     
     @staticmethod
-    def _new1294(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : bool) -> 'TerrTermin':
+    def _new1228(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1, _arg2)
         res.is_region = _arg3
         res.is_strong = _arg4
         return res
     
     @staticmethod
-    def _new1297(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'TerrTermin':
+    def _new1231(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1)
         res.canonic_text = _arg2
         res.is_sovet = _arg3
         return res
     
     @staticmethod
-    def _new1300(_arg1 : str, _arg2 : bool, _arg3 : bool) -> 'TerrTermin':
+    def _new1234(_arg1 : str, _arg2 : bool, _arg3 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1)
         res.is_region = _arg2
         res.is_adjective = _arg3
         return res
     
     @staticmethod
-    def _new1301(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : bool) -> 'TerrTermin':
+    def _new1235(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1, _arg2)
         res.is_region = _arg3
         res.is_adjective = _arg4
         return res
     
     @staticmethod
-    def _new1302(_arg1 : str, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'TerrTermin':
+    def _new1236(_arg1 : str, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1)
         res.is_region = _arg2
         res.is_specific_prefix = _arg3
@@ -144,7 +143,7 @@ class TerrTermin(Termin):
         return res
     
     @staticmethod
-    def _new1303(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : bool, _arg5 : bool) -> 'TerrTermin':
+    def _new1237(_arg1 : str, _arg2 : 'MorphLang', _arg3 : bool, _arg4 : bool, _arg5 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1, _arg2)
         res.is_region = _arg3
         res.is_specific_prefix = _arg4
@@ -152,20 +151,20 @@ class TerrTermin(Termin):
         return res
     
     @staticmethod
-    def _new1304(_arg1 : str, _arg2 : str) -> 'TerrTermin':
+    def _new1238(_arg1 : str, _arg2 : str) -> 'TerrTermin':
         res = TerrTermin(_arg1)
         res.acronym = _arg2
         return res
     
     @staticmethod
-    def _new1305(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'TerrTermin':
+    def _new1239(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1)
         res.acronym = _arg2
         res.is_region = _arg3
         return res
     
     @staticmethod
-    def _new1307(_arg1 : str, _arg2 : bool) -> 'TerrTermin':
+    def _new1241(_arg1 : str, _arg2 : bool) -> 'TerrTermin':
         res = TerrTermin(_arg1)
         res.is_moscow_region = _arg2
         return res

@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -101,7 +100,7 @@ class RusLatAccord:
         RusLatAccord.__m_accords.append(RusLatAccord("ь", ""))
         RusLatAccord.__m_accords.append(RusLatAccord("", "gh"))
         RusLatAccord.__m_accords.append(RusLatAccord("", "h"))
-        RusLatAccord.__m_accords.append(RusLatAccord._new531("", "e", True))
+        RusLatAccord.__m_accords.append(RusLatAccord._new465("", "e", True))
         RusLatAccord.__m_accords.append(RusLatAccord("еи", "ei"))
         RusLatAccord.__m_accords.append(RusLatAccord("аи", "ai"))
         RusLatAccord.__m_accords.append(RusLatAccord("ай", "i"))
@@ -309,7 +308,7 @@ class RusLatAccord:
         return max_len
     
     @staticmethod
-    def _new531(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'RusLatAccord':
+    def _new465(_arg1 : str, _arg2 : str, _arg3 : bool) -> 'RusLatAccord':
         res = RusLatAccord(_arg1, _arg2)
         res.on_tail = _arg3
         return res

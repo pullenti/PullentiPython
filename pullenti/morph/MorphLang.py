@@ -1,12 +1,11 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
 
 class MorphLang:
-    """ Язык(и) """
+    """ Язык """
     
     def __init__(self) -> None:
         self.value = 0
@@ -109,9 +108,9 @@ class MorphLang:
         return Utils.toStringStringIO(tmp_str)
     
     def equals(self, obj : object) -> bool:
-        if (not ((isinstance(obj, MorphLang)))): 
+        if (not (isinstance(obj, MorphLang))): 
             return False
-        return self.value == (obj).value
+        return self.value == obj.value
     
     def __hash__(self) -> int:
         return self.value
@@ -148,24 +147,51 @@ class MorphLang:
         return True
     
     def __and__(self : 'MorphLang', arg2 : 'MorphLang') -> 'MorphLang':
+        """ Моделирование побитного "AND"
+        
+        Args:
+            self(MorphLang): первый аргумент
+            arg2(MorphLang): второй аргумент
+        
+        Returns:
+            MorphLang: arg1 & arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphLang._new75(((val1) & (val2)))
+        return MorphLang._new56(((val1) & (val2)))
     
     def __or__(self : 'MorphLang', arg2 : 'MorphLang') -> 'MorphLang':
+        """ Моделирование побитного "OR"
+        
+        Args:
+            self(MorphLang): первый аргумент
+            arg2(MorphLang): второй аргумент
+        
+        Returns:
+            MorphLang: arg1 | arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphLang._new75(((val1) | (val2)))
+        return MorphLang._new56(((val1) | (val2)))
     
     def __eq__(self : 'MorphLang', arg2 : 'MorphLang') -> bool:
+        """ Моделирование сравнения ==
+        
+        Args:
+            self(MorphLang): первый аргумент
+            arg2(MorphLang): второй аргумент
+        
+        Returns:
+            bool: arg1 == arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
@@ -175,6 +201,15 @@ class MorphLang:
         return val1 == val2
     
     def __ne__(self : 'MorphLang', arg2 : 'MorphLang') -> bool:
+        """ Моделирование неравенства !=
+        
+        Args:
+            self(MorphLang): первый аргумент
+            arg2(MorphLang): второй аргумент
+        
+        Returns:
+            bool: arg1 != arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
@@ -205,43 +240,43 @@ class MorphLang:
     """ Казахский """
     
     @staticmethod
-    def _new75(_arg1 : int) -> 'MorphLang':
+    def _new56(_arg1 : int) -> 'MorphLang':
         res = MorphLang()
         res.value = _arg1
         return res
     
     @staticmethod
-    def _new77(_arg1 : bool) -> 'MorphLang':
+    def _new58(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_ru = _arg1
         return res
     
     @staticmethod
-    def _new78(_arg1 : bool) -> 'MorphLang':
+    def _new59(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_ua = _arg1
         return res
     
     @staticmethod
-    def _new79(_arg1 : bool) -> 'MorphLang':
+    def _new60(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_by = _arg1
         return res
     
     @staticmethod
-    def _new80(_arg1 : bool) -> 'MorphLang':
+    def _new61(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_en = _arg1
         return res
     
     @staticmethod
-    def _new81(_arg1 : bool) -> 'MorphLang':
+    def _new62(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_it = _arg1
         return res
     
     @staticmethod
-    def _new82(_arg1 : bool) -> 'MorphLang':
+    def _new63(_arg1 : bool) -> 'MorphLang':
         res = MorphLang()
         res.is_kz = _arg1
         return res
@@ -251,11 +286,11 @@ class MorphLang:
     def _static_ctor():
         MorphLang.__m_names = ["RU", "UA", "BY", "EN", "IT", "KZ"]
         MorphLang.UNKNOWN = MorphLang()
-        MorphLang.RU = MorphLang._new77(True)
-        MorphLang.UA = MorphLang._new78(True)
-        MorphLang.BY = MorphLang._new79(True)
-        MorphLang.EN = MorphLang._new80(True)
-        MorphLang.IT = MorphLang._new81(True)
-        MorphLang.KZ = MorphLang._new82(True)
+        MorphLang.RU = MorphLang._new58(True)
+        MorphLang.UA = MorphLang._new59(True)
+        MorphLang.BY = MorphLang._new60(True)
+        MorphLang.EN = MorphLang._new61(True)
+        MorphLang.IT = MorphLang._new62(True)
+        MorphLang.KZ = MorphLang._new63(True)
 
 MorphLang._static_ctor()

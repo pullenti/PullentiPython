@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -10,7 +9,9 @@ from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.LanguageHelper import LanguageHelper
 
 class MorphToken:
-    """ Элементы, на которые разбивается исходный текст (токены) """
+    """ Элементы, на которые разбивается исходный текст (токены)
+    морф.токен
+    """
     
     @property
     def length(self) -> int:
@@ -28,8 +29,7 @@ class MorphToken:
         """
         return text[self.begin_char:self.begin_char+(self.end_char + 1) - self.begin_char]
     
-    @property
-    def lemma(self) -> str:
+    def get_lemma(self) -> str:
         """ Лемма (вариант морфологической нормализации) """
         if (self.__m_lemma is not None): 
             return self.__m_lemma
@@ -66,10 +66,6 @@ class MorphToken:
                 return res[0:0+len(res) - 1] + "Е"
             return res
         return Utils.ifNotNull(self.term, "?")
-    @lemma.setter
-    def lemma(self, value) -> str:
-        self.__m_lemma = value
-        return value
     
     def __compare_forms(self, x : 'MorphWordForm', y : 'MorphWordForm') -> int:
         vx = Utils.ifNotNull(x.normal_full, x.normal_case)

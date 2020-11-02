@@ -1,32 +1,31 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.definition.DefinitionKind import DefinitionKind
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.TextToken import TextToken
-from pullenti.ner.definition.DefinitionKind import DefinitionKind
-from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.Referent import Referent
 from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.Referent import Referent
 from pullenti.ner.Token import Token
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.definition.DefinitionReferent import DefinitionReferent
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.core.NounPhraseToken import NounPhraseToken
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 
 class DefinitionAnalyzerEn:
     
     @staticmethod
     def process(kit : 'AnalysisKit', ad : 'AnalyzerData') -> None:
         t = kit.first_token
-        first_pass3743 = True
+        first_pass3623 = True
         while True:
-            if first_pass3743: first_pass3743 = False
+            if first_pass3623: first_pass3623 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not MiscHelper.can_be_start_of_sentence(t)): 
@@ -53,9 +52,9 @@ class DefinitionAnalyzerEn:
         if (mc.is_preposition or mc.is_misc or mc.is_adverb): 
             if (not MiscHelper.is_eng_article(tt)): 
                 tt = tt.next0_
-                first_pass3744 = True
+                first_pass3624 = True
                 while True:
-                    if first_pass3744: first_pass3744 = False
+                    if first_pass3624: first_pass3624 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_comma): 
@@ -91,7 +90,7 @@ class DefinitionAnalyzerEn:
         if (mc.is_personal_pronoun): 
             return None
         t2 = npt.end_token.next0_
-        if (t2 is None or MiscHelper.can_be_start_of_sentence(t2) or not ((isinstance(t2, TextToken)))): 
+        if (t2 is None or MiscHelper.can_be_start_of_sentence(t2) or not (isinstance(t2, TextToken))): 
             return None
         if (not t2.get_morph_class_in_dictionary().is_verb): 
             return None
@@ -101,9 +100,9 @@ class DefinitionAnalyzerEn:
             if (not tt.get_morph_class_in_dictionary().is_verb): 
                 break
             tt = tt.next0_
-        first_pass3745 = True
+        first_pass3625 = True
         while True:
-            if first_pass3745: first_pass3745 = False
+            if first_pass3625: first_pass3625 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.next0_ is None): 
@@ -113,7 +112,7 @@ class DefinitionAnalyzerEn:
                 if (MiscHelper.can_be_start_of_sentence(tt.next0_)): 
                     t3 = tt
                     break
-            if (not ((isinstance(tt, TextToken)))): 
+            if (not (isinstance(tt, TextToken))): 
                 continue
             if (BracketHelper.can_be_start_of_sequence(tt, False, False)): 
                 br = BracketHelper.try_parse(tt, BracketParseAttr.NO, 100)

@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -45,9 +44,9 @@ class Sentence(object):
     
     def __create_lists(self, s : 'NGSegmentVariant') -> None:
         i = 0
-        first_pass4073 = True
+        first_pass3950 = True
         while True:
-            if first_pass4073: first_pass4073 = False
+            if first_pass3950: first_pass3950 = False
             else: i += 1
             if (not (i < len(s.links))): break
             list0_ = s.get_list(i)
@@ -72,9 +71,9 @@ class Sentence(object):
     
     def __create_links(self, s : 'NGSegmentVariant') -> None:
         i = 0
-        first_pass4074 = True
+        first_pass3951 = True
         while True:
-            if first_pass4074: first_pass4074 = False
+            if first_pass3951: first_pass3951 = False
             else: i += 1
             if (not (i < len(s.links))): break
             link0 = s.links[i]
@@ -115,7 +114,7 @@ class Sentence(object):
                         if ((isinstance(li.from0_.source.source, NumbersWithUnitToken)) and li.to is not None): 
                             gr.add_link(SemLinkType.DETAIL, li.to.res_object, li.from0_.res_object, "какой", False, li.from_prep)
                             continue
-                        be = SemObject._new3004(gr, SemObjectType.VERB)
+                        be = SemObject._new2929(gr, SemObjectType.VERB)
                         be.tokens.append(li.from0_.source.source)
                         be.morph.normal_full = "БЫТЬ"
                         be.morph.normal_case = be.morph.normal_full
@@ -212,21 +211,23 @@ class Sentence(object):
             if (it.result is None): 
                 if (isinstance(it.source, NounPhraseToken)): 
                     npt = Utils.asObjectOrNull(it.source, NounPhraseToken)
-                    if (it.plural == 1 and (((it.source.morph.number) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
+                    if (it.plural == 1 and ((it.source.morph.number) & (MorphNumber.PLURAL)) != (MorphNumber.UNDEFINED)): 
                         it.source.morph.remove_items(MorphNumber.PLURAL, False)
                     it.result = CreateHelper.create_noun_group(it.res_graph, npt)
                     if (npt.multi_nouns and it.result.quantity is None): 
                         it.result_list = list()
                         it.result_list.append(it.result)
-                        if (len(npt.adjectives) > 0 and (((npt.adjectives[0].begin_token.morph.number) & (MorphNumber.SINGULAR))) == (MorphNumber.SINGULAR)): 
+                        if (len(npt.adjectives) > 0 and ((npt.adjectives[0].begin_token.morph.number) & (MorphNumber.SINGULAR)) == (MorphNumber.SINGULAR)): 
                             it.result.morph.number = MorphNumber.SINGULAR
                             if (it.result.morph.normal_full is not None): 
                                 it.result.morph.normal_case = it.result.morph.normal_full
                         i = 1
                         while i < len(npt.adjectives): 
-                            so = SemObject._new3004(it.res_graph, it.result.typ)
+                            so = SemObject._new2929(it.res_graph, it.result.typ)
                             so.tokens.append(npt.noun)
-                            so.morph = (Utils.asObjectOrNull(it.result.morph.clone(), MorphWordForm))
+                            wf = MorphWordForm()
+                            wf.copy_from_word_form(it.result.morph)
+                            so.morph = wf
                             for a in it.result.attrs: 
                                 so.attrs.append(a)
                             so.concept = it.result.concept
@@ -239,7 +240,7 @@ class Sentence(object):
                             i += 1
                 elif (isinstance(it.source, VerbPhraseToken)): 
                     it.result = CreateHelper.create_verb_group(it.res_graph, Utils.asObjectOrNull(it.source, VerbPhraseToken))
-                    it.result_verb_last = (Utils.asObjectOrNull((it.source).last_verb.tag, SemObject))
+                    it.result_verb_last = (Utils.asObjectOrNull(it.source.last_verb.tag, SemObject))
                 elif (isinstance(it.source, NumbersWithUnitToken)): 
                     it.result = CreateHelper.create_number(it.res_graph, Utils.asObjectOrNull(it.source, NumbersWithUnitToken))
                 if (it.result is not None and it.quant is not None): 
@@ -261,9 +262,9 @@ class Sentence(object):
                 if (s is not None): 
                     self.__create_links(s)
         i = 0
-        first_pass4075 = True
+        first_pass3952 = True
         while True:
-            if first_pass4075: first_pass4075 = False
+            if first_pass3952: first_pass3952 = False
             else: i += 1
             if (not (i < len(self.items))): break
             it = self.items[i]
@@ -337,8 +338,8 @@ class Sentence(object):
                             has_pac = True
                             break
                     if (not has_pac): 
-                        ni0 = NGItem._new2997(agent)
-                        gli0 = NGLink._new3010(ni0, Utils.asObjectOrNull(it.source, VerbPhraseToken), NGLinkType.PACIENT)
+                        ni0 = NGItem._new2922(agent)
+                        gli0 = NGLink._new2935(ni0, Utils.asObjectOrNull(it.source, VerbPhraseToken), NGLinkType.PACIENT)
                         if (agent.result_list is not None): 
                             gli0.from_is_plural = True
                             gli0.calc_coef(False)
@@ -361,8 +362,8 @@ class Sentence(object):
                     continue
                 if (agent is None): 
                     continue
-                ni = NGItem._new2997(agent)
-                gli = NGLink._new3010(ni, Utils.asObjectOrNull(it.source, VerbPhraseToken), NGLinkType.AGENT)
+                ni = NGItem._new2922(agent)
+                gli = NGLink._new2935(ni, Utils.asObjectOrNull(it.source, VerbPhraseToken), NGLinkType.AGENT)
                 if (agent.result_list is not None): 
                     gli.from_is_plural = True
                     gli.calc_coef(False)
@@ -377,9 +378,9 @@ class Sentence(object):
                         self.coef += (1)
         agent = (None)
         i = 0
-        first_pass4076 = True
+        first_pass3953 = True
         while True:
-            if first_pass4076: first_pass4076 = False
+            if first_pass3953: first_pass3953 = False
             else: i += 1
             if (not (i < len(self.items))): break
             it = self.items[i]
@@ -408,9 +409,9 @@ class Sentence(object):
                     break
             if (link is None): 
                 j = i + 1
-                first_pass4077 = True
+                first_pass3954 = True
                 while True:
-                    if first_pass4077: first_pass4077 = False
+                    if first_pass3954: first_pass3954 = False
                     else: j += 1
                     if (not (j < len(self.items))): break
                     itt = self.items[j]
@@ -477,9 +478,9 @@ class Sentence(object):
         res = list()
         sent = Sentence()
         t = t0
-        first_pass4078 = True
+        first_pass3955 = True
         while True:
-            if first_pass4078: first_pass4078 = False
+            if first_pass3955: first_pass3955 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= t1.end_char)): break
             if (t.is_char('(')): 
@@ -506,10 +507,10 @@ class Sentence(object):
             m_nexts = dict()
             for it in items_: 
                 nexts = None
-                wrapnexts3013 = RefOutArgWrapper(None)
-                inoutres3014 = Utils.tryGetValue(m_nexts, it.end_token.end_char, wrapnexts3013)
-                nexts = wrapnexts3013.value
-                if (not inoutres3014): 
+                wrapnexts2938 = RefOutArgWrapper(None)
+                inoutres2939 = Utils.tryGetValue(m_nexts, it.end_token.end_char, wrapnexts2938)
+                nexts = wrapnexts2938.value
+                if (not inoutres2939): 
                     nexts = Sentence.parse_variants(it.end_token.next0_, t1, lev + 1, max_count, SentItemType.UNDEFINED)
                     m_nexts[it.end_token.end_char] = nexts
                 if (nexts is None or len(nexts) == 0): 
@@ -554,9 +555,9 @@ class Sentence(object):
         from pullenti.semantic.internal.NGSegment import NGSegment
         self.coef = (0)
         i = 0
-        first_pass4079 = True
+        first_pass3956 = True
         while True:
-            if first_pass4079: first_pass4079 = False
+            if first_pass3956: first_pass3956 = False
             else: i += 1
             if (not (i < len(self.items))): break
             it = self.items[i]
@@ -573,7 +574,7 @@ class Sentence(object):
                     before = it0
                     break
                 elif (it0.typ == SentItemType.ADVERB): 
-                    if ((it0.source).typ == SemAttributeType.UNDEFINED): 
+                    if (it0.source.typ == SemAttributeType.UNDEFINED): 
                         before = it0
                         break
                 elif (it0.can_be_comma_end): 
@@ -589,7 +590,7 @@ class Sentence(object):
                     after = it0
                     break
                 elif (it0.typ == SentItemType.ADVERB): 
-                    if ((it0.source).typ == SemAttributeType.UNDEFINED): 
+                    if (it0.source.typ == SemAttributeType.UNDEFINED): 
                         after = it0
                         break
                 elif (it0.can_be_comma_end): 
@@ -786,7 +787,7 @@ class Sentence(object):
         return ret
     
     @staticmethod
-    def _new3027(_arg1 : 'NGLinkType') -> 'Sentence':
+    def _new2952(_arg1 : 'NGLinkType') -> 'Sentence':
         res = Sentence()
         res.last_noun_to_first_verb = _arg1
         return res

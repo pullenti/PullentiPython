@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -13,34 +12,36 @@ from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.MorphWordForm import MorphWordForm
-from pullenti.morph.Morphology import Morphology
+from pullenti.morph.MorphologyService import MorphologyService
 from pullenti.ner.MorphCollection import MorphCollection
 from pullenti.ner.Token import Token
 
 class TextToken(Token):
-    """ Входной токен (после морфанализа) """
+    """ Входной токен (после морфанализа)
+    Текстовой токен
+    """
     
     def __init__(self, source : 'MorphToken', kit_ : 'AnalysisKit', bchar : int=-1, echar : int=-1) -> None:
         super().__init__(kit_, (bchar if bchar >= 0 else (0 if source is None else source.begin_char)), (echar if echar >= 0 else (0 if source is None else source.end_char)))
         self.term = None;
         self.lemma = None;
         self.term0 = None;
-        self.invariant_prefix_length = 0
-        self.max_length = 0
+        self.invariant_prefix_length_of_morph_vars = 0
+        self.max_length_of_morph_vars = 0
         if (source is None): 
             return
         self.chars = source.char_info
         self.term = source.term
-        self.lemma = (Utils.ifNotNull(source.lemma, self.term))
-        self.max_length = (len(self.term))
+        self.lemma = (Utils.ifNotNull(source.get_lemma(), self.term))
+        self.max_length_of_morph_vars = (len(self.term))
         self.morph = MorphCollection()
         if (source.word_forms is not None): 
             for wf in source.word_forms: 
                 self.morph.add_item(wf)
-                if (wf.normal_case is not None and (self.max_length < len(wf.normal_case))): 
-                    self.max_length = (len(wf.normal_case))
-                if (wf.normal_full is not None and (self.max_length < len(wf.normal_full))): 
-                    self.max_length = (len(wf.normal_full))
+                if (wf.normal_case is not None and (self.max_length_of_morph_vars < len(wf.normal_case))): 
+                    self.max_length_of_morph_vars = (len(wf.normal_case))
+                if (wf.normal_full is not None and (self.max_length_of_morph_vars < len(wf.normal_full))): 
+                    self.max_length_of_morph_vars = (len(wf.normal_full))
         i = 0
         while i < len(self.term): 
             ch = self.term[i]
@@ -60,16 +61,10 @@ class TextToken(Token):
                 j += 1
             if (j < self.morph.items_count): 
                 break
-            self.invariant_prefix_length = ((i + 1))
+            self.invariant_prefix_length_of_morph_vars = ((i + 1))
             i += 1
         if (self.morph.language.is_undefined and not source.language.is_undefined): 
             self.morph.language = source.language
-    
-    def get_lemma(self) -> str:
-        """ Получить лемму (устарело, используйте Lemma)
-        
-        """
-        return self.lemma
     
     def __str__(self) -> str:
         res = Utils.newStringIO(self.term)
@@ -86,26 +81,26 @@ class TextToken(Token):
         """
         if (dict0_ is None): 
             return None
-        wrapres2933 = RefOutArgWrapper(None)
-        inoutres2934 = Utils.tryGetValue(dict0_, self.term, wrapres2933)
-        res = wrapres2933.value
-        if (inoutres2934): 
+        wrapres2864 = RefOutArgWrapper(None)
+        inoutres2865 = Utils.tryGetValue(dict0_, self.term, wrapres2864)
+        res = wrapres2864.value
+        if (inoutres2865): 
             return res
         if (self.morph is not None): 
             for it in self.morph.items: 
                 mf = Utils.asObjectOrNull(it, MorphWordForm)
                 if (mf is not None): 
                     if (mf.normal_case is not None): 
-                        wrapres2929 = RefOutArgWrapper(None)
-                        inoutres2930 = Utils.tryGetValue(dict0_, mf.normal_case, wrapres2929)
-                        res = wrapres2929.value
-                        if (inoutres2930): 
+                        wrapres2860 = RefOutArgWrapper(None)
+                        inoutres2861 = Utils.tryGetValue(dict0_, mf.normal_case, wrapres2860)
+                        res = wrapres2860.value
+                        if (inoutres2861): 
                             return res
                     if (mf.normal_full is not None and mf.normal_case != mf.normal_full): 
-                        wrapres2931 = RefOutArgWrapper(None)
-                        inoutres2932 = Utils.tryGetValue(dict0_, mf.normal_full, wrapres2931)
-                        res = wrapres2931.value
-                        if (inoutres2932): 
+                        wrapres2862 = RefOutArgWrapper(None)
+                        inoutres2863 = Utils.tryGetValue(dict0_, mf.normal_full, wrapres2862)
+                        res = wrapres2862.value
+                        if (inoutres2863): 
                             return res
         return None
     
@@ -118,14 +113,14 @@ class TextToken(Token):
                 return True
         if (term_ is None): 
             return False
-        if (self.invariant_prefix_length > len(term_)): 
+        if (self.invariant_prefix_length_of_morph_vars > len(term_)): 
             return False
-        if (self.max_length >= len(self.term) and (self.max_length < len(term_))): 
+        if (self.max_length_of_morph_vars >= len(self.term) and (self.max_length_of_morph_vars < len(term_))): 
             return False
         if (term_ == self.term): 
             return True
         for wf in self.morph.items: 
-            if ((isinstance(wf, MorphWordForm)) and (((wf).normal_case == term_ or (wf).normal_full == term_))): 
+            if ((isinstance(wf, MorphWordForm)) and ((wf.normal_case == term_ or wf.normal_full == term_))): 
                 return True
         return False
     
@@ -164,7 +159,7 @@ class TextToken(Token):
     def get_morph_class_in_dictionary(self) -> 'MorphClass':
         res = MorphClass()
         for wf in self.morph.items: 
-            if ((isinstance(wf, MorphWordForm)) and (wf).is_in_dictionary): 
+            if ((isinstance(wf, MorphWordForm)) and wf.is_in_dictionary): 
                 res |= wf.class0_
         return res
     
@@ -183,7 +178,7 @@ class TextToken(Token):
             wf = Utils.asObjectOrNull(it, MorphWordForm)
             normal_full = False
             if (gender != MorphGender.UNDEFINED): 
-                if ((((it.gender) & (gender))) == (MorphGender.UNDEFINED)): 
+                if (((it.gender) & (gender)) == (MorphGender.UNDEFINED)): 
                     if ((gender == MorphGender.MASCULINE and ((it.gender != MorphGender.UNDEFINED or it.number == MorphNumber.PLURAL)) and wf is not None) and wf.normal_full is not None): 
                         normal_full = True
                     elif (gender == MorphGender.MASCULINE and it.class0_.is_personal_pronoun): 
@@ -214,8 +209,8 @@ class TextToken(Token):
             return None
         te = None
         if (num == MorphNumber.SINGULAR and mc is not None): 
-            bi = MorphBaseInfo._new563(MorphClass._new72(mc.value), gender, MorphNumber.SINGULAR, self.morph.language)
-            vars0_ = Morphology.get_wordform(self.term, bi)
+            bi = MorphBaseInfo._new492(MorphClass._new53(mc.value), gender, MorphNumber.SINGULAR, self.morph.language)
+            vars0_ = MorphologyService.get_wordform(self.term, bi)
             if (vars0_ is not None): 
                 te = vars0_
         if (te is None): 
@@ -236,7 +231,7 @@ class TextToken(Token):
             if (isinstance(t, TextToken)): 
                 res.append(Utils.asObjectOrNull(t, TextToken))
             elif (isinstance(t, MetaToken)): 
-                res.extend(TextToken.get_source_text_tokens((t).begin_token, (t).end_token))
+                res.extend(TextToken.get_source_text_tokens(t.begin_token, t.end_token))
             t = t.next0_
         return res
     
@@ -247,7 +242,7 @@ class TextToken(Token):
         if ((self.is_value("МОЖНО", None) or self.is_value("МОЖЕТ", None) or self.is_value("ДОЛЖНЫЙ", None)) or self.is_value("НУЖНО", None)): 
             return True
         for it in self.morph.items: 
-            if ((isinstance(it, MorphWordForm)) and (it).is_in_dictionary): 
+            if ((isinstance(it, MorphWordForm)) and it.is_in_dictionary): 
                 if (it.class0_.is_verb and it.case_.is_undefined): 
                     ret = True
                 elif (not it.class0_.is_verb): 
@@ -273,25 +268,25 @@ class TextToken(Token):
         super()._serialize(stream)
         SerializerHelper.serialize_string(stream, self.term)
         SerializerHelper.serialize_string(stream, self.lemma)
-        SerializerHelper.serialize_short(stream, self.invariant_prefix_length)
-        SerializerHelper.serialize_short(stream, self.max_length)
+        SerializerHelper.serialize_short(stream, self.invariant_prefix_length_of_morph_vars)
+        SerializerHelper.serialize_short(stream, self.max_length_of_morph_vars)
     
     def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit', vers : int) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         super()._deserialize(stream, kit_, vers)
         self.term = SerializerHelper.deserialize_string(stream)
         self.lemma = SerializerHelper.deserialize_string(stream)
-        self.invariant_prefix_length = SerializerHelper.deserialize_short(stream)
-        self.max_length = SerializerHelper.deserialize_short(stream)
+        self.invariant_prefix_length_of_morph_vars = SerializerHelper.deserialize_short(stream)
+        self.max_length_of_morph_vars = SerializerHelper.deserialize_short(stream)
     
     @staticmethod
-    def _new541(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : int, _arg4 : int, _arg5 : str) -> 'TextToken':
+    def _new470(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : int, _arg4 : int, _arg5 : str) -> 'TextToken':
         res = TextToken(_arg1, _arg2, _arg3, _arg4)
         res.term0 = _arg5
         return res
     
     @staticmethod
-    def _new544(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : int, _arg4 : int, _arg5 : 'CharsInfo', _arg6 : str) -> 'TextToken':
+    def _new473(_arg1 : 'MorphToken', _arg2 : 'AnalysisKit', _arg3 : int, _arg4 : int, _arg5 : 'CharsInfo', _arg6 : str) -> 'TextToken':
         res = TextToken(_arg1, _arg2, _arg3, _arg4)
         res.chars = _arg5
         res.term0 = _arg6

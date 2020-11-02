@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -12,52 +11,68 @@ from pullenti.ner.date.DateReferent import DateReferent
 from pullenti.ner.org.OrganizationReferent import OrganizationReferent
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.Referent import Referent
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.titlepage.internal.MetaTitleInfo import MetaTitleInfo
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.core.Termin import Termin
 
 class TitlePageReferent(Referent):
-    """ Сущность, описывающая информацию из заголовков статей, книг, диссертация и пр. """
+    """ Сущность, описывающая информацию из заголовков статей, книг, диссертация и пр.
+    
+    """
     
     def __init__(self, name : str=None) -> None:
         super().__init__(Utils.ifNotNull(name, TitlePageReferent.OBJ_TYPENAME))
         self.instance_of = MetaTitleInfo._global_meta
     
     OBJ_TYPENAME = "TITLEPAGE"
+    """ Имя типа сущности TypeName ("TITLEPAGE") """
     
     ATTR_NAME = "NAME"
+    """ Имя атрибута - наименование """
     
     ATTR_TYPE = "TYPE"
+    """ Имя атрибута - тип """
     
     ATTR_AUTHOR = "AUTHOR"
+    """ Имя атрибута - автор (PersonReferent) """
     
     ATTR_SUPERVISOR = "SUPERVISOR"
+    """ Имя атрибута - руководитель (PersonReferent) """
     
     ATTR_EDITOR = "EDITOR"
+    """ Имя атрибута - редактор (PersonReferent) """
     
     ATTR_CONSULTANT = "CONSULTANT"
+    """ Имя атрибута - консультант (PersonReferent) """
     
     ATTR_OPPONENT = "OPPONENT"
+    """ Имя атрибута - оппонент (PersonReferent) """
     
     ATTR_TRANSLATOR = "TRANSLATOR"
+    """ Имя атрибута - переводчик (PersonReferent) """
     
     ATTR_AFFIRMANT = "AFFIRMANT"
+    """ Имя атрибута - утвердивший (PersonReferent) """
     
     ATTR_ORG = "ORGANIZATION"
-    
-    ATTR_DEP = "DEPARTMENT"
+    """ Имя атрибута - организации (OrganizationReferent) """
     
     ATTR_STUDENTYEAR = "STUDENTYEAR"
+    """ Имя атрибута - курс студента """
     
     ATTR_DATE = "DATE"
+    """ Имя атрибута - дата (год) """
     
     ATTR_CITY = "CITY"
+    """ Имя атрибута - город (GeoReferent) """
     
     ATTR_SPECIALITY = "SPECIALITY"
+    """ Имя атрибута - специальность (для диссертаций) """
     
     ATTR_ATTR = "ATTR"
+    """ Имя атрибута - дополнительный атрибут """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         res = io.StringIO()
@@ -70,7 +85,7 @@ class TitlePageReferent(Referent):
                     break
             for r in self.slots: 
                 if (r.type_name == TitlePageReferent.ATTR_AUTHOR and (isinstance(r.value, Referent))): 
-                    print(", {0}".format((r.value).to_string(True, lang, 0)), end="", file=res, flush=True)
+                    print(", {0}".format(r.value.to_string(True, lang, 0)), end="", file=res, flush=True)
         if (self.city is not None and not short_variant): 
             print(", {0}".format(self.city.to_string(True, lang, 0)), end="", file=res, flush=True)
         if (self.date is not None): 

@@ -1,38 +1,47 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-from pullenti.ner.goods.GoodAttrType import GoodAttrType
-from pullenti.ner.ReferentClass import ReferentClass
-from pullenti.ner.goods.internal.AttrMeta import AttrMeta
+from pullenti.ner.core.Termin import Termin
 from pullenti.ner.Referent import Referent
+from pullenti.ner.metadata.ReferentClass import ReferentClass
+from pullenti.ner.goods.GoodAttrType import GoodAttrType
+from pullenti.ner.goods.internal.AttrMeta import AttrMeta
 
 class GoodAttributeReferent(Referent):
-    """ Атрибут товара """
+    """ Атрибут товара
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(GoodAttributeReferent.OBJ_TYPENAME)
         self.instance_of = AttrMeta.GLOBAL_META
     
     OBJ_TYPENAME = "GOODATTR"
+    """ Имя типа сущности TypeName ("GOODATTR") """
     
     ATTR_TYPE = "TYPE"
+    """ Имя атрибута - тип атрибута (GoodAttrType) """
     
     ATTR_VALUE = "VALUE"
+    """ Имя атрибута - значение атрибута """
     
     ATTR_ALTVALUE = "ALTVALUE"
+    """ Имя атрибута - альтернативное значение атрибута """
     
     ATTR_UNIT = "UNIT"
+    """ Имя атрибута - единица измерения """
     
     ATTR_NAME = "NAME"
+    """ Имя атрибута - наименование атрибута """
     
     ATTR_REF = "REF"
+    """ Имя атрибута - сслыка на сущность (Referent) """
     
     @property
     def typ(self) -> 'GoodAttrType':
@@ -42,7 +51,7 @@ class GoodAttributeReferent(Referent):
             return GoodAttrType.UNDEFINED
         try: 
             return Utils.valToEnum(str0_, GoodAttrType)
-        except Exception as ex1405: 
+        except Exception as ex1339: 
             pass
         return GoodAttrType.UNDEFINED
     @typ.setter
@@ -52,7 +61,7 @@ class GoodAttributeReferent(Referent):
     
     @property
     def values(self) -> typing.List[str]:
-        """ Значения """
+        """ Значения (список string) """
         res = list()
         for s in self.slots: 
             if (s.type_name == GoodAttributeReferent.ATTR_VALUE and (isinstance(s.value, str))): 
@@ -65,7 +74,8 @@ class GoodAttributeReferent(Referent):
     
     @property
     def alt_values(self) -> typing.List[str]:
-        """ Значения """
+        """ Альтернативное представление значений (список string). Например, для значение ИКЕЯ здесь
+        будут варианты написаний на латинице типа IKEA, IKEYA ... """
         res = list()
         for s in self.slots: 
             if (s.type_name == GoodAttributeReferent.ATTR_ALTVALUE and (isinstance(s.value, str))): 
@@ -74,7 +84,7 @@ class GoodAttributeReferent(Referent):
     
     @property
     def units(self) -> typing.List[str]:
-        """ Единицы измерения """
+        """ Единицы измерения (список string) """
         res = list()
         for s in self.slots: 
             if (s.type_name == GoodAttributeReferent.ATTR_UNIT and (isinstance(s.value, str))): 
@@ -83,7 +93,7 @@ class GoodAttributeReferent(Referent):
     
     @property
     def ref(self) -> 'Referent':
-        """ Ссылка на внушнюю сущность """
+        """ Ссылка на внешнюю сущность """
         return Utils.asObjectOrNull(self.get_slot_value(GoodAttributeReferent.ATTR_REF), Referent)
     @ref.setter
     def ref(self, value) -> 'Referent':
@@ -96,7 +106,7 @@ class GoodAttributeReferent(Referent):
         nam = self.get_string_value(GoodAttributeReferent.ATTR_NAME)
         if (not short_variant): 
             if (typ_ != GoodAttrType.UNDEFINED): 
-                print("{0}{1}: ".format(AttrMeta.GLOBAL_META.typ_attr.convert_inner_value_to_outer_value(typ_, lang), ("" if nam is None else " ({0})".format(nam.lower()))), end="", file=res, flush=True)
+                print("{0}{1}: ".format(AttrMeta.GLOBAL_META.typ_attr.convert_inner_value_to_outer_value(Utils.enumToString(typ_), lang), ("" if nam is None else " ({0})".format(nam.lower()))), end="", file=res, flush=True)
         s = self.get_string_value(GoodAttributeReferent.ATTR_VALUE)
         if (s is not None): 
             if (typ_ == GoodAttrType.KEYWORD or typ_ == GoodAttrType.CHARACTER): 
@@ -121,7 +131,7 @@ class GoodAttributeReferent(Referent):
             print(re.to_string(short_variant, lang, 0), end="", file=res)
         return Utils.toStringStringIO(res)
     
-    def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ_ : 'ReferentsEqualType'=ReferentsEqualType.WITHINONETEXT) -> bool:
         a = Utils.asObjectOrNull(obj, GoodAttributeReferent)
         if (a is None): 
             return False

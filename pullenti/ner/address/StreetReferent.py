@@ -1,40 +1,49 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.ner.address.StreetKind import StreetKind
-from pullenti.ner.Referent import Referent
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.Referent import Referent
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.address.internal.MetaStreet import MetaStreet
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.geo.GeoReferent import GeoReferent
 
 class StreetReferent(Referent):
-    """ Улица, проспект, площадь, шоссе и т.п. """
+    """ Сущность: улица, проспект, площадь, шоссе и т.п. Выделяется анализатором AddressAnalyzer.
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(StreetReferent.OBJ_TYPENAME)
         self.instance_of = MetaStreet._global_meta
     
     OBJ_TYPENAME = "STREET"
+    """ Имя типа сущности TypeName ("STREET") """
     
     ATTR_TYP = "TYP"
+    """ Имя атрибута - тип (улица, переулок, площадь...) """
     
     ATTR_NAME = "NAME"
+    """ Имя атрибута - наименование (м.б. несколько вариантов) """
     
     ATTR_NUMBER = "NUMBER"
+    """ Имя атрибута - номер """
     
     ATTR_SECNUMBER = "SECNUMBER"
+    """ Имя атрибута - дополнительный номер """
     
     ATTR_GEO = "GEO"
+    """ Имя атрибута - географический объект """
     
     ATTR_FIAS = "FIAS"
+    """ Имя атрибута - код ФИАС (определяется анализатором FiasAnalyzer) """
     
     ATTR_BTI = "BTI"
     
@@ -105,9 +114,9 @@ class StreetReferent(Referent):
         typs_ = self.typs
         if (len(typs_) > 0): 
             i = 0
-            first_pass3614 = True
+            first_pass3509 = True
             while True:
-                if first_pass3614: first_pass3614 = False
+                if first_pass3509: first_pass3509 = False
                 else: i += 1
                 if (not (i < len(typs_))): break
                 if (nam is not None and typs_[i].upper() in nam): 
@@ -126,10 +135,10 @@ class StreetReferent(Referent):
         if (not short_variant): 
             kladr = self.get_slot_value(StreetReferent.ATTR_FIAS)
             if (isinstance(kladr, Referent)): 
-                print(" (ФИАС: {0}".format(Utils.ifNotNull((kladr).get_string_value("GUID"), "?")), end="", file=tmp, flush=True)
+                print(" (ФИАС: {0}".format(Utils.ifNotNull(kladr.get_string_value("GUID"), "?")), end="", file=tmp, flush=True)
                 for s in self.slots: 
                     if (s.type_name == StreetReferent.ATTR_FIAS and (isinstance(s.value, Referent)) and s.value != kladr): 
-                        print(", {0}".format(Utils.ifNotNull((s.value).get_string_value("GUID"), "?")), end="", file=tmp, flush=True)
+                        print(", {0}".format(Utils.ifNotNull(s.value.get_string_value("GUID"), "?")), end="", file=tmp, flush=True)
                 print(')', end="", file=tmp)
             bti = self.get_string_value(StreetReferent.ATTR_BTI)
             if (bti is not None): 
@@ -151,10 +160,10 @@ class StreetReferent(Referent):
                 return StreetKind.METRO
         return StreetKind.UNDEFINED
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType'=ReferentsEqualType.WITHINONETEXT) -> bool:
         return self.__can_be_equals(obj, typ, False)
     
-    def __can_be_equals(self, obj : 'Referent', typ : 'EqualType', ignore_geo : bool) -> bool:
+    def __can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType', ignore_geo : bool) -> bool:
         stri = Utils.asObjectOrNull(obj, StreetReferent)
         if (stri is None): 
             return False
@@ -231,10 +240,10 @@ class StreetReferent(Referent):
         super().merge_slots(obj, merge_statistic)
     
     def can_be_general_for(self, obj : 'Referent') -> bool:
-        if (not self.__can_be_equals(obj, Referent.EqualType.WITHINONETEXT, True)): 
+        if (not self.__can_be_equals(obj, ReferentsEqualType.WITHINONETEXT, True)): 
             return False
         geos1 = self.geos
-        geos2 = (obj).geos
+        geos2 = obj.geos
         if (len(geos2) == 0 or len(geos1) > 0): 
             return False
         return True

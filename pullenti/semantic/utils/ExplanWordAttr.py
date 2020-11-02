@@ -1,18 +1,16 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
 
 class ExplanWordAttr:
-    """ Дополнительные характеристики слова """
+    """ Атрибуты слова дериватной группы DerivateWord
+    Атрибуты слова группы
+    """
     
-    def __init__(self, val : 'ExplanWordAttr'=None) -> None:
+    def __init__(self) -> None:
         self.value = 0
-        self.value = (0)
-        if (val is not None): 
-            self.value = val.value
     
     def __get_value(self, i : int) -> bool:
         return (((((self.value) >> i)) & 1)) != 0
@@ -169,32 +167,59 @@ class ExplanWordAttr:
         return Utils.toStringStringIO(tmp_str)
     
     def equals(self, obj : object) -> bool:
-        if (not ((isinstance(obj, ExplanWordAttr)))): 
+        if (not (isinstance(obj, ExplanWordAttr))): 
             return False
-        return self.value == (obj).value
+        return self.value == obj.value
     
     def __hash__(self) -> int:
         return self.value
     
     def __and__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> 'ExplanWordAttr':
+        """ Моделирование побитного "AND"
+        
+        Args:
+            self(ExplanWordAttr): первый аргумент
+            arg2(ExplanWordAttr): второй аргумент
+        
+        Returns:
+            ExplanWordAttr: arg1 & arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return ExplanWordAttr._new3051(((val1) & (val2)))
+        return ExplanWordAttr._new2966(((val1) & (val2)))
     
     def __or__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> 'ExplanWordAttr':
+        """ Моделирование побитного "OR"
+        
+        Args:
+            self(ExplanWordAttr): первый аргумент
+            arg2(ExplanWordAttr): второй аргумент
+        
+        Returns:
+            ExplanWordAttr: arg1 | arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return ExplanWordAttr._new3051(((val1) | (val2)))
+        return ExplanWordAttr._new2966(((val1) | (val2)))
     
     def __eq__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> bool:
+        """ Моделирование сравнения ==
+        
+        Args:
+            self(ExplanWordAttr): первый аргумент
+            arg2(ExplanWordAttr): второй аргумент
+        
+        Returns:
+            bool: arg1 == arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
@@ -204,6 +229,15 @@ class ExplanWordAttr:
         return val1 == val2
     
     def __ne__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> bool:
+        """ Моделирование неравенства !=
+        
+        Args:
+            self(ExplanWordAttr): первый аргумент
+            arg2(ExplanWordAttr): второй аргумент
+        
+        Returns:
+            bool: arg1 != arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
@@ -216,7 +250,7 @@ class ExplanWordAttr:
     """ Неопределённое """
     
     @staticmethod
-    def _new3051(_arg1 : int) -> 'ExplanWordAttr':
+    def _new2966(_arg1 : int) -> 'ExplanWordAttr':
         res = ExplanWordAttr()
         res.value = _arg1
         return res

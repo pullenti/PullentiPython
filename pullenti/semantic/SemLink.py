@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -53,7 +52,7 @@ class SemLink:
         return Utils.toStringStringIO(tmp)
     
     @staticmethod
-    def _new3054(_arg1 : 'SemGraph', _arg2 : 'SemObject', _arg3 : 'SemObject', _arg4 : 'SemLinkType', _arg5 : str, _arg6 : bool, _arg7 : str) -> 'SemLink':
+    def _new2969(_arg1 : 'SemGraph', _arg2 : 'SemObject', _arg3 : 'SemObject', _arg4 : 'SemLinkType', _arg5 : str, _arg6 : bool, _arg7 : str) -> 'SemLink':
         res = SemLink(_arg1, _arg2, _arg3)
         res.typ = _arg4
         res.question = _arg5

@@ -1,16 +1,18 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.Referent import Referent
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.measure.internal.UnitMeta import UnitMeta
 
 class UnitReferent(Referent):
-    """ Ежиница измерения """
+    """ Единица измерения вместе с множителем
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(UnitReferent.OBJ_TYPENAME)
@@ -18,18 +20,25 @@ class UnitReferent(Referent):
         self.instance_of = UnitMeta.GLOBAL_META
     
     OBJ_TYPENAME = "MEASUREUNIT"
+    """ Имя типа сущности TypeName ("MEASUREUNIT") """
     
     ATTR_FULLNAME = "FULLNAME"
+    """ Имя атрибута - полное имя единицы (например, километр) """
     
     ATTR_NAME = "NAME"
+    """ Имя атрибута - краткое имя единицы (например, км) """
     
     ATTR_POW = "POW"
+    """ Имя атрибута - степень, в которую нужно возвести """
     
     ATTR_BASEFACTOR = "BASEFACTOR"
+    """ Имя атрибута - множитель для базовой единицы (чтобы приводить к единому знаменателю) """
     
     ATTR_BASEUNIT = "BASEUNIT"
+    """ Имя атрибута - базовая единица """
     
     ATTR_UNKNOWN = "UNKNOWN"
+    """ Имя атрибута - признак неизвестной (движку) метрики """
     
     @property
     def parent_referent(self) -> 'Referent':
@@ -67,7 +76,7 @@ class UnitReferent(Referent):
         self.add_slot(UnitReferent.ATTR_UNKNOWN, ("true" if value else None), True, 0)
         return value
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType'=ReferentsEqualType.WITHINONETEXT) -> bool:
         ur = Utils.asObjectOrNull(obj, UnitReferent)
         if (ur is None): 
             return False

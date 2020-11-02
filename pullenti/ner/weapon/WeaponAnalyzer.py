@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -8,27 +7,28 @@ from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.Token import Token
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.weapon.internal.WeaponItemToken import WeaponItemToken
 from pullenti.ner.Referent import Referent
-from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.TextToken import TextToken
-from pullenti.ner.core.Termin import Termin
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.internal.PullentiNerCoreInternalResourceHelper import PullentiNerCoreInternalResourceHelper
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.weapon.internal.MetaWeapon import MetaWeapon
-from pullenti.ner.weapon.WeaponReferent import WeaponReferent
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.weapon.internal.MetaWeapon import MetaWeapon
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.ner.measure.MeasureAnalyzer import MeasureAnalyzer
+from pullenti.ner.Analyzer import Analyzer
+from pullenti.ner.weapon.WeaponReferent import WeaponReferent
 from pullenti.ner.geo.GeoReferent import GeoReferent
 
 class WeaponAnalyzer(Analyzer):
-    """ Анализатор выделения оружия """
+    """ Анализатор оружия """
     
     ANALYZER_NAME = "WEAPON"
+    """ Имя анализатора ("WEAPON") """
     
     @property
     def name(self) -> str:
@@ -52,7 +52,7 @@ class WeaponAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[MetaWeapon.IMAGE_ID] = EpNerCoreInternalResourceHelper.get_bytes("weapon.jpg")
+        res[MetaWeapon.IMAGE_ID] = PullentiNerCoreInternalResourceHelper.get_bytes("weapon.jpg")
         return res
     
     def create_referent(self, type0_ : str) -> 'Referent':
@@ -74,9 +74,9 @@ class WeaponAnalyzer(Analyzer):
         objs_by_model = dict()
         obj_by_names = TerminCollection()
         t = kit.first_token
-        first_pass4042 = True
+        first_pass3920 = True
         while True:
-            if first_pass4042: first_pass4042 = False
+            if first_pass3920: first_pass3920 = False
             else: t = t.next0_
             if (not (t is not None)): break
             its = WeaponItemToken.try_parse_list(t, 10)
@@ -94,15 +94,15 @@ class WeaponAnalyzer(Analyzer):
                             for k in range(2):
                                 if (not str.isdigit(mod[0])): 
                                     li = [ ]
-                                    wrapli2866 = RefOutArgWrapper(None)
-                                    inoutres2867 = Utils.tryGetValue(objs_by_model, mod, wrapli2866)
-                                    li = wrapli2866.value
-                                    if (not inoutres2867): 
+                                    wrapli2800 = RefOutArgWrapper(None)
+                                    inoutres2801 = Utils.tryGetValue(objs_by_model, mod, wrapli2800)
+                                    li = wrapli2800.value
+                                    if (not inoutres2801): 
                                         li = list()
                                         objs_by_model[mod] = li
                                     if (not rt.referent in li): 
                                         li.append(rt.referent)
-                                    models.add_str(mod, li, None, False)
+                                    models.add_string(mod, li, None, False)
                                 if (k > 0): 
                                     break
                                 brand = rt.referent.get_string_value(WeaponReferent.ATTR_BRAND)
@@ -110,13 +110,13 @@ class WeaponAnalyzer(Analyzer):
                                     break
                                 mod = "{0} {1}".format(brand, mod)
                         elif (s.type_name == WeaponReferent.ATTR_NAME): 
-                            obj_by_names.add(Termin._new119(str(s.value), rt.referent))
+                            obj_by_names.add(Termin._new100(str(s.value), rt.referent))
         if (len(objs_by_model) == 0 and len(obj_by_names.termins) == 0): 
             return
         t = kit.first_token
-        first_pass4043 = True
+        first_pass3921 = True
         while True:
-            if first_pass4043: first_pass4043 = False
+            if first_pass3921: first_pass3921 = False
             else: t = t.next0_
             if (not (t is not None)): break
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 10)
@@ -127,7 +127,7 @@ class WeaponAnalyzer(Analyzer):
                     kit.embed_token(rt0)
                     t = (rt0)
                     continue
-            if (not ((isinstance(t, TextToken)))): 
+            if (not (isinstance(t, TextToken))): 
                 continue
             if (not t.chars.is_letter): 
                 continue
@@ -157,7 +157,7 @@ class WeaponAnalyzer(Analyzer):
                 t = (rt0)
                 continue
     
-    def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
+    def process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
         its = WeaponItemToken.try_parse_list(begin, 10)
         if (its is None): 
             return None
@@ -173,9 +173,9 @@ class WeaponAnalyzer(Analyzer):
         brand = None
         model = None
         i = 0
-        first_pass4044 = True
+        first_pass3922 = True
         while True:
-            if first_pass4044: first_pass4044 = False
+            if first_pass3922: first_pass3922 = False
             else: i += 1
             if (not (i < len(its))): break
             if (its[i].typ == WeaponItemToken.Typs.NOUN): 
@@ -272,9 +272,9 @@ class WeaponAnalyzer(Analyzer):
         if (noun is None and model is not None): 
             cou = 0
             tt = its[0].begin_token.previous
-            first_pass4045 = True
+            first_pass3923 = True
             while True:
-                if first_pass4045: first_pass4045 = False
+                if first_pass3923: first_pass3923 = False
                 else: tt = tt.previous; cou += 1
                 if (not (tt is not None and (cou < 100))): break
                 prev = Utils.asObjectOrNull(tt.get_referent(), WeaponReferent)

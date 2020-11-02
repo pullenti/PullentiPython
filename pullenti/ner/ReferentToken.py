@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -12,7 +11,9 @@ from pullenti.ner.MorphCollection import MorphCollection
 from pullenti.ner.TextAnnotation import TextAnnotation
 
 class ReferentToken(MetaToken):
-    """ Токен, соответствующий сущности """
+    """ Токен, соответствующий сущности
+    Токен сущности
+    """
     
     def __init__(self, entity : 'Referent', begin : 'Token', end : 'Token', kit_ : 'AnalysisKit'=None) -> None:
         super().__init__(begin, end, kit_)
@@ -28,10 +29,6 @@ class ReferentToken(MetaToken):
         if (self.morph is not None): 
             print(" {0}".format(str(self.morph)), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
-    
-    @property
-    def is_referent(self) -> bool:
-        return True
     
     def get_referent(self) -> 'Referent':
         return self.referent
@@ -77,7 +74,7 @@ class ReferentToken(MetaToken):
             if (t.end_char > self.end_char): 
                 break
             if (isinstance(t, ReferentToken)): 
-                (t)._replace_referent(old_referent, new_referent)
+                t._replace_referent(old_referent, new_referent)
             if (t == self.end_token): 
                 break
             t = t.next0_
@@ -96,45 +93,45 @@ class ReferentToken(MetaToken):
             self.referent = kit_.entities[id0_ - 1]
     
     @staticmethod
-    def _new116(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'AnalyzerData') -> 'ReferentToken':
+    def _new97(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'AnalyzerData') -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.data = _arg4
         return res
     
     @staticmethod
-    def _new800(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection') -> 'ReferentToken':
+    def _new734(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection') -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         return res
     
     @staticmethod
-    def _new802(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : object) -> 'ReferentToken':
+    def _new736(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : object) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.tag = _arg4
         return res
     
     @staticmethod
-    def _new1336(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : 'AnalyzerData') -> 'ReferentToken':
+    def _new1270(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : 'AnalyzerData') -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         res.data = _arg5
         return res
     
     @staticmethod
-    def _new2541(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : int) -> 'ReferentToken':
+    def _new2480(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : int) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         res.misc_attrs = _arg5
         return res
     
     @staticmethod
-    def _new2642(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : int) -> 'ReferentToken':
+    def _new2581(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : int) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.misc_attrs = _arg4
         return res
     
     @staticmethod
-    def _new2652(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : object) -> 'ReferentToken':
+    def _new2591(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : object) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         res.tag = _arg5

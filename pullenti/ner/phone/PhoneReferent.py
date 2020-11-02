@@ -1,19 +1,21 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.Referent import Referent
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.phone.PhoneKind import PhoneKind
-from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.phone.internal.MetaPhone import MetaPhone
+from pullenti.ner.Referent import Referent
+from pullenti.ner.metadata.ReferentClass import ReferentClass
+from pullenti.ner.phone.PhoneKind import PhoneKind
 
 class PhoneReferent(Referent):
-    """ Сущность, представляющая телефонные номера """
+    """ Сущность - телефонный номер
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(PhoneReferent.OBJ_TYPENAME)
@@ -21,14 +23,19 @@ class PhoneReferent(Referent):
         self.instance_of = MetaPhone._global_meta
     
     OBJ_TYPENAME = "PHONE"
+    """ Имя типа сущности TypeName ("PHONE") """
     
     ATTR_NUNBER = "NUMBER"
+    """ Имя атрибута - номер (слитно, без кода страны) """
     
     ATTR_KIND = "KIND"
+    """ Имя атрибута - тип (PhoneKind) """
     
     ATTR_COUNTRYCODE = "COUNTRYCODE"
+    """ Имя атрибута - код страны """
     
     ATTR_ADDNUMBER = "ADDNUMBER"
+    """ Имя атрибута - добавочный номер """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
@@ -57,7 +64,7 @@ class PhoneReferent(Referent):
     
     @property
     def number(self) -> str:
-        """ Основной номер (без кода города) """
+        """ Основной номер (без кода страны) """
         return self.get_string_value(PhoneReferent.ATTR_NUNBER)
     @number.setter
     def number(self, value) -> str:
@@ -111,10 +118,10 @@ class PhoneReferent(Referent):
             res.append("{0}*{1}".format(num, add))
         return res
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType') -> bool:
         return self.__can_be_equal(obj, typ, False)
     
-    def __can_be_equal(self, obj : 'Referent', typ : 'EqualType', ignore_add_number : bool) -> bool:
+    def __can_be_equal(self, obj : 'Referent', typ : 'ReferentsEqualType', ignore_add_number : bool) -> bool:
         ph = Utils.asObjectOrNull(obj, PhoneReferent)
         if (ph is None): 
             return False
@@ -132,13 +139,13 @@ class PhoneReferent(Referent):
             return False
         if (self.number == ph.number): 
             return True
-        if (typ != Referent.EqualType.DIFFERENTTEXTS): 
+        if (typ != ReferentsEqualType.DIFFERENTTEXTS): 
             if (LanguageHelper.ends_with(self.number, ph.number) or LanguageHelper.ends_with(ph.number, self.number)): 
                 return True
         return False
     
     def can_be_general_for(self, obj : 'Referent') -> bool:
-        if (not self.__can_be_equal(obj, Referent.EqualType.WITHINONETEXT, True)): 
+        if (not self.__can_be_equal(obj, ReferentsEqualType.WITHINONETEXT, True)): 
             return False
         ph = Utils.asObjectOrNull(obj, PhoneReferent)
         if (self.country_code is not None and ph.country_code is None): 

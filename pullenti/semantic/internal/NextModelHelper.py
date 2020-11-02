@@ -1,9 +1,6 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
-from pullenti.unisharp.Utils import Utils
-from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.semantic.utils.QuestionType import QuestionType
 from pullenti.morph.MorphCase import MorphCase
@@ -12,8 +9,6 @@ from pullenti.semantic.internal.NextModelItem import NextModelItem
 class NextModelHelper:
     
     ITEMS = None
-    
-    __m_hash_by_spel = None
     
     @staticmethod
     def initialize() -> None:
@@ -62,21 +57,13 @@ class NextModelHelper:
         while i < len(NextModelHelper.ITEMS): 
             j = 0
             while j < (len(NextModelHelper.ITEMS) - 1): 
-                if (NextModelHelper.ITEMS[j].compareTo(NextModelHelper.ITEMS[j + 1]) > 0): 
+                if (NextModelHelper.ITEMS[j].compare_to(NextModelHelper.ITEMS[j + 1]) > 0): 
                     it = NextModelHelper.ITEMS[j]
                     NextModelHelper.ITEMS[j] = NextModelHelper.ITEMS[j + 1]
                     NextModelHelper.ITEMS[j + 1] = it
                 j += 1
             i += 1
-        NextModelHelper.__m_hash_by_spel = dict()
-        for it in NextModelHelper.ITEMS: 
-            NextModelHelper.__m_hash_by_spel[it.spelling] = it
-    
-    @staticmethod
-    def find_by_spel(spel : str) -> 'NextModelItem':
-        wrapres2995 = RefOutArgWrapper(None)
-        inoutres2996 = Utils.tryGetValue(NextModelHelper.__m_hash_by_spel, spel, wrapres2995)
-        res = wrapres2995.value
-        if (not inoutres2996): 
-            return None
-        return res
+        i = 0
+        while i < len(NextModelHelper.ITEMS): 
+            NextModelHelper.ITEMS[i].id0_ = (i + 1)
+            i += 1

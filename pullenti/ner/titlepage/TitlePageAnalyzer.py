@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -17,7 +16,7 @@ from pullenti.ner.date.DateReferent import DateReferent
 from pullenti.ner.person.PersonReferent import PersonReferent
 from pullenti.ner.titlepage.internal.PersonRelations import PersonRelations
 from pullenti.ner.TextAnnotation import TextAnnotation
-from pullenti.ner.booklink.internal.EpNerBooklinkInternalResourceHelper import EpNerBooklinkInternalResourceHelper
+from pullenti.ner.booklink.internal.PullentiNerBooklinkInternalResourceHelper import PullentiNerBooklinkInternalResourceHelper
 from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.org.OrganizationReferent import OrganizationReferent
 from pullenti.ner.titlepage.internal.MetaTitleInfo import MetaTitleInfo
@@ -34,13 +33,16 @@ from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.titlepage.internal.Line import Line
 
 class TitlePageAnalyzer(Analyzer):
-    """ Анализатор заголовочной информации """
+    """ Анализатор титульной информации - название произведения, авторы, год и другие книжные атрибуты.
+    Специфический анализатор, то есть нужно явно создавать процессор через функцию CreateSpecificProcessor,
+    указав имя анализатора. """
     
     @property
     def name(self) -> str:
         return TitlePageAnalyzer.ANALYZER_NAME
     
     ANALYZER_NAME = "TITLEPAGE"
+    """ Имя анализатора ("TITLEPAGE") """
     
     @property
     def caption(self) -> str:
@@ -55,7 +57,7 @@ class TitlePageAnalyzer(Analyzer):
     
     @property
     def is_specific(self) -> bool:
-        """ Этот анализатор является специфическим """
+        """ Этот анализатор является специфическим (IsSpecific = true) """
         return True
     
     @property
@@ -69,7 +71,7 @@ class TitlePageAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[MetaTitleInfo.TITLE_INFO_IMAGE_ID] = EpNerBooklinkInternalResourceHelper.get_bytes("titleinfo.png")
+        res[MetaTitleInfo.TITLE_INFO_IMAGE_ID] = PullentiNerBooklinkInternalResourceHelper.get_bytes("titleinfo.png")
         return res
     
     def create_referent(self, type0_ : str) -> 'Referent':
@@ -78,18 +80,18 @@ class TitlePageAnalyzer(Analyzer):
         return None
     
     def process_referent1(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        wrapet2733 = RefOutArgWrapper(None)
-        tpr = TitlePageAnalyzer._process(begin, (0 if end is None else end.end_char), begin.kit, wrapet2733)
-        et = wrapet2733.value
+        wrapet2667 = RefOutArgWrapper(None)
+        tpr = TitlePageAnalyzer._process(begin, (0 if end is None else end.end_char), begin.kit, wrapet2667)
+        et = wrapet2667.value
         if (tpr is None): 
             return None
         return ReferentToken(tpr, begin, et)
     
     def process(self, kit : 'AnalysisKit') -> None:
         ad = kit.get_analyzer_data(self)
-        wrapet2734 = RefOutArgWrapper(None)
-        tpr = TitlePageAnalyzer._process(kit.first_token, 0, kit, wrapet2734)
-        et = wrapet2734.value
+        wrapet2668 = RefOutArgWrapper(None)
+        tpr = TitlePageAnalyzer._process(kit.first_token, 0, kit, wrapet2668)
+        et = wrapet2668.value
         if (tpr is not None): 
             ad.register_referent(tpr)
     
@@ -176,12 +178,12 @@ class TitlePageAnalyzer(Analyzer):
                 begin = (rt)
         if (term is not None and kit is not None): 
             t = kit.first_token
-            first_pass4011 = True
+            first_pass3889 = True
             while True:
-                if first_pass4011: first_pass4011 = False
+                if first_pass3889: first_pass3889 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
-                tok = term.try_parse(t, TerminParseAttr.NO, 0)
+                tok = term.try_parse(t, TerminParseAttr.NO)
                 if (tok is None): 
                     continue
                 t0 = t
@@ -198,9 +200,9 @@ class TitlePageAnalyzer(Analyzer):
         pers_typ = TitleItemToken.Types.UNDEFINED
         pers_types = pr.rel_types
         t = begin
-        first_pass4012 = True
+        first_pass3890 = True
         while True:
-            if first_pass4012: first_pass4012 = False
+            if first_pass3890: first_pass3890 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char_pos > 0 and t.begin_char > max_char_pos): 
@@ -252,7 +254,7 @@ class TitlePageAnalyzer(Analyzer):
             if (rli is None): 
                 continue
             if (not t.is_newline_before and (isinstance(t.previous, TextToken))): 
-                s = (t.previous).term
+                s = t.previous.term
                 if (s == "ИМЕНИ" or s == "ИМ"): 
                     continue
                 if (s == "." and t.previous.previous is not None and t.previous.previous.is_value("ИМ", None)): 
@@ -276,9 +278,9 @@ class TitlePageAnalyzer(Analyzer):
                         pr.add(p, pers_typ, 1)
                     else: 
                         tt = t.next0_
-                        first_pass4013 = True
+                        first_pass3891 = True
                         while True:
-                            if first_pass4013: first_pass4013 = False
+                            if first_pass3891: first_pass3891 = False
                             else: tt = tt.next0_
                             if (not (tt is not None)): break
                             rr = tt.get_referent()
@@ -331,17 +333,17 @@ class TitlePageAnalyzer(Analyzer):
                         if (t.end_char > end_token.value.end_char): 
                             end_token.value = t
                 elif (isinstance(r, GeoReferent)): 
-                    if (res.city is None and (r).is_city): 
+                    if (res.city is None and r.is_city): 
                         res.city = Utils.asObjectOrNull(r, GeoReferent)
                         if (t.end_char > end_token.value.end_char): 
                             end_token.value = t
                 if (isinstance(r, OrganizationReferent)): 
                     org0_ = Utils.asObjectOrNull(r, OrganizationReferent)
                     if ("курс" in org0_.types and org0_.number is not None): 
-                        wrapi2735 = RefOutArgWrapper(0)
-                        inoutres2736 = Utils.tryParseInt(org0_.number, wrapi2735)
-                        i = wrapi2735.value
-                        if (inoutres2736): 
+                        wrapi2669 = RefOutArgWrapper(0)
+                        inoutres2670 = Utils.tryParseInt(org0_.number, wrapi2669)
+                        i = wrapi2669.value
+                        if (inoutres2670): 
                             if (i > 0 and (i < 8)): 
                                 res.student_year = i
                     while org0_.higher is not None: 
@@ -369,13 +371,13 @@ class TitlePageAnalyzer(Analyzer):
         if (res.city is None and res.org0_ is not None): 
             s = res.org0_.find_slot(OrganizationReferent.ATTR_GEO, None, True)
             if (s is not None and (isinstance(s.value, GeoReferent))): 
-                if ((s.value).is_city): 
+                if (s.value.is_city): 
                     res.city = Utils.asObjectOrNull(s.value, GeoReferent)
         if (res.date is None): 
             t = begin
-            first_pass4014 = True
+            first_pass3892 = True
             while True:
-                if first_pass4014: first_pass4014 = False
+                if first_pass3892: first_pass3892 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= end_char)): break
                 city = Utils.asObjectOrNull(t.get_referent(), GeoReferent)
@@ -396,8 +398,13 @@ class TitlePageAnalyzer(Analyzer):
         else: 
             return res
     
+    __m_inited = None
+    
     @staticmethod
     def initialize() -> None:
+        if (TitlePageAnalyzer.__m_inited): 
+            return
+        TitlePageAnalyzer.__m_inited = True
         MetaTitleInfo.initialize()
         try: 
             Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True

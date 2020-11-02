@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -31,13 +30,13 @@ from pullenti.ner.address.StreetReferent import StreetReferent
 from pullenti.ner.address.AddressDetailType import AddressDetailType
 from pullenti.ner.address.AddressBuildingType import AddressBuildingType
 from pullenti.ner.address.AddressHouseType import AddressHouseType
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.address.internal.StreetItemType import StreetItemType
 from pullenti.ner.TextToken import TextToken
-from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.address.internal.StreetItemType import StreetItemType
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.core.BracketHelper import BracketHelper
 
 class AddressItemToken(MetaToken):
@@ -90,14 +89,14 @@ class AddressItemToken(MetaToken):
     def is_street_road(self) -> bool:
         if (self.typ != AddressItemToken.ItemType.STREET): 
             return False
-        if (not ((isinstance(self.referent, StreetReferent)))): 
+        if (not (isinstance(self.referent, StreetReferent))): 
             return False
-        return (self.referent).kind == StreetKind.ROAD
+        return self.referent.kind == StreetKind.ROAD
     
     @property
     def is_terr_or_rzd(self) -> bool:
         if (self.typ == AddressItemToken.ItemType.CITY and (isinstance(self.referent, GeoReferent))): 
-            if ((self.referent).is_territory): 
+            if (self.referent.is_territory): 
                 return True
         return False
     
@@ -131,11 +130,11 @@ class AddressItemToken(MetaToken):
     def try_parse_list(t : 'Token', loc_streets : 'IntOntologyCollection', max_count : int=20) -> typing.List['AddressItemToken']:
         from pullenti.ner.address.internal.StreetDefineHelper import StreetDefineHelper
         if (isinstance(t, NumberToken)): 
-            if ((t).int_value is None): 
+            if (t.int_value is None): 
                 return None
-            v = (t).int_value
+            v = t.int_value
             if ((v < 100000) or v >= 10000000): 
-                if ((t).typ == NumberSpellingType.DIGIT and not t.morph.class0_.is_adjective): 
+                if (t.typ == NumberSpellingType.DIGIT and not t.morph.class0_.is_adjective): 
                     if (t.next0_ is None or (isinstance(t.next0_, NumberToken))): 
                         if (t.previous is None or not t.previous.morph.class0_.is_preposition): 
                             return None
@@ -144,18 +143,18 @@ class AddressItemToken(MetaToken):
             return None
         if (it.typ == AddressItemToken.ItemType.NUMBER): 
             return None
-        if (it.typ == AddressItemToken.ItemType.KILOMETER and not it.is_number and (isinstance(it.begin_token.previous, NumberToken))): 
+        if (it.typ == AddressItemToken.ItemType.KILOMETER and (isinstance(it.begin_token.previous, NumberToken))): 
             it.begin_token = it.begin_token.previous
-            it.value = str((it.begin_token).value)
+            it.value = str(it.begin_token.value)
             if (it.begin_token.previous is not None and it.begin_token.previous.morph.class0_.is_preposition): 
                 it.begin_token = it.begin_token.previous
         res = list()
         res.append(it)
         pref = it.typ == AddressItemToken.ItemType.PREFIX
         t = it.end_token.next0_
-        first_pass3590 = True
+        first_pass3485 = True
         while True:
-            if first_pass3590: first_pass3590 = False
+            if first_pass3485: first_pass3485 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_count > 0 and len(res) >= max_count): 
@@ -164,9 +163,9 @@ class AddressItemToken(MetaToken):
             if (len(res) > 1): 
                 if (last.is_newline_before and res[len(res) - 2].typ != AddressItemToken.ItemType.PREFIX): 
                     i = 0
-                    first_pass3591 = True
+                    first_pass3486 = True
                     while True:
-                        if first_pass3591: first_pass3591 = False
+                        if first_pass3486: first_pass3486 = False
                         else: i += 1
                         if (not (i < (len(res) - 1))): break
                         if (res[i].typ == last.typ): 
@@ -244,7 +243,7 @@ class AddressItemToken(MetaToken):
                                     st2 = StreetReferent()
                                     st2.add_slot(StreetReferent.ATTR_TYP, "линия", False, 0)
                                     st2.number = ait.value
-                                    it = AddressItemToken._new83(AddressItemToken.ItemType.STREET, tt1, ait.end_token, st2)
+                                    it = AddressItemToken._new64(AddressItemToken.ItemType.STREET, tt1, ait.end_token, st2)
                                     res.append(it)
                                     t = it.end_token
                             break
@@ -265,7 +264,7 @@ class AddressItemToken(MetaToken):
                     if ((not t.is_whitespace_before and t.length_char == 1 and t.chars.is_letter) and not t.is_whitespace_after and (isinstance(t.next0_, NumberToken))): 
                         ch = AddressItemToken.__correct_char_token(t)
                         if (ch == "К" or ch == "С"): 
-                            it0 = AddressItemToken._new84((AddressItemToken.ItemType.CORPUS if ch == "К" else AddressItemToken.ItemType.BUILDING), t, t.next0_, str((t.next0_).value))
+                            it0 = AddressItemToken._new65((AddressItemToken.ItemType.CORPUS if ch == "К" else AddressItemToken.ItemType.BUILDING), t, t.next0_, str(t.next0_.value))
                             it = it0
                             res.append(it)
                             t = it.end_token
@@ -273,7 +272,7 @@ class AddressItemToken(MetaToken):
                             if (((tt is not None and not tt.is_whitespace_before and tt.length_char == 1) and tt.chars.is_letter and not tt.is_whitespace_after) and (isinstance(tt.next0_, NumberToken))): 
                                 ch = AddressItemToken.__correct_char_token(tt)
                                 if (ch == "К" or ch == "С"): 
-                                    it = AddressItemToken._new84((AddressItemToken.ItemType.CORPUS if ch == "К" else AddressItemToken.ItemType.BUILDING), tt, tt.next0_, str((tt.next0_).value))
+                                    it = AddressItemToken._new65((AddressItemToken.ItemType.CORPUS if ch == "К" else AddressItemToken.ItemType.BUILDING), tt, tt.next0_, str(tt.next0_.value))
                                     res.append(it)
                                     t = it.end_token
                             continue
@@ -329,7 +328,7 @@ class AddressItemToken(MetaToken):
                                 res.append(it)
                                 continue
                 if (t.length_char == 2 and (isinstance(t, TextToken)) and t.chars.is_all_upper): 
-                    term = (t).term
+                    term = t.term
                     if (not Utils.isNullOrEmpty(term) and term[0] == 'Р'): 
                         continue
                 break
@@ -379,7 +378,7 @@ class AddressItemToken(MetaToken):
             if (it.typ == AddressItemToken.ItemType.NUMBER and it0 is not None and it0.ref_token is not None): 
                 for s in it0.ref_token.referent.slots: 
                     if (s.type_name == "TYPE"): 
-                        ss = (Utils.asObjectOrNull(s.value, str))
+                        ss = Utils.asObjectOrNull(s.value, str)
                         if ("гараж" in ss or ((ss[0] == 'Г' and ss[len(ss) - 1] == 'К'))): 
                             it.typ = AddressItemToken.ItemType.BOX
                             break
@@ -421,7 +420,7 @@ class AddressItemToken(MetaToken):
                     str0_.number = res[i + 2].value + "км"
                     t11 = res[i + 2].end_token
                     remove2 = True
-                ai = AddressItemToken._new86(AddressItemToken.ItemType.STREET, res[i].begin_token, t11, str0_, False)
+                ai = AddressItemToken._new67(AddressItemToken.ItemType.STREET, res[i].begin_token, t11, str0_, False)
                 res[i] = ai
                 del res[i + 1]
                 if (remove2): 
@@ -438,7 +437,7 @@ class AddressItemToken(MetaToken):
                     str0_.number = res[i + 2].value + "км"
                     t11 = res[i + 2].end_token
                     remove2 = True
-                ai = AddressItemToken._new86(AddressItemToken.ItemType.STREET, res[i].begin_token, t11, str0_, False)
+                ai = AddressItemToken._new67(AddressItemToken.ItemType.STREET, res[i].begin_token, t11, str0_, False)
                 res[i] = ai
                 del res[i + 1]
                 if (remove2): 
@@ -452,15 +451,15 @@ class AddressItemToken(MetaToken):
             i += 1
         i = 0
         while i < (len(res) - 1): 
-            if ((res[i].typ == AddressItemToken.ItemType.STREET and res[i + 1].typ == AddressItemToken.ItemType.KILOMETER and (isinstance(res[i].referent, StreetReferent))) and (res[i].referent).number is None): 
-                (res[i].referent).number = res[i + 1].value + "км"
+            if ((res[i].typ == AddressItemToken.ItemType.STREET and res[i + 1].typ == AddressItemToken.ItemType.KILOMETER and (isinstance(res[i].referent, StreetReferent))) and res[i].referent.number is None): 
+                res[i].referent.number = res[i + 1].value + "км"
                 res[i].end_token = res[i + 1].end_token
                 del res[i + 1]
             i += 1
         i = 0
         while i < (len(res) - 1): 
-            if ((res[i + 1].typ == AddressItemToken.ItemType.STREET and res[i].typ == AddressItemToken.ItemType.KILOMETER and (isinstance(res[i + 1].referent, StreetReferent))) and (res[i + 1].referent).number is None): 
-                (res[i + 1].referent).number = res[i].value + "км"
+            if ((res[i + 1].typ == AddressItemToken.ItemType.STREET and res[i].typ == AddressItemToken.ItemType.KILOMETER and (isinstance(res[i + 1].referent, StreetReferent))) and res[i + 1].referent.number is None): 
+                res[i + 1].referent.number = res[i].value + "км"
                 res[i + 1].begin_token = res[i].begin_token
                 del res[i]
                 break
@@ -481,7 +480,7 @@ class AddressItemToken(MetaToken):
                         ty = s.value
                         if ("район" in ty): 
                             return None
-            tt = (t).begin_token
+            tt = t.begin_token
             while tt is not None: 
                 if (tt.end_char > max_char): 
                     break
@@ -509,26 +508,26 @@ class AddressItemToken(MetaToken):
             if (res.typ == AddressItemToken.ItemType.HOUSE or res.typ == AddressItemToken.ItemType.BUILDING or res.typ == AddressItemToken.ItemType.CORPUS): 
                 tt = res.end_token.next0_.next0_
                 if (isinstance(tt, NumberToken)): 
-                    res.value = "{0}-{1}".format(res.value, (tt).value)
+                    res.value = "{0}-{1}".format(res.value, tt.value)
                     res.end_token = tt
                     if ((not tt.is_whitespace_after and (isinstance(tt.next0_, TextToken)) and tt.next0_.length_char == 1) and tt.next0_.chars.is_all_upper): 
                         tt = tt.next0_
                         res.end_token = tt
-                        res.value += (tt).term
+                        res.value += tt.term
                     if ((not tt.is_whitespace_after and tt.next0_ is not None and tt.next0_.is_char_of("\\/")) and (isinstance(tt.next0_.next0_, NumberToken))): 
                         tt = tt.next0_.next0_
                         res.end_token = tt
-                        res.value = "{0}/{1}".format(res.value, (tt).value)
+                        res.value = "{0}/{1}".format(res.value, tt.value)
                     if ((not tt.is_whitespace_after and tt.next0_ is not None and tt.next0_.is_hiphen) and (isinstance(tt.next0_.next0_, NumberToken))): 
                         tt = tt.next0_.next0_
                         res.end_token = tt
-                        res.value = "{0}-{1}".format(res.value, (tt).value)
+                        res.value = "{0}-{1}".format(res.value, tt.value)
                         if ((not tt.is_whitespace_after and (isinstance(tt.next0_, TextToken)) and tt.next0_.length_char == 1) and tt.next0_.chars.is_all_upper): 
                             tt = tt.next0_
                             res.end_token = tt
-                            res.value += (tt).term
+                            res.value += tt.term
                 elif ((isinstance(tt, TextToken)) and tt.length_char == 1 and tt.chars.is_all_upper): 
-                    res.value = "{0}-{1}".format(res.value, (tt).term)
+                    res.value = "{0}-{1}".format(res.value, tt.term)
                     res.end_token = tt
         return res
     
@@ -546,7 +545,7 @@ class AddressItemToken(MetaToken):
                     ty = AddressItemToken.ItemType.COUNTRY
                 else: 
                     ty = AddressItemToken.ItemType.REGION
-                return AddressItemToken._new83(ty, t, t, rt.referent)
+                return AddressItemToken._new64(ty, t, t, rt.referent)
         if (not ignore_street and t is not None and prev is not None): 
             if (t.is_value("КВ", None) or t.is_value("КВАРТ", None)): 
                 if ((((prev.typ == AddressItemToken.ItemType.HOUSE or prev.typ == AddressItemToken.ItemType.NUMBER or prev.typ == AddressItemToken.ItemType.BUILDING) or prev.typ == AddressItemToken.ItemType.FLOOR or prev.typ == AddressItemToken.ItemType.POTCH) or prev.typ == AddressItemToken.ItemType.CORPUS or prev.typ == AddressItemToken.ItemType.CORPUSORFLAT) or prev.typ == AddressItemToken.ItemType.DETAIL): 
@@ -565,9 +564,9 @@ class AddressItemToken(MetaToken):
                         ttt = ttt.next0_
                     if (crlf): 
                         ttt = rt.begin_token.previous
-                        first_pass3592 = True
+                        first_pass3487 = True
                         while True:
-                            if first_pass3592: first_pass3592 = False
+                            if first_pass3487: first_pass3487 = False
                             else: ttt = ttt.previous
                             if (not (ttt is not None)): break
                             if (ttt.morph.class0_.is_preposition or ttt.is_comma): 
@@ -599,7 +598,7 @@ class AddressItemToken(MetaToken):
         if (isinstance(t, NumberToken)): 
             n = Utils.asObjectOrNull(t, NumberToken)
             if (((n.length_char == 6 or n.length_char == 5)) and n.typ == NumberSpellingType.DIGIT and not n.morph.class0_.is_adjective): 
-                return AddressItemToken._new84(AddressItemToken.ItemType.ZIP, t, t, str(n.value))
+                return AddressItemToken._new65(AddressItemToken.ItemType.ZIP, t, t, str(n.value))
             ok = False
             if ((t.previous is not None and t.previous.morph.class0_.is_preposition and t.next0_ is not None) and t.next0_.chars.is_letter and t.next0_.chars.is_all_lower): 
                 ok = True
@@ -616,9 +615,9 @@ class AddressItemToken(MetaToken):
                             return None
                     if ((isinstance(tok0.end_token.next0_, NumberToken)) and (tok0.end_token.whitespaces_after_count < 3)): 
                         if (prev is not None and ((prev.typ == AddressItemToken.ItemType.STREET or prev.typ == AddressItemToken.ItemType.CITY))): 
-                            return AddressItemToken._new84(AddressItemToken.ItemType.NUMBER, t, t, str(n.value))
+                            return AddressItemToken._new65(AddressItemToken.ItemType.NUMBER, t, t, str(n.value))
                 if ((typ0 == AddressItemToken.ItemType.KILOMETER or typ0 == AddressItemToken.ItemType.FLOOR or typ0 == AddressItemToken.ItemType.BLOCK) or typ0 == AddressItemToken.ItemType.POTCH or typ0 == AddressItemToken.ItemType.FLAT): 
-                    return AddressItemToken._new84(typ0, t, tok0.end_token, str(n.value))
+                    return AddressItemToken._new65(typ0, t, tok0.end_token, str(n.value))
         prepos = False
         tok = None
         if (t.morph.class0_.is_preposition): 
@@ -641,9 +640,9 @@ class AddressItemToken(MetaToken):
             if (tok.termin.canonic_text == "ТАМ ЖЕ"): 
                 cou = 0
                 tt = t.previous
-                first_pass3593 = True
+                first_pass3488 = True
                 while True:
-                    if first_pass3593: first_pass3593 = False
+                    if first_pass3488: first_pass3488 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (cou > 1000): 
@@ -654,12 +653,12 @@ class AddressItemToken(MetaToken):
                     if (isinstance(r, AddressReferent)): 
                         g = Utils.asObjectOrNull(r.get_slot_value(AddressReferent.ATTR_GEO), GeoReferent)
                         if (g is not None): 
-                            return AddressItemToken._new83(AddressItemToken.ItemType.CITY, t, tok.end_token, g)
+                            return AddressItemToken._new64(AddressItemToken.ItemType.CITY, t, tok.end_token, g)
                         break
                     elif (isinstance(r, GeoReferent)): 
                         g = Utils.asObjectOrNull(r, GeoReferent)
                         if (not g.is_state): 
-                            return AddressItemToken._new83(AddressItemToken.ItemType.CITY, t, tok.end_token, g)
+                            return AddressItemToken._new64(AddressItemToken.ItemType.CITY, t, tok.end_token, g)
                 return None
             if (isinstance(tok.termin.tag, AddressDetailType)): 
                 return AddressItemToken.try_attach_detail(t)
@@ -671,9 +670,9 @@ class AddressItemToken(MetaToken):
                     build_typ = (Utils.valToEnum(tok.termin.tag2, AddressBuildingType))
                 typ_ = (Utils.valToEnum(tok.termin.tag, AddressItemToken.ItemType))
                 if (typ_ == AddressItemToken.ItemType.PREFIX): 
-                    first_pass3594 = True
+                    first_pass3489 = True
                     while True:
-                        if first_pass3594: first_pass3594 = False
+                        if first_pass3489: first_pass3489 = False
                         else: t1 = t1.next0_
                         if (not (t1 is not None)): break
                         if (((t1.morph.class0_.is_preposition or t1.morph.class0_.is_conjunction)) and t1.whitespaces_after_count == 1): 
@@ -706,16 +705,16 @@ class AddressItemToken(MetaToken):
                                 t0 = t
                         res = AddressItemToken(AddressItemToken.ItemType.PREFIX, t0, t1.previous)
                         tt = t0.previous
-                        first_pass3595 = True
+                        first_pass3490 = True
                         while True:
-                            if first_pass3595: first_pass3595 = False
+                            if first_pass3490: first_pass3490 = False
                             else: tt = tt.previous
                             if (not (tt is not None)): break
                             if (tt.newlines_after_count > 3): 
                                 break
                             if (tt.is_comma_and or tt.is_char_of("().")): 
                                 continue
-                            if (not ((isinstance(tt, TextToken)))): 
+                            if (not (isinstance(tt, TextToken))): 
                                 break
                             if (((tt.is_value("ПОЧТОВЫЙ", None) or tt.is_value("ЮРИДИЧЕСКИЙ", None) or tt.is_value("ЮР", None)) or tt.is_value("ФАКТИЧЕСКИЙ", None) or tt.is_value("ФАКТ", None)) or tt.is_value("ПОЧТ", None) or tt.is_value("АДРЕС", None)): 
                                 res.begin_token = tt
@@ -727,7 +726,7 @@ class AddressItemToken(MetaToken):
                 elif (typ_ == AddressItemToken.ItemType.BUSINESSCENTER): 
                     rt = t.kit.process_referent("ORGANIZATION", t)
                     if (rt is not None): 
-                        return AddressItemToken._new94(typ_, t, rt.end_token, rt)
+                        return AddressItemToken._new75(typ_, t, rt.end_token, rt)
                 elif ((typ_ == AddressItemToken.ItemType.CORPUSORFLAT and not tok.is_whitespace_before and not tok.is_whitespace_after) and tok.begin_token == tok.end_token and tok.begin_token.is_value("К", None)): 
                     typ_ = AddressItemToken.ItemType.CORPUS
                 if (typ_ == AddressItemToken.ItemType.DETAIL and t.is_value("У", None)): 
@@ -749,16 +748,16 @@ class AddressItemToken(MetaToken):
                                     house_typ = (Utils.valToEnum(tok.termin.tag2, AddressHouseType))
                                 t1 = tok2.end_token.next0_
                                 if (t1 is None): 
-                                    return AddressItemToken._new95(typ_, t, tok2.end_token, "0", house_typ)
+                                    return AddressItemToken._new76(typ_, t, tok2.end_token, "0", house_typ)
                 if (typ_ != AddressItemToken.ItemType.NUMBER): 
                     if (t1 is None and t.length_char > 1): 
-                        return AddressItemToken._new96(typ_, t, tok.end_token, house_typ, build_typ)
-                    if ((isinstance(t1, NumberToken)) and (t1).value == "0"): 
-                        return AddressItemToken._new97(typ_, t, t1, "0", house_typ, build_typ)
+                        return AddressItemToken._new77(typ_, t, tok.end_token, house_typ, build_typ)
+                    if ((isinstance(t1, NumberToken)) and t1.value == "0"): 
+                        return AddressItemToken._new78(typ_, t, t1, "0", house_typ, build_typ)
         if (t1 is not None and t1.is_char('.') and t1.next0_ is not None): 
             if (not t1.is_whitespace_after): 
                 t1 = t1.next0_
-            elif ((isinstance(t1.next0_, NumberToken)) and (t1.next0_).typ == NumberSpellingType.DIGIT and (t1.whitespaces_after_count < 2)): 
+            elif ((isinstance(t1.next0_, NumberToken)) and t1.next0_.typ == NumberSpellingType.DIGIT and (t1.whitespaces_after_count < 2)): 
                 t1 = t1.next0_
         if ((t1 is not None and not t1.is_whitespace_after and ((t1.is_hiphen or t1.is_char('_')))) and (isinstance(t1.next0_, NumberToken))): 
             t1 = t1.next0_
@@ -766,10 +765,10 @@ class AddressItemToken(MetaToken):
         if (tok is not None and (isinstance(tok.termin.tag, AddressItemToken.ItemType)) and (Utils.valToEnum(tok.termin.tag, AddressItemToken.ItemType)) == AddressItemToken.ItemType.NUMBER): 
             t1 = tok.end_token.next0_
         elif (tok is not None and (isinstance(tok.termin.tag, AddressItemToken.ItemType)) and (Utils.valToEnum(tok.termin.tag, AddressItemToken.ItemType)) == AddressItemToken.ItemType.NONUMBER): 
-            re0 = AddressItemToken._new97(typ_, t, tok.end_token, "0", house_typ, build_typ)
+            re0 = AddressItemToken._new78(typ_, t, tok.end_token, "0", house_typ, build_typ)
             if (not re0.is_whitespace_after and (isinstance(re0.end_token.next0_, NumberToken))): 
                 re0.end_token = re0.end_token.next0_
-                re0.value = str((re0.end_token).value)
+                re0.value = str(re0.end_token.value)
             return re0
         elif (t1 is not None): 
             if (typ_ == AddressItemToken.ItemType.FLAT): 
@@ -792,7 +791,7 @@ class AddressItemToken(MetaToken):
                 return None
             print(nt.value, end="", file=num)
             if (nt.typ == NumberSpellingType.DIGIT or nt.typ == NumberSpellingType.WORDS): 
-                if (((isinstance(nt.end_token, TextToken)) and (nt.end_token).term == "Е" and nt.end_token.previous == nt.begin_token) and not nt.end_token.is_whitespace_before): 
+                if (((isinstance(nt.end_token, TextToken)) and nt.end_token.term == "Е" and nt.end_token.previous == nt.begin_token) and not nt.end_token.is_whitespace_before): 
                     print("Е", end="", file=num)
                 drob = False
                 hiph = False
@@ -811,13 +810,13 @@ class AddressItemToken(MetaToken):
                     return None
                 if (isinstance(et, NumberToken)): 
                     if (drob): 
-                        print("/{0}".format((et).value), end="", file=num, flush=True)
+                        print("/{0}".format(et.value), end="", file=num, flush=True)
                         drob = False
                         t1 = et
                         et = et.next0_
                         if (et is not None and et.is_char_of("\\/") and (isinstance(et.next0_, NumberToken))): 
                             t1 = et.next0_
-                            print("/{0}".format((t1).value), end="", file=num, flush=True)
+                            print("/{0}".format(t1.value), end="", file=num, flush=True)
                             et = t1.next0_
                     elif ((hiph and not t1.is_whitespace_after and (isinstance(et, NumberToken))) and not et.is_whitespace_before): 
                         numm = AddressItemToken.try_parse(et, None, False, True, None)
@@ -855,7 +854,7 @@ class AddressItemToken(MetaToken):
                         if (s is not None): 
                             print(s, end="", file=num)
                             t1 = br.end_token
-                elif ((isinstance(et, TextToken)) and (et).length_char == 1): 
+                elif ((isinstance(et, TextToken)) and et.length_char == 1): 
                     s = AddressItemToken.__correct_char_token(et)
                     if (s is not None): 
                         if (((s == "К" or s == "С")) and (isinstance(et.next0_, NumberToken)) and not et.is_whitespace_after): 
@@ -888,14 +887,14 @@ class AddressItemToken(MetaToken):
                                 t1 = et
                                 if (et.next0_ is not None and et.next0_.is_char_of("\\/") and et.next0_.next0_ is not None): 
                                     if (isinstance(et.next0_.next0_, NumberToken)): 
-                                        print("/{0}".format((et.next0_.next0_).value), end="", file=num, flush=True)
+                                        print("/{0}".format(et.next0_.next0_.value), end="", file=num, flush=True)
                                         et = et.next0_.next0_
                                         t1 = et
                                     elif (et.next0_.next0_.is_hiphen or et.next0_.next0_.is_char('_') or et.next0_.next0_.is_value("НЕТ", None)): 
                                         et = et.next0_.next0_
                                         t1 = et
                 elif ((isinstance(et, TextToken)) and not et.is_whitespace_before): 
-                    val = (et).term
+                    val = et.term
                     if (val == "КМ" and typ_ == AddressItemToken.ItemType.HOUSE): 
                         t1 = et
                         print("КМ", end="", file=num)
@@ -917,7 +916,7 @@ class AddressItemToken(MetaToken):
                 if ((src is not None and len(src) == 2 and ((src[0] == 'к' or src[0] == 'k'))) and str.isupper(src[1])): 
                     ch = AddressItemToken.correct_char(src[1])
                     if (ch != (chr(0))): 
-                        return AddressItemToken._new84(AddressItemToken.ItemType.CORPUS, t1, t1, "{0}".format(ch))
+                        return AddressItemToken._new65(AddressItemToken.ItemType.CORPUS, t1, t1, "{0}".format(ch))
             elif ((isinstance(t1, TextToken)) and t1.length_char == 1 and t1.is_letters): 
                 ch = AddressItemToken.__correct_char_token(t1)
                 if (ch is not None): 
@@ -939,17 +938,17 @@ class AddressItemToken(MetaToken):
                         return None
                     print(ch, end="", file=num)
                     if ((t1.next0_ is not None and ((t1.next0_.is_hiphen or t1.next0_.is_char('_'))) and not t1.is_whitespace_after) and (isinstance(t1.next0_.next0_, NumberToken)) and not t1.next0_.is_whitespace_after): 
-                        print((t1.next0_.next0_).value, end="", file=num)
+                        print(t1.next0_.next0_.value, end="", file=num)
                         t1 = t1.next0_.next0_
                     elif ((isinstance(t1.next0_, NumberToken)) and not t1.is_whitespace_after and t1.chars.is_all_upper): 
-                        print((t1.next0_).value, end="", file=num)
+                        print(t1.next0_.value, end="", file=num)
                         t1 = t1.next0_
                     if (num.tell() == 1 and typ_ == AddressItemToken.ItemType.OFFICE): 
                         return None
                 if (typ_ == AddressItemToken.ItemType.BOX and num.tell() == 0): 
                     rom = NumberHelper.try_parse_roman(t1)
                     if (rom is not None): 
-                        return AddressItemToken._new84(typ_, t, rom.end_token, str(rom.value))
+                        return AddressItemToken._new65(typ_, t, rom.end_token, str(rom.value))
             elif (((BracketHelper.is_bracket(t1, False) and (isinstance(t1.next0_, TextToken)) and t1.next0_.length_char == 1) and t1.next0_.is_letters and BracketHelper.is_bracket(t1.next0_.next0_, False)) and not t1.is_whitespace_after and not t1.next0_.is_whitespace_after): 
                 ch = AddressItemToken.__correct_char_token(t1.next0_)
                 if (ch is None): 
@@ -962,33 +961,33 @@ class AddressItemToken(MetaToken):
                 val = None
                 if (not t1.is_whitespace_after and (isinstance(t1.next0_, NumberToken))): 
                     t1 = t1.next0_
-                    val = str((t1).value)
+                    val = str(t1.value)
                 if (t1.is_value("БН", None)): 
                     val = "0"
-                return AddressItemToken._new84(typ_, t, t1, val)
+                return AddressItemToken._new65(typ_, t, t1, val)
             else: 
                 if (((typ_ == AddressItemToken.ItemType.FLOOR or typ_ == AddressItemToken.ItemType.KILOMETER or typ_ == AddressItemToken.ItemType.POTCH)) and (isinstance(t.previous, NumberToken))): 
                     return AddressItemToken(typ_, t, t1.previous)
                 if ((isinstance(t1, ReferentToken)) and (isinstance(t1.get_referent(), DateReferent))): 
-                    nn = AddressItemToken.__try_parse((t1).begin_token, loc_streets, prefix_before, True, None)
+                    nn = AddressItemToken.__try_parse(t1.begin_token, loc_streets, prefix_before, True, None)
                     if (nn is not None and nn.end_char == t1.end_char and nn.typ == AddressItemToken.ItemType.NUMBER): 
                         nn.begin_token = t
                         nn.end_token = t1
                         nn.typ = typ_
                         return nn
                 if ((isinstance(t1, TextToken)) and ((typ_ == AddressItemToken.ItemType.HOUSE or typ_ == AddressItemToken.ItemType.BUILDING or typ_ == AddressItemToken.ItemType.CORPUS))): 
-                    ter = (t1).term
+                    ter = t1.term
                     if (ter == "АБ" or ter == "АБВ" or ter == "МГУ"): 
-                        return AddressItemToken._new97(typ_, t, t1, ter, house_typ, build_typ)
+                        return AddressItemToken._new78(typ_, t, t1, ter, house_typ, build_typ)
                     if (prev is not None and ((prev.typ == AddressItemToken.ItemType.STREET or prev.typ == AddressItemToken.ItemType.CITY)) and t1.chars.is_all_upper): 
-                        return AddressItemToken._new97(typ_, t, t1, ter, house_typ, build_typ)
+                        return AddressItemToken._new78(typ_, t, t1, ter, house_typ, build_typ)
                 if (typ_ == AddressItemToken.ItemType.BOX): 
                     rom = NumberHelper.try_parse_roman(t1)
                     if (rom is not None): 
-                        return AddressItemToken._new84(typ_, t, rom.end_token, str(rom.value))
+                        return AddressItemToken._new65(typ_, t, rom.end_token, str(rom.value))
                 if (typ_ == AddressItemToken.ItemType.PLOT and t1 is not None): 
                     if ((t1.is_value("ОКОЛО", None) or t1.is_value("РЯДОМ", None) or t1.is_value("НАПРОТИВ", None)) or t1.is_value("БЛИЗЬКО", None) or t1.is_value("НАВПАКИ", None)): 
-                        return AddressItemToken._new84(typ_, t, t1, t1.get_source_text().lower())
+                        return AddressItemToken._new65(typ_, t, t1, t1.get_source_text().lower())
                 return None
         if (typ_ == AddressItemToken.ItemType.NUMBER and prepos): 
             return None
@@ -996,7 +995,7 @@ class AddressItemToken(MetaToken):
             t1 = t
             while t1.next0_ is not None:
                 t1 = t1.next0_
-        return AddressItemToken._new106(typ_, t, t1, Utils.toStringStringIO(num), t.morph, house_typ, build_typ)
+        return AddressItemToken._new87(typ_, t, t1, Utils.toStringStringIO(num), t.morph, house_typ, build_typ)
     
     @staticmethod
     def __try_attachvch(t : 'Token', ty : 'ItemType') -> 'AddressItemToken':
@@ -1013,7 +1012,7 @@ class AddressItemToken(MetaToken):
                     tt = tt2
                 if (tt.next0_ is not None and (isinstance(tt.next0_, NumberToken)) and (tt.whitespaces_after_count < 2)): 
                     tt = tt.next0_
-                return AddressItemToken._new84(ty, t, tt, "В/Ч")
+                return AddressItemToken._new65(ty, t, tt, "В/Ч")
             elif (((tt.is_value("ВОЙСКОВОЙ", None) or tt.is_value("ВОИНСКИЙ", None))) and tt.next0_ is not None and tt.next0_.is_value("ЧАСТЬ", None)): 
                 tt = tt.next0_
                 tt2 = MiscHelper.check_number_prefix(tt.next0_)
@@ -1021,25 +1020,25 @@ class AddressItemToken(MetaToken):
                     tt = tt2
                 if (tt.next0_ is not None and (isinstance(tt.next0_, NumberToken)) and (tt.whitespaces_after_count < 2)): 
                     tt = tt.next0_
-                return AddressItemToken._new84(ty, t, tt, "В/Ч")
+                return AddressItemToken._new65(ty, t, tt, "В/Ч")
             elif (ty == AddressItemToken.ItemType.FLAT): 
                 if (tt.whitespaces_before_count > 1): 
                     break
-                if (not ((isinstance(tt, TextToken)))): 
+                if (not (isinstance(tt, TextToken))): 
                     break
-                if ((tt).term.startswith("ОБЩ")): 
+                if (tt.term.startswith("ОБЩ")): 
                     if (tt.next0_ is not None and tt.next0_.is_char('.')): 
                         tt = tt.next0_
                     re = AddressItemToken.__try_attachvch(tt.next0_, ty)
                     if (re is not None): 
                         return re
-                    return AddressItemToken._new84(ty, t, tt, "ОБЩ")
+                    return AddressItemToken._new65(ty, t, tt, "ОБЩ")
                 if (tt.chars.is_all_upper and tt.length_char > 1): 
-                    re = AddressItemToken._new84(ty, t, tt, (tt).term)
+                    re = AddressItemToken._new65(ty, t, tt, tt.term)
                     if ((tt.whitespaces_after_count < 2) and (isinstance(tt.next0_, TextToken)) and tt.next0_.chars.is_all_upper): 
                         tt = tt.next0_
                         re.end_token = tt
-                        re.value += (tt).term
+                        re.value += tt.term
                     return re
                 break
             else: 
@@ -1049,7 +1048,7 @@ class AddressItemToken(MetaToken):
     
     @staticmethod
     def try_attach_detail(t : 'Token') -> 'AddressItemToken':
-        if (t is None or ((isinstance(t, ReferentToken)))): 
+        if (t is None or (isinstance(t, ReferentToken))): 
             return None
         tt = t
         if (t.chars.is_capital_upper and not t.morph.class0_.is_preposition): 
@@ -1072,13 +1071,13 @@ class AddressItemToken(MetaToken):
                 if (nex is not None and ((nex.ex_typ == NumberExType.METER or nex.ex_typ == NumberExType.KILOMETER))): 
                     res = AddressItemToken(AddressItemToken.ItemType.DETAIL, t, nex.end_token)
                     tyy = NumberExType.METER
-                    wraptyy111 = RefOutArgWrapper(tyy)
-                    res.detail_meters = (math.floor(nex.normalize_value(wraptyy111)))
-                    tyy = wraptyy111.value
+                    wraptyy92 = RefOutArgWrapper(tyy)
+                    res.detail_meters = (math.floor(nex.normalize_value(wraptyy92)))
+                    tyy = wraptyy92.value
             if (res is None): 
                 return None
         else: 
-            if (not ((isinstance(tok.termin.tag, AddressDetailType)))): 
+            if (not (isinstance(tok.termin.tag, AddressDetailType))): 
                 return None
             if (t.is_value("У", None)): 
                 if (MiscLocationHelper.check_geo_object_before(t)): 
@@ -1087,11 +1086,11 @@ class AddressItemToken(MetaToken):
                     pass
                 else: 
                     return None
-            res = AddressItemToken._new112(AddressItemToken.ItemType.DETAIL, t, tok.end_token, Utils.valToEnum(tok.termin.tag, AddressDetailType))
+            res = AddressItemToken._new93(AddressItemToken.ItemType.DETAIL, t, tok.end_token, Utils.valToEnum(tok.termin.tag, AddressDetailType))
         tt = res.end_token.next0_
-        first_pass3596 = True
+        first_pass3491 = True
         while True:
-            if first_pass3596: first_pass3596 = False
+            if first_pass3491: first_pass3491 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (isinstance(tt, ReferentToken)): 
@@ -1121,9 +1120,9 @@ class AddressItemToken(MetaToken):
                     tt = nex.end_token
                     res.end_token = tt
                     tyy = NumberExType.METER
-                    wraptyy113 = RefOutArgWrapper(tyy)
-                    res.detail_meters = (math.floor(nex.normalize_value(wraptyy113)))
-                    tyy = wraptyy113.value
+                    wraptyy94 = RefOutArgWrapper(tyy)
+                    res.detail_meters = (math.floor(nex.normalize_value(wraptyy94)))
+                    tyy = wraptyy94.value
                     continue
             break
         if (first_num and res.detail_type == AddressDetailType.UNDEFINED): 
@@ -1135,33 +1134,33 @@ class AddressItemToken(MetaToken):
     
     @staticmethod
     def try_attach_org(t : 'Token') -> 'AddressItemToken':
-        if (not ((isinstance(t, TextToken)))): 
+        if (not (isinstance(t, TextToken))): 
             return None
         if ((t.length_char > 5 and not t.chars.is_all_upper and not t.chars.is_all_lower) and not t.chars.is_capital_upper): 
-            namm = (t).get_source_text()
+            namm = t.get_source_text()
             if (str.isupper(namm[0]) and str.isupper(namm[1])): 
                 i = 0
                 while i < len(namm): 
                     if (str.islower(namm[i]) and i > 2): 
                         abbr = namm[0:0+i - 1]
-                        te = Termin._new114(abbr, abbr)
-                        li = AddressItemToken.M_ORG_ONTOLOGY.try_attach(te)
+                        te = Termin._new95(abbr, abbr)
+                        li = AddressItemToken.M_ORG_ONTOLOGY.find_termins_by_termin(te)
                         if (li is not None and len(li) > 0): 
                             org00 = t.kit.create_referent("ORGANIZATION")
                             org00.add_slot("TYPE", li[0].canonic_text.lower(), False, 0)
                             org00.add_slot("TYPE", abbr, False, 0)
-                            namm = (t).term[i - 1:]
+                            namm = t.term[i - 1:]
                             rt00 = ReferentToken(org00, t, t)
                             rt00.data = t.kit.get_analyzer_data_by_analyzer_name("ORGANIZATION")
                             if (t.next0_ is not None and t.next0_.is_hiphen): 
                                 if (isinstance(t.next0_.next0_, NumberToken)): 
-                                    org00.add_slot("NUMBER", str((t.next0_.next0_).value), False, 0)
+                                    org00.add_slot("NUMBER", str(t.next0_.next0_.value), False, 0)
                                     rt00.end_token = t.next0_.next0_
                                 elif ((isinstance(t.next0_.next0_, TextToken)) and not t.next0_.is_whitespace_after): 
-                                    namm = "{0}-{1}".format(namm, (t.next0_.next0_).term)
+                                    namm = "{0}-{1}".format(namm, t.next0_.next0_.term)
                                     rt00.end_token = t.next0_.next0_
                             org00.add_slot("NAME", namm, False, 0)
-                            return AddressItemToken._new115(AddressItemToken.ItemType.STREET, t, rt00.end_token, rt00.referent, rt00, True)
+                            return AddressItemToken._new96(AddressItemToken.ItemType.STREET, t, rt00.end_token, rt00.referent, rt00, True)
                         break
                     i += 1
         if (t.is_value("СТ", None)): 
@@ -1199,12 +1198,12 @@ class AddressItemToken(MetaToken):
             while tt is not None: 
                 if (tt.is_hiphen or tt.is_comma): 
                     pass
-                elif ((isinstance(tt, TextToken)) and (tt).term == "ПМК"): 
+                elif ((isinstance(tt, TextToken)) and tt.term == "ПМК"): 
                     tt2 = tt.next0_
                     if (tt2 is not None and ((tt2.is_hiphen or tt2.is_char_of(":")))): 
                         tt2 = tt2.next0_
                     if (isinstance(tt2, NumberToken)): 
-                        rt1.referent.add_slot("NUMBER", str((tt2).value), False, 0)
+                        rt1.referent.add_slot("NUMBER", str(tt2.value), False, 0)
                         rt1.end_token = tt2
                         break
                 else: 
@@ -1226,7 +1225,7 @@ class AddressItemToken(MetaToken):
                         rt1.begin_token = t
             elif (tok.begin_token == tok.end_token and tok.begin_token.is_value("ГПК", None)): 
                 tt1 = tok.end_token.next0_
-                if (tt1 is None or tok.is_newline_after or not ((isinstance(tt1, TextToken)))): 
+                if (tt1 is None or tok.is_newline_after or not (isinstance(tt1, TextToken))): 
                     return None
                 if (tt1.kit.process_referent("GEO", tt1) is not None): 
                     return None
@@ -1263,9 +1262,9 @@ class AddressItemToken(MetaToken):
             elif (t.chars.is_all_lower and t.get_morph_class_in_dictionary().is_undefined and not t.is_value("ПСЕВДО", None)): 
                 ok = True
             tt2 = t.next0_
-            first_pass3597 = True
+            first_pass3492 = True
             while True:
-                if first_pass3597: first_pass3597 = False
+                if first_pass3492: first_pass3492 = False
                 else: tt2 = tt2.next0_
                 if (not (tt2 is not None)): break
                 if (tt2.whitespaces_before_count > 2): 
@@ -1280,7 +1279,7 @@ class AddressItemToken(MetaToken):
                         typ2 = tok.termin.acronym
                         nam = MiscHelper.get_text_value(t, nt2, GetTextAttr.NO)
                         if (isinstance(num2, NumberToken)): 
-                            num = str((num2).value)
+                            num = str(num2.value)
                         t1 = nt2
                     break
                 if (tt2.is_hiphen): 
@@ -1294,11 +1293,11 @@ class AddressItemToken(MetaToken):
                     continue
                 nuuu = NumberHelper.try_parse_age(tt2)
                 if (nuuu is not None): 
-                    num = str((nuuu).value)
+                    num = str(nuuu.value)
                     num2 = (nuuu)
                     tt2 = nuuu.end_token
                     continue
-                if (not ((isinstance(tt2, TextToken))) or not tt2.chars.is_cyrillic_letter): 
+                if (not (isinstance(tt2, TextToken)) or not tt2.chars.is_cyrillic_letter): 
                     break
                 if (tt2.chars.is_all_lower): 
                     nnn = NounPhraseHelper.try_parse(tt2.previous, NounPhraseParseAttr.NO, 0, None)
@@ -1337,7 +1336,7 @@ class AddressItemToken(MetaToken):
                     typ2 = tok.termin.acronym
                 tt = br.end_token.previous
                 if (isinstance(tt, NumberToken)): 
-                    num = str((tt).value)
+                    num = str(tt.value)
                     tt = tt.previous
                     if (tt is not None and (((tt.is_hiphen or tt.is_char('_') or tt.is_value("N", None)) or tt.is_value("№", None)))): 
                         tt = tt.previous
@@ -1351,7 +1350,7 @@ class AddressItemToken(MetaToken):
                 tt = tt.next0_
             adt = AddressItemToken.try_parse(tt, None, False, True, None)
             if (adt is not None and adt.typ == AddressItemToken.ItemType.NUMBER): 
-                if (tt.previous.is_hiphen or tt.previous.is_char('_') or not ((isinstance(tt, NumberToken)))): 
+                if (tt.previous.is_hiphen or tt.previous.is_char('_') or not (isinstance(tt, NumberToken))): 
                     pass
                 else: 
                     is_very_doubt = True
@@ -1367,7 +1366,7 @@ class AddressItemToken(MetaToken):
             if (typ2 == "СТ" and nam == "СЭВ"): 
                 return None
             t1 = tt1
-        elif (((tok is not None and typ_ is None and tt1 is not None) and (isinstance(tt1.get_referent(), GeoReferent)) and (tt1.whitespaces_before_count < 3)) and (tt1).begin_token == (tt1).end_token): 
+        elif (((tok is not None and typ_ is None and tt1 is not None) and (isinstance(tt1.get_referent(), GeoReferent)) and (tt1.whitespaces_before_count < 3)) and tt1.begin_token == tt1.end_token): 
             typ_ = tok.termin.canonic_text.lower()
             typ2 = tok.termin.acronym
             nam = MiscHelper.get_text_value(tt1, tt1, GetTextAttr.NO)
@@ -1418,7 +1417,7 @@ class AddressItemToken(MetaToken):
                 if (nam.startswith("ИМЕНИ ") or nam.startswith("ІМЕНІ ")): 
                     org0_.add_slot("NAME", nam[6:].strip(), False, 0)
                 org0_.add_slot("NAME", nam, False, 0)
-            rt = ReferentToken._new116(org0_, t, t1, t.kit.get_analyzer_data_by_analyzer_name("ORGANIZATION"))
+            rt = ReferentToken._new97(org0_, t, t1, t.kit.get_analyzer_data_by_analyzer_name("ORGANIZATION"))
             empty_org = False
             if ((t1.next0_ is not None and t1.next0_.is_hiphen and t1.next0_.next0_ is not None) and t1.next0_.next0_.is_value("ГОРОДИЩЕ", None)): 
                 rt.end_token = t1.next0_.next0_
@@ -1453,7 +1452,7 @@ class AddressItemToken(MetaToken):
                 else: 
                     rt.end_token = t1.next0_.next0_
                     t1 = rt.end_token
-                    org0_.add_slot("NUMBER", str((t1).value), False, 0)
+                    org0_.add_slot("NUMBER", str(t1.value), False, 0)
             if (tok is not None and (t1.end_char < tok.end_char)): 
                 rt.end_token = tok.end_token
                 t1 = rt.end_token
@@ -1476,8 +1475,8 @@ class AddressItemToken(MetaToken):
         if (rt.referent.find_slot("TYPE", "администрация", True) is not None or rt.referent.find_slot("TYPE", "адміністрація", True) is not None): 
             ge = Utils.asObjectOrNull(rt.referent.get_slot_value("GEO"), GeoReferent)
             if (ge is not None): 
-                return AddressItemToken._new83((AddressItemToken.ItemType.REGION if ge.is_region else AddressItemToken.ItemType.CITY), t, rt.end_token, ge)
-        res = AddressItemToken._new115(AddressItemToken.ItemType.STREET, t, rt.end_token, rt.referent, rt, typ_ is not None)
+                return AddressItemToken._new64((AddressItemToken.ItemType.REGION if ge.is_region else AddressItemToken.ItemType.CITY), t, rt.end_token, ge)
+        res = AddressItemToken._new96(AddressItemToken.ItemType.STREET, t, rt.end_token, rt.referent, rt, typ_ is not None)
         return res
     
     def create_geo_org_terr(self) -> 'ReferentToken':
@@ -1618,23 +1617,23 @@ class AddressItemToken(MetaToken):
             return
         StreetItemToken.initialize()
         AddressItemToken.M_ONTOLOGY = TerminCollection()
-        t = Termin._new119("ДОМ", AddressItemToken.ItemType.HOUSE)
+        t = Termin._new100("ДОМ", AddressItemToken.ItemType.HOUSE)
         t.add_abridge("Д.")
         t.add_variant("КОТТЕДЖ", False)
         t.add_abridge("КОТ.")
         t.add_variant("ДАЧА", False)
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new120("БУДИНОК", AddressItemToken.ItemType.HOUSE, MorphLang.UA)
+        t = Termin._new101("БУДИНОК", AddressItemToken.ItemType.HOUSE, MorphLang.UA)
         t.add_abridge("Б.")
         t.add_variant("КОТЕДЖ", False)
         t.add_abridge("БУД.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new121("ВЛАДЕНИЕ", AddressItemToken.ItemType.HOUSE, AddressHouseType.ESTATE)
+        t = Termin._new102("ВЛАДЕНИЕ", AddressItemToken.ItemType.HOUSE, AddressHouseType.ESTATE)
         t.add_abridge("ВЛАД.")
         t.add_abridge("ВЛД.")
         t.add_abridge("ВЛ.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new121("ДОМОВЛАДЕНИЕ", AddressItemToken.ItemType.HOUSE, AddressHouseType.HOUSEESTATE)
+        t = Termin._new102("ДОМОВЛАДЕНИЕ", AddressItemToken.ItemType.HOUSE, AddressHouseType.HOUSEESTATE)
         t.add_variant("ДОМОВЛАДЕНИЕ", False)
         t.add_abridge("ДВЛД.")
         t.add_abridge("ДМВЛД.")
@@ -1642,43 +1641,43 @@ class AddressItemToken(MetaToken):
         t.add_variant("ДОМОВА", False)
         t.add_variant("ДОМОВЛАД", False)
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("ПОДЪЕЗД ДОМА", AddressItemToken.ItemType.HOUSE)
+        t = Termin._new100("ПОДЪЕЗД ДОМА", AddressItemToken.ItemType.HOUSE)
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("ПОДВАЛ ДОМА", AddressItemToken.ItemType.HOUSE)
+        t = Termin._new100("ПОДВАЛ ДОМА", AddressItemToken.ItemType.HOUSE)
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("КРЫША ДОМА", AddressItemToken.ItemType.HOUSE)
+        t = Termin._new100("КРЫША ДОМА", AddressItemToken.ItemType.HOUSE)
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("ЭТАЖ", AddressItemToken.ItemType.FLOOR)
+        t = Termin._new100("ЭТАЖ", AddressItemToken.ItemType.FLOOR)
         t.add_abridge("ЭТ.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("ПОДЪЕЗД", AddressItemToken.ItemType.POTCH)
+        t = Termin._new100("ПОДЪЕЗД", AddressItemToken.ItemType.POTCH)
         t.add_abridge("ПОД.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("КОРПУС", AddressItemToken.ItemType.CORPUS)
+        t = Termin._new100("КОРПУС", AddressItemToken.ItemType.CORPUS)
         t.add_abridge("КОРП.")
         t.add_abridge("КОР.")
         t.add_abridge("Д.КОРП.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("К", AddressItemToken.ItemType.CORPUSORFLAT)
+        t = Termin._new100("К", AddressItemToken.ItemType.CORPUSORFLAT)
         t.add_abridge("К.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("СТРОЕНИЕ", AddressItemToken.ItemType.BUILDING)
+        t = Termin._new100("СТРОЕНИЕ", AddressItemToken.ItemType.BUILDING)
         t.add_abridge("СТРОЕН.")
         t.add_abridge("СТР.")
         t.add_abridge("СТ.")
         t.add_abridge("ПОМ.СТР.")
         t.add_abridge("Д.СТР.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new121("СООРУЖЕНИЕ", AddressItemToken.ItemType.BUILDING, AddressBuildingType.CONSTRUCTION)
+        t = Termin._new102("СООРУЖЕНИЕ", AddressItemToken.ItemType.BUILDING, AddressBuildingType.CONSTRUCTION)
         t.add_abridge("СООР.")
         t.add_abridge("СООРУЖ.")
         t.add_abridge("СООРУЖЕН.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new121("ЛИТЕРА", AddressItemToken.ItemType.BUILDING, AddressBuildingType.LITER)
+        t = Termin._new102("ЛИТЕРА", AddressItemToken.ItemType.BUILDING, AddressBuildingType.LITER)
         t.add_abridge("ЛИТ.")
         t.add_variant("ЛИТЕР", False)
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("УЧАСТОК", AddressItemToken.ItemType.PLOT)
+        t = Termin._new100("УЧАСТОК", AddressItemToken.ItemType.PLOT)
         t.add_abridge("УЧАСТ.")
         t.add_abridge("УЧ.")
         t.add_abridge("УЧ-К")
@@ -1688,30 +1687,30 @@ class AddressItemToken(MetaToken):
         t.add_abridge("З/У")
         t.add_abridge("ПОЗ.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("КВАРТИРА", AddressItemToken.ItemType.FLAT)
+        t = Termin._new100("КВАРТИРА", AddressItemToken.ItemType.FLAT)
         t.add_abridge("КВАРТ.")
         t.add_abridge("КВАР.")
         t.add_abridge("КВ.")
         t.add_abridge("КВ-РА")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("ОФИС", AddressItemToken.ItemType.OFFICE)
+        t = Termin._new100("ОФИС", AddressItemToken.ItemType.OFFICE)
         t.add_abridge("ОФ.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new120("ОФІС", AddressItemToken.ItemType.OFFICE, MorphLang.UA)
+        t = Termin._new101("ОФІС", AddressItemToken.ItemType.OFFICE, MorphLang.UA)
         t.add_abridge("ОФ.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("БИЗНЕС-ЦЕНТР", AddressItemToken.ItemType.BUSINESSCENTER)
+        t = Termin._new100("БИЗНЕС-ЦЕНТР", AddressItemToken.ItemType.BUSINESSCENTER)
         t.acronym = "БЦ"
         t.add_variant("БИЗНЕС ЦЕНТР", False)
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("БЛОК", AddressItemToken.ItemType.BLOCK)
+        t = Termin._new100("БЛОК", AddressItemToken.ItemType.BLOCK)
         t.add_variant("РЯД", False)
         t.add_variant("СЕКТОР", False)
         t.add_abridge("СЕК.")
         t.add_variant("МАССИВ", False)
         t.add_variant("ОЧЕРЕДЬ", False)
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("БОКС", AddressItemToken.ItemType.BOX)
+        t = Termin._new100("БОКС", AddressItemToken.ItemType.BOX)
         t.add_variant("ГАРАЖ", False)
         t.add_variant("САРАЙ", False)
         t.add_abridge("ГАР.")
@@ -1730,29 +1729,29 @@ class AddressItemToken(MetaToken):
         t.add_abridge("ГБ.")
         t.add_abridge("Г.Б.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("КОМНАТА", AddressItemToken.ItemType.OFFICE)
+        t = Termin._new100("КОМНАТА", AddressItemToken.ItemType.OFFICE)
         t.add_abridge("КОМ.")
         t.add_abridge("КОМН.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("КАБИНЕТ", AddressItemToken.ItemType.OFFICE)
+        t = Termin._new100("КАБИНЕТ", AddressItemToken.ItemType.OFFICE)
         t.add_abridge("КАБ.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("НОМЕР", AddressItemToken.ItemType.NUMBER)
+        t = Termin._new100("НОМЕР", AddressItemToken.ItemType.NUMBER)
         t.add_abridge("НОМ.")
         t.add_abridge("№")
         t.add_abridge("N")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new143("БЕЗ НОМЕРА", "Б/Н", AddressItemToken.ItemType.NONUMBER)
+        t = Termin._new124("БЕЗ НОМЕРА", "Б/Н", AddressItemToken.ItemType.NONUMBER)
         t.add_abridge("Б.Н.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("АБОНЕНТСКИЙ ЯЩИК", AddressItemToken.ItemType.POSTOFFICEBOX)
+        t = Termin._new100("АБОНЕНТСКИЙ ЯЩИК", AddressItemToken.ItemType.POSTOFFICEBOX)
         t.add_abridge("А.Я.")
         t.add_variant("ПОЧТОВЫЙ ЯЩИК", False)
         t.add_abridge("П.Я.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new145("ГОРОДСКАЯ СЛУЖЕБНАЯ ПОЧТА", AddressItemToken.ItemType.CSP, "ГСП")
+        t = Termin._new126("ГОРОДСКАЯ СЛУЖЕБНАЯ ПОЧТА", AddressItemToken.ItemType.CSP, "ГСП")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("АДРЕС", AddressItemToken.ItemType.PREFIX)
+        t = Termin._new100("АДРЕС", AddressItemToken.ItemType.PREFIX)
         t.add_variant("ЮРИДИЧЕСКИЙ АДРЕС", False)
         t.add_variant("ФАКТИЧЕСКИЙ АДРЕС", False)
         t.add_abridge("ЮР.АДРЕС")
@@ -1766,7 +1765,7 @@ class AddressItemToken(MetaToken):
         t.add_variant("МЕСТОНАХОЖДЕНИЕ", False)
         t.add_variant("МЕСТОПОЛОЖЕНИЕ", False)
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("АДРЕСА", AddressItemToken.ItemType.PREFIX)
+        t = Termin._new100("АДРЕСА", AddressItemToken.ItemType.PREFIX)
         t.add_variant("ЮРИДИЧНА АДРЕСА", False)
         t.add_variant("ФАКТИЧНА АДРЕСА", False)
         t.add_variant("ПОШТОВА АДРЕСА", False)
@@ -1774,19 +1773,19 @@ class AddressItemToken(MetaToken):
         t.add_variant("МІСЦЕ ПЕРЕБУВАННЯ", False)
         t.add_variant("ПРОПИСКА", False)
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("КИЛОМЕТР", AddressItemToken.ItemType.KILOMETER)
+        t = Termin._new100("КИЛОМЕТР", AddressItemToken.ItemType.KILOMETER)
         t.add_abridge("КИЛОМ.")
         t.add_abridge("КМ.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ПЕРЕСЕЧЕНИЕ", AddressDetailType.CROSS))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("НА ПЕРЕСЕЧЕНИИ", AddressDetailType.CROSS))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ПЕРЕКРЕСТОК", AddressDetailType.CROSS))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("НА ПЕРЕКРЕСТКЕ", AddressDetailType.CROSS))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("НА ТЕРРИТОРИИ", AddressDetailType.NEAR))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("СЕРЕДИНА", AddressDetailType.NEAR))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ПРИМЫКАТЬ", AddressDetailType.NEAR))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ГРАНИЧИТЬ", AddressDetailType.NEAR))
-        t = Termin._new119("ВБЛИЗИ", AddressDetailType.NEAR)
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ПЕРЕСЕЧЕНИЕ", AddressDetailType.CROSS))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("НА ПЕРЕСЕЧЕНИИ", AddressDetailType.CROSS))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ПЕРЕКРЕСТОК", AddressDetailType.CROSS))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("НА ПЕРЕКРЕСТКЕ", AddressDetailType.CROSS))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("НА ТЕРРИТОРИИ", AddressDetailType.NEAR))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("СЕРЕДИНА", AddressDetailType.NEAR))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ПРИМЫКАТЬ", AddressDetailType.NEAR))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ГРАНИЧИТЬ", AddressDetailType.NEAR))
+        t = Termin._new100("ВБЛИЗИ", AddressDetailType.NEAR)
         t.add_variant("У", False)
         t.add_abridge("ВБЛ.")
         t.add_variant("ВОЗЛЕ", False)
@@ -1795,41 +1794,41 @@ class AddressItemToken(MetaToken):
         t.add_variant("РЯДОМ С", False)
         t.add_variant("ГРАНИЦА", False)
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new119("РАЙОН", AddressDetailType.NEAR)
+        t = Termin._new100("РАЙОН", AddressDetailType.NEAR)
         t.add_abridge("Р-Н")
         AddressItemToken.M_ONTOLOGY.add(t)
-        t = Termin._new143("В РАЙОНЕ", "РАЙОН", AddressDetailType.NEAR)
+        t = Termin._new124("В РАЙОНЕ", "РАЙОН", AddressDetailType.NEAR)
         t.add_abridge("В Р-НЕ")
         AddressItemToken.M_ONTOLOGY.add(t)
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ПРИМЕРНО", AddressDetailType.UNDEFINED))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ПОРЯДКА", AddressDetailType.UNDEFINED))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ПРИБЛИЗИТЕЛЬНО", AddressDetailType.UNDEFINED))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("НАПРАВЛЕНИЕ", AddressDetailType.UNDEFINED))
-        t = Termin._new119("ОБЩЕЖИТИЕ", AddressDetailType.HOSTEL)
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ПРИМЕРНО", AddressDetailType.UNDEFINED))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ПОРЯДКА", AddressDetailType.UNDEFINED))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ПРИБЛИЗИТЕЛЬНО", AddressDetailType.UNDEFINED))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("НАПРАВЛЕНИЕ", AddressDetailType.UNDEFINED))
+        t = Termin._new100("ОБЩЕЖИТИЕ", AddressDetailType.HOSTEL)
         t.add_abridge("ОБЩ.")
         t.add_abridge("ПОМ.ОБЩ.")
         AddressItemToken.M_ONTOLOGY.add(t)
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("СЕВЕРНЕЕ", AddressDetailType.NORTH))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("СЕВЕР", AddressDetailType.NORTH))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ЮЖНЕЕ", AddressDetailType.SOUTH))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ЮГ", AddressDetailType.SOUTH))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ЗАПАДНЕЕ", AddressDetailType.WEST))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ЗАПАД", AddressDetailType.WEST))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ВОСТОЧНЕЕ", AddressDetailType.EAST))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ВОСТОК", AddressDetailType.EAST))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("СЕВЕРО-ЗАПАДНЕЕ", AddressDetailType.NORTHWEST))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("СЕВЕРО-ЗАПАД", AddressDetailType.NORTHWEST))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("СЕВЕРО-ВОСТОЧНЕЕ", AddressDetailType.NORTHEAST))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("СЕВЕРО-ВОСТОК", AddressDetailType.NORTHEAST))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ЮГО-ЗАПАДНЕЕ", AddressDetailType.SOUTHWEST))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ЮГО-ЗАПАД", AddressDetailType.SOUTHWEST))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ЮГО-ВОСТОЧНЕЕ", AddressDetailType.SOUTHEAST))
-        AddressItemToken.M_ONTOLOGY.add(Termin._new119("ЮГО-ВОСТОК", AddressDetailType.SOUTHEAST))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("СЕВЕРНЕЕ", AddressDetailType.NORTH))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("СЕВЕР", AddressDetailType.NORTH))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ЮЖНЕЕ", AddressDetailType.SOUTH))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ЮГ", AddressDetailType.SOUTH))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ЗАПАДНЕЕ", AddressDetailType.WEST))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ЗАПАД", AddressDetailType.WEST))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ВОСТОЧНЕЕ", AddressDetailType.EAST))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ВОСТОК", AddressDetailType.EAST))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("СЕВЕРО-ЗАПАДНЕЕ", AddressDetailType.NORTHWEST))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("СЕВЕРО-ЗАПАД", AddressDetailType.NORTHWEST))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("СЕВЕРО-ВОСТОЧНЕЕ", AddressDetailType.NORTHEAST))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("СЕВЕРО-ВОСТОК", AddressDetailType.NORTHEAST))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ЮГО-ЗАПАДНЕЕ", AddressDetailType.SOUTHWEST))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ЮГО-ЗАПАД", AddressDetailType.SOUTHWEST))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ЮГО-ВОСТОЧНЕЕ", AddressDetailType.SOUTHEAST))
+        AddressItemToken.M_ONTOLOGY.add(Termin._new100("ЮГО-ВОСТОК", AddressDetailType.SOUTHEAST))
         t = Termin("ТАМ ЖЕ")
         t.add_abridge("ТАМЖЕ")
         AddressItemToken.M_ONTOLOGY.add(t)
         AddressItemToken.M_ORG_ONTOLOGY = TerminCollection()
-        t = Termin._new114("САДОВОЕ ТОВАРИЩЕСТВО", "СТ")
+        t = Termin._new95("САДОВОЕ ТОВАРИЩЕСТВО", "СТ")
         t.add_variant("САДОВОДЧЕСКОЕ ТОВАРИЩЕСТВО", False)
         t.acronym = "СТ"
         t.add_abridge("С/ТОВ")
@@ -1890,41 +1889,41 @@ class AddressItemToken(MetaToken):
         t.acronym_can_be_lower = True
         t.add_abridge("САДОВОЕ НЕКОМ-Е ТОВАРИЩЕСТВО")
         AddressItemToken.M_ORG_ONTOLOGY.add(t)
-        t = Termin._new182("САДОВОДЧЕСКОЕ НЕКОММЕРЧЕСКОЕ ОБЪЕДИНЕНИЕ", "СНО", True)
+        t = Termin._new163("САДОВОДЧЕСКОЕ НЕКОММЕРЧЕСКОЕ ОБЪЕДИНЕНИЕ", "СНО", True)
         t.add_variant("САДОВОЕ НЕКОММЕРЧЕСКОЕ ОБЪЕДИНЕНИЕ", False)
         AddressItemToken.M_ORG_ONTOLOGY.add(t)
-        t = Termin._new182("САДОВОДЧЕСКОЕ НЕКОММЕРЧЕСКОЕ ПАРТНЕРСТВО", "СНП", True)
+        t = Termin._new163("САДОВОДЧЕСКОЕ НЕКОММЕРЧЕСКОЕ ПАРТНЕРСТВО", "СНП", True)
         t.add_variant("САДОВОЕ НЕКОММЕРЧЕСКОЕ ПАРТНЕРСТВО", False)
         AddressItemToken.M_ORG_ONTOLOGY.add(t)
-        t = Termin._new182("САДОВОДЧЕСКОЕ НЕКОММЕРЧЕСКОЕ ТОВАРИЩЕСТВО", "СНТ", True)
+        t = Termin._new163("САДОВОДЧЕСКОЕ НЕКОММЕРЧЕСКОЕ ТОВАРИЩЕСТВО", "СНТ", True)
         t.add_variant("САДОВОЕ НЕКОММЕРЧЕСКОЕ ТОВАРИЩЕСТВО", False)
         AddressItemToken.M_ORG_ONTOLOGY.add(t)
-        t = Termin._new182("НЕКОММЕРЧЕСКОЕ САДОВОДЧЕСКОЕ ТОВАРИЩЕСТВО", "НСТ", True)
+        t = Termin._new163("НЕКОММЕРЧЕСКОЕ САДОВОДЧЕСКОЕ ТОВАРИЩЕСТВО", "НСТ", True)
         t.add_variant("НЕКОММЕРЧЕСКОЕ САДОВОЕ ТОВАРИЩЕСТВО", False)
         AddressItemToken.M_ORG_ONTOLOGY.add(t)
-        t = Termin._new182("ОБЪЕДИНЕННОЕ НЕКОММЕРЧЕСКОЕ САДОВОДЧЕСКОЕ ТОВАРИЩЕСТВО", "ОНСТ", True)
+        t = Termin._new163("ОБЪЕДИНЕННОЕ НЕКОММЕРЧЕСКОЕ САДОВОДЧЕСКОЕ ТОВАРИЩЕСТВО", "ОНСТ", True)
         t.add_variant("ОБЪЕДИНЕННОЕ НЕКОММЕРЧЕСКОЕ САДОВОЕ ТОВАРИЩЕСТВО", False)
         AddressItemToken.M_ORG_ONTOLOGY.add(t)
-        t = Termin._new182("САДОВОДЧЕСКАЯ ПОТРЕБИТЕЛЬСКАЯ КООПЕРАЦИЯ", "СПК", True)
+        t = Termin._new163("САДОВОДЧЕСКАЯ ПОТРЕБИТЕЛЬСКАЯ КООПЕРАЦИЯ", "СПК", True)
         t.add_variant("САДОВАЯ ПОТРЕБИТЕЛЬСКАЯ КООПЕРАЦИЯ", False)
         AddressItemToken.M_ORG_ONTOLOGY.add(t)
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ДАЧНО СТРОИТЕЛЬНО ПРОИЗВОДСТВЕННЫЙ КООПЕРАТИВ", "ДСПК", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ЖИЛИЩНЫЙ СТРОИТЕЛЬНО ПРОИЗВОДСТВЕННЫЙ КООПЕРАТИВ", "ЖСПК", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ЖИЛИЩНЫЙ СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", "ЖСК", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ЖИЛИЩНЫЙ СТРОИТЕЛЬНЫЙ КООПЕРАТИВ ИНДИВИДУАЛЬНЫХ ЗАСТРОЙЩИКОВ", "ЖСКИЗ", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ОГОРОДНИЧЕСКОЕ НЕКОММЕРЧЕСКОЕ ОБЪЕДИНЕНИЕ", "ОНО", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ОГОРОДНИЧЕСКОЕ НЕКОММЕРЧЕСКОЕ ПАРТНЕРСТВО", "ОНП", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ОГОРОДНИЧЕСКОЕ НЕКОММЕРЧЕСКОЕ ТОВАРИЩЕСТВО", "ОНТ", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ОГОРОДНИЧЕСКИЙ ПОТРЕБИТЕЛЬСКИЙ КООПЕРАТИВ", "ОПК", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ТОВАРИЩЕСТВО СОБСТВЕННИКОВ НЕДВИЖИМОСТИ", "СТСН", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("САДОВОДЧЕСКОЕ ТОВАРИЩЕСТВО СОБСТВЕННИКОВ НЕДВИЖИМОСТИ", "ТСН", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ТОВАРИЩЕСТВО СОБСТВЕННИКОВ ЖИЛЬЯ", "ТСЖ", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("САДОВЫЕ ЗЕМЕЛЬНЫЕ УЧАСТКИ", "СЗУ", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ТОВАРИЩЕСТВО ИНДИВИДУАЛЬНЫХ ЗАСТРОЙЩИКОВ", "ТИЗ", True))
-        t = Termin._new182("КОЛЛЕКТИВ ИНДИВИДУАЛЬНЫХ ЗАСТРОЙЩИКОВ", "КИЗ", True)
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ДАЧНО СТРОИТЕЛЬНО ПРОИЗВОДСТВЕННЫЙ КООПЕРАТИВ", "ДСПК", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ЖИЛИЩНЫЙ СТРОИТЕЛЬНО ПРОИЗВОДСТВЕННЫЙ КООПЕРАТИВ", "ЖСПК", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ЖИЛИЩНЫЙ СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", "ЖСК", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ЖИЛИЩНЫЙ СТРОИТЕЛЬНЫЙ КООПЕРАТИВ ИНДИВИДУАЛЬНЫХ ЗАСТРОЙЩИКОВ", "ЖСКИЗ", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ОГОРОДНИЧЕСКОЕ НЕКОММЕРЧЕСКОЕ ОБЪЕДИНЕНИЕ", "ОНО", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ОГОРОДНИЧЕСКОЕ НЕКОММЕРЧЕСКОЕ ПАРТНЕРСТВО", "ОНП", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ОГОРОДНИЧЕСКОЕ НЕКОММЕРЧЕСКОЕ ТОВАРИЩЕСТВО", "ОНТ", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ОГОРОДНИЧЕСКИЙ ПОТРЕБИТЕЛЬСКИЙ КООПЕРАТИВ", "ОПК", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ТОВАРИЩЕСТВО СОБСТВЕННИКОВ НЕДВИЖИМОСТИ", "СТСН", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("САДОВОДЧЕСКОЕ ТОВАРИЩЕСТВО СОБСТВЕННИКОВ НЕДВИЖИМОСТИ", "ТСН", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ТОВАРИЩЕСТВО СОБСТВЕННИКОВ ЖИЛЬЯ", "ТСЖ", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("САДОВЫЕ ЗЕМЕЛЬНЫЕ УЧАСТКИ", "СЗУ", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ТОВАРИЩЕСТВО ИНДИВИДУАЛЬНЫХ ЗАСТРОЙЩИКОВ", "ТИЗ", True))
+        t = Termin._new163("КОЛЛЕКТИВ ИНДИВИДУАЛЬНЫХ ЗАСТРОЙЩИКОВ", "КИЗ", True)
         t.add_variant("КИЗК", False)
         AddressItemToken.M_ORG_ONTOLOGY.add(t)
-        t = Termin._new182("САДОВОЕ НЕКОММЕРЧЕСКОЕ ТОВАРИЩЕСТВО СОБСТВЕННИКОВ НЕДВИЖИМОСТИ", "СНТСН", True)
+        t = Termin._new163("САДОВОЕ НЕКОММЕРЧЕСКОЕ ТОВАРИЩЕСТВО СОБСТВЕННИКОВ НЕДВИЖИМОСТИ", "СНТСН", True)
         t.add_variant("СНТ СН", False)
         AddressItemToken.M_ORG_ONTOLOGY.add(t)
         t = Termin("СОВМЕСТНОЕ ПРЕДПРИЯТИЕ")
@@ -1947,11 +1946,11 @@ class AddressItemToken(MetaToken):
         t.acronym = "ГК"
         t.acronym_can_be_lower = True
         AddressItemToken.M_ORG_ONTOLOGY.add(t)
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ГАРАЖНО СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", "ГСК", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ГАРАЖНО ЭКСПЛУАТАЦИОННЫЙ КООПЕРАТИВ", "ГЭК", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ГАРАЖНО ПОТРЕБИТЕЛЬСКИЙ КООПЕРАТИВ", "ГПК", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ПОТРЕБИТЕЛЬСКИЙ ГАРАЖНО СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", "ПГСК", True))
-        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new182("ГАРАЖНЫЙ СТРОИТЕЛЬНО ПОТРЕБИТЕЛЬСКИЙ КООПЕРАТИВ", "ГСПК", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ГАРАЖНО СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", "ГСК", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ГАРАЖНО ЭКСПЛУАТАЦИОННЫЙ КООПЕРАТИВ", "ГЭК", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ГАРАЖНО ПОТРЕБИТЕЛЬСКИЙ КООПЕРАТИВ", "ГПК", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ПОТРЕБИТЕЛЬСКИЙ ГАРАЖНО СТРОИТЕЛЬНЫЙ КООПЕРАТИВ", "ПГСК", True))
+        AddressItemToken.M_ORG_ONTOLOGY.add(Termin._new163("ГАРАЖНЫЙ СТРОИТЕЛЬНО ПОТРЕБИТЕЛЬСКИЙ КООПЕРАТИВ", "ГСПК", True))
         AddressItemToken.M_ORG_ONTOLOGY.add(t)
         t = Termin("САНАТОРИЙ")
         t.add_abridge("САН.")
@@ -1983,46 +1982,46 @@ class AddressItemToken(MetaToken):
     M_ORG_ONTOLOGY = None
     
     @staticmethod
-    def _new83(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'Referent') -> 'AddressItemToken':
+    def _new64(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'Referent') -> 'AddressItemToken':
         res = AddressItemToken(_arg1, _arg2, _arg3)
         res.referent = _arg4
         return res
     
     @staticmethod
-    def _new84(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : str) -> 'AddressItemToken':
+    def _new65(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : str) -> 'AddressItemToken':
         res = AddressItemToken(_arg1, _arg2, _arg3)
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new86(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'Referent', _arg5 : bool) -> 'AddressItemToken':
+    def _new67(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'Referent', _arg5 : bool) -> 'AddressItemToken':
         res = AddressItemToken(_arg1, _arg2, _arg3)
         res.referent = _arg4
         res.is_doubt = _arg5
         return res
     
     @staticmethod
-    def _new94(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'ReferentToken') -> 'AddressItemToken':
+    def _new75(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'ReferentToken') -> 'AddressItemToken':
         res = AddressItemToken(_arg1, _arg2, _arg3)
         res.ref_token = _arg4
         return res
     
     @staticmethod
-    def _new95(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : str, _arg5 : 'AddressHouseType') -> 'AddressItemToken':
+    def _new76(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : str, _arg5 : 'AddressHouseType') -> 'AddressItemToken':
         res = AddressItemToken(_arg1, _arg2, _arg3)
         res.value = _arg4
         res.house_type = _arg5
         return res
     
     @staticmethod
-    def _new96(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'AddressHouseType', _arg5 : 'AddressBuildingType') -> 'AddressItemToken':
+    def _new77(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'AddressHouseType', _arg5 : 'AddressBuildingType') -> 'AddressItemToken':
         res = AddressItemToken(_arg1, _arg2, _arg3)
         res.house_type = _arg4
         res.building_type = _arg5
         return res
     
     @staticmethod
-    def _new97(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : str, _arg5 : 'AddressHouseType', _arg6 : 'AddressBuildingType') -> 'AddressItemToken':
+    def _new78(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : str, _arg5 : 'AddressHouseType', _arg6 : 'AddressBuildingType') -> 'AddressItemToken':
         res = AddressItemToken(_arg1, _arg2, _arg3)
         res.value = _arg4
         res.house_type = _arg5
@@ -2030,7 +2029,7 @@ class AddressItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new106(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : str, _arg5 : 'MorphCollection', _arg6 : 'AddressHouseType', _arg7 : 'AddressBuildingType') -> 'AddressItemToken':
+    def _new87(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : str, _arg5 : 'MorphCollection', _arg6 : 'AddressHouseType', _arg7 : 'AddressBuildingType') -> 'AddressItemToken':
         res = AddressItemToken(_arg1, _arg2, _arg3)
         res.value = _arg4
         res.morph = _arg5
@@ -2039,13 +2038,13 @@ class AddressItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new112(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'AddressDetailType') -> 'AddressItemToken':
+    def _new93(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'AddressDetailType') -> 'AddressItemToken':
         res = AddressItemToken(_arg1, _arg2, _arg3)
         res.detail_type = _arg4
         return res
     
     @staticmethod
-    def _new115(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'Referent', _arg5 : 'ReferentToken', _arg6 : bool) -> 'AddressItemToken':
+    def _new96(_arg1 : 'ItemType', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'Referent', _arg5 : 'ReferentToken', _arg6 : bool) -> 'AddressItemToken':
         res = AddressItemToken(_arg1, _arg2, _arg3)
         res.referent = _arg4
         res.ref_token = _arg5

@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import datetime
@@ -12,20 +11,25 @@ from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.Referent import Referent
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.TextToken import TextToken
+from pullenti.ner.bank.internal.PullentiNerBankInternalResourceHelper import PullentiNerBankInternalResourceHelper
 from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
 from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.denomination.internal.MetaDenom import MetaDenom
+from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.ProcessorService import ProcessorService
 from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.denomination.DenominationReferent import DenominationReferent
 from pullenti.ner.core.AnalyzerDataWithOntology import AnalyzerDataWithOntology
 
 class DenominationAnalyzer(Analyzer):
-    """ Анализатор деноминаций и обозначений """
+    """ Анализатор деноминаций и обозначений (типа C#, A-320)
+    Специфический анализатор, то есть нужно явно создавать процессор через функцию CreateSpecificProcessor,
+    указав имя анализатора.
+    Анализатор деноминаций
+    """
     
     ANALYZER_NAME = "DENOMINATION"
+    """ Имя анализатора ("DENOMINATION") """
     
     @property
     def name(self) -> str:
@@ -48,6 +52,7 @@ class DenominationAnalyzer(Analyzer):
     
     @property
     def is_specific(self) -> bool:
+        """ Этот анализатор является специфическим (IsSpecific = true) """
         return True
     
     @property
@@ -57,7 +62,7 @@ class DenominationAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[MetaDenom.DENOM_IMAGE_ID] = EpNerBankInternalResourceHelper.get_bytes("denom.png")
+        res[MetaDenom.DENOM_IMAGE_ID] = PullentiNerBankInternalResourceHelper.get_bytes("denom.png")
         return res
     
     def create_referent(self, type0_ : str) -> 'Referent':
@@ -69,21 +74,15 @@ class DenominationAnalyzer(Analyzer):
         return AnalyzerDataWithOntology()
     
     def process(self, kit : 'AnalysisKit') -> None:
-        """ Основная функция выделения объектов
-        
-        Args:
-            container: 
-            lastStage: 
-        
-        """
+        # Основная функция выделения объектов
         ad = Utils.asObjectOrNull(kit.get_analyzer_data(self), AnalyzerDataWithOntology)
         for k in range(2):
             detect_new_denoms = False
             dt = datetime.datetime.now()
             t = kit.first_token
-            first_pass3760 = True
+            first_pass3640 = True
             while True:
-                if first_pass3760: first_pass3760 = False
+                if first_pass3640: first_pass3640 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_whitespace_before): 
@@ -138,7 +137,7 @@ class DenominationAnalyzer(Analyzer):
     def __can_be_start_of_denom(self, t : 'Token') -> bool:
         if ((t is None or not t.chars.is_letter or t.next0_ is None) or t.is_newline_after): 
             return False
-        if (not ((isinstance(t, TextToken)))): 
+        if (not (isinstance(t, TextToken))): 
             return False
         if (t.length_char > 4): 
             return False
@@ -153,7 +152,7 @@ class DenominationAnalyzer(Analyzer):
             return True
         return False
     
-    def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
+    def process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
         return self.try_attach(begin, False)
     
     def try_attach(self, t : 'Token', for_ontology : bool=False) -> 'ReferentToken':
@@ -177,9 +176,9 @@ class DenominationAnalyzer(Analyzer):
         nums = 0
         chars = 0
         w = t1.next0_
-        first_pass3761 = True
+        first_pass3641 = True
         while True:
-            if first_pass3761: first_pass3761 = False
+            if first_pass3641: first_pass3641 = False
             else: w = w.next0_
             if (not (w is not None)): break
             if (w.is_whitespace_before and not for_ontology): 
@@ -229,12 +228,7 @@ class DenominationAnalyzer(Analyzer):
         return ReferentToken(new_dr, t, t1)
     
     def __try_attach_spec(self, t : 'Token') -> 'ReferentToken':
-        """ Некоторые специфические случаи
-        
-        Args:
-            t(Token): 
-        
-        """
+        # Некоторые специфические случаи
         if (t is None): 
             return None
         t0 = t
@@ -250,7 +244,7 @@ class DenominationAnalyzer(Analyzer):
                     return ReferentToken(dr, t0, t.next0_)
         if (((nt is not None and nt.typ == NumberSpellingType.DIGIT and (isinstance(t.next0_, TextToken))) and not t.is_whitespace_after and not t.next0_.chars.is_all_lower) and t.next0_.chars.is_letter): 
             dr = DenominationReferent()
-            dr.add_slot(DenominationReferent.ATTR_VALUE, "{0}{1}".format(nt.get_source_text(), (t.next0_).term), False, 0)
+            dr.add_slot(DenominationReferent.ATTR_VALUE, "{0}{1}".format(nt.get_source_text(), t.next0_.term), False, 0)
             return ReferentToken(dr, t0, t.next0_)
         return None
     

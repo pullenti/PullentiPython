@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -10,17 +9,17 @@ from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.morph.internal.MorphSerializeHelper import MorphSerializeHelper
+from pullenti.morph.internal.MorphDeserializer import MorphDeserializer
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.address.StreetReferent import StreetReferent
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.geo.GeoReferent import GeoReferent
 from pullenti.ner.address.AddressReferent import AddressReferent
 
 class MiscLocationHelper:
@@ -31,9 +30,9 @@ class MiscLocationHelper:
         if (t is None): 
             return False
         tt = t.previous
-        first_pass3769 = True
+        first_pass3649 = True
         while True:
-            if first_pass3769: first_pass3769 = False
+            if first_pass3649: first_pass3649 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             if ((tt.is_char_of(",.;:") or tt.is_hiphen or tt.is_and) or tt.morph.class0_.is_conjunction or tt.morph.class0_.is_preposition): 
@@ -45,7 +44,7 @@ class MiscLocationHelper:
             if (tt.is_value("УРОЖЕНЕЦ", "УРОДЖЕНЕЦЬ") or tt.is_value("УРОЖЕНКА", "УРОДЖЕНКА")): 
                 return True
             if (tt.length_char == 2 and (isinstance(tt, TextToken)) and tt.chars.is_all_upper): 
-                term = (tt).term
+                term = tt.term
                 if (not Utils.isNullOrEmpty(term) and term[0] == 'Р'): 
                     return True
             rt = Utils.asObjectOrNull(tt, ReferentToken)
@@ -76,9 +75,9 @@ class MiscLocationHelper:
             return False
         cou = 0
         tt = t.next0_
-        first_pass3770 = True
+        first_pass3650 = True
         while True:
-            if first_pass3770: first_pass3770 = False
+            if first_pass3650: first_pass3650 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_char_of(",.;") or tt.is_hiphen or tt.morph.class0_.is_conjunction): 
@@ -136,7 +135,7 @@ class MiscLocationHelper:
         
         """
         from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
-        if (not ((isinstance(t, TextToken)))): 
+        if (not (isinstance(t, TextToken))): 
             return None
         npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0, None)
         if (npt is None): 
@@ -147,9 +146,9 @@ class MiscLocationHelper:
     
     @staticmethod
     def get_std_adj_full(t : 'Token', gen : 'MorphGender', num : 'MorphNumber', strict : bool) -> typing.List[str]:
-        if (not ((isinstance(t, TextToken)))): 
+        if (not (isinstance(t, TextToken))): 
             return None
-        return MiscLocationHelper.get_std_adj_full_str((t).term, gen, num, strict)
+        return MiscLocationHelper.get_std_adj_full_str(t.term, gen, num, strict)
     
     @staticmethod
     def get_std_adj_full_str(v : str, gen : 'MorphGender', num : 'MorphNumber', strict : bool) -> typing.List[str]:
@@ -158,15 +157,15 @@ class MiscLocationHelper:
             if (num == MorphNumber.PLURAL): 
                 res.append("БОЛЬШИЕ")
                 return res
-            if (not strict and (((num) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
+            if (not strict and ((num) & (MorphNumber.PLURAL)) != (MorphNumber.UNDEFINED)): 
                 res.append("БОЛЬШИЕ")
-            if ((((gen) & (MorphGender.FEMINIE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.FEMINIE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.FEMINIE): 
                     res.append("БОЛЬШАЯ")
-            if ((((gen) & (MorphGender.MASCULINE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.MASCULINE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.MASCULINE): 
                     res.append("БОЛЬШОЙ")
-            if ((((gen) & (MorphGender.NEUTER))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.NEUTER)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.NEUTER): 
                     res.append("БОЛЬШОЕ")
             if (len(res) > 0): 
@@ -176,15 +175,15 @@ class MiscLocationHelper:
             if (num == MorphNumber.PLURAL): 
                 res.append("МАЛЫЕ")
                 return res
-            if (not strict and (((num) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
+            if (not strict and ((num) & (MorphNumber.PLURAL)) != (MorphNumber.UNDEFINED)): 
                 res.append("МАЛЫЕ")
-            if ((((gen) & (MorphGender.FEMINIE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.FEMINIE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.FEMINIE): 
                     res.append("МАЛАЯ")
-            if ((((gen) & (MorphGender.MASCULINE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.MASCULINE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.MASCULINE): 
                     res.append("МАЛЫЙ")
-            if ((((gen) & (MorphGender.NEUTER))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.NEUTER)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.NEUTER): 
                     res.append("МАЛОЕ")
             if (len(res) > 0): 
@@ -194,15 +193,15 @@ class MiscLocationHelper:
             if (num == MorphNumber.PLURAL): 
                 res.append("ВЕРХНИЕ")
                 return res
-            if (not strict and (((num) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
+            if (not strict and ((num) & (MorphNumber.PLURAL)) != (MorphNumber.UNDEFINED)): 
                 res.append("ВЕРХНИЕ")
-            if ((((gen) & (MorphGender.FEMINIE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.FEMINIE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.FEMINIE): 
                     res.append("ВЕРХНЯЯ")
-            if ((((gen) & (MorphGender.MASCULINE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.MASCULINE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.MASCULINE): 
                     res.append("ВЕРХНИЙ")
-            if ((((gen) & (MorphGender.NEUTER))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.NEUTER)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.NEUTER): 
                     res.append("ВЕРХНЕЕ")
             if (len(res) > 0): 
@@ -238,15 +237,15 @@ class MiscLocationHelper:
             if (num == MorphNumber.PLURAL): 
                 res.append("НОВЫЕ")
                 return res
-            if (not strict and (((num) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
+            if (not strict and ((num) & (MorphNumber.PLURAL)) != (MorphNumber.UNDEFINED)): 
                 res.append("НОВЫЕ")
-            if ((((gen) & (MorphGender.FEMINIE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.FEMINIE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.FEMINIE): 
                     res.append("НОВАЯ")
-            if ((((gen) & (MorphGender.MASCULINE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.MASCULINE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.MASCULINE): 
                     res.append("НОВЫЙ")
-            if ((((gen) & (MorphGender.NEUTER))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.NEUTER)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.NEUTER): 
                     res.append("НОВОЕ")
             if (len(res) > 0): 
@@ -256,15 +255,15 @@ class MiscLocationHelper:
             if (num == MorphNumber.PLURAL): 
                 res.append("НИЖНИЕ")
                 return res
-            if (not strict and (((num) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
+            if (not strict and ((num) & (MorphNumber.PLURAL)) != (MorphNumber.UNDEFINED)): 
                 res.append("НИЖНИЕ")
-            if ((((gen) & (MorphGender.FEMINIE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.FEMINIE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.FEMINIE): 
                     res.append("НИЖНЯЯ")
-            if ((((gen) & (MorphGender.MASCULINE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.MASCULINE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.MASCULINE): 
                     res.append("НИЖНИЙ")
-            if ((((gen) & (MorphGender.NEUTER))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.NEUTER)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.NEUTER): 
                     res.append("НИЖНЕЕ")
             if (len(res) > 0): 
@@ -274,15 +273,15 @@ class MiscLocationHelper:
             if (num == MorphNumber.PLURAL): 
                 res.append("СТАРЫЕ")
                 return res
-            if (not strict and (((num) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
+            if (not strict and ((num) & (MorphNumber.PLURAL)) != (MorphNumber.UNDEFINED)): 
                 res.append("СТАРЫЕ")
-            if ((((gen) & (MorphGender.FEMINIE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.FEMINIE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.FEMINIE): 
                     res.append("СТАРАЯ")
-            if ((((gen) & (MorphGender.MASCULINE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.MASCULINE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.MASCULINE): 
                     res.append("СТАРЫЙ")
-            if ((((gen) & (MorphGender.NEUTER))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.NEUTER)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.NEUTER): 
                     res.append("СТАРОЕ")
             if (len(res) > 0): 
@@ -292,15 +291,15 @@ class MiscLocationHelper:
             if (num == MorphNumber.PLURAL): 
                 res.append("СРЕДНИЕ")
                 return res
-            if (not strict and (((num) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
+            if (not strict and ((num) & (MorphNumber.PLURAL)) != (MorphNumber.UNDEFINED)): 
                 res.append("СРЕДНИЕ")
-            if ((((gen) & (MorphGender.FEMINIE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.FEMINIE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.FEMINIE): 
                     res.append("СРЕДНЯЯ")
-            if ((((gen) & (MorphGender.MASCULINE))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.MASCULINE)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.MASCULINE): 
                     res.append("СРЕДНИЙ")
-            if ((((gen) & (MorphGender.NEUTER))) != (MorphGender.UNDEFINED)): 
+            if (((gen) & (MorphGender.NEUTER)) != (MorphGender.UNDEFINED)): 
                 if (not strict or gen == MorphGender.NEUTER): 
                     res.append("СРЕДНЕЕ")
             if (len(res) > 0): 
@@ -318,10 +317,10 @@ class MiscLocationHelper:
         """
         from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         res = None
-        wrapres1234 = RefOutArgWrapper(None)
-        inoutres1235 = Utils.tryGetValue(MiscLocationHelper.__m_geo_ref_by_name, name, wrapres1234)
-        res = wrapres1234.value
-        if (inoutres1235): 
+        wrapres1168 = RefOutArgWrapper(None)
+        inoutres1169 = Utils.tryGetValue(MiscLocationHelper.__m_geo_ref_by_name, name, wrapres1168)
+        res = wrapres1168.value
+        if (inoutres1169): 
             return res
         for r in TerrItemToken._m_all_states: 
             if (r.find_slot(None, name, True) is not None): 
@@ -340,12 +339,12 @@ class MiscLocationHelper:
             t(Token): 
         
         """
-        if (not ((isinstance(t, TextToken)))): 
+        if (not (isinstance(t, TextToken))): 
             return None
         tok = MiscLocationHelper.__m_nords.try_parse(t, TerminParseAttr.NO)
         if (tok is None): 
             return None
-        res = MetaToken._new580(t, t, t.morph)
+        res = MetaToken._new509(t, t, t.morph)
         t1 = None
         if ((t.next0_ is not None and t.next0_.is_hiphen and not t.is_whitespace_after) and not t.is_whitespace_after): 
             t1 = t.next0_.next0_
@@ -390,7 +389,7 @@ class MiscLocationHelper:
         with io.BytesIO() as unzip: 
             data = io.BytesIO(zip0_)
             data.seek(0, io.SEEK_SET)
-            MorphSerializeHelper.deflate_gzip(data, unzip)
+            MorphDeserializer.deflate_gzip(data, unzip)
             data.close()
             return bytearray(unzip.getvalue())
     

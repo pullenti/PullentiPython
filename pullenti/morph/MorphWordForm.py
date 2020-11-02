@@ -1,31 +1,26 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphPerson import MorphPerson
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphCase import MorphCase
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphMiscInfo import MorphMiscInfo
 
 class MorphWordForm(MorphBaseInfo):
-    """ Словоформа (вариант морфанализа лексемы) """
+    """ Словоформа (вариант морфанализа лексемы)
+    
+    словоформа
+    """
     
     @property
     def is_in_dictionary(self) -> bool:
         """ Находится ли словоформа в словаре (если false, то восстановлена по аналогии) """
         return self.undef_coef == (0)
-    
-    def clone(self) -> 'MorphBaseInfo':
-        res = MorphWordForm()
-        res.copy_from_word_form(self)
-        return res
     
     def copy_from_word_form(self, src : 'MorphWordForm') -> None:
         super().copy_from(src)
@@ -34,7 +29,7 @@ class MorphWordForm(MorphBaseInfo):
         self.normal_full = src.normal_full
         self.misc = src.misc
     
-    def __init__(self, v : 'MorphRuleVariant'=None, word : str=None) -> None:
+    def __init__(self, v : 'MorphRuleVariant'=None, word : str=None, mi : 'MorphMiscInfo'=None) -> None:
         super().__init__()
         self.normal_full = None;
         self.normal_case = None;
@@ -43,7 +38,7 @@ class MorphWordForm(MorphBaseInfo):
         if (v is None): 
             return
         self.copy_from(v)
-        self.misc = (v.misc_info)
+        self.misc = mi
         if (v.normal_tail is not None and word is not None): 
             word_begin = word
             if (LanguageHelper.ends_with(word, v.tail)): 
@@ -85,28 +80,23 @@ class MorphWordForm(MorphBaseInfo):
             return attr_value in self.misc.attrs
         return False
     
-    @staticmethod
-    def _has_morph_equals(list0_ : typing.List['MorphWordForm'], mv : 'MorphWordForm') -> bool:
+    def _has_morph_equals(self, list0_ : typing.List['MorphWordForm']) -> bool:
         for mr in list0_: 
-            if ((mv.class0_ == mr.class0_ and mv.number == mr.number and mv.gender == mr.gender) and mv.normal_case == mr.normal_case and mv.normal_full == mr.normal_full): 
-                mr.case_ = (mr.case_) | mv.case_
-                p = mv.misc.person
-                if (p != MorphPerson.UNDEFINED and p != mr.misc.person): 
-                    mr.misc = mr.misc.clone()
-                    mr.misc.person = Utils.valToEnum((mr.misc.person) | (mv.misc.person), MorphPerson)
+            if ((self.class0_ == mr.class0_ and self.number == mr.number and self.gender == mr.gender) and self.normal_case == mr.normal_case and self.normal_full == mr.normal_full): 
+                mr.case_ = (mr.case_) | self.case_
                 return True
         for mr in list0_: 
-            if ((mv.class0_ == mr.class0_ and mv.number == mr.number and mv.case_ == mr.case_) and mv.normal_case == mr.normal_case and mv.normal_full == mr.normal_full): 
-                mr.gender = Utils.valToEnum((mr.gender) | (mv.gender), MorphGender)
+            if ((self.class0_ == mr.class0_ and self.number == mr.number and self.case_ == mr.case_) and self.normal_case == mr.normal_case and self.normal_full == mr.normal_full): 
+                mr.gender = Utils.valToEnum((mr.gender) | (self.gender), MorphGender)
                 return True
         for mr in list0_: 
-            if ((mv.class0_ == mr.class0_ and mv.gender == mr.gender and mv.case_ == mr.case_) and mv.normal_case == mr.normal_case and mv.normal_full == mr.normal_full): 
-                mr.number = Utils.valToEnum((mr.number) | (mv.number), MorphNumber)
+            if ((self.class0_ == mr.class0_ and self.gender == mr.gender and self.case_ == mr.case_) and self.normal_case == mr.normal_case and self.normal_full == mr.normal_full): 
+                mr.number = Utils.valToEnum((mr.number) | (self.number), MorphNumber)
                 return True
         return False
     
     @staticmethod
-    def _new6(_arg1 : str, _arg2 : 'MorphClass', _arg3 : int) -> 'MorphWordForm':
+    def _new5(_arg1 : str, _arg2 : 'MorphClass', _arg3 : int) -> 'MorphWordForm':
         res = MorphWordForm()
         res.normal_case = _arg1
         res.class0_ = _arg2
@@ -114,7 +104,7 @@ class MorphWordForm(MorphBaseInfo):
         return res
     
     @staticmethod
-    def _new670(_arg1 : 'MorphCase', _arg2 : 'MorphNumber', _arg3 : 'MorphGender') -> 'MorphWordForm':
+    def _new604(_arg1 : 'MorphCase', _arg2 : 'MorphNumber', _arg3 : 'MorphGender') -> 'MorphWordForm':
         res = MorphWordForm()
         res.case_ = _arg1
         res.number = _arg2
@@ -122,14 +112,14 @@ class MorphWordForm(MorphBaseInfo):
         return res
     
     @staticmethod
-    def _new671(_arg1 : 'MorphClass', _arg2 : 'MorphMiscInfo') -> 'MorphWordForm':
+    def _new605(_arg1 : 'MorphClass', _arg2 : 'MorphMiscInfo') -> 'MorphWordForm':
         res = MorphWordForm()
         res.class0_ = _arg1
         res.misc = _arg2
         return res
     
     @staticmethod
-    def _new3005(_arg1 : 'MorphClass', _arg2 : 'MorphNumber', _arg3 : 'MorphGender', _arg4 : 'MorphCase') -> 'MorphWordForm':
+    def _new2930(_arg1 : 'MorphClass', _arg2 : 'MorphNumber', _arg3 : 'MorphGender', _arg4 : 'MorphCase') -> 'MorphWordForm':
         res = MorphWordForm()
         res.class0_ = _arg1
         res.number = _arg2

@@ -1,25 +1,24 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.address.AddressReferent import AddressReferent
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.TextToken import TextToken
+from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
+from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.ner.person.internal.PersonItemToken import PersonItemToken
 from pullenti.ner.person.PersonReferent import PersonReferent
-from pullenti.ner.address.AddressReferent import AddressReferent
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 
 class MailLine(MetaToken):
     
@@ -115,18 +114,21 @@ class MailLine(MetaToken):
         return "{0}{1} {2}: {3}".format(("(1) " if self.must_be_first_line else ""), self.lev, Utils.enumToString(self.typ), self.get_source_text())
     
     @staticmethod
-    def parse(t0 : 'Token', lev_ : int) -> 'MailLine':
+    def parse(t0 : 'Token', lev_ : int, max_count : int=0) -> 'MailLine':
         if (t0 is None): 
             return None
         res = MailLine(t0, t0)
         pr = True
+        cou = 0
         t = t0
-        first_pass3907 = True
+        first_pass3787 = True
         while True:
-            if first_pass3907: first_pass3907 = False
-            else: t = t.next0_
+            if first_pass3787: first_pass3787 = False
+            else: t = t.next0_; cou += 1
             if (not (t is not None)): break
             if (t.is_newline_before and t0 != t): 
+                break
+            if (max_count > 0 and cou > max_count): 
                 break
             res.end_token = t
             if (t.is_table_control_char or t.is_hiphen): 
@@ -156,9 +158,9 @@ class MailLine(MetaToken):
             nams = 0
             oth = 0
             last_comma = None
-            first_pass3908 = True
+            first_pass3788 = True
             while True:
-                if first_pass3908: first_pass3908 = False
+                if first_pass3788: first_pass3788 = False
                 else: t = t.next0_
                 if (not (t is not None and (t.end_char < res.end_char))): break
                 if (isinstance(t.get_referent(), PersonReferent)): 
@@ -194,12 +196,12 @@ class MailLine(MetaToken):
             if (t0.is_value("HAVE", None)): 
                 pass
             t = t0
-            first_pass3909 = True
+            first_pass3789 = True
             while True:
-                if first_pass3909: first_pass3909 = False
+                if first_pass3789: first_pass3789 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= res.end_char)): break
-                if (not ((isinstance(t, TextToken)))): 
+                if (not (isinstance(t, TextToken))): 
                     continue
                 if (t.is_char('<')): 
                     br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
@@ -217,9 +219,9 @@ class MailLine(MetaToken):
                     t = tok.end_token
                     if ((isinstance(t.next0_, TextToken)) and t.next0_.morph.case_.is_genitive): 
                         t = t.next0_
-                        first_pass3910 = True
+                        first_pass3790 = True
                         while True:
-                            if first_pass3910: first_pass3910 = False
+                            if first_pass3790: first_pass3790 = False
                             else: t = t.next0_
                             if (not (t.end_char <= res.end_char)): break
                             if (t.morph.class0_.is_conjunction): 
@@ -246,7 +248,7 @@ class MailLine(MetaToken):
                     break
                 tok = MailLine.M_REGARD_WORDS.try_parse(npt.end_token, TerminParseAttr.NO)
                 if (tok is not None and (isinstance(npt.end_token, TextToken))): 
-                    term = (npt.end_token).term
+                    term = npt.end_token.term
                     if (term == "ДЕЛ"): 
                         tok = (None)
                 if (tok is None): 
@@ -267,7 +269,7 @@ class MailLine(MetaToken):
         if (res.typ == MailLine.Types.UNDEFINED): 
             t = t0
             while t is not None and (t.end_char < res.end_char): 
-                if (not ((isinstance(t, TextToken)))): 
+                if (not (isinstance(t, TextToken))): 
                     break
                 elif (not t.is_hiphen and t.chars.is_letter): 
                     break
@@ -291,10 +293,10 @@ class MailLine(MetaToken):
                     has_from = False
                     has_date = t.get_referent() is not None and t.get_referent().type_name == "DATE"
                     if (t.is_newline_after and (lev_ < 5)): 
-                        res1 = MailLine.parse(t.next0_, lev_ + 1)
+                        res1 = MailLine.parse(t.next0_, lev_ + 1, 0)
                         if (res1 is not None and res1.typ == MailLine.Types.HELLO): 
                             res.typ = MailLine.Types.FROM
-                    next0__ = MailLine.parse(res.end_token.next0_, lev_ + 1)
+                    next0__ = MailLine.parse(res.end_token.next0_, lev_ + 1, 0)
                     if (next0__ is not None): 
                         if (next0__.typ != MailLine.Types.UNDEFINED): 
                             next0__ = (None)

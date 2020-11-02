@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -8,24 +7,25 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.ner.Token import Token
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.phone.PhoneKind import PhoneKind
-from pullenti.ner.TextToken import TextToken
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.phone.internal.PhoneHelper import PhoneHelper
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.Referent import Referent
-from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
-from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.ProcessorService import ProcessorService
-from pullenti.ner.phone.internal.MetaPhone import MetaPhone
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.phone.internal.PhoneItemToken import PhoneItemToken
 from pullenti.ner.uri.UriAnalyzer import UriAnalyzer
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.phone.internal.PhoneHelper import PhoneHelper
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
+from pullenti.ner.bank.internal.PullentiNerBankInternalResourceHelper import PullentiNerBankInternalResourceHelper
+from pullenti.ner.Referent import Referent
+from pullenti.ner.phone.internal.MetaPhone import MetaPhone
 from pullenti.ner.phone.PhoneReferent import PhoneReferent
+from pullenti.ner.phone.PhoneKind import PhoneKind
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.phone.internal.PhoneItemToken import PhoneItemToken
 from pullenti.ner.core.AnalyzerData import AnalyzerData
+from pullenti.ner.Analyzer import Analyzer
 
 class PhoneAnalyzer(Analyzer):
     """ Анализатор для выделения телефонных номеров """
@@ -37,6 +37,7 @@ class PhoneAnalyzer(Analyzer):
             self.__m_phones_hash = dict()
         
         def register_referent(self, referent : 'Referent') -> 'Referent':
+            from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
             from pullenti.ner.Referent import Referent
             from pullenti.ner.phone.PhoneReferent import PhoneReferent
             phone_ = Utils.asObjectOrNull(referent, PhoneReferent)
@@ -46,14 +47,14 @@ class PhoneAnalyzer(Analyzer):
             if (len(key) >= 10): 
                 key = key[3:]
             ph_li = [ ]
-            wrapph_li2709 = RefOutArgWrapper(None)
-            inoutres2710 = Utils.tryGetValue(self.__m_phones_hash, key, wrapph_li2709)
-            ph_li = wrapph_li2709.value
-            if (not inoutres2710): 
+            wrapph_li2648 = RefOutArgWrapper(None)
+            inoutres2649 = Utils.tryGetValue(self.__m_phones_hash, key, wrapph_li2648)
+            ph_li = wrapph_li2648.value
+            if (not inoutres2649): 
                 ph_li = list()
                 self.__m_phones_hash[key] = ph_li
             for p in ph_li: 
-                if (p.can_be_equals(phone_, Referent.EqualType.WITHINONETEXT)): 
+                if (p.can_be_equals(phone_, ReferentsEqualType.WITHINONETEXT)): 
                     p.merge_slots(phone_, True)
                     return p
             ph_li.append(phone_)
@@ -61,6 +62,7 @@ class PhoneAnalyzer(Analyzer):
             return phone_
     
     ANALYZER_NAME = "PHONE"
+    """ Имя анализатора ("PHONE") """
     
     @property
     def name(self) -> str:
@@ -84,7 +86,7 @@ class PhoneAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[MetaPhone.PHONE_IMAGE_ID] = EpNerBankInternalResourceHelper.get_bytes("phone.png")
+        res[MetaPhone.PHONE_IMAGE_ID] = PullentiNerBankInternalResourceHelper.get_bytes("phone.png")
         return res
     
     def create_referent(self, type0_ : str) -> 'Referent':
@@ -100,21 +102,14 @@ class PhoneAnalyzer(Analyzer):
         return PhoneAnalyzer.PhoneAnalizerData()
     
     def process(self, kit : 'AnalysisKit') -> None:
-        """ Основная функция выделения телефонов
-        
-        Args:
-            cnt: 
-            stage: 
-        
-        """
         ad = Utils.asObjectOrNull(kit.get_analyzer_data(self), PhoneAnalyzer.PhoneAnalizerData)
         t = kit.first_token
-        first_pass4001 = True
+        first_pass3882 = True
         while True:
-            if first_pass4001: first_pass4001 = False
+            if first_pass3882: first_pass3882 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            pli = PhoneItemToken.try_attach_all(t)
+            pli = PhoneItemToken.try_attach_all(t, 15)
             if (pli is None or len(pli) == 0): 
                 continue
             prev_phone = None
@@ -200,7 +195,7 @@ class PhoneAnalyzer(Analyzer):
                             if (tt1 is not None and tt1.is_table_control_char): 
                                 tt1 = tt1.previous
                             if ((isinstance(tt1, TextToken)) and ((tt1.is_newline_before or ((tt1.previous is not None and tt1.previous.is_table_control_char))))): 
-                                term = (tt1).term
+                                term = tt1.term
                                 if (term == "T" or term == "Т"): 
                                     rt.begin_token = tt1
                                 elif (term == "Ф" or term == "F"): 
@@ -243,12 +238,12 @@ class PhoneAnalyzer(Analyzer):
         add = PhoneItemToken.try_attach_additional(rt.end_token.next0_)
         if (add is not None): 
             for rr in res: 
-                (rr.referent).add_number = add.value
+                rr.referent.add_number = add.value
             res[len(res) - 1].end_token = add.end_token
         return res
     
-    def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        pli = PhoneItemToken.try_attach_all(begin)
+    def process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
+        pli = PhoneItemToken.try_attach_all(begin, 15)
         if (pli is None or len(pli) == 0): 
             return None
         i = 0
@@ -271,9 +266,9 @@ class PhoneAnalyzer(Analyzer):
         if (prev_phone is not None and prev_phone._m_template is not None and pli[j].item_type == PhoneItemToken.PhoneItemType.NUMBER): 
             tmp = io.StringIO()
             jj = j
-            first_pass4002 = True
+            first_pass3883 = True
             while True:
-                if first_pass4002: first_pass4002 = False
+                if first_pass3883: first_pass3883 = False
                 else: jj += 1
                 if (not (jj < len(pli))): break
                 if (pli[jj].item_type == PhoneItemToken.PhoneItemType.NUMBER): 
@@ -371,9 +366,9 @@ class PhoneAnalyzer(Analyzer):
                     std = True
                     ok = True
                     j += 5
-        first_pass4003 = True
+        first_pass3884 = True
         while True:
-            if first_pass4003: first_pass4003 = False
+            if first_pass3884: first_pass3884 = False
             else: j += 1
             if (not (j < len(pli))): break
             if (std): 
@@ -626,7 +621,7 @@ class PhoneAnalyzer(Analyzer):
             t = t.next0_
         if (t is None or lev > 3): 
             return None
-        its = PhoneItemToken.try_attach_all(t)
+        its = PhoneItemToken.try_attach_all(t, 15)
         if (its is None): 
             return None
         rt = self.__try_attach_(its, 0, False, None, lev + 1)

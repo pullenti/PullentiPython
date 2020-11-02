@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -10,7 +9,10 @@ from pullenti.ner.Token import Token
 from pullenti.morph.MorphLang import MorphLang
 
 class Slot:
-    """ Значение атрибута в конкретном экземпляре сущности """
+    """ Значение атрибута в конкретном экземпляре сущности
+    
+    Атрибут сущности
+    """
     
     def __init__(self) -> None:
         self.__typename = None;
@@ -21,6 +23,7 @@ class Slot:
     
     @property
     def type_name(self) -> str:
+        """ Имя атрибута """
         return self.__typename
     @type_name.setter
     def type_name(self, value_) -> str:
@@ -33,6 +36,7 @@ class Slot:
     
     @property
     def owner(self) -> 'Referent':
+        """ Ссылка на сущность-владельца """
         return self.__owner
     @owner.setter
     def owner(self, value_) -> 'Referent':
@@ -41,6 +45,7 @@ class Slot:
     
     @property
     def value(self) -> object:
+        """ Значение атрибута """
         return self.__m_value
     @value.setter
     def value(self, value_) -> object:
@@ -60,9 +65,9 @@ class Slot:
     
     @property
     def count(self) -> int:
-        """ Статистика встречаемости в объектах
-         (например, используется для имён организаций, чтобы статистически определить
-         правильное написание имени) """
+        """ Статистика встречаемости в сущности, когда сущность в нескольких местах текста.
+        Используется, например, для имён организаций, чтобы статистически определить
+        правильное написание имени. """
         return self.__count
     @count.setter
     def count(self, value_) -> int:
@@ -93,20 +98,28 @@ class Slot:
             print("{0}: ".format(self.type_name), end="", file=res, flush=True)
         if (self.value is not None): 
             if (isinstance(self.value, Referent)): 
-                print((self.value).to_string(False, lang, 0), end="", file=res)
+                print(self.value.to_string(False, lang, 0), end="", file=res)
             elif (attr is None): 
                 print(str(self.value), end="", file=res)
             else: 
-                print(attr.convert_inner_value_to_outer_value(self.value, None), end="", file=res)
+                print(attr.convert_inner_value_to_outer_value(str(self.value), None), end="", file=res)
         return Utils.toStringStringIO(res)
     
     def convert_value_to_string(self, lang : 'MorphLang') -> str:
+        """ Преобразовать внутреннее значение в строку указанного языка
+        
+        Args:
+            lang(MorphLang): язык
+        
+        Returns:
+            str: значение
+        """
         if (self.value is None): 
             return None
         attr = self.defining_feature
         if (attr is None): 
             return str(self.value)
-        v = attr.convert_inner_value_to_outer_value(self.value, lang)
+        v = attr.convert_inner_value_to_outer_value(str(self.value), lang)
         if (v is None): 
             return None
         if (isinstance(v, str)): 
@@ -123,14 +136,8 @@ class Slot:
         self.__tag = value_
         return self.__tag
     
-    def delete(self) -> None:
-        """ Удалить слот из сущности """
-        if (self.owner is not None and self in self.owner.slots): 
-            self.owner.slots.remove(self)
-            self.owner = None
-    
     @staticmethod
-    def _new1163(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
+    def _new1097(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
         res = Slot()
         res.type_name = _arg1
         res.tag = _arg2
@@ -138,7 +145,7 @@ class Slot:
         return res
     
     @staticmethod
-    def _new2924(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
+    def _new2858(_arg1 : str, _arg2 : object, _arg3 : int) -> 'Slot':
         res = Slot()
         res.type_name = _arg1
         res.value = _arg2

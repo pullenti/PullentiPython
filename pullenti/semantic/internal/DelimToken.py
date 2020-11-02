@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -25,7 +24,7 @@ class DelimToken(MetaToken):
     
     @staticmethod
     def try_parse(t : 'Token') -> 'DelimToken':
-        if (not ((isinstance(t, TextToken)))): 
+        if (not (isinstance(t, TextToken))): 
             return None
         if (t.is_comma_and): 
             res0 = DelimToken.try_parse(t.next0_)
@@ -55,23 +54,23 @@ class DelimToken(MetaToken):
     @staticmethod
     def initialize() -> None:
         DelimToken.__m_onto = TerminCollection()
-        t = Termin._new119("НО", DelimType.BUT)
+        t = Termin._new100("НО", DelimType.BUT)
         t.add_variant("А", False)
         t.add_variant("ОДНАКО", False)
         t.add_variant("ХОТЯ", False)
         DelimToken.__m_onto.add(t)
-        t = Termin._new119("ЕСЛИ", DelimType.IF)
+        t = Termin._new100("ЕСЛИ", DelimType.IF)
         t.add_variant("В СЛУЧАЕ ЕСЛИ", False)
         DelimToken.__m_onto.add(t)
-        t = Termin._new121("КОГДА", DelimType.IF, DelimToken.__m_onto)
+        t = Termin._new102("КОГДА", DelimType.IF, DelimToken.__m_onto)
         DelimToken.__m_onto.add(t)
-        t = Termin._new119("ТО", DelimType.THEN)
+        t = Termin._new100("ТО", DelimType.THEN)
         t.add_variant("ТОГДА", False)
         DelimToken.__m_onto.add(t)
-        t = Termin._new119("ИНАЧЕ", DelimType.ELSE)
+        t = Termin._new100("ИНАЧЕ", DelimType.ELSE)
         t.add_variant("В ПРОТИВНОМ СЛУЧАЕ", False)
         DelimToken.__m_onto.add(t)
-        t = Termin._new119("ТАК КАК", DelimType.BECAUSE)
+        t = Termin._new100("ТАК КАК", DelimType.BECAUSE)
         t.add_variant("ПОТОМУ ЧТО", False)
         t.add_variant("ПО ПРИЧИНЕ ТОГО ЧТО", False)
         t.add_variant("ИЗ ЗА ТОГО ЧТО", False)
@@ -79,8 +78,8 @@ class DelimToken(MetaToken):
         t.add_variant("ИЗ-ЗА ТОГО ЧТО", False)
         t.add_variant("ТО ЕСТЬ", False)
         DelimToken.__m_onto.add(t)
-        t = Termin._new119("ЧТОБЫ", DelimType.FOR)
+        t = Termin._new100("ЧТОБЫ", DelimType.FOR)
         t.add_variant("ДЛЯ ТОГО ЧТОБЫ", False)
         DelimToken.__m_onto.add(t)
-        t = Termin._new119("ЧТО", DelimType.WHAT)
+        t = Termin._new100("ЧТО", DelimType.WHAT)
         DelimToken.__m_onto.add(t)

@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import math
 from pullenti.unisharp.Utils import Utils
@@ -30,10 +29,10 @@ class AnalyzeHelper:
         while t is not None: 
             if (pars.progress is not None): 
                 p = t.begin_char
-                if (len(ar.sofas[0].text) < 100000): 
-                    p = (math.floor((p * 100) / len(ar.sofas[0].text)))
+                if (len(ar.sofa.text) < 100000): 
+                    p = (math.floor((p * 100) / len(ar.sofa.text)))
                 else: 
-                    p = math.floor(p / ((math.floor(len(ar.sofas[0].text) / 100))))
+                    p = math.floor(p / ((math.floor(len(ar.sofa.text) / 100))))
                 if (p != pers0): 
                     pers0 = p
                     pars.progress.call(None, ProgressEventArgs(p, None))

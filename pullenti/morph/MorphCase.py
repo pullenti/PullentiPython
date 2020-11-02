@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -213,41 +212,77 @@ class MorphCase:
         return res
     
     def equals(self, obj : object) -> bool:
-        if (not ((isinstance(obj, MorphCase)))): 
+        if (not (isinstance(obj, MorphCase))): 
             return False
-        return self.value == (obj).value
+        return self.value == obj.value
     
     def __hash__(self) -> int:
         return self.value
     
     def __and__(self : 'MorphCase', arg2 : 'MorphCase') -> 'MorphCase':
+        """ Моделирование побитного "AND"
+        
+        Args:
+            self(MorphCase): первый аргумент
+            arg2(MorphCase): второй аргумент
+        
+        Returns:
+            MorphCase: arg1 & arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphCase._new48(((val1) & (val2)))
+        return MorphCase._new29(((val1) & (val2)))
     
     def __or__(self : 'MorphCase', arg2 : 'MorphCase') -> 'MorphCase':
+        """ Моделирование побитного "OR"
+        
+        Args:
+            self(MorphCase): первый аргумент
+            arg2(MorphCase): второй аргумент
+        
+        Returns:
+            MorphCase: arg1 | arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphCase._new48(((val1) | (val2)))
+        return MorphCase._new29(((val1) | (val2)))
     
     def __xor__(self : 'MorphCase', arg2 : 'MorphCase') -> 'MorphCase':
+        """ Моделирование побитного "XOR"
+        
+        Args:
+            self(MorphCase): первый аргумент
+            arg2(MorphCase): второй аргумент
+        
+        Returns:
+            MorphCase: arg1 ^ arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphCase._new48(((val1) ^ (val2)))
+        return MorphCase._new29(((val1) ^ (val2)))
     
     def __eq__(self : 'MorphCase', arg2 : 'MorphCase') -> bool:
+        """ Моделирование сравнения ==
+        
+        Args:
+            self(MorphCase): первый аргумент
+            arg2(MorphCase): второй аргумент
+        
+        Returns:
+            bool: arg1 == arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
@@ -257,6 +292,15 @@ class MorphCase:
         return val1 == val2
     
     def __ne__(self : 'MorphCase', arg2 : 'MorphCase') -> bool:
+        """ Моделирование неравенства !=
+        
+        Args:
+            self(MorphCase): первый аргумент
+            arg2(MorphCase): второй аргумент
+        
+        Returns:
+            bool: arg1 != arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
@@ -266,7 +310,7 @@ class MorphCase:
         return val1 != val2
     
     @staticmethod
-    def _new48(_arg1 : int) -> 'MorphCase':
+    def _new29(_arg1 : int) -> 'MorphCase':
         res = MorphCase()
         res.value = _arg1
         return res
@@ -274,18 +318,18 @@ class MorphCase:
     # static constructor for class MorphCase
     @staticmethod
     def _static_ctor():
-        MorphCase.UNDEFINED = MorphCase._new48(0)
-        MorphCase.NOMINATIVE = MorphCase._new48(1)
-        MorphCase.GENITIVE = MorphCase._new48(2)
-        MorphCase.DATIVE = MorphCase._new48(4)
-        MorphCase.ACCUSATIVE = MorphCase._new48(8)
-        MorphCase.INSTRUMENTAL = MorphCase._new48(0x10)
-        MorphCase.PREPOSITIONAL = MorphCase._new48(0x20)
-        MorphCase.VOCATIVE = MorphCase._new48(0x40)
-        MorphCase.PARTIAL = MorphCase._new48(0x80)
-        MorphCase.COMMON = MorphCase._new48(0x100)
-        MorphCase.POSSESSIVE = MorphCase._new48(0x200)
-        MorphCase.ALL_CASES = MorphCase._new48(0x3FF)
+        MorphCase.UNDEFINED = MorphCase._new29(0)
+        MorphCase.NOMINATIVE = MorphCase._new29(1)
+        MorphCase.GENITIVE = MorphCase._new29(2)
+        MorphCase.DATIVE = MorphCase._new29(4)
+        MorphCase.ACCUSATIVE = MorphCase._new29(8)
+        MorphCase.INSTRUMENTAL = MorphCase._new29(0x10)
+        MorphCase.PREPOSITIONAL = MorphCase._new29(0x20)
+        MorphCase.VOCATIVE = MorphCase._new29(0x40)
+        MorphCase.PARTIAL = MorphCase._new29(0x80)
+        MorphCase.COMMON = MorphCase._new29(0x100)
+        MorphCase.POSSESSIVE = MorphCase._new29(0x200)
+        MorphCase.ALL_CASES = MorphCase._new29(0x3FF)
         MorphCase.__m_names = ["именит.", "родит.", "дател.", "винит.", "творит.", "предлож.", "зват.", "частич.", "общ.", "притяж."]
 
 MorphCase._static_ctor()

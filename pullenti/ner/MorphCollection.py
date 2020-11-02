@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -18,7 +17,9 @@ from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.MorphWordForm import MorphWordForm
 
 class MorphCollection(MorphBaseInfo):
-    """ Коллекция морфологических вариантов """
+    """ Коллекция морфологических вариантов
+    Морфология токена
+    """
     
     def __init__(self, source : 'MorphCollection'=None) -> None:
         super().__init__()
@@ -35,18 +36,20 @@ class MorphCollection(MorphBaseInfo):
         for it in source.items: 
             mi = None
             if (isinstance(it, MorphWordForm)): 
-                mi = (Utils.asObjectOrNull((it).clone(), MorphWordForm))
+                wf = MorphWordForm()
+                wf.copy_from_word_form(Utils.asObjectOrNull(it, MorphWordForm))
+                mi = (wf)
             else: 
                 mi = MorphBaseInfo()
                 mi.copy_from(it)
             if (self.__m_items is None): 
                 self.__m_items = list()
             self.__m_items.append(mi)
-        self.__m_class = MorphClass._new72(source.__m_class.value)
+        self.__m_class = MorphClass._new53(source.__m_class.value)
         self.__m_gender = source.__m_gender
-        self.__m_case = MorphCase._new48(source.__m_case.value)
+        self.__m_case = MorphCase._new29(source.__m_case.value)
         self.__m_number = source.__m_number
-        self.__m_language = MorphLang._new75(source.__m_language.value)
+        self.__m_language = MorphLang._new56(source.__m_language.value)
         self.__m_voice = source.__m_voice
         self.__m_need_recalc = False
     
@@ -73,11 +76,11 @@ class MorphCollection(MorphBaseInfo):
             except Exception as ex: 
                 pass
         if (not self.__m_need_recalc): 
-            res.__m_class = MorphClass._new72(self.__m_class.value)
+            res.__m_class = MorphClass._new53(self.__m_class.value)
             res.__m_gender = self.__m_gender
-            res.__m_case = MorphCase._new48(self.__m_case.value)
+            res.__m_case = MorphCase._new29(self.__m_case.value)
             res.__m_number = self.__m_number
-            res.__m_language = MorphLang._new75(self.__m_language.value)
+            res.__m_language = MorphLang._new56(self.__m_language.value)
             res.__m_need_recalc = False
             res.__m_voice = self.__m_voice
         return res
@@ -155,7 +158,7 @@ class MorphCollection(MorphBaseInfo):
                     self.__m_language.value |= it.language.value
                 if (it.class0_.is_verb): 
                     if (isinstance(it, MorphWordForm)): 
-                        v = (it).misc.voice
+                        v = it.misc.voice
                         if (v == MorphVoice.UNDEFINED): 
                             verb_has_undef = True
                         else: 
@@ -236,8 +239,13 @@ class MorphCollection(MorphBaseInfo):
     
     def check_accord(self, v : 'MorphBaseInfo', ignore_gender : bool=False, ignore_number : bool=False) -> bool:
         for it in self.items: 
-            if (it.check_accord(v, ignore_gender, ignore_number)): 
+            if (isinstance(v, MorphCollection)): 
+                if (v.check_accord(it, ignore_gender, ignore_number)): 
+                    return True
+            elif (it.check_accord(v, ignore_gender, ignore_number)): 
                 return True
+        if (len(self.items) > 0): 
+            return False
         return super().check_accord(v, ignore_gender, ignore_number)
     
     def check(self, cl : 'MorphClass') -> bool:
@@ -270,8 +278,16 @@ class MorphCollection(MorphBaseInfo):
                 del self.__m_items[i]
                 self.__m_need_recalc = True
             elif ((((self.__m_items[i].case_) & cas)) != self.__m_items[i].case_): 
-                self.__m_items[i] = (Utils.asObjectOrNull(self.__m_items[i].clone(), MorphBaseInfo))
-                self.__m_items[i].case_ = (self.__m_items[i].case_) & cas
+                if (isinstance(self.__m_items[i], MorphWordForm)): 
+                    wf = MorphWordForm()
+                    wf.copy_from_word_form(Utils.asObjectOrNull(self.__m_items[i], MorphWordForm))
+                    wf.case_ = (wf.case_) & cas
+                    self.__m_items[i] = (wf)
+                else: 
+                    bi = MorphBaseInfo()
+                    bi.copy_from(self.__m_items[i])
+                    bi.case_ = (bi.case_) & cas
+                    self.__m_items[i] = bi
                 self.__m_need_recalc = True
         self.__m_need_recalc = True
     
@@ -304,13 +320,16 @@ class MorphCollection(MorphBaseInfo):
             ok = True
             it = self.__m_items[i]
             if (inf.gender != MorphGender.UNDEFINED): 
-                if ((((it.gender) & (inf.gender))) == (MorphGender.UNDEFINED)): 
+                if (((it.gender) & (inf.gender)) == (MorphGender.UNDEFINED)): 
                     ok = False
             ch_num = False
-            if (inf.number != MorphNumber.PLURAL): 
-                if ((((it.number) & (inf.number))) == (MorphNumber.UNDEFINED)): 
+            if (inf.number != MorphNumber.PLURAL and inf.number != MorphNumber.UNDEFINED): 
+                if (((it.number) & (inf.number)) == (MorphNumber.UNDEFINED)): 
                     ok = False
                 ch_num = True
+            if (not inf.class0_.is_undefined): 
+                if (((inf.class0_) & it.class0_).is_undefined): 
+                    ok = False
             if (not inf.case_.is_undefined): 
                 if (((inf.case_) & it.case_).is_undefined): 
                     ok = False
@@ -323,12 +342,12 @@ class MorphCollection(MorphBaseInfo):
                         it.case_ = ((inf.case_) & it.case_)
                         self.__m_need_recalc = True
                 if (inf.gender != MorphGender.UNDEFINED): 
-                    if ((it.gender) != (((inf.gender) & (it.gender)))): 
-                        it.gender = Utils.valToEnum(((inf.gender) & (it.gender)), MorphGender)
+                    if ((it.gender) != ((inf.gender) & (it.gender))): 
+                        it.gender = Utils.valToEnum((inf.gender) & (it.gender), MorphGender)
                         self.__m_need_recalc = True
                 if (ch_num): 
-                    if ((it.number) != (((inf.number) & (it.number)))): 
-                        it.number = Utils.valToEnum(((inf.number) & (it.number)), MorphNumber)
+                    if ((it.number) != ((inf.number) & (it.number))): 
+                        it.number = Utils.valToEnum((inf.number) & (it.number), MorphNumber)
                         self.__m_need_recalc = True
     
     def remove_items_by_preposition(self, prep : 'Token') -> None:
@@ -338,26 +357,26 @@ class MorphCollection(MorphBaseInfo):
             prep(Token): 
         """
         from pullenti.ner.TextToken import TextToken
-        if (not ((isinstance(prep, TextToken)))): 
+        if (not (isinstance(prep, TextToken))): 
             return
-        mc = LanguageHelper.get_case_after_preposition((prep).lemma)
+        mc = LanguageHelper.get_case_after_preposition(prep.lemma)
         if (((mc) & self.case_).is_undefined): 
             return
         self.remove_items(mc, False)
     
     def remove_not_in_dictionary_items(self) -> None:
         """ Удалить элементы не из словаря (если все не из словаря, то ничего не удаляется).
-         То есть оставить только словарный вариант. """
+        То есть оставить только словарный вариант. """
         if (self.__m_items is None): 
             return
         has_in_dict = False
         for i in range(len(self.__m_items) - 1, -1, -1):
-            if ((isinstance(self.__m_items[i], MorphWordForm)) and (self.__m_items[i]).is_in_dictionary): 
+            if ((isinstance(self.__m_items[i], MorphWordForm)) and self.__m_items[i].is_in_dictionary): 
                 has_in_dict = True
                 break
         if (has_in_dict): 
             for i in range(len(self.__m_items) - 1, -1, -1):
-                if ((isinstance(self.__m_items[i], MorphWordForm)) and not (self.__m_items[i]).is_in_dictionary): 
+                if ((isinstance(self.__m_items[i], MorphWordForm)) and not self.__m_items[i].is_in_dictionary): 
                     del self.__m_items[i]
                     self.__m_need_recalc = True
     
@@ -373,7 +392,7 @@ class MorphCollection(MorphBaseInfo):
         if (self.__m_items is None): 
             return
         for i in range(len(self.__m_items) - 1, -1, -1):
-            if ((((self.__m_items[i].number) & (num))) == (MorphNumber.UNDEFINED)): 
+            if (((self.__m_items[i].number) & (num)) == (MorphNumber.UNDEFINED)): 
                 del self.__m_items[i]
                 self.__m_need_recalc = True
     
@@ -381,7 +400,7 @@ class MorphCollection(MorphBaseInfo):
         if (self.__m_items is None): 
             return
         for i in range(len(self.__m_items) - 1, -1, -1):
-            if ((((self.__m_items[i].gender) & (gen))) == (MorphGender.UNDEFINED)): 
+            if (((self.__m_items[i].gender) & (gen)) == (MorphGender.UNDEFINED)): 
                 del self.__m_items[i]
                 self.__m_need_recalc = True
     
@@ -409,10 +428,10 @@ class MorphCollection(MorphBaseInfo):
                     if (((self.__m_items[i].case_) & it.case_).is_undefined): 
                         continue
                 if (it.gender != MorphGender.UNDEFINED and self.__m_items[i].gender != MorphGender.UNDEFINED): 
-                    if ((((it.gender) & (self.__m_items[i].gender))) == (MorphGender.UNDEFINED)): 
+                    if (((it.gender) & (self.__m_items[i].gender)) == (MorphGender.UNDEFINED)): 
                         continue
                 if (it.number != MorphNumber.UNDEFINED and self.__m_items[i].number != MorphNumber.UNDEFINED): 
-                    if ((((it.number) & (self.__m_items[i].number))) == (MorphNumber.UNDEFINED)): 
+                    if (((it.number) & (self.__m_items[i].number)) == (MorphNumber.UNDEFINED)): 
                         continue
                 ok = True
                 break
@@ -438,10 +457,10 @@ class MorphCollection(MorphBaseInfo):
                 if (((it.case_) & cas).is_undefined): 
                     continue
             if (num != MorphNumber.UNDEFINED): 
-                if ((((num) & (it.number))) == (MorphNumber.UNDEFINED)): 
+                if (((num) & (it.number)) == (MorphNumber.UNDEFINED)): 
                     continue
             if (gen != MorphGender.UNDEFINED): 
-                if ((((gen) & (it.gender))) == (MorphGender.UNDEFINED)): 
+                if (((gen) & (it.gender)) == (MorphGender.UNDEFINED)): 
                     continue
             wf = Utils.asObjectOrNull(it, MorphWordForm)
             if (wf is not None and wf.undef_coef > (0)): 
@@ -468,12 +487,12 @@ class MorphCollection(MorphBaseInfo):
     
     def _deserialize(self, stream : io.IOBase) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
-        self.__m_class = MorphClass._new72(SerializerHelper.deserialize_short(stream))
-        self.__m_case = MorphCase._new48(SerializerHelper.deserialize_short(stream))
+        self.__m_class = MorphClass._new53(SerializerHelper.deserialize_short(stream))
+        self.__m_case = MorphCase._new29(SerializerHelper.deserialize_short(stream))
         self.__m_gender = (Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphGender))
         self.__m_number = (Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphNumber))
         self.__m_voice = (Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphVoice))
-        self.__m_language = MorphLang._new75(SerializerHelper.deserialize_short(stream))
+        self.__m_language = MorphLang._new56(SerializerHelper.deserialize_short(stream))
         cou = SerializerHelper.deserialize_int(stream)
         self.__m_items = list()
         i = 0
@@ -510,11 +529,11 @@ class MorphCollection(MorphBaseInfo):
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         ty = Utils.readByteIO(stream)
         res = (MorphBaseInfo() if ty == 0 else MorphWordForm())
-        res.class0_ = MorphClass._new72(SerializerHelper.deserialize_short(stream))
-        res.case_ = MorphCase._new48(SerializerHelper.deserialize_short(stream))
+        res.class0_ = MorphClass._new53(SerializerHelper.deserialize_short(stream))
+        res.case_ = MorphCase._new29(SerializerHelper.deserialize_short(stream))
         res.gender = Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphGender)
         res.number = Utils.valToEnum(SerializerHelper.deserialize_short(stream), MorphNumber)
-        res.language = MorphLang._new75(SerializerHelper.deserialize_short(stream))
+        res.language = MorphLang._new56(SerializerHelper.deserialize_short(stream))
         if (ty == 0): 
             return res
         wf = Utils.asObjectOrNull(res, MorphWordForm)
@@ -531,19 +550,19 @@ class MorphCollection(MorphBaseInfo):
         return res
     
     @staticmethod
-    def _new584(_arg1 : 'MorphClass') -> 'MorphCollection':
+    def _new513(_arg1 : 'MorphClass') -> 'MorphCollection':
         res = MorphCollection()
         res.class0_ = _arg1
         return res
     
     @staticmethod
-    def _new2421(_arg1 : 'MorphGender') -> 'MorphCollection':
+    def _new2365(_arg1 : 'MorphGender') -> 'MorphCollection':
         res = MorphCollection()
         res.gender = _arg1
         return res
     
     @staticmethod
-    def _new2507(_arg1 : 'MorphCase') -> 'MorphCollection':
+    def _new2446(_arg1 : 'MorphCase') -> 'MorphCollection':
         res = MorphCollection()
         res.case_ = _arg1
         return res

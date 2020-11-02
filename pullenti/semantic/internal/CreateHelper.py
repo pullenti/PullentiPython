@@ -1,30 +1,29 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.semantic.Quantity import Quantity
-from pullenti.morph.MorphCase import MorphCase
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.semantic.SemAttributeType import SemAttributeType
-from pullenti.morph.MorphAspect import MorphAspect
-from pullenti.ner.measure.MeasureReferent import MeasureReferent
-from pullenti.semantic.SemAttribute import SemAttribute
-from pullenti.ner.TextToken import TextToken
-from pullenti.semantic.internal.AdverbToken import AdverbToken
+from pullenti.morph.MorphCase import MorphCase
 from pullenti.semantic.SemLinkType import SemLinkType
+from pullenti.semantic.SemQuantity import SemQuantity
+from pullenti.ner.measure.MeasureReferent import MeasureReferent
+from pullenti.semantic.SemAttributeType import SemAttributeType
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphAspect import MorphAspect
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.semantic.internal.AdverbToken import AdverbToken
+from pullenti.semantic.SemAttribute import SemAttribute
 from pullenti.semantic.SemObjectType import SemObjectType
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.TextToken import TextToken
 from pullenti.semantic.SemObject import SemObject
 from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.semantic.utils.Explanatory import Explanatory
+from pullenti.semantic.utils.DerivateService import DerivateService
 from pullenti.ner.core.NumberHelper import NumberHelper
 
 class CreateHelper:
@@ -69,11 +68,11 @@ class CreateHelper:
             if (sem.morph.normal_case is None): 
                 sem.morph.normal_case = noun.get_normal_case_text(None, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False)
                 sem.morph.normal_full = noun.get_normal_case_text(None, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False)
-            grs = Explanatory.find_derivates(sem.morph.normal_full, True, None)
+            grs = DerivateService.find_derivates(sem.morph.normal_full, True, None)
             if (grs is not None and len(grs) > 0): 
                 sem.concept = (grs[0])
         elif (isinstance(noun, ReferentToken)): 
-            r = (noun).referent
+            r = noun.referent
             if (r is None): 
                 return None
             sem.morph.normal_case = str(r)
@@ -118,15 +117,15 @@ class CreateHelper:
         sem.typ = SemObjectType.NOUN
         sem.measure = mr.kind
         i = 0
-        first_pass4052 = True
+        first_pass3930 = True
         while True:
-            if first_pass4052: first_pass4052 = False
+            if first_pass3930: first_pass3930 = False
             else: i += 1
             if (not (i < len(sem.morph.normal_case))): break
             ch = sem.morph.normal_case[i]
             if (str.isdigit(ch) or Utils.isWhitespace(ch) or "[].+-".find(ch) >= 0): 
                 continue
-            sem.quantity = Quantity(sem.morph.normal_case[0:0+i].strip(), num.begin_token, num.end_token)
+            sem.quantity = SemQuantity(sem.morph.normal_case[0:0+i].strip(), num.begin_token, num.end_token)
             sem.morph.normal_case = sem.morph.normal_case[i:].strip()
             if (len(num.units) == 1 and num.units[0].unit is not None): 
                 sem.morph.normal_full = num.units[0].unit.fullname_cyr
@@ -145,7 +144,7 @@ class CreateHelper:
         res.not0_ = adv.not0_
         res.morph.normal_full = adv.spelling
         res.morph.normal_case = res.morph.normal_full
-        grs = Explanatory.find_derivates(res.morph.normal_full, True, None)
+        grs = DerivateService.find_derivates(res.morph.normal_full, True, None)
         if (grs is not None and len(grs) > 0): 
             res.concept = (grs[0])
         return res
@@ -185,7 +184,7 @@ class CreateHelper:
                 asem.morph.normal_case = a.get_normal_case_text(MorphClass.ADJECTIVE, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False)
                 asem.morph.normal_full = a.get_normal_case_text(MorphClass.ADJECTIVE, MorphNumber.SINGULAR, MorphGender.MASCULINE, False)
                 CreateHelper._set_morph0(asem, a.begin_token.morph)
-            grs = Explanatory.find_derivates(asem.morph.normal_full, True, None)
+            grs = DerivateService.find_derivates(asem.morph.normal_full, True, None)
             if (grs is not None and len(grs) > 0): 
                 asem.concept = (grs[0])
             return asem
@@ -197,9 +196,9 @@ class CreateHelper:
         attrs = list()
         adverbs = list()
         i = 0
-        first_pass4053 = True
+        first_pass3931 = True
         while True:
-            if first_pass4053: first_pass4053 = False
+            if first_pass3931: first_pass3931 = False
             else: i += 1
             if (not (i < len(vpt.items))): break
             v = vpt.items[i]
@@ -208,7 +207,7 @@ class CreateHelper:
                 if (adv is None): 
                     continue
                 if (adv.typ != SemAttributeType.UNDEFINED): 
-                    attrs.append(SemAttribute._new2976(adv.not0_, adv.typ, adv.spelling))
+                    attrs.append(SemAttribute._new2908(adv.not0_, adv.typ, adv.spelling))
                     continue
                 adverb = CreateHelper.create_adverb(gr, adv)
                 if (len(attrs) > 0): 
@@ -236,7 +235,7 @@ class CreateHelper:
                 sem.morph.normal_full = (Utils.ifNotNull(v.end_token.get_normal_case_text(MorphClass.VERB, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False), (sem.morph.normal_case if sem is not None and sem.morph is not None else None)))
                 sem.morph.normal_case = v.end_token.get_normal_case_text(MorphClass.ADJECTIVE, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False)
                 if (sem.morph.normal_case == sem.morph.normal_full and v.normal.endswith("Й")): 
-                    grs2 = Explanatory.find_derivates(v.normal, True, None)
+                    grs2 = DerivateService.find_derivates(v.normal, True, None)
                     if (grs2 is not None): 
                         for g in grs2: 
                             for w in g.words: 
@@ -252,7 +251,7 @@ class CreateHelper:
                             sem.morph.normal_case = (Utils.ifNotNull(wf.normal_full, wf.normal_case))
                             break
                     if (sem.morph.normal_case == sem.morph.normal_full): 
-                        grs2 = Explanatory.find_derivates(sem.morph.normal_case, True, None)
+                        grs2 = DerivateService.find_derivates(sem.morph.normal_case, True, None)
                         if (grs2 is not None): 
                             for g in grs2: 
                                 for w in g.words: 
@@ -265,7 +264,7 @@ class CreateHelper:
             if (v.verb_morph is not None and v.verb_morph.contains_attr("возвр.", None)): 
                 if (sem.morph.normal_full.endswith("СЯ") or sem.morph.normal_full.endswith("СЬ")): 
                     sem.morph.normal_full = sem.morph.normal_full[0:0+len(sem.morph.normal_full) - 2]
-            grs = Explanatory.find_derivates(sem.morph.normal_full, True, None)
+            grs = DerivateService.find_derivates(sem.morph.normal_full, True, None)
             if (grs is not None and len(grs) > 0): 
                 sem.concept = (grs[0])
                 if (v.verb_morph is not None and v.verb_morph.misc.aspect == MorphAspect.IMPERFECTIVE): 

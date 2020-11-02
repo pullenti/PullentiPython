@@ -1,13 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
+from pullenti.ner.bank.internal.PullentiNerBankInternalResourceHelper import PullentiNerBankInternalResourceHelper
 
 class PhoneHelper:
     
@@ -32,7 +31,7 @@ class PhoneHelper:
             return
         PhoneHelper.M_PHONE_ROOT = PhoneHelper.PhoneNode()
         PhoneHelper.M_ALL_COUNTRY_CODES = dict()
-        str0_ = EpNerBankInternalResourceHelper.get_string("CountryPhoneCodes.txt")
+        str0_ = PullentiNerBankInternalResourceHelper.get_string("CountryPhoneCodes.txt")
         if (str0_ is None): 
             raise Utils.newException("Can't file resource file {0} in Organization analyzer".format("CountryPhoneCodes.txt"), None)
         for line0 in Utils.splitString(str0_, '\n', False): 
@@ -51,10 +50,10 @@ class PhoneHelper:
             i = 0
             while i < len(cod): 
                 dig = cod[i]
-                wrapnn2678 = RefOutArgWrapper(None)
-                inoutres2679 = Utils.tryGetValue(tn.children, dig, wrapnn2678)
-                nn = wrapnn2678.value
-                if (not inoutres2679): 
+                wrapnn2617 = RefOutArgWrapper(None)
+                inoutres2618 = Utils.tryGetValue(tn.children, dig, wrapnn2617)
+                nn = wrapnn2617.value
+                if (not inoutres2618): 
                     nn = PhoneHelper.PhoneNode()
                     nn.pref = cod[0:0+i + 1]
                     tn.children[dig] = nn
@@ -87,10 +86,10 @@ class PhoneHelper:
         i = 0
         while i < len(full_number): 
             dig = full_number[i]
-            wrapnn2680 = RefOutArgWrapper(None)
-            inoutres2681 = Utils.tryGetValue(nod.children, dig, wrapnn2680)
-            nn = wrapnn2680.value
-            if (not inoutres2681): 
+            wrapnn2619 = RefOutArgWrapper(None)
+            inoutres2620 = Utils.tryGetValue(nod.children, dig, wrapnn2619)
+            nn = wrapnn2619.value
+            if (not inoutres2620): 
                 break
             if (nn.countries is not None and len(nn.countries) > 0): 
                 max_ind = i

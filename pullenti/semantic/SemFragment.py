@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -13,7 +12,9 @@ from pullenti.semantic.SemFragmentType import SemFragmentType
 from pullenti.semantic.SemObjectType import SemObjectType
 
 class SemFragment(ISemContainer):
-    """ Фрагмент блока (предложения) """
+    """ Фрагмент блока (предложение)
+    
+    """
     
     def __init__(self, blk : 'SemBlock') -> None:
         self.__m_graph = SemGraph()
@@ -27,8 +28,10 @@ class SemFragment(ISemContainer):
     
     @property
     def graph(self) -> 'SemGraph':
-        """ Объекты фрагмента (отметим, что часть объектов, связанных с этими,
-         могут находиться в графах вышележащих уровней). """
+        """ Объекты фрагмента (отметим, что часть объектов, связанных с этим блоком,
+        могут находиться в графах вышележащих уровней).
+        
+        """
         return self.__m_graph
     
     @property
@@ -37,12 +40,13 @@ class SemFragment(ISemContainer):
     
     @property
     def block(self) -> 'SemBlock':
+        """ Владелец фрагмента """
         return self.m_higher
     
     @property
     def root_objects(self) -> typing.List['SemObject']:
-        """ Список объектов, в которые нет связей. При нормальном разборе
-         такой объект должен быть один - это обычно предикат """
+        """ Список объектов SemObject, у которых нет связей. При нормальном разборе
+        такой объект должен быть один - это обычно предикат. """
         res = list()
         for o in self.__m_graph.objects: 
             if (len(o.links_to) == 0): 
@@ -64,7 +68,7 @@ class SemFragment(ISemContainer):
     
     @property
     def spelling(self) -> str:
-        """ Текст фрагмента (возможно, слегка подкорректированный) """
+        """ Текст фрагмента """
         return MiscHelper.get_text_value(self.begin_token, self.end_token, GetTextAttr.KEEPREGISTER)
     
     @property

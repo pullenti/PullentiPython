@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 
 class CanonicDecreeRefUri:
@@ -19,7 +18,7 @@ class CanonicDecreeRefUri:
         return ("?" if self.text is None else self.text[self.begin_char:self.begin_char+(self.end_char + 1) - self.begin_char])
     
     @staticmethod
-    def _new899(_arg1 : str, _arg2 : 'Referent', _arg3 : int, _arg4 : int) -> 'CanonicDecreeRefUri':
+    def _new833(_arg1 : str, _arg2 : 'Referent', _arg3 : int, _arg4 : int) -> 'CanonicDecreeRefUri':
         res = CanonicDecreeRefUri(_arg1)
         res.ref = _arg2
         res.begin_char = _arg3
@@ -27,7 +26,7 @@ class CanonicDecreeRefUri:
         return res
     
     @staticmethod
-    def _new901(_arg1 : str, _arg2 : 'Referent', _arg3 : int, _arg4 : int, _arg5 : bool) -> 'CanonicDecreeRefUri':
+    def _new835(_arg1 : str, _arg2 : 'Referent', _arg3 : int, _arg4 : int, _arg5 : bool) -> 'CanonicDecreeRefUri':
         res = CanonicDecreeRefUri(_arg1)
         res.ref = _arg2
         res.begin_char = _arg3

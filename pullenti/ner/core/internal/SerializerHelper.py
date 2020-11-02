@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.Token import Token
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.TextToken import TextToken
 
 class SerializerHelper:
@@ -76,9 +76,9 @@ class SerializerHelper:
             return None
         res = None
         prev = None
-        first_pass3652 = True
+        first_pass3533 = True
         while True:
-            if first_pass3652: first_pass3652 = False
+            if first_pass3533: first_pass3533 = False
             else: cou -= 1
             if (not (cou > 0)): break
             t = SerializerHelper.__deserialize_token(stream, kit, vers)
@@ -110,7 +110,6 @@ class SerializerHelper:
     @staticmethod
     def serialize_token(stream : io.IOBase, t : 'Token') -> None:
         from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.ReferentToken import ReferentToken
         typ = 0
         if (isinstance(t, TextToken)): 
@@ -126,12 +125,11 @@ class SerializerHelper:
             return
         t._serialize(stream)
         if (isinstance(t, MetaToken)): 
-            SerializerHelper.serialize_tokens(stream, (t).begin_token, t.end_char)
+            SerializerHelper.serialize_tokens(stream, t.begin_token, t.end_char)
     
     @staticmethod
     def __deserialize_token(stream : io.IOBase, kit : 'AnalysisKit', vers : int) -> 'Token':
         from pullenti.ner.MetaToken import MetaToken
-        from pullenti.ner.NumberToken import NumberToken
         from pullenti.ner.ReferentToken import ReferentToken
         typ = SerializerHelper.deserialize_short(stream)
         if (typ == (0)): 
@@ -149,8 +147,8 @@ class SerializerHelper:
         if (isinstance(t, MetaToken)): 
             tt = SerializerHelper.deserialize_tokens(stream, kit, vers)
             if (tt is not None): 
-                (t)._m_begin_token = tt
+                t._m_begin_token = tt
                 while tt is not None: 
-                    (t)._m_end_token = tt
+                    t._m_end_token = tt
                     tt = tt.next0_
         return t

@@ -1,35 +1,42 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.Referent import Referent
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-from pullenti.ner.ReferentClass import ReferentClass
-from pullenti.ner.person.internal.MetaPersonProperty import MetaPersonProperty
 from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.metadata.ReferentClass import ReferentClass
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
+from pullenti.ner.Referent import Referent
+from pullenti.ner.person.internal.MetaPersonProperty import MetaPersonProperty
 
 class PersonPropertyReferent(Referent):
-    """ Сущность, описывающая некоторое свойство физического лица """
+    """ Сущность - свойство персоны (должность, звание...)
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(PersonPropertyReferent.OBJ_TYPENAME)
         self.instance_of = MetaPersonProperty._global_meta
     
     OBJ_TYPENAME = "PERSONPROPERTY"
+    """ Имя типа сущности TypeName ("PERSONPROPERTY") """
     
     ATTR_NAME = "NAME"
+    """ Имя атрибута - наименование """
     
     ATTR_ATTR = "ATTR"
+    """ Имя атрибута - дополнительный атрибут """
     
     ATTR_REF = "REF"
+    """ Имя атрибута - ссылка на сущность (GeoReferent, PersonReferent или OrganizationReferent) """
     
     ATTR_HIGHER = "HIGHER"
+    """ Имя атрибута - для составной должности ссылка на обобщающую должность """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
@@ -40,7 +47,7 @@ class PersonPropertyReferent(Referent):
                 print(", {0}".format(str(r.value)), end="", file=res, flush=True)
         for r in self.slots: 
             if (r.type_name == PersonPropertyReferent.ATTR_REF and (isinstance(r.value, Referent)) and (lev < 10)): 
-                print("; {0}".format((r.value).to_string(short_variant, lang, lev + 1)), end="", file=res, flush=True)
+                print("; {0}".format(r.value.to_string(short_variant, lang, lev + 1)), end="", file=res, flush=True)
         hi = self.higher
         if (hi is not None and hi != self and self.__check_correct_higher(hi, 0)): 
             print("; {0}".format(hi.to_string(short_variant, lang, lev + 1)), end="", file=res, flush=True)
@@ -58,7 +65,7 @@ class PersonPropertyReferent(Referent):
     
     @property
     def name(self) -> str:
-        """ Наименование """
+        """ Наименование свойства """
         return self.get_string_value(PersonPropertyReferent.ATTR_NAME)
     @name.setter
     def name(self, value) -> str:
@@ -116,7 +123,7 @@ class PersonPropertyReferent(Referent):
     
     __tmp_stack = 0
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType') -> bool:
         pr = Utils.asObjectOrNull(obj, PersonPropertyReferent)
         if (pr is None): 
             return False
@@ -126,7 +133,7 @@ class PersonPropertyReferent(Referent):
             return False
         eq_bosses = False
         if (n1 != n2): 
-            if (typ == Referent.EqualType.DIFFERENTTEXTS): 
+            if (typ == ReferentsEqualType.DIFFERENTTEXTS): 
                 return False
             if (n1 in PersonPropertyReferent.__m_bosses0 and n2 in PersonPropertyReferent.__m_bosses1): 
                 eq_bosses = True
@@ -178,9 +185,9 @@ class PersonPropertyReferent(Referent):
             eq = False
             noeq = False
             i = 0
-            first_pass3996 = True
+            first_pass3877 = True
             while True:
-                if first_pass3996: first_pass3996 = False
+                if first_pass3877: first_pass3877 = False
                 else: i += 1
                 if (not (i < len(refs1))): break
                 if (refs1[i] in refs2): 
@@ -190,14 +197,14 @@ class PersonPropertyReferent(Referent):
                 if (isinstance(refs1[i], Referent)): 
                     for rr in refs2: 
                         if (isinstance(rr, Referent)): 
-                            if ((rr).can_be_equals(Utils.asObjectOrNull(refs1[i], Referent), typ)): 
+                            if (rr.can_be_equals(Utils.asObjectOrNull(refs1[i], Referent), typ)): 
                                 noeq = False
                                 eq = True
                                 break
             i = 0
-            first_pass3997 = True
+            first_pass3878 = True
             while True:
-                if first_pass3997: first_pass3997 = False
+                if first_pass3878: first_pass3878 = False
                 else: i += 1
                 if (not (i < len(refs2))): break
                 if (refs2[i] in refs1): 
@@ -207,14 +214,14 @@ class PersonPropertyReferent(Referent):
                 if (isinstance(refs2[i], Referent)): 
                     for rr in refs1: 
                         if (isinstance(rr, Referent)): 
-                            if ((rr).can_be_equals(Utils.asObjectOrNull(refs2[i], Referent), typ)): 
+                            if (rr.can_be_equals(Utils.asObjectOrNull(refs2[i], Referent), typ)): 
                                 noeq = False
                                 eq = True
                                 break
             if (eq and not noeq): 
                 pass
             elif (noeq and ((eq or len(refs1) == 0 or len(refs2) == 0))): 
-                if (typ == Referent.EqualType.DIFFERENTTEXTS or n1 != n2): 
+                if (typ == ReferentsEqualType.DIFFERENTTEXTS or n1 != n2): 
                     return False
                 if (self.higher is not None or pr.higher is not None): 
                     return False
@@ -234,7 +241,7 @@ class PersonPropertyReferent(Referent):
             return False
         if (self.find_slot(PersonPropertyReferent.ATTR_REF, None, True) is not None or self.higher is not None): 
             if (n1 != n2 and n1.startswith(n2)): 
-                return self.can_be_equals(obj, Referent.EqualType.DIFFERENTTEXTS)
+                return self.can_be_equals(obj, ReferentsEqualType.DIFFERENTTEXTS)
             return False
         if (n1 == n2): 
             if (pr.find_slot(PersonPropertyReferent.ATTR_REF, None, True) is not None or pr.higher is not None): 
@@ -242,11 +249,12 @@ class PersonPropertyReferent(Referent):
             return False
         if (n2.startswith(n1)): 
             if (n2.startswith(n1 + " ")): 
-                return self.can_be_equals(obj, Referent.EqualType.WITHINONETEXT)
+                return self.can_be_equals(obj, ReferentsEqualType.WITHINONETEXT)
         return False
     
     @property
     def kind(self) -> 'PersonPropertyKind':
+        """ Категория свойства """
         from pullenti.ner.person.internal.PersonAttrToken import PersonAttrToken
         return PersonAttrToken.check_kind(self)
     
@@ -259,7 +267,7 @@ class PersonPropertyReferent(Referent):
     
     def merge_slots(self, obj : 'Referent', merge_statistic : bool=True) -> None:
         nam = self.name
-        nam1 = (obj).name
+        nam1 = obj.name
         super().merge_slots(obj, merge_statistic)
         if (nam != nam1 and nam1 is not None and nam is not None): 
             s = None
@@ -275,12 +283,7 @@ class PersonPropertyReferent(Referent):
                 self.slots.remove(s)
     
     def can_has_ref(self, r : 'Referent') -> bool:
-        """ Проверка, что этот референт может выступать в качестве ATTR_REF
-        
-        Args:
-            r(Referent): 
-        
-        """
+        # Проверка, что этот референт может выступать в качестве ATTR_REF
         nam = self.name
         if (nam is None or r is None): 
             return False
@@ -306,7 +309,7 @@ class PersonPropertyReferent(Referent):
         return False
     
     @staticmethod
-    def _new2503(_arg1 : str) -> 'PersonPropertyReferent':
+    def _new2442(_arg1 : str) -> 'PersonPropertyReferent':
         res = PersonPropertyReferent()
         res.name = _arg1
         return res

@@ -1,19 +1,19 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.morph.MorphCase import MorphCase
 from pullenti.semantic.utils.QuestionType import QuestionType
 
-class NextModelItem(object):
+class NextModelItem:
     
     def __init__(self, prep : str, cas : 'MorphCase', spel : str=None, typ : 'QuestionType'=QuestionType.UNDEFINED) -> None:
         self.preposition = None;
         self.case_ = None;
         self.spelling = None;
         self.question = QuestionType.UNDEFINED
+        self.id0_ = 0
         self.preposition = prep
         self.case_ = cas
         self.spelling = spel
@@ -22,35 +22,34 @@ class NextModelItem(object):
             return
         if (not Utils.isNullOrEmpty(prep)): 
             if (cas.is_genitive): 
-                spel = "{0} чего".format(prep.lower())
+                self.spelling = "{0} чего".format(prep.lower())
             elif (cas.is_dative): 
-                spel = "{0} чему".format(prep.lower())
+                self.spelling = "{0} чему".format(prep.lower())
             elif (cas.is_accusative): 
-                spel = "{0} что".format(prep.lower())
+                self.spelling = "{0} что".format(prep.lower())
             elif (cas.is_instrumental): 
-                spel = "{0} чем".format(prep.lower())
+                self.spelling = "{0} чем".format(prep.lower())
             elif (cas.is_prepositional): 
-                spel = "{0} чём".format(prep.lower())
+                self.spelling = "{0} чём".format(prep.lower())
         else: 
             self.preposition = ""
             if (cas.is_nominative): 
-                spel = "кто"
+                self.spelling = "кто"
             elif (cas.is_genitive): 
-                spel = "чего"
+                self.spelling = "чего"
             elif (cas.is_dative): 
-                spel = "чему"
+                self.spelling = "чему"
             elif (cas.is_accusative): 
-                spel = "что"
+                self.spelling = "что"
             elif (cas.is_instrumental): 
-                spel = "чем"
+                self.spelling = "чем"
             elif (cas.is_prepositional): 
-                spel = "чём"
-        self.spelling = spel
+                self.spelling = "чём"
     
     def __str__(self) -> str:
         return self.spelling
     
-    def compareTo(self, other : 'NextModelItem') -> int:
+    def compare_to(self, other : 'NextModelItem') -> int:
         i = Utils.compareStrings(self.preposition, other.preposition, False)
         if (i != 0): 
             return i

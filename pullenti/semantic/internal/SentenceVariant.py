@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -34,9 +33,9 @@ class SentenceVariant(object):
                 self.coef += self.segs[i].coef
             i += 1
         i = 0
-        first_pass4080 = True
+        first_pass3957 = True
         while True:
-            if first_pass4080: first_pass4080 = False
+            if first_pass3957: first_pass3957 = False
             else: i += 1
             if (not (i < (len(self.segs) - 1))): break
             seg0 = self.segs[i]
@@ -80,18 +79,18 @@ class SentenceVariant(object):
     def create_alt_links(self) -> None:
         coef0 = self.coef
         i = 0
-        first_pass4081 = True
+        first_pass3958 = True
         while True:
-            if first_pass4081: first_pass4081 = False
+            if first_pass3958: first_pass3958 = False
             else: i += 1
             if (not (i < len(self.segs))): break
             seg = self.segs[i]
             if (seg is None): 
                 continue
             j = 0
-            first_pass4082 = True
+            first_pass3959 = True
             while True:
-                if first_pass4082: first_pass4082 = False
+                if first_pass3959: first_pass3959 = False
                 else: j += 1
                 if (not (j < len(seg.links))): break
                 li = seg.links[j]

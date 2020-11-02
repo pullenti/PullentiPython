@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import datetime
@@ -13,40 +12,54 @@ from pullenti.ner.instrument.internal.MetaInstrument import MetaInstrument
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.date.DateReferent import DateReferent
 from pullenti.ner.decree.DecreeReferent import DecreeReferent
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
 from pullenti.ner.decree.internal.DecreeHelper import DecreeHelper
 
 class InstrumentReferent(InstrumentBlockReferent):
-    """ Представление нормативно-правового документа или его части """
+    """ Представление всего документа
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(InstrumentReferent.OBJ_TYPENAME)
         self.instance_of = MetaInstrument.GLOBAL_META
     
     OBJ_TYPENAME = "INSTRUMENT"
+    """ Имя типа сущности TypeName ("INSTRUMENT") """
     
     ATTR_TYPE = "TYPE"
+    """ Имя атрибута - тип документа """
     
     ATTR_REGNUMBER = "NUMBER"
+    """ Имя атрибута - регистрационный номер """
     
     ATTR_CASENUMBER = "CASENUMBER"
+    """ Имя атрибута - номер судебного дела """
     
     ATTR_DATE = "DATE"
+    """ Имя атрибута - дата """
     
     ATTR_SIGNER = "SIGNER"
+    """ Имя атрибута - подписант """
     
     ATTR_SOURCE = "SOURCE"
+    """ Имя атрибута - публикующий орган """
     
     ATTR_GEO = "GEO"
+    """ Имя атрибута - географический объект """
     
     ATTR_PART = "PART"
+    """ Имя атрибута - номер части (если это часть другого документа) """
     
     ATTR_APPENDIX = "APPENDIX"
+    """ Имя атрибута - номер приложения (если это приложение) """
     
     ATTR_PARTICIPANT = "PARTICIPANT"
+    """ Имя атрибута - участник (InstrumentParticipant) """
     
     ATTR_ARTEFACT = "ARTEFACT"
+    """ Имя атрибута - артефакт (InstrumentArtefact) """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         res = io.StringIO()
@@ -139,14 +152,14 @@ class InstrumentReferent(InstrumentBlockReferent):
         if (dt is None): 
             return False
         if (isinstance(dt, DecreeToken)): 
-            if (isinstance((dt).ref, ReferentToken)): 
-                return self._add_date(((dt).ref).referent)
-            if ((dt).value is not None): 
-                self.add_slot(InstrumentReferent.ATTR_DATE, (dt).value, True, 0)
+            if (isinstance(dt.ref, ReferentToken)): 
+                return self._add_date(dt.ref.referent)
+            if (dt.value is not None): 
+                self.add_slot(InstrumentReferent.ATTR_DATE, dt.value, True, 0)
                 return True
             return False
         if (isinstance(dt, ReferentToken)): 
-            return self._add_date((dt).referent)
+            return self._add_date(dt.referent)
         if (isinstance(dt, DateReferent)): 
             dr = Utils.asObjectOrNull(dt, DateReferent)
             year = dr.year
@@ -181,5 +194,5 @@ class InstrumentReferent(InstrumentBlockReferent):
             return True
         return False
     
-    def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType') -> bool:
+    def can_be_equals(self, obj : 'Referent', typ_ : 'ReferentsEqualType') -> bool:
         return obj == self

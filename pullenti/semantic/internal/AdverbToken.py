@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -40,7 +39,7 @@ class AdverbToken(MetaToken):
     def try_parse(t : 'Token') -> 'AdverbToken':
         if (t is None): 
             return None
-        if ((isinstance(t, TextToken)) and (t).term == "НЕ"): 
+        if ((isinstance(t, TextToken)) and t.term == "НЕ"): 
             nn = AdverbToken.try_parse(t.next0_)
             if (nn is not None): 
                 nn.not0_ = True
@@ -55,12 +54,12 @@ class AdverbToken(MetaToken):
                 t1 = t1.next0_
             if (t1 is not None): 
                 if (t1.is_value("ДРУГ", None) and t.is_value("ДРУГ", None)): 
-                    return AdverbToken._new2950(t0, t1, SemAttributeType.EACHOTHER)
+                    return AdverbToken._new2882(t0, t1, SemAttributeType.EACHOTHER)
                 if (t1.is_value("СЕБЯ", None) and t.is_value("САМ", None)): 
-                    return AdverbToken._new2950(t0, t1, SemAttributeType.HIMELF)
+                    return AdverbToken._new2882(t0, t1, SemAttributeType.HIMELF)
         tok = AdverbToken.__m_termins.try_parse(t, TerminParseAttr.NO)
         if (tok is not None): 
-            res = AdverbToken._new2950(t0, tok.end_token, Utils.valToEnum(tok.termin.tag, SemAttributeType))
+            res = AdverbToken._new2882(t0, tok.end_token, Utils.valToEnum(tok.termin.tag, SemAttributeType))
             t = res.end_token.next0_
             if (t is not None and t.is_comma): 
                 t = t.next0_
@@ -84,42 +83,42 @@ class AdverbToken(MetaToken):
         if (AdverbToken.__m_termins is not None): 
             return
         AdverbToken.__m_termins = TerminCollection()
-        t = Termin._new119("ЕЩЕ", SemAttributeType.STILL)
+        t = Termin._new100("ЕЩЕ", SemAttributeType.STILL)
         AdverbToken.__m_termins.add(t)
-        t = Termin._new119("УЖЕ", SemAttributeType.ALREADY)
+        t = Termin._new100("УЖЕ", SemAttributeType.ALREADY)
         AdverbToken.__m_termins.add(t)
-        t = Termin._new119("ВСЕ", SemAttributeType.ALL)
+        t = Termin._new100("ВСЕ", SemAttributeType.ALL)
         AdverbToken.__m_termins.add(t)
-        t = Termin._new119("ЛЮБОЙ", SemAttributeType.ANY)
+        t = Termin._new100("ЛЮБОЙ", SemAttributeType.ANY)
         t.add_variant("ЛЮБОЙ", False)
         t.add_variant("КАЖДЫЙ", False)
         t.add_variant("ЧТО УГОДНО", False)
         t.add_variant("ВСЯКИЙ", False)
         AdverbToken.__m_termins.add(t)
-        t = Termin._new119("НЕКОТОРЫЙ", SemAttributeType.SOME)
+        t = Termin._new100("НЕКОТОРЫЙ", SemAttributeType.SOME)
         t.add_variant("НЕКИЙ", False)
         AdverbToken.__m_termins.add(t)
-        t = Termin._new119("ДРУГОЙ", SemAttributeType.OTHER)
+        t = Termin._new100("ДРУГОЙ", SemAttributeType.OTHER)
         t.add_variant("ИНОЙ", False)
         AdverbToken.__m_termins.add(t)
-        t = Termin._new119("ВЕСЬ", SemAttributeType.WHOLE)
+        t = Termin._new100("ВЕСЬ", SemAttributeType.WHOLE)
         t.add_variant("ЦЕЛИКОМ", False)
         t.add_variant("ПОЛНОСТЬЮ", False)
         AdverbToken.__m_termins.add(t)
-        t = Termin._new119("ОЧЕНЬ", SemAttributeType.VERY)
+        t = Termin._new100("ОЧЕНЬ", SemAttributeType.VERY)
         AdverbToken.__m_termins.add(t)
-        t = Termin._new119("МЕНЬШЕ", SemAttributeType.LESS)
+        t = Termin._new100("МЕНЬШЕ", SemAttributeType.LESS)
         t.add_variant("МЕНЕЕ", False)
         t.add_variant("МЕНЕЕ", False)
         t.add_variant("МЕНЬШЕ", False)
         AdverbToken.__m_termins.add(t)
-        t = Termin._new119("БОЛЬШЕ", SemAttributeType.GREAT)
+        t = Termin._new100("БОЛЬШЕ", SemAttributeType.GREAT)
         t.add_variant("БОЛЕЕ", False)
         t.add_variant("СВЫШЕ", False)
         AdverbToken.__m_termins.add(t)
     
     @staticmethod
-    def _new2950(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'SemAttributeType') -> 'AdverbToken':
+    def _new2882(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'SemAttributeType') -> 'AdverbToken':
         res = AdverbToken(_arg1, _arg2)
         res.typ = _arg3
         return res

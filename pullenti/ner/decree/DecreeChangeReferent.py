@@ -1,17 +1,17 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
+from pullenti.ner.Referent import Referent
+from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
+from pullenti.ner.metadata.ReferentClass import ReferentClass
+from pullenti.ner.decree.internal.MetaDecreeChange import MetaDecreeChange
 from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
 from pullenti.ner.decree.DecreeChangeValueReferent import DecreeChangeValueReferent
-from pullenti.ner.decree.DecreeChangeKind import DecreeChangeKind
-from pullenti.ner.decree.internal.MetaDecreeChange import MetaDecreeChange
-from pullenti.ner.Referent import Referent
 
 class DecreeChangeReferent(Referent):
     """ Модель изменения структурной части НПА """
@@ -21,23 +21,31 @@ class DecreeChangeReferent(Referent):
         self.instance_of = MetaDecreeChange.GLOBAL_META
     
     OBJ_TYPENAME = "DECREECHANGE"
+    """ Имя типа сущности TypeName ("DECREECHANGE") """
     
     ATTR_OWNER = "OWNER"
+    """ Имя атрибута - Структурный элемент, в который вносится изменение (м.б. несколько),
+    DecreeReferent или DecreePartReferent. """
     
     ATTR_KIND = "KIND"
+    """ Имя атрибута - тип изменения (DecreeChangeKind) """
     
     ATTR_CHILD = "CHILD"
+    """ Имя атрибута - внутренние изменения (DecreeChangeReferent) """
     
     ATTR_VALUE = "VALUE"
+    """ Имя атрибута - само изменение (DecreeChangeValueReferent) """
     
     ATTR_PARAM = "PARAM"
+    """ Имя атрибута - дополнительный параметр DecreeChangeValueReferent (для типа Exchange - что заменяется, для Append - после чего) """
     
     ATTR_MISC = "MISC"
+    """ Имя атрибута - разное """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
         if (self.kind != DecreeChangeKind.UNDEFINED): 
-            print("{0} ".format(MetaDecreeChange.KIND_FEATURE.convert_inner_value_to_outer_value(self.kind, lang)), end="", file=res, flush=True)
+            print("{0} ".format(MetaDecreeChange.KIND_FEATURE.convert_inner_value_to_outer_value(Utils.enumToString(self.kind), lang)), end="", file=res, flush=True)
         if (self.is_owner_name_and_text): 
             print("наименование и текст ", end="", file=res)
         elif (self.is_owner_name): 
@@ -72,7 +80,7 @@ class DecreeChangeReferent(Referent):
             res = Utils.valToEnum(s, DecreeChangeKind)
             if (isinstance(res, DecreeChangeKind)): 
                 return Utils.valToEnum(res, DecreeChangeKind)
-        except Exception as ex1177: 
+        except Exception as ex1111: 
             pass
         return DecreeChangeKind.UNDEFINED
     @kind.setter
@@ -147,7 +155,7 @@ class DecreeChangeReferent(Referent):
             self.add_slot(DecreeChangeReferent.ATTR_MISC, "NAMETEXT", False, 0)
         return value_
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType'=ReferentsEqualType.WITHINONETEXT) -> bool:
         return obj == self
     
     def _check_correct(self) -> bool:
@@ -166,7 +174,7 @@ class DecreeChangeReferent(Referent):
         return True
     
     @staticmethod
-    def _new1168(_arg1 : 'DecreeChangeKind') -> 'DecreeChangeReferent':
+    def _new1102(_arg1 : 'DecreeChangeKind') -> 'DecreeChangeReferent':
         res = DecreeChangeReferent()
         res.kind = _arg1
         return res

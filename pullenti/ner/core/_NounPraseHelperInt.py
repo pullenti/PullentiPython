@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
@@ -17,17 +16,17 @@ from pullenti.ner.core.internal.NounPhraseItemTextVar import NounPhraseItemTextV
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.NounPhraseToken import NounPhraseToken
 from pullenti.ner.MorphCollection import MorphCollection
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.Token import Token
-from pullenti.ner.core.PrepositionHelper import PrepositionHelper
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.TextToken import TextToken
-from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.PrepositionHelper import PrepositionHelper
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.core.VerbPhraseHelper import VerbPhraseHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.core.internal.NounPhraseItem import NounPhraseItem
 
 class _NounPraseHelperInt:
@@ -79,9 +78,9 @@ class _NounPraseHelperInt:
         internal_noun_prase = None
         conj_before = False
         t = t0
-        first_pass3654 = True
+        first_pass3534 = True
         while True:
-            if first_pass3654: first_pass3654 = False
+            if first_pass3534: first_pass3534 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char_pos > 0 and t.begin_char > max_char_pos): 
@@ -189,9 +188,9 @@ class _NounPraseHelperInt:
         if (len(items) == 1 and items[0].can_be_adj): 
             and0_ = False
             tt1 = items[0].end_token.next0_
-            first_pass3655 = True
+            first_pass3535 = True
             while True:
-                if first_pass3655: first_pass3655 = False
+                if first_pass3535: first_pass3535 = False
                 else: tt1 = tt1.next0_
                 if (not (tt1 is not None)): break
                 if (tt1.is_and or tt1.is_or): 
@@ -211,7 +210,7 @@ class _NounPraseHelperInt:
                 if (npt1 is not None and len(npt1.adjectives) > 0): 
                     ok1 = False
                     for av in items[0].adj_morph: 
-                        for v in (npt1.noun).noun_morph: 
+                        for v in npt1.noun.noun_morph: 
                             if (v.check_accord(av, False, False)): 
                                 items[0].morph.add_item(av)
                                 ok1 = True
@@ -241,9 +240,9 @@ class _NounPraseHelperInt:
                 if (npt1 is not None): 
                     ok = True
                     ii = 0
-                    first_pass3656 = True
+                    first_pass3536 = True
                     while True:
-                        if first_pass3656: first_pass3656 = False
+                        if first_pass3536: first_pass3536 = False
                         else: ii += 1
                         if (not (ii < len(items))): break
                         it = items[ii]
@@ -285,9 +284,9 @@ class _NounPraseHelperInt:
                         inp.begin_token = items[0].end_token.next0_
                         items.append(it)
         i = 0
-        first_pass3657 = True
+        first_pass3537 = True
         while True:
-            if first_pass3657: first_pass3657 = False
+            if first_pass3537: first_pass3537 = False
             else: i += 1
             if (not (i < len(items))): break
             if (items[i].can_be_adj and items[i].begin_token.morph.class0_.is_verb): 
@@ -400,7 +399,7 @@ class _NounPraseHelperInt:
                 break
         if (noun is None): 
             return None
-        res = NounPhraseToken._new537(first, noun.end_token, prep)
+        res = NounPhraseToken._new466(first, noun.end_token, prep)
         if (adverbs is not None): 
             for a in adverbs: 
                 if (a.begin_char < noun.begin_char): 
@@ -442,12 +441,14 @@ class _NounPraseHelperInt:
                     if (not ok): 
                         if (items[i].can_be_numeric_adj and items[i].try_accord_var(v, False)): 
                             ok = True
-                            v = (Utils.asObjectOrNull(v.clone(), NounPhraseItemTextVar))
-                            v.number = MorphNumber.PLURAL
+                            v1 = NounPhraseItemTextVar()
+                            v1.copy_from_item(v)
+                            v1.number = MorphNumber.PLURAL
                             is_num_not = True
-                            v.case_ = MorphCase()
+                            v1.case_ = MorphCase()
                             for a in items[i].adj_morph: 
-                                v.case_ = (v.case_) | a.case_
+                                v1.case_ = (v1.case_) | a.case_
+                            v = v1
                         else: 
                             break
                     i += 1
@@ -460,9 +461,9 @@ class _NounPraseHelperInt:
                 if (not is_num_not): 
                     noun.morph = res.morph
         i = 0
-        first_pass3658 = True
+        first_pass3538 = True
         while True:
-            if first_pass3658: first_pass3658 = False
+            if first_pass3538: first_pass3538 = False
             else: i += 1
             if (not (i < len(items))): break
             for av in items[i].adj_morph: 
@@ -510,9 +511,9 @@ class _NounPraseHelperInt:
             if (items[i].end_char > res.end_char): 
                 res.end_token = items[i].end_token
         i = 0
-        first_pass3659 = True
+        first_pass3539 = True
         while True:
-            if first_pass3659: first_pass3659 = False
+            if first_pass3539: first_pass3539 = False
             else: i += 1
             if (not (i < (len(res.adjectives) - 1))): break
             if (res.adjectives[i].whitespaces_after_count > 5): 
@@ -586,12 +587,12 @@ class _NounPraseHelperInt:
                     l2 = w2.normal_value[len(w2.normal_value) - 1]
                     i1 = 0
                     i2 = 0
-                    wrapi1539 = RefOutArgWrapper(0)
-                    Utils.tryGetValue(stat, l1, wrapi1539)
-                    i1 = wrapi1539.value
-                    wrapi2538 = RefOutArgWrapper(0)
-                    Utils.tryGetValue(stat, l2, wrapi2538)
-                    i2 = wrapi2538.value
+                    wrapi1468 = RefOutArgWrapper(0)
+                    Utils.tryGetValue(stat, l1, wrapi1468)
+                    i1 = wrapi1468.value
+                    wrapi2467 = RefOutArgWrapper(0)
+                    Utils.tryGetValue(stat, l2, wrapi2467)
+                    i2 = wrapi2467.value
                     if (i1 < i2): 
                         adj.morph.remove_item(1)
                         adj.morph.insert_item(0, w2)
@@ -603,9 +604,9 @@ class _NounPraseHelperInt:
             else: 
                 comma = False
                 tt = res.begin_token.previous
-                first_pass3660 = True
+                first_pass3540 = True
                 while True:
-                    if first_pass3660: first_pass3660 = False
+                    if first_pass3540: first_pass3540 = False
                     else: tt = tt.previous
                     if (not (tt is not None and tt.end_char <= res.end_char)): break
                     if (tt.morph.class0_.is_adverb): 
@@ -650,9 +651,9 @@ class _NounPraseHelperInt:
         if (first.previous is not None and first.previous.morph.class0_.is_preposition and (first.whitespaces_before_count < 3)): 
             has_prop = True
         t = first
-        first_pass3661 = True
+        first_pass3541 = True
         while True:
-            if first_pass3661: first_pass3661 = False
+            if first_pass3541: first_pass3541 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char_pos > 0 and t.begin_char > max_char_pos): 
@@ -746,12 +747,20 @@ class _NounPraseHelperInt:
                 continue
             if (v.class0_.is_proper and noun.begin_token.chars.is_all_lower): 
                 continue
-            vv = Utils.asObjectOrNull(v.clone(), MorphBaseInfo)
-            if (has_article and vv.number != MorphNumber.SINGULAR): 
-                vv.number = MorphNumber.SINGULAR
-            res.morph.add_item(vv)
+            if (isinstance(v, MorphWordForm)): 
+                wf = MorphWordForm()
+                wf.copy_from_word_form(Utils.asObjectOrNull(v, MorphWordForm))
+                if (has_article and v.number != MorphNumber.SINGULAR): 
+                    wf.number = MorphNumber.SINGULAR
+                res.morph.add_item(wf)
+            else: 
+                bi = MorphBaseInfo()
+                bi.copy_from(v)
+                if (has_article and v.number != MorphNumber.SINGULAR): 
+                    bi.number = MorphNumber.SINGULAR
+                res.morph.add_item(bi)
         if (res.morph.items_count == 0 and has_article): 
-            res.morph.add_item(MorphBaseInfo._new211(MorphClass.NOUN, MorphNumber.SINGULAR))
+            res.morph.add_item(MorphBaseInfo._new192(MorphClass.NOUN, MorphNumber.SINGULAR))
         i = 0
         while i < (len(items) - 1): 
             res.adjectives.append(items[i])

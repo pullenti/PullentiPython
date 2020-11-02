@@ -1,9 +1,8 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.decree.DecreeKind import DecreeKind
 from pullenti.ner.Referent import Referent
 
@@ -42,7 +41,7 @@ class MetaDecree(ReferentClass):
     def get_image_id(self, obj : 'Referent'=None) -> str:
         from pullenti.ner.decree.DecreeReferent import DecreeReferent
         if (isinstance(obj, DecreeReferent)): 
-            ki = (obj).kind
+            ki = obj.kind
             if (ki == DecreeKind.PUBLISHER): 
                 return MetaDecree.PUBLISH_IMAGE_ID
             if (ki == DecreeKind.STANDARD): 

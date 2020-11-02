@@ -1,37 +1,43 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import datetime
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.ner.ImageWrapper import ImageWrapper
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.morph.Morphology import Morphology
-from pullenti.semantic.utils.Explanatory import Explanatory
+from pullenti.ner.metadata.ImageWrapper import ImageWrapper
+from pullenti.ner.core.internal.PullentiNerCoreInternalResourceHelper import PullentiNerCoreInternalResourceHelper
+from pullenti.morph.MorphologyService import MorphologyService
+from pullenti.semantic.utils.DerivateService import DerivateService
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.NumberHelper import NumberHelper
 
 class ProcessorService:
-    """ Глобальная служба семантического процессора """
+    """ Служба лингвистических процессоров
+    
+    Служба процессоров
+    """
     
     @staticmethod
     def get_version() -> str:
         """ Версия системы """
-        return "3.23"
+        return "4.0"
     
     @staticmethod
     def get_version_date() -> datetime.datetime:
-        """ Дата-время текущей версии """
-        return datetime.datetime(2020, 7, 5, 0, 0, 0)
+        """ Дата-время создания текущей версии """
+        return datetime.datetime(2020, 11, 1, 0, 0, 0)
     
     @staticmethod
     def initialize(lang : 'MorphLang'=None) -> None:
-        """ Инициализация сервиса.  
-         Внимание! После этого нужно инициализровать анализаторы (см. документацию)
-         <param name="lang">необходимые языки (по умолчанию, русский и английский)</param> """
+        """ Инициализация сервиса. Каждый анализатор нужно аинициализировать отдельно.
+        Если вызывается Sdk.Initialize(), то там инициализация сервиса и всех анализаторов делается.
+        
+        Args:
+            lang(MorphLang): необходимые языки (по умолчанию, русский и английский)
+        
+        """
         from pullenti.ner.core.internal.NumberExHelper import NumberExHelper
         from pullenti.ner.core.internal.BlockLine import BlockLine
         from pullenti.ner.core.internal.NounPhraseItem import NounPhraseItem
@@ -40,8 +46,8 @@ class ProcessorService:
         if (ProcessorService.__m_inited): 
             return
         ProcessorService.__m_inited = True
-        Morphology.initialize(lang)
-        Explanatory.initialize(lang)
+        MorphologyService.initialize(lang)
+        DerivateService.initialize(lang)
         Termin.ASSIGN_ALL_TEXTS_AS_NORMAL = True
         PrepositionHelper._initialize()
         ConjunctionHelper._initialize()
@@ -64,6 +70,7 @@ class ProcessorService:
         
         Returns:
             Processor: экземпляр процессора
+        
         """
         from pullenti.ner.Processor import Processor
         if (not ProcessorService.__m_inited): 
@@ -78,11 +85,14 @@ class ProcessorService:
     @staticmethod
     def create_specific_processor(spec_analyzer_names : str) -> 'Processor':
         """ Создать процессор с набором стандартных и указанных параметром специфических
-         анализаторов.
+        анализаторов.
         
         Args:
-            spec_analyzer_names(str): можно несколько, разделённые запятой или точкой с запятой. 
-         Если список пустой, то эквивалентно CreateProcessor()
+            spec_analyzer_names(str): можно несколько, разделённые запятой или точкой с запятой.
+        Если список пустой, то эквивалентно CreateProcessor()
+        
+        Returns:
+            Processor: Экземпляр процессора
         
         """
         from pullenti.ner.Processor import Processor
@@ -101,25 +111,24 @@ class ProcessorService:
     def create_empty_processor() -> 'Processor':
         """ Создать экземпляр процессора с пустым списком анализаторов
         
+        Returns:
+            Processor: Процессор без выделения сущностей
+        
         """
         from pullenti.ner.Processor import Processor
         return Processor()
     
     @staticmethod
     def register_analyzer(analyzer : 'Analyzer') -> None:
-        """ Регистрация аналозатора. Вызывается при инициализации из инициализируемой сборки
-         (она сама знает, какие содержит анализаторы, и регистрирует их)
-        
-        Args:
-            analyzer(Analyzer): 
-        """
+        # Регистрация анализатора. Вызывается при инициализации из инициализируемой сборки
+        # (она сама знает, какие содержит анализаторы, и регистрирует их)
         try: 
             ProcessorService.__m_analizer_instances.append(analyzer)
             img = analyzer.images
             if (img is not None): 
                 for kp in img.items(): 
                     if (not kp[0] in ProcessorService.__m_images): 
-                        ProcessorService.__m_images[kp[0]] = ImageWrapper._new2915(kp[0], kp[1])
+                        ProcessorService.__m_images[kp[0]] = ImageWrapper._new2849(kp[0], kp[1])
         except Exception as ex: 
             pass
         ProcessorService.__reorder_cartridges()
@@ -133,9 +142,9 @@ class ProcessorService:
         k = 0
         while k < len(ProcessorService.__m_analizer_instances): 
             i = 0
-            first_pass4049 = True
+            first_pass3927 = True
             while True:
-                if first_pass4049: first_pass4049 = False
+                if first_pass3927: first_pass3927 = False
                 else: i += 1
                 if (not (i < (len(ProcessorService.__m_analizer_instances) - 1))): break
                 max_ind = -1
@@ -192,17 +201,19 @@ class ProcessorService:
         """ Получить иконку по идентификатору иконки
         
         Args:
-            image_id(str): 
+            image_id(str): идентификатор иконки
         
+        Returns:
+            ImageWrapper: обёртка над телом иконки
         """
         if (image_id is not None): 
-            wrapres2916 = RefOutArgWrapper(None)
-            inoutres2917 = Utils.tryGetValue(ProcessorService.__m_images, image_id, wrapres2916)
-            res = wrapres2916.value
-            if (inoutres2917): 
+            wrapres2850 = RefOutArgWrapper(None)
+            inoutres2851 = Utils.tryGetValue(ProcessorService.__m_images, image_id, wrapres2850)
+            res = wrapres2850.value
+            if (inoutres2851): 
                 return res
         if (ProcessorService.__m_unknown_image is None): 
-            ProcessorService.__m_unknown_image = ImageWrapper._new2915("unknown", EpNerCoreInternalResourceHelper.get_bytes("unknown.png"))
+            ProcessorService.__m_unknown_image = ImageWrapper._new2849("unknown", PullentiNerCoreInternalResourceHelper.get_bytes("unknown.png"))
         return ProcessorService.__m_unknown_image
     
     @staticmethod
@@ -210,12 +221,12 @@ class ProcessorService:
         """ Добавить специфическую иконку
         
         Args:
-            image_id(str): идентификатор (возвращаемый Referent.getImageId())
+            image_id(str): идентификатор (возвращаемый Referent.GetImageId())
             content(bytearray): содержимое иконки
         """
         if (image_id is None): 
             return
-        wr = ImageWrapper._new2915(image_id, content)
+        wr = ImageWrapper._new2849(image_id, content)
         if (image_id in ProcessorService.__m_images): 
             ProcessorService.__m_images[image_id] = wr
         else: 
@@ -226,14 +237,14 @@ class ProcessorService:
     @staticmethod
     def get_empty_processor() -> 'Processor':
         """ Экземпляр процессора с пустым множеством анализаторов (используется для
-         разных лингвистических процедур, где не нужны сущности) """
+        разных лингвистических процедур, где не нужны сущности) """
         if (ProcessorService.__m_empty_processor is None): 
             ProcessorService.__m_empty_processor = ProcessorService.create_empty_processor()
         return ProcessorService.__m_empty_processor
     
     DEBUG_CURRENT_DATE_TIME = None
-    """ Это нужно для автотестов, чтобы фиксировать дату-время, относительно которой 
-     идут вычисления (если не задана, то берётся текущая) """
+    """ Это нужно для автотестов, чтобы фиксировать дату-время, относительно которой
+    идут вычисления (если не задана, то берётся текущая) """
     
     # static constructor for class ProcessorService
     @staticmethod

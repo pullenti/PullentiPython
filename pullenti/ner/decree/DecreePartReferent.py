@@ -1,66 +1,90 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.ner.Referent import Referent
-from pullenti.ner.ReferentClass import ReferentClass
-from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.decree.DecreeReferent import DecreeReferent
 from pullenti.ner.decree.internal.MetaDecreePart import MetaDecreePart
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.metadata.ReferentClass import ReferentClass
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
 
 class DecreePartReferent(Referent):
-    """ Сущность, представляющая ссылку на структурную часть НПА """
+    """ Сущность, представляющая ссылку на структурную часть НПА
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(DecreePartReferent.OBJ_TYPENAME)
         self.instance_of = MetaDecreePart.GLOBAL_META
     
     OBJ_TYPENAME = "DECREEPART"
+    """ Имя типа сущности TypeName ("DECREEPART") """
     
     ATTR_NAME = "NAME"
+    """ Имя атрибута - наименование """
     
     ATTR_OWNER = "OWNER"
+    """ Имя атрибута - владелец (DecreeReferent) """
     
     ATTR_LOCALTYP = "LOCALTYP"
+    """ Имя атрибута - тип локального владельца (ст.10 этого закона) """
     
     ATTR_DOCPART = "DOCPART"
+    """ Имя атрибута - часть документа (например, часть 1 Налогового кодекса) """
     
     ATTR_APPENDIX = "APPENDIX"
+    """ Имя атрибута - приложение """
     
     ATTR_SECTION = "SECTION"
+    """ Имя атрибута - раздел """
     
     ATTR_SUBSECTION = "SUBSECTION"
+    """ Имя атрибута - подраздел """
     
     ATTR_CHAPTER = "CHAPTER"
+    """ Имя атрибута - глава """
     
     ATTR_CLAUSE = "CLAUSE"
+    """ Имя атрибута - статья """
     
     ATTR_PARAGRAPH = "PARAGRAPH"
+    """ Имя атрибута - параграф """
     
     ATTR_SUBPARAGRAPH = "SUBPARAGRAPH"
+    """ Имя атрибута - подпараграф """
     
     ATTR_PART = "PART"
+    """ Имя атрибута - часть статьи (не путать с частью документа!) """
     
     ATTR_ITEM = "ITEM"
+    """ Имя атрибута - пункт """
     
     ATTR_SUBITEM = "SUBITEM"
+    """ Имя атрибута - подпункт """
     
     ATTR_INDENTION = "INDENTION"
+    """ Имя атрибута - абзац """
     
     ATTR_SUBINDENTION = "SUBINDENTION"
+    """ Имя атрибута - подабзац """
     
     ATTR_PREAMBLE = "PREAMPLE"
+    """ Имя атрибута - преамбула """
     
     ATTR_NOTICE = "NOTICE"
+    """ Имя атрибута - примечание """
     
     ATTR_SUBPROGRAM = "SUBPROGRAM"
+    """ Имя атрибута - подпрограмма """
     
     ATTR_ADDAGREE = "ADDAGREE"
+    """ Имя атрибута - дополнительное соглашение """
     
     ATTR_PAGE = "PAGE"
+    """ Имя атрибута - страница """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
@@ -157,8 +181,8 @@ class DecreePartReferent(Referent):
         from pullenti.ner.decree.internal.PartToken import PartToken
         tag_ = None
         if (isinstance(attr_value, PartToken.PartValue)): 
-            tag_ = (attr_value).source_value
-            attr_value = ((attr_value).value)
+            tag_ = attr_value.source_value
+            attr_value = (attr_value.value)
         s = super().add_slot(attr_name, attr_value, clear_old_value, stat_count)
         if (tag_ is not None): 
             s.tag = tag_
@@ -166,6 +190,7 @@ class DecreePartReferent(Referent):
     
     @property
     def clause(self) -> str:
+        """ Статья """
         return self.get_string_value(DecreePartReferent.ATTR_CLAUSE)
     @clause.setter
     def clause(self, value) -> str:
@@ -174,6 +199,7 @@ class DecreePartReferent(Referent):
     
     @property
     def part(self) -> str:
+        """ Часть статьи """
         return self.get_string_value(DecreePartReferent.ATTR_PART)
     @part.setter
     def part(self, value) -> str:
@@ -182,6 +208,7 @@ class DecreePartReferent(Referent):
     
     @property
     def doc_part(self) -> str:
+        """ Часть документа (например, часть 2 Налогового кодекса) """
         return self.get_string_value(DecreePartReferent.ATTR_DOCPART)
     @doc_part.setter
     def doc_part(self, value) -> str:
@@ -190,6 +217,7 @@ class DecreePartReferent(Referent):
     
     @property
     def section(self) -> str:
+        """ Раздел """
         return self.get_string_value(DecreePartReferent.ATTR_SECTION)
     @section.setter
     def section(self, value) -> str:
@@ -198,6 +226,7 @@ class DecreePartReferent(Referent):
     
     @property
     def sub_section(self) -> str:
+        """ Подраздел """
         return self.get_string_value(DecreePartReferent.ATTR_SUBSECTION)
     @sub_section.setter
     def sub_section(self, value) -> str:
@@ -206,6 +235,7 @@ class DecreePartReferent(Referent):
     
     @property
     def appendix(self) -> str:
+        """ Приложение """
         return self.get_string_value(DecreePartReferent.ATTR_APPENDIX)
     @appendix.setter
     def appendix(self, value) -> str:
@@ -216,6 +246,7 @@ class DecreePartReferent(Referent):
     
     @property
     def chapter(self) -> str:
+        """ Глава """
         return self.get_string_value(DecreePartReferent.ATTR_CHAPTER)
     @chapter.setter
     def chapter(self, value) -> str:
@@ -224,6 +255,7 @@ class DecreePartReferent(Referent):
     
     @property
     def paragraph(self) -> str:
+        """ Параграф """
         return self.get_string_value(DecreePartReferent.ATTR_PARAGRAPH)
     @paragraph.setter
     def paragraph(self, value) -> str:
@@ -232,6 +264,7 @@ class DecreePartReferent(Referent):
     
     @property
     def sub_paragraph(self) -> str:
+        """ Подпараграф """
         return self.get_string_value(DecreePartReferent.ATTR_SUBPARAGRAPH)
     @sub_paragraph.setter
     def sub_paragraph(self, value) -> str:
@@ -240,6 +273,7 @@ class DecreePartReferent(Referent):
     
     @property
     def item(self) -> str:
+        """ Пункт """
         return self.get_string_value(DecreePartReferent.ATTR_ITEM)
     @item.setter
     def item(self, value) -> str:
@@ -248,6 +282,7 @@ class DecreePartReferent(Referent):
     
     @property
     def sub_item(self) -> str:
+        """ Подпункт """
         return self.get_string_value(DecreePartReferent.ATTR_SUBITEM)
     @sub_item.setter
     def sub_item(self, value) -> str:
@@ -256,6 +291,7 @@ class DecreePartReferent(Referent):
     
     @property
     def indention(self) -> str:
+        """ Абзац """
         return self.get_string_value(DecreePartReferent.ATTR_INDENTION)
     @indention.setter
     def indention(self, value) -> str:
@@ -264,6 +300,7 @@ class DecreePartReferent(Referent):
     
     @property
     def sub_indention(self) -> str:
+        """ Подабзац """
         return self.get_string_value(DecreePartReferent.ATTR_SUBINDENTION)
     @sub_indention.setter
     def sub_indention(self, value) -> str:
@@ -272,6 +309,7 @@ class DecreePartReferent(Referent):
     
     @property
     def preamble(self) -> str:
+        """ Преамбула """
         return self.get_string_value(DecreePartReferent.ATTR_PREAMBLE)
     @preamble.setter
     def preamble(self, value) -> str:
@@ -280,6 +318,7 @@ class DecreePartReferent(Referent):
     
     @property
     def notice(self) -> str:
+        """ Примечание """
         return self.get_string_value(DecreePartReferent.ATTR_NOTICE)
     @notice.setter
     def notice(self, value) -> str:
@@ -290,6 +329,7 @@ class DecreePartReferent(Referent):
     
     @property
     def page(self) -> str:
+        """ Страница """
         return self.get_string_value(DecreePartReferent.ATTR_PAGE)
     @page.setter
     def page(self, value) -> str:
@@ -298,6 +338,7 @@ class DecreePartReferent(Referent):
     
     @property
     def subprogram(self) -> str:
+        """ Подпрограмма """
         return self.get_string_value(DecreePartReferent.ATTR_SUBPROGRAM)
     @subprogram.setter
     def subprogram(self, value) -> str:
@@ -315,6 +356,7 @@ class DecreePartReferent(Referent):
     
     @property
     def owner(self) -> 'DecreeReferent':
+        """ НПА - владелец """
         res = Utils.asObjectOrNull(self.get_slot_value(DecreePartReferent.ATTR_OWNER), DecreeReferent)
         if (res is None): 
             return None
@@ -391,11 +433,7 @@ class DecreePartReferent(Referent):
         return False
     
     def _add_high_level_info(self, dp : 'DecreePartReferent') -> None:
-        """ Добавить информацию о вышележащих элементах
-        
-        Args:
-            dp(DecreePartReferent): 
-        """
+        # Добавить информацию о вышележащих элементах
         if (dp.addagree is not None and self.addagree is None): 
             self.addagree = dp.addagree
         elif (dp.addagree != self.addagree): 
@@ -451,12 +489,7 @@ class DecreePartReferent(Referent):
             self.indention = dp.indention
     
     def _is_all_items_less_level(self, upper_parts : 'Referent', ignore_equals : bool) -> bool:
-        """ Проверить, что все элементы находятся на более низком уровне, чем у аргумента
-        
-        Args:
-            upper_parts(Referent): 
-        
-        """
+        # Проверить, что все элементы находятся на более низком уровне, чем у аргумента
         if (isinstance(upper_parts, DecreeReferent)): 
             return True
         for s in self.slots: 
@@ -498,18 +531,18 @@ class DecreePartReferent(Referent):
                 min0_ = l_
         return min0_
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType') -> bool:
         b = self.__can_be_equals(obj, typ, False)
         return b
     
-    def __can_be_equals(self, obj : 'Referent', typ : 'EqualType', ignore_geo : bool) -> bool:
+    def __can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType', ignore_geo : bool) -> bool:
         dr = Utils.asObjectOrNull(obj, DecreePartReferent)
         if (dr is None): 
             return False
         if (self.owner is not None and dr.owner is not None): 
             if (self.owner != dr.owner): 
                 return False
-        elif (typ == Referent.EqualType.DIFFERENTTEXTS): 
+        elif (typ == ReferentsEqualType.DIFFERENTTEXTS): 
             return False
         else: 
             ty1 = (self.local_typ if self.owner is None else self.owner.typ)
@@ -520,47 +553,47 @@ class DecreePartReferent(Referent):
                 if (ty1 != ty2): 
                     return False
         if (self.clause != dr.clause): 
-            if (typ == Referent.EqualType.FORMERGING and ((self.clause is None or dr.clause is None))): 
+            if (typ == ReferentsEqualType.FORMERGING and ((self.clause is None or dr.clause is None))): 
                 pass
             else: 
                 return False
         if (self.part != dr.part): 
-            if (typ == Referent.EqualType.FORMERGING and ((self.part is None or dr.part is None))): 
+            if (typ == ReferentsEqualType.FORMERGING and ((self.part is None or dr.part is None))): 
                 pass
             else: 
                 return False
         if (self.paragraph != dr.paragraph): 
-            if (typ == Referent.EqualType.FORMERGING and ((self.paragraph is None or dr.paragraph is None))): 
+            if (typ == ReferentsEqualType.FORMERGING and ((self.paragraph is None or dr.paragraph is None))): 
                 pass
             else: 
                 return False
         if (self.sub_paragraph != dr.sub_paragraph): 
-            if (typ == Referent.EqualType.FORMERGING and ((self.sub_paragraph is None or dr.sub_paragraph is None))): 
+            if (typ == ReferentsEqualType.FORMERGING and ((self.sub_paragraph is None or dr.sub_paragraph is None))): 
                 pass
             else: 
                 return False
         if (self.item != dr.item): 
-            if (typ == Referent.EqualType.FORMERGING and ((self.item is None or dr.item is None))): 
+            if (typ == ReferentsEqualType.FORMERGING and ((self.item is None or dr.item is None))): 
                 pass
             else: 
                 return False
         if (self.sub_item != dr.sub_item): 
-            if (typ == Referent.EqualType.FORMERGING and ((self.sub_item is None or dr.sub_item is None))): 
+            if (typ == ReferentsEqualType.FORMERGING and ((self.sub_item is None or dr.sub_item is None))): 
                 pass
             else: 
                 return False
         if (self.notice != dr.notice): 
-            if (typ == Referent.EqualType.FORMERGING and ((self.notice is None or dr.notice is None))): 
+            if (typ == ReferentsEqualType.FORMERGING and ((self.notice is None or dr.notice is None))): 
                 pass
             else: 
                 return False
         if (self.indention != dr.indention): 
-            if (typ == Referent.EqualType.FORMERGING and ((self.indention is None or dr.indention is None))): 
+            if (typ == ReferentsEqualType.FORMERGING and ((self.indention is None or dr.indention is None))): 
                 pass
             else: 
                 return False
         if (self.sub_indention != dr.sub_indention): 
-            if (typ == Referent.EqualType.FORMERGING and ((self.sub_indention is None or dr.sub_indention is None))): 
+            if (typ == ReferentsEqualType.FORMERGING and ((self.sub_indention is None or dr.sub_indention is None))): 
                 pass
             else: 
                 return False
@@ -592,7 +625,7 @@ class DecreePartReferent(Referent):
             if (self.addagree != dr.addagree): 
                 return False
         if (self.doc_part != dr.doc_part): 
-            if (typ == Referent.EqualType.FORMERGING and ((self.doc_part is None or dr.doc_part is None))): 
+            if (typ == ReferentsEqualType.FORMERGING and ((self.doc_part is None or dr.doc_part is None))): 
                 pass
             else: 
                 return False
@@ -621,7 +654,7 @@ class DecreePartReferent(Referent):
         return res
     
     @staticmethod
-    def _new1174(_arg1 : 'DecreeReferent') -> 'DecreePartReferent':
+    def _new1108(_arg1 : 'DecreeReferent') -> 'DecreePartReferent':
         res = DecreePartReferent()
         res.owner = _arg1
         return res

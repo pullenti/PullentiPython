@@ -1,63 +1,71 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
+import typing
 import io
 from pullenti.unisharp.Utils import Utils
-from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.internal.MorphRuleVariant import MorphRuleVariant
 
 class MorphRule:
     
     def __init__(self) -> None:
-        self._id0_ = 0
-        self.variants = dict()
-        self.variants_list = list()
-        self.variants_key = list()
+        self.id0_ = 0
+        self.tails = list()
+        self.morph_vars = list()
         self.lazy_pos = 0
     
-    def refresh_variants(self) -> None:
-        vars0_ = list()
-        for v in self.variants_list: 
-            vars0_.extend(v)
-        self.variants.clear()
-        self.variants_key.clear()
-        self.variants_list.clear()
-        for v in vars0_: 
-            li = [ ]
-            wrapli28 = RefOutArgWrapper(None)
-            inoutres29 = Utils.tryGetValue(self.variants, Utils.ifNotNull(v.tail, ""), wrapli28)
-            li = wrapli28.value
-            if (not inoutres29): 
-                li = list()
-                self.variants[Utils.ifNotNull(v.tail, "")] = li
-            li.append(v)
-        for kp in self.variants.items(): 
-            self.variants_key.append(kp[0])
-            self.variants_list.append(kp[1])
+    def contains_var(self, tail : str) -> bool:
+        return Utils.indexOfList(self.tails, tail, 0) >= 0
+    
+    def get_vars(self, key : str) -> typing.List['MorphRuleVariant']:
+        i = Utils.indexOfList(self.tails, key, 0)
+        if (i >= 0): 
+            return self.morph_vars[i]
+        return None
+    
+    def find_var(self, id0__ : int) -> 'MorphRuleVariant':
+        for li in self.morph_vars: 
+            for v in li: 
+                if (v.id0_ == id0__): 
+                    return v
+        return None
+    
+    def add(self, tail : str, vars0_ : typing.List['MorphRuleVariant']) -> None:
+        self.tails.append(tail)
+        self.morph_vars.append(vars0_)
     
     def __str__(self) -> str:
         res = io.StringIO()
         i = 0
-        while i < len(self.variants_key): 
+        while i < len(self.tails): 
             if (res.tell() > 0): 
                 print(", ", end="", file=res)
-            print("-{0}".format(self.variants_key[i]), end="", file=res, flush=True)
+            print("-{0}".format(self.tails[i]), end="", file=res, flush=True)
             i += 1
         return Utils.toStringStringIO(res)
     
-    def add(self, tail : str, var : 'MorphRuleVariant') -> None:
-        tail = LanguageHelper.correct_word(tail)
-        if (var.class0_.is_undefined): 
-            pass
-        li = [ ]
-        wrapli30 = RefOutArgWrapper(None)
-        inoutres31 = Utils.tryGetValue(self.variants, tail, wrapli30)
-        li = wrapli30.value
-        if (not inoutres31): 
+    def _deserialize(self, str0_ : 'ByteArrayWrapper', pos : int) -> None:
+        ii = str0_.deserialize_short(pos)
+        self.id0_ = ii
+        id0__ = 1
+        while not str0_.iseof(pos.value):
+            b = str0_.deserialize_byte(pos)
+            if (b == (0xFF)): 
+                break
+            pos.value -= 1
+            key = str0_.deserialize_string(pos)
+            if (key is None): 
+                key = ""
             li = list()
-            self.variants[tail] = li
-        var.tail = tail
-        li.append(var)
-        var.rule = (self)
+            while not str0_.iseof(pos.value):
+                mrv = MorphRuleVariant()
+                inoutres24 = mrv._deserialize(str0_, pos)
+                if (not inoutres24): 
+                    break
+                mrv.tail = key
+                mrv.rule_id = (ii)
+                mrv.id0_ = id0__
+                id0__ += 1
+                li.append(mrv)
+            self.add(key, li)

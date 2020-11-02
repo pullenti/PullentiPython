@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import datetime
@@ -14,16 +13,16 @@ from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.date.DateRangeReferent import DateRangeReferent
+from pullenti.ner.date.DateReferent import DateReferent
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.date.DatePointerType import DatePointerType
-from pullenti.ner.date.DateReferent import DateReferent
-from pullenti.ner.date.DateRangeReferent import DateRangeReferent
 from pullenti.ner.date.internal.DateItemToken import DateItemToken
 
 class DateExToken(MetaToken):
-    """ ВСЁ, этот класс теперь используется внутренним робразом, а DateReferent поддерживает относительные даты-время
-     Используется для нахождения в тексте абсолютных и относительных дат и диапазонов,
-     например, "в прошлом году", "за первый квартал этого года", "два дня назад и т.п." """
+    # ВСЁ, этот класс теперь используется внутренним робразом, а DateReferent поддерживает относительные даты-время
+    # Используется для нахождения в тексте абсолютных и относительных дат и диапазонов,
+    # например, "в прошлом году", "за первый квартал этого года", "два дня назад и т.п."
     
     class DateExItemTokenType(IntEnum):
         UNDEFINED = 0
@@ -93,7 +92,7 @@ class DateExToken(MetaToken):
                     if (v.typ != DateExToken.DateExItemTokenType.HOUR and v.typ != DateExToken.DateExItemTokenType.MINUTE): 
                         oo = True
             if (not oo): 
-                return DateExToken.DateValues._new672(today.year, today.month, today.day)
+                return DateExToken.DateValues._new606(today.year, today.month, today.day)
             if (list0_ is None or len(list0_) == 0): 
                 return None
             j = 0
@@ -101,7 +100,7 @@ class DateExToken(MetaToken):
                 if (list0_[j].typ == DateExToken.DateExItemTokenType.DAYOFWEEK): 
                     if (j > 0 and list0_[j - 1].typ == DateExToken.DateExItemTokenType.WEEK): 
                         break
-                    we = DateExToken.DateExItemToken._new673(list0_[j].begin_token, list0_[j].end_token, DateExToken.DateExItemTokenType.WEEK, True)
+                    we = DateExToken.DateExItemToken._new607(list0_[j].begin_token, list0_[j].end_token, DateExToken.DateExItemTokenType.WEEK, True)
                     if (list0_[j].is_value_relate): 
                         list0_[j].is_value_relate = False
                         if (list0_[j].value < 0): 
@@ -295,7 +294,7 @@ class DateExToken(MetaToken):
             return res
         
         @staticmethod
-        def _new672(_arg1 : int, _arg2 : int, _arg3 : int) -> 'DateValues':
+        def _new606(_arg1 : int, _arg2 : int, _arg3 : int) -> 'DateValues':
             res = DateExToken.DateValues()
             res.year = _arg1
             res.month1 = _arg2
@@ -324,33 +323,33 @@ class DateExToken(MetaToken):
             return Utils.toStringStringIO(tmp)
         
         @staticmethod
-        def try_parse(t : 'Token', prev : typing.List['DateExItemToken']) -> 'DateExItemToken':
+        def try_parse(t : 'Token', prev : typing.List['DateExItemToken'], level : int=0) -> 'DateExItemToken':
             from pullenti.morph.MorphNumber import MorphNumber
-            from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
             from pullenti.ner.NumberToken import NumberToken
             from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+            from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
             from pullenti.ner.date.internal.DateItemToken import DateItemToken
-            if (t is None): 
+            if (t is None or level > 10): 
                 return None
             if (t.is_value("СЕГОДНЯ", None)): 
-                return DateExToken.DateExItemToken._new676(t, t, DateExToken.DateExItemTokenType.DAY, 0, True)
+                return DateExToken.DateExItemToken._new610(t, t, DateExToken.DateExItemTokenType.DAY, 0, True)
             if (t.is_value("ЗАВТРА", None)): 
-                return DateExToken.DateExItemToken._new676(t, t, DateExToken.DateExItemTokenType.DAY, 1, True)
+                return DateExToken.DateExItemToken._new610(t, t, DateExToken.DateExItemTokenType.DAY, 1, True)
             if (t.is_value("ПОСЛЕЗАВТРА", None)): 
-                return DateExToken.DateExItemToken._new676(t, t, DateExToken.DateExItemTokenType.DAY, 2, True)
+                return DateExToken.DateExItemToken._new610(t, t, DateExToken.DateExItemTokenType.DAY, 2, True)
             if (t.is_value("ВЧЕРА", None)): 
-                return DateExToken.DateExItemToken._new676(t, t, DateExToken.DateExItemTokenType.DAY, -1, True)
+                return DateExToken.DateExItemToken._new610(t, t, DateExToken.DateExItemTokenType.DAY, -1, True)
             if (t.is_value("ПОЗАВЧЕРА", None)): 
-                return DateExToken.DateExItemToken._new676(t, t, DateExToken.DateExItemTokenType.DAY, -2, True)
+                return DateExToken.DateExItemToken._new610(t, t, DateExToken.DateExItemTokenType.DAY, -2, True)
             if (t.is_value("ПОЛЧАСА", None)): 
-                return DateExToken.DateExItemToken._new676(t, t, DateExToken.DateExItemTokenType.MINUTE, 30, True)
+                return DateExToken.DateExItemToken._new610(t, t, DateExToken.DateExItemTokenType.MINUTE, 30, True)
             npt = NounPhraseHelper.try_parse(t, Utils.valToEnum((NounPhraseParseAttr.PARSENUMERICASADJECTIVE) | (NounPhraseParseAttr.PARSEPREPOSITION), NounPhraseParseAttr), 0, None)
             if (npt is None): 
-                if ((isinstance(t, NumberToken)) and (t).int_value is not None): 
-                    res0 = DateExToken.DateExItemToken.try_parse(t.next0_, prev)
+                if ((isinstance(t, NumberToken)) and t.int_value is not None): 
+                    res0 = DateExToken.DateExItemToken.try_parse(t.next0_, prev, level + 1)
                     if (res0 is not None and ((res0.value == 1 or res0.value == 0))): 
                         res0.begin_token = t
-                        res0.value = (t).int_value
+                        res0.value = t.int_value
                         if (t.previous is not None and ((t.previous.is_value("ЧЕРЕЗ", None) or t.previous.is_value("СПУСТЯ", None)))): 
                             res0.is_value_relate = True
                         elif (res0.end_token.next0_ is not None): 
@@ -368,11 +367,11 @@ class DateExToken(MetaToken):
                         return res0
                     dtt = DateItemToken.try_attach(t, None, False)
                     if (dtt is not None and dtt.typ == DateItemToken.DateItemType.YEAR): 
-                        return DateExToken.DateExItemToken._new691(t, dtt.end_token, DateExToken.DateExItemTokenType.YEAR, dtt.int_value)
+                        return DateExToken.DateExItemToken._new625(t, dtt.end_token, DateExToken.DateExItemTokenType.YEAR, dtt.int_value)
                     if (t.next0_ is not None and t.next0_.is_value("ЧИСЛО", None)): 
-                        ne = DateExToken.DateExItemToken.try_parse(t.next0_.next0_, prev)
+                        ne = DateExToken.DateExItemToken.try_parse(t.next0_.next0_, prev, level + 1)
                         if (ne is not None and ne.typ == DateExToken.DateExItemTokenType.MONTH): 
-                            return DateExToken.DateExItemToken._new691(t, t.next0_, DateExToken.DateExItemTokenType.DAY, (t).int_value)
+                            return DateExToken.DateExItemToken._new625(t, t.next0_, DateExToken.DateExItemTokenType.DAY, t.int_value)
                 return None
             ty = DateExToken.DateExItemTokenType.HOUR
             val = 0
@@ -432,7 +431,7 @@ class DateExToken(MetaToken):
                     val = dti.int_value
                 else: 
                     return None
-            res = DateExToken.DateExItemToken._new691(t, npt.end_token, ty, val)
+            res = DateExToken.DateExItemToken._new625(t, npt.end_token, ty, val)
             heg = False
             for a in npt.adjectives: 
                 if (a.is_value("СЛЕДУЮЩИЙ", None) or a.is_value("БУДУЩИЙ", None) or a.is_value("БЛИЖАЙШИЙ", None)): 
@@ -449,9 +448,9 @@ class DateExToken(MetaToken):
                         res.value = 2
                     res.is_value_relate = True
                     heg = True
-                elif (a.begin_token == a.end_token and (isinstance(a.begin_token, NumberToken)) and (a.begin_token).int_value is not None): 
+                elif (a.begin_token == a.end_token and (isinstance(a.begin_token, NumberToken)) and a.begin_token.int_value is not None): 
                     if (res.typ != DateExToken.DateExItemTokenType.DAYOFWEEK): 
-                        res.value = (a.begin_token).int_value
+                        res.value = a.begin_token.int_value
                 elif (a.is_value("ЭТОТ", None) or a.is_value("ТЕКУЩИЙ", None)): 
                     res.is_value_relate = True
                 elif (a.is_value("БЛИЖАЙШИЙ", None) and res.typ == DateExToken.DateExItemTokenType.DAYOFWEEK): 
@@ -499,14 +498,14 @@ class DateExToken(MetaToken):
             return 0
         
         @staticmethod
-        def _new673(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DateExItemTokenType', _arg4 : bool) -> 'DateExItemToken':
+        def _new607(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DateExItemTokenType', _arg4 : bool) -> 'DateExItemToken':
             res = DateExToken.DateExItemToken(_arg1, _arg2)
             res.typ = _arg3
             res.is_value_relate = _arg4
             return res
         
         @staticmethod
-        def _new675(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DateExItemTokenType', _arg4 : int, _arg5 : 'DateReferent') -> 'DateExItemToken':
+        def _new609(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DateExItemTokenType', _arg4 : int, _arg5 : 'DateReferent') -> 'DateExItemToken':
             res = DateExToken.DateExItemToken(_arg1, _arg2)
             res.typ = _arg3
             res.value = _arg4
@@ -514,7 +513,7 @@ class DateExToken(MetaToken):
             return res
         
         @staticmethod
-        def _new676(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DateExItemTokenType', _arg4 : int, _arg5 : bool) -> 'DateExItemToken':
+        def _new610(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DateExItemTokenType', _arg4 : int, _arg5 : bool) -> 'DateExItemToken':
             res = DateExToken.DateExItemToken(_arg1, _arg2)
             res.typ = _arg3
             res.value = _arg4
@@ -522,14 +521,14 @@ class DateExToken(MetaToken):
             return res
         
         @staticmethod
-        def _new691(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DateExItemTokenType', _arg4 : int) -> 'DateExItemToken':
+        def _new625(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DateExItemTokenType', _arg4 : int) -> 'DateExItemToken':
             res = DateExToken.DateExItemToken(_arg1, _arg2)
             res.typ = _arg3
             res.value = _arg4
             return res
         
         @staticmethod
-        def _new742(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DateExItemTokenType') -> 'DateExItemToken':
+        def _new676(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'DateExItemTokenType') -> 'DateExItemToken':
             res = DateExToken.DateExItemToken(_arg1, _arg2)
             res.typ = _arg3
             return res
@@ -554,7 +553,7 @@ class DateExToken(MetaToken):
         Args:
             now(datetime.datetime): текущая дата (для относительных вычислений)
             tense(int): время (-1 - прошлое, 0 - любое, 1 - будущее) - испрользуется
-         при неоднозначных случаях
+        при неоднозначных случаях
         
         Returns:
             datetime.datetime: дата-время или null
@@ -575,8 +574,8 @@ class DateExToken(MetaToken):
             from0_(datetime.datetime): начало диапазона
             to(datetime.datetime): конец диапазона
             tense(int): время (-1 - прошлое, 0 - любое, 1 - будущее) - испрользуется
-         при неоднозначных случаях
-         Например, 7 сентября, а сейчас лето, то какой это год? При true - этот, при false - предыдущий
+        при неоднозначных случаях
+        Например, 7 сентября, а сейчас лето, то какой это год? При true - этот, при false - предыдущий
         
         Returns:
             bool: признак корректности
@@ -707,14 +706,14 @@ class DateExToken(MetaToken):
         from_regime = False
         t0 = None
         tt = t
-        first_pass3684 = True
+        first_pass3564 = True
         while True:
-            if first_pass3684: first_pass3684 = False
+            if first_pass3564: first_pass3564 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             drr = Utils.asObjectOrNull(tt.get_referent(), DateRangeReferent)
             if (drr is not None): 
-                res = DateExToken._new674(t, tt, True)
+                res = DateExToken._new608(t, tt, True)
                 fr = drr.date_from
                 if (fr is not None): 
                     if (fr.pointer == DatePointerType.TODAY): 
@@ -731,7 +730,7 @@ class DateExToken(MetaToken):
                 elif (len(res.items_to) > 0 and res.items_to[0].typ == DateExToken.DateExItemTokenType.YEAR): 
                     has_year = True
                 if (not has_year and (tt.whitespaces_after_count < 3)): 
-                    dit = DateExToken.DateExItemToken.try_parse(tt.next0_, (res.items_to if len(res.items_to) > 0 else res.items_from))
+                    dit = DateExToken.DateExItemToken.try_parse(tt.next0_, (res.items_to if len(res.items_to) > 0 else res.items_from), 0)
                     if (dit is not None and dit.typ == DateExToken.DateExItemTokenType.YEAR): 
                         if (len(res.items_from) > 0): 
                             res.items_from.insert(0, dit)
@@ -775,7 +774,7 @@ class DateExToken(MetaToken):
                 elif (len(res.items_to) > 0 and res.items_to[0].typ == DateExToken.DateExItemTokenType.YEAR): 
                     has_year = True
                 if (not has_year and (tt.whitespaces_after_count < 3)): 
-                    dit = DateExToken.DateExItemToken.try_parse(tt.next0_, None)
+                    dit = DateExToken.DateExItemToken.try_parse(tt.next0_, None, 0)
                     if (dit is not None and dit.typ == DateExToken.DateExItemTokenType.YEAR): 
                         if (len(res.items_from) > 0): 
                             res.items_from.insert(0, dit)
@@ -794,7 +793,7 @@ class DateExToken(MetaToken):
                     if (t0 is None): 
                         t0 = tt
                 continue
-            it = DateExToken.DateExItemToken.try_parse(tt, (None if res is None else ((res.items_to if to_regime else res.items_from))))
+            it = DateExToken.DateExItemToken.try_parse(tt, (None if res is None else ((res.items_to if to_regime else res.items_from))), 0)
             if (it is None): 
                 break
             if (tt.is_value("ДЕНЬ", None) and tt.next0_ is not None and tt.next0_.is_value("НЕДЕЛЯ", None)): 
@@ -821,28 +820,28 @@ class DateExToken(MetaToken):
     @staticmethod
     def __add_items(fr : 'DateReferent', res : typing.List['DateExItemToken'], tt : 'Token') -> None:
         if (fr.year > 0): 
-            res.append(DateExToken.DateExItemToken._new675(tt, tt, DateExToken.DateExItemTokenType.YEAR, fr.year, fr))
+            res.append(DateExToken.DateExItemToken._new609(tt, tt, DateExToken.DateExItemTokenType.YEAR, fr.year, fr))
         elif (fr.pointer == DatePointerType.TODAY): 
-            res.append(DateExToken.DateExItemToken._new676(tt, tt, DateExToken.DateExItemTokenType.YEAR, 0, True))
+            res.append(DateExToken.DateExItemToken._new610(tt, tt, DateExToken.DateExItemTokenType.YEAR, 0, True))
         if (fr.month > 0): 
-            res.append(DateExToken.DateExItemToken._new675(tt, tt, DateExToken.DateExItemTokenType.MONTH, fr.month, fr))
+            res.append(DateExToken.DateExItemToken._new609(tt, tt, DateExToken.DateExItemTokenType.MONTH, fr.month, fr))
         elif (fr.pointer == DatePointerType.TODAY): 
-            res.append(DateExToken.DateExItemToken._new676(tt, tt, DateExToken.DateExItemTokenType.MONTH, 0, True))
+            res.append(DateExToken.DateExItemToken._new610(tt, tt, DateExToken.DateExItemTokenType.MONTH, 0, True))
         if (fr.day > 0): 
-            res.append(DateExToken.DateExItemToken._new675(tt, tt, DateExToken.DateExItemTokenType.DAY, fr.day, fr))
+            res.append(DateExToken.DateExItemToken._new609(tt, tt, DateExToken.DateExItemTokenType.DAY, fr.day, fr))
         elif (fr.pointer == DatePointerType.TODAY): 
-            res.append(DateExToken.DateExItemToken._new676(tt, tt, DateExToken.DateExItemTokenType.DAY, 0, True))
+            res.append(DateExToken.DateExItemToken._new610(tt, tt, DateExToken.DateExItemTokenType.DAY, 0, True))
         if (fr.find_slot(DateReferent.ATTR_HOUR, None, True) is not None): 
-            res.append(DateExToken.DateExItemToken._new675(tt, tt, DateExToken.DateExItemTokenType.HOUR, fr.hour, fr))
+            res.append(DateExToken.DateExItemToken._new609(tt, tt, DateExToken.DateExItemTokenType.HOUR, fr.hour, fr))
         elif (fr.pointer == DatePointerType.TODAY): 
-            res.append(DateExToken.DateExItemToken._new676(tt, tt, DateExToken.DateExItemTokenType.HOUR, 0, True))
+            res.append(DateExToken.DateExItemToken._new610(tt, tt, DateExToken.DateExItemTokenType.HOUR, 0, True))
         if (fr.find_slot(DateReferent.ATTR_MINUTE, None, True) is not None): 
-            res.append(DateExToken.DateExItemToken._new675(tt, tt, DateExToken.DateExItemTokenType.MINUTE, fr.minute, fr))
+            res.append(DateExToken.DateExItemToken._new609(tt, tt, DateExToken.DateExItemTokenType.MINUTE, fr.minute, fr))
         elif (fr.pointer == DatePointerType.TODAY): 
-            res.append(DateExToken.DateExItemToken._new676(tt, tt, DateExToken.DateExItemTokenType.MINUTE, 0, True))
+            res.append(DateExToken.DateExItemToken._new610(tt, tt, DateExToken.DateExItemTokenType.MINUTE, 0, True))
     
     @staticmethod
-    def _new674(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'DateExToken':
+    def _new608(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'DateExToken':
         res = DateExToken(_arg1, _arg2)
         res.is_diap = _arg3
         return res

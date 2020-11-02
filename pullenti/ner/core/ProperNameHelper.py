@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -9,23 +8,23 @@ from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-from pullenti.morph.Morphology import Morphology
+from pullenti.morph.MorphologyService import MorphologyService
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.Token import Token
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.NumberToken import NumberToken
 from pullenti.morph.MorphWordForm import MorphWordForm
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.morph.MorphCase import MorphCase
 from pullenti.ner.TextToken import TextToken
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
-from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 
 class ProperNameHelper:
-    """ Поддержка работы с собственными именами """
+    # Поддержка работы с собственными именами
     
     @staticmethod
     def __corr_chars(str0_ : str, ci : 'CharsInfo', keep_chars : bool) -> str:
@@ -65,14 +64,14 @@ class ProperNameHelper:
                 te = npt.end_token.next0_
                 if (((te is not None and te.next0_ is not None and te.is_comma) and (isinstance(te.next0_, TextToken)) and te.next0_.end_char <= end.end_char) and te.next0_.morph.class0_.is_verb and te.next0_.morph.class0_.is_adjective): 
                     for it in te.next0_.morph.items: 
-                        if (it.gender == npt.morph.gender or (((it.gender) & (npt.morph.gender))) != (MorphGender.UNDEFINED)): 
+                        if (it.gender == npt.morph.gender or ((it.gender) & (npt.morph.gender)) != (MorphGender.UNDEFINED)): 
                             if (not ((it.case_) & npt.morph.case_).is_undefined): 
-                                if (it.number == npt.morph.number or (((it.number) & (npt.morph.number))) != (MorphNumber.UNDEFINED)): 
-                                    var = (te.next0_).term
+                                if (it.number == npt.morph.number or ((it.number) & (npt.morph.number)) != (MorphNumber.UNDEFINED)): 
+                                    var = te.next0_.term
                                     if (isinstance(it, MorphWordForm)): 
-                                        var = (it).normal_case
-                                    bi = MorphBaseInfo._new563(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
-                                    var = Morphology.get_wordform(var, bi)
+                                        var = it.normal_case
+                                    bi = MorphBaseInfo._new492(MorphClass.ADJECTIVE, npt.morph.gender, npt.morph.number, npt.morph.language)
+                                    var = MorphologyService.get_wordform(var, bi)
                                     if (var is not None): 
                                         res = "{0}, {1}".format(res, var)
                                         te = te.next0_.next0_
@@ -128,9 +127,9 @@ class ProperNameHelper:
         res = io.StringIO()
         prefix = None
         t = begin
-        first_pass3678 = True
+        first_pass3557 = True
         while True:
-            if first_pass3678: first_pass3678 = False
+            if first_pass3557: first_pass3557 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             if (res.tell() > 1000): 
@@ -146,7 +145,7 @@ class ProperNameHelper:
                         if (br is not None and br.end_char <= end.end_char): 
                             tmp = ProperNameHelper.get_name_ex(br.begin_token.next0_, br.end_token.previous, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, ignore_brackets_and_hiphens, False)
                             if (tmp is not None): 
-                                if ((br.end_char == end.end_char and br.begin_token.next0_ == br.end_token.previous and not br.begin_token.next0_.chars.is_letter) and not ((isinstance(br.begin_token.next0_, ReferentToken)))): 
+                                if ((br.end_char == end.end_char and br.begin_token.next0_ == br.end_token.previous and not br.begin_token.next0_.chars.is_letter) and not (isinstance(br.begin_token.next0_, ReferentToken))): 
                                     pass
                                 else: 
                                     print(" {0}{1}{2}".format(t.get_source_text(), tmp, br.end_token.get_source_text()), end="", file=res, flush=True)
@@ -183,7 +182,7 @@ class ProperNameHelper:
                             if (((wf.case_) & mc).is_undefined): 
                                 continue
                         if (gender != MorphGender.UNDEFINED): 
-                            if ((((wf.gender) & (gender))) == (MorphGender.UNDEFINED)): 
+                            if (((wf.gender) & (gender)) == (MorphGender.UNDEFINED)): 
                                 continue
                         if (s is None or wf.normal_case == tt.term): 
                             s = wf.normal_case
@@ -232,13 +231,13 @@ class ProperNameHelper:
                         print(' ', end="", file=res)
                 nt = Utils.asObjectOrNull(t, NumberToken)
                 if ((t.morph.class0_.is_adjective and nt.typ == NumberSpellingType.WORDS and nt.begin_token == nt.end_token) and (isinstance(nt.begin_token, TextToken))): 
-                    print((nt.begin_token).term, end="", file=res)
+                    print(nt.begin_token.term, end="", file=res)
                 else: 
                     print(nt.value, end="", file=res)
             elif (isinstance(t, MetaToken)): 
                 if ((ignore_geo_referent and t != begin and t.get_referent() is not None) and t.get_referent().type_name == "GEO"): 
                     continue
-                s = ProperNameHelper.get_name_ex((t).begin_token, (t).end_token, cla, mc, gender, ignore_brackets_and_hiphens, ignore_geo_referent)
+                s = ProperNameHelper.get_name_ex(t.begin_token, t.end_token, cla, mc, gender, ignore_brackets_and_hiphens, ignore_geo_referent)
                 if (not Utils.isNullOrEmpty(s)): 
                     if (res.tell() > 0): 
                         if (not t.is_whitespace_before and Utils.getCharAtStringIO(res, res.tell() - 1) == '-'): 

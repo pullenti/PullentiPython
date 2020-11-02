@@ -1,23 +1,25 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.morph.MorphLang import MorphLang
-from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-from pullenti.ner.core.Termin import Termin
-from pullenti.ner.ReferentClass import ReferentClass
-from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.Referent import Referent
+from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.geo.internal.MetaGeo import MetaGeo
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.Referent import Referent
+from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 
 class GeoReferent(Referent):
     """ Сущность, описывающая территорию как административную единицу.
-     Это страны, автономные образования, области, административные районы и пр. """
+    Это страны, автономные образования, области, административные районы,
+    населённые пункты, территории и пр.
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(GeoReferent.OBJ_TYPENAME)
@@ -26,18 +28,25 @@ class GeoReferent(Referent):
         self.instance_of = MetaGeo._global_meta
     
     OBJ_TYPENAME = "GEO"
+    """ Имя типа сущности TypeName ("GEO") """
     
     ATTR_NAME = "NAME"
+    """ Имя атрибута - наименование """
     
     ATTR_TYPE = "TYPE"
+    """ Имя атрибута - тип """
     
     ATTR_ALPHA2 = "ALPHA2"
+    """ Имя атрибута - для страны 2-х значный идентификатор """
     
     ATTR_HIGHER = "HIGHER"
+    """ Имя атрибута - вышележащий географический объект """
     
     ATTR_REF = "REF"
+    """ Имя атрибута - дополнительная ссылка """
     
     ATTR_FIAS = "FIAS"
+    """ Имя атрибута - код ФИАС (определяется анализатором FiasAnalyzer) """
     
     ATTR_BTI = "BTI"
     
@@ -50,7 +59,7 @@ class GeoReferent(Referent):
             print(self.get_string_value(GeoReferent.ATTR_TYPE), end="", file=res)
             for s in self.slots: 
                 if (s.type_name == GeoReferent.ATTR_REF and (isinstance(s.value, Referent))): 
-                    print("; {0}".format((s.value).to_string(True, lang, 0)), end="", file=res, flush=True)
+                    print("; {0}".format(s.value.to_string(True, lang, 0)), end="", file=res, flush=True)
             return Utils.toStringStringIO(res)
         name = MiscHelper.convert_first_char_upper_and_other_lower(self.__get_name(lang is not None and lang.is_en))
         if (not short_variant): 
@@ -68,7 +77,7 @@ class GeoReferent(Referent):
         if (not short_variant and out_cladr): 
             kladr = self.get_slot_value(GeoReferent.ATTR_FIAS)
             if (isinstance(kladr, Referent)): 
-                name = "{0} (ФИАС: {1})".format(name, Utils.ifNotNull((kladr).get_string_value("GUID"), "?"))
+                name = "{0} (ФИАС: {1})".format(name, Utils.ifNotNull(kladr.get_string_value("GUID"), "?"))
             bti = self.get_string_value(GeoReferent.ATTR_BTI)
             if (bti is not None): 
                 name = "{0} (БТИ {1})".format(name, bti)
@@ -402,7 +411,7 @@ class GeoReferent(Referent):
     def parent_referent(self) -> 'Referent':
         return self.higher
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType') -> bool:
         geo_ = Utils.asObjectOrNull(obj, GeoReferent)
         if (geo_ is None): 
             return False
@@ -566,11 +575,7 @@ class GeoReferent(Referent):
         return False
     
     def _add_org_referent(self, org0_ : 'Referent') -> None:
-        """ Добавляем ссылку на организацию, также добавляем имена
-        
-        Args:
-            org0_(Referent): 
-        """
+        # Добавляем ссылку на организацию, также добавляем имена
         if (org0_ is None): 
             return
         nam = False
@@ -601,14 +606,14 @@ class GeoReferent(Referent):
             for s in org0_.slots: 
                 if (s.type_name == "EPONYM"): 
                     if (num is None): 
-                        self._add_name((s.value).upper())
+                        self._add_name(s.value.upper())
                     else: 
-                        self._add_name("{0}-{1}".format((s.value).upper(), num))
+                        self._add_name("{0}-{1}".format(s.value.upper(), num))
                     nam = True
         if (not nam and num is not None): 
             for s in org0_.slots: 
                 if (s.type_name == "TYPE"): 
-                    self._add_name("{0}-{1}".format((s.value).upper(), num))
+                    self._add_name("{0}-{1}".format(s.value.upper(), num))
                     nam = True
         if (geo_ is not None and not nam): 
             for n in geo_.get_string_values(GeoReferent.ATTR_NAME): 

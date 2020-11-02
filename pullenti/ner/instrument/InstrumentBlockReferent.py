@@ -1,20 +1,22 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.ner.Referent import Referent
-from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.instrument.InstrumentKind import InstrumentKind
-from pullenti.ner.decree.DecreeReferent import DecreeReferent
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.instrument.internal.MetaInstrumentBlock import MetaInstrumentBlock
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
 
 class InstrumentBlockReferent(Referent):
-    """ Представление нормативно-правового документа или его части """
+    """ Представление фрагмента документа. Фрагменты образуют дерево с вершиной в InstrumentReferent.
+    
+    """
     
     def __init__(self, typename : str=None) -> None:
         super().__init__(Utils.ifNotNull(typename, InstrumentBlockReferent.OBJ_TYPENAME))
@@ -22,30 +24,42 @@ class InstrumentBlockReferent(Referent):
         self.instance_of = MetaInstrumentBlock.GLOBAL_META
     
     OBJ_TYPENAME = "INSTRBLOCK"
+    """ Имя типа сущности TypeName ("INSTRBLOCK") """
     
     ATTR_KIND = "KIND"
+    """ Имя атрибута - тип фрагмента (InstrumentKind) """
     
     ATTR_KIND2 = "KIND_SEC"
     
     ATTR_CHILD = "CHILD"
+    """ Имя атрибута - ссылки на дочерние фрагменты (InstrumentBlockReferent) """
     
     ATTR_VALUE = "VALUE"
+    """ Имя атрибута - значение (например, текст) """
     
     ATTR_REF = "REF"
+    """ Имя атрибута - ссылка на сущность (если есть) """
     
     ATTR_EXPIRED = "EXPIRED"
+    """ Имя атрибута - признак утраты силы """
     
     ATTR_NAME = "NAME"
+    """ Имя атрибута - наименование фрагмента """
     
     ATTR_NUMBER = "NUMBER"
+    """ Имя атрибута - номер фрагмента (для диапазона - максимальный номер) """
     
     ATTR_MINNUMBER = "MINNUMBER"
+    """ Имя атрибута - для диапазона - минимальный номер """
     
     ATTR_SUBNUMBER = "ADDNUMBER"
+    """ Имя атрибута - подномер """
     
     ATTR_SUB2NUMBER = "ADDSECNUMBER"
+    """ Имя атрибута - второй подномер """
     
     ATTR_SUB3NUMBER = "ADDTHIRDNUMBER"
+    """ Имя атрибута - третий подномер """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         res = io.StringIO()
@@ -93,7 +107,7 @@ class InstrumentBlockReferent(Referent):
     
     @property
     def kind(self) -> 'InstrumentKind':
-        """ Классификатор """
+        """ Тип фрагмента """
         s = self.get_string_value(InstrumentBlockReferent.ATTR_KIND)
         if (s is None): 
             return InstrumentKind.UNDEFINED
@@ -103,7 +117,7 @@ class InstrumentBlockReferent(Referent):
             res = Utils.valToEnum(s, InstrumentKind)
             if (isinstance(res, InstrumentKind)): 
                 return Utils.valToEnum(res, InstrumentKind)
-        except Exception as ex1644: 
+        except Exception as ex1578: 
             pass
         return InstrumentKind.UNDEFINED
     @kind.setter
@@ -114,7 +128,6 @@ class InstrumentBlockReferent(Referent):
     
     @property
     def kind2(self) -> 'InstrumentKind':
-        """ Классификатор дополнительный """
         s = self.get_string_value(InstrumentBlockReferent.ATTR_KIND2)
         if (s is None): 
             return InstrumentKind.UNDEFINED
@@ -122,7 +135,7 @@ class InstrumentBlockReferent(Referent):
             res = Utils.valToEnum(s, InstrumentKind)
             if (isinstance(res, InstrumentKind)): 
                 return Utils.valToEnum(res, InstrumentKind)
-        except Exception as ex1645: 
+        except Exception as ex1579: 
             pass
         return InstrumentKind.UNDEFINED
     @kind2.setter
@@ -133,7 +146,7 @@ class InstrumentBlockReferent(Referent):
     
     @property
     def value(self) -> str:
-        """ Значение """
+        """ Значение фрагмента """
         return self.get_string_value(InstrumentBlockReferent.ATTR_VALUE)
     @value.setter
     def value(self, value_) -> str:
@@ -142,10 +155,12 @@ class InstrumentBlockReferent(Referent):
     
     @property
     def ref(self) -> 'Referent':
+        """ Ссылка на сущность """
         return Utils.asObjectOrNull(self.get_slot_value(InstrumentBlockReferent.ATTR_REF), Referent)
     
     @property
     def is_expired(self) -> bool:
+        """ Признак утраты силы """
         return self.get_string_value(InstrumentBlockReferent.ATTR_EXPIRED) == "true"
     @is_expired.setter
     def is_expired(self, value_) -> bool:
@@ -158,10 +173,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_NUMBER)
         if (str0_ is None): 
             return 0
-        wrapi1646 = RefOutArgWrapper(0)
-        inoutres1647 = Utils.tryParseInt(str0_, wrapi1646)
-        i = wrapi1646.value
-        if (inoutres1647): 
+        wrapi1580 = RefOutArgWrapper(0)
+        inoutres1581 = Utils.tryParseInt(str0_, wrapi1580)
+        i = wrapi1580.value
+        if (inoutres1581): 
             return i
         return 0
     @number.setter
@@ -175,10 +190,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_SUBNUMBER)
         if (str0_ is None): 
             return 0
-        wrapi1648 = RefOutArgWrapper(0)
-        inoutres1649 = Utils.tryParseInt(str0_, wrapi1648)
-        i = wrapi1648.value
-        if (inoutres1649): 
+        wrapi1582 = RefOutArgWrapper(0)
+        inoutres1583 = Utils.tryParseInt(str0_, wrapi1582)
+        i = wrapi1582.value
+        if (inoutres1583): 
             return i
         return 0
     @sub_number.setter
@@ -192,10 +207,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_SUB2NUMBER)
         if (str0_ is None): 
             return 0
-        wrapi1650 = RefOutArgWrapper(0)
-        inoutres1651 = Utils.tryParseInt(str0_, wrapi1650)
-        i = wrapi1650.value
-        if (inoutres1651): 
+        wrapi1584 = RefOutArgWrapper(0)
+        inoutres1585 = Utils.tryParseInt(str0_, wrapi1584)
+        i = wrapi1584.value
+        if (inoutres1585): 
             return i
         return 0
     @sub_number2.setter
@@ -209,10 +224,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_SUB3NUMBER)
         if (str0_ is None): 
             return 0
-        wrapi1652 = RefOutArgWrapper(0)
-        inoutres1653 = Utils.tryParseInt(str0_, wrapi1652)
-        i = wrapi1652.value
-        if (inoutres1653): 
+        wrapi1586 = RefOutArgWrapper(0)
+        inoutres1587 = Utils.tryParseInt(str0_, wrapi1586)
+        i = wrapi1586.value
+        if (inoutres1587): 
             return i
         return 0
     @sub_number3.setter
@@ -226,10 +241,10 @@ class InstrumentBlockReferent(Referent):
         str0_ = self.get_string_value(InstrumentBlockReferent.ATTR_MINNUMBER)
         if (str0_ is None): 
             return 0
-        wrapi1654 = RefOutArgWrapper(0)
-        inoutres1655 = Utils.tryParseInt(str0_, wrapi1654)
-        i = wrapi1654.value
-        if (inoutres1655): 
+        wrapi1588 = RefOutArgWrapper(0)
+        inoutres1589 = Utils.tryParseInt(str0_, wrapi1588)
+        i = wrapi1588.value
+        if (inoutres1589): 
             return i
         return 0
     @min_number.setter
@@ -248,7 +263,7 @@ class InstrumentBlockReferent(Referent):
     
     @property
     def children(self) -> typing.List['InstrumentBlockReferent']:
-        """ Внутреннее содержимое """
+        """ Дочерние узлы: список InstrumentBlockReferent """
         if (self.__m_children is None): 
             self.__m_children = list()
             for s in self.slots: 
@@ -261,11 +276,20 @@ class InstrumentBlockReferent(Referent):
         self.__m_children = (None)
         return super().add_slot(attr_name, attr_value, clear_old_value, stat_count)
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType'=ReferentsEqualType.WITHINONETEXT) -> bool:
         return obj == self
     
     @staticmethod
     def kind_to_rus_string(typ : 'InstrumentKind', short_val : bool) -> str:
+        """ Представить тип строкой русского языка.
+        
+        Args:
+            typ(InstrumentKind): тип
+            short_val(bool): сокращённый или полный (например, ст. или статья)
+        
+        Returns:
+            str: слово
+        """
         if (typ == InstrumentKind.APPENDIX): 
             return ("прил." if short_val else "Приложение")
         if (typ == InstrumentKind.CLAUSE): 

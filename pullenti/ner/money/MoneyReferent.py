@@ -1,35 +1,43 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import math
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.ner.Referent import Referent
-from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.core.NumberHelper import NumberHelper
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.money.internal.MoneyMeta import MoneyMeta
 
 class MoneyReferent(Referent):
-    """ Представление денежных сумм """
+    """ Сущность - денежная сумма
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(MoneyReferent.OBJ_TYPENAME)
         self.instance_of = MoneyMeta.GLOBAL_META
     
     OBJ_TYPENAME = "MONEY"
+    """ Имя типа сущности TypeName ("MONEY") """
     
     ATTR_CURRENCY = "CURRENCY"
+    """ Имя атрибута - валюта (3-х значный код ISO 4217) """
     
     ATTR_VALUE = "VALUE"
+    """ Имя атрибута - значение (целая часть) """
     
     ATTR_ALTVALUE = "ALTVALUE"
+    """ Имя атрибута - альтернативное значение (когда в скобках ошибочно указано другле число) """
     
     ATTR_REST = "REST"
+    """ Имя атрибута - дробная часть ("копейки") """
     
     ATTR_ALTREST = "ALTREST"
+    """ Имя атрибута - альтернативная дробная часть (когда в скобках указано другое число) """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
@@ -61,28 +69,28 @@ class MoneyReferent(Referent):
     
     @property
     def value(self) -> float:
-        """ Значение """
+        """ Значение целой части """
         val = self.get_string_value(MoneyReferent.ATTR_VALUE)
         if (val is None): 
             return 0
-        wrapv1809 = RefOutArgWrapper(0)
-        inoutres1810 = Utils.tryParseFloat(val, wrapv1809)
-        v = wrapv1809.value
-        if (not inoutres1810): 
+        wrapv1746 = RefOutArgWrapper(0)
+        inoutres1747 = Utils.tryParseFloat(val, wrapv1746)
+        v = wrapv1746.value
+        if (not inoutres1747): 
             return 0
         return v
     
     @property
     def alt_value(self) -> float:
         """ Альтернативное значение (если есть, то значит неправильно написали сумму
-         числом и далее прописью в скобках) """
+        числом и далее прописью в скобках) """
         val = self.get_string_value(MoneyReferent.ATTR_ALTVALUE)
         if (val is None): 
             return None
-        wrapv1811 = RefOutArgWrapper(0)
-        inoutres1812 = Utils.tryParseFloat(val, wrapv1811)
-        v = wrapv1811.value
-        if (not inoutres1812): 
+        wrapv1748 = RefOutArgWrapper(0)
+        inoutres1749 = Utils.tryParseFloat(val, wrapv1748)
+        v = wrapv1748.value
+        if (not inoutres1749): 
             return None
         return v
     
@@ -92,23 +100,23 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_REST)
         if (val is None): 
             return 0
-        wrapv1813 = RefOutArgWrapper(0)
-        inoutres1814 = Utils.tryParseInt(val, wrapv1813)
-        v = wrapv1813.value
-        if (not inoutres1814): 
+        wrapv1750 = RefOutArgWrapper(0)
+        inoutres1751 = Utils.tryParseInt(val, wrapv1750)
+        v = wrapv1750.value
+        if (not inoutres1751): 
             return 0
         return v
     
     @property
     def alt_rest(self) -> int:
-        """ Остаток (от 0 до 99) - копеек, центов и т.п. """
+        """ Альтернативный остаток (от 0 до 99) - копеек, центов и т.п. """
         val = self.get_string_value(MoneyReferent.ATTR_ALTREST)
         if (val is None): 
             return None
-        wrapv1815 = RefOutArgWrapper(0)
-        inoutres1816 = Utils.tryParseInt(val, wrapv1815)
-        v = wrapv1815.value
-        if (not inoutres1816): 
+        wrapv1752 = RefOutArgWrapper(0)
+        inoutres1753 = Utils.tryParseInt(val, wrapv1752)
+        v = wrapv1752.value
+        if (not inoutres1753): 
             return None
         return v
     
@@ -124,10 +132,10 @@ class MoneyReferent(Referent):
             val = val[0:0+ii]
         self.add_slot(MoneyReferent.ATTR_VALUE, val, True, 0)
         re = ((value_ - self.value)) * (100)
-        self.add_slot(MoneyReferent.ATTR_REST, str((math.floor((re + 0.0001)))), True, 0)
+        self.add_slot(MoneyReferent.ATTR_REST, str(math.floor((re + 0.0001))), True, 0)
         return value_
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType'=ReferentsEqualType.WITHINONETEXT) -> bool:
         s = Utils.asObjectOrNull(obj, MoneyReferent)
         if (s is None): 
             return False
@@ -144,7 +152,7 @@ class MoneyReferent(Referent):
         return True
     
     @staticmethod
-    def _new904(_arg1 : str, _arg2 : float) -> 'MoneyReferent':
+    def _new838(_arg1 : str, _arg2 : float) -> 'MoneyReferent':
         res = MoneyReferent()
         res.currency = _arg1
         res.real_value = _arg2

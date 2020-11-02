@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -11,26 +10,26 @@ from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.address.internal.StreetDefineHelper import StreetDefineHelper
 from pullenti.ner.Token import Token
-from pullenti.ner.date.DateReferent import DateReferent
 from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
 from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.date.DateReferent import DateReferent
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.address.internal.StreetItemType import StreetItemType
-from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
 from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.Referent import Referent
 from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
 from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.address.internal.AddressItemToken import AddressItemToken
+from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.address.internal.StreetItemToken import StreetItemToken
+from pullenti.ner.geo.internal.CityItemToken import CityItemToken
 from pullenti.ner.core.ProperNameHelper import ProperNameHelper
 
 class CityAttachHelper:
@@ -48,30 +47,30 @@ class CityAttachHelper:
             if (res is not None and res.end_char <= li[1].end_char): 
                 res = (None)
         if (res is None): 
-            wrapoi1191 = RefOutArgWrapper(None)
-            res = CityAttachHelper.__try1(li, wrapoi1191, ad)
-            oi = wrapoi1191.value
+            wrapoi1125 = RefOutArgWrapper(None)
+            res = CityAttachHelper.__try1(li, wrapoi1125, ad)
+            oi = wrapoi1125.value
         if (res is None): 
-            wrapoi1192 = RefOutArgWrapper(None)
-            res = CityAttachHelper.__try_noun_name(li, wrapoi1192, False)
-            oi = wrapoi1192.value
+            wrapoi1126 = RefOutArgWrapper(None)
+            res = CityAttachHelper.__try_noun_name(li, wrapoi1126, False)
+            oi = wrapoi1126.value
         if (res is None): 
-            wrapoi1193 = RefOutArgWrapper(None)
-            res = CityAttachHelper.__try_name_exist(li, wrapoi1193, False)
-            oi = wrapoi1193.value
+            wrapoi1127 = RefOutArgWrapper(None)
+            res = CityAttachHelper.__try_name_exist(li, wrapoi1127, False)
+            oi = wrapoi1127.value
         if (res is None): 
             res = CityAttachHelper.__try4(li)
         if (res is None and always): 
-            wrapoi1194 = RefOutArgWrapper(None)
-            res = CityAttachHelper.__try_noun_name(li, wrapoi1194, True)
-            oi = wrapoi1194.value
+            wrapoi1128 = RefOutArgWrapper(None)
+            res = CityAttachHelper.__try_noun_name(li, wrapoi1128, True)
+            oi = wrapoi1128.value
         if (res is None and always): 
             if (AddressItemToken.try_attach_org(li[0].begin_token) is not None): 
                 pass
             else: 
-                wrapoi1195 = RefOutArgWrapper(None)
-                res = CityAttachHelper.__try_name_exist(li, wrapoi1195, True)
-                oi = wrapoi1195.value
+                wrapoi1129 = RefOutArgWrapper(None)
+                res = CityAttachHelper.__try_name_exist(li, wrapoi1129, True)
+                oi = wrapoi1129.value
         if (res is None): 
             return None
         if (res is not None and res.morph is not None): 
@@ -79,8 +78,10 @@ class CityAttachHelper:
         if (res.begin_token.previous is not None): 
             if (res.begin_token.previous.is_value("ТЕРРИТОРИЯ", None)): 
                 res.begin_token = res.begin_token.previous
+                res.morph = res.begin_token.morph
             if ((BracketHelper.can_be_start_of_sequence(res.begin_token.previous, False, False) and BracketHelper.can_be_end_of_sequence(res.end_token.next0_, False, None, False) and res.begin_token.previous.previous is not None) and res.begin_token.previous.previous.is_value("ТЕРРИТОРИЯ", None)): 
                 res.begin_token = res.begin_token.previous.previous
+                res.morph = res.begin_token.morph
                 res.end_token = res.end_token.next0_
         return res
     
@@ -203,7 +204,7 @@ class CityAttachHelper:
         elif (isinstance(oi.value.referent, GeoReferent)): 
             city = Utils.asObjectOrNull(oi.value.referent.clone(), GeoReferent)
             city.occurrence.clear()
-            rt = ReferentToken._new800(city, li[0].begin_token, li[len(li) - 1].end_token, mc)
+            rt = ReferentToken._new734(city, li[0].begin_token, li[len(li) - 1].end_token, mc)
         elif (typ is None): 
             typ = oi.value.typ
         if (rt is None): 
@@ -215,8 +216,8 @@ class CityAttachHelper:
                 city._add_typ_city(li[0].kit.base_language)
             if (alttyp is not None): 
                 city._add_typ(alttyp)
-            rt = ReferentToken._new800(city, li[0].begin_token, li[len(li) - 1].end_token, mc)
-        if ((isinstance(rt.referent, GeoReferent)) and len(li) == 1 and (rt.referent).is_city): 
+            rt = ReferentToken._new734(city, li[0].begin_token, li[len(li) - 1].end_token, mc)
+        if ((isinstance(rt.referent, GeoReferent)) and len(li) == 1 and rt.referent.is_city): 
             if (rt.begin_token.previous is not None and rt.begin_token.previous.is_value("Г", None)): 
                 rt.begin_token = rt.begin_token.previous
             elif ((rt.begin_token.previous is not None and rt.begin_token.previous.is_char('.') and rt.begin_token.previous.previous is not None) and rt.begin_token.previous.previous.is_value("Г", None)): 
@@ -280,6 +281,8 @@ class CityAttachHelper:
                         ok = True
                     elif ((li[1].whitespaces_before_count < 2) and li[1].onto_item is not None): 
                         if (li[1].is_newline_after): 
+                            ok = True
+                        else: 
                             ok = True
                 if (li[1].doubtful and li[1].end_token.next0_ is not None and li[1].end_token.chars == li[1].end_token.next0_.chars): 
                     ok = False
@@ -387,7 +390,7 @@ class CityAttachHelper:
             city.higher = li[0].higher_geo
         if (li[0].typ == CityItemToken.ItemType.MISC): 
             del li[0]
-        res = ReferentToken._new800(city, li[0].begin_token, li[len(li) - 1].end_token, mc)
+        res = ReferentToken._new734(city, li[0].begin_token, li[len(li) - 1].end_token, mc)
         if (res.end_token.next0_ is not None and res.end_token.next0_.is_hiphen and (isinstance(res.end_token.next0_.next0_, NumberToken))): 
             num = Utils.asObjectOrNull(res.end_token.next0_.next0_, NumberToken)
             if ((num.typ == NumberSpellingType.DIGIT and not num.morph.class0_.is_adjective and num.int_value is not None) and (num.int_value < 50)): 
@@ -438,9 +441,9 @@ class CityAttachHelper:
             ok = True
         else: 
             tt2 = li[0].end_token.next0_
-            first_pass3763 = True
+            first_pass3643 = True
             while True:
-                if first_pass3763: first_pass3763 = False
+                if first_pass3643: first_pass3643 = False
                 else: tt2 = tt2.next0_
                 if (not (tt2 is not None)): break
                 if (tt2.is_newline_before): 
@@ -452,9 +455,9 @@ class CityAttachHelper:
                 break
             if (not ok): 
                 tt2 = li[0].begin_token.previous
-                first_pass3764 = True
+                first_pass3644 = True
                 while True:
-                    if first_pass3764: first_pass3764 = False
+                    if first_pass3644: first_pass3644 = False
                     else: tt2 = tt2.previous
                     if (not (tt2 is not None)): break
                     if (tt2.is_newline_after): 
@@ -510,7 +513,7 @@ class CityAttachHelper:
                 city._merge_slots2(Utils.asObjectOrNull(oi.value.referent, GeoReferent), li[0].kit.base_language)
             if (not city.is_city): 
                 city._add_typ_city(li[0].kit.base_language)
-        return ReferentToken._new800(city, li[0].begin_token, li[0].end_token, li[0].morph)
+        return ReferentToken._new734(city, li[0].begin_token, li[0].end_token, li[0].morph)
     
     @staticmethod
     def __try4(li : typing.List['CityItemToken']) -> 'ReferentToken':
@@ -536,8 +539,8 @@ class CityAttachHelper:
         if (tt is not None and ((tt.is_comma or tt.is_hiphen))): 
             tt = tt.next0_
         if (tt is not None and tt.is_newline_after): 
-            if ((isinstance(tt, NumberToken)) and (tt).int_value is not None): 
-                year = (tt).int_value
+            if ((isinstance(tt, NumberToken)) and tt.int_value is not None): 
+                year = tt.int_value
                 if (year > 1990 and (year < 2100)): 
                     return True
             elif (tt.get_referent() is not None and tt.get_referent().type_name == "DATE"): 

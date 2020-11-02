@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -13,7 +12,10 @@ from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.MorphCollection import MorphCollection
 
 class Token:
-    """ Базовый класс для всех токенов """
+    """ Базовый класс для всех токенов. Наследные классы - TextToken (конечная словоформа) и MetaToken (связный фрагмент других токенов).
+    
+    Токен
+    """
     
     def __init__(self, kit_ : 'AnalysisKit', begin : int, end : int) -> None:
         self.kit = None;
@@ -31,22 +33,28 @@ class Token:
     
     @property
     def begin_char(self) -> int:
-        """ Начальная позиция """
+        """ Позиция в тексте начального символа
+        
+        """
         return self.__m_begin_char
     
     @property
     def end_char(self) -> int:
-        """ Конечная позиция """
+        """ Позиция в тексте конечного символа
+        
+        """
         return self.__m_end_char
     
     @property
     def length_char(self) -> int:
-        """ Длина в исходных символах """
+        """ Длина в текстовых символах """
         return (self.end_char - self.begin_char) + 1
     
     @property
     def previous(self) -> 'Token':
-        """ Предыдущий токен """
+        """ Предыдущий токен в цепочке токенов
+        
+        """
         return self._m_previous
     @previous.setter
     def previous(self, value) -> 'Token':
@@ -58,7 +66,9 @@ class Token:
     
     @property
     def next0_(self) -> 'Token':
-        """ Следующий токен """
+        """ Следующий токен в цепочке токенов
+        
+        """
         return self._m_next
     @next0_.setter
     def next0_(self, value) -> 'Token':
@@ -70,7 +80,9 @@ class Token:
     
     @property
     def morph(self) -> 'MorphCollection':
-        """ Морфологическая информация """
+        """ Морфологическая информация
+        
+        """
         if (self.__m_morph is None): 
             self.__m_morph = MorphCollection()
         return self.__m_morph
@@ -138,7 +150,7 @@ class Token:
     @property
     def is_newline_before(self) -> bool:
         """ Элемент начинается с новой строки.
-         Для 1-го элемента всегда true. """
+        Для 1-го элемента всегда true. """
         return self.__get_attr(3)
     @is_newline_before.setter
     def is_newline_before(self, value) -> bool:
@@ -148,7 +160,7 @@ class Token:
     @property
     def is_newline_after(self) -> bool:
         """ Элемент заканчивает строку.
-         Для последнего элемента всегда true. """
+        Для последнего элемента всегда true. """
         return self.__get_attr(4)
     @is_newline_after.setter
     def is_newline_after(self, value) -> bool:
@@ -157,7 +169,7 @@ class Token:
     
     @property
     def inner_bool(self) -> bool:
-        """ Это используется внутренним образом """
+        # Это используется внутренним образом
         return self.__get_attr(5)
     @inner_bool.setter
     def inner_bool(self, value) -> bool:
@@ -166,8 +178,8 @@ class Token:
     
     @property
     def not_noun_phrase(self) -> bool:
-        """ Это используется внутренним образом 
-         (признак того, что здесь не начинается именная группа, чтобы повторно не пытаться выделять) """
+        # Это используется внутренним образом
+        # (признак того, что здесь не начинается именная группа, чтобы повторно не пытаться выделять)
         return self.__get_attr(6)
     @not_noun_phrase.setter
     def not_noun_phrase(self, value) -> bool:
@@ -288,7 +300,7 @@ class Token:
         return self.is_comma or self.is_and
     
     def is_char(self, ch : 'char') -> bool:
-        """ Токен состоит из символа
+        """ Токен состоит из конкретного символа
         
         Args:
             ch('char'): проверяемый символ
@@ -310,6 +322,15 @@ class Token:
         return chars_.find(self.kit.sofa.text[self.begin_char]) >= 0
     
     def is_value(self, term : str, termua : str=None) -> bool:
+        """ Проверка конкретного значения слова
+        
+        Args:
+            term(str): слово (проверяется значение TextToken.Term)
+            termua(str): слово для проверки на украинском языке
+        
+        Returns:
+            bool: да-нет
+        """
         return False
     
     @property
@@ -317,23 +338,15 @@ class Token:
         """ Признак того, что это буквенный текстовой токен (TextToken) """
         return False
     
-    @property
-    def is_number(self) -> bool:
-        """ Это число (в различных вариантах задания) """
-        return False
-    
-    @property
-    def is_referent(self) -> bool:
-        """ Это сущность (Referent) """
-        return False
-    
     def get_referent(self) -> 'Referent':
-        """ Ссылка на сущность (для ReferentToken) """
+        """ Получить ссылку на сущность (не null только для ReferentToken)
+        
+        """
         return None
     
     def get_referents(self) -> typing.List['Referent']:
-        """ Получить список ссылок на все сущности, скрывающиеся под элементом
-         (дело в том, что одни сущности могут поглощать дркгие, например, адрес поглотит город)
+        """ Получить список ссылок на все сущности, скрывающиеся под элементом.
+        Дело в том, что одни сущности могут накрывать другие (например, адрес накроет город).
         
         """
         return None
@@ -347,12 +360,16 @@ class Token:
             gender(MorphGender): желательный пол
             keep_chars(bool): сохранять регистр символов (по умолчанию, всё в верхний)
         
+        Returns:
+            str: строка текста
         """
         return str(self)
     
     def get_source_text(self) -> str:
-        """ Получить чистый фрагмент исходного текста
+        """ Получить фрагмент исходного текста, связанный с токеном
         
+        Returns:
+            str: фрагмент исходного текста
         """
         len0_ = (self.end_char + 1) - self.begin_char
         if ((len0_ < 1) or (self.begin_char < 0)): 
@@ -362,11 +379,10 @@ class Token:
         return self.kit.sofa.text[self.begin_char:self.begin_char+len0_]
     
     def get_morph_class_in_dictionary(self) -> 'MorphClass':
-        """ Проверка, что это текстовый токен и есть в словаре соотв. тип
+        """ Проверка, что слово есть в словаре соответствующего языка
         
-        Args:
-            cla: 
-        
+        Returns:
+            MorphClass: части речи, если не из словаря, то IsUndefined
         """
         return self.morph.class0_
     
@@ -386,6 +402,6 @@ class Token:
         self.__m_begin_char = SerializerHelper.deserialize_int(stream)
         self.__m_end_char = SerializerHelper.deserialize_int(stream)
         self.__m_attrs = (SerializerHelper.deserialize_int(stream))
-        self.chars = CharsInfo._new2618(SerializerHelper.deserialize_int(stream))
+        self.chars = CharsInfo._new2557(SerializerHelper.deserialize_int(stream))
         self.__m_morph = MorphCollection()
         self.__m_morph._deserialize(stream)

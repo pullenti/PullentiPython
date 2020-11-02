@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import threading
 import io
@@ -8,11 +7,12 @@ import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
+from pullenti.morph.internal.ByteArrayWrapper import ByteArrayWrapper
 from pullenti.semantic.utils.DerivateGroup import DerivateGroup
 from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphLang import MorphLang
 from pullenti.semantic.internal.ExplanTreeNode import ExplanTreeNode
-from pullenti.semantic.internal.DeserializeHelper import DeserializeHelper
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.internal.MorphDeserializer import MorphDeserializer
 
 class DerivateDictionary:
     
@@ -28,10 +28,10 @@ class DerivateDictionary:
         with io.BytesIO(dat) as mem: 
             self._m_all_groups.clear()
             self._m_root = ExplanTreeNode()
-            self.__m_buf = DeserializeHelper.deserializedd(mem, self, True)
+            self._deserialize(mem, True)
             self.__m_inited = True
     
-    def init(self, lang_ : 'MorphLang') -> bool:
+    def init(self, lang_ : 'MorphLang', lazy : bool) -> bool:
         if (self.__m_inited): 
             return True
         # ignored: assembly = 
@@ -45,7 +45,7 @@ class DerivateDictionary:
                 with Utils.getResourceStream('pullenti.semantic.utils.properties', n) as stream: 
                     stream.seek(0, io.SEEK_SET)
                     self._m_all_groups.clear()
-                    self.__m_buf = DeserializeHelper.deserializedd(stream, self, True)
+                    self._deserialize(stream, lazy)
                     self.lang = lang_
                 self.__m_inited = True
                 return True
@@ -56,36 +56,49 @@ class DerivateDictionary:
         self._m_all_groups.clear()
         self.lang = MorphLang()
     
-    def add(self, dg : 'DerivateGroup') -> None:
-        self._m_all_groups.append(dg)
-        for w in dg.words: 
-            if (w.spelling is None): 
-                continue
-            tn = self._m_root
-            i = 0
-            while i < len(w.spelling): 
-                k = ord(w.spelling[i])
-                tn1 = None
-                if (tn.nodes is None): 
-                    tn.nodes = dict()
-                wraptn12985 = RefOutArgWrapper(None)
-                inoutres2986 = Utils.tryGetValue(tn.nodes, k, wraptn12985)
-                tn1 = wraptn12985.value
-                if (not inoutres2986): 
-                    tn1 = ExplanTreeNode()
-                    tn.nodes[k] = tn1
-                tn = tn1
-                i += 1
-            tn._add_group(dg)
+    def _get_group(self, id0_ : int) -> 'DerivateGroup':
+        if (id0_ >= 1 and id0_ <= len(self._m_all_groups)): 
+            return self._m_all_groups[id0_ - 1]
+        return None
     
     def __load_tree_node(self, tn : 'ExplanTreeNode') -> None:
         with self._m_lock: 
             pos = tn.lazy_pos
             if (pos > 0): 
-                wrappos2987 = RefOutArgWrapper(pos)
-                DeserializeHelper.deserialize_tree_node(self.__m_buf, self, tn, True, wrappos2987)
-                pos = wrappos2987.value
+                wrappos2917 = RefOutArgWrapper(pos)
+                tn._deserialize(self.__m_buf, self, True, wrappos2917)
+                pos = wrappos2917.value
             tn.lazy_pos = 0
+    
+    def _deserialize(self, str0_ : io.IOBase, lazy_load : bool) -> None:
+        wr = None
+        with io.BytesIO() as tmp: 
+            MorphDeserializer.deflate_gzip(str0_, tmp)
+            wr = ByteArrayWrapper(bytearray(tmp.getvalue()))
+            pos = 0
+            wrappos2921 = RefOutArgWrapper(pos)
+            cou = wr.deserialize_int(wrappos2921)
+            pos = wrappos2921.value
+            while cou > 0: 
+                wrappos2919 = RefOutArgWrapper(pos)
+                p1 = wr.deserialize_int(wrappos2919)
+                pos = wrappos2919.value
+                ew = DerivateGroup()
+                if (lazy_load): 
+                    ew._lazy_pos = pos
+                    pos = p1
+                else: 
+                    wrappos2918 = RefOutArgWrapper(pos)
+                    ew._deserialize(wr, wrappos2918)
+                    pos = wrappos2918.value
+                ew.id0_ = (len(self._m_all_groups) + 1)
+                self._m_all_groups.append(ew)
+                cou -= 1
+            self._m_root = ExplanTreeNode()
+            wrappos2920 = RefOutArgWrapper(pos)
+            self._m_root._deserialize(wr, self, lazy_load, wrappos2920)
+            pos = wrappos2920.value
+        self.__m_buf = wr
     
     def find(self, word : str, try_create : bool, lang_ : 'MorphLang') -> typing.List['DerivateGroup']:
         if (Utils.isNullOrEmpty(word)): 
@@ -94,22 +107,19 @@ class DerivateDictionary:
         i = 0
         while i < len(word): 
             k = ord(word[i])
-            tn1 = None
             if (tn.nodes is None): 
                 break
-            wraptn12988 = RefOutArgWrapper(None)
-            inoutres2989 = Utils.tryGetValue(tn.nodes, k, wraptn12988)
-            tn1 = wraptn12988.value
-            if (not inoutres2989): 
+            if (not k in tn.nodes): 
                 break
-            tn = tn1
+            tn = tn.nodes[k]
             if (tn.lazy_pos > 0): 
                 self.__load_tree_node(tn)
             i += 1
-        res = (None if i < len(word) else tn.groups)
         li = None
-        if (isinstance(res, list)): 
-            li = list(Utils.asObjectOrNull(res, list))
+        if (i >= len(word) and tn.groups is not None): 
+            li = list()
+            for g in tn.groups: 
+                li.append(self._get_group(g))
             gen = False
             nogen = False
             for g in li: 
@@ -122,9 +132,6 @@ class DerivateDictionary:
                     if (li[i].is_generated): 
                         del li[i]
                 else: i = -1
-        elif (isinstance(res, DerivateGroup)): 
-            li = list()
-            li.append(Utils.asObjectOrNull(res, DerivateGroup))
         if (li is not None and lang_ is not None and not lang_.is_undefined): 
             for i in range(len(li) - 1, -1, -1):
                 if (not li[i].contains_word(word, lang_)): 
@@ -183,29 +190,4 @@ class DerivateDictionary:
                 return li
         if (not try_create): 
             return None
-        len0_ = len(word) - 4
-        i = 1
-        first_pass4054 = True
-        while True:
-            if first_pass4054: first_pass4054 = False
-            else: i += 1
-            if (not (i <= len0_)): break
-            rest = word[i:]
-            li1 = self.find(rest, False, lang_)
-            if (li1 is None): 
-                continue
-            pref = word[0:0+i]
-            gen = list()
-            for dg in li1: 
-                if (not dg.is_dummy and not dg.is_generated): 
-                    if (dg.not_generate): 
-                        if (len(rest) < 5): 
-                            continue
-                    gg = dg.create_by_prefix(pref, lang_)
-                    if (gg is not None): 
-                        gen.append(gg)
-                        self.add(gg)
-            if (len(gen) == 0): 
-                return None
-            return gen
         return None

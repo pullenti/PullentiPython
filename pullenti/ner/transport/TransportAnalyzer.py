@@ -1,34 +1,34 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.ner.Token import Token
-from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.ner.TextToken import TextToken
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
-from pullenti.ner.transport.TransportKind import TransportKind
-from pullenti.ner.Referent import Referent
-from pullenti.ner.ProcessorService import ProcessorService
-from pullenti.ner.transport.internal.MetaTransport import MetaTransport
 from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.internal.PullentiNerCoreInternalResourceHelper import PullentiNerCoreInternalResourceHelper
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.transport.TransportKind import TransportKind
+from pullenti.ner.transport.internal.MetaTransport import MetaTransport
+from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.Referent import Referent
 from pullenti.ner.transport.internal.TransItemToken import TransItemToken
-from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.geo.GeoReferent import GeoReferent
 from pullenti.ner.transport.TransportReferent import TransportReferent
+from pullenti.ner.geo.GeoReferent import GeoReferent
+from pullenti.ner.Analyzer import Analyzer
 
 class TransportAnalyzer(Analyzer):
     """ Анализатор транспортных стредств """
     
     ANALYZER_NAME = "TRANSPORT"
+    """ Имя анализатора ("TRANSPORT") """
     
     @property
     def name(self) -> str:
@@ -52,12 +52,12 @@ class TransportAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[Utils.enumToString(TransportKind.FLY)] = EpNerCoreInternalResourceHelper.get_bytes("fly.png")
-        res[Utils.enumToString(TransportKind.SHIP)] = EpNerCoreInternalResourceHelper.get_bytes("ship.png")
-        res[Utils.enumToString(TransportKind.SPACE)] = EpNerCoreInternalResourceHelper.get_bytes("space.png")
-        res[Utils.enumToString(TransportKind.TRAIN)] = EpNerCoreInternalResourceHelper.get_bytes("train.png")
-        res[Utils.enumToString(TransportKind.AUTO)] = EpNerCoreInternalResourceHelper.get_bytes("auto.png")
-        res[MetaTransport.IMAGE_ID] = EpNerCoreInternalResourceHelper.get_bytes("transport.png")
+        res[Utils.enumToString(TransportKind.FLY)] = PullentiNerCoreInternalResourceHelper.get_bytes("fly.png")
+        res[Utils.enumToString(TransportKind.SHIP)] = PullentiNerCoreInternalResourceHelper.get_bytes("ship.png")
+        res[Utils.enumToString(TransportKind.SPACE)] = PullentiNerCoreInternalResourceHelper.get_bytes("space.png")
+        res[Utils.enumToString(TransportKind.TRAIN)] = PullentiNerCoreInternalResourceHelper.get_bytes("train.png")
+        res[Utils.enumToString(TransportKind.AUTO)] = PullentiNerCoreInternalResourceHelper.get_bytes("auto.png")
+        res[MetaTransport.IMAGE_ID] = PullentiNerCoreInternalResourceHelper.get_bytes("transport.png")
         return res
     
     def create_referent(self, type0_ : str) -> 'Referent':
@@ -79,9 +79,9 @@ class TransportAnalyzer(Analyzer):
         objs_by_model = dict()
         obj_by_names = TerminCollection()
         t = kit.first_token
-        first_pass4020 = True
+        first_pass3898 = True
         while True:
-            if first_pass4020: first_pass4020 = False
+            if first_pass3898: first_pass3898 = False
             else: t = t.next0_
             if (not (t is not None)): break
             its = TransItemToken.try_parse_list(t, 10)
@@ -92,9 +92,9 @@ class TransportAnalyzer(Analyzer):
                 for rt in rts: 
                     cou = 0
                     tt = t.previous
-                    first_pass4021 = True
+                    first_pass3899 = True
                     while True:
-                        if first_pass4021: first_pass4021 = False
+                        if first_pass3899: first_pass3899 = False
                         else: tt = tt.previous; cou += 1
                         if (not (tt is not None and (cou < 1000))): break
                         tr = Utils.asObjectOrNull(tt.get_referent(), TransportReferent)
@@ -117,15 +117,15 @@ class TransportAnalyzer(Analyzer):
                             for k in range(2):
                                 if (not str.isdigit(mod[0])): 
                                     li = [ ]
-                                    wrapli2764 = RefOutArgWrapper(None)
-                                    inoutres2765 = Utils.tryGetValue(objs_by_model, mod, wrapli2764)
-                                    li = wrapli2764.value
-                                    if (not inoutres2765): 
+                                    wrapli2698 = RefOutArgWrapper(None)
+                                    inoutres2699 = Utils.tryGetValue(objs_by_model, mod, wrapli2698)
+                                    li = wrapli2698.value
+                                    if (not inoutres2699): 
                                         li = list()
                                         objs_by_model[mod] = li
                                     if (not rt.referent in li): 
                                         li.append(rt.referent)
-                                    models.add_str(mod, li, None, False)
+                                    models.add_string(mod, li, None, False)
                                 if (k > 0): 
                                     break
                                 brand = rt.referent.get_string_value(TransportReferent.ATTR_BRAND)
@@ -133,13 +133,13 @@ class TransportAnalyzer(Analyzer):
                                     break
                                 mod = "{0} {1}".format(brand, mod)
                         elif (s.type_name == TransportReferent.ATTR_NAME): 
-                            obj_by_names.add(Termin._new119(str(s.value), rt.referent))
+                            obj_by_names.add(Termin._new100(str(s.value), rt.referent))
         if (len(objs_by_model) == 0 and len(obj_by_names.termins) == 0): 
             return
         t = kit.first_token
-        first_pass4022 = True
+        first_pass3900 = True
         while True:
-            if first_pass4022: first_pass4022 = False
+            if first_pass3900: first_pass3900 = False
             else: t = t.next0_
             if (not (t is not None)): break
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 10)
@@ -150,7 +150,7 @@ class TransportAnalyzer(Analyzer):
                     kit.embed_token(rt0)
                     t = (rt0)
                     continue
-            if (not ((isinstance(t, TextToken)))): 
+            if (not (isinstance(t, TextToken))): 
                 continue
             if (not t.chars.is_letter): 
                 continue
@@ -180,7 +180,7 @@ class TransportAnalyzer(Analyzer):
                 t = (rt0)
                 continue
     
-    def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
+    def process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
         its = TransItemToken.try_parse_list(begin, 10)
         if (its is None): 
             return None
@@ -194,9 +194,9 @@ class TransportAnalyzer(Analyzer):
         t1 = None
         brand_is_doubt = False
         i = 0
-        first_pass4023 = True
+        first_pass3901 = True
         while True:
-            if first_pass4023: first_pass4023 = False
+            if first_pass3901: first_pass3901 = False
             else: i += 1
             if (not (i < len(its))): break
             if (its[i].typ == TransItemToken.Typs.NOUN): 

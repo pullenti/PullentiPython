@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 
@@ -105,9 +104,9 @@ class OptimizerHelper:
     def __process_participles(gr : 'SemGraph') -> bool:
         ret = False
         i = 0
-        first_pass4067 = True
+        first_pass3944 = True
         while True:
-            if first_pass4067: first_pass4067 = False
+            if first_pass3944: first_pass3944 = False
             else: i += 1
             if (not (i < len(gr.objects))): break
             obj = gr.objects[i]
@@ -123,9 +122,9 @@ class OptimizerHelper:
             if (not has): 
                 continue
             if (own is None): 
-                dum = SemObject._new3004(gr, SemObjectType.NOUN)
+                dum = SemObject._new2929(gr, SemObjectType.NOUN)
                 if (obj.morph is not None): 
-                    dum.morph = MorphWordForm._new3005(MorphClass.NOUN, obj.morph.number, obj.morph.gender, obj.morph.case_)
+                    dum.morph = MorphWordForm._new2930(MorphClass.NOUN, obj.morph.number, obj.morph.gender, obj.morph.case_)
                 gr.objects.append(dum)
                 own = gr.add_link(SemLinkType.PARTICIPLE, dum, obj, "какой", False, None)
                 ret = True
@@ -170,9 +169,9 @@ class OptimizerHelper:
     def __collapse_anafors(gr : 'SemGraph') -> bool:
         ret = False
         i = 0
-        first_pass4068 = True
+        first_pass3945 = True
         while True:
-            if first_pass4068: first_pass4068 = False
+            if first_pass3945: first_pass3945 = False
             else: i += 1
             if (not (i < len(gr.objects))): break
             obj = gr.objects[i]
@@ -204,9 +203,9 @@ class OptimizerHelper:
     def __process_formulas(objs : typing.List['SemObject']) -> bool:
         ret = False
         i = 0
-        first_pass4069 = True
+        first_pass3946 = True
         while True:
-            if first_pass4069: first_pass4069 = False
+            if first_pass3946: first_pass3946 = False
             else: i += 1
             if (not (i < len(objs))): break
             o = objs[i]
@@ -238,9 +237,9 @@ class OptimizerHelper:
     def __process_pointers(objs : typing.List['SemObject']) -> bool:
         ret = False
         i = 0
-        first_pass4070 = True
+        first_pass3947 = True
         while True:
-            if first_pass4070: first_pass4070 = False
+            if first_pass3947: first_pass3947 = False
             else: i += 1
             if (not (i < len(objs))): break
             o = objs[i]
@@ -264,9 +263,9 @@ class OptimizerHelper:
                     break
             if (not ok): 
                 j = i + 1
-                first_pass4071 = True
+                first_pass3948 = True
                 while True:
-                    if first_pass4071: first_pass4071 = False
+                    if first_pass3948: first_pass3948 = False
                     else: j += 1
                     if (not (j < len(objs))): break
                     oo = objs[j]
@@ -279,19 +278,19 @@ class OptimizerHelper:
                         break
             if (not ok): 
                 continue
-            first = SemObject._new3004(o.graph, SemObjectType.ADJECTIVE)
+            first = SemObject._new2929(o.graph, SemObjectType.ADJECTIVE)
             first.tokens.append(o.tokens[0])
             first.morph.normal_full = "ПЕРВЫЙ"
-            first.morph.normal_case = ("ПЕРВАЯ" if (((o.morph.gender) & (MorphGender.FEMINIE))) != (MorphGender.UNDEFINED) else ("ПЕРВОЕ" if (((o.morph.gender) & (MorphGender.NEUTER))) != (MorphGender.UNDEFINED) else "ПЕРВЫЙ"))
+            first.morph.normal_case = ("ПЕРВАЯ" if ((o.morph.gender) & (MorphGender.FEMINIE)) != (MorphGender.UNDEFINED) else ("ПЕРВОЕ" if ((o.morph.gender) & (MorphGender.NEUTER)) != (MorphGender.UNDEFINED) else "ПЕРВЫЙ"))
             first.morph.gender = o.morph.gender
             o.graph.objects.append(first)
             o.graph.add_link(SemLinkType.DETAIL, o, first, "какой", False, None)
             o.quantity = (None)
             ret = True
         i = 0
-        first_pass4072 = True
+        first_pass3949 = True
         while True:
-            if first_pass4072: first_pass4072 = False
+            if first_pass3949: first_pass3949 = False
             else: i += 1
             if (not (i < len(objs))): break
             o = objs[i]
@@ -316,5 +315,5 @@ class OptimizerHelper:
                     break
             if (ok): 
                 other.morph.normal_full = "ВТОРОЙ"
-                other.morph.normal_case = ("ВТОРАЯ" if (((o.morph.gender) & (MorphGender.FEMINIE))) != (MorphGender.UNDEFINED) else ("ВТОРОЕ" if (((o.morph.gender) & (MorphGender.NEUTER))) != (MorphGender.UNDEFINED) else "ВТОРОЙ"))
+                other.morph.normal_case = ("ВТОРАЯ" if ((o.morph.gender) & (MorphGender.FEMINIE)) != (MorphGender.UNDEFINED) else ("ВТОРОЕ" if ((o.morph.gender) & (MorphGender.NEUTER)) != (MorphGender.UNDEFINED) else "ВТОРОЙ"))
         return ret

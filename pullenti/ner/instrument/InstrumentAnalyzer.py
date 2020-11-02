@@ -1,32 +1,35 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.ner.Analyzer import Analyzer
 from pullenti.ner.instrument.InstrumentKind import InstrumentKind
-from pullenti.ner.instrument.InstrumentArtefact import InstrumentArtefact
+from pullenti.ner.instrument.InstrumentArtefactReferent import InstrumentArtefactReferent
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.instrument.internal.MetaInstrumentBlock import MetaInstrumentBlock
 from pullenti.ner.instrument.InstrumentBlockReferent import InstrumentBlockReferent
 from pullenti.ner.ProcessorService import ProcessorService
-from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
+from pullenti.ner.instrument.InstrumentParticipantReferent import InstrumentParticipantReferent
 from pullenti.ner.instrument.internal.InstrumentParticipantMeta import InstrumentParticipantMeta
 from pullenti.ner.instrument.internal.InstrumentArtefactMeta import InstrumentArtefactMeta
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.core.internal.PullentiNerCoreInternalResourceHelper import PullentiNerCoreInternalResourceHelper
 from pullenti.ner.instrument.internal.MetaInstrument import MetaInstrument
 from pullenti.ner.instrument.InstrumentReferent import InstrumentReferent
 
 class InstrumentAnalyzer(Analyzer):
-    """ Анализатор структуры нормативных актов и договоров """
+    """ Анализатор структуры нормативных актов и договоров: восставовление иерархической структуры фрагментов,
+    выделение фигурантов (для договоров и судебных документов), артефактов.
+    Специфический анализатор, то есть нужно явно создавать процессор через функцию CreateSpecificProcessor,
+    указав имя анализатора. """
     
     @property
     def name(self) -> str:
         return InstrumentAnalyzer.ANALYZER_NAME
     
     ANALYZER_NAME = "INSTRUMENT"
+    """ Имя анализатора ("INSTRUMENT") """
     
     @property
     def caption(self) -> str:
@@ -41,7 +44,7 @@ class InstrumentAnalyzer(Analyzer):
     
     @property
     def is_specific(self) -> bool:
-        """ Этот анализатор является специфическим """
+        """ Этот анализатор является специфическим (IsSpecific = true) """
         return True
     
     @property
@@ -55,10 +58,10 @@ class InstrumentAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[MetaInstrument.DOC_IMAGE_ID] = EpNerCoreInternalResourceHelper.get_bytes("decree.png")
-        res[MetaInstrumentBlock.PART_IMAGE_ID] = EpNerCoreInternalResourceHelper.get_bytes("part.png")
-        res[InstrumentParticipantMeta.IMAGE_ID] = EpNerCoreInternalResourceHelper.get_bytes("participant.png")
-        res[InstrumentArtefactMeta.IMAGE_ID] = EpNerCoreInternalResourceHelper.get_bytes("artefact.png")
+        res[MetaInstrument.DOC_IMAGE_ID] = PullentiNerCoreInternalResourceHelper.get_bytes("decree.png")
+        res[MetaInstrumentBlock.PART_IMAGE_ID] = PullentiNerCoreInternalResourceHelper.get_bytes("part.png")
+        res[InstrumentParticipantMeta.IMAGE_ID] = PullentiNerCoreInternalResourceHelper.get_bytes("participant.png")
+        res[InstrumentArtefactMeta.IMAGE_ID] = PullentiNerCoreInternalResourceHelper.get_bytes("artefact.png")
         return res
     
     def create_referent(self, type0_ : str) -> 'Referent':
@@ -66,10 +69,10 @@ class InstrumentAnalyzer(Analyzer):
             return InstrumentReferent()
         if (type0_ == InstrumentBlockReferent.OBJ_TYPENAME): 
             return InstrumentBlockReferent()
-        if (type0_ == InstrumentParticipant.OBJ_TYPENAME): 
-            return InstrumentParticipant()
-        if (type0_ == InstrumentArtefact.OBJ_TYPENAME): 
-            return InstrumentArtefact()
+        if (type0_ == InstrumentParticipantReferent.OBJ_TYPENAME): 
+            return InstrumentParticipantReferent()
+        if (type0_ == InstrumentArtefactReferent.OBJ_TYPENAME): 
+            return InstrumentArtefactReferent()
         return None
     
     def process(self, kit : 'AnalysisKit') -> None:

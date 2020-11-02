@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -12,27 +11,35 @@ from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 from pullenti.ner.named.internal.MetaNamedEntity import MetaNamedEntity
 from pullenti.ner.Referent import Referent
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.core.MiscHelper import MiscHelper
 
 class NamedEntityReferent(Referent):
-    """ Текоторые мелкие именованные сущности (планеты, памятники, здания, местоположения, планеты и пр.) """
+    """ Сущность "тип" + "имя" (планеты, памятники, здания, местоположения, планеты и пр.)
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(NamedEntityReferent.OBJ_TYPENAME)
         self.instance_of = MetaNamedEntity.GLOBAL_META
     
     OBJ_TYPENAME = "NAMEDENTITY"
+    """ Имя типа сущности TypeName ("NAMEDENTITY") """
     
     ATTR_NAME = "NAME"
+    """ Имя атрибута - наименование """
     
     ATTR_KIND = "KIND"
+    """ Имя атрибута - категория сущности (NamedEntityKind) """
     
     ATTR_TYPE = "TYPE"
+    """ Имя атрибута - тип """
     
     ATTR_REF = "REF"
+    """ Имя атрибута - ссылка на другую сущность """
     
     ATTR_MISC = "MISC"
+    """ Имя атрибута - разное """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang', lev : int=0) -> str:
         res = io.StringIO()
@@ -59,7 +66,7 @@ class NamedEntityReferent(Referent):
             return NamedEntityKind.UNDEFINED
         try: 
             return Utils.valToEnum(str0_, NamedEntityKind)
-        except Exception as ex1825: 
+        except Exception as ex1762: 
             pass
         return NamedEntityKind.UNDEFINED
     @kind.setter
@@ -92,7 +99,7 @@ class NamedEntityReferent(Referent):
         else: 
             return super().get_compare_strings()
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType') -> bool:
         ent = Utils.asObjectOrNull(obj, NamedEntityReferent)
         if (ent is None): 
             return False
@@ -128,7 +135,6 @@ class NamedEntityReferent(Referent):
         return True
     
     def create_ontology_item(self) -> 'IntOntologyItem':
-        """ Признак того, что была попытка привязаться к внешней онтологии """
         return self._create_ontology_item(2, False, False)
     
     def _create_ontology_item(self, min_len : int, only_names : bool=False, pure_names : bool=False) -> 'IntOntologyItem':
@@ -170,7 +176,7 @@ class NamedEntityReferent(Referent):
         return oi
     
     @staticmethod
-    def _new1824(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
+    def _new1761(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
         res = NamedEntityReferent()
         res.kind = _arg1
         return res

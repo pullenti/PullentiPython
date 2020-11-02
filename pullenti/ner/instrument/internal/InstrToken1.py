@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import math
@@ -9,36 +8,36 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.decree.DecreeKind import DecreeKind
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.instrument.InstrumentKind import InstrumentKind
+from pullenti.ner.decree.DecreeKind import DecreeKind
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.Token import Token
 from pullenti.ner.org.OrganizationReferent import OrganizationReferent
 from pullenti.ner.instrument.internal.ParticipantToken import ParticipantToken
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.morph.MorphBaseInfo import MorphBaseInfo
 from pullenti.ner.TextToken import TextToken
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.ner.decree.DecreeReferent import DecreeReferent
-from pullenti.ner.instrument.InstrumentParticipant import InstrumentParticipant
-from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
-from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
+from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.person.PersonReferent import PersonReferent
-from pullenti.ner.decree.internal.DecreeToken import DecreeToken
-from pullenti.ner.instrument.internal.NumberTypes import NumberTypes
 from pullenti.ner.decree.internal.PartToken import PartToken
+from pullenti.ner.decree.DecreeChangeReferent import DecreeChangeReferent
+from pullenti.ner.decree.internal.DecreeToken import DecreeToken
+from pullenti.ner.decree.DecreePartReferent import DecreePartReferent
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.instrument.internal.NumberTypes import NumberTypes
+from pullenti.ner.instrument.InstrumentParticipantReferent import InstrumentParticipantReferent
+from pullenti.ner.decree.DecreeReferent import DecreeReferent
 from pullenti.ner.instrument.internal.FragToken import FragToken
 from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.instrument.internal.InstrToken import InstrToken
-from pullenti.ner.core.internal.TableHelper import TableHelper
+from pullenti.ner.core.TableHelper import TableHelper
 
 class InstrToken1(MetaToken):
     
@@ -173,18 +172,18 @@ class InstrToken1(MetaToken):
             edt = None
             fr = FragToken._create_editions(t)
             if (fr is not None): 
-                edt = InstrToken1._new1598(fr.begin_token, fr.end_token, InstrToken1.Types.EDITIONS)
+                edt = InstrToken1._new1532(fr.begin_token, fr.end_token, InstrToken1.Types.EDITIONS)
             else: 
                 t2 = InstrToken1._create_edition(t)
                 if (t2 is not None): 
-                    edt = InstrToken1._new1598(t, t2, InstrToken1.Types.EDITIONS)
+                    edt = InstrToken1._new1532(t, t2, InstrToken1.Types.EDITIONS)
             if (edt is not None): 
                 if (edt.end_token.next0_ is not None and edt.end_token.next0_.is_char('.')): 
                     edt.end_token = edt.end_token.next0_
                 return edt
         t0 = t
         t00 = None
-        res = InstrToken1._new1600(t0, t, True)
+        res = InstrToken1._new1534(t0, t, True)
         while t is not None: 
             if (not t.is_table_control_char): 
                 break
@@ -228,8 +227,8 @@ class InstrToken1(MetaToken):
                 return None
             t = res.end_token
         dt = DecreeToken.try_attach(t, None, False)
-        if (dt is None and (((isinstance(t.get_referent(), PersonReferent)) or (isinstance(t.get_referent(), InstrumentParticipant))))): 
-            dt = DecreeToken._new908(t, t, DecreeToken.ItemType.OWNER)
+        if (dt is None and (((isinstance(t.get_referent(), PersonReferent)) or (isinstance(t.get_referent(), InstrumentParticipantReferent))))): 
+            dt = DecreeToken._new842(t, t, DecreeToken.ItemType.OWNER)
             dt.ref = (Utils.asObjectOrNull(t, ReferentToken))
         if (dt is not None and dt.end_token.is_newline_after): 
             if (dt.typ == DecreeToken.ItemType.DATE or dt.typ == DecreeToken.ItemType.NUMBER or dt.typ == DecreeToken.ItemType.OWNER): 
@@ -246,9 +245,9 @@ class InstrToken1(MetaToken):
                 if (isinstance(t.get_referent(), DecreePartReferent)): 
                     t = t.kit.debed_token(t)
                 t = t.next0_
-                first_pass3876 = True
+                first_pass3756 = True
                 while True:
-                    if first_pass3876: first_pass3876 = False
+                    if first_pass3756: first_pass3756 = False
                     else: t = t.next0_
                     if (not (t is not None)): break
                     if (res.num_end_token is None): 
@@ -270,7 +269,7 @@ class InstrToken1(MetaToken):
                         continue
                     if ((isinstance(t, NumberToken)) and ((t.is_newline_after or ((t.next0_ is not None and t.next0_.is_char('.') and t.next0_.is_newline_after))))): 
                         res.num_begin_token = t
-                        res.numbers.append(str((t).value))
+                        res.numbers.append(str(t.value))
                         if (t.next0_ is not None and t.next0_.is_char('.')): 
                             t = t.next0_
                         res.num_end_token = t
@@ -278,8 +277,8 @@ class InstrToken1(MetaToken):
                         continue
                     if (((isinstance(t, NumberToken)) and (isinstance(t.next0_, TextToken)) and t.next0_.length_char == 1) and ((t.next0_.is_newline_after or ((t.next0_.next0_ is not None and t.next0_.next0_.is_char('.')))))): 
                         res.num_begin_token = t
-                        res.numbers.append(str((t).value))
-                        res.numbers.append((t.next0_).term)
+                        res.numbers.append(str(t.value))
+                        res.numbers.append(t.next0_.term)
                         res.num_typ = NumberTypes.COMBO
                         t = t.next0_
                         if (t.next0_ is not None and t.next0_.is_char('.')): 
@@ -309,7 +308,7 @@ class InstrToken1(MetaToken):
                             continue
                         if (t.length_char == 1 and t.chars.is_all_upper): 
                             res.num_begin_token = t
-                            res.numbers.append((t).term)
+                            res.numbers.append(t.term)
                             res.num_typ = NumberTypes.LETTER
                             if (t.next0_ is not None and ((t.next0_.is_char('.') or t.next0_.is_char(')')))): 
                                 t = t.next0_
@@ -319,7 +318,7 @@ class InstrToken1(MetaToken):
                     if (InstrToken._check_entered(t) is not None): 
                         break
                     if (isinstance(t, TextToken)): 
-                        if ((t).is_pure_verb): 
+                        if (t.is_pure_verb): 
                             res.typ = InstrToken1.Types.LINE
                             break
                     break
@@ -338,7 +337,7 @@ class InstrToken1(MetaToken):
                     res.typ = InstrToken1.Types.APPENDIX
                     res.end_token = t1.previous
                     return res
-            if ((isinstance(t.get_referent(), DecreeReferent)) and (t.get_referent()).kind == DecreeKind.PUBLISHER): 
+            if ((isinstance(t.get_referent(), DecreeReferent)) and t.get_referent().kind == DecreeKind.PUBLISHER): 
                 res.typ = InstrToken1.Types.APPROVED
         if (t.is_value("КОНСУЛЬТАНТПЛЮС", None) or t.is_value("ГАРАНТ", None) or ((t.is_value("ИНФОРМАЦИЯ", None) and t.is_newline_before))): 
             t1 = t.next0_
@@ -353,12 +352,12 @@ class InstrToken1(MetaToken):
             if (t1 is not None and ((t1.is_value("ПРИМЕЧАНИЕ", None) or ok))): 
                 if (t1.next0_ is not None and t1.next0_.is_char('.')): 
                     t1 = t1.next0_
-                re = InstrToken1._new1598(t, t1, InstrToken1.Types.COMMENT)
+                re = InstrToken1._new1532(t, t1, InstrToken1.Types.COMMENT)
                 hiph = False
                 t1 = t1.next0_
-                first_pass3877 = True
+                first_pass3757 = True
                 while True:
-                    if first_pass3877: first_pass3877 = False
+                    if first_pass3757: first_pass3757 = False
                     else: t1 = t1.next0_
                     if (not (t1 is not None)): break
                     re.end_token = t1
@@ -379,9 +378,9 @@ class InstrToken1(MetaToken):
                 return re
         check_comment = 0
         ttt = t
-        first_pass3878 = True
+        first_pass3758 = True
         while True:
-            if first_pass3878: first_pass3878 = False
+            if first_pass3758: first_pass3758 = False
             else: ttt = ttt.next0_
             if (not (ttt is not None)): break
             if (((ttt.is_newline_before or ttt.is_table_control_char)) and ttt != t): 
@@ -413,7 +412,7 @@ class InstrToken1(MetaToken):
                     break
                 ttt = ttt.next0_
             if (ok): 
-                cmt = InstrToken1._new1598(t, t1, InstrToken1.Types.COMMENT)
+                cmt = InstrToken1._new1532(t, t1, InstrToken1.Types.COMMENT)
                 if (dref is not None and t1.next0_ is not None and t1.next0_.get_referent() == dref): 
                     if (t1.next0_.next0_ is not None and t1.next0_.next0_.is_value("УТРАТИТЬ", "ВТРАТИТИ")): 
                         ttt = t1.next0_.next0_
@@ -433,7 +432,7 @@ class InstrToken1(MetaToken):
             tt1 = tt
             if (tt1.is_char(':') and tt1.next0_ is not None): 
                 tt1 = tt1.next0_
-            if ((isinstance(tt1.get_referent(), PersonReferent)) or (isinstance(tt1.get_referent(), InstrumentParticipant))): 
+            if ((isinstance(tt1.get_referent(), PersonReferent)) or (isinstance(tt1.get_referent(), InstrumentParticipantReferent))): 
                 res.typ = InstrToken1.Types.APPROVED
                 res.end_token = tt1
                 return res
@@ -442,9 +441,9 @@ class InstrToken1(MetaToken):
                 res.typ = InstrToken1.Types.APPROVED
                 err = 0
                 ttt = dt1.end_token.next0_
-                first_pass3879 = True
+                first_pass3759 = True
                 while True:
-                    if first_pass3879: first_pass3879 = False
+                    if first_pass3759: first_pass3759 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if (DecreeToken.is_keyword(ttt, False) is not None): 
@@ -465,12 +464,12 @@ class InstrToken1(MetaToken):
                         break
                 return res
         val = None
-        wrapval1609 = RefOutArgWrapper(None)
-        tt2 = InstrToken1._check_directive(t, wrapval1609)
-        val = wrapval1609.value
+        wrapval1543 = RefOutArgWrapper(None)
+        tt2 = InstrToken1._check_directive(t, wrapval1543)
+        val = wrapval1543.value
         if (tt2 is not None): 
             if (tt2.is_newline_after or ((tt2.next0_ is not None and ((tt2.next0_.is_char_of(":") or ((tt2.next0_.is_char('.') and tt2 != t)))) and ((tt2.next0_.is_newline_after or t.chars.is_all_upper))))): 
-                return InstrToken1._new1604(t, (tt2 if tt2.is_newline_after else tt2.next0_), InstrToken1.Types.DIRECTIVE, val)
+                return InstrToken1._new1538(t, (tt2 if tt2.is_newline_after else tt2.next0_), InstrToken1.Types.DIRECTIVE, val)
         if ((lev < 3) and t is not None): 
             if ((t.is_value("СОДЕРЖИМОЕ", "ВМІСТ") or t.is_value("СОДЕРЖАНИЕ", "ЗМІСТ") or t.is_value("ОГЛАВЛЕНИЕ", "ЗМІСТ")) or ((t.is_value("СПИСОК", None) and t.next0_ is not None and t.next0_.is_value("РАЗДЕЛ", None)))): 
                 t11 = t.next0_
@@ -557,7 +556,7 @@ class InstrToken1(MetaToken):
                         ok = True
                     if (tt.is_newline_after): 
                         if (ok): 
-                            return InstrToken1._new1598(t, tt, InstrToken1.Types.COMMENT)
+                            return InstrToken1._new1532(t, tt, InstrToken1.Types.COMMENT)
                         break
                     tt = tt.next0_
         if (t is not None and (((t.is_newline_before or is_in_index or is_citat) or ((t.previous is not None and t.previous.is_table_control_char)))) and not t.is_table_control_char): 
@@ -573,7 +572,7 @@ class InstrToken1(MetaToken):
                         ok = False
             if (ok and (isinstance(t, TextToken))): 
                 ok = False
-                s = (t).term
+                s = t.term
                 if (s == "ГЛАВА" or s == "ГОЛОВА"): 
                     res.typ = InstrToken1.Types.CHAPTER
                     t = t.next0_
@@ -622,9 +621,9 @@ class InstrToken1(MetaToken):
         num = res.typ != InstrToken1.Types.EDITIONS
         has_letters = False
         is_app = cur is not None and ((cur.kind == InstrumentKind.APPENDIX or cur.kind == InstrumentKind.INTERNALDOCUMENT))
-        first_pass3880 = True
+        first_pass3760 = True
         while True:
-            if first_pass3880: first_pass3880 = False
+            if first_pass3760: first_pass3760 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char > 0 and t.begin_char > max_char): 
@@ -692,7 +691,7 @@ class InstrToken1(MetaToken):
                         break
             if ((t.is_char('[') and t == t0 and (isinstance(t.next0_, NumberToken))) and t.next0_.next0_ is not None and t.next0_.next0_.is_char(']')): 
                 num = False
-                res.numbers.append(str((t.next0_).value))
+                res.numbers.append(str(t.next0_.value))
                 res.num_typ = NumberTypes.DIGIT
                 res.num_suffix = "]"
                 res.num_begin_token = t
@@ -718,7 +717,7 @@ class InstrToken1(MetaToken):
                         elif (((t == t0 and t.is_newline_before and br.length_char == 3) and br.end_token == t.next0_.next0_ and (isinstance(t.next0_, TextToken))) and t.next0_.chars.is_latin_letter): 
                             res.num_begin_token = t
                             res.num_typ = NumberTypes.LETTER
-                            res.numbers.append((t.next0_).term)
+                            res.numbers.append(t.next0_.term)
                             res.num_end_token = t.next0_.next0_
                             res.end_token = res.num_end_token
                     res.end_token = br.end_token
@@ -750,7 +749,7 @@ class InstrToken1(MetaToken):
                                 break
                 if (not t.chars.is_all_upper): 
                     res.all_upper = False
-                if ((t).is_pure_verb): 
+                if (t.is_pure_verb): 
                     if (t.chars.is_cyrillic_letter): 
                         npt = NounPhraseHelper.try_parse((t.next0_ if t.morph.class0_.is_preposition else t), NounPhraseParseAttr.NO, 0, None)
                         if (npt is not None): 
@@ -765,14 +764,14 @@ class InstrToken1(MetaToken):
                 if (isinstance(t.get_referent(), DecreeChangeReferent)): 
                     res.has_verb = True
                     res.all_upper = False
-                if (isinstance(t.get_referent(), InstrumentParticipant)): 
+                if (isinstance(t.get_referent(), InstrumentParticipantReferent)): 
                     if (not t.chars.is_all_upper): 
                         res.all_upper = False
             if (t != res.begin_token and InstrToken1.__is_first_line(t)): 
                 break
-            wraptmp1606 = RefOutArgWrapper(None)
-            tt2 = InstrToken1._check_directive(t, wraptmp1606)
-            tmp = wraptmp1606.value
+            wraptmp1540 = RefOutArgWrapper(None)
+            tt2 = InstrToken1._check_directive(t, wraptmp1540)
+            tmp = wraptmp1540.value
             if (tt2 is not None): 
                 if (tt2.next0_ is not None and tt2.next0_.is_char_of(":.") and tt2.next0_.is_newline_after): 
                     if (ignore_directives and not t.is_newline_before): 
@@ -878,9 +877,9 @@ class InstrToken1(MetaToken):
         if (res.end_token.is_char('>') and res.begin_token.is_value("ПУТЕВОДИТЕЛЬ", None)): 
             res.typ = InstrToken1.Types.COMMENT
             ttt = res.end_token.next0_
-            first_pass3881 = True
+            first_pass3761 = True
             while True:
-                if first_pass3881: first_pass3881 = False
+                if first_pass3761: first_pass3761 = False
                 else: ttt = ttt.next0_
                 if (not (ttt is not None)): break
                 li2 = InstrToken1.parse(ttt, True, None, 0, None, False, 0, False, False)
@@ -899,10 +898,10 @@ class InstrToken1(MetaToken):
                         res.value = (None)
                         res.numbers.clear()
                 for nn in res.numbers: 
-                    wrapvv1607 = RefOutArgWrapper(0)
-                    inoutres1608 = Utils.tryParseInt(nn, wrapvv1607)
-                    vv = wrapvv1607.value
-                    if (inoutres1608): 
+                    wrapvv1541 = RefOutArgWrapper(0)
+                    inoutres1542 = Utils.tryParseInt(nn, wrapvv1541)
+                    vv = wrapvv1541.value
+                    if (inoutres1542): 
                         if (vv > 1000 and res.num_begin_token == res.begin_token): 
                             res.num_typ = NumberTypes.UNDEFINED
                             res.value = (None)
@@ -938,9 +937,9 @@ class InstrToken1(MetaToken):
         if (len(res.numbers) == 2 and res.numbers[0] == "2" and res.numbers[1] == "3"): 
             pass
         tt = (res.begin_token if res.num_end_token is None else res.num_end_token.next0_)
-        first_pass3882 = True
+        first_pass3762 = True
         while True:
-            if first_pass3882: first_pass3882 = False
+            if first_pass3762: first_pass3762 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.end_char > res.end_token.end_char): 
@@ -959,12 +958,12 @@ class InstrToken1(MetaToken):
         res.title_typ = InstrToken1.StdTitleType.UNDEFINED
         words = 0
         tt = (res.begin_token if res.num_begin_token is None else res.num_begin_token.next0_)
-        first_pass3883 = True
+        first_pass3763 = True
         while True:
-            if first_pass3883: first_pass3883 = False
+            if first_pass3763: first_pass3763 = False
             else: tt = tt.next0_
             if (not (tt is not None and tt.end_char <= res.end_char)): break
-            if (not ((isinstance(tt, TextToken))) or tt.is_char('_')): 
+            if (not (isinstance(tt, TextToken)) or tt.is_char('_')): 
                 res.title_typ = InstrToken1.StdTitleType.UNDEFINED
                 break
             if (not tt.chars.is_letter or tt.morph.class0_.is_conjunction or tt.morph.class0_.is_preposition): 
@@ -1002,7 +1001,7 @@ class InstrToken1(MetaToken):
                     res.title_typ = InstrToken1.StdTitleType.SUBJECT
                     continue
                 if (isinstance(npt.end_token, TextToken)): 
-                    term = (npt.end_token).term
+                    term = npt.end_token.term
                     if (term == "ПРИЛОЖЕНИЯ" or term == "ПРИЛОЖЕНИЙ"): 
                         tt = npt.end_token
                         res.title_typ = InstrToken1.StdTitleType.OTHERS
@@ -1018,7 +1017,7 @@ class InstrToken1(MetaToken):
             break
         if (res.title_typ != InstrToken1.StdTitleType.UNDEFINED and len(res.numbers) == 0): 
             t = res.begin_token
-            if (not ((isinstance(t, TextToken))) or not t.chars.is_letter or t.chars.is_all_lower): 
+            if (not (isinstance(t, TextToken)) or not t.chars.is_letter or t.chars.is_all_lower): 
                 res.title_typ = InstrToken1.StdTitleType.UNDEFINED
         if ((len(res.numbers) == 0 and not res.is_newline_before and res.begin_token.previous is not None) and res.begin_token.previous.is_table_control_char): 
             res.title_typ = InstrToken1.StdTitleType.UNDEFINED
@@ -1153,26 +1152,26 @@ class InstrToken1(MetaToken):
         return False
     
     @staticmethod
-    def _new1598(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Types') -> 'InstrToken1':
+    def _new1532(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Types') -> 'InstrToken1':
         res = InstrToken1(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new1600(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'InstrToken1':
+    def _new1534(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'InstrToken1':
         res = InstrToken1(_arg1, _arg2)
         res.all_upper = _arg3
         return res
     
     @staticmethod
-    def _new1604(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Types', _arg4 : str) -> 'InstrToken1':
+    def _new1538(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Types', _arg4 : str) -> 'InstrToken1':
         res = InstrToken1(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new1617(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool, _arg4 : 'Types') -> 'InstrToken1':
+    def _new1551(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool, _arg4 : 'Types') -> 'InstrToken1':
         res = InstrToken1(_arg1, _arg2)
         res.index_no_keyword = _arg3
         res.typ = _arg4

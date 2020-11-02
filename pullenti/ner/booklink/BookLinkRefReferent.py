@@ -1,30 +1,38 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.ner.Referent import Referent
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.ner.booklink.BookLinkRefType import BookLinkRefType
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.Referent import Referent
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.booklink.internal.MetaBookLinkRef import MetaBookLinkRef
 
 class BookLinkRefReferent(Referent):
-    """ Ссылка на внешний литературный источник (статью, книгу и пр.) """
+    """ Ссылка на ССЫЛКУ (BookLinkReferent или DecreeReferent)
+    
+    """
     
     OBJ_TYPENAME = "BOOKLINKREF"
+    """ Имя типа сущности TypeName ("BOOKLINKREF") """
     
     ATTR_BOOK = "BOOK"
+    """ Имя атрибута - источник (BookLinkReferent или DecreeReferent) """
     
     ATTR_TYPE = "TYPE"
+    """ Имя атрибута - тип (BookLinkRefType) """
     
     ATTR_PAGES = "PAGES"
+    """ Имя атрибута - ссылка на страницу или диапазон страниц """
     
     ATTR_NUMBER = "NUMBER"
+    """ Имя атрибута - порядковый номер в списке """
     
     ATTR_MISC = "MISC"
+    """ Имя атрибута - разное """
     
     def __init__(self) -> None:
         super().__init__(BookLinkRefReferent.OBJ_TYPENAME)
@@ -55,7 +63,7 @@ class BookLinkRefReferent(Referent):
             return BookLinkRefType.UNDEFINED
         try: 
             return Utils.valToEnum(val, BookLinkRefType)
-        except Exception as ex398: 
+        except Exception as ex380: 
             pass
         return BookLinkRefType.UNDEFINED
     @typ.setter
@@ -93,7 +101,7 @@ class BookLinkRefReferent(Referent):
         self.add_slot(BookLinkRefReferent.ATTR_PAGES, value, True, 0)
         return value
     
-    def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ_ : 'ReferentsEqualType'=ReferentsEqualType.WITHINONETEXT) -> bool:
         r = Utils.asObjectOrNull(obj, BookLinkRefReferent)
         if (r is None): 
             return False
@@ -112,26 +120,26 @@ class BookLinkRefReferent(Referent):
         """ Возвращает разницу номеров r2 - r1, иначе null, если номеров нет
         
         Args:
-            r1(Referent): 
-            r2(Referent): 
+            r1(Referent): первая ссылка
+            r2(Referent): вторая ссылка
         
         """
         num1 = r1.get_string_value(BookLinkRefReferent.ATTR_NUMBER)
         num2 = r2.get_string_value(BookLinkRefReferent.ATTR_NUMBER)
         if (num1 is None or num2 is None): 
             return None
-        wrapn1399 = RefOutArgWrapper(0)
-        inoutres400 = Utils.tryParseInt(num1, wrapn1399)
-        wrapn2401 = RefOutArgWrapper(0)
-        inoutres402 = Utils.tryParseInt(num2, wrapn2401)
-        n1 = wrapn1399.value
-        n2 = wrapn2401.value
-        if (not inoutres400 or not inoutres402): 
+        wrapn1381 = RefOutArgWrapper(0)
+        inoutres382 = Utils.tryParseInt(num1, wrapn1381)
+        wrapn2383 = RefOutArgWrapper(0)
+        inoutres384 = Utils.tryParseInt(num2, wrapn2383)
+        n1 = wrapn1381.value
+        n2 = wrapn2383.value
+        if (not inoutres382 or not inoutres384): 
             return None
         return n2 - n1
     
     @staticmethod
-    def _new390(_arg1 : 'Referent') -> 'BookLinkRefReferent':
+    def _new372(_arg1 : 'Referent') -> 'BookLinkRefReferent':
         res = BookLinkRefReferent()
         res.book = _arg1
         return res

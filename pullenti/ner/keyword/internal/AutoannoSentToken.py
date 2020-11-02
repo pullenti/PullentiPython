@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import math
 import io
@@ -35,8 +34,8 @@ class AutoannoSentToken(MetaToken):
                 break
             r = t.get_referent()
             if (isinstance(r, KeywordReferent)): 
-                res.rank += (r).rank
-                if ((r).typ == KeywordType.PREDICATE): 
+                res.rank += r.rank
+                if (r.typ == KeywordType.PREDICATE): 
                     has_verb = True
             elif (isinstance(t, TextToken)): 
                 mc = t.get_morph_class_in_dictionary()
@@ -55,9 +54,9 @@ class AutoannoSentToken(MetaToken):
     def create_annotation(kit_ : 'AnalysisKit', max_sents : int) -> 'KeywordReferent':
         sents = list()
         t = kit_.first_token
-        first_pass3903 = True
+        first_pass3783 = True
         while True:
-            if first_pass3903: first_pass3903 = False
+            if first_pass3783: first_pass3783 = False
             else: t = t.next0_
             if (not (t is not None)): break
             sent = AutoannoSentToken.__try_parse(t)
@@ -70,7 +69,7 @@ class AutoannoSentToken(MetaToken):
             return None
         i = 0
         while i < len(sents): 
-            sents[i].rank *= ((((len(sents) - i))) / (len(sents)))
+            sents[i].rank *= (((len(sents) - i)) / (len(sents)))
             i += 1
         if ((max_sents * 3) > len(sents)): 
             max_sents = (math.floor(len(sents) / 3))
@@ -93,6 +92,6 @@ class AutoannoSentToken(MetaToken):
             if (tmp.tell() > 0): 
                 print(' ', end="", file=tmp)
             print(s.value, end="", file=tmp)
-            ano.occurrence.append(TextAnnotation._new1656(s.begin_char, s.end_char, ano, kit_.sofa))
+            ano.occurrence.append(TextAnnotation._new1590(s.begin_char, s.end_char, ano, kit_.sofa))
         ano.add_slot(KeywordReferent.ATTR_VALUE, Utils.toStringStringIO(tmp), True, 0)
         return ano

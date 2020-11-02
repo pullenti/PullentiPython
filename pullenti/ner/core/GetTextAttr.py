@@ -1,12 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from enum import IntEnum
 
 class GetTextAttr(IntEnum):
-    """ Атрибуты получения текста """
+    """ Атрибуты получения текста методами GetTextValue и GetTextValueOfMetaToken класса MiscHelper. Битовая маска.
+    Атрибуты получения текста
+    """
     NO = 0
+    """ Не задано """
     KEEPREGISTER = 1
     """ Сохранять ли регистр букв (по умолчанию, верхний регистр) """
     FIRSTNOUNGROUPTONOMINATIVE = 2
@@ -21,8 +23,8 @@ class GetTextAttr(IntEnum):
     """ Преобразовать ли числовые значения в цифры """
     RESTOREREGISTER = 0x40
     """ Если все слова в верхнем регистре, то попытаться восстановить слова в нижнем регистре
-     на основе их встречаемости в других частях всего документа
-     (то есть если слово есть в нижнем, то оно переводится в нижний) """
+    на основе их встречаемости в других частях всего документа
+    (то есть если слово есть в нижнем, то оно переводится в нижний) """
     IGNOREARTICLES = 0x80
     """ Для английского языка игнорировать артикли и суффикс 'S """
     

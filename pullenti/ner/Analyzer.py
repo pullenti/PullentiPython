@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import math
@@ -10,7 +9,9 @@ from pullenti.unisharp.Misc import CancelEventArgs
 from pullenti.ner.core.AnalyzerData import AnalyzerData
 
 class Analyzer:
-    """ Базовый класс для всех семантических анализаторов """
+    """ Базовый класс для всех лингвистических анализаторов. Игнорируйте, если не собираетесь делать свой анализатор.
+    Анализатор процессора
+    """
     
     def __init__(self) -> None:
         self._progress = list()
@@ -62,15 +63,17 @@ class Analyzer:
     @property
     def is_specific(self) -> bool:
         """ Признак специфического анализатора (предназначенного для конкретной предметной области).
-         Специфические анализаторы по умолчанию не добавляются в процессор (Processor) """
+        Специфические анализаторы по умолчанию не добавляются в процессор (Processor) """
         return False
     
     def create_referent(self, type0_ : str) -> 'Referent':
-        """ Создать объект указанного типа
+        """ Создать сущность указанного типа
         
         Args:
-            type0_(str): 
+            type0_(str): тип сущности
         
+        Returns:
+            Referent: экземпляр
         """
         return None
     
@@ -113,7 +116,7 @@ class Analyzer:
     @property
     def _persist_referents_regim(self) -> bool:
         """ Включить режим накопления выделяемых сущностей при обработке разных SourceOfText
-         (то есть локальные сущности будут накапливаться) """
+        (то есть локальные сущности будут накапливаться) """
         return self.__persistreferentsregim
     @_persist_referents_regim.setter
     def _persist_referents_regim(self, value) -> bool:
@@ -135,9 +138,9 @@ class Analyzer:
         """
         return AnalyzerData()
     
-    def _process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
+    def process_referent(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
         """ Попытаться выделить сущность в указанном диапазоне (используется внутренним образом).
-         Кстати, выделенная сущность не сохраняется в локальной онтологии.
+        Кстати, выделенная сущность не сохраняется в локальной онтологии.
         
         Args:
             begin(Token): начало диапазона

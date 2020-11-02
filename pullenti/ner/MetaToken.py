@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -13,7 +12,10 @@ from pullenti.ner.Token import Token
 from pullenti.ner.core.GetTextAttr import GetTextAttr
 
 class MetaToken(Token):
-    """ Токен - надстройка над диапазоном других токенов """
+    """ Метатокен - надстройка над диапазоном других токенов. Базовый класс для подавляющего числа всех токенов:
+    NumberToken, ReferentToken, NounPhraseToken и пр.
+    Метатокен
+    """
     
     def __init__(self, begin : 'Token', end : 'Token', kit_ : 'AnalysisKit'=None) -> None:
         super().__init__((kit_ if kit_ is not None else ((begin.kit if begin is not None else None))), (0 if begin is None else begin.begin_char), (0 if end is None else end.end_char))
@@ -33,7 +35,7 @@ class MetaToken(Token):
                     if (self.chars.is_capital_upper and t.chars.is_all_lower): 
                         pass
                     else: 
-                        self.chars = CharsInfo._new2618(((self.chars.value) & (t.chars.value)))
+                        self.chars = CharsInfo._new2557(((self.chars.value) & (t.chars.value)))
                 if (t == end): 
                     break
                 t = t.next0_
@@ -52,7 +54,7 @@ class MetaToken(Token):
                 if (t.end_char > self._m_end_token.end_char): 
                     break
                 if (t.chars.is_letter): 
-                    self.chars = CharsInfo._new2618(((self.chars.value) & (t.chars.value)))
+                    self.chars = CharsInfo._new2557(((self.chars.value) & (t.chars.value)))
                 if (t == self._m_end_token): 
                     break
                 t = t.next0_
@@ -149,9 +151,9 @@ class MetaToken(Token):
     def get_referents(self) -> typing.List['Referent']:
         res = None
         t = self.begin_token
-        first_pass4047 = True
+        first_pass3925 = True
         while True:
-            if first_pass4047: first_pass4047 = False
+            if first_pass3925: first_pass3925 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= self.end_char)): break
             li = t.get_referents()
@@ -195,19 +197,19 @@ class MetaToken(Token):
             return MiscHelper.get_text_value(self.begin_token, self.end_token, attr)
     
     @staticmethod
-    def _new580(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'MetaToken':
+    def _new509(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.morph = _arg3
         return res
     
     @staticmethod
-    def _new902(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object) -> 'MetaToken':
+    def _new836(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object) -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.tag = _arg3
         return res
     
     @staticmethod
-    def _new2422(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
+    def _new2366(_arg1 : 'Token', _arg2 : 'Token', _arg3 : object, _arg4 : 'MorphCollection') -> 'MetaToken':
         res = MetaToken(_arg1, _arg2)
         res.tag = _arg3
         res.morph = _arg4

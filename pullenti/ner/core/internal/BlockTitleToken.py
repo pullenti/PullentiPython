@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import math
@@ -30,9 +29,9 @@ class BlockTitleToken(MetaToken):
         intro = None
         lits = None
         tt = t
-        first_pass3648 = True
+        first_pass3528 = True
         while True:
-            if first_pass3648: first_pass3648 = False
+            if first_pass3528: first_pass3528 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 
@@ -75,9 +74,9 @@ class BlockTitleToken(MetaToken):
             cou = 0
             err = 0
             tt = content.end_token.next0_
-            first_pass3649 = True
+            first_pass3529 = True
             while True:
-                if first_pass3649: first_pass3649 = False
+                if first_pass3529: first_pass3529 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not tt.is_newline_before): 
@@ -101,7 +100,7 @@ class BlockTitleToken(MetaToken):
                 content.end_token = btt.end_token
                 tt = content.end_token
                 if (btt.value is not None): 
-                    chapter_names.add_str(btt.value, None, None, False)
+                    chapter_names.add_string(btt.value, None, None, False)
             content.typ = BlkTyps.INDEX
             t0 = content.end_token.next0_
         elif (intro is not None): 
@@ -112,9 +111,9 @@ class BlockTitleToken(MetaToken):
             return None
         first = True
         tt = t0
-        first_pass3650 = True
+        first_pass3530 = True
         while True:
-            if first_pass3650: first_pass3650 = False
+            if first_pass3530: first_pass3530 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (not tt.is_newline_before): 
@@ -168,9 +167,9 @@ class BlockTitleToken(MetaToken):
         if (li.typ == BlkTyps.INDEX): 
             pass
         if (li.is_exist_name): 
-            return BlockTitleToken._new460(t, li.end_token, li.typ)
+            return BlockTitleToken._new392(t, li.end_token, li.typ)
         if (li.end_token == li.number_end or ((li.end_token.is_char_of(".:") and li.end_token.previous == li.number_end))): 
-            res2 = BlockTitleToken._new460(t, li.end_token, li.typ)
+            res2 = BlockTitleToken._new392(t, li.end_token, li.typ)
             if (li.typ == BlkTyps.CHAPTER or li.typ == BlkTyps.APPENDIX): 
                 li2 = BlockLine.create(li.end_token.next0_, names)
                 if ((li2 is not None and li2.typ == BlkTyps.UNDEFINED and li2.is_all_upper) and li2.words > 0): 
@@ -188,7 +187,7 @@ class BlockTitleToken(MetaToken):
             return res2
         if (li.number_end is None): 
             return None
-        res = BlockTitleToken._new460(t, li.end_token, li.typ)
+        res = BlockTitleToken._new392(t, li.end_token, li.typ)
         if (res.typ == BlkTyps.UNDEFINED): 
             if (li.words < 1): 
                 return None
@@ -238,7 +237,7 @@ class BlockTitleToken(MetaToken):
         return res
     
     @staticmethod
-    def _new460(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BlkTyps') -> 'BlockTitleToken':
+    def _new392(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'BlkTyps') -> 'BlockTitleToken':
         res = BlockTitleToken(_arg1, _arg2)
         res.typ = _arg3
         return res

@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -11,7 +10,9 @@ from pullenti.semantic.SemGraph import SemGraph
 from pullenti.semantic.SemDocument import SemDocument
 
 class SemBlock(ISemContainer):
-    """ Блок документа (абзац) """
+    """ Блок документа (абзац)
+    
+    """
     
     def __init__(self, blk : 'SemDocument') -> None:
         self.__m_graph = SemGraph()
@@ -22,6 +23,7 @@ class SemBlock(ISemContainer):
     
     @property
     def graph(self) -> 'SemGraph':
+        """ Семантический граф объектов этого блока """
         return self.__m_graph
     
     @property
@@ -51,7 +53,7 @@ class SemBlock(ISemContainer):
         for li in self.links: 
             if (li.typ == typ and li.source == src and li.target == tgt): 
                 return li
-        res = SemFraglink._new3053(typ, src, tgt, ques)
+        res = SemFraglink._new2968(typ, src, tgt, ques)
         self.links.append(res)
         return res
     

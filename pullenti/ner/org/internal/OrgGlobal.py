@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import xml.etree
@@ -8,7 +7,7 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.ner.org.OrganizationReferent import OrganizationReferent
-from pullenti.ner.org.internal.EpNerOrgInternalResourceHelper import EpNerOrgInternalResourceHelper
+from pullenti.ner.org.internal.PullentiNerOrgInternalResourceHelper import PullentiNerOrgInternalResourceHelper
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
 from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
 from pullenti.ner.geo.GeoReferent import GeoReferent
@@ -36,7 +35,7 @@ class OrgGlobal:
             for k in range(3):
                 lang = (MorphLang.RU if k == 0 else (MorphLang.EN if k == 1 else MorphLang.UA))
                 name = ("Orgs_ru.dat" if k == 0 else ("Orgs_en.dat" if k == 1 else "Orgs_ua.dat"))
-                dat = EpNerOrgInternalResourceHelper.get_bytes(name)
+                dat = PullentiNerOrgInternalResourceHelper.get_bytes(name)
                 if (dat is None): 
                     raise Utils.newException("Can't file resource file {0} in Organization analyzer".format(name), None)
                 with io.BytesIO(OrgItemTypeToken._deflate(dat)) as tmp: 
@@ -58,10 +57,10 @@ class OrgGlobal:
                             elif (xx.tag == "abbr"): 
                                 abbr = Utils.getXmlInnerText(xx)
                             elif (xx.tag == "geo"): 
-                                wrapgeo1826 = RefOutArgWrapper(None)
-                                inoutres1827 = Utils.tryGetValue(geos, Utils.getXmlInnerText(xx), wrapgeo1826)
-                                geo_ = wrapgeo1826.value
-                                if (not inoutres1827): 
+                                wrapgeo1763 = RefOutArgWrapper(None)
+                                inoutres1764 = Utils.tryGetValue(geos, Utils.getXmlInnerText(xx), wrapgeo1763)
+                                geo_ = wrapgeo1763.value
+                                if (not inoutres1764): 
                                     ar = geo_proc.process(SourceOfAnalysis(Utils.getXmlInnerText(xx)), None, lang)
                                     if (ar is not None and len(ar.entities) == 1 and (isinstance(ar.entities[0], GeoReferent))): 
                                         geo_ = (Utils.asObjectOrNull(ar.entities[0], GeoReferent))

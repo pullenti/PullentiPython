@@ -1,25 +1,24 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
+import datetime
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import Stopwatch
 
-from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.keyword.KeywordReferent import KeywordReferent
 from pullenti.ner.core.GetTextAttr import GetTextAttr
-from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.ProcessorService import ProcessorService
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
+from pullenti.ner.keyword.KeywordReferent import KeywordReferent
 from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.keyword.KeywordAnalyzer import KeywordAnalyzer
-from pullenti.ner.Sdk import Sdk
+from pullenti.Sdk import Sdk
 
 class Program:
     
@@ -27,22 +26,25 @@ class Program:
     def main(args : typing.List[str]) -> None:
         sw = Stopwatch()
         # инициализация - необходимо проводить один раз до обработки текстов
-        print("Initializing ... ", end="", flush=True)
+        print("Initializing SDK Pullenti ver {0} ({1}) ... ".format(Sdk.get_version(), Utils.getDateShortString(Sdk.get_version_date())), end="", flush=True)
         # инициализируются движок и все имеющиеся анализаторы
-        Sdk.initialize((MorphLang.RU) | MorphLang.EN)
+        Sdk.initialize_all()
         sw.stop()
         print("OK (by {0} ms), version {1}".format(sw.elapsedMilliseconds, ProcessorService.get_version()), flush=True)
+        # посмотрим, какие анализаторы доступны
+        for a in ProcessorService.get_analyzers(): 
+            print("   {0} {1} \"{2}\"".format(("Specific analyzer" if a.is_specific else "Common analyzer"), a.name, a.caption), flush=True)
         # анализируемый текст
-        txt = "Единственным конкурентом «Трансмаша» на этом сомнительном тендере было ООО «Плассер Алека Рейл Сервис», основным владельцем которого является австрийская компания «СТЦ-Холдинг ГМБХ». До конца 2011 г. эта же фирма была совладельцем «Трансмаша» вместе с «Тако» Краснова. Зато совладельцем «Плассера», также до конца 2011 г., был тот самый Карл Контрус, который имеет четверть акций «Трансмаша». "
+        txt = "SDK Pullenti разрабатывается с 2011 года российским программистом Константином Кузнецовым, проживающим в Москве на Красной площади в доме номер один на втором этаже. Конкурентов у него много: Abbyy, Yandex, ООО \"Russian Context Optimizer\" (RCO) и другие компании. Он планирует продать SDK за 1.120.000.001,99 (миллиард сто двадцать миллионов один рубль 99 копеек) рублей, без НДС."
         print("Text: {0}".format(txt), flush=True)
         # запускаем обработку на пустом процессоре (без анализаторов NER)
         are = ProcessorService.get_empty_processor().process(SourceOfAnalysis(txt), None, None)
         print("Noun groups: ", end="", flush=True)
         t = are.first_token
         # перебираем токены
-        first_pass3571 = True
+        first_pass3467 = True
         while True:
-            if first_pass3571: first_pass3571 = False
+            if first_pass3467: first_pass3467 = False
             else: t = t.next0_
             if (not (t is not None)): break
             # выделяем именную группу с текущего токена
@@ -66,9 +68,9 @@ class Program:
             # пример выделения именных групп
             print("\r\n==========================================\r\nNoun groups: ", flush=True)
             t = ar.first_token
-            first_pass3572 = True
+            first_pass3468 = True
             while True:
-                if first_pass3572: first_pass3572 = False
+                if first_pass3468: first_pass3468 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 # токены с сущностями игнорируем
@@ -90,9 +92,9 @@ class Program:
                     print(e0_, flush=True)
             print("\r\n==========================================\r\nKeywords2: ", flush=True)
             t = ar.first_token
-            first_pass3573 = True
+            first_pass3469 = True
             while True:
-                if first_pass3573: first_pass3573 = False
+                if first_pass3469: first_pass3469 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (isinstance(t, ReferentToken)): 

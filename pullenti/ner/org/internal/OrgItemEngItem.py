@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -11,11 +10,11 @@ from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.ner.Referent import Referent
 from pullenti.ner.org.OrgProfile import OrgProfile
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.TextToken import TextToken
-from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.BracketHelper import BracketHelper
@@ -35,7 +34,7 @@ class OrgItemEngItem(MetaToken):
     
     @staticmethod
     def try_attach(t : 'Token', can_be_cyr : bool=False) -> 'OrgItemEngItem':
-        if (t is None or not ((isinstance(t, TextToken)))): 
+        if (t is None or not (isinstance(t, TextToken))): 
             return None
         tok = (OrgItemEngItem.__m_ontology.try_parse(t, TerminParseAttr.NO) if can_be_cyr else None)
         if (not t.chars.is_latin_letter and tok is None): 
@@ -66,7 +65,7 @@ class OrgItemEngItem(MetaToken):
             if (tt0 is not None and tt0.is_char('.')): 
                 tt0 = tt0.previous
             if (isinstance(tt0, TextToken)): 
-                if ((tt0).term == "U"): 
+                if (tt0.term == "U"): 
                     return False
         elif (tok.begin_token.is_value("CO", None) and tok.begin_token == tok.end_token): 
             if (tok.end_token.next0_ is not None and tok.end_token.next0_.is_hiphen): 
@@ -86,7 +85,7 @@ class OrgItemEngItem(MetaToken):
             t = t.next0_
             br = True
         if (isinstance(t, NumberToken)): 
-            if ((t).typ == NumberSpellingType.WORDS and t.morph.class0_.is_adjective and t.chars.is_capital_upper): 
+            if (t.typ == NumberSpellingType.WORDS and t.morph.class0_.is_adjective and t.chars.is_capital_upper): 
                 pass
             else: 
                 return None
@@ -104,9 +103,9 @@ class OrgItemEngItem(MetaToken):
         tok = None
         geo_ = None
         add_typ = None
-        first_pass3924 = True
+        first_pass3804 = True
         while True:
-            if first_pass3924: first_pass3924 = False
+            if first_pass3804: first_pass3804 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and t.whitespaces_before_count > 1): 
@@ -265,85 +264,85 @@ class OrgItemEngItem(MetaToken):
         OrgItemEngItem.__m_ontology = TerminCollection()
         t = Termin("BANK")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Public Limited Company".upper(), "PLC")
+        t = Termin._new95("Public Limited Company".upper(), "PLC")
         t.add_abridge("P.L.C.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Limited Liability Company".upper(), "LLC")
+        t = Termin._new95("Limited Liability Company".upper(), "LLC")
         t.add_abridge("L.L.C.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Limited Liability Partnership".upper(), "LLP")
+        t = Termin._new95("Limited Liability Partnership".upper(), "LLP")
         t.add_abridge("L.L.P.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Limited Liability Limited Partnership".upper(), "LLLP")
+        t = Termin._new95("Limited Liability Limited Partnership".upper(), "LLLP")
         t.add_abridge("L.L.L.P.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Limited Duration Company".upper(), "LDC")
+        t = Termin._new95("Limited Duration Company".upper(), "LDC")
         t.add_abridge("L.D.C.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("International Business Company".upper(), "IBC")
+        t = Termin._new95("International Business Company".upper(), "IBC")
         t.add_abridge("I.B.S.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Joint stock company".upper(), "JSC")
+        t = Termin._new95("Joint stock company".upper(), "JSC")
         t.add_abridge("J.S.C.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Open Joint stock company".upper(), "OJSC")
+        t = Termin._new95("Open Joint stock company".upper(), "OJSC")
         t.add_abridge("O.J.S.C.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Sosiedad Anonima".upper(), "SA")
+        t = Termin._new95("Sosiedad Anonima".upper(), "SA")
         t.add_variant("Sociedad Anonima".upper(), False)
         t.add_abridge("S.A.")
         t.add_variant("SPA", False)
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Société en commandite".upper(), "SC")
+        t = Termin._new95("Société en commandite".upper(), "SC")
         t.add_abridge("S.C.")
         t.add_variant("SCS", False)
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Societas Europaea".upper(), "SE")
+        t = Termin._new95("Societas Europaea".upper(), "SE")
         t.add_abridge("S.E.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Società in accomandita".upper(), "SAS")
+        t = Termin._new95("Società in accomandita".upper(), "SAS")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Société en commandite par actions".upper(), "SCA")
+        t = Termin._new95("Société en commandite par actions".upper(), "SCA")
         t.add_abridge("S.C.A.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Société en nom collectif".upper(), "SNC")
+        t = Termin._new95("Société en nom collectif".upper(), "SNC")
         t.add_variant("Società in nome collettivo".upper(), False)
         t.add_abridge("S.N.C.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("General Partnership".upper(), "GP")
+        t = Termin._new95("General Partnership".upper(), "GP")
         t.add_variant("General Partners", False)
         t.add_abridge("G.P.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Limited Partnership".upper(), "LP")
+        t = Termin._new95("Limited Partnership".upper(), "LP")
         t.add_abridge("L.P.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Kommanditaktiengesellschaft".upper(), "KGAA")
+        t = Termin._new95("Kommanditaktiengesellschaft".upper(), "KGAA")
         t.add_variant("KOMMAG", False)
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Societe a Responsidilite Limitee".upper(), "SRL")
+        t = Termin._new95("Societe a Responsidilite Limitee".upper(), "SRL")
         t.add_abridge("S.A.R.L.")
         t.add_abridge("S.R.L.")
         t.add_variant("SARL", False)
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Società a garanzia limitata".upper(), "SAGL")
+        t = Termin._new95("Società a garanzia limitata".upper(), "SAGL")
         t.add_abridge("S.A.G.L.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Società limitata".upper(), "SL")
+        t = Termin._new95("Società limitata".upper(), "SL")
         t.add_abridge("S.L.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Vennootschap Met Beperkte Aansparkelij kheid".upper(), "BV")
+        t = Termin._new95("Vennootschap Met Beperkte Aansparkelij kheid".upper(), "BV")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Vennootschap Met Beperkte Aansparkelij".upper(), "AVV")
+        t = Termin._new95("Vennootschap Met Beperkte Aansparkelij".upper(), "AVV")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Naamlose Vennootschap".upper(), "NV")
+        t = Termin._new95("Naamlose Vennootschap".upper(), "NV")
         t.add_abridge("N.V.")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Gesellschaft mit beschrakter Haftung".upper(), "GMBH")
+        t = Termin._new95("Gesellschaft mit beschrakter Haftung".upper(), "GMBH")
         t.add_variant("ГМБХ", False)
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Aktiengesellschaft".upper(), "AG")
+        t = Termin._new95("Aktiengesellschaft".upper(), "AG")
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("International Company".upper(), "IC")
+        t = Termin._new95("International Company".upper(), "IC")
         t.add_abridge("I.C.")
         OrgItemEngItem.__m_ontology.add(t)
         t = Termin("And Company".upper())
@@ -351,11 +350,11 @@ class OrgItemEngItem(MetaToken):
         t.add_variant("& Co", False)
         t.add_variant("& Company", False)
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Kollektivgesellschaft".upper(), "KG")
+        t = Termin._new95("Kollektivgesellschaft".upper(), "KG")
         t.add_abridge("K.G.")
         t.add_variant("OHG", False)
         OrgItemEngItem.__m_ontology.add(t)
-        t = Termin._new114("Kommanditgesellschaft".upper(), "KG")
+        t = Termin._new95("Kommanditgesellschaft".upper(), "KG")
         t.add_variant("KOMMG", False)
         OrgItemEngItem.__m_ontology.add(t)
         t = Termin("LIMITED")

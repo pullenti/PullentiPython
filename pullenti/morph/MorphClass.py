@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -86,7 +85,7 @@ class MorphClass:
     
     @property
     def is_misc(self) -> bool:
-        """ Всякая ерунда (частицы, междометия) """
+        """ Разное (частицы, междометия) """
         return self.__get_value(5)
     @is_misc.setter
     def is_misc(self, value_) -> bool:
@@ -242,41 +241,77 @@ class MorphClass:
     """ Союз """
     
     def equals(self, obj : object) -> bool:
-        if (not ((isinstance(obj, MorphClass)))): 
+        if (not (isinstance(obj, MorphClass))): 
             return False
-        return self.value == (obj).value
+        return self.value == obj.value
     
     def __hash__(self) -> int:
         return self.value
     
     def __and__(self : 'MorphClass', arg2 : 'MorphClass') -> 'MorphClass':
+        """ Моделирование побитного "AND"
+        
+        Args:
+            self(MorphClass): первый аргумент
+            arg2(MorphClass): второй аргумент
+        
+        Returns:
+            MorphClass: arg1 & arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphClass._new72(((val1) & (val2)))
+        return MorphClass._new53(((val1) & (val2)))
     
     def __or__(self : 'MorphClass', arg2 : 'MorphClass') -> 'MorphClass':
+        """ Моделирование побитного "OR"
+        
+        Args:
+            self(MorphClass): первый аргумент
+            arg2(MorphClass): второй аргумент
+        
+        Returns:
+            MorphClass: arg1 | arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphClass._new72(((val1) | (val2)))
+        return MorphClass._new53(((val1) | (val2)))
     
     def __xor__(self : 'MorphClass', arg2 : 'MorphClass') -> 'MorphClass':
+        """ Моделирование побитного "XOR"
+        
+        Args:
+            self(MorphClass): первый аргумент
+            arg2(MorphClass): второй аргумент
+        
+        Returns:
+            MorphClass: arg1 ^ arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return MorphClass._new72(((val1) ^ (val2)))
+        return MorphClass._new53(((val1) ^ (val2)))
     
     def __eq__(self : 'MorphClass', arg2 : 'MorphClass') -> bool:
+        """ Моделирование сравнения ==
+        
+        Args:
+            self(MorphClass): первый аргумент
+            arg2(MorphClass): второй аргумент
+        
+        Returns:
+            bool: arg1 == arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
@@ -286,6 +321,15 @@ class MorphClass:
         return val1 == val2
     
     def __ne__(self : 'MorphClass', arg2 : 'MorphClass') -> bool:
+        """ Моделирование неравенства !=
+        
+        Args:
+            self(MorphClass): первый аргумент
+            arg2(MorphClass): второй аргумент
+        
+        Returns:
+            bool: arg1 != arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
@@ -295,67 +339,67 @@ class MorphClass:
         return val1 != val2
     
     @staticmethod
-    def _new63(_arg1 : bool) -> 'MorphClass':
+    def _new44(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_undefined = _arg1
         return res
     
     @staticmethod
-    def _new64(_arg1 : bool) -> 'MorphClass':
+    def _new45(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_noun = _arg1
         return res
     
     @staticmethod
-    def _new65(_arg1 : bool) -> 'MorphClass':
+    def _new46(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_pronoun = _arg1
         return res
     
     @staticmethod
-    def _new66(_arg1 : bool) -> 'MorphClass':
+    def _new47(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_personal_pronoun = _arg1
         return res
     
     @staticmethod
-    def _new67(_arg1 : bool) -> 'MorphClass':
+    def _new48(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_verb = _arg1
         return res
     
     @staticmethod
-    def _new68(_arg1 : bool) -> 'MorphClass':
+    def _new49(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_adjective = _arg1
         return res
     
     @staticmethod
-    def _new69(_arg1 : bool) -> 'MorphClass':
+    def _new50(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_adverb = _arg1
         return res
     
     @staticmethod
-    def _new70(_arg1 : bool) -> 'MorphClass':
+    def _new51(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_preposition = _arg1
         return res
     
     @staticmethod
-    def _new71(_arg1 : bool) -> 'MorphClass':
+    def _new52(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_conjunction = _arg1
         return res
     
     @staticmethod
-    def _new72(_arg1 : int) -> 'MorphClass':
+    def _new53(_arg1 : int) -> 'MorphClass':
         res = MorphClass()
         res.value = _arg1
         return res
     
     @staticmethod
-    def _new2629(_arg1 : bool) -> 'MorphClass':
+    def _new2568(_arg1 : bool) -> 'MorphClass':
         res = MorphClass()
         res.is_proper_surname = _arg1
         return res
@@ -364,14 +408,14 @@ class MorphClass:
     @staticmethod
     def _static_ctor():
         MorphClass.__m_names = ["существ.", "прилаг.", "глагол", "наречие", "местоим.", "разное", "предлог", "союз", "собств.", "фамилия", "имя", "отч.", "геогр.", "личн.местоим."]
-        MorphClass.UNDEFINED = MorphClass._new63(True)
-        MorphClass.NOUN = MorphClass._new64(True)
-        MorphClass.PRONOUN = MorphClass._new65(True)
-        MorphClass.PERSONAL_PRONOUN = MorphClass._new66(True)
-        MorphClass.VERB = MorphClass._new67(True)
-        MorphClass.ADJECTIVE = MorphClass._new68(True)
-        MorphClass.ADVERB = MorphClass._new69(True)
-        MorphClass.PREPOSITION = MorphClass._new70(True)
-        MorphClass.CONJUNCTION = MorphClass._new71(True)
+        MorphClass.UNDEFINED = MorphClass._new44(True)
+        MorphClass.NOUN = MorphClass._new45(True)
+        MorphClass.PRONOUN = MorphClass._new46(True)
+        MorphClass.PERSONAL_PRONOUN = MorphClass._new47(True)
+        MorphClass.VERB = MorphClass._new48(True)
+        MorphClass.ADJECTIVE = MorphClass._new49(True)
+        MorphClass.ADVERB = MorphClass._new50(True)
+        MorphClass.PREPOSITION = MorphClass._new51(True)
+        MorphClass.CONJUNCTION = MorphClass._new52(True)
 
 MorphClass._static_ctor()

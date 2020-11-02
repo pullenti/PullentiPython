@@ -1,12 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 
 from pullenti.ner.core.internal.TextsCompareType import TextsCompareType
 
 class TextAnnotation:
-    """ Аннотация слитного фрагмента текста """
+    """ Аннотация слитного фрагмента текста (фрагмент вхождения сущности в текст)
+    
+    Аннотация
+    """
     
     def __init__(self, begin : 'Token'=None, end : 'Token'=None, r : 'Referent'=None) -> None:
         self.sofa = None;
@@ -39,6 +41,8 @@ class TextAnnotation:
     def get_text(self) -> str:
         """ Извлечь фрагмент исходного текста, соответствующий аннотации
         
+        Returns:
+            str: фрагмент текста
         """
         if (self.sofa is None or self.sofa.text is None): 
             return None
@@ -73,7 +77,7 @@ class TextAnnotation:
             self.essential_for_occurence = True
     
     @staticmethod
-    def _new545(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int) -> 'TextAnnotation':
+    def _new474(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int) -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.begin_char = _arg2
@@ -81,7 +85,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new780(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int, _arg4 : 'Referent') -> 'TextAnnotation':
+    def _new714(_arg1 : 'SourceOfAnalysis', _arg2 : int, _arg3 : int, _arg4 : 'Referent') -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.begin_char = _arg2
@@ -90,7 +94,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new1656(_arg1 : int, _arg2 : int, _arg3 : 'Referent', _arg4 : 'SourceOfAnalysis') -> 'TextAnnotation':
+    def _new1590(_arg1 : int, _arg2 : int, _arg3 : 'Referent', _arg4 : 'SourceOfAnalysis') -> 'TextAnnotation':
         res = TextAnnotation()
         res.begin_char = _arg1
         res.end_char = _arg2
@@ -99,7 +103,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2923(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
+    def _new2857(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
         res = TextAnnotation()
         res.begin_char = _arg1
         res.end_char = _arg2
@@ -107,7 +111,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2925(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
+    def _new2859(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.occurence_of = _arg2

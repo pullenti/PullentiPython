@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import math
 import io
@@ -8,13 +7,16 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.morph.MorphNumber import MorphNumber
 
 class NumberToken(MetaToken):
-    """ Числовой токен (числительное) """
+    """ Метатокен - число (числительное). Причём задаваемое не только цифрами, но и словами, возможно, римская запись и др.
+    Для получения см. методы NumberHelper.
+    
+    Числовой токен
+    """
     
     def __init__(self, begin : 'Token', end : 'Token', val : str, typ_ : 'NumberSpellingType', kit_ : 'AnalysisKit'=None) -> None:
         super().__init__(begin, end, kit_)
@@ -27,7 +29,8 @@ class NumberToken(MetaToken):
     
     @property
     def value(self) -> str:
-        """ Числовое значение (если действительное, то с точкой - разделителем дробных). """
+        """ Числовое значение, представленное строкой. Если действительное, то с точкой - разделителем дробных.
+        Может быть сколь угодно большим, что не умещаться в системные числовые типы long или double. """
         return self.__m_value
     @value.setter
     def value(self, value_) -> str:
@@ -37,10 +40,10 @@ class NumberToken(MetaToken):
             self.__m_value = self.__m_value[0:0+len(self.__m_value) - 2]
         while len(self.__m_value) > 1 and self.__m_value[0] == '0' and self.__m_value[1] != '.':
             self.__m_value = self.__m_value[1:]
-        wrapn2898 = RefOutArgWrapper(0)
-        inoutres2899 = Utils.tryParseInt(self.__m_value, wrapn2898)
-        n = wrapn2898.value
-        if (inoutres2899): 
+        wrapn2832 = RefOutArgWrapper(0)
+        inoutres2833 = Utils.tryParseInt(self.__m_value, wrapn2832)
+        n = wrapn2832.value
+        if (inoutres2833): 
             self.__m_int_val = n
         else: 
             self.__m_int_val = (None)
@@ -54,9 +57,9 @@ class NumberToken(MetaToken):
     @property
     def int_value(self) -> int:
         """ Целочисленное 32-х битное значение.
-         Число может быть большое и не умещаться в Int, тогда вернёт null.
-         Если есть дробная часть, то тоже вернёт null.
-         Long не используется, так как не поддерживается в Javascript """
+        Число Value может быть большое и не умещаться в Int, тогда вернёт null.
+        Если есть дробная часть, то тоже вернёт null.
+        Long не используется, так как не поддерживается в Javascript. Если что - напрямую работайте с Value. """
         return self.__m_int_val
     @int_value.setter
     def int_value(self, value_) -> int:
@@ -73,10 +76,6 @@ class NumberToken(MetaToken):
         self.value = NumberHelper.double_to_string(value_)
         return value_
     
-    @property
-    def is_number(self) -> bool:
-        return True
-    
     def __str__(self) -> str:
         res = io.StringIO()
         print("{0} {1}".format(self.value, Utils.enumToString(self.typ)), end="", file=res, flush=True)
@@ -88,11 +87,13 @@ class NumberToken(MetaToken):
         return str(self.value)
     
     def _serialize(self, stream : io.IOBase) -> None:
+        from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         super()._serialize(stream)
         SerializerHelper.serialize_string(stream, self.__m_value)
         SerializerHelper.serialize_int(stream, self.typ)
     
     def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit', vers : int) -> None:
+        from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         super()._deserialize(stream, kit_, vers)
         if (vers == 0): 
             buf = Utils.newArrayOfBytes(8, 0)
@@ -104,7 +105,7 @@ class NumberToken(MetaToken):
         self.typ = (Utils.valToEnum(SerializerHelper.deserialize_int(stream), NumberSpellingType))
     
     @staticmethod
-    def _new575(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'MorphCollection') -> 'NumberToken':
+    def _new504(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'NumberSpellingType', _arg5 : 'MorphCollection') -> 'NumberToken':
         res = NumberToken(_arg1, _arg2, _arg3, _arg4)
         res.morph = _arg5
         return res

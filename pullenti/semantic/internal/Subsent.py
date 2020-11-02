@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -38,7 +37,7 @@ class Subsent:
     
     def check(self, typ_ : 'DelimType') -> bool:
         for d in self.delims: 
-            if ((isinstance(d, DelimToken)) and ((((d).typ) & (typ_))) != (DelimType.UNDEFINED)): 
+            if ((isinstance(d, DelimToken)) and (((d.typ) & (typ_))) != (DelimType.UNDEFINED)): 
                 return True
             elif ((isinstance(d, ConjunctionToken)) and typ_ == DelimType.AND): 
                 return True
@@ -46,7 +45,7 @@ class Subsent:
     
     def check_or(self) -> bool:
         for d in self.delims: 
-            if ((isinstance(d, ConjunctionToken)) and (d).typ == ConjunctionType.OR): 
+            if ((isinstance(d, ConjunctionToken)) and d.typ == ConjunctionType.OR): 
                 return True
         return False
     
@@ -61,7 +60,7 @@ class Subsent:
             return True
         for d in next0_.delims: 
             if (isinstance(d, DelimToken)): 
-                if (not self.check((d).typ)): 
+                if (not self.check(d.typ)): 
                     return False
         return True
     
@@ -112,9 +111,9 @@ class Subsent:
         ss = Subsent()
         has_verb = False
         i = 0
-        first_pass4084 = True
+        first_pass3961 = True
         while True:
-            if first_pass4084: first_pass4084 = False
+            if first_pass3961: first_pass3961 = False
             else: i += 1
             if (not (i < len(sent.items))): break
             it = sent.items[i]
@@ -123,7 +122,7 @@ class Subsent:
                 delim = True
             elif (it.typ == SentItemType.CONJ and map0_[it.begin_token.begin_char - begin] == (0)): 
                 delim = True
-                if ((it.source).typ == ConjunctionType.COMMA): 
+                if (it.source.typ == ConjunctionType.COMMA): 
                     if (not has_verb): 
                         delim = False
             if (not delim): 
@@ -142,9 +141,9 @@ class Subsent:
         if (len(ss.items) > 0): 
             res.append(ss)
         i = 0
-        first_pass4085 = True
+        first_pass3962 = True
         while True:
-            if first_pass4085: first_pass4085 = False
+            if first_pass3962: first_pass3962 = False
             else: i += 1
             if (not (i < len(res))): break
             r = res[i]
@@ -246,9 +245,9 @@ class Subsent:
                         res[i - 1].typ = SemFraglinkType.FOR
                         continue
         i = 1
-        first_pass4086 = True
+        first_pass3963 = True
         while True:
-            if first_pass4086: first_pass4086 = False
+            if first_pass3963: first_pass3963 = False
             else: i += 1
             if (not (i < len(res))): break
             r = res[i]

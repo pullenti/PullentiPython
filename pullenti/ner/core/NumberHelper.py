@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import math
 import io
@@ -11,35 +10,40 @@ from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphLang import MorphLang
 from pullenti.morph.MorphCase import MorphCase
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.core.NumberExType import NumberExType
 from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.core.NumberExType import NumberExType
 from pullenti.ner.core.NumberExToken import NumberExToken
-from pullenti.ner.Token import Token
-from pullenti.morph.MorphBaseInfo import MorphBaseInfo
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.MorphCollection import MorphCollection
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.MorphCollection import MorphCollection
+from pullenti.ner.Token import Token
+from pullenti.ner.NumberSpellingType import NumberSpellingType
 from pullenti.morph.MorphWordForm import MorphWordForm
-from pullenti.morph.Morphology import Morphology
-from pullenti.ner.TextToken import TextToken
+from pullenti.morph.MorphologyService import MorphologyService
 from pullenti.ner.NumberToken import NumberToken
+from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.TerminCollection import TerminCollection
 
 class NumberHelper:
-    """ Работа с числовыми значениями """
+    """ Работа с числовыми значениями
+    
+    Хелпер числовых представлений
+    """
     
     @staticmethod
     def _try_parse_number(token : 'Token') -> 'NumberToken':
         """ Попробовать создать числительное (без знака, целочисленное).
-         Внимание! Этот метод всегда вызывается процессором при формировании цепочки токенов,
-         так что все NumberToken уже созданы.
+        Внимание! Этот метод всегда вызывается процессором при формировании цепочки токенов в методе Process(),
+        так что все NumberToken уже созданы в основной цепочке, сфорированной для текста.
         
         Args:
-            token(Token): 
+            token(Token): начальный токен
         
+        Returns:
+            NumberToken: число-метатокен
         """
         return NumberHelper.__try_parse(token, None)
     
@@ -76,10 +80,10 @@ class NumberHelper:
                 num2 = NumberHelper._try_parse_number(et.next0_.next0_)
                 if ((num2 is not None and num2.value == val and num2.end_token.next0_ is not None) and num2.end_token.next0_.is_char(')')): 
                     et = (Utils.asObjectOrNull(num2.end_token.next0_, TextToken))
-            while (isinstance(et.next0_, TextToken)) and not ((isinstance(et.previous, NumberToken))) and et.is_whitespace_before:
+            while (isinstance(et.next0_, TextToken)) and not (isinstance(et.previous, NumberToken)) and et.is_whitespace_before:
                 if (et.whitespaces_after_count != 1): 
                     break
-                sss = (et.next0_).term
+                sss = et.next0_.term
                 if (sss == "000"): 
                     val = (val + "000")
                     et = (Utils.asObjectOrNull(et.next0_, TextToken))
@@ -87,17 +91,17 @@ class NumberHelper:
                 if (str.isdigit(sss[0]) and len(sss) == 3): 
                     val2 = val
                     ttt = et.next0_
-                    first_pass3675 = True
+                    first_pass3554 = True
                     while True:
-                        if first_pass3675: first_pass3675 = False
+                        if first_pass3554: first_pass3554 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         ss = ttt.get_source_text()
                         if (ttt.whitespaces_before_count == 1 and ttt.length_char == 3 and str.isdigit(ss[0])): 
-                            wrapii573 = RefOutArgWrapper(0)
-                            inoutres574 = Utils.tryParseInt(ss, wrapii573)
-                            ii = wrapii573.value
-                            if (not inoutres574): 
+                            wrapii502 = RefOutArgWrapper(0)
+                            inoutres503 = Utils.tryParseInt(ss, wrapii502)
+                            ii = wrapii502.value
+                            if (not inoutres503): 
                                 break
                             val2 += ss
                             continue
@@ -106,6 +110,10 @@ class NumberHelper:
                                 et = (Utils.asObjectOrNull(ttt.previous, TextToken))
                                 val = val2
                                 break
+                        if (((((ttt.is_value("МИЛЛИАРД", "МІЛЬЯРД") or ttt.is_value("BILLION", None) or ttt.is_value("BN", None)) or ttt.is_value("МЛРД", None) or ttt.is_value("МИЛЛИОН", "МІЛЬЙОН")) or ttt.is_value("MILLION", None) or ttt.is_value("МЛН", None)) or ttt.is_value("ТЫСЯЧА", "ТИСЯЧА") or ttt.is_value("THOUSAND", None)) or ttt.is_value("ТЫС", None) or ttt.is_value("ТИС", None)): 
+                            et = (Utils.asObjectOrNull(ttt.previous, TextToken))
+                            val = val2
+                            break
                         break
                 break
             for k in range(3):
@@ -135,7 +143,7 @@ class NumberHelper:
                             val += coef
                             if ((isinstance(et.next0_, TextToken)) and et.next0_.is_char('.')): 
                                 et = (Utils.asObjectOrNull(et.next0_, TextToken))
-                        elif ((isinstance(tt, TextToken)) and (tt).term == "M"): 
+                        elif ((isinstance(tt, TextToken)) and tt.term == "M"): 
                             if (NumberHelper._is_money_char(et.previous) is not None): 
                                 et = tt
                                 val += coef
@@ -162,7 +170,7 @@ class NumberHelper:
                             val = val[0:0+len(val) - 2]
                         else: 
                             val = val[0:0+len(val) - 3]
-                        hi = ((t0.previous.previous).value if isinstance(t0.previous.previous, NumberToken) else prev_val.value)
+                        hi = (t0.previous.previous.value if isinstance(t0.previous.previous, NumberToken) else prev_val.value)
                         cou = len(coef) - len(val)
                         while cou > 0: 
                             hi = (hi + "0")
@@ -182,17 +190,17 @@ class NumberHelper:
                     val += next0_.value
                     et = (Utils.asObjectOrNull(next0_.end_token, TextToken))
                     break
-            res = NumberToken._new575(token, et, val, typ, mc)
+            res = NumberToken._new504(token, et, val, typ, mc)
             if (et.next0_ is not None and (len(res.value) < 4) and ((et.next0_.is_hiphen or et.next0_.is_value("ДО", None)))): 
                 tt1 = et.next0_.next0_
-                first_pass3676 = True
+                first_pass3555 = True
                 while True:
-                    if first_pass3676: first_pass3676 = False
+                    if first_pass3555: first_pass3555 = False
                     else: tt1 = tt1.next0_
                     if (not (tt1 is not None)): break
-                    if (not ((isinstance(tt1, TextToken)))): 
+                    if (not (isinstance(tt1, TextToken))): 
                         break
-                    if (str.isdigit((tt1).term[0])): 
+                    if (str.isdigit(tt1.term[0])): 
                         continue
                     if (tt1.is_char_of(",.") or NumberHelper._is_money_char(tt1) is not None): 
                         continue
@@ -265,10 +273,13 @@ class NumberHelper:
     
     @staticmethod
     def try_parse_roman(t : 'Token') -> 'NumberToken':
-        """ Попробовать выделить римскую цифру
+        """ Попробовать выделить число в римской записи
         
         Args:
-            t(Token): 
+            t(Token): начальный токен
+        
+        Returns:
+            NumberToken: числовой метатокен или null
         
         """
         if (isinstance(t, NumberToken)): 
@@ -288,9 +299,9 @@ class NumberHelper:
         while t is not None: 
             if (t != res.begin_token and t.is_whitespace_before): 
                 break
-            if (not ((isinstance(t, TextToken)))): 
+            if (not (isinstance(t, TextToken))): 
                 break
-            term = (t).term
+            term = t.term
             if (not NumberHelper.__is_rom_val(term)): 
                 break
             for s in term: 
@@ -361,11 +372,13 @@ class NumberHelper:
     
     @staticmethod
     def try_parse_roman_back(token : 'Token') -> 'NumberToken':
-        """ Выделить римскую цифру с token в обратном порядке
+        """ Выделить число в римской записи в обратном порядке
         
         Args:
-            token(Token): 
+            token(Token): токен на предполагаемой римской цифрой
         
+        Returns:
+            NumberToken: число-метатокен или null
         """
         t = token
         if (t is None): 
@@ -390,8 +403,10 @@ class NumberHelper:
         """ Это выделение числительных типа 16-летие, 50-летний
         
         Args:
-            t(Token): 
+            t(Token): начальный токен
         
+        Returns:
+            NumberToken: числовой метатокен или null
         """
         if (t is None): 
             return None
@@ -401,7 +416,7 @@ class NumberHelper:
             nt_next = nt.next0_
         else: 
             if (t.is_value("AGED", None) and (isinstance(t.next0_, NumberToken))): 
-                return NumberToken(t, t.next0_, (t.next0_).value, NumberSpellingType.AGE)
+                return NumberToken(t, t.next0_, t.next0_.value, NumberSpellingType.AGE)
             nt = NumberHelper.try_parse_roman(t)
             if ((nt) is not None): 
                 nt_next = nt.end_token.next0_
@@ -411,11 +426,11 @@ class NumberHelper:
                 if (t1.is_hiphen): 
                     t1 = t1.next0_
                 if (isinstance(t1, TextToken)): 
-                    v = (t1).term
+                    v = t1.term
                     if ((v == "ЛЕТ" or v == "ЛЕТИЯ" or v == "ЛЕТИЕ") or v == "РІЧЧЯ"): 
-                        return NumberToken._new575(t, t1, nt.value, NumberSpellingType.AGE, t1.morph)
+                        return NumberToken._new504(t, t1, nt.value, NumberSpellingType.AGE, t1.morph)
                     if (t1.is_value("ЛЕТНИЙ", "РІЧНИЙ")): 
-                        return NumberToken._new575(t, t1, nt.value, NumberSpellingType.AGE, t1.morph)
+                        return NumberToken._new504(t, t1, nt.value, NumberSpellingType.AGE, t1.morph)
                     if (v == "Л" or ((v == "Р" and nt.morph.language.is_ua))): 
                         return NumberToken(t, (t1.next0_ if t1.next0_ is not None and t1.next0_.is_char('.') else t1), nt.value, NumberSpellingType.AGE)
             return None
@@ -426,17 +441,24 @@ class NumberHelper:
         if (LanguageHelper.ends_with_ex(s, "ЛЕТИЕ", "ЛЕТИЯ", "РІЧЧЯ", None)): 
             term = NumberHelper._m_nums.find(s[0:0+len(s) - 5])
             if (term is not None): 
-                return NumberToken._new575(tt, tt, str(term.tag), NumberSpellingType.AGE, tt.morph)
+                return NumberToken._new504(tt, tt, str(term.tag), NumberSpellingType.AGE, tt.morph)
         s = tt.lemma
         if (LanguageHelper.ends_with_ex(s, "ЛЕТНИЙ", "РІЧНИЙ", None, None)): 
             term = NumberHelper._m_nums.find(s[0:0+len(s) - 6])
             if (term is not None): 
-                return NumberToken._new575(tt, tt, str(term.tag), NumberSpellingType.AGE, tt.morph)
+                return NumberToken._new504(tt, tt, str(term.tag), NumberSpellingType.AGE, tt.morph)
         return None
     
     @staticmethod
     def try_parse_anniversary(t : 'Token') -> 'NumberToken':
-        """ Выделение годовщин и летий (XX-летие) ... """
+        """ Выделение годовщин и летий (XX-летие) ...
+        
+        Args:
+            t(Token): начальный токен
+        
+        Returns:
+            NumberToken: числовой метатокен или null
+        """
         nt = Utils.asObjectOrNull(t, NumberToken)
         t1 = None
         if (nt is not None): 
@@ -445,7 +467,7 @@ class NumberHelper:
             nt = NumberHelper.try_parse_roman(t)
             if ((nt) is None): 
                 if (isinstance(t, TextToken)): 
-                    v = (t).term
+                    v = t.term
                     num = 0
                     if (v.endswith("ЛЕТИЯ") or v.endswith("ЛЕТИЕ")): 
                         if (v.startswith("ВОСЕМЬСОТ") or v.startswith("ВОСЬМИСОТ")): 
@@ -459,7 +481,7 @@ class NumberHelper:
         if (t1.is_hiphen): 
             t1 = t1.next0_
         if (isinstance(t1, TextToken)): 
-            v = (t1).term
+            v = t1.term
             if ((v == "ЛЕТ" or v == "ЛЕТИЯ" or v == "ЛЕТИЕ") or t1.is_value("ГОДОВЩИНА", None)): 
                 return NumberToken(t, t1, nt.value, NumberSpellingType.AGE)
             if (t1.morph.language.is_ua): 
@@ -471,25 +493,25 @@ class NumberHelper:
     
     @staticmethod
     def __analize_number_tail(tt : 'TextToken', val : str) -> 'MetaToken':
-        if (not ((isinstance(tt, TextToken)))): 
+        if (not (isinstance(tt, TextToken))): 
             return None
         s = tt.term
         mc = None
         if (not tt.chars.is_letter): 
             if (((s == "<" or s == "(")) and (isinstance(tt.next0_, TextToken))): 
-                s = (tt.next0_).term
+                s = tt.next0_.term
                 if ((s == "TH" or s == "ST" or s == "RD") or s == "ND"): 
                     if (tt.next0_.next0_ is not None and tt.next0_.next0_.is_char_of(">)")): 
                         mc = MorphCollection()
                         mc.class0_ = MorphClass.ADJECTIVE
                         mc.language = MorphLang.EN
-                        return MetaToken._new580(tt, tt.next0_.next0_, mc)
+                        return MetaToken._new509(tt, tt.next0_.next0_, mc)
             return None
         if ((s == "TH" or s == "ST" or s == "RD") or s == "ND"): 
             mc = MorphCollection()
             mc.class0_ = MorphClass.ADJECTIVE
             mc.language = MorphLang.EN
-            return MetaToken._new580(tt, tt, mc)
+            return MetaToken._new509(tt, tt, mc)
         if (not tt.chars.is_cyrillic_letter): 
             return None
         if (not tt.is_whitespace_after): 
@@ -498,14 +520,14 @@ class NumberHelper:
             if (tt.length_char == 1 and ((tt.is_value("X", None) or tt.is_value("Х", None)))): 
                 return None
         if (not tt.chars.is_all_lower): 
-            ss = (tt).term
+            ss = tt.term
             if (ss == "Я" or ss == "Й" or ss == "Е"): 
                 pass
             elif (len(ss) == 2 and ((ss[1] == 'Я' or ss[1] == 'Й' or ss[1] == 'Е'))): 
                 pass
             else: 
                 return None
-        if ((tt).term == "М"): 
+        if (tt.term == "М"): 
             if (tt.previous is None or not tt.previous.is_hiphen): 
                 return None
         if (Utils.isNullOrEmpty(val)): 
@@ -513,7 +535,7 @@ class NumberHelper:
         dig = ((ord(val[len(val) - 1])) - (ord('0')))
         if ((dig < 0) or dig >= 10): 
             return None
-        vars0_ = Morphology.get_all_wordforms(NumberHelper.__m_samples[dig], None)
+        vars0_ = MorphologyService.get_all_wordforms(NumberHelper.__m_samples[dig], None)
         if (vars0_ is None or len(vars0_) == 0): 
             return None
         for v in vars0_: 
@@ -532,11 +554,11 @@ class NumberHelper:
                     mc.add_item(mm)
         if (tt.morph.language.is_ua and mc is None and s == "Ї"): 
             mc = MorphCollection()
-            mc.add_item(MorphBaseInfo._new582(MorphClass.ADJECTIVE))
+            mc.add_item(MorphBaseInfo._new511(MorphClass.ADJECTIVE))
         if (mc is not None): 
-            return MetaToken._new580(tt, tt, mc)
+            return MetaToken._new509(tt, tt, mc)
         if ((((len(s) < 3) and not tt.is_whitespace_before and tt.previous is not None) and tt.previous.is_hiphen and not tt.previous.is_whitespace_before) and tt.whitespaces_after_count == 1 and s != "А"): 
-            return MetaToken._new580(tt, tt, MorphCollection._new584(MorphClass.ADJECTIVE))
+            return MetaToken._new509(tt, tt, MorphCollection._new513(MorphClass.ADJECTIVE))
         return None
     
     @staticmethod
@@ -554,14 +576,14 @@ class NumberHelper:
         ns = None
         sps = None
         t1 = t
-        first_pass3677 = True
+        first_pass3556 = True
         while True:
-            if first_pass3677: first_pass3677 = False
+            if first_pass3556: first_pass3556 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
             if (t1.next0_ is None): 
                 break
-            if (((isinstance(t1.next0_, NumberToken)) and (t1.whitespaces_after_count < 3) and (t1.next0_).typ == NumberSpellingType.DIGIT) and t1.next0_.length_char == 3): 
+            if (((isinstance(t1.next0_, NumberToken)) and (t1.whitespaces_after_count < 3) and t1.next0_.typ == NumberSpellingType.DIGIT) and t1.next0_.length_char == 3): 
                 if (ns is None): 
                     ns = list()
                     ns.append(t)
@@ -571,7 +593,7 @@ class NumberHelper:
                 ns.append(Utils.asObjectOrNull(t1.next0_, NumberToken))
                 sps.append(' ')
                 continue
-            if ((t1.next0_.is_char_of(",.") and (isinstance(t1.next0_.next0_, NumberToken)) and (t1.next0_.next0_).typ == NumberSpellingType.DIGIT) and (t1.whitespaces_after_count < 2) and (t1.next0_.whitespaces_after_count < 2)): 
+            if ((t1.next0_.is_char_of(",.") and (isinstance(t1.next0_.next0_, NumberToken)) and t1.next0_.next0_.typ == NumberSpellingType.DIGIT) and (t1.whitespaces_after_count < 2) and (t1.next0_.whitespaces_after_count < 2)): 
                 if (no_ws): 
                     if (t1.is_whitespace_after or t1.next0_.is_whitespace_after): 
                         break
@@ -603,7 +625,7 @@ class NumberHelper:
                     elif (ns[1].end_token.is_char('.') and ns[1].end_token.previous is not None and ns[1].end_token.previous.chars.is_letter): 
                         merge = True
                     if (ns[1].is_whitespace_before): 
-                        if ((isinstance(ns[1].end_token, TextToken)) and (ns[1].end_token).term.endswith("000")): 
+                        if ((isinstance(ns[1].end_token, TextToken)) and ns[1].end_token.term.endswith("000")): 
                             return None
             elif (ns[0].length_char > 3 or ns[0].real_value == 0): 
                 is_last_drob = True
@@ -616,7 +638,7 @@ class NumberHelper:
                         ok = False
                         not_set_drob = False
                     elif (ns[1].end_token.next0_ is not None and ns[1].end_token.next0_.is_char('(') and (isinstance(ns[1].end_token.next0_.next0_, NumberToken))): 
-                        nt1 = (Utils.asObjectOrNull(ns[1].end_token.next0_.next0_, NumberToken))
+                        nt1 = Utils.asObjectOrNull(ns[1].end_token.next0_.next0_, NumberToken)
                         if (nt1.real_value == (((ns[0].real_value * (1000)) + ns[1].real_value))): 
                             is_last_drob = False
                             ok = False
@@ -692,19 +714,18 @@ class NumberHelper:
     
     @staticmethod
     def try_parse_real_number(t : 'Token', can_be_integer : bool=False, no_whitespace : bool=False) -> 'NumberToken':
-        """ Это разделитель дроби по-умолчанию, используется для случаев, когда невозможно принять однозначного решения.
-         Устанавливается на основе последнего успешного анализа.
-        Выделить действительное число, знак также выделяется,
-         разделители дроби могут быть точка или запятая, разделителями тысячных
-         могут быть точки, пробелы и запятые.
+        """ Выделить действительное число, знак также выделяется,
+        разделители дроби могут быть точка или запятая, разделителями тысячных
+        могут быть точки, пробелы и запятые.
         
         Args:
             t(Token): начальный токен
-            can_be_integer(bool): число должно быть целым
+            can_be_integer(bool): число может быть целым
             no_whitespace(bool): не должно быть пробелов
         
         Returns:
-            NumberToken: результат или null
+            NumberToken: числовой метатокен или null
+        
         """
         is_not = False
         t0 = t
@@ -721,18 +742,18 @@ class NumberHelper:
                 t = t.next0_
             res0 = NumberToken(t, t.next0_, "0", NumberSpellingType.WORDS)
             t = t.next0_
-            if ((isinstance(t, NumberToken)) and (t).int_value is not None): 
-                val = (t).int_value
+            if ((isinstance(t, NumberToken)) and t.int_value is not None): 
+                val = t.int_value
                 if (t.next0_ is not None and val > 0): 
                     if (t.next0_.is_value("ДЕСЯТЫЙ", None)): 
                         res0.end_token = t.next0_
-                        res0.real_value = ((val)) / (10)
+                        res0.real_value = (val) / (10)
                     elif (t.next0_.is_value("СОТЫЙ", None)): 
                         res0.end_token = t.next0_
-                        res0.real_value = ((val)) / (100)
+                        res0.real_value = (val) / (100)
                     elif (t.next0_.is_value("ТЫСЯЧНЫЙ", None)): 
                         res0.end_token = t.next0_
-                        res0.real_value = ((val)) / (1000)
+                        res0.real_value = (val) / (1000)
                 if (res0.real_value == 0): 
                     res0.end_token = t
                     res0.value = "0.{0}".format(val)
@@ -745,14 +766,14 @@ class NumberHelper:
                 return res0
         if (t is None): 
             return None
-        if (not ((isinstance(t, NumberToken)))): 
+        if (not (isinstance(t, NumberToken))): 
             if (t.is_value("СОТНЯ", None)): 
                 return NumberToken(t, t, "100", NumberSpellingType.WORDS)
             if (t.is_value("ТЫЩА", None) or t.is_value("ТЫСЯЧА", None)): 
                 return NumberToken(t, t, "1000", NumberSpellingType.WORDS)
             return None
         if (t.next0_ is not None and t.next0_.is_value("ЦЕЛЫЙ", None) and (((isinstance(t.next0_.next0_, NumberToken)) or (((isinstance(t.next0_.next0_, TextToken)) and t.next0_.next0_.is_value("НОЛЬ", None)))))): 
-            res0 = NumberExToken(t, t.next0_, (t).value, NumberSpellingType.WORDS, NumberExType.UNDEFINED)
+            res0 = NumberExToken(t, t.next0_, t.value, NumberSpellingType.WORDS, NumberExType.UNDEFINED)
             t = t.next0_.next0_
             val = 0
             if (isinstance(t, TextToken)): 
@@ -760,7 +781,7 @@ class NumberHelper:
                 t = t.next0_
             if (isinstance(t, NumberToken)): 
                 res0.end_token = t
-                val = (t).real_value
+                val = t.real_value
                 t = t.next0_
             if (t is not None): 
                 if (t.is_value("ДЕСЯТЫЙ", None)): 
@@ -775,28 +796,28 @@ class NumberHelper:
             if (res0.real_value == 0): 
                 str0_ = "0.{0}".format(val)
                 dd = 0
-                wrapdd588 = RefOutArgWrapper(0)
-                inoutres589 = Utils.tryParseFloat(str0_, wrapdd588)
-                dd = wrapdd588.value
-                if (inoutres589): 
+                wrapdd517 = RefOutArgWrapper(0)
+                inoutres518 = Utils.tryParseFloat(str0_, wrapdd517)
+                dd = wrapdd517.value
+                if (inoutres518): 
                     pass
                 else: 
-                    wrapdd586 = RefOutArgWrapper(0)
-                    inoutres587 = Utils.tryParseFloat(str0_.replace('.', ','), wrapdd586)
-                    dd = wrapdd586.value
-                    if (inoutres587): 
+                    wrapdd515 = RefOutArgWrapper(0)
+                    inoutres516 = Utils.tryParseFloat(str0_.replace('.', ','), wrapdd515)
+                    dd = wrapdd515.value
+                    if (inoutres516): 
                         pass
                     else: 
                         return None
                 res0.real_value = dd + res0.real_value
             return res0
-        wrapd591 = RefOutArgWrapper(0)
-        tt = NumberHelper.__try_parse_float(Utils.asObjectOrNull(t, NumberToken), wrapd591, no_whitespace)
-        d = wrapd591.value
+        wrapd520 = RefOutArgWrapper(0)
+        tt = NumberHelper.__try_parse_float(Utils.asObjectOrNull(t, NumberToken), wrapd520, no_whitespace)
+        d = wrapd520.value
         if (tt is None): 
             if ((t.next0_ is None or t.is_whitespace_after or t.next0_.chars.is_letter) or can_be_integer): 
                 tt = t
-                d = (t).real_value
+                d = t.real_value
             else: 
                 return None
         if (is_not): 
@@ -804,17 +825,20 @@ class NumberHelper:
         if (tt.next0_ is not None and tt.next0_.is_value("ДЕСЯТОК", None)): 
             d *= (10)
             tt = tt.next0_
-        return NumberExToken._new590(t0, tt, "", NumberSpellingType.DIGIT, NumberExType.UNDEFINED, d)
+        return NumberExToken._new519(t0, tt, "", NumberSpellingType.DIGIT, NumberExType.UNDEFINED, d)
     
     @staticmethod
     def get_number_adjective(value : int, gender : 'MorphGender', num : 'MorphNumber') -> str:
-        """ Преобразовать число в числительное, записанное буквами, в соотв. роде и числе.
-         Например, 5 жен.ед. - ПЯТАЯ,  26 мн. - ДВАДЦАТЬ ШЕСТЫЕ
+        """ Преобразовать целое число в записанное буквами числительное в нужном роде и числе именительного падежа.
+        Например, 5 жен.ед. - ПЯТАЯ,  26 мн. - ДВАДЦАТЬ ШЕСТЫЕ.
         
         Args:
-            value(int): значение
+            value(int): целочисленное значение
             gender(MorphGender): род
             num(MorphNumber): число
+        
+        Returns:
+            str: значение
         
         """
         if ((value < 1) or value >= 100): 
@@ -879,8 +903,10 @@ class NumberHelper:
         """ Получить для числа римскую запись
         
         Args:
-            val(int): 
+            val(int): целое число
         
+        Returns:
+            str: римская запись
         """
         if (val > 0 and val <= len(NumberHelper._m_romans)): 
             return NumberHelper._m_romans[val - 1]
@@ -888,11 +914,11 @@ class NumberHelper:
     
     @staticmethod
     def get_number_string(val : int, units : str=None) -> str:
-        """ Получить строковое представление целого числа
+        """ Получить строковое представление целого числа. Например, GetNumberString(38, "попугай") => "тридцать восемь попугаев".
         
         Args:
             val(int): значение
-            units(str): единицы измерения (они тоже будут преобразовываться в нужное число)
+            units(str): единицы измерения (если не null, то они тоже будут преобразовываться в нужное число)
         
         Returns:
             str: строковое представление (пока на русском языке)
@@ -947,53 +973,39 @@ class NumberHelper:
             return res.lower()
         if (units is not None): 
             if (val == 1): 
-                bi = Morphology.get_word_base_info(units.upper(), None, False, False)
-                if ((((bi.gender) & (MorphGender.FEMINIE))) == (MorphGender.FEMINIE)): 
+                bi = MorphologyService.get_word_base_info(units.upper(), None, False, False)
+                if (((bi.gender) & (MorphGender.FEMINIE)) == (MorphGender.FEMINIE)): 
                     return "одна " + units
-                if ((((bi.gender) & (MorphGender.NEUTER))) == (MorphGender.NEUTER)): 
+                if (((bi.gender) & (MorphGender.NEUTER)) == (MorphGender.NEUTER)): 
                     return "одно " + units
                 return "один " + units
             if (val == 2): 
-                bi = Morphology.get_word_base_info(units.upper(), None, False, False)
-                if ((((bi.gender) & (MorphGender.FEMINIE))) == (MorphGender.FEMINIE)): 
+                bi = MorphologyService.get_word_base_info(units.upper(), None, False, False)
+                if (((bi.gender) & (MorphGender.FEMINIE)) == (MorphGender.FEMINIE)): 
                     return "две " + MiscHelper.get_text_morph_var_by_case_and_number_ex(units, None, MorphNumber.PLURAL, None)
             return "{0} {1}".format(NumberHelper.__m_1words[val].lower(), MiscHelper.get_text_morph_var_by_case_and_number_ex(units, MorphCase.GENITIVE, MorphNumber.UNDEFINED, str(val)))
         return NumberHelper.__m_1words[val].lower()
     
     @staticmethod
     def try_parse_number_with_postfix(t : 'Token') -> 'NumberExToken':
-        """ Выделение стандартных мер, типа: 10 кв.м.
-        
-        Args:
-            t(Token): начальный токен
-        
-        """
+        # Выделение стандартных мер, типа: 10 кв.м.
+        # УСТАРЕЛО. Вместо этого лучше использовать возможности MeasureReferent.
         from pullenti.ner.core.internal.NumberExHelper import NumberExHelper
         return NumberExHelper.try_parse_number_with_postfix(t)
     
     @staticmethod
     def try_parse_postfix_only(t : 'Token') -> 'NumberExToken':
-        """ Это попробовать только тип (постфикс) без самого числа.
-         Например, куб.м.
-        
-        Args:
-            t(Token): 
-        
-        """
+        # Это попробовать только тип (постфикс) без самого числа.
+        # Например, куб.м.
         from pullenti.ner.core.internal.NumberExHelper import NumberExHelper
         return NumberExHelper.try_attach_postfix_only(t)
     
     @staticmethod
     def _is_money_char(t : 'Token') -> str:
-        """ Если этообозначение денежной единицы (н-р, $), то возвращает код валюты
-        
-        Args:
-            t(Token): 
-        
-        """
-        if (not ((isinstance(t, TextToken))) or t.length_char != 1): 
+        # Если это обозначение денежной единицы (н-р, $), то возвращает код валюты
+        if (not (isinstance(t, TextToken)) or t.length_char != 1): 
             return None
-        ch = (t).term[0]
+        ch = t.term[0]
         if (ch == '$'): 
             return "USD"
         if (ch == '£' or ch == (chr(0xA3)) or ch == (chr(0x20A4))): 
@@ -1041,39 +1053,41 @@ class NumberHelper:
     @staticmethod
     def string_to_double(str0_ : str) -> float:
         """ Для парсинга действительного числа из строки используйте эту функцию,
-         которая работает назависимо от локализьных настроек и на всех языках программирования
+        которая работает назависимо от локализьных настроек и на всех языках программирования.
         
         Args:
-            str0_(str): строка
+            str0_(str): строка с действительным числом
         
         Returns:
-            float: число
+            float: double-число или null
+        
         """
         if (str0_ == "NaN"): 
             return math.nan
-        wrapres594 = RefOutArgWrapper(0)
-        inoutres595 = Utils.tryParseFloat(str0_, wrapres594)
-        res = wrapres594.value
-        if (inoutres595): 
+        wrapres523 = RefOutArgWrapper(0)
+        inoutres524 = Utils.tryParseFloat(str0_, wrapres523)
+        res = wrapres523.value
+        if (inoutres524): 
             return res
-        wrapres592 = RefOutArgWrapper(0)
-        inoutres593 = Utils.tryParseFloat(str0_.replace('.', ','), wrapres592)
-        res = wrapres592.value
-        if (inoutres593): 
+        wrapres521 = RefOutArgWrapper(0)
+        inoutres522 = Utils.tryParseFloat(str0_.replace('.', ','), wrapres521)
+        res = wrapres521.value
+        if (inoutres522): 
             return res
         return None
     
     @staticmethod
     def double_to_string(d : float) -> str:
-        """ Независимо от языка и настроек выводит действиельное число в строку,
-         разделитель - точка. Ситуация типа 1.0000000001 или 23.7299999999999,
-         случающиеся на разных языках, округляются куда надо.
+        """ Независимо от языка и локальных настроек выводит действительное число в строку,
+        разделитель - всегда точка. Ситуация типа 1.0000000001 или 23.7299999999999,
+        случающиеся на разных языках, округляются куда надо.
         
         Args:
             d(float): число
         
         Returns:
-            str: результат
+            str: строковый результат
+        
         """
         if (math.isnan(d)): 
             return "NaN"
@@ -1167,7 +1181,7 @@ class NumberHelper:
                         while j > i: 
                             if (res[j] != '9'): 
                                 if (res[j] != '.'): 
-                                    return "{0}{1}".format(res[0:0+j], ((((ord(res[j])) - (ord('0'))))) + 1)
+                                    return "{0}{1}".format(res[0:0+j], (((ord(res[j])) - (ord('0')))) + 1)
                             j -= 1
                         break
             j += 1
@@ -1181,316 +1195,316 @@ class NumberHelper:
             return
         NumberHelper._m_nums = TerminCollection()
         NumberHelper._m_nums.all_add_strs_normalized = True
-        NumberHelper._m_nums.add_str("ОДИН", 1, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("ПЕРВЫЙ", 1 | NumberHelper.__pril_num_tag_bit, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("ОДИН", 1, MorphLang.UA, True)
-        NumberHelper._m_nums.add_str("ПЕРШИЙ", 1 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, True)
-        NumberHelper._m_nums.add_str("ОДНА", 1, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("ОДНО", 1, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("FIRST", 1 | NumberHelper.__pril_num_tag_bit, MorphLang.EN, True)
-        NumberHelper._m_nums.add_str("SEMEL", 1, MorphLang.EN, True)
-        NumberHelper._m_nums.add_str("ONE", 1, MorphLang.EN, True)
-        NumberHelper._m_nums.add_str("ДВА", 2, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("ВТОРОЙ", 2 | NumberHelper.__pril_num_tag_bit, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("ДВОЕ", 2, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("ДВЕ", 2, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("ДВУХ", 2, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("ОБА", 2, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("ОБЕ", 2, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("ДВА", 2, MorphLang.UA, True)
-        NumberHelper._m_nums.add_str("ДРУГИЙ", 2 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, True)
-        NumberHelper._m_nums.add_str("ДВОЄ", 2, MorphLang.UA, True)
-        NumberHelper._m_nums.add_str("ДВІ", 2, MorphLang.UA, True)
-        NumberHelper._m_nums.add_str("ДВОХ", 2, MorphLang.UA, True)
-        NumberHelper._m_nums.add_str("ОБОЄ", 2, MorphLang.UA, True)
-        NumberHelper._m_nums.add_str("ОБИДВА", 2, MorphLang.UA, True)
-        NumberHelper._m_nums.add_str("SECOND", 2 | NumberHelper.__pril_num_tag_bit, MorphLang.EN, True)
-        NumberHelper._m_nums.add_str("BIS", 2, MorphLang.EN, True)
-        NumberHelper._m_nums.add_str("TWO", 2, MorphLang.EN, True)
-        NumberHelper._m_nums.add_str("ТРИ", 3, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("ТРЕТИЙ", 3 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ТРЕХ", 3, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("ТРОЕ", 3, MorphLang.RU, True)
-        NumberHelper._m_nums.add_str("ТРИ", 3, MorphLang.UA, True)
-        NumberHelper._m_nums.add_str("ТРЕТІЙ", 3 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, True)
-        NumberHelper._m_nums.add_str("ТРЬОХ", 3, MorphLang.UA, True)
-        NumberHelper._m_nums.add_str("ТРОЄ", 3, MorphLang.UA, True)
-        NumberHelper._m_nums.add_str("THIRD", 3 | NumberHelper.__pril_num_tag_bit, MorphLang.EN, True)
-        NumberHelper._m_nums.add_str("TER", 3, MorphLang.EN, True)
-        NumberHelper._m_nums.add_str("THREE", 3, MorphLang.EN, True)
-        NumberHelper._m_nums.add_str("ЧЕТЫРЕ", 4, None, False)
-        NumberHelper._m_nums.add_str("ЧЕТВЕРТЫЙ", 4 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ЧЕТЫРЕХ", 4, None, False)
-        NumberHelper._m_nums.add_str("ЧЕТВЕРО", 4, None, False)
-        NumberHelper._m_nums.add_str("ЧОТИРИ", 4, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ЧЕТВЕРТИЙ", 4 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ЧОТИРЬОХ", 4, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("FORTH", 4 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("QUATER", 4, None, False)
-        NumberHelper._m_nums.add_str("FOUR", 4, MorphLang.EN, True)
-        NumberHelper._m_nums.add_str("ПЯТЬ", 5, None, False)
-        NumberHelper._m_nums.add_str("ПЯТЫЙ", 5 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ПЯТИ", 5, None, False)
-        NumberHelper._m_nums.add_str("ПЯТЕРО", 5, None, False)
-        NumberHelper._m_nums.add_str("ПЯТЬ", 5, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ПЯТИЙ", 5 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("FIFTH", 5 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("QUINQUIES", 5, None, False)
-        NumberHelper._m_nums.add_str("FIVE", 5, MorphLang.EN, True)
-        NumberHelper._m_nums.add_str("ШЕСТЬ", 6, None, False)
-        NumberHelper._m_nums.add_str("ШЕСТОЙ", 6 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ШЕСТИ", 6, None, False)
-        NumberHelper._m_nums.add_str("ШЕСТЕРО", 6, None, False)
-        NumberHelper._m_nums.add_str("ШІСТЬ", 6, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ШОСТИЙ", 6 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("SIX", 6, MorphLang.EN, False)
-        NumberHelper._m_nums.add_str("SIXTH", 6 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("SEXIES ", 6, None, False)
-        NumberHelper._m_nums.add_str("СЕМЬ", 7, None, False)
-        NumberHelper._m_nums.add_str("СЕДЬМОЙ", 7 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("СЕМИ", 7, None, False)
-        NumberHelper._m_nums.add_str("СЕМЕРО", 7, None, False)
-        NumberHelper._m_nums.add_str("СІМ", 7, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("СЬОМИЙ", 7 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("SEVEN", 7, None, False)
-        NumberHelper._m_nums.add_str("SEVENTH", 7 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("SEPTIES", 7, None, False)
-        NumberHelper._m_nums.add_str("ВОСЕМЬ", 8, None, False)
-        NumberHelper._m_nums.add_str("ВОСЬМОЙ", 8 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ВОСЬМИ", 8, None, False)
-        NumberHelper._m_nums.add_str("ВОСЬМЕРО", 8, None, False)
-        NumberHelper._m_nums.add_str("ВІСІМ", 8, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ВОСЬМИЙ", 8 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("EIGHT", 8, None, False)
-        NumberHelper._m_nums.add_str("EIGHTH", 8 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("OCTIES", 8, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТЬ", 9, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТЫЙ", 9 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТИ", 9, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТЕРО", 9, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТЬ", 9, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТИЙ", 9 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("NINE", 9, None, False)
-        NumberHelper._m_nums.add_str("NINTH", 9 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("NOVIES", 9, None, False)
-        NumberHelper._m_nums.add_str("ДЕСЯТЬ", 10, None, False)
-        NumberHelper._m_nums.add_str("ДЕСЯТЫЙ", 10 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДЕСЯТИ", 10, None, False)
-        NumberHelper._m_nums.add_str("ДЕСЯТИРО", 10, None, False)
-        NumberHelper._m_nums.add_str("ДЕСЯТЬ", 10, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДЕСЯТИЙ", 10 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("TEN", 10, None, False)
-        NumberHelper._m_nums.add_str("TENTH", 10 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("DECIES", 10, None, False)
-        NumberHelper._m_nums.add_str("ОДИННАДЦАТЬ", 11, None, False)
-        NumberHelper._m_nums.add_str("ОДИНАДЦАТЬ", 11, None, False)
-        NumberHelper._m_nums.add_str("ОДИННАДЦАТЫЙ", 11 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ОДИННАДЦАТИ", 11, None, False)
-        NumberHelper._m_nums.add_str("ОДИННАДЦАТИРО", 11, None, False)
-        NumberHelper._m_nums.add_str("ОДИНАДЦЯТЬ", 11, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ОДИНАДЦЯТИЙ", 11 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ОДИНАДЦЯТИ", 11, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ELEVEN", 11, None, False)
-        NumberHelper._m_nums.add_str("ELEVENTH", 11 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДВЕНАДЦАТЬ", 12, None, False)
-        NumberHelper._m_nums.add_str("ДВЕНАДЦАТЫЙ", 12 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДВЕНАДЦАТИ", 12, None, False)
-        NumberHelper._m_nums.add_str("ДВАНАДЦЯТЬ", 12, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДВАНАДЦЯТИЙ", 12 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДВАНАДЦЯТИ", 12, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("TWELVE", 12, None, False)
-        NumberHelper._m_nums.add_str("TWELFTH", 12 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ТРИНАДЦАТЬ", 13, None, False)
-        NumberHelper._m_nums.add_str("ТРИНАДЦАТЫЙ", 13 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ТРИНАДЦАТИ", 13, None, False)
-        NumberHelper._m_nums.add_str("ТРИНАДЦЯТЬ", 13, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ТРИНАДЦЯТИЙ", 13 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ТРИНАДЦЯТИ", 13, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("THIRTEEN", 13, None, False)
-        NumberHelper._m_nums.add_str("THIRTEENTH", 13 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ЧЕТЫРНАДЦАТЬ", 14, None, False)
-        NumberHelper._m_nums.add_str("ЧЕТЫРНАДЦАТЫЙ", 14 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ЧЕТЫРНАДЦАТИ", 14, None, False)
-        NumberHelper._m_nums.add_str("ЧОТИРНАДЦЯТЬ", 14, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ЧОТИРНАДЦЯТИЙ", 14 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ЧОТИРНАДЦЯТИ", 14, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("FOURTEEN", 14, None, False)
-        NumberHelper._m_nums.add_str("FOURTEENTH", 14 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ПЯТНАДЦАТЬ", 15, None, False)
-        NumberHelper._m_nums.add_str("ПЯТНАДЦАТЫЙ", 15 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ПЯТНАДЦАТИ", 15, None, False)
-        NumberHelper._m_nums.add_str("ПЯТНАДЦЯТЬ", 15, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ПЯТНАДЦЯТИЙ", 15 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ПЯТНАДЦЯТИ", 15, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("FIFTEEN", 15, None, False)
-        NumberHelper._m_nums.add_str("FIFTEENTH", 15 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ШЕСТНАДЦАТЬ", 16, None, False)
-        NumberHelper._m_nums.add_str("ШЕСТНАДЦАТЫЙ", 16 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ШЕСТНАДЦАТИ", 16, None, False)
-        NumberHelper._m_nums.add_str("ШІСТНАДЦЯТЬ", 16, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ШІСТНАДЦЯТИЙ", 16 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ШІСТНАДЦЯТИ", 16, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("SIXTEEN", 16, None, False)
-        NumberHelper._m_nums.add_str("SIXTEENTH", 16 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("СЕМНАДЦАТЬ", 17, None, False)
-        NumberHelper._m_nums.add_str("СЕМНАДЦАТЫЙ", 17 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("СЕМНАДЦАТИ", 17, None, False)
-        NumberHelper._m_nums.add_str("СІМНАДЦЯТЬ", 17, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("СІМНАДЦЯТИЙ", 17 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("СІМНАДЦЯТИ", 17, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("SEVENTEEN", 17, None, False)
-        NumberHelper._m_nums.add_str("SEVENTEENTH", 17 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ВОСЕМНАДЦАТЬ", 18, None, False)
-        NumberHelper._m_nums.add_str("ВОСЕМНАДЦАТЫЙ", 18 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ВОСЕМНАДЦАТИ", 18, None, False)
-        NumberHelper._m_nums.add_str("ВІСІМНАДЦЯТЬ", 18, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ВІСІМНАДЦЯТИЙ", 18 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ВІСІМНАДЦЯТИ", 18, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("EIGHTEEN", 18, None, False)
-        NumberHelper._m_nums.add_str("EIGHTEENTH", 18 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТНАДЦАТЬ", 19, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТНАДЦАТЫЙ", 19 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТНАДЦАТИ", 19, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТНАДЦЯТЬ", 19, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТНАДЦЯТИЙ", 19 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТНАДЦЯТИ", 19, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("NINETEEN", 19, None, False)
-        NumberHelper._m_nums.add_str("NINETEENTH", 19 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДВАДЦАТЬ", 20, None, False)
-        NumberHelper._m_nums.add_str("ДВАДЦАТЫЙ", 20 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДВАДЦАТИ", 20, None, False)
-        NumberHelper._m_nums.add_str("ДВАДЦЯТЬ", 20, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДВАДЦЯТИЙ", 20 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДВАДЦЯТИ", 20, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("TWENTY", 20, None, False)
-        NumberHelper._m_nums.add_str("TWENTIETH", 20 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ТРИДЦАТЬ", 30, None, False)
-        NumberHelper._m_nums.add_str("ТРИДЦАТЫЙ", 30 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ТРИДЦАТИ", 30, None, False)
-        NumberHelper._m_nums.add_str("ТРИДЦЯТЬ", 30, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ТРИДЦЯТИЙ", 30 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ТРИДЦЯТИ", 30, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("THIRTY", 30, None, False)
-        NumberHelper._m_nums.add_str("THIRTIETH", 30 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("СОРОК", 40, None, False)
-        NumberHelper._m_nums.add_str("СОРОКОВОЙ", 40 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("СОРОКА", 40, None, False)
-        NumberHelper._m_nums.add_str("СОРОК", 40, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("СОРОКОВИЙ", 40 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("FORTY", 40, None, False)
-        NumberHelper._m_nums.add_str("FORTIETH", 40 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ПЯТЬДЕСЯТ", 50, None, False)
-        NumberHelper._m_nums.add_str("ПЯТИДЕСЯТЫЙ", 50 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ПЯТИДЕСЯТИ", 50, None, False)
-        NumberHelper._m_nums.add_str("ПЯТДЕСЯТ", 50, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ПЯТДЕСЯТИЙ", 50 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ПЯТДЕСЯТИ", 50, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("FIFTY", 50, None, False)
-        NumberHelper._m_nums.add_str("FIFTIETH", 50 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ШЕСТЬДЕСЯТ", 60, None, False)
-        NumberHelper._m_nums.add_str("ШЕСТИДЕСЯТЫЙ", 60 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ШЕСТИДЕСЯТИ", 60, None, False)
-        NumberHelper._m_nums.add_str("ШІСТДЕСЯТ", 60, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ШЕСИДЕСЯТЫЙ", 60 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ШІСТДЕСЯТИ", 60, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("SIXTY", 60, None, False)
-        NumberHelper._m_nums.add_str("SIXTIETH", 60 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("СЕМЬДЕСЯТ", 70, None, False)
-        NumberHelper._m_nums.add_str("СЕМИДЕСЯТЫЙ", 70 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("СЕМИДЕСЯТИ", 70, None, False)
-        NumberHelper._m_nums.add_str("СІМДЕСЯТ", 70, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("СІМДЕСЯТИЙ", 70 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("СІМДЕСЯТИ", 70, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("SEVENTY", 70, None, False)
-        NumberHelper._m_nums.add_str("SEVENTIETH", 70 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("SEVENTIES", 70 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ВОСЕМЬДЕСЯТ", 80, None, False)
-        NumberHelper._m_nums.add_str("ВОСЬМИДЕСЯТЫЙ", 80 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ВОСЬМИДЕСЯТИ", 80, None, False)
-        NumberHelper._m_nums.add_str("ВІСІМДЕСЯТ", 80, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ВОСЬМИДЕСЯТИЙ", 80 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ВІСІМДЕСЯТИ", 80, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("EIGHTY", 80, None, False)
-        NumberHelper._m_nums.add_str("EIGHTIETH", 80 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("EIGHTIES", 80 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯНОСТО", 90, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯНОСТЫЙ", 90 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯНОСТО", 90, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДЕВЯНОСТИЙ", 90 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("NINETY", 90, None, False)
-        NumberHelper._m_nums.add_str("NINETIETH", 90 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("NINETIES", 90 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("СТО", 100, None, False)
-        NumberHelper._m_nums.add_str("СОТЫЙ", 100 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("СТА", 100, None, False)
-        NumberHelper._m_nums.add_str("СТО", 100, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("СОТИЙ", 100 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("HUNDRED", 100, None, False)
-        NumberHelper._m_nums.add_str("HUNDREDTH", 100 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДВЕСТИ", 200, None, False)
-        NumberHelper._m_nums.add_str("ДВУХСОТЫЙ", 200 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДВУХСОТ", 200, None, False)
-        NumberHelper._m_nums.add_str("ДВІСТІ", 200, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДВОХСОТИЙ", 200 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДВОХСОТ", 200, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ТРИСТА", 300, None, False)
-        NumberHelper._m_nums.add_str("ТРЕХСОТЫЙ", 300 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ТРЕХСОТ", 300, None, False)
-        NumberHelper._m_nums.add_str("ТРИСТА", 300, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ТРЬОХСОТИЙ", 300 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ТРЬОХСОТ", 300, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ЧЕТЫРЕСТА", 400, None, False)
-        NumberHelper._m_nums.add_str("ЧЕТЫРЕХСОТЫЙ", 400 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ЧОТИРИСТА", 400, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ЧОТИРЬОХСОТИЙ", 400 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ПЯТЬСОТ", 500, None, False)
-        NumberHelper._m_nums.add_str("ПЯТИСОТЫЙ", 500 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ПЯТСОТ", 500, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ПЯТИСОТИЙ", 500 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ШЕСТЬСОТ", 600, None, False)
-        NumberHelper._m_nums.add_str("ШЕСТИСОТЫЙ", 600 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ШІСТСОТ", 600, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ШЕСТИСОТИЙ", 600 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("СЕМЬСОТ", 700, None, False)
-        NumberHelper._m_nums.add_str("СЕМИСОТЫЙ", 700 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("СІМСОТ", 700, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("СЕМИСОТИЙ", 700 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ВОСЕМЬСОТ", 800, None, False)
-        NumberHelper._m_nums.add_str("ВОСЕМЬСОТЫЙ", 800 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ВОСЬМИСОТЫЙ", 800 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ВІСІМСОТ", 800, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ВОСЬМИСОТЫЙ", 800 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТЬСОТ", 900, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТЬСОТЫЙ", 900 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТИСОТЫЙ", 900 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТСОТ", 900, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТЬСОТЫЙ", 900 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДЕВЯТИСОТИЙ", 900 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ТЫС", 1000, None, False)
-        NumberHelper._m_nums.add_str("ТЫСЯЧА", 1000, None, False)
-        NumberHelper._m_nums.add_str("ТЫСЯЧНЫЙ", 1000 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ТИС", 1000, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ТИСЯЧА", 1000, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ТИСЯЧНИЙ", 1000 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("ДВУХТЫСЯЧНЫЙ", 2000 | NumberHelper.__pril_num_tag_bit, None, False)
-        NumberHelper._m_nums.add_str("ДВОХТИСЯЧНИЙ", 2000 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("МИЛЛИОН", 1000000, None, False)
-        NumberHelper._m_nums.add_str("МЛН", 1000000, None, False)
-        NumberHelper._m_nums.add_str("МІЛЬЙОН", 1000000, MorphLang.UA, False)
-        NumberHelper._m_nums.add_str("МИЛЛИАРД", 1000000000, None, False)
-        NumberHelper._m_nums.add_str("МІЛЬЯРД", 1000000000, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ОДИН", 1, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("ПЕРВЫЙ", 1 | NumberHelper.__pril_num_tag_bit, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("ОДИН", 1, MorphLang.UA, True)
+        NumberHelper._m_nums.add_string("ПЕРШИЙ", 1 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, True)
+        NumberHelper._m_nums.add_string("ОДНА", 1, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("ОДНО", 1, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("FIRST", 1 | NumberHelper.__pril_num_tag_bit, MorphLang.EN, True)
+        NumberHelper._m_nums.add_string("SEMEL", 1, MorphLang.EN, True)
+        NumberHelper._m_nums.add_string("ONE", 1, MorphLang.EN, True)
+        NumberHelper._m_nums.add_string("ДВА", 2, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("ВТОРОЙ", 2 | NumberHelper.__pril_num_tag_bit, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("ДВОЕ", 2, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("ДВЕ", 2, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("ДВУХ", 2, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("ОБА", 2, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("ОБЕ", 2, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("ДВА", 2, MorphLang.UA, True)
+        NumberHelper._m_nums.add_string("ДРУГИЙ", 2 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, True)
+        NumberHelper._m_nums.add_string("ДВОЄ", 2, MorphLang.UA, True)
+        NumberHelper._m_nums.add_string("ДВІ", 2, MorphLang.UA, True)
+        NumberHelper._m_nums.add_string("ДВОХ", 2, MorphLang.UA, True)
+        NumberHelper._m_nums.add_string("ОБОЄ", 2, MorphLang.UA, True)
+        NumberHelper._m_nums.add_string("ОБИДВА", 2, MorphLang.UA, True)
+        NumberHelper._m_nums.add_string("SECOND", 2 | NumberHelper.__pril_num_tag_bit, MorphLang.EN, True)
+        NumberHelper._m_nums.add_string("BIS", 2, MorphLang.EN, True)
+        NumberHelper._m_nums.add_string("TWO", 2, MorphLang.EN, True)
+        NumberHelper._m_nums.add_string("ТРИ", 3, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("ТРЕТИЙ", 3 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ТРЕХ", 3, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("ТРОЕ", 3, MorphLang.RU, True)
+        NumberHelper._m_nums.add_string("ТРИ", 3, MorphLang.UA, True)
+        NumberHelper._m_nums.add_string("ТРЕТІЙ", 3 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, True)
+        NumberHelper._m_nums.add_string("ТРЬОХ", 3, MorphLang.UA, True)
+        NumberHelper._m_nums.add_string("ТРОЄ", 3, MorphLang.UA, True)
+        NumberHelper._m_nums.add_string("THIRD", 3 | NumberHelper.__pril_num_tag_bit, MorphLang.EN, True)
+        NumberHelper._m_nums.add_string("TER", 3, MorphLang.EN, True)
+        NumberHelper._m_nums.add_string("THREE", 3, MorphLang.EN, True)
+        NumberHelper._m_nums.add_string("ЧЕТЫРЕ", 4, None, False)
+        NumberHelper._m_nums.add_string("ЧЕТВЕРТЫЙ", 4 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ЧЕТЫРЕХ", 4, None, False)
+        NumberHelper._m_nums.add_string("ЧЕТВЕРО", 4, None, False)
+        NumberHelper._m_nums.add_string("ЧОТИРИ", 4, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ЧЕТВЕРТИЙ", 4 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ЧОТИРЬОХ", 4, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("FORTH", 4 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("QUATER", 4, None, False)
+        NumberHelper._m_nums.add_string("FOUR", 4, MorphLang.EN, True)
+        NumberHelper._m_nums.add_string("ПЯТЬ", 5, None, False)
+        NumberHelper._m_nums.add_string("ПЯТЫЙ", 5 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ПЯТИ", 5, None, False)
+        NumberHelper._m_nums.add_string("ПЯТЕРО", 5, None, False)
+        NumberHelper._m_nums.add_string("ПЯТЬ", 5, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ПЯТИЙ", 5 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("FIFTH", 5 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("QUINQUIES", 5, None, False)
+        NumberHelper._m_nums.add_string("FIVE", 5, MorphLang.EN, True)
+        NumberHelper._m_nums.add_string("ШЕСТЬ", 6, None, False)
+        NumberHelper._m_nums.add_string("ШЕСТОЙ", 6 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ШЕСТИ", 6, None, False)
+        NumberHelper._m_nums.add_string("ШЕСТЕРО", 6, None, False)
+        NumberHelper._m_nums.add_string("ШІСТЬ", 6, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ШОСТИЙ", 6 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("SIX", 6, MorphLang.EN, False)
+        NumberHelper._m_nums.add_string("SIXTH", 6 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("SEXIES ", 6, None, False)
+        NumberHelper._m_nums.add_string("СЕМЬ", 7, None, False)
+        NumberHelper._m_nums.add_string("СЕДЬМОЙ", 7 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("СЕМИ", 7, None, False)
+        NumberHelper._m_nums.add_string("СЕМЕРО", 7, None, False)
+        NumberHelper._m_nums.add_string("СІМ", 7, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("СЬОМИЙ", 7 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("SEVEN", 7, None, False)
+        NumberHelper._m_nums.add_string("SEVENTH", 7 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("SEPTIES", 7, None, False)
+        NumberHelper._m_nums.add_string("ВОСЕМЬ", 8, None, False)
+        NumberHelper._m_nums.add_string("ВОСЬМОЙ", 8 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ВОСЬМИ", 8, None, False)
+        NumberHelper._m_nums.add_string("ВОСЬМЕРО", 8, None, False)
+        NumberHelper._m_nums.add_string("ВІСІМ", 8, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ВОСЬМИЙ", 8 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("EIGHT", 8, None, False)
+        NumberHelper._m_nums.add_string("EIGHTH", 8 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("OCTIES", 8, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТЬ", 9, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТЫЙ", 9 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТИ", 9, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТЕРО", 9, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТЬ", 9, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТИЙ", 9 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("NINE", 9, None, False)
+        NumberHelper._m_nums.add_string("NINTH", 9 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("NOVIES", 9, None, False)
+        NumberHelper._m_nums.add_string("ДЕСЯТЬ", 10, None, False)
+        NumberHelper._m_nums.add_string("ДЕСЯТЫЙ", 10 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДЕСЯТИ", 10, None, False)
+        NumberHelper._m_nums.add_string("ДЕСЯТИРО", 10, None, False)
+        NumberHelper._m_nums.add_string("ДЕСЯТЬ", 10, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДЕСЯТИЙ", 10 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("TEN", 10, None, False)
+        NumberHelper._m_nums.add_string("TENTH", 10 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("DECIES", 10, None, False)
+        NumberHelper._m_nums.add_string("ОДИННАДЦАТЬ", 11, None, False)
+        NumberHelper._m_nums.add_string("ОДИНАДЦАТЬ", 11, None, False)
+        NumberHelper._m_nums.add_string("ОДИННАДЦАТЫЙ", 11 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ОДИННАДЦАТИ", 11, None, False)
+        NumberHelper._m_nums.add_string("ОДИННАДЦАТИРО", 11, None, False)
+        NumberHelper._m_nums.add_string("ОДИНАДЦЯТЬ", 11, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ОДИНАДЦЯТИЙ", 11 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ОДИНАДЦЯТИ", 11, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ELEVEN", 11, None, False)
+        NumberHelper._m_nums.add_string("ELEVENTH", 11 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДВЕНАДЦАТЬ", 12, None, False)
+        NumberHelper._m_nums.add_string("ДВЕНАДЦАТЫЙ", 12 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДВЕНАДЦАТИ", 12, None, False)
+        NumberHelper._m_nums.add_string("ДВАНАДЦЯТЬ", 12, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДВАНАДЦЯТИЙ", 12 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДВАНАДЦЯТИ", 12, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("TWELVE", 12, None, False)
+        NumberHelper._m_nums.add_string("TWELFTH", 12 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ТРИНАДЦАТЬ", 13, None, False)
+        NumberHelper._m_nums.add_string("ТРИНАДЦАТЫЙ", 13 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ТРИНАДЦАТИ", 13, None, False)
+        NumberHelper._m_nums.add_string("ТРИНАДЦЯТЬ", 13, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ТРИНАДЦЯТИЙ", 13 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ТРИНАДЦЯТИ", 13, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("THIRTEEN", 13, None, False)
+        NumberHelper._m_nums.add_string("THIRTEENTH", 13 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ЧЕТЫРНАДЦАТЬ", 14, None, False)
+        NumberHelper._m_nums.add_string("ЧЕТЫРНАДЦАТЫЙ", 14 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ЧЕТЫРНАДЦАТИ", 14, None, False)
+        NumberHelper._m_nums.add_string("ЧОТИРНАДЦЯТЬ", 14, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ЧОТИРНАДЦЯТИЙ", 14 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ЧОТИРНАДЦЯТИ", 14, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("FOURTEEN", 14, None, False)
+        NumberHelper._m_nums.add_string("FOURTEENTH", 14 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ПЯТНАДЦАТЬ", 15, None, False)
+        NumberHelper._m_nums.add_string("ПЯТНАДЦАТЫЙ", 15 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ПЯТНАДЦАТИ", 15, None, False)
+        NumberHelper._m_nums.add_string("ПЯТНАДЦЯТЬ", 15, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ПЯТНАДЦЯТИЙ", 15 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ПЯТНАДЦЯТИ", 15, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("FIFTEEN", 15, None, False)
+        NumberHelper._m_nums.add_string("FIFTEENTH", 15 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ШЕСТНАДЦАТЬ", 16, None, False)
+        NumberHelper._m_nums.add_string("ШЕСТНАДЦАТЫЙ", 16 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ШЕСТНАДЦАТИ", 16, None, False)
+        NumberHelper._m_nums.add_string("ШІСТНАДЦЯТЬ", 16, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ШІСТНАДЦЯТИЙ", 16 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ШІСТНАДЦЯТИ", 16, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("SIXTEEN", 16, None, False)
+        NumberHelper._m_nums.add_string("SIXTEENTH", 16 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("СЕМНАДЦАТЬ", 17, None, False)
+        NumberHelper._m_nums.add_string("СЕМНАДЦАТЫЙ", 17 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("СЕМНАДЦАТИ", 17, None, False)
+        NumberHelper._m_nums.add_string("СІМНАДЦЯТЬ", 17, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("СІМНАДЦЯТИЙ", 17 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("СІМНАДЦЯТИ", 17, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("SEVENTEEN", 17, None, False)
+        NumberHelper._m_nums.add_string("SEVENTEENTH", 17 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ВОСЕМНАДЦАТЬ", 18, None, False)
+        NumberHelper._m_nums.add_string("ВОСЕМНАДЦАТЫЙ", 18 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ВОСЕМНАДЦАТИ", 18, None, False)
+        NumberHelper._m_nums.add_string("ВІСІМНАДЦЯТЬ", 18, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ВІСІМНАДЦЯТИЙ", 18 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ВІСІМНАДЦЯТИ", 18, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("EIGHTEEN", 18, None, False)
+        NumberHelper._m_nums.add_string("EIGHTEENTH", 18 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТНАДЦАТЬ", 19, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТНАДЦАТЫЙ", 19 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТНАДЦАТИ", 19, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТНАДЦЯТЬ", 19, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТНАДЦЯТИЙ", 19 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТНАДЦЯТИ", 19, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("NINETEEN", 19, None, False)
+        NumberHelper._m_nums.add_string("NINETEENTH", 19 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДВАДЦАТЬ", 20, None, False)
+        NumberHelper._m_nums.add_string("ДВАДЦАТЫЙ", 20 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДВАДЦАТИ", 20, None, False)
+        NumberHelper._m_nums.add_string("ДВАДЦЯТЬ", 20, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДВАДЦЯТИЙ", 20 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДВАДЦЯТИ", 20, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("TWENTY", 20, None, False)
+        NumberHelper._m_nums.add_string("TWENTIETH", 20 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ТРИДЦАТЬ", 30, None, False)
+        NumberHelper._m_nums.add_string("ТРИДЦАТЫЙ", 30 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ТРИДЦАТИ", 30, None, False)
+        NumberHelper._m_nums.add_string("ТРИДЦЯТЬ", 30, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ТРИДЦЯТИЙ", 30 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ТРИДЦЯТИ", 30, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("THIRTY", 30, None, False)
+        NumberHelper._m_nums.add_string("THIRTIETH", 30 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("СОРОК", 40, None, False)
+        NumberHelper._m_nums.add_string("СОРОКОВОЙ", 40 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("СОРОКА", 40, None, False)
+        NumberHelper._m_nums.add_string("СОРОК", 40, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("СОРОКОВИЙ", 40 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("FORTY", 40, None, False)
+        NumberHelper._m_nums.add_string("FORTIETH", 40 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ПЯТЬДЕСЯТ", 50, None, False)
+        NumberHelper._m_nums.add_string("ПЯТИДЕСЯТЫЙ", 50 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ПЯТИДЕСЯТИ", 50, None, False)
+        NumberHelper._m_nums.add_string("ПЯТДЕСЯТ", 50, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ПЯТДЕСЯТИЙ", 50 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ПЯТДЕСЯТИ", 50, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("FIFTY", 50, None, False)
+        NumberHelper._m_nums.add_string("FIFTIETH", 50 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ШЕСТЬДЕСЯТ", 60, None, False)
+        NumberHelper._m_nums.add_string("ШЕСТИДЕСЯТЫЙ", 60 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ШЕСТИДЕСЯТИ", 60, None, False)
+        NumberHelper._m_nums.add_string("ШІСТДЕСЯТ", 60, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ШЕСИДЕСЯТЫЙ", 60 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ШІСТДЕСЯТИ", 60, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("SIXTY", 60, None, False)
+        NumberHelper._m_nums.add_string("SIXTIETH", 60 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("СЕМЬДЕСЯТ", 70, None, False)
+        NumberHelper._m_nums.add_string("СЕМИДЕСЯТЫЙ", 70 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("СЕМИДЕСЯТИ", 70, None, False)
+        NumberHelper._m_nums.add_string("СІМДЕСЯТ", 70, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("СІМДЕСЯТИЙ", 70 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("СІМДЕСЯТИ", 70, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("SEVENTY", 70, None, False)
+        NumberHelper._m_nums.add_string("SEVENTIETH", 70 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("SEVENTIES", 70 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ВОСЕМЬДЕСЯТ", 80, None, False)
+        NumberHelper._m_nums.add_string("ВОСЬМИДЕСЯТЫЙ", 80 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ВОСЬМИДЕСЯТИ", 80, None, False)
+        NumberHelper._m_nums.add_string("ВІСІМДЕСЯТ", 80, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ВОСЬМИДЕСЯТИЙ", 80 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ВІСІМДЕСЯТИ", 80, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("EIGHTY", 80, None, False)
+        NumberHelper._m_nums.add_string("EIGHTIETH", 80 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("EIGHTIES", 80 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯНОСТО", 90, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯНОСТЫЙ", 90 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯНОСТО", 90, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДЕВЯНОСТИЙ", 90 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("NINETY", 90, None, False)
+        NumberHelper._m_nums.add_string("NINETIETH", 90 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("NINETIES", 90 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("СТО", 100, None, False)
+        NumberHelper._m_nums.add_string("СОТЫЙ", 100 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("СТА", 100, None, False)
+        NumberHelper._m_nums.add_string("СТО", 100, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("СОТИЙ", 100 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("HUNDRED", 100, None, False)
+        NumberHelper._m_nums.add_string("HUNDREDTH", 100 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДВЕСТИ", 200, None, False)
+        NumberHelper._m_nums.add_string("ДВУХСОТЫЙ", 200 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДВУХСОТ", 200, None, False)
+        NumberHelper._m_nums.add_string("ДВІСТІ", 200, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДВОХСОТИЙ", 200 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДВОХСОТ", 200, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ТРИСТА", 300, None, False)
+        NumberHelper._m_nums.add_string("ТРЕХСОТЫЙ", 300 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ТРЕХСОТ", 300, None, False)
+        NumberHelper._m_nums.add_string("ТРИСТА", 300, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ТРЬОХСОТИЙ", 300 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ТРЬОХСОТ", 300, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ЧЕТЫРЕСТА", 400, None, False)
+        NumberHelper._m_nums.add_string("ЧЕТЫРЕХСОТЫЙ", 400 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ЧОТИРИСТА", 400, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ЧОТИРЬОХСОТИЙ", 400 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ПЯТЬСОТ", 500, None, False)
+        NumberHelper._m_nums.add_string("ПЯТИСОТЫЙ", 500 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ПЯТСОТ", 500, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ПЯТИСОТИЙ", 500 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ШЕСТЬСОТ", 600, None, False)
+        NumberHelper._m_nums.add_string("ШЕСТИСОТЫЙ", 600 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ШІСТСОТ", 600, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ШЕСТИСОТИЙ", 600 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("СЕМЬСОТ", 700, None, False)
+        NumberHelper._m_nums.add_string("СЕМИСОТЫЙ", 700 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("СІМСОТ", 700, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("СЕМИСОТИЙ", 700 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ВОСЕМЬСОТ", 800, None, False)
+        NumberHelper._m_nums.add_string("ВОСЕМЬСОТЫЙ", 800 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ВОСЬМИСОТЫЙ", 800 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ВІСІМСОТ", 800, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ВОСЬМИСОТЫЙ", 800 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТЬСОТ", 900, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТЬСОТЫЙ", 900 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТИСОТЫЙ", 900 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТСОТ", 900, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТЬСОТЫЙ", 900 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДЕВЯТИСОТИЙ", 900 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ТЫС", 1000, None, False)
+        NumberHelper._m_nums.add_string("ТЫСЯЧА", 1000, None, False)
+        NumberHelper._m_nums.add_string("ТЫСЯЧНЫЙ", 1000 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ТИС", 1000, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ТИСЯЧА", 1000, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ТИСЯЧНИЙ", 1000 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("ДВУХТЫСЯЧНЫЙ", 2000 | NumberHelper.__pril_num_tag_bit, None, False)
+        NumberHelper._m_nums.add_string("ДВОХТИСЯЧНИЙ", 2000 | NumberHelper.__pril_num_tag_bit, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("МИЛЛИОН", 1000000, None, False)
+        NumberHelper._m_nums.add_string("МЛН", 1000000, None, False)
+        NumberHelper._m_nums.add_string("МІЛЬЙОН", 1000000, MorphLang.UA, False)
+        NumberHelper._m_nums.add_string("МИЛЛИАРД", 1000000000, None, False)
+        NumberHelper._m_nums.add_string("МІЛЬЯРД", 1000000000, MorphLang.UA, False)
         NumberHelper.__m_after_points = TerminCollection()
-        t = Termin._new119("ПОЛОВИНА", 0.5)
+        t = Termin._new100("ПОЛОВИНА", 0.5)
         t.add_variant("ОДНА ВТОРАЯ", False)
         t.add_variant("ПОЛ", False)
         NumberHelper.__m_after_points.add(t)
-        t = Termin._new119("ТРЕТЬ", 0.33)
+        t = Termin._new100("ТРЕТЬ", 0.33)
         t.add_variant("ОДНА ТРЕТЬ", False)
         NumberHelper.__m_after_points.add(t)
-        t = Termin._new119("ЧЕТВЕРТЬ", 0.25)
+        t = Termin._new100("ЧЕТВЕРТЬ", 0.25)
         t.add_variant("ОДНА ЧЕТВЕРТАЯ", False)
         NumberHelper.__m_after_points.add(t)
-        t = Termin._new119("ПЯТАЯ ЧАСТЬ", 0.2)
+        t = Termin._new100("ПЯТАЯ ЧАСТЬ", 0.2)
         t.add_variant("ОДНА ПЯТАЯ", False)
         NumberHelper.__m_after_points.add(t)
     

@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from enum import IntEnum
@@ -8,21 +7,21 @@ from pullenti.unisharp.Utils import Utils
 
 from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
 from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.ner.Token import Token
+from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.TextToken import TextToken
-from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
-from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.ReferentToken import ReferentToken
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 
 class TitleItemToken(MetaToken):
     
@@ -67,7 +66,7 @@ class TitleItemToken(MetaToken):
                     t1 = tit.end_token
                     if (t1.next0_ is not None and t1.next0_.is_char(':')): 
                         t1 = t1.next0_
-                    return TitleItemToken._new2717(t, t1, TitleItemToken.Types.TYPANDTHEME, tit.value)
+                    return TitleItemToken._new2651(t, t1, TitleItemToken.Types.TYPANDTHEME, tit.value)
                 if (tt.next0_ is not None and tt.next0_.is_char(':')): 
                     t1 = tt.next0_
                 return TitleItemToken(tt, t1, TitleItemToken.Types.THEME)
@@ -82,7 +81,7 @@ class TitleItemToken(MetaToken):
                 if (tt2 is not None and tt2.is_char('.')): 
                     tt2 = tt2.next0_
                 if (isinstance(tt2, TextToken)): 
-                    if ((tt2).term == "C" or (tt2).term == "С"): 
+                    if (tt2.term == "C" or tt2.term == "С"): 
                         tt2 = tt2.next0_
                         if (isinstance(tt2, TextToken)): 
                             return TitleItemToken(t, tt2, TitleItemToken.Types.TRANSLATE)
@@ -130,16 +129,16 @@ class TitleItemToken(MetaToken):
                 if (ty == TitleItemToken.Types.TYP): 
                     tit = TitleItemToken.try_attach(tok.end_token.next0_)
                     if (tit is not None and tit.typ == TitleItemToken.Types.THEME): 
-                        return TitleItemToken._new2717(npt.begin_token, tit.end_token, TitleItemToken.Types.TYPANDTHEME, s)
+                        return TitleItemToken._new2651(npt.begin_token, tit.end_token, TitleItemToken.Types.TYPANDTHEME, s)
                     if (s == "РАБОТА" or s == "РОБОТА" or s == "ПРОЕКТ"): 
                         return None
                     t1 = tok.end_token
                     if (s == "ДИССЕРТАЦИЯ" or s == "ДИСЕРТАЦІЯ"): 
                         err = 0
                         ttt = t1.next0_
-                        first_pass4008 = True
+                        first_pass3886 = True
                         while True:
-                            if first_pass4008: first_pass4008 = False
+                            if first_pass3886: first_pass3886 = False
                             else: ttt = ttt.next0_
                             if (not (ttt is not None)): break
                             if (ttt.morph.class0_.is_preposition): 
@@ -182,7 +181,7 @@ class TitleItemToken(MetaToken):
                         npt1 = NounPhraseHelper.try_parse(t1.next0_, NounPhraseParseAttr.PARSEPREPOSITION, 0, None)
                         if (npt1 is not None and npt1.morph.case_.is_prepositional): 
                             t1 = npt1.end_token
-                    return TitleItemToken._new2717(npt.begin_token, t1, ty, s)
+                    return TitleItemToken._new2651(npt.begin_token, t1, ty, s)
         tok1 = TitleItemToken.M_TERMINS.try_parse(t, TerminParseAttr.NO)
         if (tok1 is not None): 
             t1 = tok1.end_token
@@ -237,9 +236,9 @@ class TitleItemToken(MetaToken):
             Utils.insertStringIO(val, 4, '.')
             Utils.insertStringIO(val, 2, '.')
         tt = t.next0_
-        first_pass4009 = True
+        first_pass3887 = True
         while True:
-            if first_pass4009: first_pass4009 = False
+            if first_pass3887: first_pass3887 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 
@@ -250,7 +249,7 @@ class TitleItemToken(MetaToken):
                 t = tt
                 continue
             t = tt
-        return TitleItemToken._new2717(t0, t, TitleItemToken.Types.SPECIALITY, Utils.toStringStringIO(val))
+        return TitleItemToken._new2651(t0, t, TitleItemToken.Types.SPECIALITY, Utils.toStringStringIO(val))
     
     M_TERMINS = None
     
@@ -260,32 +259,32 @@ class TitleItemToken(MetaToken):
             return
         TitleItemToken.M_TERMINS = TerminCollection()
         for s in ["РАБОТА", "ДИССЕРТАЦИЯ", "ОТЧЕТ", "ОБЗОР", "ДИПЛОМ", "ПРОЕКТ", "СПРАВКА", "АВТОРЕФЕРАТ", "РЕФЕРАТ", "TECHNOLOGY ISSUES", "TECHNOLOGY COURSE", "УЧЕБНИК", "УЧЕБНОЕ ПОСОБИЕ"]: 
-            TitleItemToken.M_TERMINS.add(Termin._new119(s, TitleItemToken.Types.TYP))
+            TitleItemToken.M_TERMINS.add(Termin._new100(s, TitleItemToken.Types.TYP))
         for s in ["РОБОТА", "ДИСЕРТАЦІЯ", "ЗВІТ", "ОГЛЯД", "ДИПЛОМ", "ПРОЕКТ", "ДОВІДКА", "АВТОРЕФЕРАТ", "РЕФЕРАТ"]: 
-            TitleItemToken.M_TERMINS.add(Termin._new456(s, MorphLang.UA, TitleItemToken.Types.TYP))
+            TitleItemToken.M_TERMINS.add(Termin._new388(s, MorphLang.UA, TitleItemToken.Types.TYP))
         for s in ["ДОПУСТИТЬ К ЗАЩИТА", "РЕКОМЕНДОВАТЬ К ЗАЩИТА", "ДОЛЖНОСТЬ", "ЦЕЛЬ РАБОТЫ", "НА ПРАВАХ РУКОПИСИ", "ПО ИЗДАНИЮ", "ПОЛУЧЕНО"]: 
-            TitleItemToken.M_TERMINS.add(Termin._new119(s, TitleItemToken.Types.DUST))
+            TitleItemToken.M_TERMINS.add(Termin._new100(s, TitleItemToken.Types.DUST))
         for s in ["ДОПУСТИТИ ДО ЗАХИСТУ", "РЕКОМЕНДУВАТИ ДО ЗАХИСТ", "ПОСАДА", "МЕТА РОБОТИ", "НА ПРАВАХ РУКОПИСУ", "ПО ВИДАННЮ", "ОТРИМАНО"]: 
-            TitleItemToken.M_TERMINS.add(Termin._new456(s, MorphLang.UA, TitleItemToken.Types.DUST))
+            TitleItemToken.M_TERMINS.add(Termin._new388(s, MorphLang.UA, TitleItemToken.Types.DUST))
         for s in ["УТВЕРЖДАТЬ", "СОГЛАСЕН", "СТВЕРДЖУВАТИ", "ЗГОДЕН"]: 
-            TitleItemToken.M_TERMINS.add(Termin._new119(s, TitleItemToken.Types.ADOPT))
+            TitleItemToken.M_TERMINS.add(Termin._new100(s, TitleItemToken.Types.ADOPT))
         for s in ["НАУЧНЫЙ РУКОВОДИТЕЛЬ", "РУКОВОДИТЕЛЬ РАБОТА", "НАУКОВИЙ КЕРІВНИК", "КЕРІВНИК РОБОТА"]: 
-            TitleItemToken.M_TERMINS.add(Termin._new119(s, TitleItemToken.Types.BOSS))
+            TitleItemToken.M_TERMINS.add(Termin._new100(s, TitleItemToken.Types.BOSS))
         for s in ["НАУЧНЫЙ КОНСУЛЬТАНТ", "КОНСУЛЬТАНТ", "НАУКОВИЙ КОНСУЛЬТАНТ"]: 
-            TitleItemToken.M_TERMINS.add(Termin._new119(s, TitleItemToken.Types.CONSULTANT))
+            TitleItemToken.M_TERMINS.add(Termin._new100(s, TitleItemToken.Types.CONSULTANT))
         for s in ["РЕДАКТОР", "РЕДАКТОРСКАЯ ГРУППА", "РЕЦЕНЗЕНТ", "РЕДАКТОРСЬКА ГРУПА"]: 
-            TitleItemToken.M_TERMINS.add(Termin._new119(s, TitleItemToken.Types.EDITOR))
+            TitleItemToken.M_TERMINS.add(Termin._new100(s, TitleItemToken.Types.EDITOR))
         for s in ["ОФИЦИАЛЬНЫЙ ОППОНЕНТ", "ОППОНЕНТ", "ОФІЦІЙНИЙ ОПОНЕНТ"]: 
-            TitleItemToken.M_TERMINS.add(Termin._new119(s, TitleItemToken.Types.OPPONENT))
+            TitleItemToken.M_TERMINS.add(Termin._new100(s, TitleItemToken.Types.OPPONENT))
         for s in ["ИСПОЛНИТЕЛЬ", "ОТВЕТСТВЕННЫЙ ИСПОЛНИТЕЛЬ", "АВТОР", "ДИПЛОМНИК", "КОЛЛЕКТТИВ ИСПОЛНИТЕЛЕЙ", "ВЫПОЛНИТЬ", "ИСПОЛНИТЬ"]: 
-            TitleItemToken.M_TERMINS.add(Termin._new119(s, TitleItemToken.Types.WORKER))
+            TitleItemToken.M_TERMINS.add(Termin._new100(s, TitleItemToken.Types.WORKER))
         for s in ["ВИКОНАВЕЦЬ", "ВІДПОВІДАЛЬНИЙ ВИКОНАВЕЦЬ", "АВТОР", "ДИПЛОМНИК", "КОЛЛЕКТТИВ ВИКОНАВЦІВ", "ВИКОНАТИ", "ВИКОНАТИ"]: 
-            TitleItemToken.M_TERMINS.add(Termin._new456(s, MorphLang.UA, TitleItemToken.Types.WORKER))
+            TitleItemToken.M_TERMINS.add(Termin._new388(s, MorphLang.UA, TitleItemToken.Types.WORKER))
         for s in ["КЛЮЧЕВЫЕ СЛОВА", "KEYWORDS", "КЛЮЧОВІ СЛОВА"]: 
-            TitleItemToken.M_TERMINS.add(Termin._new119(s, TitleItemToken.Types.KEYWORDS))
+            TitleItemToken.M_TERMINS.add(Termin._new100(s, TitleItemToken.Types.KEYWORDS))
     
     @staticmethod
-    def _new2717(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Types', _arg4 : str) -> 'TitleItemToken':
+    def _new2651(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Types', _arg4 : str) -> 'TitleItemToken':
         res = TitleItemToken(_arg1, _arg2, _arg3)
         res.value = _arg4
         return res

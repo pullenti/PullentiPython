@@ -1,77 +1,104 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.address.AddressDetailType import AddressDetailType
 from pullenti.ner.address.StreetReferent import StreetReferent
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.ner.geo.internal.GeoOwnerHelper import GeoOwnerHelper
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.address.AddressDetailType import AddressDetailType
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.address.AddressBuildingType import AddressBuildingType
 from pullenti.ner.address.AddressHouseType import AddressHouseType
 from pullenti.ner.address.internal.MetaAddress import MetaAddress
 from pullenti.ner.Referent import Referent
 
 class AddressReferent(Referent):
-    """ Сущность, представляющая адрес """
+    """ Сущность, представляющая адрес
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(AddressReferent.OBJ_TYPENAME)
         self.instance_of = MetaAddress._global_meta
     
     OBJ_TYPENAME = "ADDRESS"
+    """ Имя типа сущности TypeName ("ADDRESS") """
     
     ATTR_STREET = "STREET"
+    """ Имя атрибута - улица """
     
     ATTR_HOUSE = "HOUSE"
+    """ Имя атрибута - дом """
     
     ATTR_HOUSETYPE = "HOUSETYPE"
+    """ Имя атрибута - тип дома """
     
     ATTR_CORPUS = "CORPUS"
+    """ Имя атрибута - корпус """
     
     ATTR_BUILDING = "BUILDING"
+    """ Имя атрибута - строение """
     
     ATTR_BUILDINGTYPE = "BUILDINGTYPE"
+    """ Имя атрибута - тип строения """
     
     ATTR_CORPUSORFLAT = "CORPUSORFLAT"
+    """ Имя атрибута - корпус или квартира (когда неясно) """
     
     ATTR_PORCH = "PORCH"
+    """ Имя атрибута - подъезд """
     
     ATTR_FLOOR = "FLOOR"
+    """ Имя атрибута - этаж """
     
     ATTR_OFFICE = "OFFICE"
+    """ Имя атрибута - офис """
     
     ATTR_FLAT = "FLAT"
+    """ Имя атрибута - квартира """
     
     ATTR_KILOMETER = "KILOMETER"
+    """ Имя атрибута - километр """
     
     ATTR_PLOT = "PLOT"
+    """ Имя атрибута - участок """
     
     ATTR_BLOCK = "BLOCK"
+    """ Имя атрибута - блок (ряд) """
     
     ATTR_BOX = "BOX"
+    """ Имя атрибута - бокс (гараж) """
     
     ATTR_GEO = "GEO"
+    """ Имя атрибута - географический объект (ближайший в иерархии) """
     
     ATTR_ZIP = "ZIP"
+    """ Имя атрибута - почтовый индекс """
     
     ATTR_POSTOFFICEBOX = "POSTOFFICEBOX"
+    """ Имя атрибута - почтовый ящик """
     
     ATTR_CSP = "CSP"
+    """ Имя атрибута - ГСП """
     
     ATTR_METRO = "METRO"
+    """ Имя атрибута - станция метро """
     
     ATTR_DETAIL = "DETAIL"
+    """ Имя атрибута - дополнительная информация """
     
     ATTR_DETAILPARAM = "DETAILPARAM"
+    """ Имя атрибута - параметр дополнительной информации """
     
     ATTR_MISC = "MISC"
+    """ Имя атрибута - разное """
     
     ATTR_FIAS = "FIAS"
+    """ Имя атрибута - код ФИАС (определяется анализатором FiasAnalyzer) """
     
     ATTR_BTI = "BTI"
     
@@ -95,12 +122,13 @@ class AddressReferent(Referent):
     
     @property
     def house_type(self) -> 'AddressHouseType':
+        """ Тип дома """
         str0_ = self.get_string_value(AddressReferent.ATTR_HOUSETYPE)
         if (Utils.isNullOrEmpty(str0_)): 
             return AddressHouseType.HOUSE
         try: 
             return Utils.valToEnum(str0_, AddressHouseType)
-        except Exception as ex341: 
+        except Exception as ex323: 
             return AddressHouseType.HOUSE
     @house_type.setter
     def house_type(self, value) -> 'AddressHouseType':
@@ -124,7 +152,7 @@ class AddressReferent(Referent):
             return AddressBuildingType.BUILDING
         try: 
             return Utils.valToEnum(str0_, AddressBuildingType)
-        except Exception as ex342: 
+        except Exception as ex324: 
             return AddressBuildingType.BUILDING
     @building_type.setter
     def building_type(self, value) -> 'AddressBuildingType':
@@ -265,7 +293,7 @@ class AddressReferent(Referent):
             if (a.type_name == AddressReferent.ATTR_GEO and (isinstance(a.value, GeoReferent))): 
                 res.append(Utils.asObjectOrNull(a.value, GeoReferent))
             elif (a.type_name == AddressReferent.ATTR_STREET and (isinstance(a.value, Referent))): 
-                for s in (a.value).slots: 
+                for s in a.value.slots: 
                     if (isinstance(s.value, GeoReferent)): 
                         res.append(Utils.asObjectOrNull(s.value, GeoReferent))
         i = len(res) - 1
@@ -284,7 +312,7 @@ class AddressReferent(Referent):
     def __is_higher(ghi : 'GeoReferent', glo : 'GeoReferent') -> bool:
         i = 0
         while glo is not None and (i < 10): 
-            if (glo.can_be_equals(ghi, Referent.EqualType.WITHINONETEXT)): 
+            if (glo.can_be_equals(ghi, ReferentsEqualType.WITHINONETEXT)): 
                 return True
             glo = glo.higher; i += 1
         return False
@@ -322,12 +350,12 @@ class AddressReferent(Referent):
                     if (GeoOwnerHelper.can_be_higher(geo, geo0)): 
                         return
             self.add_slot(AddressReferent.ATTR_GEO, r, False, 0)
-        elif (((isinstance(r, StreetReferent))) or r.type_name == "ORGANIZATION"): 
+        elif ((isinstance(r, StreetReferent)) or r.type_name == "ORGANIZATION"): 
             self.add_slot(AddressReferent.ATTR_STREET, r, False, 0)
     
     @property
     def detail(self) -> 'AddressDetailType':
-        """ ополнительная детализация места (пересечение, около ...) """
+        """ Дополнительная детализация места (пересечение, около ...) """
         s = self.get_string_value(AddressReferent.ATTR_DETAIL)
         if (s is None): 
             return AddressDetailType.UNDEFINED
@@ -335,7 +363,7 @@ class AddressReferent(Referent):
             res = Utils.valToEnum(s, AddressDetailType)
             if (isinstance(res, AddressDetailType)): 
                 return Utils.valToEnum(res, AddressDetailType)
-        except Exception as ex343: 
+        except Exception as ex325: 
             pass
         return AddressDetailType.UNDEFINED
     @detail.setter
@@ -414,10 +442,10 @@ class AddressReferent(Referent):
             print(" ГСП-{0}".format(self.csp), end="", file=res, flush=True)
         kladr = self.get_slot_value(AddressReferent.ATTR_FIAS)
         if (isinstance(kladr, Referent)): 
-            print(" (ФИАС: {0}".format(Utils.ifNotNull((kladr).get_string_value("GUID"), "?")), end="", file=res, flush=True)
+            print(" (ФИАС: {0}".format(Utils.ifNotNull(kladr.get_string_value("GUID"), "?")), end="", file=res, flush=True)
             for s in self.slots: 
                 if (s.type_name == AddressReferent.ATTR_FIAS and (isinstance(s.value, Referent)) and s.value != kladr): 
-                    print(", {0}".format(Utils.ifNotNull((s.value).get_string_value("GUID"), "?")), end="", file=res, flush=True)
+                    print(", {0}".format(Utils.ifNotNull(s.value.get_string_value("GUID"), "?")), end="", file=res, flush=True)
             print(')', end="", file=res)
         bti = self.get_string_value(AddressReferent.ATTR_BTI)
         if (bti is not None): 
@@ -434,7 +462,7 @@ class AddressReferent(Referent):
             print("; {0}".format(self.zip0_), end="", file=res, flush=True)
         return Utils.toStringStringIO(res).strip()
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType'=ReferentsEqualType.WITHINONETEXT) -> bool:
         addr = Utils.asObjectOrNull(obj, AddressReferent)
         if (addr is None): 
             return False
@@ -533,7 +561,7 @@ class AddressReferent(Referent):
             if (a.type_name == AddressReferent.ATTR_GEO and (isinstance(a.value, GeoReferent))): 
                 geos_.append(Utils.asObjectOrNull(a.value, GeoReferent))
             elif (a.type_name == AddressReferent.ATTR_STREET and (isinstance(a.value, Referent))): 
-                for s in (a.value).slots: 
+                for s in a.value.slots: 
                     if (isinstance(s.value, GeoReferent)): 
                         geos_.append(Utils.asObjectOrNull(s.value, GeoReferent))
         i = len(geos_) - 1

@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -36,17 +35,17 @@ class AnaforHelper:
             from pullenti.semantic.SemObjectType import SemObjectType
             if (tgt.typ != SemObjectType.NOUN): 
                 return None
-            if ((((src.morph.number) & (MorphNumber.PLURAL))) == (MorphNumber.PLURAL)): 
-                if ((((tgt.morph.number) & (MorphNumber.PLURAL))) != (MorphNumber.UNDEFINED)): 
-                    return AnaforHelper.AnaforLink._new2970(1, tgt)
-                res = AnaforHelper.AnaforLink._new2970(0.5, tgt)
+            if (((src.morph.number) & (MorphNumber.PLURAL)) == (MorphNumber.PLURAL)): 
+                if (((tgt.morph.number) & (MorphNumber.PLURAL)) != (MorphNumber.UNDEFINED)): 
+                    return AnaforHelper.AnaforLink._new2902(1, tgt)
+                res = AnaforHelper.AnaforLink._new2902(0.5, tgt)
                 res.target_list = list()
                 for li in tgt.links_to: 
                     frm = li.source
                     i = 0
-                    first_pass4051 = True
+                    first_pass3929 = True
                     while True:
-                        if first_pass4051: first_pass4051 = False
+                        if first_pass3929: first_pass3929 = False
                         else: i += 1
                         if (not (i < len(frm.links_from))): break
                         res.target_list.clear()
@@ -63,13 +62,13 @@ class AnaforHelper:
                         if (len(res.target_list) > 1): 
                             return res
                 return None
-            if (tgt.morph.number != MorphNumber.UNDEFINED and (((tgt.morph.number) & (MorphNumber.SINGULAR))) == (MorphNumber.UNDEFINED)): 
+            if (tgt.morph.number != MorphNumber.UNDEFINED and ((tgt.morph.number) & (MorphNumber.SINGULAR)) == (MorphNumber.UNDEFINED)): 
                 return None
             if (tgt.morph.gender != MorphGender.UNDEFINED): 
-                if ((((tgt.morph.gender) & (src.morph.gender))) == (MorphGender.UNDEFINED)): 
+                if (((tgt.morph.gender) & (src.morph.gender)) == (MorphGender.UNDEFINED)): 
                     return None
-                return AnaforHelper.AnaforLink._new2970(1, tgt)
-            return AnaforHelper.AnaforLink._new2970(0.1, tgt)
+                return AnaforHelper.AnaforLink._new2902(1, tgt)
+            return AnaforHelper.AnaforLink._new2902(0.1, tgt)
         
         @staticmethod
         def sort(li : typing.List['AnaforLink']) -> None:
@@ -109,7 +108,7 @@ class AnaforHelper:
             return 0
         
         @staticmethod
-        def _new2970(_arg1 : float, _arg2 : 'SemObject') -> 'AnaforLink':
+        def _new2902(_arg1 : float, _arg2 : 'SemObject') -> 'AnaforLink':
             res = AnaforHelper.AnaforLink()
             res.coef = _arg1
             res.target = _arg2

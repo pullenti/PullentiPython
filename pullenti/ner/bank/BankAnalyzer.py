@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -13,20 +12,21 @@ from pullenti.ner.core.TerminCollection import TerminCollection
 from pullenti.ner.Referent import Referent
 from pullenti.ner.NumberToken import NumberToken
 from pullenti.ner.bank.internal.MetaBank import MetaBank
-from pullenti.ner.bank.internal.EpNerBankInternalResourceHelper import EpNerBankInternalResourceHelper
+from pullenti.ner.bank.internal.PullentiNerBankInternalResourceHelper import PullentiNerBankInternalResourceHelper
 from pullenti.ner.bank.BankDataReferent import BankDataReferent
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.ProcessorService import ProcessorService
 from pullenti.ner.MetaToken import MetaToken
+from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.ner.Analyzer import Analyzer
-from pullenti.ner.core.TerminParseAttr import TerminParseAttr
 
 class BankAnalyzer(Analyzer):
     """ Анализатор банковских данных (счетов, платёжных реквизитов...) """
     
     ANALYZER_NAME = "BANKDATA"
+    """ Имя анализатора ("BANKDATA") """
     
     @property
     def name(self) -> str:
@@ -54,7 +54,7 @@ class BankAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[MetaBank.IMAGE_ID] = EpNerBankInternalResourceHelper.get_bytes("dollar.png")
+        res[MetaBank.IMAGE_ID] = PullentiNerBankInternalResourceHelper.get_bytes("dollar.png")
         return res
     
     def create_referent(self, type0_ : str) -> 'Referent':
@@ -107,9 +107,9 @@ class BankAnalyzer(Analyzer):
         org_is_bank = False
         empty = 0
         last_uri = None
-        first_pass3615 = True
+        first_pass3510 = True
         while True:
-            if first_pass3615: first_pass3615 = False
+            if first_pass3510: first_pass3510 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char and t != t0): 

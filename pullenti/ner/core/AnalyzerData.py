@@ -1,13 +1,16 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 
-from pullenti.ner.Referent import Referent
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 
 class AnalyzerData:
-    """ Данные, полученные в ходе обработки анализатором """
+    """ Данные, полученные в ходе обработки одним анализатором. Каждый анализатор сохраняет в своём класса свои данные,
+    получаемые в ходе анализа. В конце процессор объединяет их все. Получить экземпляр, связанный с анализатором,
+    можно методом AnalyzerKit.GetAnalyzerDataByAnalyzerName.
+    Данные анализа
+    """
     
     def __init__(self) -> None:
         self.kit = None;
@@ -17,7 +20,7 @@ class AnalyzerData:
     
     @property
     def referents(self) -> typing.List['Referent']:
-        """ Список выделенных сущностей """
+        """ Список выделенных сущностей Referent """
         return self._m_referents
     @referents.setter
     def referents(self, value) -> typing.List['Referent']:
@@ -27,11 +30,15 @@ class AnalyzerData:
         return value
     
     def register_referent(self, referent : 'Referent') -> 'Referent':
-        """ Зарегистрировать новую сущность или привязать к существующей сущности
+        """ Зарегистрировать новую сущность или привязать к существующей сущности. Сущности, получаемые в ходе анализа,
+        должны сохраняться через эту функцию. Именно здесь решается задача кореференции, то есть объединения
+        сущностей, соответствующих одному и тому же объекту текста.
         
         Args:
-            referent(Referent): 
+            referent(Referent): сохраняемая сущность
         
+        Returns:
+            Referent: этот же экземпляр referent или другой, если удалось объединиться с ранее выделенной сущностью
         """
         if (referent is None): 
             return None
@@ -61,7 +68,7 @@ class AnalyzerData:
         i = len(self._m_referents) - 1
         while i >= 0 and ((len(self._m_referents) - i) < 1000): 
             p = self._m_referents[i]
-            if (p.can_be_equals(referent, Referent.EqualType.WITHINONETEXT)): 
+            if (p.can_be_equals(referent, ReferentsEqualType.WITHINONETEXT)): 
                 if (not p.can_be_general_for(referent) and not referent.can_be_general_for(p)): 
                     if (eq is None): 
                         eq = list()
@@ -91,5 +98,10 @@ class AnalyzerData:
         return referent
     
     def remove_referent(self, r : 'Referent') -> None:
+        """ Удалить сущность из списка
+        
+        Args:
+            r(Referent): удаляемая сущность
+        """
         if (r in self._m_referents): 
             self._m_referents.remove(r)

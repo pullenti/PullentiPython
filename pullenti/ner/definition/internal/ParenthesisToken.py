@@ -1,21 +1,20 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 
-from pullenti.morph.MorphLang import MorphLang
-from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.MetaToken import MetaToken
-from pullenti.ner.core.Termin import Termin
+from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
-from pullenti.ner.TextToken import TextToken
 from pullenti.morph.MorphClass import MorphClass
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.BracketHelper import BracketHelper
+from pullenti.ner.core.Termin import Termin
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 
 class ParenthesisToken(MetaToken):
-    """ Анализ вводных слов и словосочетаний """
+    # Анализ вводных слов и словосочетаний
     
     def __init__(self, b : 'Token', e0_ : 'Token') -> None:
         super().__init__(b, e0_, None)
@@ -29,7 +28,7 @@ class ParenthesisToken(MetaToken):
         if (tok is not None): 
             res = ParenthesisToken(t, tok.end_token)
             return res
-        if (not ((isinstance(t, TextToken)))): 
+        if (not (isinstance(t, TextToken))): 
             return None
         mc = t.get_morph_class_in_dictionary()
         ok = False
@@ -66,13 +65,13 @@ class ParenthesisToken(MetaToken):
                         t1 = npt1.end_token.next0_
             r = t1.get_referent()
             if (r is not None): 
-                res = ParenthesisToken._new1181(t, t1, r)
+                res = ParenthesisToken._new1115(t, t1, r)
                 if (t1.next0_ is not None and t1.next0_.is_comma): 
                     sila = False
                     ttt = t1.next0_.next0_
-                    first_pass3746 = True
+                    first_pass3626 = True
                     while True:
-                        if first_pass3746: first_pass3746 = False
+                        if first_pass3626: first_pass3626 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_value("СИЛА", None) or ttt.is_value("ДЕЙСТВИЕ", None)): 
@@ -115,7 +114,7 @@ class ParenthesisToken(MetaToken):
     __m_termins = None
     
     @staticmethod
-    def _new1181(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent') -> 'ParenthesisToken':
+    def _new1115(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Referent') -> 'ParenthesisToken':
         res = ParenthesisToken(_arg1, _arg2)
         res.ref = _arg3
         return res

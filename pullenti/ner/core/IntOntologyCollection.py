@@ -1,18 +1,19 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.ner.Referent import Referent
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.ner.core.Termin import Termin
-from pullenti.ner.core.IntOntologyToken import IntOntologyToken
 from pullenti.ner.core.TerminCollection import TerminCollection
+from pullenti.ner.core.IntOntologyToken import IntOntologyToken
 
 class IntOntologyCollection:
-    """ Онтологический словарь """
+    # Внутренний онтологический словарь. По сути, некоторая надстройка над TerminCollection.
+    # Не помню уже, зачем был введён, но для чего-то нужен.
     
     class OntologyTermin(Termin):
         
@@ -21,7 +22,7 @@ class IntOntologyCollection:
             self.owner = None;
         
         @staticmethod
-        def _new560(_arg1 : 'IntOntologyItem', _arg2 : object) -> 'OntologyTermin':
+        def _new489(_arg1 : 'IntOntologyItem', _arg2 : object) -> 'OntologyTermin':
             res = IntOntologyCollection.OntologyTermin()
             res.owner = _arg1
             res.tag = _arg2
@@ -48,10 +49,10 @@ class IntOntologyCollection:
         i = 0
         while i < len(di.termins): 
             if (isinstance(di.termins[i], IntOntologyCollection.OntologyTermin)): 
-                (di.termins[i]).owner = di
+                di.termins[i].owner = di
                 self.__m_termins.add(di.termins[i])
             else: 
-                nt = IntOntologyCollection.OntologyTermin._new560(di, di.termins[i].tag)
+                nt = IntOntologyCollection.OntologyTermin._new489(di, di.termins[i].tag)
                 di.termins[i].copy_to(nt)
                 self.__m_termins.add(nt)
                 di.termins[i] = (nt)
@@ -93,7 +94,7 @@ class IntOntologyCollection:
             di(IntOntologyItem): 
             t(Termin): 
         """
-        nt = IntOntologyCollection.OntologyTermin._new560(di, t.tag)
+        nt = IntOntologyCollection.OntologyTermin._new489(di, t.tag)
         t.copy_to(nt)
         self.__m_termins.add(nt)
     
@@ -106,7 +107,7 @@ class IntOntologyCollection:
         self.__m_termins.add(t)
     
     def find_termin_by_canonic_text(self, text : str) -> typing.List['Termin']:
-        return self.__m_termins.find_termin_by_canonic_text(text)
+        return self.__m_termins.find_termins_by_canonic_text(text)
     
     def try_attach(self, t : 'Token', referent_type_name : str=None, can_be_geo_object : bool=False) -> typing.List['IntOntologyToken']:
         """ Привязать с указанной позиции
@@ -116,7 +117,7 @@ class IntOntologyCollection:
             can_be_geo_object(bool): при True внутри может быть географический объект (Министерство РФ по делам ...)
         
         """
-        tts = self.__m_termins.try_parse_all(t, (TerminParseAttr.CANBEGEOOBJECT if can_be_geo_object else TerminParseAttr.NO), 0)
+        tts = self.__m_termins.try_parse_all(t, (TerminParseAttr.CANBEGEOOBJECT if can_be_geo_object else TerminParseAttr.NO))
         if (tts is None): 
             return None
         res = list()
@@ -124,7 +125,7 @@ class IntOntologyCollection:
         for tt in tts: 
             di = None
             if (isinstance(tt.termin, IntOntologyCollection.OntologyTermin)): 
-                di = (tt.termin).owner
+                di = tt.termin.owner
             if (di is not None): 
                 if (di.referent is not None and referent_type_name is not None): 
                     if (di.referent.type_name != referent_type_name): 
@@ -132,7 +133,7 @@ class IntOntologyCollection:
                 if (di in dis): 
                     continue
                 dis.append(di)
-            res.append(IntOntologyToken._new562(tt.begin_token, tt.end_token, di, tt.termin, tt.morph))
+            res.append(IntOntologyToken._new491(tt.begin_token, tt.end_token, di, tt.termin, tt.morph))
         return (None if len(res) == 0 else res)
     
     def try_attach_by_item(self, item : 'IntOntologyItem') -> typing.List['IntOntologyItem']:
@@ -146,11 +147,11 @@ class IntOntologyCollection:
             return None
         res = None
         for t in item.termins: 
-            li = self.__m_termins.try_attach(t)
+            li = self.__m_termins.find_termins_by_termin(t)
             if (li is not None): 
                 for tt in li: 
                     if (isinstance(tt, IntOntologyCollection.OntologyTermin)): 
-                        oi = (tt).owner
+                        oi = tt.owner
                         if (res is None): 
                             res = list()
                         if (not oi in res): 
@@ -176,9 +177,9 @@ class IntOntologyCollection:
             return None
         res = None
         for oi in li: 
-            r = Utils.ifNotNull(oi.referent, (Utils.asObjectOrNull(oi.tag, Referent)))
+            r = Utils.ifNotNull(oi.referent, Utils.asObjectOrNull(oi.tag, Referent))
             if (r is not None): 
-                if (referent.can_be_equals(r, Referent.EqualType.WITHINONETEXT)): 
+                if (referent.can_be_equals(r, ReferentsEqualType.WITHINONETEXT)): 
                     if (res is None): 
                         res = list()
                     if (not r in res): 
@@ -189,7 +190,7 @@ class IntOntologyCollection:
                 while i < (len(res) - 1): 
                     j = i + 1
                     while j < len(res): 
-                        if (not res[i].can_be_equals(res[j], Referent.EqualType.FORMERGING)): 
+                        if (not res[i].can_be_equals(res[j], ReferentsEqualType.FORMERGING)): 
                             return None
                         j += 1
                     i += 1
@@ -218,7 +219,7 @@ class IntOntologyCollection:
             i += 1
     
     @staticmethod
-    def _new2877(_arg1 : bool) -> 'IntOntologyCollection':
+    def _new2811(_arg1 : bool) -> 'IntOntologyCollection':
         res = IntOntologyCollection()
         res.is_ext_ontology = _arg1
         return res

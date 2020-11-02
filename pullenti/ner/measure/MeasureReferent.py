@@ -1,40 +1,49 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.ner.measure.UnitReferent import UnitReferent
 from pullenti.ner.measure.MeasureKind import MeasureKind
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.ner.Referent import Referent
-from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.ReferentClass import ReferentClass
+from pullenti.ner.measure.UnitReferent import UnitReferent
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.measure.internal.MeasureMeta import MeasureMeta
+from pullenti.ner.core.NumberHelper import NumberHelper
 from pullenti.ner.measure.internal.MeasureHelper import MeasureHelper
 
 class MeasureReferent(Referent):
-    """ Величина или диапазон величин, измеряемая в некоторых единицах """
+    """ Величина или диапазон величин, измеряемая в некоторых единицах
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(MeasureReferent.OBJ_TYPENAME)
         self.instance_of = MeasureMeta.GLOBAL_META
     
     OBJ_TYPENAME = "MEASURE"
+    """ Имя типа сущности TypeName ("MEASURE") """
     
     ATTR_TEMPLATE = "TEMPLATE"
+    """ Имя атрибута - шаблон для значений, например, [1..2], 1x2, 1 ]..1] """
     
     ATTR_VALUE = "VALUE"
+    """ Имя атрибута - значение (м.б. несколько для каждого числа из шаблона) """
     
     ATTR_UNIT = "UNIT"
+    """ Имя атрибута - единицы измерения (UnitReferent) """
     
     ATTR_REF = "REF"
+    """ Имя атрибута - ссылка на уточняющее измерение (MeasureReferent) """
     
     ATTR_NAME = "NAME"
+    """ Имя атрибута - наименование перед (если есть) """
     
     ATTR_KIND = "KIND"
+    """ Имя атрибута - тип (MeasureKind), что измеряется этой величиной """
     
     @property
     def template(self) -> str:
@@ -50,10 +59,10 @@ class MeasureReferent(Referent):
         res = list()
         for s in self.slots: 
             if (s.type_name == MeasureReferent.ATTR_VALUE and (isinstance(s.value, str))): 
-                wrapd1806 = RefOutArgWrapper(0)
-                inoutres1807 = MeasureHelper.try_parse_double(Utils.asObjectOrNull(s.value, str), wrapd1806)
-                d = wrapd1806.value
-                if (inoutres1807): 
+                wrapd1740 = RefOutArgWrapper(0)
+                inoutres1741 = MeasureHelper.try_parse_double(Utils.asObjectOrNull(s.value, str), wrapd1740)
+                d = wrapd1740.value
+                if (inoutres1741): 
                     res.append(d)
         return res
     
@@ -62,6 +71,7 @@ class MeasureReferent(Referent):
     
     @property
     def units(self) -> typing.List['UnitReferent']:
+        """ Список единиц измерения UnitReferent """
         res = list()
         for s in self.slots: 
             if (s.type_name == MeasureReferent.ATTR_UNIT and (isinstance(s.value, UnitReferent))): 
@@ -70,12 +80,13 @@ class MeasureReferent(Referent):
     
     @property
     def kind(self) -> 'MeasureKind':
+        """ Тип, что измеряется этой величиной """
         str0_ = self.get_string_value(MeasureReferent.ATTR_KIND)
         if (str0_ is None): 
             return MeasureKind.UNDEFINED
         try: 
             return Utils.valToEnum(str0_, MeasureKind)
-        except Exception as ex1808: 
+        except Exception as ex1742: 
             pass
         return MeasureKind.UNDEFINED
     @kind.setter
@@ -95,7 +106,7 @@ class MeasureReferent(Referent):
                         val = "?"
                     vals.append(val)
                 elif (isinstance(s.value, Referent)): 
-                    vals.append((s.value).to_string(True, lang, 0))
+                    vals.append(s.value.to_string(True, lang, 0))
         for i in range(res.tell() - 1, -1, -1):
             ch = Utils.getCharAtStringIO(res, i)
             if (not str.isdigit(ch)): 
@@ -105,23 +116,32 @@ class MeasureReferent(Referent):
                 continue
             Utils.removeStringIO(res, i, 1)
             Utils.insertStringIO(res, i, vals[j])
-        self.out_units(res, lang)
+        print(self.out_units(lang), end="", file=res)
         if (not short_variant): 
             nam = self.get_string_value(MeasureReferent.ATTR_NAME)
             if (nam is not None): 
                 print(" - {0}".format(nam), end="", file=res, flush=True)
             for s in self.slots: 
                 if (s.type_name == MeasureReferent.ATTR_REF and (isinstance(s.value, MeasureReferent))): 
-                    print(" / {0}".format((s.value).to_string(True, lang, 0)), end="", file=res, flush=True)
+                    print(" / {0}".format(s.value.to_string(True, lang, 0)), end="", file=res, flush=True)
             ki = self.kind
             if (ki != MeasureKind.UNDEFINED): 
                 print(" ({0})".format(Utils.enumToString(ki).upper()), end="", file=res, flush=True)
         return Utils.toStringStringIO(res)
     
-    def out_units(self, res : io.StringIO, lang : 'MorphLang'=None) -> None:
+    def out_units(self, lang : 'MorphLang'=None) -> str:
+        """ Вывести только единицы измерения
+        
+        Args:
+            lang(MorphLang): язык
+        
+        Returns:
+            str: строка с результатом
+        """
         uu = self.units
         if (len(uu) == 0): 
-            return
+            return ""
+        res = io.StringIO()
         print(uu[0].to_string(True, lang, 0), end="", file=res)
         i = 1
         while i < len(uu): 
@@ -133,8 +153,9 @@ class MeasureReferent(Referent):
             else: 
                 print("*{0}".format(uu[i].to_string(True, lang, 0)), end="", file=res, flush=True)
             i += 1
+        return Utils.toStringStringIO(res)
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType'=ReferentsEqualType.WITHINONETEXT) -> bool:
         mr = Utils.asObjectOrNull(obj, MeasureReferent)
         if (mr is None): 
             return False

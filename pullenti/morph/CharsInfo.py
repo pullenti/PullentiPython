@@ -1,12 +1,14 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
 
 class CharsInfo:
-    """ Информация о символах токена """
+    """ Информация о символах токена
+    
+    Символьная информация
+    """
     
     def __init__(self) -> None:
         self.value = 0
@@ -41,7 +43,7 @@ class CharsInfo:
     @property
     def is_capital_upper(self) -> bool:
         """ Первый символ в верхнем регистре, остальные в нижнем.
-         Для однобуквенной комбинации false. """
+        Для однобуквенной комбинации false. """
         return self.__get_value(2)
     @is_capital_upper.setter
     def is_capital_upper(self, value_) -> bool:
@@ -107,11 +109,20 @@ class CharsInfo:
         return Utils.toStringStringIO(tmp_str)
     
     def equals(self, obj : object) -> bool:
-        if (not ((isinstance(obj, CharsInfo)))): 
+        if (not (isinstance(obj, CharsInfo))): 
             return False
-        return self.value == (obj).value
+        return self.value == obj.value
     
     def __eq__(self : 'CharsInfo', arg2 : 'CharsInfo') -> bool:
+        """ Моделирование сравнения ==
+        
+        Args:
+            self(CharsInfo): первый аргумент
+            arg2(CharsInfo): второй аргумент
+        
+        Returns:
+            bool: arg1 == arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
@@ -121,6 +132,15 @@ class CharsInfo:
         return val1 == val2
     
     def __ne__(self : 'CharsInfo', arg2 : 'CharsInfo') -> bool:
+        """ Моделирование неравенства !=
+        
+        Args:
+            self(CharsInfo): первый аргумент
+            arg2(CharsInfo): второй аргумент
+        
+        Returns:
+            bool: arg1 != arg2
+        """
         val1 = 0
         val2 = 0
         if (self is not None): 
@@ -130,26 +150,26 @@ class CharsInfo:
         return val1 != val2
     
     @staticmethod
-    def _new2416(_arg1 : bool) -> 'CharsInfo':
+    def _new2360(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_capital_upper = _arg1
         return res
     
     @staticmethod
-    def _new2602(_arg1 : bool) -> 'CharsInfo':
+    def _new2541(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_cyrillic_letter = _arg1
         return res
     
     @staticmethod
-    def _new2608(_arg1 : bool, _arg2 : bool) -> 'CharsInfo':
+    def _new2547(_arg1 : bool, _arg2 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_cyrillic_letter = _arg1
         res.is_capital_upper = _arg2
         return res
     
     @staticmethod
-    def _new2613(_arg1 : bool, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'CharsInfo':
+    def _new2552(_arg1 : bool, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_capital_upper = _arg1
         res.is_cyrillic_letter = _arg2
@@ -158,13 +178,13 @@ class CharsInfo:
         return res
     
     @staticmethod
-    def _new2618(_arg1 : int) -> 'CharsInfo':
+    def _new2557(_arg1 : int) -> 'CharsInfo':
         res = CharsInfo()
         res.value = _arg1
         return res
     
     @staticmethod
-    def _new2637(_arg1 : bool) -> 'CharsInfo':
+    def _new2576(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_latin_letter = _arg1
         return res

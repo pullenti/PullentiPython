@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -44,13 +43,13 @@ class NGItem:
         self.links.clear()
     
     @staticmethod
-    def _new2997(_arg1 : 'SentItem') -> 'NGItem':
+    def _new2922(_arg1 : 'SentItem') -> 'NGItem':
         res = NGItem()
         res.source = _arg1
         return res
     
     @staticmethod
-    def _new2998(_arg1 : 'SentItem', _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'NGItem':
+    def _new2923(_arg1 : 'SentItem', _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'NGItem':
         res = NGItem()
         res.source = _arg1
         res.comma_before = _arg2
@@ -59,7 +58,7 @@ class NGItem:
         return res
     
     @staticmethod
-    def _new3003(_arg1 : 'SentItem', _arg2 : int) -> 'NGItem':
+    def _new2928(_arg1 : 'SentItem', _arg2 : int) -> 'NGItem':
         res = NGItem()
         res.source = _arg1
         res.order = _arg2

@@ -1,24 +1,27 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.ner.Token import Token
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.core.BracketSequenceToken import BracketSequenceToken
+from pullenti.ner.Token import Token
 from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.TextToken import TextToken
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.core.BracketSequenceToken import BracketSequenceToken
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 
 class BracketHelper:
-    """ Поддержка анализа скобок и кавычек """
+    """ Поддержка анализа скобок и кавычек
+    
+    Хелпер скобок и кавычек
+    """
     
     class Bracket:
         
@@ -30,7 +33,7 @@ class BracketHelper:
             self.can_be_close = False
             self.source = t
             if (isinstance(t, TextToken)): 
-                self.char0_ = (t).term[0]
+                self.char0_ = t.term[0]
             self.can_be_open = BracketHelper.can_be_start_of_sequence(t, False, False)
             self.can_be_close = BracketHelper.can_be_end_of_sequence(t, False, None, False)
         
@@ -45,11 +48,14 @@ class BracketHelper:
     
     @staticmethod
     def can_be_start_of_sequence(t : 'Token', quotes_only : bool=False, ignore_whitespaces : bool=False) -> bool:
-        """ Проверка, что с этого терма может начинаться последовательность
+        """ Проверка, что с этого токена может начинаться последовательность, а сам токен является открывающей скобкой или кавычкой
         
         Args:
             t(Token): проверяемый токен
             quotes_only(bool): должны быть именно кавычка, а не скобка
+        
+        Returns:
+            bool: да-нет
         
         """
         tt = Utils.asObjectOrNull(t, TextToken)
@@ -81,13 +87,16 @@ class BracketHelper:
         return True
     
     @staticmethod
-    def can_be_end_of_sequence(t : 'Token', quotes_only : bool=False, opent : 'Token'=None, ignore_whitespaces : bool=False) -> bool:
-        """ Проверка, что на этом терме может заканчиваться последовательность
+    def can_be_end_of_sequence(t : 'Token', quotes_only : bool=False, open_token : 'Token'=None, ignore_whitespaces : bool=False) -> bool:
+        """ Проверка, что на этом токене может заканчиваться последовательность, а сам токен является закрывающей скобкой или кавычкой
         
         Args:
-            t(Token): закрывающая кавычка
+            t(Token): проверяемый токен
             quotes_only(bool): должны быть именно кавычка, а не скобка
-            opent(Token): это ссылка на токен, который мог быть открывающим
+            open_token(Token): это ссылка на токен, который был открывающим
+        
+        Returns:
+            bool: да-нет
         
         """
         tt = Utils.asObjectOrNull(t, TextToken)
@@ -117,8 +126,8 @@ class BracketHelper:
                     return False
                 if (not t.is_whitespace_after): 
                     return False
-        if (isinstance(opent, TextToken)): 
-            ch0 = (opent).term[0]
+        if (isinstance(open_token, TextToken)): 
+            ch0 = open_token.term[0]
             i = BracketHelper.M_OPEN_CHARS.find(ch0)
             if (i < 0): 
                 return BracketHelper.M_CLOSE_CHARS.find(ch) < 0
@@ -127,56 +136,63 @@ class BracketHelper:
         return True
     
     @staticmethod
-    def is_bracket_char(ch : 'char', quots_only : bool=False) -> bool:
+    def is_bracket_char(ch : 'char', quotes_only : bool=False) -> bool:
         """ Проверка символа, что он может быть скобкой или кавычкой
         
         Args:
-            ch('char'): 
-            quots_only(bool): 
+            ch('char'): проверяемый символ
+            quotes_only(bool): должны быть именно кавычка, а не скобка
         
+        Returns:
+            bool: да-нет
         """
         if (BracketHelper.M_OPEN_CHARS.find(ch) >= 0 or BracketHelper.M_CLOSE_CHARS.find(ch) >= 0): 
-            if (not quots_only): 
+            if (not quotes_only): 
                 return True
             return BracketHelper.M_QUOTES.find(ch) >= 0
         return False
     
     @staticmethod
-    def is_bracket(t : 'Token', quots_only : bool=False) -> bool:
+    def is_bracket(t : 'Token', quotes_only : bool=False) -> bool:
         """ Проверка токена, что он является скобкой или кавычкой
         
         Args:
-            t(Token): 
-            quots_only(bool): 
+            t(Token): проверяемый токен
+            quotes_only(bool): должны быть именно кавычка, а не скобка
         
+        Returns:
+            bool: да-нет
         """
         if (t is None): 
             return False
         if (t.is_char_of(BracketHelper.M_OPEN_CHARS)): 
-            if (quots_only): 
+            if (quotes_only): 
                 if (isinstance(t, TextToken)): 
-                    if (BracketHelper.M_QUOTES.find((t).term[0]) < 0): 
+                    if (BracketHelper.M_QUOTES.find(t.term[0]) < 0): 
                         return False
             return True
         if (t.is_char_of(BracketHelper.M_CLOSE_CHARS)): 
-            if (quots_only): 
+            if (quotes_only): 
                 if (isinstance(t, TextToken)): 
-                    if (BracketHelper.M_QUOTES.find((t).term[0]) < 0): 
+                    if (BracketHelper.M_QUOTES.find(t.term[0]) < 0): 
                         return False
             return True
         return False
     
     @staticmethod
-    def try_parse(t : 'Token', typ : 'BracketParseAttr'=BracketParseAttr.NO, max_tokens : int=100) -> 'BracketSequenceToken':
-        """ Попробовать восстановить последовательность, обрамляемой кавычками
+    def try_parse(t : 'Token', attrs : 'BracketParseAttr'=BracketParseAttr.NO, max_tokens : int=100) -> 'BracketSequenceToken':
+        """ Попробовать восстановить последовательность, обрамляемую кавычками или скобками. Поддерживается
+        вложенность, возможность отсутствия закрывающего элемента и др.
         
         Args:
-            t(Token): 
-            typ(BracketParseAttr): параметры выделения
-            max_tokens(int): максимально токенов (вдруг забыли закрывающую ккавычку)
+            t(Token): начальный токен
+            attrs(BracketParseAttr): параметры выделения
+            max_tokens(int): максимально токенов (вдруг забыли закрывающую кавычку)
+        
+        Returns:
+            BracketSequenceToken: метатокен BracketSequenceToken
         
         """
-        from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
         t0 = t
         cou = 0
         if (not BracketHelper.can_be_start_of_sequence(t0, False, False)): 
@@ -188,17 +204,18 @@ class BracketHelper:
         last = None
         lev = 1
         is_assim = br_list[0].char0_ != '«' and BracketHelper.M_ASSYMOPEN_CHARS.find(br_list[0].char0_) >= 0
+        gen_case = False
         t = t0.next0_
-        first_pass3670 = True
+        first_pass3550 = True
         while True:
-            if first_pass3670: first_pass3670 = False
+            if first_pass3550: first_pass3550 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
                 break
             last = t
             if (t.is_char_of(BracketHelper.M_OPEN_CHARS) or t.is_char_of(BracketHelper.M_CLOSE_CHARS)): 
-                if (t.is_newline_before and (((typ) & (BracketParseAttr.CANBEMANYLINES))) == (BracketParseAttr.NO)): 
+                if (t.is_newline_before and (((attrs) & (BracketParseAttr.CANBEMANYLINES))) == (BracketParseAttr.NO)): 
                     if (t.whitespaces_before_count > 10 or BracketHelper.can_be_start_of_sequence(t, False, False)): 
                         if (t.is_char('(') and not t0.is_char('(')): 
                             pass
@@ -246,7 +263,7 @@ class BracketHelper:
                 cou += 1
                 if (cou > max_tokens): 
                     break
-                if ((((typ) & (BracketParseAttr.CANCONTAINSVERBS))) == (BracketParseAttr.NO)): 
+                if ((((attrs) & (BracketParseAttr.CANCONTAINSVERBS))) == (BracketParseAttr.NO)): 
                     if (t.morph.language.is_cyrillic): 
                         if (t.get_morph_class_in_dictionary() == MorphClass.VERB): 
                             if (not t.morph.class0_.is_adjective and not t.morph.contains_attr("страд.з.", None)): 
@@ -264,7 +281,7 @@ class BracketHelper:
                     if (r is not None and r.type_name == "ADDRESS"): 
                         if (not t0.is_char('(')): 
                             break
-            if ((((typ) & (BracketParseAttr.CANBEMANYLINES))) != (BracketParseAttr.NO)): 
+            if ((((attrs) & (BracketParseAttr.CANBEMANYLINES))) != (BracketParseAttr.NO)): 
                 if (t.is_newline_before): 
                     if (t.newlines_before_count > 1): 
                         break
@@ -272,12 +289,27 @@ class BracketHelper:
                 continue
             if (t.is_newline_before): 
                 if (t.whitespaces_before_count > 15): 
+                    last = t.previous
                     break
                 crlf += 1
                 if (not t.chars.is_all_lower): 
-                    if (t.previous is not None and t.previous.is_char('.')): 
-                        break
-                if ((isinstance(t.previous, MetaToken)) and BracketHelper.can_be_end_of_sequence((t.previous).end_token, False, None, False)): 
+                    if (MiscHelper.can_be_start_of_sentence(t)): 
+                        has = False
+                        tt = t.next0_
+                        while tt is not None: 
+                            if (tt.is_newline_before): 
+                                break
+                            elif (tt.length_char == 1 and tt.is_char_of(BracketHelper.M_OPEN_CHARS) and tt.is_whitespace_before): 
+                                break
+                            elif (tt.length_char == 1 and tt.is_char_of(BracketHelper.M_CLOSE_CHARS) and not tt.is_whitespace_before): 
+                                has = True
+                                break
+                            tt = tt.next0_
+                        if (not has): 
+                            last = t.previous
+                            break
+                if ((isinstance(t.previous, MetaToken)) and BracketHelper.can_be_end_of_sequence(t.previous.end_token, False, None, False)): 
+                    last = t.previous
                     break
             if (crlf > 1): 
                 if (len(br_list) > 1): 
@@ -286,9 +318,17 @@ class BracketHelper:
                     break
             if (t.is_char(';') and t.is_newline_after): 
                 break
+            npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0, None)
+            if (npt is not None): 
+                if (t.is_newline_before): 
+                    gen_case = npt.morph.case_.is_genitive
+                t = npt.end_token
+                last = t
         if ((len(br_list) == 1 and br_list[0].can_be_open and (isinstance(last, MetaToken))) and last.is_newline_after): 
-            if (BracketHelper.can_be_end_of_sequence((last).end_token, False, None, False)): 
+            if (BracketHelper.can_be_end_of_sequence(last.end_token, False, None, False)): 
                 return BracketSequenceToken(t0, last)
+        if ((len(br_list) == 1 and br_list[0].can_be_open and gen_case) and last.is_newline_after and crlf <= 2): 
+            return BracketSequenceToken(t0, last)
         if (len(br_list) < 1): 
             return None
         i = 1
@@ -335,7 +375,7 @@ class BracketHelper:
                 if (internals is not None): 
                     res.internal.extend(internals)
         if ((res is None and len(br_list) >= 3 and br_list[2].can_be_close) and not br_list[2].can_be_open): 
-            if ((((typ) & (BracketParseAttr.NEARCLOSEBRACKET))) != (BracketParseAttr.NO)): 
+            if ((((attrs) & (BracketParseAttr.NEARCLOSEBRACKET))) != (BracketParseAttr.NO)): 
                 if (BracketHelper.__can_be_close_char(br_list[1].char0_, br_list[0].char0_)): 
                     return BracketSequenceToken(br_list[0].source, br_list[1].source)
             ok = True
@@ -360,18 +400,18 @@ class BracketHelper:
                         t = t.next0_
                 lev1 = 0
                 tt = br_list[0].source.previous
-                first_pass3671 = True
+                first_pass3551 = True
                 while True:
-                    if first_pass3671: first_pass3671 = False
+                    if first_pass3551: first_pass3551 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.is_newline_after or tt.is_table_control_char): 
                         break
-                    if (not ((isinstance(tt, TextToken)))): 
+                    if (not (isinstance(tt, TextToken))): 
                         continue
                     if (tt.chars.is_letter or tt.length_char > 1): 
                         continue
-                    ch = (tt).term[0]
+                    ch = tt.term[0]
                     if (BracketHelper.__can_be_close_char(ch, br_list[0].char0_)): 
                         lev1 += 1
                     elif (BracketHelper.__can_be_close_char(br_list[1].char0_, ch)): 
@@ -402,9 +442,9 @@ class BracketHelper:
         if (res is None): 
             cou = 0
             tt = t0.next0_
-            first_pass3672 = True
+            first_pass3552 = True
             while True:
-                if first_pass3672: first_pass3672 = False
+                if first_pass3552: first_pass3552 = False
                 else: tt = tt.next0_; cou += 1
                 if (not (tt is not None)): break
                 if (tt.is_table_control_char): 
@@ -417,7 +457,7 @@ class BracketHelper:
                 if (mt is None): 
                     continue
                 if (isinstance(mt.end_token, TextToken)): 
-                    if ((mt.end_token).is_char_of(BracketHelper.M_CLOSE_CHARS)): 
+                    if (mt.end_token.is_char_of(BracketHelper.M_CLOSE_CHARS)): 
                         bb = BracketHelper.Bracket(Utils.asObjectOrNull(mt.end_token, TextToken))
                         if (bb.can_be_close and BracketHelper.__can_be_close_char(bb.char0_, br_list[0].char0_)): 
                             return BracketSequenceToken(t0, tt)

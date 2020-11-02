@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 
 from pullenti.morph.MorphNumber import MorphNumber
@@ -10,8 +9,10 @@ from pullenti.ner.core.ConjunctionType import ConjunctionType
 from pullenti.ner.MetaToken import MetaToken
 
 class ConjunctionToken(MetaToken):
-    """ Представление союзов (они могут быть из нескольких токенов, например, "из-за того что"
-     Получить можно с помощью ConjunctionHelper.TryParse(t) """
+    """ Метатокен - представление союзов и других служебных слов. Они могут быть из нескольких токенов, например, "из-за того что".
+    Получить можно с помощью ConjunctionHelper.TryParse(t)
+    Союзная группа
+    """
     
     def __init__(self, b : 'Token', e0_ : 'Token') -> None:
         super().__init__(b, e0_, None)
@@ -34,7 +35,7 @@ class ConjunctionToken(MetaToken):
         return res
     
     @staticmethod
-    def _new549(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ConjunctionType', _arg4 : bool, _arg5 : str) -> 'ConjunctionToken':
+    def _new478(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ConjunctionType', _arg4 : bool, _arg5 : str) -> 'ConjunctionToken':
         res = ConjunctionToken(_arg1, _arg2)
         res.typ = _arg3
         res.is_simple = _arg4
@@ -42,14 +43,14 @@ class ConjunctionToken(MetaToken):
         return res
     
     @staticmethod
-    def _new550(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'ConjunctionType') -> 'ConjunctionToken':
+    def _new479(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'ConjunctionType') -> 'ConjunctionToken':
         res = ConjunctionToken(_arg1, _arg2)
         res.normal = _arg3
         res.typ = _arg4
         return res
     
     @staticmethod
-    def _new551(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : bool, _arg5 : 'ConjunctionType') -> 'ConjunctionToken':
+    def _new480(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : bool, _arg5 : 'ConjunctionType') -> 'ConjunctionToken':
         res = ConjunctionToken(_arg1, _arg2)
         res.normal = _arg3
         res.is_simple = _arg4

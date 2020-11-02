@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import math
 import io
@@ -9,7 +8,10 @@ from pullenti.unisharp.Utils import Utils
 from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 
 class SourceOfAnalysis:
-    """ Анализируемый текст """
+    """ Анализируемый текст, точнее, обёртка над ним
+    
+    Источник анализа
+    """
     
     @property
     def text(self) -> str:
@@ -30,13 +32,11 @@ class SourceOfAnalysis:
         return self.__tag
     
     def __init__(self, txt : str) -> None:
-        """ Делать анализ переходов на новую строку, которые на самом деле таковыми не являются
-         (например, они форматируют абзац в PDF).
-        Создать контейнер на основе плоского текста.
-         При создании будут автоматически сделаны транслитеральные замены, если они будут найдены.
+        """ Создать контейнер на основе плоского текста.
+        При создании будут автоматически сделаны транслитеральные замены, если они будут найдены.
         
         Args:
-            txt(str): Текст
+            txt(str): Анализируемый текст
         """
         self.__text = None;
         self.__tag = None;
@@ -53,17 +53,13 @@ class SourceOfAnalysis:
         self.text = txt
     
     def __do_cr_lf_correction(self, txt : str) -> str:
-        """ Это анализ случаев принудительно отформатированного текста
-        
-        Args:
-            txt(str): 
-        """
+        # Это анализ случаев принудительно отформатированного текста
         cou = 0
         total_len = 0
         i = 0
-        first_pass4050 = True
+        first_pass3928 = True
         while True:
-            if first_pass4050: first_pass4050 = False
+            if first_pass3928: first_pass3928 = False
             else: i += 1
             if (not (i < len(txt))): break
             ch = txt[i]
@@ -154,15 +150,7 @@ class SourceOfAnalysis:
     
     @staticmethod
     def __do_transliteral_correction(txt : io.StringIO, info : io.StringIO) -> int:
-        """ Произвести транслитеральную коррекцию
-        
-        Args:
-            txt(io.StringIO): корректируемый текст
-            info(io.StringIO): информация о замене (может быть null)
-        
-        Returns:
-            int: количество замен
-        """
+        # Произвести транслитеральную коррекцию
         stat = 0
         pref_rus_word = False
         i = 0
@@ -225,12 +213,14 @@ class SourceOfAnalysis:
         return self.__m_total_transliteral_substitutions
     
     def substring(self, position : int, length : int) -> str:
-        """ Извлечь фрагмент из исходного текста
+        """ Извлечь фрагмент из исходного текста. Переходы на новую строку заменяются пробелами.
         
         Args:
-            position(int): 
-            length(int): 
+            position(int): начальная позиция
+            length(int): длина
         
+        Returns:
+            str: фрагмент
         """
         if (length < 0): 
             length = (len(self.text) - position)
@@ -244,13 +234,7 @@ class SourceOfAnalysis:
         return "Position + Length > Text.Length"
     
     def calc_whitespace_distance_between_positions(self, pos_from : int, pos_to : int) -> int:
-        """ Вычислить расстояние в символах между соседними элементами
-        
-        Args:
-            indFrom: 
-            indTo: 
-        
-        """
+        # Вычислить расстояние в символах между соседними элементами
         if (pos_from == (pos_to + 1)): 
             return 0
         if (pos_from > pos_to or (pos_from < 0) or pos_to >= len(self.text)): 
@@ -277,7 +261,7 @@ class SourceOfAnalysis:
         self.text = SerializerHelper.deserialize_string(stream)
     
     @staticmethod
-    def _new565(_arg1 : str, _arg2 : bool) -> 'SourceOfAnalysis':
+    def _new494(_arg1 : str, _arg2 : bool) -> 'SourceOfAnalysis':
         res = SourceOfAnalysis(_arg1)
         res.create_number_tokens = _arg2
         return res

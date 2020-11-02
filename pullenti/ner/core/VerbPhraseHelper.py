@@ -1,29 +1,30 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
 from pullenti.morph.MorphClass import MorphClass
-from pullenti.ner.core.VerbPhraseToken import VerbPhraseToken
 from pullenti.morph.MorphWordForm import MorphWordForm
-from pullenti.ner.core.PrepositionHelper import PrepositionHelper
 from pullenti.ner.MorphCollection import MorphCollection
-from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.VerbPhraseToken import VerbPhraseToken
 from pullenti.morph.MorphCase import MorphCase
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.ner.TextToken import TextToken
 from pullenti.ner.core.VerbPhraseItemToken import VerbPhraseItemToken
+from pullenti.semantic.utils.DerivateService import DerivateService
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.Token import Token
-from pullenti.morph.Morphology import Morphology
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.semantic.utils.Explanatory import Explanatory
 from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.ner.Token import Token
+from pullenti.morph.MorphologyService import MorphologyService
 from pullenti.ner.core.MiscHelper import MiscHelper
+from pullenti.ner.core.PrepositionHelper import PrepositionHelper
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 
 class VerbPhraseHelper:
-    """ Работа с глагольными группами (последовательность из глаголов и наречий) """
+    """ Работа с глагольными группами (последовательность из глаголов и наречий)
+    Хелпер глагольных групп
+    """
     
     @staticmethod
     def try_parse(t : 'Token', can_be_partition : bool=False, can_be_adj_partition : bool=False, force_parse : bool=False) -> 'VerbPhraseToken':
@@ -33,11 +34,12 @@ class VerbPhraseHelper:
             t(Token): первый токен группы
             can_be_partition(bool): выделять ли причастия
             can_be_adj_partition(bool): это бывают чистые прилагательные используются в режиме причастий (действия, опасные для жизни)
+            force_parse(bool): всегда ли пытаться выделять, даже при сомнительных случаях (false по умолчанию)
         
         Returns:
             VerbPhraseToken: группа или null
         """
-        if (not ((isinstance(t, TextToken)))): 
+        if (not (isinstance(t, TextToken))): 
             return None
         if (not t.chars.is_letter): 
             return None
@@ -53,12 +55,12 @@ class VerbPhraseHelper:
         has_verb = False
         verb_be_before = False
         prep = None
-        first_pass3683 = True
+        first_pass3563 = True
         while True:
-            if first_pass3683: first_pass3683 = False
+            if first_pass3563: first_pass3563 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            if (not ((isinstance(t, TextToken)))): 
+            if (not (isinstance(t, TextToken))): 
                 break
             tt = Utils.asObjectOrNull(t, TextToken)
             is_participle = False
@@ -123,7 +125,7 @@ class VerbPhraseHelper:
                 if (norm.endswith("ЙШИЙ")): 
                     pass
                 else: 
-                    grs = Explanatory.find_derivates(norm, True, None)
+                    grs = DerivateService.find_derivates(norm, True, None)
                     if (grs is not None and len(grs) > 0): 
                         hverb = False
                         hpart = False
@@ -142,7 +144,7 @@ class VerbPhraseHelper:
                             hverb = False
                             hpart = False
                             norm1 = norm[len(grs[0].prefix):]
-                            grs = Explanatory.find_derivates(norm1, True, None)
+                            grs = DerivateService.find_derivates(norm1, True, None)
                             if (grs is not None and len(grs) > 0): 
                                 for gr in grs: 
                                     for w in gr.words: 
@@ -163,7 +165,7 @@ class VerbPhraseHelper:
             if (res is None): 
                 res = VerbPhraseToken(t0, t)
             res.end_token = t
-            it = VerbPhraseItemToken._new669(t, t, MorphCollection(t.morph))
+            it = VerbPhraseItemToken._new603(t, t, MorphCollection(t.morph))
             if (not0_ is not None): 
                 it.begin_token = not0_
                 it.not0_ = True
@@ -177,12 +179,12 @@ class VerbPhraseHelper:
             if (norm is None): 
                 norm = t.get_normal_case_text((MorphClass.ADJECTIVE if ty == 3 else (MorphClass.ADVERB if ty == 2 else MorphClass.VERB)), MorphNumber.SINGULAR, MorphGender.MASCULINE, False)
                 if (ty == 1 and not tt.morph.case_.is_undefined): 
-                    mi = MorphWordForm._new670(MorphCase.NOMINATIVE, MorphNumber.SINGULAR, MorphGender.MASCULINE)
+                    mi = MorphWordForm._new604(MorphCase.NOMINATIVE, MorphNumber.SINGULAR, MorphGender.MASCULINE)
                     for mit in tt.morph.items: 
                         if (isinstance(mit, MorphWordForm)): 
-                            mi.misc = (mit).misc
+                            mi.misc = mit.misc
                             break
-                    nnn = Morphology.get_wordform("КК" + (t).term, mi)
+                    nnn = MorphologyService.get_wordform("КК" + t.term, mi)
                     if (nnn is not None): 
                         norm = nnn[2:]
             it.normal = norm

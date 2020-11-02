@@ -1,110 +1,89 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
+import threading
 import gc
 import math
 import typing
-import threading
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.unisharp.Misc import EventHandler
 from pullenti.unisharp.Misc import ProgressEventArgs
 
-from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.morph.CharsInfo import CharsInfo
+from pullenti.morph.MorphToken import MorphToken
 from pullenti.morph.internal.UnicodeInfo import UnicodeInfo
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.internal.MorphEngine import MorphEngine
-from pullenti.morph.CharsInfo import CharsInfo
-from pullenti.morph.internal.TextWrapper import TextWrapper
 from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.morph.internal.TextWrapper import TextWrapper
+from pullenti.morph.internal.UniLexWrap import UniLexWrap
 from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphToken import MorphToken
 
 class InnerMorphology:
     
-    class UniLexWrap:
-        
-        def __init__(self) -> None:
-            self.word_forms = None;
-            self.lang = None;
-        
-        @staticmethod
-        def _new1(_arg1 : 'MorphLang') -> 'UniLexWrap':
-            res = InnerMorphology.UniLexWrap()
-            res.lang = _arg1
-            return res
-    
     def __init__(self) -> None:
+        self.__m_engine_ru = MorphEngine()
+        self.__m_engine_en = MorphEngine()
+        self.__m_engine_ua = MorphEngine()
+        self.__m_engine_by = MorphEngine()
+        self.__m_engine_kz = MorphEngine()
+        self.__m_lock = threading.Lock()
         self.__last_percent = 0
     
-    @staticmethod
-    def set_engines(engine : 'MorphEngine') -> None:
-        if (engine is not None): 
-            InnerMorphology.M_ENGINE_RU = engine
-            InnerMorphology.M_ENGINE_EN = engine
-            InnerMorphology.M_ENGINE_UA = engine
-            InnerMorphology.M_ENGINE_BY = engine
+    @property
+    def _loaded_languages(self) -> 'MorphLang':
+        return ((self.__m_engine_ru.language) | self.__m_engine_en.language | self.__m_engine_ua.language) | self.__m_engine_by.language | self.__m_engine_kz.language
     
-    M_ENGINE_RU = None
-    
-    M_ENGINE_EN = None
-    
-    M_ENGINE_UA = None
-    
-    M_ENGINE_BY = None
-    
-    M_ENGINE_KZ = None
-    
-    M_LOCK = None
-    
-    @staticmethod
-    def get_loaded_languages() -> 'MorphLang':
-        return ((InnerMorphology.M_ENGINE_RU.language) | InnerMorphology.M_ENGINE_EN.language | InnerMorphology.M_ENGINE_UA.language) | InnerMorphology.M_ENGINE_BY.language | InnerMorphology.M_ENGINE_KZ.language
-    
-    @staticmethod
-    def _load_languages(langs : 'MorphLang') -> None:
-        if (langs.is_ru and not InnerMorphology.M_ENGINE_RU.language.is_ru): 
-            with InnerMorphology.M_LOCK: 
-                if (not InnerMorphology.M_ENGINE_RU.language.is_ru): 
-                    if (not InnerMorphology.M_ENGINE_RU.initialize(MorphLang.RU)): 
+    def _load_languages(self, langs : 'MorphLang', lazy_load : bool) -> None:
+        if (langs.is_ru and not self.__m_engine_ru.language.is_ru): 
+            with self.__m_lock: 
+                if (not self.__m_engine_ru.language.is_ru): 
+                    if (not self.__m_engine_ru.initialize(MorphLang.RU, lazy_load)): 
                         raise Utils.newException("Not found resource file m_ru.dat in Morphology", None)
-        if (langs.is_en and not InnerMorphology.M_ENGINE_EN.language.is_en): 
-            with InnerMorphology.M_LOCK: 
-                if (not InnerMorphology.M_ENGINE_EN.language.is_en): 
-                    if (not InnerMorphology.M_ENGINE_EN.initialize(MorphLang.EN)): 
+        if (langs.is_en and not self.__m_engine_en.language.is_en): 
+            with self.__m_lock: 
+                if (not self.__m_engine_en.language.is_en): 
+                    if (not self.__m_engine_en.initialize(MorphLang.EN, lazy_load)): 
                         raise Utils.newException("Not found resource file m_en.dat in Morphology", None)
-        if (langs.is_ua and not InnerMorphology.M_ENGINE_UA.language.is_ua): 
-            with InnerMorphology.M_LOCK: 
-                if (not InnerMorphology.M_ENGINE_UA.language.is_ua): 
-                    InnerMorphology.M_ENGINE_UA.initialize(MorphLang.UA)
-        if (langs.is_by and not InnerMorphology.M_ENGINE_BY.language.is_by): 
-            with InnerMorphology.M_LOCK: 
-                if (not InnerMorphology.M_ENGINE_BY.language.is_by): 
-                    InnerMorphology.M_ENGINE_BY.initialize(MorphLang.BY)
-        if (langs.is_kz and not InnerMorphology.M_ENGINE_KZ.language.is_kz): 
-            with InnerMorphology.M_LOCK: 
-                if (not InnerMorphology.M_ENGINE_KZ.language.is_kz): 
-                    InnerMorphology.M_ENGINE_KZ.initialize(MorphLang.KZ)
+        if (langs.is_ua and not self.__m_engine_ua.language.is_ua): 
+            with self.__m_lock: 
+                if (not self.__m_engine_ua.language.is_ua): 
+                    self.__m_engine_ua.initialize(MorphLang.UA, lazy_load)
+        if (langs.is_by and not self.__m_engine_by.language.is_by): 
+            with self.__m_lock: 
+                if (not self.__m_engine_by.language.is_by): 
+                    self.__m_engine_by.initialize(MorphLang.BY, lazy_load)
+        if (langs.is_kz and not self.__m_engine_kz.language.is_kz): 
+            with self.__m_lock: 
+                if (not self.__m_engine_kz.language.is_kz): 
+                    self.__m_engine_kz.initialize(MorphLang.KZ, lazy_load)
     
-    @staticmethod
-    def _unload_languages(langs : 'MorphLang') -> None:
+    def _unload_languages(self, langs : 'MorphLang') -> None:
         """ Выгрузить язык(и), если они больше не нужны
         
         Args:
             langs(MorphLang): 
         """
-        if (langs.is_ru and InnerMorphology.M_ENGINE_RU.language.is_ru): 
-            InnerMorphology.M_ENGINE_RU._reset()
-        if (langs.is_en and InnerMorphology.M_ENGINE_EN.language.is_en): 
-            InnerMorphology.M_ENGINE_EN._reset()
-        if (langs.is_ua and InnerMorphology.M_ENGINE_UA.language.is_ua): 
-            InnerMorphology.M_ENGINE_UA._reset()
-        if (langs.is_by and InnerMorphology.M_ENGINE_BY.language.is_by): 
-            InnerMorphology.M_ENGINE_BY._reset()
-        if (langs.is_kz and InnerMorphology.M_ENGINE_KZ.language.is_kz): 
-            InnerMorphology.M_ENGINE_KZ._reset()
+        if (langs.is_ru and self.__m_engine_ru.language.is_ru): 
+            self.__m_engine_ru = MorphEngine()
+        if (langs.is_en and self.__m_engine_en.language.is_en): 
+            self.__m_engine_en = MorphEngine()
+        if (langs.is_ua and self.__m_engine_ua.language.is_ua): 
+            self.__m_engine_ua = MorphEngine()
+        if (langs.is_by and self.__m_engine_by.language.is_by): 
+            self.__m_engine_by = MorphEngine()
+        if (langs.is_kz and self.__m_engine_kz.language.is_kz): 
+            self.__m_engine_kz = MorphEngine()
         gc.collect()
+    
+    def set_engines(self, engine : 'MorphEngine') -> None:
+        if (engine is not None): 
+            self.__m_engine_ru = engine
+            self.__m_engine_en = engine
+            self.__m_engine_ua = engine
+            self.__m_engine_by = engine
     
     def __on_progress(self, val : int, max0_ : int, progress : EventHandler) -> None:
         p = val
@@ -116,7 +95,7 @@ class InnerMorphology:
             progress.call(None, ProgressEventArgs(p, None))
         self.__last_percent = p
     
-    def run(self, text : str, only_tokenizing : bool, dlang : 'MorphLang', progress : EventHandler, good_text : bool) -> typing.List['MorphToken']:
+    def run(self, text : str, only_tokenizing : bool, dlang : 'MorphLang', good_text : bool, progress : EventHandler) -> typing.List['MorphToken']:
         """ Произвести морфологический анализ текста
         
         Args:
@@ -142,12 +121,12 @@ class InnerMorphology:
         tot_by_words = 0
         tot_kz_words = 0
         i = 0
-        first_pass3575 = True
+        first_pass3471 = True
         while True:
-            if first_pass3575: first_pass3575 = False
+            if first_pass3471: first_pass3471 = False
             else: i += 1
             if (not (i < twr.length)): break
-            ty = InnerMorphology._get_char_typ(twrch[i])
+            ty = self._get_char_typ(twrch[i])
             if (ty == 0): 
                 continue
             if (ty > 2): 
@@ -155,7 +134,7 @@ class InnerMorphology:
             else: 
                 j = (i + 1)
                 while j < twr.length: 
-                    if (InnerMorphology._get_char_typ(twrch[j]) != ty): 
+                    if (self._get_char_typ(twrch[j]) != ty): 
                         break
                     j += 1
             wstr = text[i:i+j - i]
@@ -168,7 +147,7 @@ class InnerMorphology:
             if (Utils.isNullOrEmpty(term)): 
                 i = (j - 1)
                 continue
-            lang = InnerMorphology.__detect_lang(twr, i, j - 1, term)
+            lang = LanguageHelper._get_word_lang(term)
             if (lang == MorphLang.UA): 
                 pure_ukr_words += 1
             elif (lang == MorphLang.RU): 
@@ -189,12 +168,13 @@ class InnerMorphology:
                 term0 = term
             lemmas = None
             if (ty == 1 and not only_tokenizing): 
-                wraplemmas2 = RefOutArgWrapper(None)
-                inoutres3 = Utils.tryGetValue(uni_lex, term, wraplemmas2)
-                lemmas = wraplemmas2.value
-                if (not inoutres3): 
-                    lemmas = InnerMorphology.UniLexWrap._new1(lang)
-                    uni_lex[term] = lemmas
+                wraplemmas1 = RefOutArgWrapper(None)
+                inoutres2 = Utils.tryGetValue(uni_lex, term, wraplemmas1)
+                lemmas = wraplemmas1.value
+                if (not inoutres2): 
+                    nuni = UniLexWrap(lang)
+                    uni_lex[term] = nuni
+                    lemmas = nuni
             tok = MorphToken()
             tok.term = term
             tok.begin_char = i
@@ -227,7 +207,7 @@ class InnerMorphology:
             elif (tot_rus_words == 0 or tot_by_words >= (tot_rus_words * 2)): 
                 def_lang = MorphLang.BY
         if (((def_lang.is_undefined or def_lang.is_ua)) and tot_rus_words > 0): 
-            if (((tot_ukr_words > tot_rus_words and InnerMorphology.M_ENGINE_UA.language.is_ua)) or ((tot_by_words > tot_rus_words and InnerMorphology.M_ENGINE_BY.language.is_by)) or ((tot_kz_words > tot_rus_words and InnerMorphology.M_ENGINE_KZ.language.is_kz))): 
+            if (((tot_ukr_words > tot_rus_words and self.__m_engine_ua.language.is_ua)) or ((tot_by_words > tot_rus_words and self.__m_engine_by.language.is_by)) or ((tot_kz_words > tot_rus_words and self.__m_engine_kz.language.is_kz))): 
                 cou0 = 0
                 tot_kz_words = 0
                 tot_ukr_words = tot_kz_words
@@ -235,9 +215,9 @@ class InnerMorphology:
                 tot_rus_words = tot_by_words
                 for kp in uni_lex.items(): 
                     lang = MorphLang()
-                    wraplang4 = RefOutArgWrapper(lang)
-                    kp[1].word_forms = self.__process_one_word(kp[0], wraplang4)
-                    lang = wraplang4.value
+                    wraplang3 = RefOutArgWrapper(lang)
+                    kp[1].word_forms = self.__process_one_word(kp[0], wraplang3)
+                    lang = wraplang3.value
                     if (kp[1].word_forms is not None): 
                         for wf in kp[1].word_forms: 
                             lang |= wf.language
@@ -278,9 +258,9 @@ class InnerMorphology:
                     lang = MorphLang.BY
                 elif (tot_kz_words > tot_rus_words and tot_kz_words > tot_ukr_words and tot_kz_words > tot_by_words): 
                     lang = MorphLang.KZ
-            wraplang5 = RefOutArgWrapper(lang)
-            kp[1].word_forms = self.__process_one_word(kp[0], wraplang5)
-            lang = wraplang5.value
+            wraplang4 = RefOutArgWrapper(lang)
+            kp[1].word_forms = self.__process_one_word(kp[0], wraplang4)
+            lang = wraplang4.value
             kp[1].lang = lang
             if ((((lang) & MorphLang.RU)) != MorphLang.UNKNOWN): 
                 tot_rus_words += 1
@@ -293,10 +273,9 @@ class InnerMorphology:
             if (progress is not None): 
                 self.__on_progress(cou, len(uni_lex), progress)
             cou += 1
-        debug_token = None
         empty_list = None
         for r in res: 
-            uni = Utils.asObjectOrNull(r.tag, InnerMorphology.UniLexWrap)
+            uni = Utils.asObjectOrNull(r.tag, UniLexWrap)
             r.tag = None
             if (uni is None or uni.word_forms is None or len(uni.word_forms) == 0): 
                 if (empty_list is None): 
@@ -306,13 +285,11 @@ class InnerMorphology:
                     r.language = uni.lang
             else: 
                 r.word_forms = uni.word_forms
-            if (r.begin_char == 733860): 
-                debug_token = r
         if (not good_text): 
             i = 0
-            first_pass3576 = True
+            first_pass3472 = True
             while True:
-                if first_pass3576: first_pass3576 = False
+                if first_pass3472: first_pass3472 = False
                 else: i += 1
                 if (not (i < (len(res) - 2))): break
                 ui0 = twrch[res[i].begin_char]
@@ -338,9 +315,9 @@ class InnerMorphology:
                                 res[i].term = wstr
                                 if (li is None): 
                                     li = list()
-                                res[i].word_forms = li
                                 if (li is not None and len(li) > 0): 
                                     res[i].language = li[0].language
+                                res[i].word_forms = li
                                 del res[i + 1:i + 1+2]
                 elif (((ui1.uni_char == '3' or ui1.uni_char == '4')) and res[i + 1].length == 1): 
                     src = ("З" if ui1.uni_char == '3' else "Ч")
@@ -426,15 +403,15 @@ class InnerMorphology:
                         res[i].word_forms = li
                         del res[i + 1]
         i = 0
-        first_pass3577 = True
+        first_pass3473 = True
         while True:
-            if first_pass3577: first_pass3577 = False
+            if first_pass3473: first_pass3473 = False
             else: i += 1
             if (not (i < len(res))): break
             mt = res[i]
             mt.char_info = CharsInfo()
             ui0 = twrch[mt.begin_char]
-            ui00 = UnicodeInfo.ALL_CHARS[ord((res[i].term[0]))]
+            ui00 = UnicodeInfo.ALL_CHARS[ord((mt.term[0]))]
             j = (mt.begin_char + 1)
             while j <= mt.end_char: 
                 if (ui0.is_letter): 
@@ -442,14 +419,14 @@ class InnerMorphology:
                 ui0 = twrch[j]
                 j += 1
             if (ui0.is_letter): 
-                res[i].char_info.is_letter = True
+                mt.char_info.is_letter = True
                 if (ui00.is_latin): 
-                    res[i].char_info.is_latin_letter = True
+                    mt.char_info.is_latin_letter = True
                 elif (ui00.is_cyrillic): 
-                    res[i].char_info.is_cyrillic_letter = True
-                if (res[i].language == MorphLang.UNKNOWN): 
+                    mt.char_info.is_cyrillic_letter = True
+                if (mt.language == MorphLang.UNKNOWN): 
                     if (LanguageHelper.is_cyrillic(mt.term)): 
-                        res[i].language = (MorphLang.RU if def_lang.is_undefined else def_lang)
+                        mt.language = (MorphLang.RU if def_lang.is_undefined else def_lang)
                 if (good_text): 
                     continue
                 all_up = True
@@ -493,14 +470,15 @@ class InnerMorphology:
                         ok = True
                         break
                 if (not ok): 
+                    wf0 = MorphWordForm._new5(pref, MorphClass.NOUN, 1)
                     mt.word_forms = list(mt.word_forms)
-                    mt.word_forms.insert(0, MorphWordForm._new6(pref, MorphClass.NOUN, 1))
+                    mt.word_forms.insert(0, wf0)
         if (good_text or only_tokenizing): 
             return res
         i = 0
-        first_pass3578 = True
+        first_pass3474 = True
         while True:
-            if first_pass3578: first_pass3578 = False
+            if first_pass3474: first_pass3474 = False
             else: i += 1
             if (not (i < len(res))): break
             if (res[i].length == 1 and res[i].char_info.is_latin_letter): 
@@ -539,7 +517,7 @@ class InnerMorphology:
                             break
                     if (not ok): 
                         r.word_forms = list(r.word_forms)
-                        InnerMorphology.M_ENGINE_RU.process_surname_variants(r.term, r.word_forms)
+                        self.__m_engine_ru.process_surname_variants(r.term, r.word_forms)
         for r in res: 
             for mv in r.word_forms: 
                 if (mv.normal_case is None): 
@@ -563,9 +541,9 @@ class InnerMorphology:
                         del res[i + 1:i + 1+2]
             i += 1
         i = 0
-        first_pass3579 = True
+        first_pass3475 = True
         while True:
-            if first_pass3579: first_pass3579 = False
+            if first_pass3475: first_pass3475 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (not res[i].char_info.is_letter and not res[i + 1].char_info.is_letter and (res[i].end_char + 1) == res[i + 1].begin_char): 
@@ -582,8 +560,7 @@ class InnerMorphology:
                     del res[i + 1]
         return res
     
-    @staticmethod
-    def _get_char_typ(ui : 'UnicodeInfo') -> int:
+    def _get_char_typ(self, ui : 'UnicodeInfo') -> int:
         if (ui.is_letter): 
             return 1
         if (ui.is_digit): 
@@ -594,172 +571,100 @@ class InnerMorphology:
             return 1
         return ui.code
     
-    @staticmethod
-    def __detect_lang(wr : 'TextWrapper', begin : int, end : int, word : str) -> 'MorphLang':
-        """ Определение языка для одного слова
-        
-        Args:
-            word(str): слово (в верхнем регистре)
-        
-        """
-        cyr = 0
-        lat = 0
-        undef = 0
-        if (wr is not None): 
-            i = begin
-            while i <= end: 
-                ui = wr.chars[i]
-                if (ui.is_letter): 
-                    if (ui.is_cyrillic): 
-                        cyr += 1
-                    elif (ui.is_latin): 
-                        lat += 1
-                    else: 
-                        undef += 1
-                i += 1
-        else: 
-            for ch in word: 
-                ui = UnicodeInfo.ALL_CHARS[ord(ch)]
-                if (ui.is_letter): 
-                    if (ui.is_cyrillic): 
-                        cyr += 1
-                    elif (ui.is_latin): 
-                        lat += 1
-                    else: 
-                        undef += 1
-        if (undef > 0): 
-            return MorphLang.UNKNOWN
-        if (cyr == 0 and lat == 0): 
-            return MorphLang.UNKNOWN
-        if (cyr == 0): 
-            return MorphLang.EN
-        if (lat > 0): 
-            return MorphLang.UNKNOWN
-        lang = ((MorphLang.UA) | MorphLang.RU | MorphLang.BY) | MorphLang.KZ
-        for ch in word: 
-            ui = UnicodeInfo.ALL_CHARS[ord(ch)]
-            if (ui.is_letter): 
-                if (ch == 'Ґ' or ch == 'Є' or ch == 'Ї'): 
-                    lang.is_ru = False
-                    lang.is_by = False
-                elif (ch == 'І'): 
-                    lang.is_ru = False
-                elif (ch == 'Ё' or ch == 'Э'): 
-                    lang.is_ua = False
-                    lang.is_kz = False
-                elif (ch == 'Ы'): 
-                    lang.is_ua = False
-                elif (ch == 'Ў'): 
-                    lang.is_ru = False
-                    lang.is_ua = False
-                elif (ch == 'Щ'): 
-                    lang.is_by = False
-                elif (ch == 'Ъ'): 
-                    lang.is_by = False
-                    lang.is_ua = False
-                    lang.is_kz = False
-                elif ((((ch == 'Ә' or ch == 'Ғ' or ch == 'Қ') or ch == 'Ң' or ch == 'Ө') or ((ch == 'Ұ' and len(word) > 1)) or ch == 'Ү') or ch == 'Һ'): 
-                    lang.is_by = False
-                    lang.is_ua = False
-                    lang.is_ru = False
-                elif ((ch == 'В' or ch == 'Ф' or ch == 'Ц') or ch == 'Ч' or ch == 'Ь'): 
-                    lang.is_kz = False
-        return lang
-    
     def get_all_wordforms(self, word : str, lang : 'MorphLang') -> typing.List['MorphWordForm']:
         if (LanguageHelper.is_cyrillic_char(word[0])): 
             if (lang is not None): 
-                if (InnerMorphology.M_ENGINE_RU.language.is_ru and lang.is_ru): 
-                    return InnerMorphology.M_ENGINE_RU.get_all_wordforms(word)
-                if (InnerMorphology.M_ENGINE_UA.language.is_ua and lang.is_ua): 
-                    return InnerMorphology.M_ENGINE_UA.get_all_wordforms(word)
-                if (InnerMorphology.M_ENGINE_BY.language.is_by and lang.is_by): 
-                    return InnerMorphology.M_ENGINE_BY.get_all_wordforms(word)
-                if (InnerMorphology.M_ENGINE_KZ.language.is_kz and lang.is_kz): 
-                    return InnerMorphology.M_ENGINE_KZ.get_all_wordforms(word)
-            return InnerMorphology.M_ENGINE_RU.get_all_wordforms(word)
+                if (self.__m_engine_ru.language.is_ru and lang.is_ru): 
+                    return self.__m_engine_ru.get_all_wordforms(word)
+                if (self.__m_engine_ua.language.is_ua and lang.is_ua): 
+                    return self.__m_engine_ua.get_all_wordforms(word)
+                if (self.__m_engine_by.language.is_by and lang.is_by): 
+                    return self.__m_engine_by.get_all_wordforms(word)
+                if (self.__m_engine_kz.language.is_kz and lang.is_kz): 
+                    return self.__m_engine_kz.get_all_wordforms(word)
+            return self.__m_engine_ru.get_all_wordforms(word)
         else: 
-            return InnerMorphology.M_ENGINE_EN.get_all_wordforms(word)
+            return self.__m_engine_en.get_all_wordforms(word)
     
     def get_wordform(self, word : str, cla : 'MorphClass', gender : 'MorphGender', cas : 'MorphCase', num : 'MorphNumber', lang : 'MorphLang', add_info : 'MorphWordForm') -> str:
         if (LanguageHelper.is_cyrillic_char(word[0])): 
-            if (InnerMorphology.M_ENGINE_RU.language.is_ru and lang.is_ru): 
-                return InnerMorphology.M_ENGINE_RU.get_wordform(word, cla, gender, cas, num, add_info)
-            if (InnerMorphology.M_ENGINE_UA.language.is_ua and lang.is_ua): 
-                return InnerMorphology.M_ENGINE_UA.get_wordform(word, cla, gender, cas, num, add_info)
-            if (InnerMorphology.M_ENGINE_BY.language.is_by and lang.is_by): 
-                return InnerMorphology.M_ENGINE_BY.get_wordform(word, cla, gender, cas, num, add_info)
-            if (InnerMorphology.M_ENGINE_KZ.language.is_kz and lang.is_kz): 
-                return InnerMorphology.M_ENGINE_KZ.get_wordform(word, cla, gender, cas, num, add_info)
-            return InnerMorphology.M_ENGINE_RU.get_wordform(word, cla, gender, cas, num, add_info)
+            if (self.__m_engine_ru.language.is_ru and lang.is_ru): 
+                return self.__m_engine_ru.get_wordform(word, cla, gender, cas, num, add_info)
+            if (self.__m_engine_ua.language.is_ua and lang.is_ua): 
+                return self.__m_engine_ua.get_wordform(word, cla, gender, cas, num, add_info)
+            if (self.__m_engine_by.language.is_by and lang.is_by): 
+                return self.__m_engine_by.get_wordform(word, cla, gender, cas, num, add_info)
+            if (self.__m_engine_kz.language.is_kz and lang.is_kz): 
+                return self.__m_engine_kz.get_wordform(word, cla, gender, cas, num, add_info)
+            return self.__m_engine_ru.get_wordform(word, cla, gender, cas, num, add_info)
         else: 
-            return InnerMorphology.M_ENGINE_EN.get_wordform(word, cla, gender, cas, num, add_info)
+            return self.__m_engine_en.get_wordform(word, cla, gender, cas, num, add_info)
     
     def correct_word_by_morph(self, word : str, lang : 'MorphLang') -> str:
         if (LanguageHelper.is_cyrillic_char(word[0])): 
             if (lang is not None): 
-                if (InnerMorphology.M_ENGINE_RU.language.is_ru and lang.is_ru): 
-                    return InnerMorphology.M_ENGINE_RU.correct_word_by_morph(word)
-                if (InnerMorphology.M_ENGINE_UA.language.is_ua and lang.is_ua): 
-                    return InnerMorphology.M_ENGINE_UA.correct_word_by_morph(word)
-                if (InnerMorphology.M_ENGINE_BY.language.is_by and lang.is_by): 
-                    return InnerMorphology.M_ENGINE_BY.correct_word_by_morph(word)
-                if (InnerMorphology.M_ENGINE_KZ.language.is_kz and lang.is_kz): 
-                    return InnerMorphology.M_ENGINE_KZ.correct_word_by_morph(word)
-            return InnerMorphology.M_ENGINE_RU.correct_word_by_morph(word)
+                if (self.__m_engine_ru.language.is_ru and lang.is_ru): 
+                    return self.__m_engine_ru.correct_word_by_morph(word)
+                if (self.__m_engine_ua.language.is_ua and lang.is_ua): 
+                    return self.__m_engine_ua.correct_word_by_morph(word)
+                if (self.__m_engine_by.language.is_by and lang.is_by): 
+                    return self.__m_engine_by.correct_word_by_morph(word)
+                if (self.__m_engine_kz.language.is_kz and lang.is_kz): 
+                    return self.__m_engine_kz.correct_word_by_morph(word)
+            return self.__m_engine_ru.correct_word_by_morph(word)
         else: 
-            return InnerMorphology.M_ENGINE_EN.correct_word_by_morph(word)
+            return self.__m_engine_en.correct_word_by_morph(word)
     
     def __process_one_word0(self, wstr : str) -> typing.List['MorphWordForm']:
         dl = MorphLang()
-        wrapdl7 = RefOutArgWrapper(dl)
-        inoutres8 = self.__process_one_word(wstr, wrapdl7)
-        dl = wrapdl7.value
-        return inoutres8
+        wrapdl6 = RefOutArgWrapper(dl)
+        inoutres7 = self.__process_one_word(wstr, wrapdl6)
+        dl = wrapdl6.value
+        return inoutres7
     
     def __process_one_word(self, wstr : str, def_lang : 'MorphLang') -> typing.List['MorphWordForm']:
-        lang = InnerMorphology.__detect_lang(None, 0, 0, wstr)
+        lang = LanguageHelper._get_word_lang(wstr)
         if (lang == MorphLang.UNKNOWN): 
             def_lang.value = MorphLang()
             return None
         if (lang == MorphLang.EN): 
-            return InnerMorphology.M_ENGINE_EN.process(wstr)
+            return self.__m_engine_en.process(wstr)
         if (def_lang.value == MorphLang.RU): 
             if (lang.is_ru): 
-                return InnerMorphology.M_ENGINE_RU.process(wstr)
+                return self.__m_engine_ru.process(wstr)
         if (lang == MorphLang.RU): 
             def_lang.value = lang
-            return InnerMorphology.M_ENGINE_RU.process(wstr)
+            return self.__m_engine_ru.process(wstr)
         if (def_lang.value == MorphLang.UA): 
             if (lang.is_ua): 
-                return InnerMorphology.M_ENGINE_UA.process(wstr)
+                return self.__m_engine_ua.process(wstr)
         if (lang == MorphLang.UA): 
             def_lang.value = lang
-            return InnerMorphology.M_ENGINE_UA.process(wstr)
+            return self.__m_engine_ua.process(wstr)
         if (def_lang.value == MorphLang.BY): 
             if (lang.is_by): 
-                return InnerMorphology.M_ENGINE_BY.process(wstr)
+                return self.__m_engine_by.process(wstr)
         if (lang == MorphLang.BY): 
             def_lang.value = lang
-            return InnerMorphology.M_ENGINE_BY.process(wstr)
+            return self.__m_engine_by.process(wstr)
         if (def_lang.value == MorphLang.KZ): 
             if (lang.is_kz): 
-                return InnerMorphology.M_ENGINE_KZ.process(wstr)
+                return self.__m_engine_kz.process(wstr)
         if (lang == MorphLang.KZ): 
             def_lang.value = lang
-            return InnerMorphology.M_ENGINE_KZ.process(wstr)
+            return self.__m_engine_kz.process(wstr)
         ru = None
         if (lang.is_ru): 
-            ru = InnerMorphology.M_ENGINE_RU.process(wstr)
+            ru = self.__m_engine_ru.process(wstr)
         ua = None
         if (lang.is_ua): 
-            ua = InnerMorphology.M_ENGINE_UA.process(wstr)
+            ua = self.__m_engine_ua.process(wstr)
         by = None
         if (lang.is_by): 
-            by = InnerMorphology.M_ENGINE_BY.process(wstr)
+            by = self.__m_engine_by.process(wstr)
         kz = None
         if (lang.is_kz): 
-            kz = InnerMorphology.M_ENGINE_KZ.process(wstr)
+            kz = self.__m_engine_kz.process(wstr)
         has_ru = False
         has_ua = False
         has_by = False
@@ -816,15 +721,3 @@ class InnerMorphology:
             lang |= MorphLang.KZ
             res.extend(kz)
         return res
-    
-    # static constructor for class InnerMorphology
-    @staticmethod
-    def _static_ctor():
-        InnerMorphology.M_ENGINE_RU = MorphEngine()
-        InnerMorphology.M_ENGINE_EN = MorphEngine()
-        InnerMorphology.M_ENGINE_UA = MorphEngine()
-        InnerMorphology.M_ENGINE_BY = MorphEngine()
-        InnerMorphology.M_ENGINE_KZ = MorphEngine()
-        InnerMorphology.M_LOCK = threading.Lock()
-
-InnerMorphology._static_ctor()

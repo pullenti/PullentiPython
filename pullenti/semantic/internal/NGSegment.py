@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -40,16 +39,16 @@ class NGSegment:
     def create_segments(s : 'Sentence') -> typing.List['NGSegment']:
         res = list()
         i = 0
-        first_pass4055 = True
+        first_pass3932 = True
         while True:
-            if first_pass4055: first_pass4055 = False
+            if first_pass3932: first_pass3932 = False
             else: i += 1
             if (not (i < len(s.items))): break
             it = s.items[i]
             if (it.typ == SentItemType.VERB or it.typ == SentItemType.DELIM): 
                 continue
             seg = NGSegment()
-            nit = NGItem._new2997(it)
+            nit = NGItem._new2922(it)
             for j in range(i - 1, -1, -1):
                 it = s.items[j]
                 if (it.typ == SentItemType.VERB): 
@@ -58,20 +57,20 @@ class NGSegment:
                 if (it.typ == SentItemType.DELIM): 
                     break
                 if (it.can_be_comma_end): 
-                    if ((it.source).typ == ConjunctionType.COMMA): 
+                    if (it.source.typ == ConjunctionType.COMMA): 
                         nit.comma_before = True
                     else: 
                         nit.and_before = True
-                        if ((it.source).typ == ConjunctionType.OR): 
+                        if (it.source.typ == ConjunctionType.OR): 
                             nit.or_before = True
                 if (it.typ == SentItemType.CONJ or it.can_be_noun): 
                     break
             comma = False
             and0_ = False
             or0_ = False
-            first_pass4056 = True
+            first_pass3933 = True
             while True:
-                if first_pass4056: first_pass4056 = False
+                if first_pass3933: first_pass3933 = False
                 else: i += 1
                 if (not (i < len(s.items))): break
                 it = s.items[i]
@@ -79,11 +78,11 @@ class NGSegment:
                     comma = False
                     and0_ = False
                     or0_ = False
-                    if ((it.source).typ == ConjunctionType.COMMA): 
+                    if (it.source.typ == ConjunctionType.COMMA): 
                         comma = True
                     else: 
                         and0_ = True
-                        if ((it.source).typ == ConjunctionType.OR): 
+                        if (it.source.typ == ConjunctionType.OR): 
                             or0_ = True
                     if (len(seg.items) > 0): 
                         if (comma): 
@@ -94,7 +93,7 @@ class NGSegment:
                                 seg.items[len(seg.items) - 1].or_after = True
                     continue
                 if (it.can_be_noun or it.typ == SentItemType.ADVERB): 
-                    nit = NGItem._new2998(it, comma, and0_, or0_)
+                    nit = NGItem._new2923(it, comma, and0_, or0_)
                     seg.items.append(nit)
                     comma = False
                     and0_ = False
@@ -124,9 +123,9 @@ class NGSegment:
             i += 1
         li = None
         i = 0
-        first_pass4057 = True
+        first_pass3934 = True
         while True:
-            if first_pass4057: first_pass4057 = False
+            if first_pass3934: first_pass3934 = False
             else: i += 1
             if (not (i < len(self.items))): break
             it = self.items[i]
@@ -326,9 +325,9 @@ class NGSegment:
                     ok = True
                     li = (None)
         i = 1
-        first_pass4058 = True
+        first_pass3935 = True
         while True:
-            if first_pass4058: first_pass4058 = False
+            if first_pass3935: first_pass3935 = False
             else: i += 1
             if (not (i < len(self.items))): break
             it = self.items[i]
@@ -339,7 +338,7 @@ class NGSegment:
                 continue
             if (len(it0.links) > 0): 
                 continue
-            li = NGLink._new2999(NGLinkType.GENETIVE, it0, it, True)
+            li = NGLink._new2924(NGLinkType.GENETIVE, it0, it, True)
             li.calc_coef(True)
             if (li.coef > 0): 
                 it0.links.append(li)
@@ -353,7 +352,7 @@ class NGSegment:
         var = None
         for kkk in range(1000):
             if (var is None): 
-                var = NGSegmentVariant._new3000(self)
+                var = NGSegmentVariant._new2925(self)
             else: 
                 var.links.clear()
             i = 0

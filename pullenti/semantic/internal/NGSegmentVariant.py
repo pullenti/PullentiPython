@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -55,7 +54,7 @@ class NGSegmentVariant(object):
         nn = t2.get_normal_case_text(None, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False)
         if (t1.is_value(nn, None)): 
             return True
-        if ((((t1.morph.number) & (t2.morph.number))) == (MorphNumber.UNDEFINED)): 
+        if (((t1.morph.number) & (t2.morph.number)) == (MorphNumber.UNDEFINED)): 
             return False
         if (((t1.morph.case_) & t2.morph.case_).is_undefined): 
             return False
@@ -69,9 +68,9 @@ class NGSegmentVariant(object):
             if (it is not None): 
                 self.coef += it.coef
         i = 0
-        first_pass4059 = True
+        first_pass3936 = True
         while True:
-            if first_pass4059: first_pass4059 = False
+            if first_pass3936: first_pass3936 = False
             else: i += 1
             if (not (i < len(self.links))): break
             li1 = self.links[i]
@@ -84,9 +83,9 @@ class NGSegmentVariant(object):
                 self.coef = -1
                 return self.coef
             k = i0 + 1
-            first_pass4060 = True
+            first_pass3937 = True
             while True:
-                if first_pass4060: first_pass4060 = False
+                if first_pass3937: first_pass3937 = False
                 else: k += 1
                 if (not (k < i)): break
                 li = self.links[k]
@@ -103,9 +102,9 @@ class NGSegmentVariant(object):
                     self.coef = -1
                     return self.coef
         i = 0
-        first_pass4061 = True
+        first_pass3938 = True
         while True:
-            if first_pass4061: first_pass4061 = False
+            if first_pass3938: first_pass3938 = False
             else: i += 1
             if (not (i < len(self.links))): break
             list0_ = self.get_list(i)
@@ -141,7 +140,7 @@ class NGSegmentVariant(object):
                 else: 
                     self.coef = -1
                     return self.coef
-            ngli = NGLink._new3001(NGLinkType.LIST)
+            ngli = NGLink._new2926(NGLinkType.LIST)
             k = 0
             while k < (len(list0_) - 2): 
                 kk = k + 2
@@ -182,7 +181,7 @@ class NGSegmentVariant(object):
                         break
             if (not ok or lalink is None): 
                 continue
-            test = NGLink._new3002(lalink.from0_, lalink.typ)
+            test = NGLink._new2927(lalink.from0_, lalink.typ)
             j = 0
             while j < (len(list0_) - 1): 
                 test.to = list0_[j]
@@ -200,9 +199,9 @@ class NGSegmentVariant(object):
         aft_ag = 0
         aft_pac = 0
         i = 0
-        first_pass4062 = True
+        first_pass3939 = True
         while True:
-            if first_pass4062: first_pass4062 = False
+            if first_pass3939: first_pass3939 = False
             else: i += 1
             if (not (i < len(self.links))): break
             li = self.links[i]
@@ -295,9 +294,9 @@ class NGSegmentVariant(object):
             self.coef = -1
             return self.coef
         i = 0
-        first_pass4063 = True
+        first_pass3940 = True
         while True:
-            if first_pass4063: first_pass4063 = False
+            if first_pass3940: first_pass3940 = False
             else: i += 1
             if (not (i < len(self.links))): break
             li = self.links[i]
@@ -306,9 +305,9 @@ class NGSegmentVariant(object):
             if (li.typ != NGLinkType.ACTANT or li.to_verb is None): 
                 continue
         i = 0
-        first_pass4064 = True
+        first_pass3941 = True
         while True:
-            if first_pass4064: first_pass4064 = False
+            if first_pass3941: first_pass3941 = False
             else: i += 1
             if (not (i < len(self.links))): break
             li = self.links[i]
@@ -357,12 +356,12 @@ class NGSegmentVariant(object):
             if (li.to_verb is None): 
                 return None
             res = list()
-            res.append(NGItem._new3003(SentItem(li.to_verb), ord0_ - 1))
+            res.append(NGItem._new2928(SentItem(li.to_verb), ord0_ - 1))
             res.append(ngit)
         i = ord0_ + 1
-        first_pass4065 = True
+        first_pass3942 = True
         while True:
-            if first_pass4065: first_pass4065 = False
+            if first_pass3942: first_pass3942 = False
             else: i += 1
             if (not (i < len(self.links))): break
             li = self.links[i]
@@ -378,9 +377,9 @@ class NGSegmentVariant(object):
     
     def correct_morph(self) -> None:
         i = 0
-        first_pass4066 = True
+        first_pass3943 = True
         while True:
-            if first_pass4066: first_pass4066 = False
+            if first_pass3943: first_pass3943 = False
             else: i += 1
             if (not (i < len(self.links))): break
             li = self.links[i]
@@ -394,7 +393,7 @@ class NGSegmentVariant(object):
                     li.from0_.source.plural = 1
     
     @staticmethod
-    def _new3000(_arg1 : 'NGSegment') -> 'NGSegmentVariant':
+    def _new2925(_arg1 : 'NGSegment') -> 'NGSegmentVariant':
         res = NGSegmentVariant()
         res.source = _arg1
         return res

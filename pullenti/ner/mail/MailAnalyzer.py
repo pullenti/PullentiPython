@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -12,7 +11,7 @@ from pullenti.ner.core.Termin import Termin
 from pullenti.ner.ProcessorService import ProcessorService
 from pullenti.ner.person.PersonReferent import PersonReferent
 from pullenti.ner.Referent import Referent
-from pullenti.ner.person.internal.EpNerPersonInternalResourceHelper import EpNerPersonInternalResourceHelper
+from pullenti.ner.person.internal.PullentiNerPersonInternalResourceHelper import PullentiNerPersonInternalResourceHelper
 from pullenti.ner.mail.internal.MetaLetter import MetaLetter
 from pullenti.ner.mail.MailKind import MailKind
 from pullenti.ner.mail.MailReferent import MailReferent
@@ -21,9 +20,13 @@ from pullenti.ner.mail.internal.MailLine import MailLine
 from pullenti.ner.core.MiscHelper import MiscHelper
 
 class MailAnalyzer(Analyzer):
-    """ Анализатор анализа писем (блоков писем) """
+    """ Анализатор текстов электронных писем и их блоков. Восстановление структуры, разбиение на блоки,
+    анализ блока подписи.
+    Специфический анализатор, то есть нужно явно создавать процессор через функцию CreateSpecificProcessor,
+    указав имя анализатора. """
     
     ANALYZER_NAME = "MAIL"
+    """ Имя анализатора ("MAIL") """
     
     @property
     def name(self) -> str:
@@ -47,7 +50,7 @@ class MailAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[MetaLetter.IMAGE_ID] = EpNerPersonInternalResourceHelper.get_bytes("mail.png")
+        res[MetaLetter.IMAGE_ID] = PullentiNerPersonInternalResourceHelper.get_bytes("mail.png")
         return res
     
     def create_referent(self, type0_ : str) -> 'Referent':
@@ -61,7 +64,7 @@ class MailAnalyzer(Analyzer):
     
     @property
     def is_specific(self) -> bool:
-        """ Этот анализатор является специфическим """
+        """ Этот анализатор является специфическим (IsSpecific = true) """
         return True
     
     @property
@@ -71,12 +74,12 @@ class MailAnalyzer(Analyzer):
     def process(self, kit : 'AnalysisKit') -> None:
         lines = list()
         t = kit.first_token
-        first_pass3911 = True
+        first_pass3791 = True
         while True:
-            if first_pass3911: first_pass3911 = False
+            if first_pass3791: first_pass3791 = False
             else: t = t.next0_
             if (not (t is not None)): break
-            ml = MailLine.parse(t, 0)
+            ml = MailLine.parse(t, 0, 0)
             if (ml is None): 
                 continue
             if (len(lines) == 91): 
@@ -88,9 +91,9 @@ class MailAnalyzer(Analyzer):
         blocks = list()
         blk = None
         i = 0
-        first_pass3912 = True
+        first_pass3792 = True
         while True:
-            if first_pass3912: first_pass3912 = False
+            if first_pass3792: first_pass3792 = False
             else: i += 1
             if (not (i < len(lines))): break
             ml = lines[i]
@@ -114,9 +117,9 @@ class MailAnalyzer(Analyzer):
                 if (is_new): 
                     blk = list()
                     blocks.append(blk)
-                    first_pass3913 = True
+                    first_pass3793 = True
                     while True:
-                        if first_pass3913: first_pass3913 = False
+                        if first_pass3793: first_pass3793 = False
                         else: i += 1
                         if (not (i < len(lines))): break
                         if (lines[i].typ == MailLine.Types.FROM): 
@@ -160,9 +163,9 @@ class MailAnalyzer(Analyzer):
             return
         ad = kit.get_analyzer_data(self)
         j = 0
-        first_pass3914 = True
+        first_pass3794 = True
         while True:
-            if first_pass3914: first_pass3914 = False
+            if first_pass3794: first_pass3794 = False
             else: j += 1
             if (not (j < len(blocks))): break
             lines = blocks[j]
@@ -179,7 +182,7 @@ class MailAnalyzer(Analyzer):
                     else: 
                         break
                     i += 1
-                mail_ = MailReferent._new1667(MailKind.HEAD)
+                mail_ = MailReferent._new1601(MailKind.HEAD)
                 mt = ReferentToken(mail_, lines[0].begin_token, t1)
                 mail_.text = MiscHelper.get_text_value_of_meta_token(mt, GetTextAttr.KEEPREGISTER)
                 ad.register_referent(mail_)
@@ -188,9 +191,9 @@ class MailAnalyzer(Analyzer):
             t2 = None
             err = 0
             i = (len(lines) - 1)
-            first_pass3915 = True
+            first_pass3795 = True
             while True:
-                if first_pass3915: first_pass3915 = False
+                if first_pass3795: first_pass3795 = False
                 else: i -= 1
                 if (not (i >= i0)): break
                 li = lines[i]
@@ -230,7 +233,7 @@ class MailAnalyzer(Analyzer):
             ii = i0
             while ii < len(lines): 
                 if (lines[ii].typ == MailLine.Types.HELLO): 
-                    mail_ = MailReferent._new1667(MailKind.HELLO)
+                    mail_ = MailReferent._new1601(MailKind.HELLO)
                     mt = ReferentToken(mail_, lines[i0].begin_token, lines[ii].end_token)
                     if (mt.length_char > 0): 
                         mail_.text = MiscHelper.get_text_value_of_meta_token(mt, GetTextAttr.KEEPREGISTER)
@@ -245,14 +248,14 @@ class MailAnalyzer(Analyzer):
                 if (t2 is not None and t2.previous is None): 
                     pass
                 else: 
-                    mail_ = MailReferent._new1667(MailKind.BODY)
+                    mail_ = MailReferent._new1601(MailKind.BODY)
                     mt = ReferentToken(mail_, lines[i0].begin_token, (t2.previous if t2 is not None and t2.previous is not None else lines[len(lines) - 1].end_token))
                     if (mt.length_char > 0): 
                         mail_.text = MiscHelper.get_text_value_of_meta_token(mt, GetTextAttr.KEEPREGISTER)
                         ad.register_referent(mail_)
                         mail_.add_occurence_of_ref_tok(mt)
                 if (t2 is not None): 
-                    mail_ = MailReferent._new1667(MailKind.TAIL)
+                    mail_ = MailReferent._new1601(MailKind.TAIL)
                     mt = ReferentToken(mail_, t2, lines[len(lines) - 1].end_token)
                     if (mt.length_char > 0): 
                         mail_.text = MiscHelper.get_text_value_of_meta_token(mt, GetTextAttr.KEEPREGISTER)

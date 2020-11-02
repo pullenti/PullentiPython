@@ -1,12 +1,12 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
 
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
+from pullenti.ner.metadata.ReferentClass import ReferentClass
 from pullenti.ner.Referent import Referent
-from pullenti.ner.ReferentClass import ReferentClass
 from pullenti.ner.person.internal.MetaPersonIdentity import MetaPersonIdentity
 
 class PersonIdentityReferent(Referent):
@@ -17,18 +17,25 @@ class PersonIdentityReferent(Referent):
         self.instance_of = MetaPersonIdentity._global_meta
     
     OBJ_TYPENAME = "PERSONIDENTITY"
+    """ Имя типа сущности TypeName ("NAMEDENTITY") """
     
     ATTR_TYPE = "TYPE"
+    """ Имя атрибута - тип документа """
     
     ATTR_NUMBER = "NUMBER"
+    """ Имя атрибута - серийный номер """
     
     ATTR_DATE = "DATE"
+    """ Имя атрибута - дата выдачи """
     
     ATTR_ORG = "ORG"
+    """ Имя атрибута - выдавшая организация (OrganizationReferent) """
     
     ATTR_STATE = "STATE"
+    """ Имя атрибута - географический объект (GeoReferent) """
     
     ATTR_ADDRESS = "ADDRESS"
+    """ Имя атрибута - адрес регистрации (AddressReferent) """
     
     def to_string(self, short_variant : bool, lang : 'MorphLang'=None, lev : int=0) -> str:
         res = io.StringIO()
@@ -84,7 +91,7 @@ class PersonIdentityReferent(Referent):
         self.add_slot(PersonIdentityReferent.ATTR_ADDRESS, value, True, 0)
         return value
     
-    def can_be_equals(self, obj : 'Referent', typ_ : 'EqualType'=Referent.EqualType.WITHINONETEXT) -> bool:
+    def can_be_equals(self, obj : 'Referent', typ_ : 'ReferentsEqualType'=ReferentsEqualType.WITHINONETEXT) -> bool:
         id0_ = Utils.asObjectOrNull(obj, PersonIdentityReferent)
         if (id0_ is None): 
             return False

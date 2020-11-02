@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -12,15 +11,18 @@ from pullenti.ner.core.MiscHelper import MiscHelper
 from pullenti.ner.core.IntOntologyItem import IntOntologyItem
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.NumberHelper import NumberHelper
-from pullenti.ner.Referent import Referent
-from pullenti.ner.ReferentClass import ReferentClass
-from pullenti.ner.person.internal.MetaPerson import MetaPerson
 from pullenti.ner.person.PersonPropertyKind import PersonPropertyKind
+from pullenti.ner.metadata.ReferentClass import ReferentClass
+from pullenti.ner.Referent import Referent
+from pullenti.ner.person.internal.MetaPerson import MetaPerson
+from pullenti.ner.core.ReferentsEqualType import ReferentsEqualType
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.ner.person.PersonPropertyReferent import PersonPropertyReferent
 
 class PersonReferent(Referent):
-    """ Сущность, описывающее физическое лицо """
+    """ Сущность - персона
+    
+    """
     
     def __init__(self) -> None:
         super().__init__(PersonReferent.OBJ_TYPENAME)
@@ -32,30 +34,43 @@ class PersonReferent(Referent):
         self.instance_of = MetaPerson._global_meta
     
     OBJ_TYPENAME = "PERSON"
+    """ Имя типа сущности TypeName ("PERSON") """
     
     ATTR_SEX = "SEX"
+    """ Имя атрибута - пол """
     
     ATTR_IDENTITY = "IDENTITY"
+    """ Имя атрибута - слитно полное имя, если не удалось разбить на ФИО по отдельности """
     
     ATTR_FIRSTNAME = "FIRSTNAME"
+    """ Имя атрибута - имя """
     
     ATTR_MIDDLENAME = "MIDDLENAME"
+    """ Имя атрибута - отчество """
     
     ATTR_LASTNAME = "LASTNAME"
+    """ Имя атрибута - фамилия """
     
     ATTR_NICKNAME = "NICKNAME"
+    """ Имя атрибута - кличка или номер """
     
     ATTR_ATTR = "ATTRIBUTE"
+    """ Имя атрибута - свойство (PersonPropertyReferent) """
     
     ATTR_AGE = "AGE"
+    """ Имя атрибута - возраст """
     
     ATTR_BORN = "BORN"
+    """ Имя атрибута - дата рождения """
     
     ATTR_DIE = "DIE"
+    """ Имя атрибута - дата смерти """
     
     ATTR_CONTACT = "CONTACT"
+    """ Имя атрибута - контактная информация """
     
     ATTR_IDDOC = "IDDOC"
+    """ Имя атрибута - удостоверяющий документ (PersonIdentityReferent) """
     
     @property
     def is_male(self) -> bool:
@@ -95,7 +110,7 @@ class PersonReferent(Referent):
                     if (r.can_be_general_for(contact)): 
                         self.upload_slot(s, contact)
                         return
-                    if (r.can_be_equals(contact, Referent.EqualType.WITHINONETEXT)): 
+                    if (r.can_be_equals(contact, ReferentsEqualType.WITHINONETEXT)): 
                         return
         self.add_slot(PersonReferent.ATTR_CONTACT, contact, False, 0)
     
@@ -324,7 +339,7 @@ class PersonReferent(Referent):
             if (isinstance(middle_name, str)): 
                 self.add_slot(PersonReferent.ATTR_MIDDLENAME, middle_name, False, 0)
             elif (isinstance(middle_name, PersonMorphCollection)): 
-                mm = (Utils.asObjectOrNull(middle_name, PersonMorphCollection))
+                mm = Utils.asObjectOrNull(middle_name, PersonMorphCollection)
                 if (mm.head is not None and len(mm.head) > 2): 
                     self.__m_sec_occurs.append(mm)
                 for v in mm.values: 
@@ -352,7 +367,7 @@ class PersonReferent(Referent):
     def add_attribute(self, attr : object) -> None:
         self.add_slot(PersonReferent.ATTR_ATTR, attr, False, 0)
     
-    def can_be_equals(self, obj : 'Referent', typ : 'EqualType') -> bool:
+    def can_be_equals(self, obj : 'Referent', typ : 'ReferentsEqualType') -> bool:
         p = Utils.asObjectOrNull(obj, PersonReferent)
         if (p is None): 
             return False
@@ -376,7 +391,7 @@ class PersonReferent(Referent):
                 if (self.find_slot(PersonReferent.ATTR_MIDDLENAME, None, True) is not None and p.find_slot(PersonReferent.ATTR_MIDDLENAME, None, True) is not None): 
                     if (not self.__check_names(PersonReferent.ATTR_MIDDLENAME, p)): 
                         return False
-                elif (typ == Referent.EqualType.DIFFERENTTEXTS): 
+                elif (typ == ReferentsEqualType.DIFFERENTTEXTS): 
                     if (self.find_slot(PersonReferent.ATTR_MIDDLENAME, None, True) is not None or p.find_slot(PersonReferent.ATTR_MIDDLENAME, None, True) is not None): 
                         return str(self) == str(p)
                     names1 = list()
@@ -396,7 +411,7 @@ class PersonReferent(Referent):
                     if (len(names1) == 0 and len(names2) == 0): 
                         return True
                     return False
-            elif (typ == Referent.EqualType.DIFFERENTTEXTS and ((self.find_slot(PersonReferent.ATTR_FIRSTNAME, None, True) is not None or p.find_slot(PersonReferent.ATTR_FIRSTNAME, None, True) is not None))): 
+            elif (typ == ReferentsEqualType.DIFFERENTTEXTS and ((self.find_slot(PersonReferent.ATTR_FIRSTNAME, None, True) is not None or p.find_slot(PersonReferent.ATTR_FIRSTNAME, None, True) is not None))): 
                 return False
             return True
         tit1 = self.__find_shortest_king_titul(False)
@@ -417,7 +432,7 @@ class PersonReferent(Referent):
         return False
     
     def can_be_general_for(self, obj : 'Referent') -> bool:
-        if (not self.can_be_equals(obj, Referent.EqualType.WITHINONETEXT)): 
+        if (not self.can_be_equals(obj, ReferentsEqualType.WITHINONETEXT)): 
             return False
         p = Utils.asObjectOrNull(obj, PersonReferent)
         if (p is None): 
@@ -498,13 +513,7 @@ class PersonReferent(Referent):
         return False
     
     def __compare_surnames_strs(self, s1 : str, s2 : str) -> bool:
-        """ Сравнение с учётом возможных окончаний
-        
-        Args:
-            s1(str): 
-            s2(str): 
-        
-        """
+        # Сравнение с учётом возможных окончаний
         if (s1.startswith(s2) or s2.startswith(s1)): 
             return True
         if (PersonReferent._del_surname_end(s1) == PersonReferent._del_surname_end(s2)): 
@@ -692,9 +701,9 @@ class PersonReferent(Referent):
                 v = str(self.slots[i].value)
                 if (not v in vars0_): 
                     j = 0
-                    first_pass3998 = True
+                    first_pass3879 = True
                     while True:
-                        if first_pass3998: first_pass3998 = False
+                        if first_pass3879: first_pass3879 = False
                         else: j += 1
                         if (not (j < len(self.slots))): break
                         if (j != i and self.slots[j].type_name == self.slots[i].type_name): 
@@ -743,8 +752,8 @@ class PersonReferent(Referent):
             i += 1
         for i in range(len(self.slots) - 1, -1, -1):
             if (self.slots[i].type_name == PersonReferent.ATTR_ATTR and (isinstance(self.slots[i].value, PersonPropertyReferent))): 
-                if ((self.slots[i].value).tag is not None): 
-                    pr = Utils.asObjectOrNull((self.slots[i].value).tag, PersonPropertyReferent)
+                if (self.slots[i].value.tag is not None): 
+                    pr = Utils.asObjectOrNull(self.slots[i].value.tag, PersonPropertyReferent)
                     if (pr is not None and pr.general_referent is None): 
                         pr.general_referent = Utils.asObjectOrNull(self.slots[i].value, PersonPropertyReferent)
                     del self.slots[i]
@@ -754,7 +763,7 @@ class PersonReferent(Referent):
         tit = self.__find_shortest_king_titul(False)
         for a in self.slots: 
             if (a.type_name == PersonReferent.ATTR_IDENTITY): 
-                oi.termins.append(Termin._new2677(str(a.value), True))
+                oi.termins.append(Termin._new2616(str(a.value), True))
             elif (a.type_name == PersonReferent.ATTR_LASTNAME): 
                 t = Termin(str(a.value))
                 if (len(t.terms) > 20): 

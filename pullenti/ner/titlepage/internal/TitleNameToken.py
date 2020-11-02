@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import math
@@ -84,7 +83,7 @@ class TitleNameToken(MetaToken):
             if (isinstance(t, TextToken)): 
                 if (t.chars.is_letter): 
                     words += 1
-                if (t.chars.is_all_lower and (t).is_pure_verb): 
+                if (t.chars.is_all_lower and t.is_pure_verb): 
                     verbs += 1
             t = t.next0_
         if (words > 10 and verbs > 1): 
@@ -111,9 +110,9 @@ class TitleNameToken(MetaToken):
         tstart = self.begin_token
         tend = self.end_token
         t = self.begin_token
-        first_pass4010 = True
+        first_pass3888 = True
         while True:
-            if first_pass4010: first_pass4010 = False
+            if first_pass3888: first_pass3888 = False
             else: t = t.next0_
             if (not (t != self.end_token.next0_ and t is not None and t.end_char <= self.end_token.end_char)): break
             if (t.is_newline_before): 
@@ -239,7 +238,7 @@ class TitleNameToken(MetaToken):
                         self.rank -= 10
                 continue
             if (isinstance(t, NumberToken)): 
-                if ((t).typ == NumberSpellingType.WORDS): 
+                if (t.typ == NumberSpellingType.WORDS): 
                     words += 1
                     if (t.chars.is_all_upper): 
                         up_words += 1

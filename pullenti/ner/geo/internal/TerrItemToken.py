@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -8,33 +7,33 @@ import xml.etree
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
-from pullenti.morph.MorphGender import MorphGender
-from pullenti.ner.MetaToken import MetaToken
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.ner.core.IntOntologyItem import IntOntologyItem
-from pullenti.morph.MorphLang import MorphLang
 from pullenti.ner.Token import Token
-from pullenti.ner.Referent import Referent
-from pullenti.morph.MorphWordForm import MorphWordForm
-from pullenti.ner.address.internal.EpNerAddressInternalResourceHelper import EpNerAddressInternalResourceHelper
 from pullenti.ner.core.TerminCollection import TerminCollection
-from pullenti.ner.geo.internal.TerrTermin import TerrTermin
+from pullenti.ner.core.IntOntologyItem import IntOntologyItem
+from pullenti.morph.MorphWordForm import MorphWordForm
+from pullenti.ner.Referent import Referent
+from pullenti.ner.NumberSpellingType import NumberSpellingType
+from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
+from pullenti.ner.address.internal.PullentiNerAddressInternalResourceHelper import PullentiNerAddressInternalResourceHelper
+from pullenti.morph.MorphLang import MorphLang
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.ner.core.BracketHelper import BracketHelper
 from pullenti.ner.core.IntOntologyCollection import IntOntologyCollection
 from pullenti.ner.core.NounPhraseParseAttr import NounPhraseParseAttr
-from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
+from pullenti.morph.MorphGender import MorphGender
+from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.geo.GeoReferent import GeoReferent
-from pullenti.ner.NumberSpellingType import NumberSpellingType
-from pullenti.ner.core.BracketParseAttr import BracketParseAttr
 from pullenti.ner.TextToken import TextToken
+from pullenti.ner.core.BracketParseAttr import BracketParseAttr
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.core.TerminParseAttr import TerminParseAttr
+from pullenti.ner.geo.internal.TerrTermin import TerrTermin
+from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.ner.NumberToken import NumberToken
-from pullenti.ner.ReferentToken import ReferentToken
 from pullenti.ner.core.Termin import Termin
 from pullenti.ner.core.MiscHelper import MiscHelper
-from pullenti.ner.core.BracketHelper import BracketHelper
-from pullenti.ner.geo.internal.MiscLocationHelper import MiscLocationHelper
+from pullenti.ner.core.NounPhraseHelper import NounPhraseHelper
 
 class TerrItemToken(MetaToken):
     
@@ -128,7 +127,7 @@ class TerrItemToken(MetaToken):
                         ok = False
                         if (tt2 is None or tt2.whitespaces_before_count > 3): 
                             ok = True
-                        elif (((tt2.length_char == 1 and not tt2.is_letters)) or not ((isinstance(tt2, TextToken)))): 
+                        elif (((tt2.length_char == 1 and not tt2.is_letters)) or not (isinstance(tt2, TextToken))): 
                             ok = True
                         if (ok): 
                             li.append(li2[0])
@@ -166,7 +165,7 @@ class TerrItemToken(MetaToken):
                     continue
                 alpha2 = None
                 if (isinstance(cc.onto_item.referent, GeoReferent)): 
-                    alpha2 = (cc.onto_item.referent).alpha2
+                    alpha2 = cc.onto_item.referent.alpha2
                 if (alpha2 == "TG"): 
                     if (isinstance(cc.begin_token, TextToken)): 
                         if (cc.begin_token.get_source_text() != "Того"): 
@@ -183,7 +182,7 @@ class TerrItemToken(MetaToken):
                         return None
                 if (alpha2 == "PE"): 
                     if (isinstance(cc.begin_token, TextToken)): 
-                        if ((cc.begin_token).get_source_text() != "Перу"): 
+                        if (cc.begin_token.get_source_text() != "Перу"): 
                             return None
                         if (len(li) == 1 and cc.begin_token.previous is not None and cc.begin_token.previous.is_char('.')): 
                             return None
@@ -201,14 +200,14 @@ class TerrItemToken(MetaToken):
             elif (cc.onto_item is not None and cc.is_adjective): 
                 alpha2 = None
                 if (isinstance(cc.onto_item.referent, GeoReferent)): 
-                    alpha2 = (cc.onto_item.referent).alpha2
+                    alpha2 = cc.onto_item.referent.alpha2
                 if (alpha2 == "SU"): 
                     if (cc.end_token.next0_ is None or not cc.end_token.next0_.is_value("СОЮЗ", None)): 
                         cc.onto_item = (None)
         i = 0
-        first_pass3773 = True
+        first_pass3653 = True
         while True:
-            if first_pass3773: first_pass3773 = False
+            if first_pass3653: first_pass3653 = False
             else: i += 1
             if (not (i < len(li))): break
             if (li[i].onto_item is not None and li[i].onto_item2 is not None): 
@@ -225,6 +224,16 @@ class TerrItemToken(MetaToken):
                 elif (li[i].onto_item.referent.find_slot(GeoReferent.ATTR_TYPE, "республика", True) is not None and nou.canonic_text != "РЕСПУБЛИКА"): 
                     li[i].onto_item = li[i].onto_item2
                     li[i].onto_item2 = (None)
+        if ((len(li) >= 3 and li[0].termin_item is None and li[1].termin_item is not None) and li[2].termin_item is None): 
+            if (len(li) == 3 or ((len(li) >= 5 and ((((li[3].termin_item is not None and li[4].termin_item is None)) or ((li[4].termin_item is not None and li[3].termin_item is None))))))): 
+                t1 = li[0].begin_token.previous
+                if (t1 is not None and t1.is_char('.') and t1.previous is not None): 
+                    t1 = t1.previous
+                    cit = CityItemToken.try_parse_back(t1)
+                    if (cit is not None): 
+                        del li[0]
+                    elif (t1.chars.is_all_lower and ((t1.is_value("С", None) or t1.is_value("П", None) or t1.is_value("ПОС", None)))): 
+                        del li[0]
         for cc in li: 
             if (cc.onto_item is not None or ((cc.termin_item is not None and not cc.is_adjective)) or cc.rzd is not None): 
                 return li
@@ -237,9 +246,9 @@ class TerrItemToken(MetaToken):
         tt1 = None
         val = None
         tt = t
-        first_pass3774 = True
+        first_pass3654 = True
         while True:
-            if first_pass3774: first_pass3774 = False
+            if first_pass3654: first_pass3654 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_char_of(",.")): 
@@ -260,24 +269,24 @@ class TerrItemToken(MetaToken):
                 tt1 = npt.end_token
                 val = npt.get_normal_case_text(None, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False)
                 break
-            if ((isinstance(tt, TextToken)) and ((not tt.chars.is_all_lower or napr is not None)) and (((tt.morph.gender) & (MorphGender.NEUTER))) != (MorphGender.UNDEFINED)): 
+            if ((isinstance(tt, TextToken)) and ((not tt.chars.is_all_lower or napr is not None)) and ((tt.morph.gender) & (MorphGender.NEUTER)) != (MorphGender.UNDEFINED)): 
                 tt1 = tt
                 tt0 = tt1
                 continue
-            if ((((isinstance(tt, TextToken)) and ((not tt.chars.is_all_lower or napr is not None)) and tt.next0_ is not None) and tt.next0_.is_hiphen and (isinstance(tt.next0_.next0_, TextToken))) and (((tt.next0_.next0_.morph.gender) & (MorphGender.NEUTER))) != (MorphGender.UNDEFINED)): 
+            if ((((isinstance(tt, TextToken)) and ((not tt.chars.is_all_lower or napr is not None)) and tt.next0_ is not None) and tt.next0_.is_hiphen and (isinstance(tt.next0_.next0_, TextToken))) and ((tt.next0_.next0_.morph.gender) & (MorphGender.NEUTER)) != (MorphGender.UNDEFINED)): 
                 tt0 = tt
                 tt = tt.next0_.next0_
                 tt1 = tt
                 continue
             break
         if (tt0 is not None): 
-            ci = TerrItemToken._new1240(tt0, tt1, True)
+            ci = TerrItemToken._new1174(tt0, tt1, True)
             if (val is not None): 
                 ci.rzd_dir = val
             else: 
                 ci.rzd_dir = tt1.get_normal_case_text(MorphClass.ADJECTIVE, MorphNumber.SINGULAR, MorphGender.NEUTER, False)
                 if (tt0 != tt1): 
-                    ci.rzd_dir = "{0} {1}".format((tt0).term, ci.rzd_dir)
+                    ci.rzd_dir = "{0} {1}".format(tt0.term, ci.rzd_dir)
                 ci.rzd_dir += " НАПРАВЛЕНИЕ"
             if (napr is not None and napr.end_char > ci.end_char): 
                 ci.end_token = napr
@@ -298,24 +307,24 @@ class TerrItemToken(MetaToken):
             if (noun_can_be_adjective and t.morph.class0_.is_adjective): 
                 tok = TerrItemToken._m_terr_noun_adjectives.try_parse(t, TerminParseAttr.NO)
                 if (tok is not None): 
-                    return TerrItemToken._new1241(tok.begin_token, tok.end_token, Utils.asObjectOrNull(tok.termin.tag, TerrTermin), False)
+                    return TerrItemToken._new1175(tok.begin_token, tok.end_token, Utils.asObjectOrNull(tok.termin.tag, TerrTermin), False)
             if ((t.chars.is_all_upper and t.length_char == 2 and (isinstance(t, TextToken))) and int_ont is not None): 
-                term = (t).term
+                term = t.term
                 if (((term == "РБ" or term == "РК" or term == "TC") or term == "ТС" or term == "РТ") or term == "УР" or term == "РД"): 
                     for it in int_ont.items: 
                         if (isinstance(it.referent, GeoReferent)): 
-                            alph2 = (it.referent).alpha2
+                            alph2 = it.referent.alpha2
                             if (((alph2 == "BY" and term == "РБ")) or ((alph2 == "KZ" and term == "РК"))): 
-                                return TerrItemToken._new1242(t, t, it)
+                                return TerrItemToken._new1176(t, t, it)
                             if (term == "РТ"): 
                                 if (it.referent.find_slot(None, "ТАТАРСТАН", True) is not None): 
-                                    return TerrItemToken._new1242(t, t, it)
+                                    return TerrItemToken._new1176(t, t, it)
                             if (term == "РД"): 
                                 if (it.referent.find_slot(None, "ДАГЕСТАН", True) is not None): 
-                                    return TerrItemToken._new1242(t, t, it)
+                                    return TerrItemToken._new1176(t, t, it)
                     ok = False
                     if ((t.whitespaces_before_count < 2) and (isinstance(t.previous, TextToken))): 
-                        term2 = (t.previous).term
+                        term2 = t.previous.term
                         if ((t.previous.is_value("КОДЕКС", None) or t.previous.is_value("ЗАКОН", None) or term2 == "КОАП") or term2 == "ПДД" or term2 == "МЮ"): 
                             ok = True
                         elif ((t.previous.chars.is_all_upper and t.previous.length_char > 1 and (t.previous.length_char < 4)) and term2.endswith("К")): 
@@ -325,25 +334,25 @@ class TerrItemToken(MetaToken):
                             if (tt is not None and tt.is_comma): 
                                 tt = tt.previous
                             if (tt is not None): 
-                                if ((isinstance(tt.get_referent(), GeoReferent)) and (tt.get_referent()).alpha2 == "RU"): 
+                                if ((isinstance(tt.get_referent(), GeoReferent)) and tt.get_referent().alpha2 == "RU"): 
                                     ok = True
-                                elif ((isinstance(tt, NumberToken)) and tt.length_char == 6 and (tt).typ == NumberSpellingType.DIGIT): 
+                                elif ((isinstance(tt, NumberToken)) and tt.length_char == 6 and tt.typ == NumberSpellingType.DIGIT): 
                                     ok = True
-                    elif (((t.whitespaces_before_count < 2) and (isinstance(t.previous, NumberToken)) and t.previous.length_char == 6) and (t.previous).typ == NumberSpellingType.DIGIT): 
+                    elif (((t.whitespaces_before_count < 2) and (isinstance(t.previous, NumberToken)) and t.previous.length_char == 6) and t.previous.typ == NumberSpellingType.DIGIT): 
                         ok = True
                     if (ok): 
                         if (term == "РК" and TerrItemToken.__m_kazahstan is not None): 
-                            return TerrItemToken._new1242(t, t, TerrItemToken.__m_kazahstan)
+                            return TerrItemToken._new1176(t, t, TerrItemToken.__m_kazahstan)
                         if (term == "РТ" and TerrItemToken.__m_tatarstan is not None): 
-                            return TerrItemToken._new1242(t, t, TerrItemToken.__m_tatarstan)
+                            return TerrItemToken._new1176(t, t, TerrItemToken.__m_tatarstan)
                         if (term == "РД" and TerrItemToken.__m_dagestan is not None): 
-                            return TerrItemToken._new1242(t, t, TerrItemToken.__m_dagestan)
+                            return TerrItemToken._new1176(t, t, TerrItemToken.__m_dagestan)
                         if (term == "УР" and TerrItemToken.__m_udmurtia is not None): 
-                            return TerrItemToken._new1242(t, t, TerrItemToken.__m_udmurtia)
+                            return TerrItemToken._new1176(t, t, TerrItemToken.__m_udmurtia)
                         if (term == "РБ" and TerrItemToken.__m_belorussia is not None): 
-                            return TerrItemToken._new1242(t, t, TerrItemToken.__m_belorussia)
+                            return TerrItemToken._new1176(t, t, TerrItemToken.__m_belorussia)
                         if (((term == "ТС" or term == "TC")) and TerrItemToken.__m_tamog_sous is not None): 
-                            return TerrItemToken._new1242(t, t, TerrItemToken.__m_tamog_sous)
+                            return TerrItemToken._new1176(t, t, TerrItemToken.__m_tamog_sous)
             if (((isinstance(t, TextToken)) and ((t.is_value("Р", None) or t.is_value("P", None))) and t.next0_ is not None) and t.next0_.is_char('.') and not t.next0_.is_newline_after): 
                 res = TerrItemToken.try_parse(t.next0_.next0_, int_ont, False, False, None)
                 if (res is not None and res.onto_item is not None): 
@@ -353,11 +362,11 @@ class TerrItemToken(MetaToken):
                         res.is_doubt = False
                         return res
             if ((isinstance(t, TextToken)) and t.length_char > 2 and not t.chars.is_all_lower): 
-                if (((t.morph.class0_.is_adjective or t.chars.is_all_upper or (t).term.endswith("ЖД"))) or ((t.next0_ is not None and t.next0_.is_hiphen))): 
+                if (((t.morph.class0_.is_adjective or t.chars.is_all_upper or t.term.endswith("ЖД"))) or ((t.next0_ is not None and t.next0_.is_hiphen))): 
                     rt0 = t.kit.process_referent("ORGANIZATION", t)
                     if (rt0 is not None): 
                         if ((Utils.ifNotNull(rt0.referent.get_string_value("TYPE"), "")).endswith("дорога")): 
-                            return TerrItemToken._new1251(t, rt0.end_token, rt0, rt0.morph)
+                            return TerrItemToken._new1185(t, rt0.end_token, rt0, rt0.morph)
                 rzd_dir_ = TerrItemToken.__try_parse_rzd_dir(t)
                 if (rzd_dir_ is not None): 
                     tt = rzd_dir_.end_token.next0_
@@ -374,7 +383,7 @@ class TerrItemToken(MetaToken):
             rt0 = t.kit.process_referent("ORGANIZATION", t)
             if (rt0 is not None): 
                 if ((Utils.ifNotNull(rt0.referent.get_string_value("TYPE"), "")).endswith("дорога")): 
-                    return TerrItemToken._new1251(t, rt0.end_token, rt0, rt0.morph)
+                    return TerrItemToken._new1185(t, rt0.end_token, rt0, rt0.morph)
             rzd_dir_ = TerrItemToken.__try_parse_rzd_dir(t)
             if (rzd_dir_ is not None): 
                 tt = rzd_dir_.end_token.next0_
@@ -444,7 +453,7 @@ class TerrItemToken(MetaToken):
                                 return None
         if (res is not None and res.begin_token == res.end_token and res.termin_item is None): 
             if (isinstance(t, TextToken)): 
-                str0_ = (t).term
+                str0_ = t.term
                 if (str0_ == "ЧАДОВ" or str0_ == "ТОГОВ"): 
                     return None
             if ((((isinstance(t.next0_, TextToken)) and (t.whitespaces_after_count < 2) and not t.next0_.chars.is_all_lower) and t.chars == t.next0_.chars and not t.chars.is_latin_letter) and ((not t.morph.case_.is_genitive and not t.morph.case_.is_accusative))): 
@@ -469,7 +478,7 @@ class TerrItemToken(MetaToken):
     @staticmethod
     def __try_parse(t : 'Token', int_ont : 'IntOntologyCollection', can_be_low_capital : bool, prev : 'TerrItemToken') -> 'TerrItemToken':
         from pullenti.ner.geo.internal.CityItemToken import CityItemToken
-        if (not ((isinstance(t, TextToken)))): 
+        if (not (isinstance(t, TextToken))): 
             return None
         li = None
         if (int_ont is not None): 
@@ -498,28 +507,28 @@ class TerrItemToken(MetaToken):
                         elif (t.previous is not None and t.previous.is_value("ДОМЕН", None)): 
                             del li[i]
             for nt in li: 
-                if (nt.item is not None and not ((isinstance(nt.termin.tag, IntOntologyItem)))): 
+                if (nt.item is not None and not (isinstance(nt.termin.tag, IntOntologyItem))): 
                     if (can_be_low_capital or not MiscHelper.is_all_characters_lower(nt.begin_token, nt.end_token, False) or nt.begin_token != nt.end_token): 
-                        res0 = TerrItemToken._new1253(nt.begin_token, nt.end_token, nt.item, nt.morph)
+                        res0 = TerrItemToken._new1187(nt.begin_token, nt.end_token, nt.item, nt.morph)
                         if (nt.end_token.morph.class0_.is_adjective and nt.begin_token == nt.end_token): 
                             if (nt.begin_token.get_morph_class_in_dictionary().is_proper_geo): 
                                 pass
                             else: 
                                 res0.is_adjective = True
                         if (nt.begin_token == nt.end_token and nt.chars.is_latin_letter): 
-                            if ((nt.item.referent).is_state): 
+                            if (nt.item.referent.is_state): 
                                 pass
                             elif (nt.item.referent.find_slot(GeoReferent.ATTR_TYPE, "state", True) is not None): 
                                 pass
                             else: 
                                 res0.is_doubt = True
-                        if ((len(li) == 2 and nt == li[0] and li[1].item is not None) and not ((isinstance(li[1].termin.tag, IntOntologyItem)))): 
+                        if ((len(li) == 2 and nt == li[0] and li[1].item is not None) and not (isinstance(li[1].termin.tag, IntOntologyItem))): 
                             res0.onto_item2 = li[1].item
                         return res0
             for nt in li: 
                 if (nt.item is not None and (isinstance(nt.termin.tag, IntOntologyItem))): 
                     if (nt.end_token.next0_ is None or not nt.end_token.next0_.is_hiphen): 
-                        res1 = TerrItemToken._new1254(nt.begin_token, nt.end_token, nt.item, True, nt.morph)
+                        res1 = TerrItemToken._new1188(nt.begin_token, nt.end_token, nt.item, True, nt.morph)
                         if ((len(li) == 2 and nt == li[0] and li[1].item is not None) and (isinstance(li[1].termin.tag, IntOntologyItem))): 
                             res1.onto_item2 = li[1].item
                         if (t.kit.base_language.is_ua and res1.onto_item.canonic_text == "СУДАН" and t.is_value("СУД", None)): 
@@ -527,8 +536,8 @@ class TerrItemToken(MetaToken):
                         return res1
             for nt in li: 
                 if (nt.termin is not None and nt.item is None): 
-                    if (nt.end_token.next0_ is None or not nt.end_token.next0_.is_hiphen or not (nt.termin).is_adjective): 
-                        res1 = TerrItemToken._new1255(nt.begin_token, nt.end_token, Utils.asObjectOrNull(nt.termin, TerrTermin), (nt.termin).is_adjective, nt.morph)
+                    if (nt.end_token.next0_ is None or not nt.end_token.next0_.is_hiphen or not nt.termin.is_adjective): 
+                        res1 = TerrItemToken._new1189(nt.begin_token, nt.end_token, Utils.asObjectOrNull(nt.termin, TerrTermin), nt.termin.is_adjective, nt.morph)
                         if (not res1.is_adjective): 
                             if (res1.termin_item.canonic_text == "РЕСПУБЛИКА" or res1.termin_item.canonic_text == "ШТАТ"): 
                                 npt1 = NounPhraseHelper.try_parse(res1.begin_token.previous, NounPhraseParseAttr.NO, 0, None)
@@ -560,7 +569,7 @@ class TerrItemToken(MetaToken):
                     if (r is not None and r.type_name == "PHONE"): 
                         ok = True
                 if (ok): 
-                    return TerrItemToken._new1242(tt, tt, TerrItemToken._m_alpha2state[tt.term])
+                    return TerrItemToken._new1176(tt, tt, TerrItemToken._m_alpha2state[tt.term])
         if (tt.length_char < 3): 
             return None
         if (MiscHelper.is_eng_article(tt)): 
@@ -598,7 +607,7 @@ class TerrItemToken(MetaToken):
         if (npt is not None): 
             if (((npt.noun.is_value("ФЕДЕРАЦИЯ", None) or npt.noun.is_value("ФЕДЕРАЦІЯ", None))) and len(npt.adjectives) == 1): 
                 if (MiscHelper.is_not_more_than_one_error("РОССИЙСКАЯ", npt.adjectives[0]) or MiscHelper.is_not_more_than_one_error("РОСІЙСЬКА", npt.adjectives[0])): 
-                    return TerrItemToken._new1253(npt.begin_token, npt.end_token, (TerrItemToken.__m_russiaua if t0.kit.base_language.is_ua else TerrItemToken.__m_russiaru), npt.morph)
+                    return TerrItemToken._new1187(npt.begin_token, npt.end_token, (TerrItemToken.__m_russiaua if t0.kit.base_language.is_ua else TerrItemToken.__m_russiaru), npt.morph)
         if (t0.morph.class0_.is_proper_name): 
             if (t0.is_whitespace_after or t0.next0_.is_whitespace_after): 
                 return None
@@ -611,7 +620,7 @@ class TerrItemToken(MetaToken):
                 else: 
                     tok = TerrItemToken._m_terr_ontology.try_attach(tt.next0_, None, False)
                     if (tok is not None): 
-                        if ((((tok[0].termin.canonic_text == "РАЙОН" or tok[0].termin.canonic_text == "ОБЛАСТЬ" or tok[0].termin.canonic_text == "УЛУС") or tok[0].termin.canonic_text == "КРАЙ" or tok[0].termin.canonic_text == "ВОЛОСТЬ") or tok[0].termin.canonic_text == "ОКРУГ" or tok[0].termin.canonic_text == "АВТОНОМИЯ") or tok[0].termin.canonic_text == "АВТОНОМІЯ" or ((tok[0].chars.is_latin_letter and (isinstance(tok[0].termin, TerrTermin)) and (tok[0].termin).is_region))): 
+                        if ((((tok[0].termin.canonic_text == "РАЙОН" or tok[0].termin.canonic_text == "ОБЛАСТЬ" or tok[0].termin.canonic_text == "УЛУС") or tok[0].termin.canonic_text == "КРАЙ" or tok[0].termin.canonic_text == "ВОЛОСТЬ") or tok[0].termin.canonic_text == "ОКРУГ" or tok[0].termin.canonic_text == "АВТОНОМИЯ") or tok[0].termin.canonic_text == "АВТОНОМІЯ" or ((tok[0].chars.is_latin_letter and (isinstance(tok[0].termin, TerrTermin)) and tok[0].termin.is_region))): 
                             reg_after = True
             if (reg_after): 
                 adj = True
@@ -685,26 +694,26 @@ class TerrItemToken(MetaToken):
             proc: 
         
         """
-        if (not ((isinstance(t, TextToken))) or not t.chars.is_capital_upper or not t.chars.is_cyrillic_letter): 
+        if (not (isinstance(t, TextToken)) or not t.chars.is_capital_upper or not t.chars.is_cyrillic_letter): 
             return None
         if ((t.next0_ is not None and t.next0_.is_hiphen and (isinstance(t.next0_.next0_, TextToken))) and t.next0_.next0_.chars == t.chars): 
             tok = TerrItemToken._m_terr_ontology.try_attach(t, None, False)
-            if ((tok is not None and tok[0].item is not None and (isinstance(tok[0].item.referent, GeoReferent))) and (tok[0].item.referent).is_state): 
+            if ((tok is not None and tok[0].item is not None and (isinstance(tok[0].item.referent, GeoReferent))) and tok[0].item.referent.is_state): 
                 return None
             tok = TerrItemToken._m_terr_ontology.try_attach(t.next0_.next0_, None, False)
-            if ((tok is not None and tok[0].item is not None and (isinstance(tok[0].item.referent, GeoReferent))) and (tok[0].item.referent).is_state): 
+            if ((tok is not None and tok[0].item is not None and (isinstance(tok[0].item.referent, GeoReferent))) and tok[0].item.referent.is_state): 
                 return None
             return TerrItemToken(t, t.next0_.next0_)
         if ((isinstance(t.next0_, TextToken)) and t.next0_.chars == t.chars): 
             npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0, None)
             if (npt is not None and npt.end_token == t.next0_ and len(npt.adjectives) == 1): 
-                if (not npt.end_token.morph.class0_.is_adjective or ((npt.end_token.morph.case_.is_nominative and (isinstance(npt.end_token, TextToken)) and LanguageHelper.ends_with((npt.end_token).term, "О")))): 
+                if (not npt.end_token.morph.class0_.is_adjective or ((npt.end_token.morph.case_.is_nominative and (isinstance(npt.end_token, TextToken)) and LanguageHelper.ends_with(npt.end_token.term, "О")))): 
                     ty = TerrItemToken.__try_parse(t.next0_, int_ont, False, None)
                     if (ty is not None and ty.termin_item is not None): 
                         return None
                     return TerrItemToken(t, t.next0_)
-        str0_ = (t).term
-        res = TerrItemToken._new1258(t, t, True)
+        str0_ = t.term
+        res = TerrItemToken._new1192(t, t, True)
         if (not LanguageHelper.ends_with(str0_, "О")): 
             res.is_doubt = True
         dir0_ = MiscLocationHelper.try_attach_nord_west(t)
@@ -737,58 +746,58 @@ class TerrItemToken(MetaToken):
         t.add_abridge("РЕСП-КА")
         TerrItemToken._m_terr_ontology.add(t)
         TerrItemToken._m_terr_ontology.add(TerrTermin("РЕСПУБЛІКА", MorphLang.UA))
-        t = TerrTermin._new1259("ГОСУДАРСТВО", True)
+        t = TerrTermin._new1193("ГОСУДАРСТВО", True)
         t.add_abridge("ГОС-ВО")
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1260("ДЕРЖАВА", MorphLang.UA, True)
+        t = TerrTermin._new1194("ДЕРЖАВА", MorphLang.UA, True)
         TerrItemToken._m_terr_ontology.add(t)
         t = TerrTermin("АВТОНОМНАЯ СОВЕТСКАЯ СОЦИАЛИСТИЧЕСКАЯ РЕСПУБЛИКА")
         t.acronym = "АССР"
         TerrItemToken._m_terr_ontology.add(t)
         for s in ["СОЮЗ", "СОДРУЖЕСТВО", "ФЕДЕРАЦИЯ", "КОНФЕДЕРАЦИЯ"]: 
-            TerrItemToken._m_terr_ontology.add(TerrTermin._new1261(s, True, True))
+            TerrItemToken._m_terr_ontology.add(TerrTermin._new1195(s, True, True))
         for s in ["СОЮЗ", "СПІВДРУЖНІСТЬ", "ФЕДЕРАЦІЯ", "КОНФЕДЕРАЦІЯ"]: 
-            TerrItemToken._m_terr_ontology.add(TerrTermin._new1262(s, MorphLang.UA, True, True))
+            TerrItemToken._m_terr_ontology.add(TerrTermin._new1196(s, MorphLang.UA, True, True))
         for s in ["КОРОЛЕВСТВО", "КНЯЖЕСТВО", "ГЕРЦОГСТВО", "ИМПЕРИЯ", "ЦАРСТВО", "KINGDOM", "DUCHY", "EMPIRE"]: 
-            TerrItemToken._m_terr_ontology.add(TerrTermin._new1259(s, True))
+            TerrItemToken._m_terr_ontology.add(TerrTermin._new1193(s, True))
         for s in ["КОРОЛІВСТВО", "КНЯЗІВСТВО", "ГЕРЦОГСТВО", "ІМПЕРІЯ"]: 
-            TerrItemToken._m_terr_ontology.add(TerrTermin._new1260(s, MorphLang.UA, True))
+            TerrItemToken._m_terr_ontology.add(TerrTermin._new1194(s, MorphLang.UA, True))
         for s in ["НЕЗАВИСИМЫЙ", "ОБЪЕДИНЕННЫЙ", "СОЕДИНЕННЫЙ", "НАРОДНЫЙ", "НАРОДНО", "ФЕДЕРАТИВНЫЙ", "ДЕМОКРАТИЧЕСКИЙ", "СОВЕТСКИЙ", "СОЦИАЛИСТИЧЕСКИЙ", "КООПЕРАТИВНЫЙ", "ИСЛАМСКИЙ", "АРАБСКИЙ", "МНОГОНАЦИОНАЛЬНЫЙ", "СУВЕРЕННЫЙ", "САМОПРОВОЗГЛАШЕННЫЙ", "НЕПРИЗНАННЫЙ"]: 
-            TerrItemToken._m_terr_ontology.add(TerrTermin._new1265(s, True, True))
+            TerrItemToken._m_terr_ontology.add(TerrTermin._new1199(s, True, True))
         for s in ["НЕЗАЛЕЖНИЙ", "ОБЄДНАНИЙ", "СПОЛУЧЕНИЙ", "НАРОДНИЙ", "ФЕДЕРАЛЬНИЙ", "ДЕМОКРАТИЧНИЙ", "РАДЯНСЬКИЙ", "СОЦІАЛІСТИЧНИЙ", "КООПЕРАТИВНИЙ", "ІСЛАМСЬКИЙ", "АРАБСЬКИЙ", "БАГАТОНАЦІОНАЛЬНИЙ", "СУВЕРЕННИЙ"]: 
-            TerrItemToken._m_terr_ontology.add(TerrTermin._new1266(s, MorphLang.UA, True, True))
-        t = TerrTermin._new1267("ОБЛАСТЬ", True)
+            TerrItemToken._m_terr_ontology.add(TerrTermin._new1200(s, MorphLang.UA, True, True))
+        t = TerrTermin._new1201("ОБЛАСТЬ", True)
         t.add_abridge("ОБЛ.")
-        TerrItemToken._m_terr_noun_adjectives.add(Termin._new119("ОБЛАСТНОЙ", t))
+        TerrItemToken._m_terr_noun_adjectives.add(Termin._new100("ОБЛАСТНОЙ", t))
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1267("REGION", True)
+        t = TerrTermin._new1201("REGION", True)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1270("ОБЛАСТЬ", MorphLang.UA, True)
+        t = TerrTermin._new1204("ОБЛАСТЬ", MorphLang.UA, True)
         t.add_abridge("ОБЛ.")
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1271(None, True, "АО")
+        t = TerrTermin._new1205(None, True, "АО")
         t.add_variant("АОБЛ", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1272(None, MorphLang.UA, True, "АО")
+        t = TerrTermin._new1206(None, MorphLang.UA, True, "АО")
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1267("РАЙОН", True)
+        t = TerrTermin._new1201("РАЙОН", True)
         t.add_abridge("Р-Н")
         t.add_abridge("Р-ОН")
         t.add_abridge("РН.")
-        TerrItemToken._m_terr_noun_adjectives.add(Termin._new119("РАЙОННЫЙ", t))
+        TerrItemToken._m_terr_noun_adjectives.add(Termin._new100("РАЙОННЫЙ", t))
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1270("РАЙОН", MorphLang.UA, True)
+        t = TerrTermin._new1204("РАЙОН", MorphLang.UA, True)
         t.add_abridge("Р-Н")
         t.add_abridge("Р-ОН")
         t.add_abridge("РН.")
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1267("УЛУС", True)
+        t = TerrTermin._new1201("УЛУС", True)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1267("УЕЗД", True)
+        t = TerrTermin._new1201("УЕЗД", True)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1278("ГУБЕРНАТОРСТВО", True, True)
+        t = TerrTermin._new1212("ГУБЕРНАТОРСТВО", True, True)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1271("ПОЧТОВОЕ ОТДЕЛЕНИЕ", True, "ОПС")
+        t = TerrTermin._new1205("ПОЧТОВОЕ ОТДЕЛЕНИЕ", True, "ОПС")
         t.add_abridge("П.О.")
         t.add_abridge("ПОЧТ.ОТД.")
         t.add_abridge("ПОЧТОВ.ОТД.")
@@ -797,35 +806,35 @@ class TerrItemToken(MetaToken):
         t.add_variant("ПОЧТАМТ", False)
         t.add_variant("ГЛАВПОЧТАМТ", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1278("ШТАТ", True, True)
+        t = TerrTermin._new1212("ШТАТ", True, True)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1267("STATE", True)
+        t = TerrTermin._new1201("STATE", True)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1282("ШТАТ", MorphLang.UA, True, True)
+        t = TerrTermin._new1216("ШТАТ", MorphLang.UA, True, True)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1278("ПРОВИНЦИЯ", True, True)
+        t = TerrTermin._new1212("ПРОВИНЦИЯ", True, True)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1282("ПРОВІНЦІЯ", MorphLang.UA, True, True)
+        t = TerrTermin._new1216("ПРОВІНЦІЯ", MorphLang.UA, True, True)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1267("PROVINCE", True)
+        t = TerrTermin._new1201("PROVINCE", True)
         t.add_variant("PROVINCIAL", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1267("ПРЕФЕКТУРА", True)
+        t = TerrTermin._new1201("ПРЕФЕКТУРА", True)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1267("PREFECTURE", True)
+        t = TerrTermin._new1201("PREFECTURE", True)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1267("АВТОНОМИЯ", True)
+        t = TerrTermin._new1201("АВТОНОМИЯ", True)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1267("AUTONOMY", True)
+        t = TerrTermin._new1201("AUTONOMY", True)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1270("АВТОНОМІЯ", MorphLang.UA, True)
+        t = TerrTermin._new1204("АВТОНОМІЯ", MorphLang.UA, True)
         TerrItemToken._m_terr_ontology.add(t)
         for s in ["РЕСПУБЛИКА", "КРАЙ", "ОКРУГ", "ФЕДЕРАЛЬНЫЙ ОКРУГ", "АВТОНОМНЫЙ ОКРУГ", "НАЦИОНАЛЬНЫЙ ОКРУГ", "ВОЛОСТЬ", "ФЕДЕРАЛЬНАЯ ЗЕМЛЯ", "ВОЕВОДСТВО", "МУНИЦИПАЛЬНЫЙ РАЙОН", "МУНИЦИПАЛЬНЫЙ ОКРУГ", "АДМИНИСТРАТИВНЫЙ ОКРУГ", "ГОРОДСКОЙ РАЙОН", "ВНУТРИГОРОДСКОЙ РАЙОН", "ВНУТРИГОРОДСКОЕ МУНИЦИПАЛЬНОЕ ОБРАЗОВАНИЕ", "REPUBLIC", "COUNTY", "BOROUGH", "PARISH", "MUNICIPALITY", "CENSUS AREA", "AUTONOMOUS REGION", "ADMINISTRATIVE REGION", "SPECIAL ADMINISTRATIVE REGION"]: 
-            t = TerrTermin._new1291(s, True, " " in s)
+            t = TerrTermin._new1225(s, True, " " in s)
             if (s == "КРАЙ"): 
-                TerrItemToken._m_terr_noun_adjectives.add(Termin._new119("КРАЕВОЙ", t))
+                TerrItemToken._m_terr_noun_adjectives.add(Termin._new100("КРАЕВОЙ", t))
             elif (s == "ОКРУГ"): 
-                TerrItemToken._m_terr_noun_adjectives.add(Termin._new119("ОКРУЖНОЙ", t))
+                TerrItemToken._m_terr_noun_adjectives.add(Termin._new100("ОКРУЖНОЙ", t))
             elif (s == "ФЕДЕРАЛЬНЫЙ ОКРУГ"): 
                 t.acronym = "ФО"
                 t.acronym_can_be_lower = False
@@ -833,23 +842,23 @@ class TerrItemToken(MetaToken):
                 t.add_abridge(s.replace("РАЙОН", "Р-Н"))
             TerrItemToken._m_terr_ontology.add(t)
         for s in ["РЕСПУБЛІКА", "КРАЙ", "ОКРУГ", "ФЕДЕРАЛЬНИЙ ОКРУГ", "АВТОНОМНЫЙ ОКРУГ", "НАЦІОНАЛЬНИЙ ОКРУГ", "ВОЛОСТЬ", "ФЕДЕРАЛЬНА ЗЕМЛЯ", "МУНІЦИПАЛЬНИЙ РАЙОН", "МУНІЦИПАЛЬНИЙ ОКРУГ", "АДМІНІСТРАТИВНИЙ ОКРУГ", "МІСЬКИЙ РАЙОН", "ВНУТРИГОРОДСКОЕ МУНІЦИПАЛЬНЕ УТВОРЕННЯ"]: 
-            t = TerrTermin._new1294(s, MorphLang.UA, True, " " in s)
+            t = TerrTermin._new1228(s, MorphLang.UA, True, " " in s)
             if (LanguageHelper.ends_with(s, "РАЙОН")): 
                 t.add_abridge(s.replace("РАЙОН", "Р-Н"))
             TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1267("СЕЛЬСКИЙ ОКРУГ", True)
+        t = TerrTermin._new1201("СЕЛЬСКИЙ ОКРУГ", True)
         t.add_abridge("С.О.")
         t.add_abridge("C.O.")
         t.add_abridge("ПС С.О.")
         t.add_abridge("С/ОКРУГ")
         t.add_abridge("С/О")
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1270("СІЛЬСЬКИЙ ОКРУГ", MorphLang.UA, True)
+        t = TerrTermin._new1204("СІЛЬСЬКИЙ ОКРУГ", MorphLang.UA, True)
         t.add_abridge("С.О.")
         t.add_abridge("C.O.")
         t.add_abridge("С/ОКРУГ")
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1297("СЕЛЬСКИЙ СОВЕТ", "СЕЛЬСКИЙ ОКРУГ", True)
+        t = TerrTermin._new1231("СЕЛЬСКИЙ СОВЕТ", "СЕЛЬСКИЙ ОКРУГ", True)
         t.add_variant("СЕЛЬСОВЕТ", False)
         t.add_abridge("С.С.")
         t.add_abridge("С/С")
@@ -857,7 +866,7 @@ class TerrItemToken(MetaToken):
         t.add_abridge("С.А.")
         t.add_abridge("С.АДМ.")
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1267("ПОСЕЛКОВЫЙ ОКРУГ", True)
+        t = TerrTermin._new1201("ПОСЕЛКОВЫЙ ОКРУГ", True)
         t.add_abridge("П.О.")
         t.add_abridge("П/О")
         t.add_variant("ПОСЕЛКОВАЯ АДМИНИСТРАЦИЯ", False)
@@ -865,88 +874,88 @@ class TerrItemToken(MetaToken):
         t.add_abridge("П.АДМ.")
         t.add_abridge("П/А")
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1297("ПОСЕЛКОВЫЙ СОВЕТ", "ПОСЕЛКОВЫЙ ОКРУГ", True)
+        t = TerrTermin._new1231("ПОСЕЛКОВЫЙ СОВЕТ", "ПОСЕЛКОВЫЙ ОКРУГ", True)
         t.add_abridge("П.С.")
         TerrItemToken._m_terr_ontology.add(t)
-        TerrItemToken._m_terr_ontology.add(TerrTermin._new1300("АВТОНОМНЫЙ", True, True))
-        TerrItemToken._m_terr_ontology.add(TerrTermin._new1301("АВТОНОМНИЙ", MorphLang.UA, True, True))
-        TerrItemToken._m_terr_ontology.add(TerrTermin._new1302("МУНИЦИПАЛЬНОЕ СОБРАНИЕ", True, True, True))
-        TerrItemToken._m_terr_ontology.add(TerrTermin._new1303("МУНІЦИПАЛЬНЕ ЗБОРИ", MorphLang.UA, True, True, True))
-        t = TerrTermin._new1304("МУНИЦИПАЛЬНОЕ ОБРАЗОВАНИЕ", "МО")
+        TerrItemToken._m_terr_ontology.add(TerrTermin._new1234("АВТОНОМНЫЙ", True, True))
+        TerrItemToken._m_terr_ontology.add(TerrTermin._new1235("АВТОНОМНИЙ", MorphLang.UA, True, True))
+        TerrItemToken._m_terr_ontology.add(TerrTermin._new1236("МУНИЦИПАЛЬНОЕ СОБРАНИЕ", True, True, True))
+        TerrItemToken._m_terr_ontology.add(TerrTermin._new1237("МУНІЦИПАЛЬНЕ ЗБОРИ", MorphLang.UA, True, True, True))
+        t = TerrTermin._new1238("МУНИЦИПАЛЬНОЕ ОБРАЗОВАНИЕ", "МО")
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1305("МУНИЦИПАЛЬНОЕ ОБРАЗОВАНИЕ МУНИЦИПАЛЬНЫЙ РАЙОН", "МОМР", True)
+        t = TerrTermin._new1239("МУНИЦИПАЛЬНОЕ ОБРАЗОВАНИЕ МУНИЦИПАЛЬНЫЙ РАЙОН", "МОМР", True)
         t.add_variant("МО МР", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1305("МУНИЦИПАЛЬНОЕ ОБРАЗОВАНИЕ ГОРОДСКОЙ ОКРУГ", "МОГО", True)
+        t = TerrTermin._new1239("МУНИЦИПАЛЬНОЕ ОБРАЗОВАНИЕ ГОРОДСКОЙ ОКРУГ", "МОГО", True)
         t.add_variant("МО ГО", False)
         TerrItemToken._m_terr_ontology.add(t)
         t = TerrTermin("ТЕРРИТОРИЯ")
         t.add_abridge("ТЕР.")
         t.add_abridge("ТЕРРИТОР.")
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1307("ЦЕНТРАЛЬНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
+        t = TerrTermin._new1241("ЦЕНТРАЛЬНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
         t.add_abridge("ЦАО")
         t.add_variant("ЦЕНТРАЛЬНЫЙ АО", False)
         t.add_variant("ЦЕНТРАЛЬНЫЙ ОКРУГ", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1307("СЕВЕРНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
+        t = TerrTermin._new1241("СЕВЕРНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
         t.add_abridge("САО")
         t.add_variant("СЕВЕРНЫЙ АО", False)
         t.add_variant("СЕВЕРНЫЙ ОКРУГ", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1307("СЕВЕРО-ВОСТОЧНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
+        t = TerrTermin._new1241("СЕВЕРО-ВОСТОЧНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
         t.add_abridge("СВАО")
         t.add_variant("СЕВЕРО-ВОСТОЧНЫЙ АО", False)
         t.add_variant("СЕВЕРО-ВОСТОЧНЫЙ ОКРУГ", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1307("ВОСТОЧНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
+        t = TerrTermin._new1241("ВОСТОЧНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
         t.add_abridge("ВАО")
         t.add_variant("ВОСТОЧНЫЙ АО", False)
         t.add_variant("ВОСТОЧНЫЙ ОКРУГ", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1307("ЮГО-ВОСТОЧНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
+        t = TerrTermin._new1241("ЮГО-ВОСТОЧНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
         t.add_abridge("ЮВАО")
         t.add_variant("ЮГО-ВОСТОЧНЫЙ АО", False)
         t.add_variant("ЮГО-ВОСТОЧНЫЙ ОКРУГ", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1307("ЮЖНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
+        t = TerrTermin._new1241("ЮЖНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
         t.add_abridge("ЮАО")
         t.add_variant("ЮЖНЫЙ АО", False)
         t.add_variant("ЮЖНЫЙ ОКРУГ", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1307("ЗАПАДНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
+        t = TerrTermin._new1241("ЗАПАДНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
         t.add_abridge("ЗАО")
         t.add_variant("ЗАПАДНЫЙ АО", False)
         t.add_variant("ЗАПАДНЫЙ ОКРУГ", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1307("СЕВЕРО-ЗАПАДНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
+        t = TerrTermin._new1241("СЕВЕРО-ЗАПАДНЫЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
         t.add_abridge("СЗАО")
         t.add_variant("СЕВЕРО-ЗАПАДНЫЙ АО", False)
         t.add_variant("СЕВЕРО-ЗАПАДНЫЙ ОКРУГ", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1307("ЗЕЛЕНОГРАДСКИЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
+        t = TerrTermin._new1241("ЗЕЛЕНОГРАДСКИЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
         t.add_abridge("ЗЕЛАО")
         t.add_variant("ЗЕЛЕНОГРАДСКИЙ АО", False)
         t.add_variant("ЗЕЛЕНОГРАДСКИЙ ОКРУГ", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1307("ТРОИЦКИЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
+        t = TerrTermin._new1241("ТРОИЦКИЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
         t.add_abridge("ТАО")
         t.add_variant("ТРОИЦКИЙ АО", False)
         t.add_variant("ТРОИЦКИЙ ОКРУГ", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1307("НОВОМОСКОВСКИЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
+        t = TerrTermin._new1241("НОВОМОСКОВСКИЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
         t.add_abridge("НАО")
         t.add_variant("НОВОМОСКОВСКИЙ АО", False)
         t.add_variant("НОВОМОСКОВСКИЙ ОКРУГ", False)
         TerrItemToken._m_terr_ontology.add(t)
-        t = TerrTermin._new1307("ТРОИЦКИЙ И НОВОМОСКОВСКИЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
+        t = TerrTermin._new1241("ТРОИЦКИЙ И НОВОМОСКОВСКИЙ АДМИНИСТРАТИВНЫЙ ОКРУГ", True)
         t.add_abridge("ТИНАО")
         t.add_abridge("НИТАО")
         t.add_variant("ТРОИЦКИЙ И НОВОМОСКОВСКИЙ АО", False)
         t.add_variant("ТРОИЦКИЙ И НОВОМОСКОВСКИЙ ОКРУГ", False)
         TerrItemToken._m_terr_ontology.add(t)
         TerrItemToken._m_alpha2state = dict()
-        dat = EpNerAddressInternalResourceHelper.get_bytes("t.dat")
+        dat = PullentiNerAddressInternalResourceHelper.get_bytes("t.dat")
         if (dat is None): 
             raise Utils.newException("Not found resource file t.dat in Analyzer.Location", None)
         dat = MiscLocationHelper._deflate(dat)
@@ -969,7 +978,7 @@ class TerrItemToken(MetaToken):
                 elif (x.tag == "unknown"): 
                     a = Utils.getXmlAttrByName(x.attrib, "name")
                     if (a is not None and a[1] is not None): 
-                        TerrItemToken._m_unknown_regions.add(Termin._new967(a[1], lang))
+                        TerrItemToken._m_unknown_regions.add(Termin._new901(a[1], lang))
     
     _m_terr_ontology = None
     """ Словарь стран и некоторых терминов """
@@ -1022,7 +1031,7 @@ class TerrItemToken(MetaToken):
                 c.termins.append(te)
                 state._add_name(Utils.getXmlInnerText(x))
             elif (x.tag == "acr"): 
-                c.termins.append(Termin._new1320(Utils.getXmlInnerText(x), lang))
+                c.termins.append(Termin._new1254(Utils.getXmlInnerText(x), lang))
                 state._add_name(Utils.getXmlInnerText(x))
                 if (acrs is None): 
                     acrs = list()
@@ -1084,10 +1093,10 @@ class TerrItemToken(MetaToken):
         if (a2 is not None): 
             if (not a2 in TerrItemToken._m_alpha2state): 
                 TerrItemToken._m_alpha2state[a2] = c
-            wrapa31321 = RefOutArgWrapper(None)
-            inoutres1322 = Utils.tryGetValue(MiscLocationHelper._m_alpha2_3, a2, wrapa31321)
-            a3 = wrapa31321.value
-            if (inoutres1322): 
+            wrapa31255 = RefOutArgWrapper(None)
+            inoutres1256 = Utils.tryGetValue(MiscLocationHelper._m_alpha2_3, a2, wrapa31255)
+            a3 = wrapa31255.value
+            if (inoutres1256): 
                 if (not a3 in TerrItemToken._m_alpha2state): 
                     TerrItemToken._m_alpha2state[a3] = c
         if (acrs is not None): 
@@ -1131,7 +1140,7 @@ class TerrItemToken(MetaToken):
                 r.termins.append(te)
             elif (x.tag == "ab"): 
                 if (aterm is None): 
-                    aterm = Termin._new456(reg.get_string_value(GeoReferent.ATTR_NAME), lang, reg)
+                    aterm = Termin._new388(reg.get_string_value(GeoReferent.ATTR_NAME), lang, reg)
                 aterm.add_abridge(Utils.getXmlInnerText(x))
         if (aterm is not None): 
             TerrItemToken._m_geo_abbrs.add(aterm)
@@ -1149,40 +1158,40 @@ class TerrItemToken(MetaToken):
         TerrItemToken._m_terr_ontology.add_item(r)
     
     @staticmethod
-    def _new1240(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'TerrItemToken':
+    def _new1174(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'TerrItemToken':
         res = TerrItemToken(_arg1, _arg2)
         res.is_adjective = _arg3
         return res
     
     @staticmethod
-    def _new1241(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'TerrTermin', _arg4 : bool) -> 'TerrItemToken':
+    def _new1175(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'TerrTermin', _arg4 : bool) -> 'TerrItemToken':
         res = TerrItemToken(_arg1, _arg2)
         res.termin_item = _arg3
         res.is_doubt = _arg4
         return res
     
     @staticmethod
-    def _new1242(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'IntOntologyItem') -> 'TerrItemToken':
+    def _new1176(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'IntOntologyItem') -> 'TerrItemToken':
         res = TerrItemToken(_arg1, _arg2)
         res.onto_item = _arg3
         return res
     
     @staticmethod
-    def _new1251(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ReferentToken', _arg4 : 'MorphCollection') -> 'TerrItemToken':
+    def _new1185(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ReferentToken', _arg4 : 'MorphCollection') -> 'TerrItemToken':
         res = TerrItemToken(_arg1, _arg2)
         res.rzd = _arg3
         res.morph = _arg4
         return res
     
     @staticmethod
-    def _new1253(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'IntOntologyItem', _arg4 : 'MorphCollection') -> 'TerrItemToken':
+    def _new1187(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'IntOntologyItem', _arg4 : 'MorphCollection') -> 'TerrItemToken':
         res = TerrItemToken(_arg1, _arg2)
         res.onto_item = _arg3
         res.morph = _arg4
         return res
     
     @staticmethod
-    def _new1254(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'IntOntologyItem', _arg4 : bool, _arg5 : 'MorphCollection') -> 'TerrItemToken':
+    def _new1188(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'IntOntologyItem', _arg4 : bool, _arg5 : 'MorphCollection') -> 'TerrItemToken':
         res = TerrItemToken(_arg1, _arg2)
         res.onto_item = _arg3
         res.is_adjective = _arg4
@@ -1190,7 +1199,7 @@ class TerrItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1255(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'TerrTermin', _arg4 : bool, _arg5 : 'MorphCollection') -> 'TerrItemToken':
+    def _new1189(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'TerrTermin', _arg4 : bool, _arg5 : 'MorphCollection') -> 'TerrItemToken':
         res = TerrItemToken(_arg1, _arg2)
         res.termin_item = _arg3
         res.is_adjective = _arg4
@@ -1198,7 +1207,7 @@ class TerrItemToken(MetaToken):
         return res
     
     @staticmethod
-    def _new1258(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'TerrItemToken':
+    def _new1192(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'TerrItemToken':
         res = TerrItemToken(_arg1, _arg2)
         res.is_doubt = _arg3
         return res

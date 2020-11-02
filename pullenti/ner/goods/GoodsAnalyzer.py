@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import math
@@ -14,7 +13,7 @@ from pullenti.ner.core.GetTextAttr import GetTextAttr
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.goods.GoodAttrType import GoodAttrType
 from pullenti.ner.ReferentToken import ReferentToken
-from pullenti.ner.core.internal.EpNerCoreInternalResourceHelper import EpNerCoreInternalResourceHelper
+from pullenti.ner.core.internal.PullentiNerCoreInternalResourceHelper import PullentiNerCoreInternalResourceHelper
 from pullenti.ner.goods.internal.AttrMeta import AttrMeta
 from pullenti.ner.goods.internal.GoodMeta import GoodMeta
 from pullenti.ner.core.Termin import Termin
@@ -26,9 +25,16 @@ from pullenti.ner.goods.internal.GoodAttrToken import GoodAttrToken
 from pullenti.ner.goods.GoodReferent import GoodReferent
 
 class GoodsAnalyzer(Analyzer):
-    """ Анализатор для названий товаров (номенклатур) и их характеристик """
+    """ Анализатор названий товаров (номенклатур) и выделение из них характеристик.
+    Специфический анализатор, то есть нужно явно создавать процессор через функцию CreateSpecificProcessor,
+    указав имя анализатора.
+    Выделение происходит из небольшого фрагмента текста, содержащего только один товар и его характеристики.
+    Выделять из большого текста такие фрагменты - это не задача анализатора.
+    Примеры текстов: "Плед OXFORD Cashnere Touch Herringbone 1.5-сп с эффектом кашемира",
+    "Имплантат размером 5 см х 5 см предназначен для реконструкции твердой мозговой оболочки. Изготовлен из биологически совместимого материала на коллагеновой основе.". """
     
     ANALYZER_NAME = "GOODS"
+    """ Имя анализатора ("GOODS") """
     
     @property
     def name(self) -> str:
@@ -44,6 +50,7 @@ class GoodsAnalyzer(Analyzer):
     
     @property
     def is_specific(self) -> bool:
+        """ Этот анализатор является специфическим (IsSpecific = true) """
         return True
     
     def clone(self) -> 'Analyzer':
@@ -56,8 +63,8 @@ class GoodsAnalyzer(Analyzer):
     @property
     def images(self) -> typing.List[tuple]:
         res = dict()
-        res[AttrMeta.ATTR_IMAGE_ID] = EpNerCoreInternalResourceHelper.get_bytes("bullet_ball_glass_grey.png")
-        res[GoodMeta.IMAGE_ID] = EpNerCoreInternalResourceHelper.get_bytes("shoppingcart.png")
+        res[AttrMeta.ATTR_IMAGE_ID] = PullentiNerCoreInternalResourceHelper.get_bytes("bullet_ball_glass_grey.png")
+        res[GoodMeta.IMAGE_ID] = PullentiNerCoreInternalResourceHelper.get_bytes("shoppingcart.png")
         return res
     
     def create_referent(self, type0_ : str) -> 'Referent':
@@ -75,13 +82,6 @@ class GoodsAnalyzer(Analyzer):
         return AnalyzerDataWithOntology()
     
     def process(self, kit : 'AnalysisKit') -> None:
-        """ Основная функция выделения дат
-        
-        Args:
-            cnt: 
-            stage: 
-        
-        """
         ad = kit.get_analyzer_data(self)
         delta = 100000
         parts = math.floor((((len(kit.sofa.text) + delta) - 1)) / delta)
@@ -91,9 +91,9 @@ class GoodsAnalyzer(Analyzer):
         next_pos = 0
         goods_ = list()
         t = kit.first_token
-        first_pass3793 = True
+        first_pass3673 = True
         while True:
-            if first_pass3793: first_pass3793 = False
+            if first_pass3673: first_pass3673 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not t.is_newline_before): 
@@ -142,9 +142,9 @@ class GoodsAnalyzer(Analyzer):
                 return None
         res = ReferentToken(ga, begin, begin)
         t = begin
-        first_pass3794 = True
+        first_pass3674 = True
         while True:
-            if first_pass3794: first_pass3794 = False
+            if first_pass3674: first_pass3674 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char(';')): 

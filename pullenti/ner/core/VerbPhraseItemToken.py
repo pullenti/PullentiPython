@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -12,11 +11,13 @@ from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.ner.MetaToken import MetaToken
 from pullenti.morph.MorphMiscInfo import MorphMiscInfo
 from pullenti.morph.MorphWordForm import MorphWordForm
-from pullenti.morph.Morphology import Morphology
+from pullenti.morph.MorphologyService import MorphologyService
 from pullenti.ner.TextToken import TextToken
 
 class VerbPhraseItemToken(MetaToken):
-    """ Элемент глагольной группы """
+    """ Элемент глагольной группы VerbPhraseToken
+    Элемент глагольной группы
+    """
     
     def __init__(self, begin : 'Token', end : 'Token') -> None:
         super().__init__(begin, end, None)
@@ -28,18 +29,18 @@ class VerbPhraseItemToken(MetaToken):
     
     @property
     def is_participle(self) -> bool:
-        """ Причастие """
+        """ Это причастие """
         if (self.__m_is_participle >= 0): 
             return self.__m_is_participle > 0
         for f in self.morph.items: 
-            if (f.class0_.is_adjective and (isinstance(f, MorphWordForm)) and not "к.ф." in (f).misc.attrs): 
+            if (f.class0_.is_adjective and (isinstance(f, MorphWordForm)) and not "к.ф." in f.misc.attrs): 
                 return True
             elif (f.class0_.is_verb and not f.case_.is_undefined): 
                 return True
         self.__m_is_participle = 0
         tt = Utils.asObjectOrNull(self.end_token, TextToken)
         if (tt is not None and tt.term.endswith("СЯ")): 
-            mb = Morphology.get_word_base_info(tt.term[0:0+len(tt.term) - 2], None, False, False)
+            mb = MorphologyService.get_word_base_info(tt.term[0:0+len(tt.term) - 2], None, False, False)
             if (mb is not None): 
                 if (mb.class0_.is_adjective): 
                     self.__m_is_participle = 1
@@ -51,7 +52,7 @@ class VerbPhraseItemToken(MetaToken):
     
     @property
     def is_dee_participle(self) -> bool:
-        """ Признак деепричастия """
+        """ Это деепричастие """
         tt = Utils.asObjectOrNull(self.end_token, TextToken)
         if (tt is None): 
             return False
@@ -64,15 +65,15 @@ class VerbPhraseItemToken(MetaToken):
     
     @property
     def is_verb_infinitive(self) -> bool:
-        """ Глагол-инфиниитив """
+        """ Это глагол-инфиниитив """
         for f in self.morph.items: 
-            if (f.class0_.is_verb and (isinstance(f, MorphWordForm)) and "инф." in (f).misc.attrs): 
+            if (f.class0_.is_verb and (isinstance(f, MorphWordForm)) and "инф." in f.misc.attrs): 
                 return True
         return False
     
     @property
     def is_verb_be(self) -> bool:
-        """ Глаголы быть, являться... """
+        """ Это глагол быть, являться... """
         wf = self.verb_morph
         if (wf is not None): 
             if (wf.normal_case == "БЫТЬ" or wf.normal_case == "ЯВЛЯТЬСЯ"): 
@@ -81,7 +82,7 @@ class VerbPhraseItemToken(MetaToken):
     
     @property
     def is_verb_reversive(self) -> bool:
-        """ Возвратный глагол """
+        """ Это возвратный глагол """
         if (self.is_verb_be): 
             return False
         if (self.verb_morph is not None): 
@@ -94,7 +95,7 @@ class VerbPhraseItemToken(MetaToken):
     
     @property
     def is_verb_passive(self) -> bool:
-        """ Глагол в страдательном залоге """
+        """ Это глагол в страдательном залоге """
         if (self.is_verb_be): 
             return False
         if (self.morph.contains_attr("страд.з", None)): 
@@ -122,24 +123,24 @@ class VerbPhraseItemToken(MetaToken):
     
     @property
     def verb_morph(self) -> 'MorphWordForm':
-        """ Полное морф.информация о глаголе глагола """
+        """ Полное морф.информация (для глагола) """
         if (self.__m_verb_morph is not None): 
             return self.__m_verb_morph
         for f in self.morph.items: 
-            if (f.class0_.is_verb and (isinstance(f, MorphWordForm)) and ((((f).misc.person) & (MorphPerson.THIRD))) != (MorphPerson.UNDEFINED)): 
-                if ((f).normal_case.endswith("СЯ")): 
-                    return (Utils.asObjectOrNull(f, MorphWordForm))
+            if (f.class0_.is_verb and (isinstance(f, MorphWordForm)) and ((f.misc.person) & (MorphPerson.THIRD)) != (MorphPerson.UNDEFINED)): 
+                if (f.normal_case.endswith("СЯ")): 
+                    return Utils.asObjectOrNull(f, MorphWordForm)
         for f in self.morph.items: 
-            if (f.class0_.is_verb and (isinstance(f, MorphWordForm)) and ((((f).misc.person) & (MorphPerson.THIRD))) != (MorphPerson.UNDEFINED)): 
-                return (Utils.asObjectOrNull(f, MorphWordForm))
+            if (f.class0_.is_verb and (isinstance(f, MorphWordForm)) and ((f.misc.person) & (MorphPerson.THIRD)) != (MorphPerson.UNDEFINED)): 
+                return Utils.asObjectOrNull(f, MorphWordForm)
         for f in self.morph.items: 
             if (f.class0_.is_verb and (isinstance(f, MorphWordForm))): 
-                return (Utils.asObjectOrNull(f, MorphWordForm))
+                return Utils.asObjectOrNull(f, MorphWordForm)
         for f in self.morph.items: 
             if (f.class0_.is_adjective and (isinstance(f, MorphWordForm))): 
-                return (Utils.asObjectOrNull(f, MorphWordForm))
+                return Utils.asObjectOrNull(f, MorphWordForm)
         if (self.__m_normal == "НЕТ"): 
-            return MorphWordForm._new671(MorphClass.VERB, MorphMiscInfo())
+            return MorphWordForm._new605(MorphClass.VERB, MorphMiscInfo())
         return None
     @verb_morph.setter
     def verb_morph(self, value) -> 'MorphWordForm':
@@ -150,7 +151,7 @@ class VerbPhraseItemToken(MetaToken):
         return ((("НЕ " if self.not0_ else ""))) + self.normal
     
     @staticmethod
-    def _new669(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'VerbPhraseItemToken':
+    def _new603(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection') -> 'VerbPhraseItemToken':
         res = VerbPhraseItemToken(_arg1, _arg2)
         res.morph = _arg3
         return res

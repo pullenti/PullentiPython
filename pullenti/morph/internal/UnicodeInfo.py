@@ -1,14 +1,17 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
 
 class UnicodeInfo:
-    """ Ввели для оптимизации на Питоне. """
+    # Ввели для оптимизации на Питоне.
     
     ALL_CHARS = None
+    
+    @staticmethod
+    def get_char(ch : 'char') -> 'UnicodeInfo':
+        return UnicodeInfo.ALL_CHARS[ord(ch)].__clone()
     
     __m_inited = None
     
@@ -54,6 +57,13 @@ class UnicodeInfo:
             if (i >= 0x300 and (i < 0x370)): 
                 ui.is_udaren = True
             UnicodeInfo.ALL_CHARS.append(ui)
+    
+    def __clone(self) -> 'UnicodeInfo':
+        res = UnicodeInfo()
+        res.uni_char = self.uni_char
+        res.__m_value = self.__m_value
+        res.code = self.code
+        return res
     
     def __init__(self, v : int=0) -> None:
         self.__m_value = 0

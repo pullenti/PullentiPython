@@ -1,6 +1,5 @@
 ﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project (www.pullenti.ru).
-# See www.pullenti.ru/downloadpage.aspx.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
 
 
 from pullenti.morph.MorphGender import MorphGender
@@ -9,9 +8,11 @@ from pullenti.ner.MetaToken import MetaToken
 from pullenti.ner.core.MiscHelper import MiscHelper
 
 class PrepositionToken(MetaToken):
-    """ Представление предлогов (они могут быть из нескольких токенов, например, 
-     "несмотря на", "в соответствии с").
-     Получить можно с помощью PrepositionHelper.TryParse(t) """
+    """ Метатокен - предлог (они могут быть из нескольких токенов, например,
+    "несмотря на", "в соответствии с").
+    Создаётся методом PrepositionHelper.TryParse(t).
+    Предложная группа
+    """
     
     def __init__(self, b : 'Token', e0_ : 'Token') -> None:
         super().__init__(b, e0_, None)
@@ -33,7 +34,7 @@ class PrepositionToken(MetaToken):
         return res
     
     @staticmethod
-    def _new600(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'MorphCase') -> 'PrepositionToken':
+    def _new529(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str, _arg4 : 'MorphCase') -> 'PrepositionToken':
         res = PrepositionToken(_arg1, _arg2)
         res.normal = _arg3
         res.next_case = _arg4
