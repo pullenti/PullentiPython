@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -52,9 +54,9 @@ class UriItemToken(MetaToken):
         t1 = t
         delim = chr(0)
         txt = io.StringIO()
-        first_pass3902 = True
+        first_pass3410 = True
         while True:
-            if first_pass3902: first_pass3902 = False
+            if first_pass3410: first_pass3410 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_whitespace_before and t != t1): 
@@ -73,7 +75,7 @@ class UriItemToken(MetaToken):
             delim = t.get_source_text()[0]
         if (txt.tell() == 0): 
             return None
-        return UriItemToken._new2702(t0, t1, Utils.toStringStringIO(txt))
+        return UriItemToken._new2706(t0, t1, Utils.toStringStringIO(txt))
     
     @staticmethod
     def __attach_uri_content(t0 : 'Token', chars_ : str, can_be_whitespaces : bool=False) -> 'UriItemToken':
@@ -87,9 +89,9 @@ class UriItemToken(MetaToken):
         t = t0
         if (dom is not None): 
             t = dom.end_token.next0_
-        first_pass3903 = True
+        first_pass3411 = True
         while True:
-            if first_pass3903: first_pass3903 = False
+            if first_pass3411: first_pass3411 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and t.is_whitespace_before): 
@@ -109,9 +111,9 @@ class UriItemToken(MetaToken):
                     if (t.is_char_of("\\/")): 
                         tt1 = t.next0_
                     tt0 = tt1
-                    first_pass3904 = True
+                    first_pass3412 = True
                     while True:
-                        if first_pass3904: first_pass3904 = False
+                        if first_pass3412: first_pass3412 = False
                         else: tt1 = tt1.next0_
                         if (not (tt1 is not None)): break
                         if (tt1 != tt0 and tt1.is_whitespace_before): 
@@ -172,6 +174,7 @@ class UriItemToken(MetaToken):
         if (txt.tell() == 0): 
             return dom
         i = 0
+        i = 0
         while i < txt.tell(): 
             if (str.isalnum(Utils.getCharAtStringIO(txt, i))): 
                 break
@@ -191,7 +194,7 @@ class UriItemToken(MetaToken):
             tmp = tmp[2:]
         if (Utils.compareStrings(tmp, "WWW", True) == 0): 
             return None
-        res = UriItemToken._new2702(t0, t1, Utils.toStringStringIO(txt))
+        res = UriItemToken._new2706(t0, t1, Utils.toStringStringIO(txt))
         return res
     
     @staticmethod
@@ -201,18 +204,18 @@ class UriItemToken(MetaToken):
         ip_count = 0
         is_ip = True
         t = t0
-        first_pass3905 = True
+        first_pass3413 = True
         while True:
-            if first_pass3905: first_pass3905 = False
+            if first_pass3413: first_pass3413 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_whitespace_before and t != t0): 
                 ok = False
                 if (not t.is_newline_before and can_be_whitspaces): 
                     tt1 = t
-                    first_pass3906 = True
+                    first_pass3414 = True
                     while True:
-                        if first_pass3906: first_pass3906 = False
+                        if first_pass3414: first_pass3414 = False
                         else: tt1 = tt1.next0_
                         if (not (tt1 is not None)): break
                         if (tt1.is_char('.') or tt1.is_hiphen): 
@@ -256,7 +259,7 @@ class UriItemToken(MetaToken):
                     is_ip = False
                 if (ch == '-'): 
                     if (Utils.compareStrings(Utils.toStringStringIO(txt), "vk.com", True) == 0): 
-                        return UriItemToken._new2702(t0, t1, Utils.toStringStringIO(txt).lower())
+                        return UriItemToken._new2706(t0, t1, Utils.toStringStringIO(txt).lower())
             else: 
                 is_ip = False
             print(src.lower(), end="", file=txt)
@@ -265,6 +268,7 @@ class UriItemToken(MetaToken):
             return None
         if (ip_count != 4): 
             is_ip = False
+        i = 0
         points = 0
         i = 0
         while i < txt.tell(): 
@@ -292,7 +296,7 @@ class UriItemToken(MetaToken):
                     ok = True
             if (not ok): 
                 return None
-        return UriItemToken._new2702(t0, t1, Utils.toStringStringIO(txt).lower())
+        return UriItemToken._new2706(t0, t1, Utils.toStringStringIO(txt).lower())
     
     @staticmethod
     def attach_mail_users(t1 : 'Token') -> typing.List['UriItemToken']:
@@ -303,9 +307,9 @@ class UriItemToken(MetaToken):
             if (res0 is None): 
                 return None
             t1 = res0[0].begin_token.previous
-            first_pass3907 = True
+            first_pass3415 = True
             while True:
-                if first_pass3907: first_pass3907 = False
+                if first_pass3415: first_pass3415 = False
                 else: t1 = t1.previous
                 if (not (t1 is not None)): break
                 if (t1.is_char('{')): 
@@ -322,9 +326,9 @@ class UriItemToken(MetaToken):
         txt = io.StringIO()
         t0 = t1
         t = t1
-        first_pass3908 = True
+        first_pass3416 = True
         while True:
-            if first_pass3908: first_pass3908 = False
+            if first_pass3416: first_pass3416 = False
             else: t = t.previous
             if (not (t is not None)): break
             if (t.is_whitespace_after): 
@@ -347,7 +351,7 @@ class UriItemToken(MetaToken):
         if (txt.tell() == 0): 
             return None
         res = list()
-        res.append(UriItemToken._new2702(t0, t1, Utils.toStringStringIO(txt).lower()))
+        res.append(UriItemToken._new2706(t0, t1, Utils.toStringStringIO(txt).lower()))
         return res
     
     @staticmethod
@@ -394,13 +398,14 @@ class UriItemToken(MetaToken):
                 t1 = dat.end_token
                 print("#{0}".format(dat.value), end="", file=txt, flush=True)
         i = 0
+        i = 0
         while i < txt.tell(): 
             if (str.isalpha(Utils.getCharAtStringIO(txt, i))): 
                 break
             i += 1
         if (i >= txt.tell()): 
             return None
-        return UriItemToken._new2702(t0, t1, Utils.toStringStringIO(txt))
+        return UriItemToken._new2706(t0, t1, Utils.toStringStringIO(txt))
     
     @staticmethod
     def attachisbn(t0 : 'Token') -> 'UriItemToken':
@@ -408,9 +413,9 @@ class UriItemToken(MetaToken):
         t1 = t0
         digs = 0
         t = t0
-        first_pass3909 = True
+        first_pass3417 = True
         while True:
-            if first_pass3909: first_pass3909 = False
+            if first_pass3417: first_pass3417 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -443,6 +448,7 @@ class UriItemToken(MetaToken):
             t1 = t
             if (s != "-"): 
                 break
+        i = 0
         dig = 0
         i = 0
         while i < txt.tell(): 
@@ -451,7 +457,7 @@ class UriItemToken(MetaToken):
             i += 1
         if (dig < 7): 
             return None
-        return UriItemToken._new2702(t0, t1, Utils.toStringStringIO(txt))
+        return UriItemToken._new2706(t0, t1, Utils.toStringStringIO(txt))
     
     @staticmethod
     def attachbbk(t0 : 'Token') -> 'UriItemToken':
@@ -459,9 +465,9 @@ class UriItemToken(MetaToken):
         t1 = t0
         digs = 0
         t = t0
-        first_pass3910 = True
+        first_pass3418 = True
         while True:
-            if first_pass3910: first_pass3910 = False
+            if first_pass3418: first_pass3418 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before and t != t0): 
@@ -496,7 +502,7 @@ class UriItemToken(MetaToken):
         if (Utils.getCharAtStringIO(txt, txt.tell() - 1) == '.'): 
             Utils.setLengthStringIO(txt, txt.tell() - 1)
             t1 = t1.previous
-        return UriItemToken._new2702(t0, t1, Utils.toStringStringIO(txt))
+        return UriItemToken._new2706(t0, t1, Utils.toStringStringIO(txt))
     
     @staticmethod
     def attach_skype(t0 : 'Token') -> 'UriItemToken':
@@ -539,7 +545,7 @@ class UriItemToken(MetaToken):
                 UriItemToken.__m_std_groups.add(Termin(domain, MorphLang.UNKNOWN, True))
     
     @staticmethod
-    def _new2702(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'UriItemToken':
+    def _new2706(_arg1 : 'Token', _arg2 : 'Token', _arg3 : str) -> 'UriItemToken':
         res = UriItemToken(_arg1, _arg2)
         res.value = _arg3
         return res

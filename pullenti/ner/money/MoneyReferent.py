@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import math
@@ -73,10 +75,11 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_VALUE)
         if (val is None): 
             return 0
-        wrapv1746 = RefOutArgWrapper(0)
-        inoutres1747 = Utils.tryParseFloat(val, wrapv1746)
-        v = wrapv1746.value
-        if (not inoutres1747): 
+        v = 0
+        wrapv1750 = RefOutArgWrapper(0)
+        inoutres1751 = Utils.tryParseFloat(val, wrapv1750)
+        v = wrapv1750.value
+        if (not inoutres1751): 
             return 0
         return v
     
@@ -87,10 +90,11 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_ALTVALUE)
         if (val is None): 
             return None
-        wrapv1748 = RefOutArgWrapper(0)
-        inoutres1749 = Utils.tryParseFloat(val, wrapv1748)
-        v = wrapv1748.value
-        if (not inoutres1749): 
+        v = 0
+        wrapv1752 = RefOutArgWrapper(0)
+        inoutres1753 = Utils.tryParseFloat(val, wrapv1752)
+        v = wrapv1752.value
+        if (not inoutres1753): 
             return None
         return v
     
@@ -100,10 +104,11 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_REST)
         if (val is None): 
             return 0
-        wrapv1750 = RefOutArgWrapper(0)
-        inoutres1751 = Utils.tryParseInt(val, wrapv1750)
-        v = wrapv1750.value
-        if (not inoutres1751): 
+        v = 0
+        wrapv1754 = RefOutArgWrapper(0)
+        inoutres1755 = Utils.tryParseInt(val, wrapv1754)
+        v = wrapv1754.value
+        if (not inoutres1755): 
             return 0
         return v
     
@@ -113,10 +118,11 @@ class MoneyReferent(Referent):
         val = self.get_string_value(MoneyReferent.ATTR_ALTREST)
         if (val is None): 
             return None
-        wrapv1752 = RefOutArgWrapper(0)
-        inoutres1753 = Utils.tryParseInt(val, wrapv1752)
-        v = wrapv1752.value
-        if (not inoutres1753): 
+        v = 0
+        wrapv1756 = RefOutArgWrapper(0)
+        inoutres1757 = Utils.tryParseInt(val, wrapv1756)
+        v = wrapv1756.value
+        if (not inoutres1757): 
             return None
         return v
     

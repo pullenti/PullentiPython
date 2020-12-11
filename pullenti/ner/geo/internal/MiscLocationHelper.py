@@ -1,10 +1,13 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
-import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
+from pullenti.unisharp.Streams import MemoryStream
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphNumber import MorphNumber
@@ -30,9 +33,9 @@ class MiscLocationHelper:
         if (t is None): 
             return False
         tt = t.previous
-        first_pass3649 = True
+        first_pass3156 = True
         while True:
-            if first_pass3649: first_pass3649 = False
+            if first_pass3156: first_pass3156 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             if ((tt.is_char_of(",.;:") or tt.is_hiphen or tt.is_and) or tt.morph.class0_.is_conjunction or tt.morph.class0_.is_preposition): 
@@ -75,9 +78,9 @@ class MiscLocationHelper:
             return False
         cou = 0
         tt = t.next0_
-        first_pass3650 = True
+        first_pass3157 = True
         while True:
-            if first_pass3650: first_pass3650 = False
+            if first_pass3157: first_pass3157 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_char_of(",.;") or tt.is_hiphen or tt.morph.class0_.is_conjunction): 
@@ -128,12 +131,6 @@ class MiscLocationHelper:
     
     @staticmethod
     def check_unknown_region(t : 'Token') -> 'Token':
-        """ Проверка, что здесь какой-то непонятный регион типа "Европа", "Средняя Азия", "Дикий запад" и т.п.
-        
-        Args:
-            t(Token): 
-        
-        """
         from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         if (not (isinstance(t, TextToken))): 
             return None
@@ -309,12 +306,6 @@ class MiscLocationHelper:
     
     @staticmethod
     def get_geo_referent_by_name(name : str) -> 'GeoReferent':
-        """ Прлучить глобальный экземпляр существующего объекта по ALPHA2 или краткой текстовой форме (РФ, РОССИЯ, КИТАЙ ...)
-        
-        Args:
-            name(str): 
-        
-        """
         from pullenti.ner.geo.internal.TerrItemToken import TerrItemToken
         res = None
         wrapres1168 = RefOutArgWrapper(None)
@@ -333,12 +324,6 @@ class MiscLocationHelper:
     
     @staticmethod
     def try_attach_nord_west(t : 'Token') -> 'MetaToken':
-        """ Выделение существительных и прилагательных типа "северо-западное", "южное"
-        
-        Args:
-            t(Token): 
-        
-        """
         if (not (isinstance(t, TextToken))): 
             return None
         tok = MiscLocationHelper.__m_nords.try_parse(t, TerminParseAttr.NO)
@@ -386,12 +371,12 @@ class MiscLocationHelper:
     
     @staticmethod
     def _deflate(zip0_ : bytearray) -> bytearray:
-        with io.BytesIO() as unzip: 
-            data = io.BytesIO(zip0_)
-            data.seek(0, io.SEEK_SET)
+        with MemoryStream() as unzip: 
+            data = MemoryStream(zip0_)
+            data.position = 0
             MorphDeserializer.deflate_gzip(data, unzip)
             data.close()
-            return bytearray(unzip.getvalue())
+            return unzip.toarray()
     
     # static constructor for class MiscLocationHelper
     @staticmethod

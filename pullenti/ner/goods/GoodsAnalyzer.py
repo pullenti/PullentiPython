@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import math
@@ -91,9 +93,9 @@ class GoodsAnalyzer(Analyzer):
         next_pos = 0
         goods_ = list()
         t = kit.first_token
-        first_pass3673 = True
+        first_pass3180 = True
         while True:
-            if first_pass3673: first_pass3673 = False
+            if first_pass3180: first_pass3180 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not t.is_newline_before): 
@@ -142,9 +144,9 @@ class GoodsAnalyzer(Analyzer):
                 return None
         res = ReferentToken(ga, begin, begin)
         t = begin
-        first_pass3674 = True
+        first_pass3181 = True
         while True:
-            if first_pass3674: first_pass3674 = False
+            if first_pass3181: first_pass3181 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char(';')): 

@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 
@@ -68,10 +70,11 @@ class Line(MetaToken):
             if (max_end_char > 0): 
                 if (t.begin_char > max_end_char): 
                     break
+            t1 = None
             t1 = t
-            first_pass3885 = True
+            first_pass3393 = True
             while True:
-                if first_pass3885: first_pass3885 = False
+                if first_pass3393: first_pass3393 = False
                 else: t1 = t1.next0_
                 if (not (t1 is not None and t1.next0_ is not None)): break
                 if (t1.is_newline_after): 

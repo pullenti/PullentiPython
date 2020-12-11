@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -56,9 +58,9 @@ class ListHelper:
             if (t is None or t.end_char > max_char): 
                 return None
             res = ListHelper.LineToken(t, t)
-            first_pass3764 = True
+            first_pass3272 = True
             while True:
-                if first_pass3764: first_pass3764 = False
+                if first_pass3272: first_pass3272 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= max_char)): break
                 if (t.is_char(':')): 
@@ -136,12 +138,14 @@ class ListHelper:
                     return res
                 return None
             i = 0
+            i = 0
             while i < len(res): 
                 if (res[i].is_list_item): 
                     break
                 i += 1
             if (i >= len(res)): 
                 return None
+            j = 0
             cou = 0
             j = i
             while j < len(res): 
@@ -170,18 +174,19 @@ class ListHelper:
         if (res.kind == InstrumentKind.CLAUSE and res.number == 12): 
             pass
         i = 0
-        first_pass3765 = True
+        first_pass3273 = True
         while True:
-            if first_pass3765: first_pass3765 = False
+            if first_pass3273: first_pass3273 = False
             else: i += 1
             if (not (i < len(res.children))): break
             if (res.children[i].kind == InstrumentKind.INDENTION and ((res.children[i].end_token.is_char_of(":;") or ((((i + 1) < len(res.children)) and res.children[i + 1].kind == InstrumentKind.EDITIONS and res.children[i + 1].end_token.is_char_of(":;")))))): 
+                j = 0
                 cou = 1
                 list_bullet = chr(0)
                 j = (i + 1)
-                first_pass3766 = True
+                first_pass3274 = True
                 while True:
-                    if first_pass3766: first_pass3766 = False
+                    if first_pass3274: first_pass3274 = False
                     else: j += 1
                     if (not (j < len(res.children))): break
                     ch = res.children[j]
@@ -224,9 +229,9 @@ class ListHelper:
                     continue
                 if ((i > 0 and not res.children[i].end_token.is_char(':') and res.children[i - 1].kind2 == InstrumentKind.UNDEFINED) and res.children[i - 1].end_token.is_char(':')): 
                     res.children[i - 1].kind2 = InstrumentKind.LISTHEAD
-                first_pass3767 = True
+                first_pass3275 = True
                 while True:
-                    if first_pass3767: first_pass3767 = False
+                    if first_pass3275: first_pass3275 = False
                     else: i += 1
                     if (not (i < j)): break
                     ch = res.children[i]
@@ -289,6 +294,7 @@ class ListHelper:
                 dcr = Utils.asObjectOrNull(ci.tag, DecreeChangeReferent)
                 if (dcr.value is not None and len(dcr.value.new_items) > 0): 
                     mnem = dcr.value.new_items[0]
+                    i = 0
                     i = mnem.find(' ')
                     if (((i)) > 0): 
                         mnem = mnem[0:0+i]
@@ -352,9 +358,9 @@ class ListHelper:
                 lines[1].is_list_item = False
                 lines[0].is_list_item = lines[1].is_list_item
         i = 0
-        first_pass3768 = True
+        first_pass3276 = True
         while True:
-            if first_pass3768: first_pass3768 = False
+            if first_pass3276: first_pass3276 = False
             else: i += 1
             if (not (i < len(lines))): break
             if (lines[i].is_list_item): 
@@ -365,6 +371,7 @@ class ListHelper:
                 else: 
                     lines[i].is_list_item = False
                     continue
+                j = 0
                 new_line = False
                 j = (i + 1)
                 while j < len(lines): 
@@ -445,9 +452,9 @@ class ListHelper:
         if (cou < 2): 
             return -1
         i = 0
-        first_pass3769 = True
+        first_pass3277 = True
         while True:
-            if first_pass3769: first_pass3769 = False
+            if first_pass3277: first_pass3277 = False
             else: i += 1
             if (not (i < len(lines))): break
             if (lines[i].is_list_item): 
@@ -513,9 +520,9 @@ class ListHelper:
             if ((lines[i].typ == InstrToken1.Types.LINE and len(lines[i].numbers) == 0 and lines[i].begin_token.is_value("ПРИЛОЖЕНИЯ", "ДОДАТОК")) and len(lines[i + 1].numbers) > 0 and lines[i].end_token.is_char(':')): 
                 num = 1
                 i += 1
-                first_pass3770 = True
+                first_pass3278 = True
                 while True:
-                    if first_pass3770: first_pass3770 = False
+                    if first_pass3278: first_pass3278 = False
                     else: i += 1
                     if (not (i < len(lines))): break
                     if (len(lines[i].numbers) == 0): 
@@ -526,10 +533,11 @@ class ListHelper:
                             continue
                         break
                     else: 
-                        wrapnn1549 = RefOutArgWrapper(0)
-                        inoutres1550 = Utils.tryParseInt(lines[i].numbers[0], wrapnn1549)
-                        nn = wrapnn1549.value
-                        if (inoutres1550): 
+                        nn = 0
+                        wrapnn1553 = RefOutArgWrapper(0)
+                        inoutres1554 = Utils.tryParseInt(lines[i].numbers[0], wrapnn1553)
+                        nn = wrapnn1553.value
+                        if (inoutres1554): 
                             num = (nn + 1)
                         lines[i].num_typ = NumberTypes.UNDEFINED
                         lines[i].numbers.clear()
@@ -546,6 +554,7 @@ class ListHelper:
         index = list()
         index.append(lines[0])
         content = list()
+        i = 0
         ind_text = 0
         con_text = 0
         i = 1
@@ -567,7 +576,7 @@ class ListHelper:
             i += 1
         if (len(index) == len(content) and len(index) > 2): 
             if ((ind_text * 10) < con_text): 
-                lines[0] = InstrToken1._new1551(lines[0].begin_token, lines[cind - 1].end_token, True, InstrToken1.Types.INDEX)
+                lines[0] = InstrToken1._new1555(lines[0].begin_token, lines[cind - 1].end_token, True, InstrToken1.Types.INDEX)
                 del lines[1:1+cind - 1]
     
     @staticmethod

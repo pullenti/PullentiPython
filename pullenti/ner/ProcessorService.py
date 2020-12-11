@@ -1,8 +1,10 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
-import datetime
 import typing
+import datetime
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 
@@ -22,12 +24,12 @@ class ProcessorService:
     @staticmethod
     def get_version() -> str:
         """ Версия системы """
-        return "4.0"
+        return "4.1"
     
     @staticmethod
-    def get_version_date() -> datetime.datetime:
-        """ Дата-время создания текущей версии """
-        return datetime.datetime(2020, 11, 1, 0, 0, 0)
+    def get_version_date() -> str:
+        """ Дата создания текущей версии """
+        return "2020.12.8"
     
     @staticmethod
     def initialize(lang : 'MorphLang'=None) -> None:
@@ -128,7 +130,7 @@ class ProcessorService:
             if (img is not None): 
                 for kp in img.items(): 
                     if (not kp[0] in ProcessorService.__m_images): 
-                        ProcessorService.__m_images[kp[0]] = ImageWrapper._new2849(kp[0], kp[1])
+                        ProcessorService.__m_images[kp[0]] = ImageWrapper._new2853(kp[0], kp[1])
         except Exception as ex: 
             pass
         ProcessorService.__reorder_cartridges()
@@ -142,9 +144,9 @@ class ProcessorService:
         k = 0
         while k < len(ProcessorService.__m_analizer_instances): 
             i = 0
-            first_pass3927 = True
+            first_pass3435 = True
             while True:
-                if first_pass3927: first_pass3927 = False
+                if first_pass3435: first_pass3435 = False
                 else: i += 1
                 if (not (i < (len(ProcessorService.__m_analizer_instances) - 1))): break
                 max_ind = -1
@@ -207,13 +209,14 @@ class ProcessorService:
             ImageWrapper: обёртка над телом иконки
         """
         if (image_id is not None): 
-            wrapres2850 = RefOutArgWrapper(None)
-            inoutres2851 = Utils.tryGetValue(ProcessorService.__m_images, image_id, wrapres2850)
-            res = wrapres2850.value
-            if (inoutres2851): 
+            res = None
+            wrapres2854 = RefOutArgWrapper(None)
+            inoutres2855 = Utils.tryGetValue(ProcessorService.__m_images, image_id, wrapres2854)
+            res = wrapres2854.value
+            if (inoutres2855): 
                 return res
         if (ProcessorService.__m_unknown_image is None): 
-            ProcessorService.__m_unknown_image = ImageWrapper._new2849("unknown", PullentiNerCoreInternalResourceHelper.get_bytes("unknown.png"))
+            ProcessorService.__m_unknown_image = ImageWrapper._new2853("unknown", PullentiNerCoreInternalResourceHelper.get_bytes("unknown.png"))
         return ProcessorService.__m_unknown_image
     
     @staticmethod
@@ -226,7 +229,7 @@ class ProcessorService:
         """
         if (image_id is None): 
             return
-        wr = ImageWrapper._new2849(image_id, content)
+        wr = ImageWrapper._new2853(image_id, content)
         if (image_id in ProcessorService.__m_images): 
             ProcessorService.__m_images[image_id] = wr
         else: 

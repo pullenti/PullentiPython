@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import math
 import io
@@ -58,6 +60,8 @@ class NumberHelper:
         val = None
         typ = NumberSpellingType.DIGIT
         term = tt.term
+        i = 0
+        j = 0
         if (str.isdigit(term[0])): 
             val = term
         if (val is not None): 
@@ -91,13 +95,14 @@ class NumberHelper:
                 if (str.isdigit(sss[0]) and len(sss) == 3): 
                     val2 = val
                     ttt = et.next0_
-                    first_pass3554 = True
+                    first_pass3061 = True
                     while True:
-                        if first_pass3554: first_pass3554 = False
+                        if first_pass3061: first_pass3061 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         ss = ttt.get_source_text()
                         if (ttt.whitespaces_before_count == 1 and ttt.length_char == 3 and str.isdigit(ss[0])): 
+                            ii = 0
                             wrapii502 = RefOutArgWrapper(0)
                             inoutres503 = Utils.tryParseInt(ss, wrapii502)
                             ii = wrapii502.value
@@ -193,9 +198,9 @@ class NumberHelper:
             res = NumberToken._new504(token, et, val, typ, mc)
             if (et.next0_ is not None and (len(res.value) < 4) and ((et.next0_.is_hiphen or et.next0_.is_value("ДО", None)))): 
                 tt1 = et.next0_.next0_
-                first_pass3555 = True
+                first_pass3062 = True
                 while True:
-                    if first_pass3555: first_pass3555 = False
+                    if first_pass3062: first_pass3062 = False
                     else: tt1 = tt1.next0_
                     if (not (tt1 is not None)): break
                     if (not (isinstance(tt1, TextToken))): 
@@ -576,9 +581,9 @@ class NumberHelper:
         ns = None
         sps = None
         t1 = t
-        first_pass3556 = True
+        first_pass3063 = True
         while True:
-            if first_pass3556: first_pass3556 = False
+            if first_pass3063: first_pass3063 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
             if (t1.next0_ is None): 
@@ -686,8 +691,10 @@ class NumberHelper:
                     m_prev_point_char = sps[len(sps) - 1]
                     if (m_prev_point_char == ','): 
                         pass
+                f2 = 0
                 if (merge): 
                     sss = str(ns[i].value)
+                    kkk = 0
                     kkk = 0
                     while kkk < (len(sss) - ns[i].begin_token.length_char): 
                         d.value *= (10)
@@ -811,6 +818,7 @@ class NumberHelper:
                         return None
                 res0.real_value = dd + res0.real_value
             return res0
+        d = 0
         wrapd520 = RefOutArgWrapper(0)
         tt = NumberHelper.__try_parse_float(Utils.asObjectOrNull(t, NumberToken), wrapd520, no_whitespace)
         d = wrapd520.value
@@ -926,6 +934,7 @@ class NumberHelper:
         from pullenti.ner.core.MiscHelper import MiscHelper
         if (val < 0): 
             return "минус " + NumberHelper.get_number_string(- val, units)
+        res = None
         if (val >= 1000000000): 
             vv = math.floor(val / 1000000000)
             res = NumberHelper.get_number_string(vv, "миллиард")
@@ -1062,6 +1071,7 @@ class NumberHelper:
             float: double-число или null
         
         """
+        res = 0
         if (str0_ == "NaN"): 
             return math.nan
         wrapres523 = RefOutArgWrapper(0)
@@ -1165,10 +1175,12 @@ class NumberHelper:
         if (i < 0): 
             return res
         i += 1
+        j = 0
         j = (i + 1)
         while j < len(res): 
             if (res[j] == '9'): 
                 k = 0
+                jj = 0
                 jj = j
                 while jj < len(res): 
                     if (res[jj] != '9'): 

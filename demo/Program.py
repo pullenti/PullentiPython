@@ -1,8 +1,9 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
-import datetime
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import Stopwatch
 
@@ -26,7 +27,7 @@ class Program:
     def main(args : typing.List[str]) -> None:
         sw = Stopwatch()
         # инициализация - необходимо проводить один раз до обработки текстов
-        print("Initializing SDK Pullenti ver {0} ({1}) ... ".format(Sdk.get_version(), Utils.getDateShortString(Sdk.get_version_date())), end="", flush=True)
+        print("Initializing SDK Pullenti ver {0} ({1}) ... ".format(Sdk.get_version(), Sdk.get_version_date()), end="", flush=True)
         # инициализируются движок и все имеющиеся анализаторы
         Sdk.initialize_all()
         sw.stop()
@@ -35,16 +36,16 @@ class Program:
         for a in ProcessorService.get_analyzers(): 
             print("   {0} {1} \"{2}\"".format(("Specific analyzer" if a.is_specific else "Common analyzer"), a.name, a.caption), flush=True)
         # анализируемый текст
-        txt = "SDK Pullenti разрабатывается с 2011 года российским программистом Константином Кузнецовым, проживающим в Москве на Красной площади в доме номер один на втором этаже. Конкурентов у него много: Abbyy, Yandex, ООО \"Russian Context Optimizer\" (RCO) и другие компании. Он планирует продать SDK за 1.120.000.001,99 (миллиард сто двадцать миллионов один рубль 99 копеек) рублей, без НДС."
+        txt = "Система разрабатывается с 2011 года российским программистом Михаилом Жуковым, проживающим в Москве на Красной площади в доме номер один на втором этаже. Конкурентов у него много: Abbyy, Yandex, ООО \"Russian Context Optimizer\" (RCO) и другие компании. Он планирует продать SDK за 1.120.000.001,99 (миллиард сто двадцать миллионов один рубль 99 копеек) рублей, без НДС."
         print("Text: {0}".format(txt), flush=True)
         # запускаем обработку на пустом процессоре (без анализаторов NER)
         are = ProcessorService.get_empty_processor().process(SourceOfAnalysis(txt), None, None)
         print("Noun groups: ", end="", flush=True)
         t = are.first_token
         # перебираем токены
-        first_pass3467 = True
+        first_pass2974 = True
         while True:
-            if first_pass3467: first_pass3467 = False
+            if first_pass2974: first_pass2974 = False
             else: t = t.next0_
             if (not (t is not None)): break
             # выделяем именную группу с текущего токена
@@ -68,9 +69,9 @@ class Program:
             # пример выделения именных групп
             print("\r\n==========================================\r\nNoun groups: ", flush=True)
             t = ar.first_token
-            first_pass3468 = True
+            first_pass2975 = True
             while True:
-                if first_pass3468: first_pass3468 = False
+                if first_pass2975: first_pass2975 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 # токены с сущностями игнорируем
@@ -92,9 +93,9 @@ class Program:
                     print(e0_, flush=True)
             print("\r\n==========================================\r\nKeywords2: ", flush=True)
             t = ar.first_token
-            first_pass3469 = True
+            first_pass2976 = True
             while True:
-                if first_pass3469: first_pass3469 = False
+                if first_pass2976: first_pass2976 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (isinstance(t, ReferentToken)): 

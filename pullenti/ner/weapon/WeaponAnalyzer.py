@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -74,9 +76,9 @@ class WeaponAnalyzer(Analyzer):
         objs_by_model = dict()
         obj_by_names = TerminCollection()
         t = kit.first_token
-        first_pass3920 = True
+        first_pass3428 = True
         while True:
-            if first_pass3920: first_pass3920 = False
+            if first_pass3428: first_pass3428 = False
             else: t = t.next0_
             if (not (t is not None)): break
             its = WeaponItemToken.try_parse_list(t, 10)
@@ -94,10 +96,10 @@ class WeaponAnalyzer(Analyzer):
                             for k in range(2):
                                 if (not str.isdigit(mod[0])): 
                                     li = [ ]
-                                    wrapli2800 = RefOutArgWrapper(None)
-                                    inoutres2801 = Utils.tryGetValue(objs_by_model, mod, wrapli2800)
-                                    li = wrapli2800.value
-                                    if (not inoutres2801): 
+                                    wrapli2804 = RefOutArgWrapper(None)
+                                    inoutres2805 = Utils.tryGetValue(objs_by_model, mod, wrapli2804)
+                                    li = wrapli2804.value
+                                    if (not inoutres2805): 
                                         li = list()
                                         objs_by_model[mod] = li
                                     if (not rt.referent in li): 
@@ -114,9 +116,9 @@ class WeaponAnalyzer(Analyzer):
         if (len(objs_by_model) == 0 and len(obj_by_names.termins) == 0): 
             return
         t = kit.first_token
-        first_pass3921 = True
+        first_pass3429 = True
         while True:
-            if first_pass3921: first_pass3921 = False
+            if first_pass3429: first_pass3429 = False
             else: t = t.next0_
             if (not (t is not None)): break
             br = BracketHelper.try_parse(t, BracketParseAttr.NO, 10)
@@ -168,14 +170,15 @@ class WeaponAnalyzer(Analyzer):
     
     def __try_attach(self, its : typing.List['WeaponItemToken'], attach : bool) -> typing.List['ReferentToken']:
         tr = WeaponReferent()
+        i = 0
         t1 = None
         noun = None
         brand = None
         model = None
         i = 0
-        first_pass3922 = True
+        first_pass3430 = True
         while True:
-            if first_pass3922: first_pass3922 = False
+            if first_pass3430: first_pass3430 = False
             else: i += 1
             if (not (i < len(its))): break
             if (its[i].typ == WeaponItemToken.Typs.NOUN): 
@@ -272,9 +275,9 @@ class WeaponAnalyzer(Analyzer):
         if (noun is None and model is not None): 
             cou = 0
             tt = its[0].begin_token.previous
-            first_pass3923 = True
+            first_pass3431 = True
             while True:
-                if first_pass3923: first_pass3923 = False
+                if first_pass3431: first_pass3431 = False
                 else: tt = tt.previous; cou += 1
                 if (not (tt is not None and (cou < 100))): break
                 prev = Utils.asObjectOrNull(tt.get_referent(), WeaponReferent)

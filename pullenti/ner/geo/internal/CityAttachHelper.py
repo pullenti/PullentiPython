@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -38,6 +40,7 @@ class CityAttachHelper:
     def try_attach_city(li : typing.List['CityItemToken'], ad : 'AnalyzerDataWithOntology', always : bool=False) -> 'ReferentToken':
         if (li is None): 
             return None
+        oi = None
         if (len(li) > 2 and li[0].typ == CityItemToken.ItemType.MISC and li[1].typ == CityItemToken.ItemType.NOUN): 
             li[1].doubtful = False
             del li[0]
@@ -405,13 +408,6 @@ class CityAttachHelper:
     
     @staticmethod
     def __try_name_exist(li : typing.List['CityItemToken'], oi : 'IntOntologyItem', always : bool) -> 'ReferentToken':
-        """ Это проверяем некоторые частные случаи
-        
-        Args:
-            li(typing.List[CityItemToken]): 
-            oi(IntOntologyItem): 
-        
-        """
         oi.value = (None)
         if (li is None or li[0].typ != CityItemToken.ItemType.CITY): 
             return None
@@ -441,9 +437,9 @@ class CityAttachHelper:
             ok = True
         else: 
             tt2 = li[0].end_token.next0_
-            first_pass3643 = True
+            first_pass3150 = True
             while True:
-                if first_pass3643: first_pass3643 = False
+                if first_pass3150: first_pass3150 = False
                 else: tt2 = tt2.next0_
                 if (not (tt2 is not None)): break
                 if (tt2.is_newline_before): 
@@ -455,9 +451,9 @@ class CityAttachHelper:
                 break
             if (not ok): 
                 tt2 = li[0].begin_token.previous
-                first_pass3644 = True
+                first_pass3151 = True
                 while True:
-                    if first_pass3644: first_pass3644 = False
+                    if first_pass3151: first_pass3151 = False
                     else: tt2 = tt2.previous
                     if (not (tt2 is not None)): break
                     if (tt2.is_newline_after): 

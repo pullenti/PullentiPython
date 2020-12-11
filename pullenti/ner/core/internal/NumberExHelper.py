@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import math
 from pullenti.unisharp.Utils import Utils
@@ -25,7 +27,6 @@ class NumberExHelper:
     
     @staticmethod
     def try_parse_number_with_postfix(t : 'Token') -> 'NumberExToken':
-        """ Выделение стандартных мер, типа: 10 кв.м. """
         if (t is None): 
             return None
         t0 = t
@@ -47,9 +48,9 @@ class NumberExHelper:
                 return None
             val = tt.term
             i = 4
-            first_pass3531 = True
+            first_pass3038 = True
             while True:
-                if first_pass3531: first_pass3531 = False
+                if first_pass3038: first_pass3038 = False
                 else: i += 1
                 if (not (i < (len(val) - 5))): break
                 v = val[0:0+i]
@@ -71,6 +72,7 @@ class NumberExHelper:
             return None
         t1 = nt.next0_
         if (((t1 is not None and t1.is_char_of(",."))) or (((isinstance(t1, NumberToken)) and (t1.whitespaces_before_count < 3)))): 
+            d = 0
             tt11 = NumberHelper.try_parse_real_number(nt, False, False)
             if (tt11 is not None): 
                 t1 = tt11.end_token.next0_
@@ -194,9 +196,9 @@ class NumberExHelper:
         if (toks is None and t1.is_char('р')): 
             cou = 10
             ttt = t0.previous
-            first_pass3532 = True
+            first_pass3039 = True
             while True:
-                if first_pass3532: first_pass3532 = False
+                if first_pass3039: first_pass3039 = False
                 else: ttt = ttt.previous; cou -= 1
                 if (not (ttt is not None and cou > 0)): break
                 if (ttt.is_value("СУММА", None) or ttt.is_value("НАЛИЧНЫЙ", None) or ttt.is_value("БАЛАНС", None)): 
@@ -266,12 +268,6 @@ class NumberExHelper:
     
     @staticmethod
     def try_attach_postfix_only(t : 'Token') -> 'NumberExToken':
-        """ Это попробовать только тип (постфикс) без самого числа
-        
-        Args:
-            t(Token): 
-        
-        """
         if (t is None): 
             return None
         tok = NumberExHelper._m_postfixes.try_parse(t, TerminParseAttr.NO)
@@ -435,6 +431,7 @@ class NumberExHelper:
     def _initialize() -> None:
         if (NumberExHelper._m_postfixes is not None): 
             return
+        t = None
         NumberExHelper._m_postfixes = TerminCollection()
         t = Termin._new418("КВАДРАТНЫЙ МЕТР", MorphLang.RU, True, "кв.м.", NumberExType.METER2)
         t.add_abridge("КВ.МЕТР")

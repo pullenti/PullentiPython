@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -162,7 +164,7 @@ class SemanticHelper:
                         has_gen = True
                         break
                 if (not has_gen): 
-                    res.append(SemanticLink._new2869(True, npt1, sla2, 0.5, ControlModelQuestion.get_base_genetive()))
+                    res.append(SemanticLink._new2873(True, npt1, sla2, 0.5, ControlModelQuestion.get_base_genetive()))
         if (onto is not None): 
             str1 = SemanticHelper.get_keyword(master)
             str2 = SemanticHelper.get_keyword(slave)
@@ -174,7 +176,7 @@ class SemanticHelper:
                             if (r.role == SemanticRole.COMMON): 
                                 r.role = SemanticRole.STRONG
                     else: 
-                        res.append(SemanticLink._new2870(SemanticRole.STRONG, master, slave, 3))
+                        res.append(SemanticLink._new2874(SemanticRole.STRONG, master, slave, 3))
         if (npt1 is not None): 
             if (((len(npt1.adjectives) > 0 and npt1.adjectives[0].begin_token.morph.class0_.is_pronoun)) or npt1.anafor is not None): 
                 for r in res: 
@@ -210,7 +212,7 @@ class SemanticHelper:
         if (cit is not None and ControlModelQuestion.get_to_do() in cit.links): 
             rol = cit.links[ControlModelQuestion.get_to_do()]
         if (rol is not None): 
-            res.append(SemanticLink._new2871((2 if rol != SemanticRole.COMMON else 1), ControlModelQuestion.get_to_do()))
+            res.append(SemanticLink._new2875((2 if rol != SemanticRole.COMMON else 1), ControlModelQuestion.get_to_do()))
         return res
     
     @staticmethod
@@ -244,7 +246,7 @@ class SemanticHelper:
                         break
         if (ok): 
             if (len(res) == 0): 
-                res.append(SemanticLink._new2872(ControlModelQuestion.get_base_genetive(), SemanticRole.PACIENT, True))
+                res.append(SemanticLink._new2876(ControlModelQuestion.get_base_genetive(), SemanticRole.PACIENT, True))
             for r in res: 
                 r.rank += (4)
                 if (r.role == SemanticRole.COMMON): 
@@ -305,12 +307,12 @@ class SemanticHelper:
                 sl = None
                 addagent = False
                 if (cit00 is None): 
-                    sl = SemanticLink._new2873(True, (SemanticRole.PACIENT if is_rev0 else SemanticRole.AGENT), 1, ControlModelQuestion.get_base_nominative(), is_rev0)
+                    sl = SemanticLink._new2877(True, (SemanticRole.PACIENT if is_rev0 else SemanticRole.AGENT), 1, ControlModelQuestion.get_base_nominative(), is_rev0)
                 else: 
                     for kp in cit00.links.items(): 
                         q = kp[0]
                         if (q.check(None, MorphCase.NOMINATIVE)): 
-                            sl = SemanticLink._new2874(kp[1], 2, q, is_rev0)
+                            sl = SemanticLink._new2878(kp[1], 2, q, is_rev0)
                             if (sl.role == SemanticRole.AGENT): 
                                 sl.is_passive = False
                             elif (sl.role == SemanticRole.PACIENT and cit00.nominative_can_be_agent_and_pacient and vpt1.last_verb.is_verb_reversive): 
@@ -327,18 +329,18 @@ class SemanticHelper:
                         sl.rank -= 0.5
                     res.append(sl)
                     if (addagent): 
-                        res.append(SemanticLink._new2875(SemanticRole.AGENT, sl.rank, sl.question))
+                        res.append(SemanticLink._new2879(SemanticRole.AGENT, sl.rank, sl.question))
         if (prep is None and is_rev1 and morph_.case_.is_instrumental): 
             no_instr = True
             cit00 = cit
             sl = None
             if (cit00 is None): 
-                sl = SemanticLink._new2873(True, SemanticRole.AGENT, 1, ControlModelQuestion.get_base_instrumental(), True)
+                sl = SemanticLink._new2877(True, SemanticRole.AGENT, 1, ControlModelQuestion.get_base_instrumental(), True)
             else: 
                 for kp in cit00.links.items(): 
                     q = kp[0]
                     if (q.check(None, MorphCase.INSTRUMENTAL)): 
-                        sl = SemanticLink._new2875(kp[1], 2, q)
+                        sl = SemanticLink._new2879(kp[1], 2, q)
                         if (sl.role == SemanticRole.AGENT): 
                             sl.is_passive = True
                         break
@@ -352,10 +354,10 @@ class SemanticHelper:
                 res.append(sl)
                 if ((gr is not None and len(gr.model.items) > 0 and gr.model.items[0].typ == ControlModelItemType.VERB) and ControlModelQuestion.get_base_instrumental() in gr.model.items[0].links): 
                     sl.rank = (0)
-                    sl0 = SemanticLink._new2878(sl.question, 1, gr.model.items[0].links[ControlModelQuestion.get_base_instrumental()])
+                    sl0 = SemanticLink._new2882(sl.question, 1, gr.model.items[0].links[ControlModelQuestion.get_base_instrumental()])
                     res.insert(0, sl0)
         if (prep is None and morph_.case_.is_dative and ((cit is None or not ControlModelQuestion.get_base_dative() in cit.links))): 
-            sl = SemanticLink._new2879(cit is None, SemanticRole.STRONG, 1, ControlModelQuestion.get_base_dative())
+            sl = SemanticLink._new2883(cit is None, SemanticRole.STRONG, 1, ControlModelQuestion.get_base_dative())
             if (morph_.case_.is_accusative or morph_.case_.is_nominative): 
                 sl.rank -= 0.5
             if (vpt1.end_token.next0_ != sla2.begin_token): 
@@ -382,7 +384,7 @@ class SemanticHelper:
                     elif (prep is None and not is_rev1 and morph_.case_.is_accusative): 
                         ok = True
                     if (ok): 
-                        res.append(SemanticLink._new2880(SemanticRole.PACIENT, (ControlModelQuestion.get_base_nominative() if is_rev1 else ControlModelQuestion.get_base_accusative()), True))
+                        res.append(SemanticLink._new2884(SemanticRole.PACIENT, (ControlModelQuestion.get_base_nominative() if is_rev1 else ControlModelQuestion.get_base_accusative()), True))
                 else: 
                     for r in res: 
                         r.rank += (4)
@@ -419,7 +421,7 @@ class SemanticHelper:
                     roles[q] = r
         if (roles is not None): 
             for kp in roles.items(): 
-                sl = SemanticLink._new2875(kp[1], 2, kp[0])
+                sl = SemanticLink._new2879(kp[1], 2, kp[0])
                 if (kp[1] == SemanticRole.AGENT): 
                     if (not kp[0].is_base): 
                         sl.role = SemanticRole.COMMON

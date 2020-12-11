@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -23,9 +25,9 @@ class DefinitionAnalyzerEn:
     @staticmethod
     def process(kit : 'AnalysisKit', ad : 'AnalyzerData') -> None:
         t = kit.first_token
-        first_pass3623 = True
+        first_pass3130 = True
         while True:
-            if first_pass3623: first_pass3623 = False
+            if first_pass3130: first_pass3130 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not MiscHelper.can_be_start_of_sentence(t)): 
@@ -52,9 +54,9 @@ class DefinitionAnalyzerEn:
         if (mc.is_preposition or mc.is_misc or mc.is_adverb): 
             if (not MiscHelper.is_eng_article(tt)): 
                 tt = tt.next0_
-                first_pass3624 = True
+                first_pass3131 = True
                 while True:
-                    if first_pass3624: first_pass3624 = False
+                    if first_pass3131: first_pass3131 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_comma): 
@@ -100,9 +102,9 @@ class DefinitionAnalyzerEn:
             if (not tt.get_morph_class_in_dictionary().is_verb): 
                 break
             tt = tt.next0_
-        first_pass3625 = True
+        first_pass3132 = True
         while True:
-            if first_pass3625: first_pass3625 = False
+            if first_pass3132: first_pass3132 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.next0_ is None): 

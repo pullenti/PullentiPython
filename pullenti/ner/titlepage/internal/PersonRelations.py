@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 
@@ -20,7 +22,7 @@ class PersonRelations:
                 r = rr
                 break
         if (r is None): 
-            r = PersonRelation._new2650(pers)
+            r = PersonRelation._new2654(pers)
             self.rels.append(r)
         if (not typ in r.coefs): 
             r.coefs[typ] = coef

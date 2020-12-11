@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import math
@@ -66,9 +68,9 @@ class PersonAnalyzer(Analyzer):
             if (isinstance(referent, PersonReferent)): 
                 exist_props = None
                 i = 0
-                first_pass3872 = True
+                first_pass3380 = True
                 while True:
-                    if first_pass3872: first_pass3872 = False
+                    if first_pass3380: first_pass3380 = False
                     else: i += 1
                     if (not (i < len(referent.slots))): break
                     a = referent.slots[i]
@@ -103,9 +105,9 @@ class PersonAnalyzer(Analyzer):
                                 referent.upload_slot(a, pat.referent)
             if (isinstance(referent, PersonPropertyReferent)): 
                 i = 0
-                first_pass3873 = True
+                first_pass3381 = True
                 while True:
-                    if first_pass3873: first_pass3873 = False
+                    if first_pass3381: first_pass3381 = False
                     else: i += 1
                     if (not (i < len(referent.slots))): break
                     a = referent.slots[i]
@@ -327,18 +329,18 @@ class PersonAnalyzer(Analyzer):
                 if (s.type_name == PersonReferent.ATTR_ATTR and (isinstance(s.value, PersonPropertyReferent))): 
                     pr = Utils.asObjectOrNull(s.value, PersonPropertyReferent)
                     li = [ ]
-                    wrapli2601 = RefOutArgWrapper(None)
-                    inoutres2602 = Utils.tryGetValue(props, pr, wrapli2601)
-                    li = wrapli2601.value
-                    if (not inoutres2602): 
+                    wrapli2605 = RefOutArgWrapper(None)
+                    inoutres2606 = Utils.tryGetValue(props, pr, wrapli2605)
+                    li = wrapli2605.value
+                    if (not inoutres2606): 
                         li = list()
                         props[pr] = li
                     if (not p in li): 
                         li.append(p)
         t = kit.first_token
-        first_pass3874 = True
+        first_pass3382 = True
         while True:
-            if first_pass3874: first_pass3874 = False
+            if first_pass3382: first_pass3382 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (isinstance(t, ReferentToken)): 
@@ -433,8 +435,8 @@ class PersonAnalyzer(Analyzer):
         if (names is not None): 
             for n in names: 
                 pers = PersonReferent()
-                bi = MorphBaseInfo._new2606(MorphNumber.SINGULAR, t.kit.base_language)
-                bi.class0_ = MorphClass._new2568(True)
+                bi = MorphBaseInfo._new2610(MorphNumber.SINGULAR, t.kit.base_language)
+                bi.class0_ = MorphClass._new2572(True)
                 if (n.firstname.vars0_[0].gender == MorphGender.FEMINIE): 
                     pers.is_female = True
                     bi.gender = MorphGender.FEMINIE
@@ -472,9 +474,9 @@ class PersonAnalyzer(Analyzer):
         can_attach_to_previous_person = True
         is_king = False
         after_be_predicate = False
-        first_pass3875 = True
+        first_pass3383 = True
         while True:
-            if first_pass3875: first_pass3875 = False
+            if first_pass3383: first_pass3383 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (attrs is not None and t.next0_ is not None): 
@@ -550,7 +552,7 @@ class PersonAnalyzer(Analyzer):
                     if (pits[2].is_newline_after and pits[5].is_newline_after): 
                         a = (None)
             if ((a is None and t.is_value("НА", None) and t.next0_ is not None) and t.next0_.is_value("ИМЯ", None)): 
-                a = PersonAttrToken._new2440(t, t.next0_, MorphCollection._new2446(MorphCase.GENITIVE))
+                a = PersonAttrToken._new2444(t, t.next0_, MorphCollection._new2450(MorphCase.GENITIVE))
                 is_genitive = True
             if (a is None): 
                 break
@@ -675,8 +677,8 @@ class PersonAnalyzer(Analyzer):
                             return None
                         v = pits[0].firstname.vars0_[0]
                         pers = PersonReferent()
-                        bi = MorphBaseInfo._new2611(v.gender, MorphNumber.SINGULAR, pits[0].kit.base_language)
-                        bi.class0_ = MorphClass._new2568(True)
+                        bi = MorphBaseInfo._new2615(v.gender, MorphNumber.SINGULAR, pits[0].kit.base_language)
+                        bi.class0_ = MorphClass._new2572(True)
                         if (v.gender == MorphGender.MASCULINE): 
                             pers.is_male = True
                         elif (v.gender == MorphGender.FEMINIE): 
@@ -700,8 +702,8 @@ class PersonAnalyzer(Analyzer):
                         pr = (Utils.asObjectOrNull(vvv.referent, PersonReferent))
                     if (pr is not None): 
                         pers = PersonReferent()
-                        bi = MorphBaseInfo._new2613(MorphNumber.SINGULAR, attr.gender, attr.kit.base_language)
-                        bi.class0_ = MorphClass._new2568(True)
+                        bi = MorphBaseInfo._new2617(MorphNumber.SINGULAR, attr.gender, attr.kit.base_language)
+                        bi.class0_ = MorphClass._new2572(True)
                         for s in pr.slots: 
                             if (s.type_name == PersonReferent.ATTR_LASTNAME): 
                                 sur = Utils.asObjectOrNull(s.value, str)
@@ -889,6 +891,7 @@ class PersonAnalyzer(Analyzer):
                     if (for_attribute): 
                         best.coef += (1)
                 if (best.coef >= min_coef): 
+                    i = 0
                     gender = MorphGender.UNDEFINED
                     i = 0
                     while i < len(pli): 
@@ -907,9 +910,9 @@ class PersonAnalyzer(Analyzer):
                                 cou = 100
                                 sur = pli[0].lastname.items[0].value
                                 ttt = pli[0].end_token.next0_
-                                first_pass3876 = True
+                                first_pass3384 = True
                                 while True:
-                                    if first_pass3876: first_pass3876 = False
+                                    if first_pass3384: first_pass3384 = False
                                     else: ttt = ttt.next0_; cou -= 1
                                     if (not (ttt is not None and cou > 0)): break
                                     if (step > 0): 

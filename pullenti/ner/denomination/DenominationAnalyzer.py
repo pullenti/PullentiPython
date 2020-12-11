@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import datetime
@@ -80,9 +82,9 @@ class DenominationAnalyzer(Analyzer):
             detect_new_denoms = False
             dt = datetime.datetime.now()
             t = kit.first_token
-            first_pass3640 = True
+            first_pass3147 = True
             while True:
-                if first_pass3640: first_pass3640 = False
+                if first_pass3147: first_pass3147 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_whitespace_before): 
@@ -176,9 +178,9 @@ class DenominationAnalyzer(Analyzer):
         nums = 0
         chars = 0
         w = t1.next0_
-        first_pass3641 = True
+        first_pass3148 = True
         while True:
-            if first_pass3641: first_pass3641 = False
+            if first_pass3148: first_pass3148 = False
             else: w = w.next0_
             if (not (w is not None)): break
             if (w.is_whitespace_before and not for_ontology): 

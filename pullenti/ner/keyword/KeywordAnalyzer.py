@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -123,9 +125,9 @@ class KeywordAnalyzer(Analyzer):
             t = t.next0_
         cur = 0
         t = kit.first_token
-        first_pass3784 = True
+        first_pass3292 = True
         while True:
-            if first_pass3784: first_pass3784 = False
+            if first_pass3292: first_pass3292 = False
             else: t = t.next0_; cur += 1
             if (not (t is not None)): break
             r = t.get_referent()
@@ -151,7 +153,7 @@ class KeywordAnalyzer(Analyzer):
                         continue
                     if (t.is_value("МОЧЬ", None) or t.is_value("WOULD", None)): 
                         continue
-                    kref = KeywordReferent._new1591(KeywordType.PREDICATE)
+                    kref = KeywordReferent._new1595(KeywordType.PREDICATE)
                     norm = t.get_normal_case_text(MorphClass.VERB, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False)
                     if (norm is None): 
                         norm = t.lemma
@@ -188,9 +190,9 @@ class KeywordAnalyzer(Analyzer):
             li.clear()
             t0 = t
             tt = t
-            first_pass3785 = True
+            first_pass3293 = True
             while True:
-                if first_pass3785: first_pass3785 = False
+                if first_pass3293: first_pass3293 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= npt.end_char)): break
                 if (not (isinstance(tt, TextToken))): 
@@ -208,7 +210,7 @@ class KeywordAnalyzer(Analyzer):
                 if (mc.is_misc): 
                     if (MiscHelper.is_eng_article(tt)): 
                         continue
-                kref = KeywordReferent._new1591(KeywordType.OBJECT)
+                kref = KeywordReferent._new1595(KeywordType.OBJECT)
                 norm = tt.lemma
                 kref.add_slot(KeywordReferent.ATTR_VALUE, norm, False, 0)
                 if (norm != "ЕСТЬ"): 
@@ -223,7 +225,7 @@ class KeywordAnalyzer(Analyzer):
                 t = (rt1)
                 li.append(kref)
             if (len(li) > 1): 
-                kref = KeywordReferent._new1591(KeywordType.OBJECT)
+                kref = KeywordReferent._new1595(KeywordType.OBJECT)
                 Utils.setLengthStringIO(tmp, 0)
                 tmp2.clear()
                 has_norm = False
@@ -257,9 +259,9 @@ class KeywordAnalyzer(Analyzer):
                 t = (rt1)
         cur = 0
         t = kit.first_token
-        first_pass3786 = True
+        first_pass3294 = True
         while True:
-            if first_pass3786: first_pass3786 = False
+            if first_pass3294: first_pass3294 = False
             else: t = t.next0_; cur += 1
             if (not (t is not None)): break
             kw = Utils.asObjectOrNull(t.get_referent(), KeywordReferent)
@@ -345,7 +347,7 @@ class KeywordAnalyzer(Analyzer):
             return t
         if (isinstance(r, DenominationReferent)): 
             dr = Utils.asObjectOrNull(r, DenominationReferent)
-            kref0 = KeywordReferent._new1591(KeywordType.REFERENT)
+            kref0 = KeywordReferent._new1595(KeywordType.REFERENT)
             for s in dr.slots: 
                 if (s.type_name == DenominationReferent.ATTR_VALUE): 
                     kref0.add_slot(KeywordReferent.ATTR_NORMAL, s.value, False, 0)
@@ -357,7 +359,7 @@ class KeywordAnalyzer(Analyzer):
             return t
         if (isinstance(r, MoneyReferent)): 
             mr = Utils.asObjectOrNull(r, MoneyReferent)
-            kref0 = KeywordReferent._new1591(KeywordType.OBJECT)
+            kref0 = KeywordReferent._new1595(KeywordType.OBJECT)
             kref0.add_slot(KeywordReferent.ATTR_NORMAL, mr.currency, False, 0)
             rt0 = ReferentToken(ad.register_referent(kref0), t, t)
             t.kit.embed_token(rt0)
@@ -369,7 +371,7 @@ class KeywordAnalyzer(Analyzer):
             if (isinstance(tt, ReferentToken)): 
                 self.__add_referents(ad, tt, cur, max0_)
             tt = tt.next0_
-        kref = KeywordReferent._new1591(KeywordType.REFERENT)
+        kref = KeywordReferent._new1595(KeywordType.REFERENT)
         norm = None
         if (r.type_name == "GEO"): 
             norm = r.get_string_value("ALPHA2")

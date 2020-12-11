@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -43,7 +45,7 @@ class DerivateWord:
         return Utils.toStringStringIO(tmp)
     
     @staticmethod
-    def _new2965(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'MorphClass', _arg4 : 'MorphAspect', _arg5 : bool, _arg6 : 'MorphTense', _arg7 : 'MorphVoice', _arg8 : 'ExplanWordAttr') -> 'DerivateWord':
+    def _new2969(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'MorphClass', _arg4 : 'MorphAspect', _arg5 : bool, _arg6 : 'MorphTense', _arg7 : 'MorphVoice', _arg8 : 'ExplanWordAttr') -> 'DerivateWord':
         res = DerivateWord()
         res.spelling = _arg1
         res.lang = _arg2

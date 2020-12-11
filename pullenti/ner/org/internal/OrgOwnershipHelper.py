@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -14,13 +16,6 @@ class OrgOwnershipHelper:
     
     @staticmethod
     def can_be_higher(higher : 'OrganizationReferent', lower : 'OrganizationReferent', robust : bool=False) -> bool:
-        """ Проверка на отношения "вышестоящий - нижестоящий"
-        
-        Args:
-            higher(OrganizationReferent): 
-            lower(OrganizationReferent): 
-        
-        """
         if (higher is None or lower is None or higher == lower): 
             return False
         if (lower.owner is not None): 

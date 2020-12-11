@@ -1,10 +1,12 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
-import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 from pullenti.ner.ProcessorService import ProcessorService
@@ -39,7 +41,7 @@ class ExtOntology:
         if (rs is None): 
             return None
         self.__m_hash = (None)
-        res = ExtOntologyItem._new2803(ext_id, rs[0], type_name)
+        res = ExtOntologyItem._new2807(ext_id, rs[0], type_name)
         if (len(rs) > 1): 
             del rs[0]
             res._refs = rs
@@ -59,16 +61,16 @@ class ExtOntology:
         if (referent is None): 
             return None
         self.__m_hash = (None)
-        res = ExtOntologyItem._new2803(ext_id, referent, referent.type_name)
+        res = ExtOntologyItem._new2807(ext_id, referent, referent.type_name)
         self.items.append(res)
         return res
     
     def __create_referent(self, type_name : str, definition_ : str) -> typing.List['Referent']:
         analyzer = None
-        wrapanalyzer2805 = RefOutArgWrapper(None)
-        inoutres2806 = Utils.tryGetValue(self.__m_anal_by_type, type_name, wrapanalyzer2805)
-        analyzer = wrapanalyzer2805.value
-        if (not inoutres2806): 
+        wrapanalyzer2809 = RefOutArgWrapper(None)
+        inoutres2810 = Utils.tryGetValue(self.__m_anal_by_type, type_name, wrapanalyzer2809)
+        analyzer = wrapanalyzer2809.value
+        if (not inoutres2810): 
             return None
         sf = SourceOfAnalysis(definition_)
         ar = self.__m_processor._process(sf, True, True, None, None)
@@ -88,9 +90,9 @@ class ExtOntology:
             r0 = rt.referent
             t = rt.end_token
         t = t.next0_
-        first_pass3924 = True
+        first_pass3432 = True
         while True:
-            if first_pass3924: first_pass3924 = False
+            if first_pass3432: first_pass3432 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char(';') and t.next0_ is not None): 
@@ -132,10 +134,10 @@ class ExtOntology:
         if (isinstance(definition_, str)): 
             new_referent = (self.__create_referent(item.type_name, Utils.asObjectOrNull(definition_, str)))
         analyzer = None
-        wrapanalyzer2807 = RefOutArgWrapper(None)
-        inoutres2808 = Utils.tryGetValue(self.__m_anal_by_type, item.type_name, wrapanalyzer2807)
-        analyzer = wrapanalyzer2807.value
-        if (not inoutres2808): 
+        wrapanalyzer2811 = RefOutArgWrapper(None)
+        inoutres2812 = Utils.tryGetValue(self.__m_anal_by_type, item.type_name, wrapanalyzer2811)
+        analyzer = wrapanalyzer2811.value
+        if (not inoutres2812): 
             return False
         if (analyzer._persist_analizer_data is None): 
             return True
@@ -179,22 +181,22 @@ class ExtOntology:
                     if (not t.name in self.__m_anal_by_type): 
                         self.__m_anal_by_type[t.name] = a
     
-    def serialize(self, stream : io.IOBase) -> None:
+    def serialize(self, stream : Stream) -> None:
         """ Сериализовать весь словарь в поток
         
         Args:
-            stream(io.IOBase): поток для сериализации
+            stream(Stream): поток для сериализации
         """
         SerializerHelper.serialize_string(stream, self.__m_specs)
         SerializerHelper.serialize_int(stream, len(self.items))
         for it in self.items: 
             it._serialize(stream)
     
-    def deserialize(self, stream : io.IOBase) -> None:
+    def deserialize(self, stream : Stream) -> None:
         """ Восстановить словарь из потока
         
         Args:
-            stream(io.IOBase): поток для десериализации
+            stream(Stream): поток для десериализации
         """
         self.__m_specs = SerializerHelper.deserialize_string(stream)
         self.__init()
@@ -207,10 +209,11 @@ class ExtOntology:
         self.__init_hash()
     
     def _get_analyzer_data(self, type_name : str) -> 'AnalyzerData':
-        wrapa2809 = RefOutArgWrapper(None)
-        inoutres2810 = Utils.tryGetValue(self.__m_anal_by_type, type_name, wrapa2809)
-        a = wrapa2809.value
-        if (not inoutres2810): 
+        a = None
+        wrapa2813 = RefOutArgWrapper(None)
+        inoutres2814 = Utils.tryGetValue(self.__m_anal_by_type, type_name, wrapa2813)
+        a = wrapa2813.value
+        if (not inoutres2814): 
             return None
         return a._persist_analizer_data
     
@@ -221,11 +224,12 @@ class ExtOntology:
                 it.referent.ontology_items = (None)
         for it in self.items: 
             if (it.referent is not None): 
-                wrapont2812 = RefOutArgWrapper(None)
-                inoutres2813 = Utils.tryGetValue(self.__m_hash, it.referent.type_name, wrapont2812)
-                ont = wrapont2812.value
-                if (not inoutres2813): 
-                    ont = IntOntologyCollection._new2811(True)
+                ont = None
+                wrapont2816 = RefOutArgWrapper(None)
+                inoutres2817 = Utils.tryGetValue(self.__m_hash, it.referent.type_name, wrapont2816)
+                ont = wrapont2816.value
+                if (not inoutres2817): 
+                    ont = IntOntologyCollection._new2815(True)
                     self.__m_hash[it.referent.type_name] = ont
                 if (it.referent.ontology_items is None): 
                     it.referent.ontology_items = list()
@@ -244,10 +248,11 @@ class ExtOntology:
         """
         if (self.__m_hash is None): 
             self.__init_hash()
-        wraponto2814 = RefOutArgWrapper(None)
-        inoutres2815 = Utils.tryGetValue(self.__m_hash, r.type_name, wraponto2814)
-        onto = wraponto2814.value
-        if (not inoutres2815): 
+        onto = None
+        wraponto2818 = RefOutArgWrapper(None)
+        inoutres2819 = Utils.tryGetValue(self.__m_hash, r.type_name, wraponto2818)
+        onto = wraponto2818.value
+        if (not inoutres2819): 
             return None
         li = onto.try_attach_by_referent(r, None, False)
         if (li is None or len(li) == 0): 
@@ -264,9 +269,10 @@ class ExtOntology:
         # Используется внутренним образом
         if (self.__m_hash is None): 
             self.__init_hash()
-        wraponto2816 = RefOutArgWrapper(None)
-        inoutres2817 = Utils.tryGetValue(self.__m_hash, type_name, wraponto2816)
-        onto = wraponto2816.value
-        if (not inoutres2817): 
+        onto = None
+        wraponto2820 = RefOutArgWrapper(None)
+        inoutres2821 = Utils.tryGetValue(self.__m_hash, type_name, wraponto2820)
+        onto = wraponto2820.value
+        if (not inoutres2821): 
             return None
         return onto.try_attach(t, None, False)

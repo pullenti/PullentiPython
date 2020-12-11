@@ -7,6 +7,7 @@ import datetime
 import time
 import xml.etree.ElementTree
 import uuid
+from pullenti.unisharp.Streams import Stream
 
 class Utils:    
     @staticmethod
@@ -51,6 +52,11 @@ class Utils:
         return res
 
     @staticmethod
+    def copyArray(src, sind, tgt, tind, cou):
+        for i in range(cou):
+            tgt[i + tind] = src[i + sind]
+
+    @staticmethod
     def newArrayOfBytes(cou, ini):
         res = bytearray()
         for i in range(cou):
@@ -61,6 +67,13 @@ class Utils:
     def indexOfList(li, it, i):
         for ii in range(i, len(li)):
             if(li[ii] == it): return ii
+        return -1
+    @staticmethod
+    def indexOfAny(li, sany, i, le):
+        if(le <= 0):
+            le = len(li)
+        for ii in range(i, le):
+            if(Utils.indexOfList(sany, li[ii], 0) >= 0): return ii
         return -1
     @staticmethod
     def lastIndexOfList(li, it, i):
@@ -229,7 +242,7 @@ class Utils:
 
     @staticmethod
     def trimEndString(s):
-        for i in range(len(s) - 1, 0, -1):
+        for i in range(len(s) - 1, -1, -1):
             if(not s[i].isspace()):
                 if(i < len(s) - 1): return s[:i + 1]
                 return s
@@ -412,7 +425,7 @@ class Utils:
             for rn in pkg_resources.ResourceManager().resource_listdir(di, ''):
                 fname = PurePath(rn).name
                 if(Utils.endsWithString(name, fname, True)):
-                    return pkg_resources.ResourceManager().resource_stream(di, fname)
+                    return Stream(pkg_resources.ResourceManager().resource_stream(di, fname))
         except:
             return None
 
@@ -433,11 +446,57 @@ class Utils:
         root = xml.etree.ElementTree.fromstring(txt)
         tree._root = root
         return tree
+    @staticmethod
+    def parseXmlFromStream(stream):
+        mem = io.BytesIO()
+        blen = stream.length
+        if blen <= 0: blen = 10000
+        buf = bytearray(blen)
+        while True:
+            i = stream.read(buf, 0, blen)
+            if i <= 0: break
+            buf1 = buf
+            if i < blen: buf1 = buf[0:i]
+            mem.write(buf1)
+        mem.seek(0, io.SEEK_SET)
+        tree = xml.etree.ElementTree.parse(mem)
+        mem.close()
+        return tree
+
+    @staticmethod
+    def getXmlLocalName(e):
+        tag = Utils.getXmlName(e)
+        i = tag.find(':')
+        if i > 0: tag = tag[i + 1:]
+        return tag
+    @staticmethod
+    def getXmlName(e):
+        tag = e.tag
+        i = tag.find('}')
+        if i > 0: tag = tag[i + 1:]
+        return tag
+
+    @staticmethod
+    def getXmlAttrLocalName(a):
+        tag = Utils.getXmlAttrName(a)
+        i = tag.find(':')
+        if i > 0: tag = tag[i + 1:]
+        return tag
+
+    @staticmethod
+    def getXmlAttrName(a):
+        tag = a[0]
+        i = tag.find('}')
+        if i > 0: tag = tag[i + 1:]
+        return tag
 
     @staticmethod
     def getXmlAttrByName(attrs, tag):
         try:
-            return (tag,attrs[tag])
+            for a in attrs.items():
+                if a[0] == tag or Utils.getXmlAttrLocalName(a) == tag or Utils.getXmlAttrName(a) == tag: 
+                    return (tag, a[1])
+            return None
         except:
             return None
 

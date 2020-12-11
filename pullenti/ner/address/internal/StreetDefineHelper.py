@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -59,6 +61,8 @@ class StreetDefineHelper:
     def _try_parse_street(sli : typing.List['StreetItemToken'], ext_onto_regim : bool=False, for_metro : bool=False) -> 'AddressItemToken':
         if (sli is None or len(sli) == 0): 
             return None
+        i = 0
+        j = 0
         i = 0
         while i < len(sli): 
             if (i == 0 and sli[i].typ == StreetItemType.FIX and ((len(sli) == 1 or sli[1].typ != StreetItemType.NOUN))): 
@@ -152,6 +156,8 @@ class StreetDefineHelper:
                 after += 1
             j += 1
         rli = list()
+        n0 = 0
+        n1 = 0
         if (before > after): 
             if (noun.termin.canonic_text == "МЕТРО"): 
                 return None
@@ -219,9 +225,9 @@ class StreetDefineHelper:
             return None
         sec_number = None
         j = n0
-        first_pass3493 = True
+        first_pass3000 = True
         while True:
-            if first_pass3493: first_pass3493 = False
+            if first_pass3000: first_pass3000 = False
             else: j += 1
             if (not (j <= n1)): break
             if (sli[j].typ == StreetItemType.NUMBER): 
@@ -464,6 +470,7 @@ class StreetDefineHelper:
         adj_str = None
         adj_can_be_initial = False
         if (adj is not None): 
+            s = None
             if (adj_gen == MorphGender.UNDEFINED and name is not None and ((name.morph.number) & (MorphNumber.PLURAL)) == (MorphNumber.UNDEFINED)): 
                 if (name.morph.gender == MorphGender.FEMINIE or name.morph.gender == MorphGender.MASCULINE or name.morph.gender == MorphGender.NEUTER): 
                     adj_gen = name.morph.gender
@@ -570,9 +577,9 @@ class StreetDefineHelper:
             elif (noun.termin.canonic_text == "ПРОЕЗД" and street.find_slot(StreetReferent.ATTR_NAME, "ПРОЕКТИРУЕМЫЙ", True) is not None): 
                 res.is_doubt = False
             tt0 = res.begin_token.previous
-            first_pass3494 = True
+            first_pass3001 = True
             while True:
-                if first_pass3494: first_pass3494 = False
+                if first_pass3001: first_pass3001 = False
                 else: tt0 = tt0.previous
                 if (not (tt0 is not None)): break
                 if (tt0.is_char_of(",,") or tt0.is_comma_and): 
@@ -592,6 +599,7 @@ class StreetDefineHelper:
     def __try_detect_non_noun(sli : typing.List['StreetItemToken'], onto_regim : bool, for_metro : bool) -> 'AddressItemToken':
         if (len(sli) > 1 and sli[len(sli) - 1].typ == StreetItemType.NUMBER and not sli[len(sli) - 1].number_has_prefix): 
             del sli[len(sli) - 1]
+        street = None
         if (len(sli) == 1 and sli[0].typ == StreetItemType.NAME and ((onto_regim or for_metro))): 
             s = MiscHelper.get_text_value(sli[0].begin_token, sli[0].end_token, GetTextAttr.NO)
             if (s is None): 
@@ -621,9 +629,9 @@ class StreetDefineHelper:
                     is_street_before = True
                 cou = 0
                 tt = sli[0].end_token.next0_
-                first_pass3495 = True
+                first_pass3002 = True
                 while True:
-                    if first_pass3495: first_pass3495 = False
+                    if first_pass3002: first_pass3002 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (not tt.is_comma_and or tt.next0_ is None): 
@@ -741,9 +749,9 @@ class StreetDefineHelper:
                 if (nex is not None): 
                     return None
                 t = sli[0].begin_token.previous
-                first_pass3496 = True
+                first_pass3003 = True
                 while True:
-                    if first_pass3496: first_pass3496 = False
+                    if first_pass3003: first_pass3003 = False
                     else: t = t.previous
                     if (not (t is not None)): break
                     if (t.is_newline_after): 

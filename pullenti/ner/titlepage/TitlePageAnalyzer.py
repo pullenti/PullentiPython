@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -80,18 +82,20 @@ class TitlePageAnalyzer(Analyzer):
         return None
     
     def process_referent1(self, begin : 'Token', end : 'Token') -> 'ReferentToken':
-        wrapet2667 = RefOutArgWrapper(None)
-        tpr = TitlePageAnalyzer._process(begin, (0 if end is None else end.end_char), begin.kit, wrapet2667)
-        et = wrapet2667.value
+        et = None
+        wrapet2671 = RefOutArgWrapper(None)
+        tpr = TitlePageAnalyzer._process(begin, (0 if end is None else end.end_char), begin.kit, wrapet2671)
+        et = wrapet2671.value
         if (tpr is None): 
             return None
         return ReferentToken(tpr, begin, et)
     
     def process(self, kit : 'AnalysisKit') -> None:
         ad = kit.get_analyzer_data(self)
-        wrapet2668 = RefOutArgWrapper(None)
-        tpr = TitlePageAnalyzer._process(kit.first_token, 0, kit, wrapet2668)
-        et = wrapet2668.value
+        et = None
+        wrapet2672 = RefOutArgWrapper(None)
+        tpr = TitlePageAnalyzer._process(kit.first_token, 0, kit, wrapet2672)
+        et = wrapet2672.value
         if (tpr is not None): 
             ad.register_referent(tpr)
     
@@ -178,9 +182,9 @@ class TitlePageAnalyzer(Analyzer):
                 begin = (rt)
         if (term is not None and kit is not None): 
             t = kit.first_token
-            first_pass3889 = True
+            first_pass3397 = True
             while True:
-                if first_pass3889: first_pass3889 = False
+                if first_pass3397: first_pass3397 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 tok = term.try_parse(t, TerminParseAttr.NO)
@@ -200,9 +204,9 @@ class TitlePageAnalyzer(Analyzer):
         pers_typ = TitleItemToken.Types.UNDEFINED
         pers_types = pr.rel_types
         t = begin
-        first_pass3890 = True
+        first_pass3398 = True
         while True:
-            if first_pass3890: first_pass3890 = False
+            if first_pass3398: first_pass3398 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char_pos > 0 and t.begin_char > max_char_pos): 
@@ -278,9 +282,9 @@ class TitlePageAnalyzer(Analyzer):
                         pr.add(p, pers_typ, 1)
                     else: 
                         tt = t.next0_
-                        first_pass3891 = True
+                        first_pass3399 = True
                         while True:
-                            if first_pass3891: first_pass3891 = False
+                            if first_pass3399: first_pass3399 = False
                             else: tt = tt.next0_
                             if (not (tt is not None)): break
                             rr = tt.get_referent()
@@ -340,10 +344,11 @@ class TitlePageAnalyzer(Analyzer):
                 if (isinstance(r, OrganizationReferent)): 
                     org0_ = Utils.asObjectOrNull(r, OrganizationReferent)
                     if ("курс" in org0_.types and org0_.number is not None): 
-                        wrapi2669 = RefOutArgWrapper(0)
-                        inoutres2670 = Utils.tryParseInt(org0_.number, wrapi2669)
-                        i = wrapi2669.value
-                        if (inoutres2670): 
+                        i = 0
+                        wrapi2673 = RefOutArgWrapper(0)
+                        inoutres2674 = Utils.tryParseInt(org0_.number, wrapi2673)
+                        i = wrapi2673.value
+                        if (inoutres2674): 
                             if (i > 0 and (i < 8)): 
                                 res.student_year = i
                     while org0_.higher is not None: 
@@ -375,9 +380,9 @@ class TitlePageAnalyzer(Analyzer):
                     res.city = Utils.asObjectOrNull(s.value, GeoReferent)
         if (res.date is None): 
             t = begin
-            first_pass3892 = True
+            first_pass3400 = True
             while True:
-                if first_pass3892: first_pass3892 = False
+                if first_pass3400: first_pass3400 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= end_char)): break
                 city = Utils.asObjectOrNull(t.get_referent(), GeoReferent)

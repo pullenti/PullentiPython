@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -42,7 +44,7 @@ class MailReferent(Referent):
         try: 
             if (val is not None): 
                 return Utils.valToEnum(val, MailKind)
-        except Exception as ex1605: 
+        except Exception as ex1609: 
             pass
         return MailKind.UNDEFINED
     @kind.setter
@@ -86,7 +88,7 @@ class MailReferent(Referent):
                 self._add_ref(Utils.asObjectOrNull(s.value, Referent), lev + 1)
     
     @staticmethod
-    def _new1601(_arg1 : 'MailKind') -> 'MailReferent':
+    def _new1605(_arg1 : 'MailKind') -> 'MailReferent':
         res = MailReferent()
         res.kind = _arg1
         return res

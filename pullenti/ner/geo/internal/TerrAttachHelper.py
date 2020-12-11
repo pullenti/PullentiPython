@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -131,6 +133,7 @@ class TerrAttachHelper:
                 can_be_city_before = True
             elif (cits[0].typ == CityItemToken.ItemType.NOUN and len(cits) > 1): 
                 can_be_city_before = True
+        k = 0
         k = 0
         while k < len(li): 
             if (li[k].onto_item is not None): 
@@ -417,9 +420,9 @@ class TerrAttachHelper:
                 cou = 0
                 str0_ = li[0].termin_item.canonic_text.lower()
                 tt = li[0].begin_token.previous
-                first_pass3651 = True
+                first_pass3158 = True
                 while True:
-                    if first_pass3651: first_pass3651 = False
+                    if first_pass3158: first_pass3158 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.is_newline_after): 
@@ -434,9 +437,9 @@ class TerrAttachHelper:
                     ok = True
                     cou = 0
                     tt = li[0].end_token.next0_
-                    first_pass3652 = True
+                    first_pass3159 = True
                     while True:
-                        if first_pass3652: first_pass3652 = False
+                        if first_pass3159: first_pass3159 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.is_newline_before): 
@@ -548,12 +551,6 @@ class TerrAttachHelper:
     
     @staticmethod
     def try_attach_stateusaterritory(t : 'Token') -> 'ReferentToken':
-        """ Это привязка сокращений штатов
-        
-        Args:
-            t(Token): 
-        
-        """
         if (t is None or not t.chars.is_latin_letter): 
             return None
         tok = TerrItemToken._m_geo_abbrs.try_parse(t, TerminParseAttr.NO)

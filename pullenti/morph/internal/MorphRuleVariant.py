@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -20,6 +22,7 @@ class MorphRuleVariant(MorphBaseInfo):
         self.id0_ = 0
         self.normal_tail = None;
         self.full_normal_tail = None;
+        self.tag = None;
     
     def copy_from_variant(self, src : 'MorphRuleVariant') -> None:
         if (src is None): 
@@ -65,6 +68,7 @@ class MorphRuleVariant(MorphBaseInfo):
         if (mc.is_misc and mc.is_proper): 
             mc.is_misc = False
         self.class0_ = mc
+        bbb = 0
         bbb = str0_.deserialize_byte(pos)
         self.gender = Utils.valToEnum(bbb, MorphGender)
         bbb = str0_.deserialize_byte(pos)

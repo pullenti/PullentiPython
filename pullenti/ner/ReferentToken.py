@@ -1,9 +1,12 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 from pullenti.ner.MetaToken import MetaToken
@@ -79,14 +82,14 @@ class ReferentToken(MetaToken):
                 break
             t = t.next0_
     
-    def _serialize(self, stream : io.IOBase) -> None:
+    def _serialize(self, stream : Stream) -> None:
         super()._serialize(stream)
         id0_ = 0
         if (self.referent is not None and (isinstance(self.referent.tag, int))): 
             id0_ = (self.referent.tag)
         SerializerHelper.serialize_int(stream, id0_)
     
-    def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit', vers : int) -> None:
+    def _deserialize(self, stream : Stream, kit_ : 'AnalysisKit', vers : int) -> None:
         super()._deserialize(stream, kit_, vers)
         id0_ = SerializerHelper.deserialize_int(stream)
         if (id0_ > 0): 
@@ -118,20 +121,20 @@ class ReferentToken(MetaToken):
         return res
     
     @staticmethod
-    def _new2480(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : int) -> 'ReferentToken':
+    def _new2484(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : int) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         res.misc_attrs = _arg5
         return res
     
     @staticmethod
-    def _new2581(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : int) -> 'ReferentToken':
+    def _new2585(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : int) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.misc_attrs = _arg4
         return res
     
     @staticmethod
-    def _new2591(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : object) -> 'ReferentToken':
+    def _new2595(_arg1 : 'Referent', _arg2 : 'Token', _arg3 : 'Token', _arg4 : 'MorphCollection', _arg5 : object) -> 'ReferentToken':
         res = ReferentToken(_arg1, _arg2, _arg3)
         res.morph = _arg4
         res.tag = _arg5

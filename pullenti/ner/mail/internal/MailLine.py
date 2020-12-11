@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
@@ -121,9 +123,9 @@ class MailLine(MetaToken):
         pr = True
         cou = 0
         t = t0
-        first_pass3787 = True
+        first_pass3295 = True
         while True:
-            if first_pass3787: first_pass3787 = False
+            if first_pass3295: first_pass3295 = False
             else: t = t.next0_; cou += 1
             if (not (t is not None)): break
             if (t.is_newline_before and t0 != t): 
@@ -158,9 +160,9 @@ class MailLine(MetaToken):
             nams = 0
             oth = 0
             last_comma = None
-            first_pass3788 = True
+            first_pass3296 = True
             while True:
-                if first_pass3788: first_pass3788 = False
+                if first_pass3296: first_pass3296 = False
                 else: t = t.next0_
                 if (not (t is not None and (t.end_char < res.end_char))): break
                 if (isinstance(t.get_referent(), PersonReferent)): 
@@ -196,9 +198,9 @@ class MailLine(MetaToken):
             if (t0.is_value("HAVE", None)): 
                 pass
             t = t0
-            first_pass3789 = True
+            first_pass3297 = True
             while True:
-                if first_pass3789: first_pass3789 = False
+                if first_pass3297: first_pass3297 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= res.end_char)): break
                 if (not (isinstance(t, TextToken))): 
@@ -219,9 +221,9 @@ class MailLine(MetaToken):
                     t = tok.end_token
                     if ((isinstance(t.next0_, TextToken)) and t.next0_.morph.case_.is_genitive): 
                         t = t.next0_
-                        first_pass3790 = True
+                        first_pass3298 = True
                         while True:
-                            if first_pass3790: first_pass3790 = False
+                            if first_pass3298: first_pass3298 = False
                             else: t = t.next0_
                             if (not (t.end_char <= res.end_char)): break
                             if (t.morph.class0_.is_conjunction): 

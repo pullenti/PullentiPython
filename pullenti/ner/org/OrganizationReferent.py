@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import math
@@ -342,14 +344,16 @@ class OrganizationReferent(Referent):
         if (name is None or (len(name) < 1)): 
             return None
         if (str.isdigit(name[0]) and name.find(' ') > 0): 
-            wrapi2386 = RefOutArgWrapper(0)
-            inoutres2387 = Utils.tryParseInt(name[0:0+name.find(' ')], wrapi2386)
-            i = wrapi2386.value
-            if (inoutres2387): 
+            i = 0
+            wrapi2390 = RefOutArgWrapper(0)
+            inoutres2391 = Utils.tryParseInt(name[0:0+name.find(' ')], wrapi2390)
+            i = wrapi2390.value
+            if (inoutres2391): 
                 if (i > 1): 
                     num.value = i
                     name = name[name.find(' '):].strip()
         elif (str.isdigit(name[len(name) - 1])): 
+            i = 0
             for i in range(len(name) - 1, -1, -1):
                 if (not str.isdigit(name[i])): 
                     break
@@ -357,8 +361,8 @@ class OrganizationReferent(Referent):
             if (i >= 0 and name[i] == '.'): 
                 pass
             else: 
-                inoutres2388 = Utils.tryParseInt(name[i + 1:], num)
-                if (i > 0 and inoutres2388 and num.value > 0): 
+                inoutres2392 = Utils.tryParseInt(name[i + 1:], num)
+                if (i > 0 and inoutres2392 and num.value > 0): 
                     if (i < 1): 
                         return None
                     name = name[0:0+i].strip()
@@ -384,9 +388,9 @@ class OrganizationReferent(Referent):
         tmp = io.StringIO()
         not_empty = False
         i = 0
-        first_pass3846 = True
+        first_pass3354 = True
         while True:
-            if first_pass3846: first_pass3846 = False
+            if first_pass3354: first_pass3354 = False
             else: i += 1
             if (not (i < len(name))): break
             ch = name[i]
@@ -417,9 +421,10 @@ class OrganizationReferent(Referent):
         return Utils.toStringStringIO(tmp)
     
     def add_name(self, name : str, remove_long_gov_names : bool=True, t : 'Token'=None) -> None:
-        wrapnum2389 = RefOutArgWrapper(0)
-        s = self.__correct_name(name, wrapnum2389)
-        num = wrapnum2389.value
+        num = 0
+        wrapnum2393 = RefOutArgWrapper(0)
+        s = self.__correct_name(name, wrapnum2393)
+        num = wrapnum2393.value
         if (s is None): 
             if (num > 0 and self.number is None): 
                 self.number = str(num)
@@ -489,9 +494,9 @@ class OrganizationReferent(Referent):
                 return
             if (typ.name is not None and Utils.compareStrings(typ.name, typ.typ, True) != 0 and ((len(typ.name) > len(typ.typ) or self.find_slot(OrganizationReferent.ATTR_NAME, None, True) is None))): 
                 num = 0
-                wrapnum2390 = RefOutArgWrapper(0)
-                s = self.__correct_name(typ.name, wrapnum2390)
-                num = wrapnum2390.value
+                wrapnum2394 = RefOutArgWrapper(0)
+                s = self.__correct_name(typ.name, wrapnum2394)
+                num = wrapnum2394.value
                 self.add_slot(OrganizationReferent.ATTR_NAME, s, False, cou)
                 if (num > 0 and typ.is_dep and self.number is None): 
                     self.number = str(num)
@@ -505,9 +510,9 @@ class OrganizationReferent(Referent):
                 self.add_slot(OrganizationReferent.ATTR_NAME, "{0} {1}".format(typ.typ.upper(), s), False, cou)
                 if (typ.name is not None): 
                     num = 0
-                    wrapnum2391 = RefOutArgWrapper(0)
-                    ss = self.__correct_name(typ.name, wrapnum2391)
-                    num = wrapnum2391.value
+                    wrapnum2395 = RefOutArgWrapper(0)
+                    ss = self.__correct_name(typ.name, wrapnum2395)
+                    num = wrapnum2395.value
                     if (ss is not None): 
                         self.add_type_str(ss)
                         self.add_slot(OrganizationReferent.ATTR_NAME, "{0} {1}".format(ss, s), False, cou)
@@ -532,7 +537,7 @@ class OrganizationReferent(Referent):
                         str0_ = "Unit"
                     v = Utils.valToEnum(str0_, OrgProfile)
                     res.append(v)
-                except Exception as ex2392: 
+                except Exception as ex2396: 
                     pass
         return res
     
@@ -647,9 +652,9 @@ class OrganizationReferent(Referent):
         res = list(self.types)
         res.sort()
         i = 0
-        first_pass3847 = True
+        first_pass3355 = True
         while True:
-            if first_pass3847: first_pass3847 = False
+            if first_pass3355: first_pass3355 = False
             else: i += 1
             if (not (i < len(res))): break
             if (str.islower(res[i][0])): 
@@ -825,6 +830,7 @@ class OrganizationReferent(Referent):
             if (not n in self.__m_name_vars): 
                 self.__m_name_vars[n] = False
         for n in self.names: 
+            a = None
             if (ki == OrganizationKind.BANK): 
                 if (not "БАНК" in n): 
                     a = (n + "БАНК")
@@ -1100,10 +1106,11 @@ class OrganizationReferent(Referent):
                 for v in self._name_vars.items(): 
                     if (typ == ReferentsEqualType.DIFFERENTTEXTS and v[1]): 
                         continue
-                    wrapb2393 = RefOutArgWrapper(False)
-                    inoutres2394 = Utils.tryGetValue(org0_._name_vars, v[0], wrapb2393)
-                    b = wrapb2393.value
-                    if (not inoutres2394): 
+                    b = False
+                    wrapb2397 = RefOutArgWrapper(False)
+                    inoutres2398 = Utils.tryGetValue(org0_._name_vars, v[0], wrapb2397)
+                    b = wrapb2397.value
+                    if (not inoutres2398): 
                         continue
                     if (typ == ReferentsEqualType.DIFFERENTTEXTS and b): 
                         continue
@@ -1435,6 +1442,7 @@ class OrganizationReferent(Referent):
         cou = 0
         for v in vars0_: 
             if (len(v) >= min_len): 
+                term = None
                 if (pure_names): 
                     term = Termin()
                     term.init_by_normal_text(v, None)

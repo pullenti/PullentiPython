@@ -1,11 +1,15 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
 import xml.etree
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
+from pullenti.unisharp.Streams import MemoryStream
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.ner.Token import Token
 from pullenti.ner.core.TerminCollection import TerminCollection
@@ -205,9 +209,9 @@ class TerrItemToken(MetaToken):
                     if (cc.end_token.next0_ is None or not cc.end_token.next0_.is_value("СОЮЗ", None)): 
                         cc.onto_item = (None)
         i = 0
-        first_pass3653 = True
+        first_pass3160 = True
         while True:
-            if first_pass3653: first_pass3653 = False
+            if first_pass3160: first_pass3160 = False
             else: i += 1
             if (not (i < len(li))): break
             if (li[i].onto_item is not None and li[i].onto_item2 is not None): 
@@ -246,9 +250,9 @@ class TerrItemToken(MetaToken):
         tt1 = None
         val = None
         tt = t
-        first_pass3654 = True
+        first_pass3161 = True
         while True:
-            if first_pass3654: first_pass3654 = False
+            if first_pass3161: first_pass3161 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_char_of(",.")): 
@@ -686,14 +690,6 @@ class TerrItemToken(MetaToken):
     
     @staticmethod
     def try_parse_district_name(t : 'Token', int_ont : 'IntOntologyCollection') -> 'TerrItemToken':
-        """ Это пыделение возможного имени для городского района типа Владыкино, Тёплый Стан)
-        
-        Args:
-            t(Token): 
-            int_ont(IntOntologyCollection): 
-            proc: 
-        
-        """
         if (not (isinstance(t, TextToken)) or not t.chars.is_capital_upper or not t.chars.is_cyrillic_letter): 
             return None
         if ((t.next0_ is not None and t.next0_.is_hiphen and (isinstance(t.next0_.next0_, TextToken))) and t.next0_.next0_.chars == t.chars): 
@@ -959,10 +955,10 @@ class TerrItemToken(MetaToken):
         if (dat is None): 
             raise Utils.newException("Not found resource file t.dat in Analyzer.Location", None)
         dat = MiscLocationHelper._deflate(dat)
-        with io.BytesIO(dat) as tmp: 
-            tmp.seek(0, io.SEEK_SET)
+        with MemoryStream(dat) as tmp: 
+            tmp.position = 0
             xml0_ = None # new XmlDocument
-            xml0_ = xml.etree.ElementTree.parse(tmp)
+            xml0_ = Utils.parseXmlFromStream(tmp)
             for x in xml0_.getroot(): 
                 lang = MorphLang.RU
                 a = Utils.getXmlAttrByName(x.attrib, "l")
@@ -971,17 +967,16 @@ class TerrItemToken(MetaToken):
                         lang = MorphLang.EN
                     elif (a[1] == "ua"): 
                         lang = MorphLang.UA
-                if (x.tag == "state"): 
+                if (Utils.getXmlName(x) == "state"): 
                     TerrItemToken.__load_state(x, lang)
-                elif (x.tag == "reg"): 
+                elif (Utils.getXmlName(x) == "reg"): 
                     TerrItemToken.__load_region(x, lang)
-                elif (x.tag == "unknown"): 
+                elif (Utils.getXmlName(x) == "unknown"): 
                     a = Utils.getXmlAttrByName(x.attrib, "name")
                     if (a is not None and a[1] is not None): 
                         TerrItemToken._m_unknown_regions.add(Termin._new901(a[1], lang))
     
     _m_terr_ontology = None
-    """ Словарь стран и некоторых терминов """
     
     _m_geo_abbrs = None
     
@@ -1025,38 +1020,38 @@ class TerrItemToken(MetaToken):
         c = IntOntologyItem(state)
         acrs = None
         for x in xml0_: 
-            if (x.tag == "n"): 
+            if (Utils.getXmlName(x) == "n"): 
                 te = Termin()
                 te.init_by_normal_text(Utils.getXmlInnerText(x), None)
                 c.termins.append(te)
                 state._add_name(Utils.getXmlInnerText(x))
-            elif (x.tag == "acr"): 
+            elif (Utils.getXmlName(x) == "acr"): 
                 c.termins.append(Termin._new1254(Utils.getXmlInnerText(x), lang))
                 state._add_name(Utils.getXmlInnerText(x))
                 if (acrs is None): 
                     acrs = list()
                 acrs.append(Utils.getXmlInnerText(x))
-            elif (x.tag == "a"): 
+            elif (Utils.getXmlName(x) == "a"): 
                 te = Termin()
                 te.init_by_normal_text(Utils.getXmlInnerText(x), lang)
                 te.tag = (c)
                 c.termins.append(te)
                 TerrItemToken._m_terr_adjs.add(te)
-            elif (x.tag == "a2"): 
+            elif (Utils.getXmlName(x) == "a2"): 
                 state.alpha2 = Utils.getXmlInnerText(x)
-            elif (x.tag == "m"): 
+            elif (Utils.getXmlName(x) == "m"): 
                 te = Termin()
                 te.init_by_normal_text(Utils.getXmlInnerText(x), lang)
                 te.tag = (state)
                 te.gender = MorphGender.MASCULINE
                 TerrItemToken._m_mans_by_state.add(te)
-            elif (x.tag == "w"): 
+            elif (Utils.getXmlName(x) == "w"): 
                 te = Termin()
                 te.init_by_normal_text(Utils.getXmlInnerText(x), lang)
                 te.tag = (state)
                 te.gender = MorphGender.FEMINIE
                 TerrItemToken._m_mans_by_state.add(te)
-            elif (x.tag == "cap"): 
+            elif (Utils.getXmlName(x) == "cap"): 
                 te = Termin()
                 te.init_by_normal_text(Utils.getXmlInnerText(x), lang)
                 te.tag = (state)
@@ -1093,6 +1088,7 @@ class TerrItemToken(MetaToken):
         if (a2 is not None): 
             if (not a2 in TerrItemToken._m_alpha2state): 
                 TerrItemToken._m_alpha2state[a2] = c
+            a3 = None
             wrapa31255 = RefOutArgWrapper(None)
             inoutres1256 = Utils.tryGetValue(MiscLocationHelper._m_alpha2_3, a2, wrapa31255)
             a3 = wrapa31255.value
@@ -1110,7 +1106,7 @@ class TerrItemToken(MetaToken):
         r = IntOntologyItem(reg)
         aterm = None
         for x in xml0_: 
-            if (x.tag == "n"): 
+            if (Utils.getXmlName(x) == "n"): 
                 v = Utils.getXmlInnerText(x)
                 if (v.startswith("ЦЕНТРАЛ")): 
                     pass
@@ -1131,14 +1127,14 @@ class TerrItemToken(MetaToken):
                     TerrItemToken.__m_len_regru = r
                 r.termins.append(te)
                 reg._add_name(v)
-            elif (x.tag == "t"): 
+            elif (Utils.getXmlName(x) == "t"): 
                 reg._add_typ(Utils.getXmlInnerText(x))
-            elif (x.tag == "a"): 
+            elif (Utils.getXmlName(x) == "a"): 
                 te = Termin()
                 te.init_by_normal_text(Utils.getXmlInnerText(x), lang)
                 te.tag = (r)
                 r.termins.append(te)
-            elif (x.tag == "ab"): 
+            elif (Utils.getXmlName(x) == "ab"): 
                 if (aterm is None): 
                     aterm = Termin._new388(reg.get_string_value(GeoReferent.ATTR_NAME), lang, reg)
                 aterm.add_abridge(Utils.getXmlInnerText(x))

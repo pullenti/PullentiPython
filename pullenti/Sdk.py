@@ -1,7 +1,8 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
-import datetime
 
 from pullenti.ner.ProcessorService import ProcessorService
 from pullenti.ner.decree.DecreeAnalyzer import DecreeAnalyzer
@@ -40,7 +41,7 @@ class Sdk:
         return ProcessorService.get_version()
     
     @staticmethod
-    def get_version_date() -> datetime.datetime:
+    def get_version_date() -> str:
         """ Дата выпуска версии SDK """
         return ProcessorService.get_version_date()
     

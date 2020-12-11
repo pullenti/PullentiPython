@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import datetime
@@ -51,6 +53,7 @@ class DateAnalyzer(Analyzer):
         
         def register_referent(self, referent : 'Referent') -> 'Referent':
             key = str(referent)
+            dr = None
             wrapdr712 = RefOutArgWrapper(None)
             inoutres713 = Utils.tryGetValue(self.__m_hash, key, wrapdr712)
             dr = wrapdr712.value
@@ -112,9 +115,9 @@ class DateAnalyzer(Analyzer):
     def process(self, kit : 'AnalysisKit') -> None:
         ad = Utils.asObjectOrNull(kit.get_analyzer_data(self), DateAnalyzer.DateAnalizerData)
         t = kit.first_token
-        first_pass3568 = True
+        first_pass3075 = True
         while True:
-            if first_pass3568: first_pass3568 = False
+            if first_pass3075: first_pass3075 = False
             else: t = t.next0_
             if (not (t is not None)): break
             rts = None
@@ -126,9 +129,9 @@ class DateAnalyzer(Analyzer):
             else: 
                 high = False
                 tt = t.previous
-                first_pass3569 = True
+                first_pass3076 = True
                 while True:
-                    if first_pass3569: first_pass3569 = False
+                    if first_pass3076: first_pass3076 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.is_value("ДАТА", None) or tt.is_value("DATE", None)): 
@@ -228,9 +231,9 @@ class DateAnalyzer(Analyzer):
                     continue
         self.__apply_date_range0(kit, ad)
         t = kit.first_token
-        first_pass3570 = True
+        first_pass3077 = True
         while True:
-            if first_pass3570: first_pass3570 = False
+            if first_pass3077: first_pass3077 = False
             else: t = t.next0_
             if (not (t is not None)): break
             det = DateExToken.try_parse(t)
@@ -340,6 +343,9 @@ class DateAnalyzer(Analyzer):
                         time.higher = Utils.asObjectOrNull(res1[len(res1) - 1].referent, DateReferent)
                         res1.append(ReferentToken(time, dts[0].begin_token, res1[len(res1) - 1].end_token))
                         return res1
+        year = None
+        mon = None
+        day = None
         cent = None
         point = None
         year_is_dif = False
@@ -654,6 +660,7 @@ class DateAnalyzer(Analyzer):
                     t0 = day.begin_token
                 if (day.end_char > t1.end_char): 
                     t1 = day.end_token
+                tt = None
                 tt = t0.previous
                 while tt is not None: 
                     if (not tt.is_char_of(",.")): 
@@ -787,9 +794,9 @@ class DateAnalyzer(Analyzer):
     def __corr_time(self, t0 : 'Token', time : 'DateReferent') -> 'Token':
         t1 = None
         t = t0
-        first_pass3571 = True
+        first_pass3078 = True
         while True:
-            if first_pass3571: first_pass3571 = False
+            if first_pass3078: first_pass3078 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not (isinstance(t, TextToken))): 
@@ -875,9 +882,11 @@ class DateAnalyzer(Analyzer):
         mon.value = (None)
         day.value = (None)
         i = 0
-        first_pass3572 = True
+        j = 0
+        i = 0
+        first_pass3079 = True
         while True:
-            if first_pass3572: first_pass3572 = False
+            if first_pass3079: first_pass3079 = False
             else: i += 1
             if (not (i < (len(its) - 4))): break
             if (its[i].begin_token.previous is not None and its[i].begin_token.previous.is_char(')') and (its[i].whitespaces_before_count < 2)): 
@@ -890,9 +899,9 @@ class DateAnalyzer(Analyzer):
                 else: 
                     continue
             j = i
-            first_pass3573 = True
+            first_pass3080 = True
             while True:
-                if first_pass3573: first_pass3573 = False
+                if first_pass3080: first_pass3080 = False
                 else: j += 1
                 if (not (j < (i + 4))): break
                 if (its[j].is_whitespace_after): 
@@ -998,6 +1007,7 @@ class DateAnalyzer(Analyzer):
         mon.value = (None)
         day.value = (None)
         year_is_diff.value = False
+        i = 0
         if (len(its) == 2): 
             if (its[0].typ == DateItemToken.DateItemType.MONTH and its[1].typ == DateItemToken.DateItemType.YEAR): 
                 year.value = its[1]
@@ -1151,6 +1161,7 @@ class DateAnalyzer(Analyzer):
         year.value = (None)
         mon.value = (None)
         day.value = (None)
+        i = 0
         doubt = False
         i = 0
         while i < len(its): 
@@ -1214,9 +1225,9 @@ class DateAnalyzer(Analyzer):
     
     def __apply_date_range0(self, kit : 'AnalysisKit', ad : 'AnalyzerData') -> None:
         t = kit.first_token
-        first_pass3574 = True
+        first_pass3081 = True
         while True:
-            if first_pass3574: first_pass3574 = False
+            if first_pass3081: first_pass3081 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not (isinstance(t, TextToken))): 

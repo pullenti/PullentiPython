@@ -1,10 +1,13 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import math
 import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphNumber import MorphNumber
@@ -40,10 +43,11 @@ class NumberToken(MetaToken):
             self.__m_value = self.__m_value[0:0+len(self.__m_value) - 2]
         while len(self.__m_value) > 1 and self.__m_value[0] == '0' and self.__m_value[1] != '.':
             self.__m_value = self.__m_value[1:]
-        wrapn2832 = RefOutArgWrapper(0)
-        inoutres2833 = Utils.tryParseInt(self.__m_value, wrapn2832)
-        n = wrapn2832.value
-        if (inoutres2833): 
+        n = 0
+        wrapn2836 = RefOutArgWrapper(0)
+        inoutres2837 = Utils.tryParseInt(self.__m_value, wrapn2836)
+        n = wrapn2836.value
+        if (inoutres2837): 
             self.__m_int_val = n
         else: 
             self.__m_int_val = (None)
@@ -86,18 +90,18 @@ class NumberToken(MetaToken):
     def get_normal_case_text(self, mc : 'MorphClass'=None, num : 'MorphNumber'=MorphNumber.UNDEFINED, gender : 'MorphGender'=MorphGender.UNDEFINED, keep_chars : bool=False) -> str:
         return str(self.value)
     
-    def _serialize(self, stream : io.IOBase) -> None:
+    def _serialize(self, stream : Stream) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         super()._serialize(stream)
         SerializerHelper.serialize_string(stream, self.__m_value)
         SerializerHelper.serialize_int(stream, self.typ)
     
-    def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit', vers : int) -> None:
+    def _deserialize(self, stream : Stream, kit_ : 'AnalysisKit', vers : int) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         super()._deserialize(stream, kit_, vers)
         if (vers == 0): 
             buf = Utils.newArrayOfBytes(8, 0)
-            Utils.readIO(stream, buf, 0, 8)
+            stream.read(buf, 0, 8)
             lo = int.from_bytes(buf[0:0+8], byteorder="little")
             self.value = str(lo)
         else: 

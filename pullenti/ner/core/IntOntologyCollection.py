@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -35,15 +37,9 @@ class IntOntologyCollection:
     
     @property
     def items(self) -> typing.List['IntOntologyItem']:
-        """ Список элементов онтологии """
         return self.__m_items
     
     def add_item(self, di : 'IntOntologyItem') -> None:
-        """ Добавить элемент (внимание, после добавления нельзя менять термины у элемента)
-        
-        Args:
-            di(IntOntologyItem): 
-        """
         self.__m_items.append(di)
         di.owner = self
         i = 0
@@ -59,12 +55,6 @@ class IntOntologyCollection:
             i += 1
     
     def add_referent(self, referent : 'Referent') -> bool:
-        """ Добавить в онтологию сущность
-        
-        Args:
-            referent(Referent): 
-        
-        """
         if (referent is None): 
             return False
         oi = None
@@ -88,35 +78,17 @@ class IntOntologyCollection:
         return True
     
     def add_termin(self, di : 'IntOntologyItem', t : 'Termin') -> None:
-        """ Добавить термин в существующий элемент
-        
-        Args:
-            di(IntOntologyItem): 
-            t(Termin): 
-        """
         nt = IntOntologyCollection.OntologyTermin._new489(di, t.tag)
         t.copy_to(nt)
         self.__m_termins.add(nt)
     
     def add(self, t : 'Termin') -> None:
-        """ Добавить отдельный термин (после добавления нельзя изменять свойства термина)
-        
-        Args:
-            t(Termin): 
-        """
         self.__m_termins.add(t)
     
     def find_termin_by_canonic_text(self, text : str) -> typing.List['Termin']:
         return self.__m_termins.find_termins_by_canonic_text(text)
     
     def try_attach(self, t : 'Token', referent_type_name : str=None, can_be_geo_object : bool=False) -> typing.List['IntOntologyToken']:
-        """ Привязать с указанной позиции
-        
-        Args:
-            t(Token): 
-            can_be_geo_object(bool): при True внутри может быть географический объект (Министерство РФ по делам ...)
-        
-        """
         tts = self.__m_termins.try_parse_all(t, (TerminParseAttr.CANBEGEOOBJECT if can_be_geo_object else TerminParseAttr.NO))
         if (tts is None): 
             return None
@@ -137,12 +109,6 @@ class IntOntologyCollection:
         return (None if len(res) == 0 else res)
     
     def try_attach_by_item(self, item : 'IntOntologyItem') -> typing.List['IntOntologyItem']:
-        """ Найти похожие онтологические объекты
-        
-        Args:
-            item(IntOntologyItem): 
-        
-        """
         if (item is None): 
             return None
         res = None
@@ -159,13 +125,6 @@ class IntOntologyCollection:
         return res
     
     def try_attach_by_referent(self, referent : 'Referent', item : 'IntOntologyItem'=None, must_be_single : bool=False) -> typing.List['Referent']:
-        """ Найти эквивалентные сущности через онтологические объекты
-        
-        Args:
-            item(IntOntologyItem): 
-            referent(Referent): 
-        
-        """
         if (referent is None): 
             return None
         if (item is None): 
@@ -197,15 +156,7 @@ class IntOntologyCollection:
         return res
     
     def remove(self, r : 'Referent') -> None:
-        """ Произвести привязку, если элемент найдётся, то установить ссылку на OntologyElement
-        
-        Args:
-            referent: 
-            mergeSlots: 
-        
-        Удалить всё, что связано с сущностью
-            r(Referent): 
-        """
+        i = 0
         i = 0
         while i < len(self.__m_items): 
             if (self.__m_items[i].referent == r): 
@@ -219,7 +170,7 @@ class IntOntologyCollection:
             i += 1
     
     @staticmethod
-    def _new2811(_arg1 : bool) -> 'IntOntologyCollection':
+    def _new2815(_arg1 : bool) -> 'IntOntologyCollection':
         res = IntOntologyCollection()
         res.is_ext_ontology = _arg1
         return res

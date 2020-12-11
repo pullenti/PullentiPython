@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 
 from pullenti.ner.core.internal.TextsCompareType import TextsCompareType
@@ -94,7 +96,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new1590(_arg1 : int, _arg2 : int, _arg3 : 'Referent', _arg4 : 'SourceOfAnalysis') -> 'TextAnnotation':
+    def _new1594(_arg1 : int, _arg2 : int, _arg3 : 'Referent', _arg4 : 'SourceOfAnalysis') -> 'TextAnnotation':
         res = TextAnnotation()
         res.begin_char = _arg1
         res.end_char = _arg2
@@ -103,7 +105,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2857(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
+    def _new2861(_arg1 : int, _arg2 : int, _arg3 : 'SourceOfAnalysis') -> 'TextAnnotation':
         res = TextAnnotation()
         res.begin_char = _arg1
         res.end_char = _arg2
@@ -111,7 +113,7 @@ class TextAnnotation:
         return res
     
     @staticmethod
-    def _new2859(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
+    def _new2863(_arg1 : 'SourceOfAnalysis', _arg2 : 'Referent') -> 'TextAnnotation':
         res = TextAnnotation()
         res.sofa = _arg1
         res.occurence_of = _arg2

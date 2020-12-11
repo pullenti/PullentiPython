@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import operator
@@ -46,9 +48,9 @@ class DateRelHelper:
         res = list()
         own = None
         i = 0
-        first_pass3567 = True
+        first_pass3074 = True
         while True:
-            if first_pass3567: first_pass3567 = False
+            if first_pass3074: first_pass3074 = False
             else: i += 1
             if (not (i < len(its))): break
             it = its[i]
@@ -89,6 +91,7 @@ class DateRelHelper:
     def __create_date_ex(dr : 'DateReferent') -> typing.List['DateExItemToken']:
         res = list()
         while dr is not None: 
+            n = 0
             for s in dr.slots: 
                 it = DateExToken.DateExItemToken._new676(None, None, DateExToken.DateExItemTokenType.UNDEFINED)
                 if (dr.get_string_value(DateReferent.ATTR_ISRELATIVE) == "true"): 
@@ -184,6 +187,8 @@ class DateRelHelper:
     def calculate_date_range2(dr : 'DateRangeReferent', now : datetime.datetime, from0_ : datetime.datetime, to : datetime.datetime, tense : int) -> bool:
         from0_.value = datetime.datetime.min
         to.value = datetime.datetime.max
+        dt0 = None
+        dt1 = None
         if (dr.date_from is None): 
             if (dr.date_to is None): 
                 return False
@@ -214,6 +219,8 @@ class DateRelHelper:
         if (not inoutres705): 
             return False
         from0_.value = dt0
+        dt2 = None
+        dt3 = None
         wrapdt2700 = RefOutArgWrapper(None)
         wrapdt3701 = RefOutArgWrapper(None)
         inoutres702 = DateRelHelper.calculate_date_range(dr.date_to, now, wrapdt2700, wrapdt3701, tense)
@@ -226,6 +233,8 @@ class DateRelHelper:
     
     @staticmethod
     def append_to_string(dr : 'DateReferent', res : io.StringIO) -> None:
+        dt0 = None
+        dt1 = None
         cur = (datetime.datetime.now() if ProcessorService.DEBUG_CURRENT_DATE_TIME is None else ProcessorService.DEBUG_CURRENT_DATE_TIME)
         wrapdt0706 = RefOutArgWrapper(None)
         wrapdt1707 = RefOutArgWrapper(None)
@@ -238,6 +247,8 @@ class DateRelHelper:
     
     @staticmethod
     def append_to_string2(dr : 'DateRangeReferent', res : io.StringIO) -> None:
+        dt0 = None
+        dt1 = None
         cur = (datetime.datetime.now() if ProcessorService.DEBUG_CURRENT_DATE_TIME is None else ProcessorService.DEBUG_CURRENT_DATE_TIME)
         wrapdt0709 = RefOutArgWrapper(None)
         wrapdt1710 = RefOutArgWrapper(None)

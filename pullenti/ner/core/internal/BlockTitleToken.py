@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import math
@@ -29,9 +31,9 @@ class BlockTitleToken(MetaToken):
         intro = None
         lits = None
         tt = t
-        first_pass3528 = True
+        first_pass3035 = True
         while True:
-            if first_pass3528: first_pass3528 = False
+            if first_pass3035: first_pass3035 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 
@@ -74,9 +76,9 @@ class BlockTitleToken(MetaToken):
             cou = 0
             err = 0
             tt = content.end_token.next0_
-            first_pass3529 = True
+            first_pass3036 = True
             while True:
-                if first_pass3529: first_pass3529 = False
+                if first_pass3036: first_pass3036 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not tt.is_newline_before): 
@@ -111,9 +113,9 @@ class BlockTitleToken(MetaToken):
             return None
         first = True
         tt = t0
-        first_pass3530 = True
+        first_pass3037 = True
         while True:
-            if first_pass3530: first_pass3530 = False
+            if first_pass3037: first_pass3037 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (not tt.is_newline_before): 

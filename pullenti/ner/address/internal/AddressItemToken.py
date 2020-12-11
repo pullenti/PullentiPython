@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -152,9 +154,9 @@ class AddressItemToken(MetaToken):
         res.append(it)
         pref = it.typ == AddressItemToken.ItemType.PREFIX
         t = it.end_token.next0_
-        first_pass3485 = True
+        first_pass2992 = True
         while True:
-            if first_pass3485: first_pass3485 = False
+            if first_pass2992: first_pass2992 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_count > 0 and len(res) >= max_count): 
@@ -163,13 +165,15 @@ class AddressItemToken(MetaToken):
             if (len(res) > 1): 
                 if (last.is_newline_before and res[len(res) - 2].typ != AddressItemToken.ItemType.PREFIX): 
                     i = 0
-                    first_pass3486 = True
+                    i = 0
+                    first_pass2993 = True
                     while True:
-                        if first_pass3486: first_pass3486 = False
+                        if first_pass2993: first_pass2993 = False
                         else: i += 1
                         if (not (i < (len(res) - 1))): break
                         if (res[i].typ == last.typ): 
                             if (i == (len(res) - 2) and ((last.typ == AddressItemToken.ItemType.CITY or last.typ == AddressItemToken.ItemType.REGION))): 
+                                jj = 0
                                 jj = 0
                                 while jj < i: 
                                     if ((res[jj].typ != AddressItemToken.ItemType.PREFIX and res[jj].typ != AddressItemToken.ItemType.ZIP and res[jj].typ != AddressItemToken.ItemType.REGION) and res[jj].typ != AddressItemToken.ItemType.COUNTRY): 
@@ -537,6 +541,7 @@ class AddressItemToken(MetaToken):
         from pullenti.ner.address.internal.StreetDefineHelper import StreetDefineHelper
         if (isinstance(t, ReferentToken)): 
             rt = Utils.asObjectOrNull(t, ReferentToken)
+            ty = None
             geo = Utils.asObjectOrNull(rt.referent, GeoReferent)
             if (geo is not None): 
                 if (geo.is_city or geo.is_territory): 
@@ -564,9 +569,9 @@ class AddressItemToken(MetaToken):
                         ttt = ttt.next0_
                     if (crlf): 
                         ttt = rt.begin_token.previous
-                        first_pass3487 = True
+                        first_pass2994 = True
                         while True:
-                            if first_pass3487: first_pass3487 = False
+                            if first_pass2994: first_pass2994 = False
                             else: ttt = ttt.previous
                             if (not (ttt is not None)): break
                             if (ttt.morph.class0_.is_preposition or ttt.is_comma): 
@@ -640,9 +645,9 @@ class AddressItemToken(MetaToken):
             if (tok.termin.canonic_text == "ТАМ ЖЕ"): 
                 cou = 0
                 tt = t.previous
-                first_pass3488 = True
+                first_pass2995 = True
                 while True:
-                    if first_pass3488: first_pass3488 = False
+                    if first_pass2995: first_pass2995 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (cou > 1000): 
@@ -670,9 +675,9 @@ class AddressItemToken(MetaToken):
                     build_typ = (Utils.valToEnum(tok.termin.tag2, AddressBuildingType))
                 typ_ = (Utils.valToEnum(tok.termin.tag, AddressItemToken.ItemType))
                 if (typ_ == AddressItemToken.ItemType.PREFIX): 
-                    first_pass3489 = True
+                    first_pass2996 = True
                     while True:
-                        if first_pass3489: first_pass3489 = False
+                        if first_pass2996: first_pass2996 = False
                         else: t1 = t1.next0_
                         if (not (t1 is not None)): break
                         if (((t1.morph.class0_.is_preposition or t1.morph.class0_.is_conjunction)) and t1.whitespaces_after_count == 1): 
@@ -705,9 +710,9 @@ class AddressItemToken(MetaToken):
                                 t0 = t
                         res = AddressItemToken(AddressItemToken.ItemType.PREFIX, t0, t1.previous)
                         tt = t0.previous
-                        first_pass3490 = True
+                        first_pass2997 = True
                         while True:
-                            if first_pass3490: first_pass3490 = False
+                            if first_pass2997: first_pass2997 = False
                             else: tt = tt.previous
                             if (not (tt is not None)): break
                             if (tt.newlines_after_count > 3): 
@@ -786,6 +791,7 @@ class AddressItemToken(MetaToken):
             return None
         num = io.StringIO()
         nt = Utils.asObjectOrNull(t1, NumberToken)
+        re11 = None
         if (nt is not None): 
             if (nt.int_value is None or nt.int_value == 0): 
                 return None
@@ -1088,9 +1094,9 @@ class AddressItemToken(MetaToken):
                     return None
             res = AddressItemToken._new93(AddressItemToken.ItemType.DETAIL, t, tok.end_token, Utils.valToEnum(tok.termin.tag, AddressDetailType))
         tt = res.end_token.next0_
-        first_pass3491 = True
+        first_pass2998 = True
         while True:
-            if first_pass3491: first_pass3491 = False
+            if first_pass2998: first_pass2998 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (isinstance(tt, ReferentToken)): 
@@ -1262,9 +1268,9 @@ class AddressItemToken(MetaToken):
             elif (t.chars.is_all_lower and t.get_morph_class_in_dictionary().is_undefined and not t.is_value("ПСЕВДО", None)): 
                 ok = True
             tt2 = t.next0_
-            first_pass3492 = True
+            first_pass2999 = True
             while True:
-                if first_pass3492: first_pass3492 = False
+                if first_pass2999: first_pass2999 = False
                 else: tt2 = tt2.next0_
                 if (not (tt2 is not None)): break
                 if (tt2.whitespaces_before_count > 2): 
@@ -1617,6 +1623,7 @@ class AddressItemToken(MetaToken):
             return
         StreetItemToken.initialize()
         AddressItemToken.M_ONTOLOGY = TerminCollection()
+        t = None
         t = Termin._new100("ДОМ", AddressItemToken.ItemType.HOUSE)
         t.add_abridge("Д.")
         t.add_variant("КОТТЕДЖ", False)

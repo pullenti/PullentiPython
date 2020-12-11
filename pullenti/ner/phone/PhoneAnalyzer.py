@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -47,10 +49,10 @@ class PhoneAnalyzer(Analyzer):
             if (len(key) >= 10): 
                 key = key[3:]
             ph_li = [ ]
-            wrapph_li2648 = RefOutArgWrapper(None)
-            inoutres2649 = Utils.tryGetValue(self.__m_phones_hash, key, wrapph_li2648)
-            ph_li = wrapph_li2648.value
-            if (not inoutres2649): 
+            wrapph_li2652 = RefOutArgWrapper(None)
+            inoutres2653 = Utils.tryGetValue(self.__m_phones_hash, key, wrapph_li2652)
+            ph_li = wrapph_li2652.value
+            if (not inoutres2653): 
                 ph_li = list()
                 self.__m_phones_hash[key] = ph_li
             for p in ph_li: 
@@ -104,9 +106,9 @@ class PhoneAnalyzer(Analyzer):
     def process(self, kit : 'AnalysisKit') -> None:
         ad = Utils.asObjectOrNull(kit.get_analyzer_data(self), PhoneAnalyzer.PhoneAnalizerData)
         t = kit.first_token
-        first_pass3882 = True
+        first_pass3390 = True
         while True:
-            if first_pass3882: first_pass3882 = False
+            if first_pass3390: first_pass3390 = False
             else: t = t.next0_
             if (not (t is not None)): break
             pli = PhoneItemToken.try_attach_all(t, 15)
@@ -266,9 +268,9 @@ class PhoneAnalyzer(Analyzer):
         if (prev_phone is not None and prev_phone._m_template is not None and pli[j].item_type == PhoneItemToken.PhoneItemType.NUMBER): 
             tmp = io.StringIO()
             jj = j
-            first_pass3883 = True
+            first_pass3391 = True
             while True:
-                if first_pass3883: first_pass3883 = False
+                if first_pass3391: first_pass3391 = False
                 else: jj += 1
                 if (not (jj < len(pli))): break
                 if (pli[jj].item_type == PhoneItemToken.PhoneItemType.NUMBER): 
@@ -366,9 +368,9 @@ class PhoneAnalyzer(Analyzer):
                     std = True
                     ok = True
                     j += 5
-        first_pass3884 = True
+        first_pass3392 = True
         while True:
-            if first_pass3884: first_pass3884 = False
+            if first_pass3392: first_pass3392 = False
             else: j += 1
             if (not (j < len(pli))): break
             if (std): 
@@ -463,6 +465,7 @@ class PhoneAnalyzer(Analyzer):
         if (num.tell() < 7): 
             if (city_code is not None and (len(city_code) + num.tell()) > 7): 
                 if (not is_phone_before and len(city_code) == 3): 
+                    ii = 0
                     ii = 0
                     while ii < len(part_length): 
                         if (part_length[ii] == 3): 

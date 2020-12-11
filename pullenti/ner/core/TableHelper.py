@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from enum import IntEnum
@@ -70,16 +72,6 @@ class TableHelper:
     
     @staticmethod
     def try_parse_rows(t : 'Token', max_char : int, must_be_start_of_table : bool) -> typing.List['TableRowToken']:
-        """ Получить список строк таблицы
-        
-        Args:
-            t(Token): начальная позиция
-            max_char(int): максимальная позиция (0 - не ограничена)
-            must_be_start_of_table(bool): при true первый символ должен быть 1Eh
-        
-        Returns:
-            typing.List[TableRowToken]: список строк
-        """
         if (t is None): 
             return None
         is_tab = False
@@ -153,6 +145,7 @@ class TableHelper:
         if (t.is_char(chr(0x1E)) and t.next0_ is not None): 
             is_tab.value = True
             t = t.next0_
+        tt = None
         cell_info = None
         tt = t
         while tt is not None and ((tt.end_char <= max_char or max_char == 0)): 

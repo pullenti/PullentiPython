@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -623,7 +625,7 @@ class NGLink(object):
         return coef_ >= 0
     
     @staticmethod
-    def _new2924(_arg1 : 'NGLinkType', _arg2 : 'NGItem', _arg3 : 'NGItem', _arg4 : bool) -> 'NGLink':
+    def _new2928(_arg1 : 'NGLinkType', _arg2 : 'NGItem', _arg3 : 'NGItem', _arg4 : bool) -> 'NGLink':
         res = NGLink()
         res.typ = _arg1
         res.from0_ = _arg2
@@ -632,20 +634,20 @@ class NGLink(object):
         return res
     
     @staticmethod
-    def _new2926(_arg1 : 'NGLinkType') -> 'NGLink':
+    def _new2930(_arg1 : 'NGLinkType') -> 'NGLink':
         res = NGLink()
         res.typ = _arg1
         return res
     
     @staticmethod
-    def _new2927(_arg1 : 'NGItem', _arg2 : 'NGLinkType') -> 'NGLink':
+    def _new2931(_arg1 : 'NGItem', _arg2 : 'NGLinkType') -> 'NGLink':
         res = NGLink()
         res.from0_ = _arg1
         res.typ = _arg2
         return res
     
     @staticmethod
-    def _new2935(_arg1 : 'NGItem', _arg2 : 'VerbPhraseToken', _arg3 : 'NGLinkType') -> 'NGLink':
+    def _new2939(_arg1 : 'NGItem', _arg2 : 'VerbPhraseToken', _arg3 : 'NGLinkType') -> 'NGLink':
         res = NGLink()
         res.from0_ = _arg1
         res.to_verb = _arg2
@@ -653,7 +655,7 @@ class NGLink(object):
         return res
     
     @staticmethod
-    def _new2951(_arg1 : 'NGLinkType', _arg2 : 'NGItem', _arg3 : 'VerbPhraseToken') -> 'NGLink':
+    def _new2955(_arg1 : 'NGLinkType', _arg2 : 'NGItem', _arg3 : 'VerbPhraseToken') -> 'NGLink':
         res = NGLink()
         res.typ = _arg1
         res.from0_ = _arg2

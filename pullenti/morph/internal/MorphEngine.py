@@ -1,11 +1,15 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import threading
-import io
 import typing
+import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
+from pullenti.unisharp.Streams import MemoryStream
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.morph.MorphTense import MorphTense
 from pullenti.morph.MorphVoice import MorphVoice
@@ -17,12 +21,12 @@ from pullenti.morph.internal.MorphDeserializer import MorphDeserializer
 from pullenti.morph.internal.MorphRule import MorphRule
 from pullenti.morph.internal.MorphTreeNode import MorphTreeNode
 from pullenti.morph.MorphLang import MorphLang
-from pullenti.morph.LanguageHelper import LanguageHelper
-from pullenti.morph.MorphClass import MorphClass
-from pullenti.morph.MorphNumber import MorphNumber
-from pullenti.morph.MorphCase import MorphCase
-from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphMiscInfo import MorphMiscInfo
+from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphClass import MorphClass
+from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphWordForm import MorphWordForm
 
 class MorphEngine:
@@ -75,7 +79,7 @@ class MorphEngine:
             if (not self.language.is_undefined): 
                 return False
             self.language = lang
-            # ignored: assembly = 
+            
             rsname = "m_{0}.dat".format(str(lang))
             names = Utils.getResourcesNames('pullenti.morph.internal.properties', '.dat')
             for n in names: 
@@ -84,7 +88,7 @@ class MorphEngine:
                     if (inf is None): 
                         continue
                     with Utils.getResourceStream('pullenti.morph.internal.properties', n) as stream: 
-                        stream.seek(0, io.SEEK_SET)
+                        stream.position = 0
                         self.deserialize(stream, False, lazy_load)
                     return True
             return False
@@ -99,15 +103,10 @@ class MorphEngine:
             tn.lazy_pos = 0
     
     def process(self, word : str) -> typing.List['MorphWordForm']:
-        """ Обработка одного слова
-        
-        Args:
-            word(str): слово должно быть в верхнем регистре
-        
-        """
         if (Utils.isNullOrEmpty(word)): 
             return None
         res = None
+        i = 0
         if (len(word) > 1): 
             i = 0
             while i < len(word): 
@@ -303,6 +302,7 @@ class MorphEngine:
     
     def get_all_wordforms(self, word : str) -> typing.List['MorphWordForm']:
         res = list()
+        i = 0
         tn = self.m_root
         i = 0
         while i <= len(word): 
@@ -339,9 +339,9 @@ class MorphEngine:
                 break
             i += 1
         i = 0
-        first_pass3476 = True
+        first_pass2983 = True
         while True:
-            if first_pass3476: first_pass3476 = False
+            if first_pass2983: first_pass2983 = False
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
@@ -349,9 +349,9 @@ class MorphEngine:
                 continue
             cas = wf.case_
             j = i + 1
-            first_pass3477 = True
+            first_pass2984 = True
             while True:
-                if first_pass3477: first_pass3477 = False
+                if first_pass2984: first_pass2984 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
@@ -364,18 +364,18 @@ class MorphEngine:
             if (cas != wf.case_): 
                 res[i].case_ = cas
         i = 0
-        first_pass3478 = True
+        first_pass2985 = True
         while True:
-            if first_pass3478: first_pass3478 = False
+            if first_pass2985: first_pass2985 = False
             else: i += 1
             if (not (i < len(res))): break
             wf = res[i]
             if (wf.contains_attr("инф.", None)): 
                 continue
             j = i + 1
-            first_pass3479 = True
+            first_pass2986 = True
             while True:
-                if first_pass3479: first_pass3479 = False
+                if first_pass2986: first_pass2986 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 wf1 = res[j]
@@ -388,6 +388,7 @@ class MorphEngine:
         return res
     
     def get_wordform(self, word : str, cla : 'MorphClass', gender : 'MorphGender', cas : 'MorphCase', num : 'MorphNumber', add_info : 'MorphWordForm') -> str:
+        i = 0
         tn = self.m_root
         find = False
         res = None
@@ -532,7 +533,7 @@ class MorphEngine:
     
     def correct_word_by_morph(self, word : str) -> str:
         vars0_ = list()
-        tmp = Utils.newStringIO(len(word))
+        tmp = io.StringIO()
         ch = 1
         while ch < len(word): 
             Utils.setLengthStringIO(tmp, 0)
@@ -570,9 +571,9 @@ class MorphEngine:
         return vars0_[0]
     
     def __check_corr_var(self, word : str, tn : 'MorphTreeNode', i : int) -> str:
-        first_pass3480 = True
+        first_pass2987 = True
         while True:
-            if first_pass3480: first_pass3480 = False
+            if first_pass2987: first_pass2987 = False
             else: i += 1
             if (not (i <= len(word))): break
             if (tn.lazy_pos > 0): 
@@ -595,6 +596,7 @@ class MorphEngine:
                     if (word_end.find('*') >= 0): 
                         for v in r.tails: 
                             if (len(v) == len(word_end)): 
+                                j = 0
                                 j = 0
                                 while j < len(v): 
                                     if (word_end[j] == '*' or word_end[j] == v[j]): 
@@ -630,6 +632,7 @@ class MorphEngine:
     def __process_proper_variants(self, word : str, res : typing.List['MorphWordForm'], geo : bool) -> None:
         tn = self.m_root_reverce
         nodes_with_vars = None
+        i = 0
         for i in range(len(word) - 1, -1, -1):
             if (tn.lazy_pos > 0): 
                 self.__load_tree_node(tn)
@@ -788,9 +791,9 @@ class MorphEngine:
         i = 0
         while i < (len(res) - 1): 
             j = i + 1
-            first_pass3481 = True
+            first_pass2988 = True
             while True:
-                if first_pass3481: first_pass3481 = False
+                if first_pass2988: first_pass2988 = False
                 else: j += 1
                 if (not (j < len(res))): break
                 if (self.__comp1(res[i], res[j])): 
@@ -819,10 +822,10 @@ class MorphEngine:
             return False
         return True
     
-    def deserialize(self, str0 : io.IOBase, ignore_rev_tree : bool, lazy_load : bool) -> None:
-        tmp = io.BytesIO()
+    def deserialize(self, str0 : Stream, ignore_rev_tree : bool, lazy_load : bool) -> None:
+        tmp = MemoryStream()
         MorphDeserializer.deflate_gzip(str0, tmp)
-        arr = bytearray(tmp.getvalue())
+        arr = tmp.toarray()
         buf = ByteArrayWrapper(arr)
         pos = 0
         wrappos23 = RefOutArgWrapper(pos)

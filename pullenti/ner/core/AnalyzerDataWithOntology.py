@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 
 from pullenti.ner.core.AnalyzerData import AnalyzerData
@@ -13,6 +15,7 @@ class AnalyzerDataWithOntology(AnalyzerData):
         self.local_ontology = IntOntologyCollection()
     
     def register_referent(self, referent : 'Referent') -> 'Referent':
+        res = None
         li = self.local_ontology.try_attach_by_referent(referent, None, True)
         if (li is not None): 
             for i in range(len(li) - 1, -1, -1):

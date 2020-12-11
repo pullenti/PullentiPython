@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -74,9 +76,9 @@ class MailAnalyzer(Analyzer):
     def process(self, kit : 'AnalysisKit') -> None:
         lines = list()
         t = kit.first_token
-        first_pass3791 = True
+        first_pass3299 = True
         while True:
-            if first_pass3791: first_pass3791 = False
+            if first_pass3299: first_pass3299 = False
             else: t = t.next0_
             if (not (t is not None)): break
             ml = MailLine.parse(t, 0, 0)
@@ -88,12 +90,13 @@ class MailAnalyzer(Analyzer):
             t = ml.end_token
         if (len(lines) == 0): 
             return
+        i = 0
         blocks = list()
         blk = None
         i = 0
-        first_pass3792 = True
+        first_pass3300 = True
         while True:
-            if first_pass3792: first_pass3792 = False
+            if first_pass3300: first_pass3300 = False
             else: i += 1
             if (not (i < len(lines))): break
             ml = lines[i]
@@ -117,9 +120,9 @@ class MailAnalyzer(Analyzer):
                 if (is_new): 
                     blk = list()
                     blocks.append(blk)
-                    first_pass3793 = True
+                    first_pass3301 = True
                     while True:
-                        if first_pass3793: first_pass3793 = False
+                        if first_pass3301: first_pass3301 = False
                         else: i += 1
                         if (not (i < len(lines))): break
                         if (lines[i].typ == MailLine.Types.FROM): 
@@ -127,6 +130,7 @@ class MailAnalyzer(Analyzer):
                                 break
                             blk.append(lines[i])
                         elif (((i + 1) < len(lines)) and lines[i + 1].typ == MailLine.Types.FROM): 
+                            j = 0
                             j = 0
                             while j < len(blk): 
                                 if (blk[j].typ == MailLine.Types.FROM): 
@@ -163,9 +167,9 @@ class MailAnalyzer(Analyzer):
             return
         ad = kit.get_analyzer_data(self)
         j = 0
-        first_pass3794 = True
+        first_pass3302 = True
         while True:
-            if first_pass3794: first_pass3794 = False
+            if first_pass3302: first_pass3302 = False
             else: j += 1
             if (not (j < len(blocks))): break
             lines = blocks[j]
@@ -182,7 +186,7 @@ class MailAnalyzer(Analyzer):
                     else: 
                         break
                     i += 1
-                mail_ = MailReferent._new1601(MailKind.HEAD)
+                mail_ = MailReferent._new1605(MailKind.HEAD)
                 mt = ReferentToken(mail_, lines[0].begin_token, t1)
                 mail_.text = MiscHelper.get_text_value_of_meta_token(mt, GetTextAttr.KEEPREGISTER)
                 ad.register_referent(mail_)
@@ -191,9 +195,9 @@ class MailAnalyzer(Analyzer):
             t2 = None
             err = 0
             i = (len(lines) - 1)
-            first_pass3795 = True
+            first_pass3303 = True
             while True:
-                if first_pass3795: first_pass3795 = False
+                if first_pass3303: first_pass3303 = False
                 else: i -= 1
                 if (not (i >= i0)): break
                 li = lines[i]
@@ -233,7 +237,7 @@ class MailAnalyzer(Analyzer):
             ii = i0
             while ii < len(lines): 
                 if (lines[ii].typ == MailLine.Types.HELLO): 
-                    mail_ = MailReferent._new1601(MailKind.HELLO)
+                    mail_ = MailReferent._new1605(MailKind.HELLO)
                     mt = ReferentToken(mail_, lines[i0].begin_token, lines[ii].end_token)
                     if (mt.length_char > 0): 
                         mail_.text = MiscHelper.get_text_value_of_meta_token(mt, GetTextAttr.KEEPREGISTER)
@@ -248,14 +252,14 @@ class MailAnalyzer(Analyzer):
                 if (t2 is not None and t2.previous is None): 
                     pass
                 else: 
-                    mail_ = MailReferent._new1601(MailKind.BODY)
+                    mail_ = MailReferent._new1605(MailKind.BODY)
                     mt = ReferentToken(mail_, lines[i0].begin_token, (t2.previous if t2 is not None and t2.previous is not None else lines[len(lines) - 1].end_token))
                     if (mt.length_char > 0): 
                         mail_.text = MiscHelper.get_text_value_of_meta_token(mt, GetTextAttr.KEEPREGISTER)
                         ad.register_referent(mail_)
                         mail_.add_occurence_of_ref_tok(mt)
                 if (t2 is not None): 
-                    mail_ = MailReferent._new1601(MailKind.TAIL)
+                    mail_ = MailReferent._new1605(MailKind.TAIL)
                     mt = ReferentToken(mail_, t2, lines[len(lines) - 1].end_token)
                     if (mt.length_char > 0): 
                         mail_.text = MiscHelper.get_text_value_of_meta_token(mt, GetTextAttr.KEEPREGISTER)

@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import threading
 import gc
@@ -61,11 +63,6 @@ class InnerMorphology:
                     self.__m_engine_kz.initialize(MorphLang.KZ, lazy_load)
     
     def _unload_languages(self, langs : 'MorphLang') -> None:
-        """ Выгрузить язык(и), если они больше не нужны
-        
-        Args:
-            langs(MorphLang): 
-        """
         if (langs.is_ru and self.__m_engine_ru.language.is_ru): 
             self.__m_engine_ru = MorphEngine()
         if (langs.is_en and self.__m_engine_en.language.is_en): 
@@ -96,21 +93,14 @@ class InnerMorphology:
         self.__last_percent = p
     
     def run(self, text : str, only_tokenizing : bool, dlang : 'MorphLang', good_text : bool, progress : EventHandler) -> typing.List['MorphToken']:
-        """ Произвести морфологический анализ текста
-        
-        Args:
-            text(str): исходный текст
-            lang: язык (если null, то попробует определить)
-        
-        Returns:
-            typing.List[MorphToken]: последовательность результирующих морфем
-        """
         if (Utils.isNullOrEmpty(text)): 
             return None
         twr = TextWrapper(text, good_text)
         twrch = twr.chars
         res = list()
         uni_lex = dict()
+        i = 0
+        j = 0
         term0 = None
         pure_rus_words = 0
         pure_ukr_words = 0
@@ -121,9 +111,9 @@ class InnerMorphology:
         tot_by_words = 0
         tot_kz_words = 0
         i = 0
-        first_pass3471 = True
+        first_pass2978 = True
         while True:
-            if first_pass3471: first_pass3471 = False
+            if first_pass2978: first_pass2978 = False
             else: i += 1
             if (not (i < twr.length)): break
             ty = self._get_char_typ(twrch[i])
@@ -287,9 +277,9 @@ class InnerMorphology:
                 r.word_forms = uni.word_forms
         if (not good_text): 
             i = 0
-            first_pass3472 = True
+            first_pass2979 = True
             while True:
-                if first_pass3472: first_pass3472 = False
+                if first_pass2979: first_pass2979 = False
                 else: i += 1
                 if (not (i < (len(res) - 2))): break
                 ui0 = twrch[res[i].begin_char]
@@ -403,9 +393,9 @@ class InnerMorphology:
                         res[i].word_forms = li
                         del res[i + 1]
         i = 0
-        first_pass3473 = True
+        first_pass2980 = True
         while True:
-            if first_pass3473: first_pass3473 = False
+            if first_pass2980: first_pass2980 = False
             else: i += 1
             if (not (i < len(res))): break
             mt = res[i]
@@ -476,9 +466,9 @@ class InnerMorphology:
         if (good_text or only_tokenizing): 
             return res
         i = 0
-        first_pass3474 = True
+        first_pass2981 = True
         while True:
-            if first_pass3474: first_pass3474 = False
+            if first_pass2981: first_pass2981 = False
             else: i += 1
             if (not (i < len(res))): break
             if (res[i].length == 1 and res[i].char_info.is_latin_letter): 
@@ -541,9 +531,9 @@ class InnerMorphology:
                         del res[i + 1:i + 1+2]
             i += 1
         i = 0
-        first_pass3475 = True
+        first_pass2982 = True
         while True:
-            if first_pass3475: first_pass3475 = False
+            if first_pass2982: first_pass2982 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (not res[i].char_info.is_letter and not res[i + 1].char_info.is_letter and (res[i].end_char + 1) == res[i + 1].begin_char): 

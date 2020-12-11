@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -114,9 +116,9 @@ class DefinitionAnalyzer(Analyzer):
             if (len(onto.termins) == 0): 
                 onto = (None)
         t = kit.first_token
-        first_pass3627 = True
+        first_pass3134 = True
         while True:
-            if first_pass3627: first_pass3627 = False
+            if first_pass3134: first_pass3134 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not glos_regime and t.is_newline_before): 
@@ -242,9 +244,9 @@ class DefinitionAnalyzer(Analyzer):
     
     @staticmethod
     def __ignore_list_prefix(t : 'Token') -> 'Token':
-        first_pass3628 = True
+        first_pass3135 = True
         while True:
-            if first_pass3628: first_pass3628 = False
+            if first_pass3135: first_pass3135 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_after): 
@@ -313,9 +315,9 @@ class DefinitionAnalyzer(Analyzer):
                 t = t.next0_
             return None
         misc_token = None
-        first_pass3629 = True
+        first_pass3136 = True
         while True:
-            if first_pass3629: first_pass3629 = False
+            if first_pass3136: first_pass3136 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and MiscHelper.can_be_start_of_sentence(t)): 
@@ -401,6 +403,7 @@ class DefinitionAnalyzer(Analyzer):
                 if (not glos_regime or not t.is_and): 
                     break
                 continue
+            npt = None
             if (t.is_value("ДАВАТЬ", None) or t.is_value("ДАТЬ", None) or t.is_value("ФОРМУЛИРОВАТЬ", None)): 
                 npt = NounPhraseHelper.try_parse(t.next0_, NounPhraseParseAttr.NO, 0, None)
                 if (npt is not None and npt.noun.is_value("ОПРЕДЕЛЕНИЕ", None)): 
@@ -437,6 +440,7 @@ class DefinitionAnalyzer(Analyzer):
                 if (t.morph.class0_.is_preposition or t.morph.class0_.is_verb): 
                     break
                 if (t.morph.class0_.is_adjective): 
+                    tt = None
                     ve = 0
                     tt = t.next0_
                     while tt is not None: 
@@ -666,9 +670,9 @@ class DefinitionAnalyzer(Analyzer):
                 dr.add_slot(DefinitionReferent.ATTR_MISC, Utils.asObjectOrNull(misc_token.tag, str), False, 0)
         t1 = None
         multi_parts = None
-        first_pass3630 = True
+        first_pass3137 = True
         while True:
-            if first_pass3630: first_pass3630 = False
+            if first_pass3137: first_pass3137 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (MiscHelper.can_be_start_of_sentence(t)): 
@@ -762,9 +766,9 @@ class DefinitionAnalyzer(Analyzer):
             tmp = io.StringIO()
             print(df, end="", file=tmp)
             t = t1.next0_
-            first_pass3631 = True
+            first_pass3138 = True
             while True:
-                if first_pass3631: first_pass3631 = False
+                if first_pass3138: first_pass3138 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_char('(')): 
@@ -833,9 +837,9 @@ class DefinitionAnalyzer(Analyzer):
         r0 = t0
         r1 = None
         l0 = None
-        first_pass3632 = True
+        first_pass3139 = True
         while True:
-            if first_pass3632: first_pass3632 = False
+            if first_pass3139: first_pass3139 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and MiscHelper.can_be_start_of_sentence(t)): 
@@ -918,9 +922,9 @@ class DefinitionAnalyzer(Analyzer):
         if (t.is_value("КАК", None)): 
             t1 = None
             tt = t.next0_
-            first_pass3633 = True
+            first_pass3140 = True
             while True:
-                if first_pass3633: first_pass3633 = False
+                if first_pass3140: first_pass3140 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_newline_before): 
@@ -960,9 +964,9 @@ class DefinitionAnalyzer(Analyzer):
         tt = None
         pr = 0
         tt = t
-        first_pass3634 = True
+        first_pass3141 = True
         while True:
-            if first_pass3634: first_pass3634 = False
+            if first_pass3141: first_pass3141 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_whitespace_before and tt != t): 
@@ -1054,9 +1058,9 @@ class DefinitionAnalyzer(Analyzer):
         for k in range(2):
             terms = (terms1 if k == 0 else terms2)
             t = ((ar1.first_token if k == 0 else ar2.first_token))
-            first_pass3635 = True
+            first_pass3142 = True
             while True:
-                if first_pass3635: first_pass3635 = False
+                if first_pass3142: first_pass3142 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 npt = NounPhraseHelper.try_parse(t, NounPhraseParseAttr.NO, 0, None)
@@ -1094,9 +1098,9 @@ class DefinitionAnalyzer(Analyzer):
         tmp2 = io.StringIO()
         if (ar is not None): 
             t = ar.first_token
-            first_pass3636 = True
+            first_pass3143 = True
             while True:
-                if first_pass3636: first_pass3636 = False
+                if first_pass3143: first_pass3143 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 t1 = None
@@ -1108,11 +1112,12 @@ class DefinitionAnalyzer(Analyzer):
                 if (t1 is None): 
                     continue
                 tt = t1.next0_
-                first_pass3637 = True
+                first_pass3144 = True
                 while True:
-                    if first_pass3637: first_pass3637 = False
+                    if first_pass3144: first_pass3144 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
+                    npt2 = None
                     if (tt.is_and): 
                         npt2 = NounPhraseHelper.try_parse(tt.next0_, Utils.valToEnum((NounPhraseParseAttr.PARSENUMERICASADJECTIVE) | (NounPhraseParseAttr.PARSEPREPOSITION), NounPhraseParseAttr), 0, None)
                         if (npt2 is not None): 
@@ -1133,9 +1138,9 @@ class DefinitionAnalyzer(Analyzer):
                     break
                 vars0_ = list()
                 tt = t
-                first_pass3638 = True
+                first_pass3145 = True
                 while True:
-                    if first_pass3638: first_pass3638 = False
+                    if first_pass3145: first_pass3145 = False
                     else: tt = tt.next0_
                     if (not (tt is not None and tt.end_char <= t1.end_char)): break
                     if (not (isinstance(tt, TextToken))): 
@@ -1181,6 +1186,7 @@ class DefinitionAnalyzer(Analyzer):
                     ww = Utils.toStringStringIO(tmp2)
                     if (not ww in res): 
                         res.append(ww)
+                    j = 0
                     for j in range(len(vars0_) - 1, -1, -1):
                         if ((inds[j] + 1) < len(vars0_[j])): 
                             inds[j] += 1

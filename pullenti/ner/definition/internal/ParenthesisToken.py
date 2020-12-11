@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 
 from pullenti.ner.MetaToken import MetaToken
@@ -32,6 +34,7 @@ class ParenthesisToken(MetaToken):
             return None
         mc = t.get_morph_class_in_dictionary()
         ok = False
+        t1 = None
         if (mc.is_adverb): 
             ok = True
         elif (mc.is_adjective): 
@@ -69,9 +72,9 @@ class ParenthesisToken(MetaToken):
                 if (t1.next0_ is not None and t1.next0_.is_comma): 
                     sila = False
                     ttt = t1.next0_.next0_
-                    first_pass3626 = True
+                    first_pass3133 = True
                     while True:
-                        if first_pass3626: first_pass3626 = False
+                        if first_pass3133: first_pass3133 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_value("СИЛА", None) or ttt.is_value("ДЕЙСТВИЕ", None)): 

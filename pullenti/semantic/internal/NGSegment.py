@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -39,16 +41,16 @@ class NGSegment:
     def create_segments(s : 'Sentence') -> typing.List['NGSegment']:
         res = list()
         i = 0
-        first_pass3932 = True
+        first_pass3440 = True
         while True:
-            if first_pass3932: first_pass3932 = False
+            if first_pass3440: first_pass3440 = False
             else: i += 1
             if (not (i < len(s.items))): break
             it = s.items[i]
             if (it.typ == SentItemType.VERB or it.typ == SentItemType.DELIM): 
                 continue
             seg = NGSegment()
-            nit = NGItem._new2922(it)
+            nit = NGItem._new2926(it)
             for j in range(i - 1, -1, -1):
                 it = s.items[j]
                 if (it.typ == SentItemType.VERB): 
@@ -68,9 +70,9 @@ class NGSegment:
             comma = False
             and0_ = False
             or0_ = False
-            first_pass3933 = True
+            first_pass3441 = True
             while True:
-                if first_pass3933: first_pass3933 = False
+                if first_pass3441: first_pass3441 = False
                 else: i += 1
                 if (not (i < len(s.items))): break
                 it = s.items[i]
@@ -93,7 +95,7 @@ class NGSegment:
                                 seg.items[len(seg.items) - 1].or_after = True
                     continue
                 if (it.can_be_noun or it.typ == SentItemType.ADVERB): 
-                    nit = NGItem._new2923(it, comma, and0_, or0_)
+                    nit = NGItem._new2927(it, comma, and0_, or0_)
                     seg.items.append(nit)
                     comma = False
                     and0_ = False
@@ -115,7 +117,6 @@ class NGSegment:
         return res
     
     def create_links(self, after_part : bool=False) -> None:
-        """ А это создание вариантов связей между элементами """
         i = 0
         while i < len(self.items): 
             self.items[i].order = i
@@ -123,9 +124,9 @@ class NGSegment:
             i += 1
         li = None
         i = 0
-        first_pass3934 = True
+        first_pass3442 = True
         while True:
-            if first_pass3934: first_pass3934 = False
+            if first_pass3442: first_pass3442 = False
             else: i += 1
             if (not (i < len(self.items))): break
             it = self.items[i]
@@ -325,9 +326,9 @@ class NGSegment:
                     ok = True
                     li = (None)
         i = 1
-        first_pass3935 = True
+        first_pass3443 = True
         while True:
-            if first_pass3935: first_pass3935 = False
+            if first_pass3443: first_pass3443 = False
             else: i += 1
             if (not (i < len(self.items))): break
             it = self.items[i]
@@ -338,7 +339,7 @@ class NGSegment:
                 continue
             if (len(it0.links) > 0): 
                 continue
-            li = NGLink._new2924(NGLinkType.GENETIVE, it0, it, True)
+            li = NGLink._new2928(NGLinkType.GENETIVE, it0, it, True)
             li.calc_coef(True)
             if (li.coef > 0): 
                 it0.links.append(li)
@@ -352,7 +353,7 @@ class NGSegment:
         var = None
         for kkk in range(1000):
             if (var is None): 
-                var = NGSegmentVariant._new2925(self)
+                var = NGSegmentVariant._new2929(self)
             else: 
                 var.links.clear()
             i = 0
@@ -370,6 +371,7 @@ class NGSegment:
                 if (len(self.variants) > (max_count * 5)): 
                     NGSegment.__sort_vars(self.variants)
                     del self.variants[max_count:max_count+len(self.variants) - max_count]
+            j = 0
             for j in range(len(self.items) - 1, -1, -1):
                 it = self.items[j]
                 it.ind += 1

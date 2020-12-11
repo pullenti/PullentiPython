@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -66,7 +68,7 @@ class NamedEntityReferent(Referent):
             return NamedEntityKind.UNDEFINED
         try: 
             return Utils.valToEnum(str0_, NamedEntityKind)
-        except Exception as ex1762: 
+        except Exception as ex1766: 
             pass
         return NamedEntityKind.UNDEFINED
     @kind.setter
@@ -176,7 +178,7 @@ class NamedEntityReferent(Referent):
         return oi
     
     @staticmethod
-    def _new1761(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
+    def _new1765(_arg1 : 'NamedEntityKind') -> 'NamedEntityReferent':
         res = NamedEntityReferent()
         res.kind = _arg1
         return res

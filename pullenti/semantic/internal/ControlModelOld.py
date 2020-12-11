@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -47,10 +49,11 @@ class ControlModelOld:
     def check_next(self, prep : str, cas : 'MorphCase') -> bool:
         if (self.nexts is None): 
             return False
-        wrapcas02906 = RefOutArgWrapper(None)
-        inoutres2907 = Utils.tryGetValue(self.nexts, Utils.ifNotNull(prep, ""), wrapcas02906)
-        cas0 = wrapcas02906.value
-        if (not inoutres2907): 
+        cas0 = None
+        wrapcas02910 = RefOutArgWrapper(None)
+        inoutres2911 = Utils.tryGetValue(self.nexts, Utils.ifNotNull(prep, ""), wrapcas02910)
+        cas0 = wrapcas02910.value
+        if (not inoutres2911): 
             return False
         return not ((cas0) & cas).is_undefined
     

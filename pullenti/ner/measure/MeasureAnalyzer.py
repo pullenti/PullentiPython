@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import threading
@@ -88,9 +90,9 @@ class MeasureAnalyzer(Analyzer):
                     if (s.type_name == UnitReferent.ATTR_NAME or s.type_name == UnitReferent.ATTR_FULLNAME): 
                         addunits.add(Termin._new100(Utils.asObjectOrNull(s.value, str), uu))
         t = kit.first_token
-        first_pass3801 = True
+        first_pass3309 = True
         while True:
-            if first_pass3801: first_pass3801 = False
+            if first_pass3309: first_pass3309 = False
             else: t = t.next0_
             if (not (t is not None)): break
             mt = MeasureToken.try_parse_minimal(t, addunits, False)

@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -150,26 +152,26 @@ class CharsInfo:
         return val1 != val2
     
     @staticmethod
-    def _new2360(_arg1 : bool) -> 'CharsInfo':
+    def _new2364(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_capital_upper = _arg1
         return res
     
     @staticmethod
-    def _new2541(_arg1 : bool) -> 'CharsInfo':
+    def _new2545(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_cyrillic_letter = _arg1
         return res
     
     @staticmethod
-    def _new2547(_arg1 : bool, _arg2 : bool) -> 'CharsInfo':
+    def _new2551(_arg1 : bool, _arg2 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_cyrillic_letter = _arg1
         res.is_capital_upper = _arg2
         return res
     
     @staticmethod
-    def _new2552(_arg1 : bool, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'CharsInfo':
+    def _new2556(_arg1 : bool, _arg2 : bool, _arg3 : bool, _arg4 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_capital_upper = _arg1
         res.is_cyrillic_letter = _arg2
@@ -178,13 +180,13 @@ class CharsInfo:
         return res
     
     @staticmethod
-    def _new2557(_arg1 : int) -> 'CharsInfo':
+    def _new2561(_arg1 : int) -> 'CharsInfo':
         res = CharsInfo()
         res.value = _arg1
         return res
     
     @staticmethod
-    def _new2576(_arg1 : bool) -> 'CharsInfo':
+    def _new2580(_arg1 : bool) -> 'CharsInfo':
         res = CharsInfo()
         res.is_latin_letter = _arg1
         return res

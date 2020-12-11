@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -143,18 +145,13 @@ class RusLatAccord:
     
     @staticmethod
     def get_variants(rus_or_lat : str) -> typing.List[str]:
-        """ Сформировать всевозможные варианты написаний на другой раскладке
-        
-        Args:
-            rus_or_lat(str): слово на кириллице или латинице
-        
-        """
         res = list()
         if (Utils.isNullOrEmpty(rus_or_lat)): 
             return res
         rus_or_lat = rus_or_lat.upper()
         is_rus = LanguageHelper.is_cyrillic_char(rus_or_lat[0])
         stack = list()
+        i = 0
         i = 0
         while i < len(rus_or_lat): 
             li = list()
@@ -257,14 +254,6 @@ class RusLatAccord:
     
     @staticmethod
     def find_accords_rus_to_lat(txt : str, pos : int, res : typing.List[str]) -> int:
-        """ Вернёт длину привязки
-        
-        Args:
-            txt(str): 
-            pos(int): 
-            res(typing.List[str]): 
-        
-        """
         if (pos >= len(txt)): 
             return 0
         ch0 = txt[pos]
@@ -289,6 +278,8 @@ class RusLatAccord:
     def find_accords_lat_to_rus(txt : str, pos : int, res : typing.List[str]) -> int:
         if (pos >= len(txt)): 
             return 0
+        i = 0
+        j = 0
         max_len = 0
         for a in RusLatAccord.__get_accords(): 
             if (a.lat_to_rus and len(a.lat) >= max_len): 

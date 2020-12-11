@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
@@ -126,6 +128,7 @@ class NumberExToken(NumberToken):
         from pullenti.ner.core.internal.NumberExHelper import NumberExHelper
         if (ty2 != NumberExType.UNDEFINED): 
             return "{0}/{1}".format(NumberExToken.ex_typ_to_string(ty, NumberExType.UNDEFINED), NumberExToken.ex_typ_to_string(ty2, NumberExType.UNDEFINED))
+        res = None
         wrapres500 = RefOutArgWrapper(None)
         inoutres501 = Utils.tryGetValue(NumberExHelper._m_normals_typs, ty, wrapres500)
         res = wrapres500.value

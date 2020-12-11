@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -28,7 +30,7 @@ class BracketHelper:
         def __init__(self, t : 'Token') -> None:
             from pullenti.ner.TextToken import TextToken
             self.source = None;
-            self.char0_ = None;
+            self.char0_ = '\x00'
             self.can_be_open = False
             self.can_be_close = False
             self.source = t
@@ -206,9 +208,9 @@ class BracketHelper:
         is_assim = br_list[0].char0_ != '«' and BracketHelper.M_ASSYMOPEN_CHARS.find(br_list[0].char0_) >= 0
         gen_case = False
         t = t0.next0_
-        first_pass3550 = True
+        first_pass3057 = True
         while True:
-            if first_pass3550: first_pass3550 = False
+            if first_pass3057: first_pass3057 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -400,9 +402,9 @@ class BracketHelper:
                         t = t.next0_
                 lev1 = 0
                 tt = br_list[0].source.previous
-                first_pass3551 = True
+                first_pass3058 = True
                 while True:
-                    if first_pass3551: first_pass3551 = False
+                    if first_pass3058: first_pass3058 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.is_newline_after or tt.is_table_control_char): 
@@ -442,9 +444,9 @@ class BracketHelper:
         if (res is None): 
             cou = 0
             tt = t0.next0_
-            first_pass3552 = True
+            first_pass3059 = True
             while True:
-                if first_pass3552: first_pass3552 = False
+                if first_pass3059: first_pass3059 = False
                 else: tt = tt.next0_; cou += 1
                 if (not (tt is not None)): break
                 if (tt.is_table_control_char): 

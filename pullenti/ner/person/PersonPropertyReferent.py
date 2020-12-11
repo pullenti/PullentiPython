@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -185,9 +187,9 @@ class PersonPropertyReferent(Referent):
             eq = False
             noeq = False
             i = 0
-            first_pass3877 = True
+            first_pass3385 = True
             while True:
-                if first_pass3877: first_pass3877 = False
+                if first_pass3385: first_pass3385 = False
                 else: i += 1
                 if (not (i < len(refs1))): break
                 if (refs1[i] in refs2): 
@@ -202,9 +204,9 @@ class PersonPropertyReferent(Referent):
                                 eq = True
                                 break
             i = 0
-            first_pass3878 = True
+            first_pass3386 = True
             while True:
-                if first_pass3878: first_pass3878 = False
+                if first_pass3386: first_pass3386 = False
                 else: i += 1
                 if (not (i < len(refs2))): break
                 if (refs2[i] in refs1): 
@@ -309,7 +311,7 @@ class PersonPropertyReferent(Referent):
         return False
     
     @staticmethod
-    def _new2442(_arg1 : str) -> 'PersonPropertyReferent':
+    def _new2446(_arg1 : str) -> 'PersonPropertyReferent':
         res = PersonPropertyReferent()
         res.name = _arg1
         return res

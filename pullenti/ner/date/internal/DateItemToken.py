@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import datetime
 import typing
@@ -139,13 +141,6 @@ class DateItemToken(MetaToken):
     
     @staticmethod
     def try_attach(t : 'Token', prev : typing.List['DateItemToken'], detail_regime : bool=False) -> 'DateItemToken':
-        """ Привязать с указанной позиции один примитив
-        
-        Args:
-            cnt: 
-            indFrom: 
-        
-        """
         if (t is None): 
             return None
         t0 = t
@@ -250,6 +245,7 @@ class DateItemToken(MetaToken):
                         return None
             if (NumberHelper.try_parse_age(nt) is not None): 
                 return None
+            tt = None
             res = DateItemToken._new628(begin, end, DateItemToken.DateItemType.NUMBER, nt.int_value, nt.morph)
             if ((res.int_value == 20 and (isinstance(nt.next0_, NumberToken)) and nt.next0_.int_value is not None) and nt.next0_.length_char == 2 and prev is not None): 
                 num = 2000 + nt.next0_.int_value
@@ -288,9 +284,9 @@ class DateItemToken(MetaToken):
                         if (tt is not None and tt.is_char('.')): 
                             res.end_token = tt
                             tt = tt.next0_
-                first_pass3565 = True
+                first_pass3072 = True
                 while True:
-                    if first_pass3565: first_pass3565 = False
+                    if first_pass3072: first_pass3072 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_value("УТРО", "РАНОК")): 
@@ -503,9 +499,9 @@ class DateItemToken(MetaToken):
                         return None
                 cou = 0
                 tt = t.previous
-                first_pass3566 = True
+                first_pass3073 = True
                 while True:
-                    if first_pass3566: first_pass3566 = False
+                    if first_pass3073: first_pass3073 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (cou > 200): 
@@ -702,15 +698,6 @@ class DateItemToken(MetaToken):
     
     @staticmethod
     def try_attach_list(t : 'Token', max_count : int=20) -> typing.List['DateItemToken']:
-        """ Привязать примитивы в контейнере с указанной позиции
-        
-        Args:
-            cnt: 
-            indFrom: 
-        
-        Returns:
-            typing.List[DateItemToken]: Список примитивов
-        """
         p = DateItemToken.try_attach(t, None, False)
         if (p is None): 
             return None

@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import math
 import io
@@ -54,9 +56,9 @@ class AutoannoSentToken(MetaToken):
     def create_annotation(kit_ : 'AnalysisKit', max_sents : int) -> 'KeywordReferent':
         sents = list()
         t = kit_.first_token
-        first_pass3783 = True
+        first_pass3291 = True
         while True:
-            if first_pass3783: first_pass3783 = False
+            if first_pass3291: first_pass3291 = False
             else: t = t.next0_
             if (not (t is not None)): break
             sent = AutoannoSentToken.__try_parse(t)
@@ -92,6 +94,6 @@ class AutoannoSentToken(MetaToken):
             if (tmp.tell() > 0): 
                 print(' ', end="", file=tmp)
             print(s.value, end="", file=tmp)
-            ano.occurrence.append(TextAnnotation._new1590(s.begin_char, s.end_char, ano, kit_.sofa))
+            ano.occurrence.append(TextAnnotation._new1594(s.begin_char, s.end_char, ano, kit_.sofa))
         ano.add_slot(KeywordReferent.ATTR_VALUE, Utils.toStringStringIO(tmp), True, 0)
         return ano

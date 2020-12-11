@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -76,9 +78,9 @@ class NamedEntityAnalyzer(Analyzer):
     def process(self, kit : 'AnalysisKit') -> None:
         ad = Utils.asObjectOrNull(kit.get_analyzer_data(self), AnalyzerDataWithOntology)
         t = kit.first_token
-        first_pass3803 = True
+        first_pass3311 = True
         while True:
-            if first_pass3803: first_pass3803 = False
+            if first_pass3311: first_pass3311 = False
             else: t = t.next0_
             if (not (t is not None)): break
             li = NamedItemToken.try_parse_list(t, ad.local_ontology)
@@ -124,6 +126,7 @@ class NamedEntityAnalyzer(Analyzer):
         re = None
         nams = None
         ki = NamedEntityKind.UNDEFINED
+        i = 0
         i = 0
         while i < len(toks): 
             if (toks[i].type_value is not None): 
@@ -174,7 +177,7 @@ class NamedEntityAnalyzer(Analyzer):
                 ok = True
         if (not ok or ki == NamedEntityKind.UNDEFINED): 
             return None
-        nam = NamedEntityReferent._new1761(ki)
+        nam = NamedEntityReferent._new1765(ki)
         if (typ is not None): 
             nam.add_slot(NamedEntityReferent.ATTR_TYPE, typ.type_value.lower(), False, 0)
         if (nams is not None): 

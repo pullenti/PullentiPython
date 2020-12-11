@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import math
@@ -67,6 +69,7 @@ class TitleNameToken(MetaToken):
     
     @staticmethod
     def can_be_start_of_text_or_content(begin : 'Token', end : 'Token') -> bool:
+        t = None
         if (begin.is_value("СОДЕРЖАНИЕ", "ЗМІСТ") or begin.is_value("ОГЛАВЛЕНИЕ", None) or begin.is_value("СОДЕРЖИМОЕ", None)): 
             t = begin
             if (t.next0_ is not None and t.next0_.is_char_of(":.")): 
@@ -110,9 +113,9 @@ class TitleNameToken(MetaToken):
         tstart = self.begin_token
         tend = self.end_token
         t = self.begin_token
-        first_pass3888 = True
+        first_pass3396 = True
         while True:
-            if first_pass3888: first_pass3888 = False
+            if first_pass3396: first_pass3396 = False
             else: t = t.next0_
             if (not (t != self.end_token.next0_ and t is not None and t.end_char <= self.end_token.end_char)): break
             if (t.is_newline_before): 

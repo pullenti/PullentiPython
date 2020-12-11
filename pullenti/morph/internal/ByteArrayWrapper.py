@@ -1,6 +1,9 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
+from pullenti.unisharp.Streams import Stream
 
 class ByteArrayWrapper:
     # Сделан специально для Питона - а то стандартым способом через Memory Stream
@@ -10,7 +13,7 @@ class ByteArrayWrapper:
         self.m_array = None;
         self.__m_len = 0
         self.m_array = arr
-        self.__m_len = (len(self.m_array))
+        self.__m_len = len(self.m_array)
     
     def iseof(self, pos : int) -> bool:
         return pos >= self.__m_len
@@ -18,9 +21,9 @@ class ByteArrayWrapper:
     def deserialize_byte(self, pos : int) -> int:
         if (pos.value >= self.__m_len): 
             return 0
-        retVal3470 = self.m_array[pos.value]
+        retVal2977 = self.m_array[pos.value]
         pos.value += 1
-        return retVal3470
+        return retVal2977
     
     def deserialize_short(self, pos : int) -> int:
         if ((pos.value + 1) >= self.__m_len): 

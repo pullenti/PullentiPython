@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -118,6 +120,7 @@ class TerminCollection:
             ch = ord(key[i])
             if (nod.children is None): 
                 nod.children = dict()
+            nn = None
             wrapnn578 = RefOutArgWrapper(None)
             inoutres579 = Utils.tryGetValue(nod.children, ch, wrapnn578)
             nn = wrapnn578.value
@@ -140,6 +143,7 @@ class TerminCollection:
             ch = ord(key[i])
             if (nod.children is None): 
                 return
+            nn = None
             wrapnn580 = RefOutArgWrapper(None)
             inoutres581 = Utils.tryGetValue(nod.children, ch, wrapnn580)
             nn = wrapnn580.value
@@ -171,6 +175,7 @@ class TerminCollection:
                         res = None
                         for t in nod.termins: 
                             if (len(t.terms) == len(pp)): 
+                                k = 0
                                 k = 1
                                 while k < len(pp): 
                                     if (not pp[k] in t.terms[k].variants): 
@@ -311,6 +316,7 @@ class TerminCollection:
                     if (nod.children is None): 
                         no_vars = True
                         break
+                    nn = None
                     wrapnn585 = RefOutArgWrapper(None)
                     inoutres586 = Utils.tryGetValue(nod.children, ch, wrapnn585)
                     nn = wrapnn585.value
@@ -326,9 +332,9 @@ class TerminCollection:
                 if (inoutres592): 
                     was_vars = True
                 i = 0
-                first_pass3562 = True
+                first_pass3069 = True
                 while True:
-                    if first_pass3562: first_pass3562 = False
+                    if first_pass3069: first_pass3069 = False
                     else: i += 1
                     if (not (i < tt.morph.items_count)): break
                     if ((((pars) & (TerminParseAttr.TERMONLY))) != (TerminParseAttr.NO)): 
@@ -339,6 +345,7 @@ class TerminCollection:
                     if ((((pars) & (TerminParseAttr.INDICTIONARYONLY))) != (TerminParseAttr.NO)): 
                         if (not wf.is_in_dictionary): 
                             continue
+                    j = 0
                     ok = True
                     if (wf.normal_case is None or wf.normal_case == s): 
                         ok = False
@@ -425,6 +432,7 @@ class TerminCollection:
             ch = ord(v[i])
             if (nod.children is None): 
                 return False
+            nn = None
             wrapnn597 = RefOutArgWrapper(None)
             inoutres598 = Utils.tryGetValue(nod.children, ch, wrapnn597)
             nn = wrapnn597.value
@@ -447,6 +455,7 @@ class TerminCollection:
                     res.value.append(ar)
                 elif (ar.tokens_count == res.value[0].tokens_count): 
                     j = 0
+                    j = 0
                     while j < len(res.value): 
                         if (res.value[j].termin == ar.termin): 
                             break
@@ -466,6 +475,7 @@ class TerminCollection:
                         res.value.clear()
                         res.value.append(ar)
                     elif (ar.tokens_count == res.value[0].tokens_count): 
+                        j = 0
                         j = 0
                         while j < len(res.value): 
                             if (res.value[j].termin == ar.termin): 

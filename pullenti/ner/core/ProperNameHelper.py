@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -38,16 +40,6 @@ class ProperNameHelper:
     
     @staticmethod
     def __get_name_without_brackets(begin : 'Token', end : 'Token', normalize_first_noun_group : bool=False, normal_first_group_single : bool=False, ignore_geo_referent : bool=False) -> str:
-        """ Получить строковое значение между токенами, при этом исключая кавычки и скобки
-        
-        Args:
-            begin(Token): начальный токен
-            end(Token): конечный токен
-            normalize_first_noun_group(bool): нормализовывать ли первую именную группу (именит. падеж)
-            normal_first_group_single(bool): приводить ли к единственному числу первую именную группу
-            ignore_geo_referent(bool): игнорировать внутри географические сущности
-        
-        """
         res = None
         if (BracketHelper.can_be_start_of_sequence(begin, False, False) and BracketHelper.can_be_end_of_sequence(end, False, begin, False)): 
             begin = begin.next0_
@@ -108,13 +100,6 @@ class ProperNameHelper:
     
     @staticmethod
     def __get_name(begin : 'Token', end : 'Token') -> str:
-        """ Получить строковое значение между токенами без нормализации первой группы, всё в верхнем регистре.
-        
-        Args:
-            begin(Token): 
-            end(Token): 
-        
-        """
         res = ProperNameHelper.get_name_ex(begin, end, MorphClass.UNDEFINED, MorphCase.UNDEFINED, MorphGender.UNDEFINED, False, False)
         return res
     
@@ -127,9 +112,9 @@ class ProperNameHelper:
         res = io.StringIO()
         prefix = None
         t = begin
-        first_pass3557 = True
+        first_pass3064 = True
         while True:
-            if first_pass3557: first_pass3557 = False
+            if first_pass3064: first_pass3064 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             if (res.tell() > 1000): 

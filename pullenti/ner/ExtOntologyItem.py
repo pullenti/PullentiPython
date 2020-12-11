@@ -1,8 +1,10 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
-import io
 from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 from pullenti.ner.ProcessorService import ProcessorService
@@ -31,7 +33,7 @@ class ExtOntologyItem:
                     res = (res + "; " + str1)
             return res
     
-    def _serialize(self, stream : io.IOBase) -> None:
+    def _serialize(self, stream : Stream) -> None:
         SerializerHelper.serialize_string(stream, (None if self.ext_id is None else str(self.ext_id)))
         SerializerHelper.serialize_string(stream, self.__m_caption)
         if (self._refs is None): 
@@ -50,7 +52,7 @@ class ExtOntologyItem:
         SerializerHelper.serialize_string(stream, self.type_name)
         self.referent.serialize(stream)
     
-    def _deserialize(self, stream : io.IOBase) -> None:
+    def _deserialize(self, stream : Stream) -> None:
         self.ext_id = (SerializerHelper.deserialize_string(stream))
         self.__m_caption = SerializerHelper.deserialize_string(stream)
         cou = SerializerHelper.deserialize_int(stream)
@@ -67,7 +69,7 @@ class ExtOntologyItem:
         self.referent.deserialize(stream, self._refs, None)
     
     @staticmethod
-    def _new2803(_arg1 : object, _arg2 : 'Referent', _arg3 : str) -> 'ExtOntologyItem':
+    def _new2807(_arg1 : object, _arg2 : 'Referent', _arg3 : str) -> 'ExtOntologyItem':
         res = ExtOntologyItem()
         res.ext_id = _arg1
         res.referent = _arg2

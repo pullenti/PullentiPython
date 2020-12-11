@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -55,9 +57,9 @@ class VerbPhraseHelper:
         has_verb = False
         verb_be_before = False
         prep = None
-        first_pass3563 = True
+        first_pass3070 = True
         while True:
-            if first_pass3563: first_pass3563 = False
+            if first_pass3070: first_pass3070 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (not (isinstance(t, TextToken))): 

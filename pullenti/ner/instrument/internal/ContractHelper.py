@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 
 from pullenti.ner.TextToken import TextToken
@@ -12,12 +14,7 @@ class ContractHelper:
     
     @staticmethod
     def correct_dummy_newlines(fr : 'FragToken') -> None:
-        """ Объединение абзацев в один фрагмент, если переход на новую строку
-        является сомнительным (для договоров обычно кривые документы)
-        
-        Args:
-            fr(FragToken): 
-        """
+        i = 0
         i = 0
         while i < len(fr.children): 
             ch = fr.children[i]
@@ -27,6 +24,7 @@ class ContractHelper:
                 break
             i += 1
         if ((i < len(fr.children)) and fr.children[i].kind == InstrumentKind.INDENTION): 
+            j = 0
             j = (i + 1)
             while j < len(fr.children): 
                 if (fr.children[j].kind != InstrumentKind.INDENTION): 

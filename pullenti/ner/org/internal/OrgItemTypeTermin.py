@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import xml.etree
 import typing
@@ -75,14 +77,14 @@ class OrgItemTypeTermin(Termin):
     @staticmethod
     def deserialize_src(xml0_ : xml.etree.ElementTree.Element, set0_ : 'OrgItemTypeTermin') -> typing.List['OrgItemTypeTermin']:
         res = list()
-        is_set = xml0_.tag == "set"
+        is_set = Utils.getXmlLocalName(xml0_) == "set"
         if (is_set): 
             set0_ = OrgItemTypeTermin(None)
             res.append(set0_)
         if (xml0_.attrib is None): 
             return res
         for a in xml0_.attrib.items(): 
-            nam = a[0]
+            nam = Utils.getXmlAttrLocalName(a)
             if (not nam.startswith("name")): 
                 continue
             lang_ = MorphLang.RU
@@ -101,7 +103,7 @@ class OrgItemTypeTermin(Termin):
                     else: 
                         it.add_variant(s, False)
         for a in xml0_.attrib.items(): 
-            nam = a[0]
+            nam = Utils.getXmlAttrLocalName(a)
             if (nam.startswith("name")): 
                 continue
             if (nam.startswith("abbr")): 
@@ -151,11 +153,11 @@ class OrgItemTypeTermin(Termin):
                 for r in res: 
                     r.can_has_number = a[1] == "true"
                 continue
-            raise Utils.newException("Unknown Org Type Tag: " + a[0], None)
+            raise Utils.newException("Unknown Org Type Tag: " + Utils.getXmlAttrName(a), None)
         return res
     
     @staticmethod
-    def _new1827(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgProfile', _arg4 : float, _arg5 : 'OrgItemTypeTyp', _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
+    def _new1831(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgProfile', _arg4 : float, _arg5 : 'OrgItemTypeTyp', _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2, _arg3)
         res.coeff = _arg4
         res.typ = _arg5
@@ -164,7 +166,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1830(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : 'OrgProfile', _arg4 : float) -> 'OrgItemTypeTermin':
+    def _new1834(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : 'OrgProfile', _arg4 : float) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res._profile = _arg3
@@ -172,7 +174,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1831(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile', _arg5 : float) -> 'OrgItemTypeTermin':
+    def _new1835(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile', _arg5 : float) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res._profile = _arg4
@@ -180,7 +182,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1832(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : 'OrgProfile', _arg4 : float, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1836(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : 'OrgProfile', _arg4 : float, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res._profile = _arg3
@@ -189,7 +191,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1835(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1839(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -197,7 +199,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1836(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile', _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1840(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile', _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -206,7 +208,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1837(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1841(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.coeff = _arg3
         res.typ = _arg4
@@ -214,7 +216,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1838(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new1842(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -222,7 +224,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1839(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1843(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -231,7 +233,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1843(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1847(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -240,7 +242,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1845(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new1849(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -250,14 +252,14 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1846(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp') -> 'OrgItemTypeTermin':
+    def _new1850(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new1848(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new1852(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -265,7 +267,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1851(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1855(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -274,7 +276,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1853(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1857(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -284,7 +286,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1855(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1859(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -294,7 +296,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1856(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1860(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -303,7 +305,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1857(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1861(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -313,7 +315,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1859(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1863(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -324,7 +326,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1866(_arg1 : str, _arg2 : float, _arg3 : str, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1870(_arg1 : str, _arg2 : float, _arg3 : str, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.acronym = _arg3
@@ -334,7 +336,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1867(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1871(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -343,7 +345,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1868(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1872(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -352,7 +354,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1871(_arg1 : str, _arg2 : float, _arg3 : 'MorphLang', _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1875(_arg1 : str, _arg2 : float, _arg3 : 'MorphLang', _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.lang = _arg3
@@ -362,7 +364,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1880(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile', _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1884(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile', _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -371,7 +373,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1881(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new1885(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -379,7 +381,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1882(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1886(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -388,7 +390,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1885(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp') -> 'OrgItemTypeTermin':
+    def _new1889(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -396,7 +398,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1890(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str, _arg4 : 'OrgProfile', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new1894(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str, _arg4 : 'OrgProfile', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.acronym = _arg3
@@ -406,7 +408,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1893(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile', _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1897(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile', _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -415,7 +417,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1894(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgProfile', _arg5 : 'OrgItemTypeTyp', _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new1898(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgProfile', _arg5 : 'OrgItemTypeTyp', _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -425,7 +427,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1897(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new1901(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -435,7 +437,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1903(_arg1 : str, _arg2 : float, _arg3 : str, _arg4 : 'OrgItemTypeTyp', _arg5 : 'OrgProfile', _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
+    def _new1907(_arg1 : str, _arg2 : float, _arg3 : str, _arg4 : 'OrgItemTypeTyp', _arg5 : 'OrgProfile', _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.acronym = _arg3
@@ -446,7 +448,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1904(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : bool, _arg8 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1908(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : bool, _arg8 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -458,7 +460,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1910(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1914(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -468,7 +470,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1918(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : 'OrgProfile', _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new1922(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : 'OrgProfile', _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -478,14 +480,14 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1922(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool) -> 'OrgItemTypeTermin':
+    def _new1926(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.is_doubt_word = _arg3
         return res
     
     @staticmethod
-    def _new1925(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool, _arg6 : 'OrgProfile', _arg7 : bool) -> 'OrgItemTypeTermin':
+    def _new1929(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool, _arg6 : 'OrgProfile', _arg7 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -496,7 +498,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1934(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : str, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1938(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : str, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -506,7 +508,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1935(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : str, _arg7 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1939(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : str, _arg7 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -517,7 +519,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1936(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new1940(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -525,7 +527,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1946(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1950(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -536,7 +538,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1947(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool, _arg8 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1951(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool, _arg8 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -548,7 +550,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1950(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : bool, _arg8 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1954(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : bool, _arg8 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -560,7 +562,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1951(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool, _arg8 : bool) -> 'OrgItemTypeTermin':
+    def _new1955(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool, _arg8 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -572,7 +574,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1955(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1959(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -581,7 +583,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1956(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1960(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -590,7 +592,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1957(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new1961(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -600,7 +602,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1958(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1962(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -610,7 +612,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1959(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1963(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -621,7 +623,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1960(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new1964(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -629,7 +631,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1961(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str) -> 'OrgItemTypeTermin':
+    def _new1965(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -637,7 +639,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1963(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1967(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -646,7 +648,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1964(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : str) -> 'OrgItemTypeTermin':
+    def _new1968(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -655,7 +657,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1970(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new1974(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -665,7 +667,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1971(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
+    def _new1975(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -676,7 +678,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1974(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1978(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -685,7 +687,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1976(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : float, _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1980(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : float, _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.coeff = _arg3
@@ -694,7 +696,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1977(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : float, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new1981(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : float, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.typ = _arg3
@@ -704,7 +706,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1978(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str) -> 'OrgItemTypeTermin':
+    def _new1982(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -712,7 +714,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1979(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new1983(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -721,7 +723,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1981(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1985(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -730,7 +732,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1982(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new1986(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.coeff = _arg3
         res.typ = _arg4
@@ -739,7 +741,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1983(_arg1 : str, _arg2 : float, _arg3 : str, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new1987(_arg1 : str, _arg2 : float, _arg3 : str, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.acronym = _arg3
@@ -748,7 +750,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1984(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : str, _arg5 : 'OrgItemTypeTyp', _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new1988(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : str, _arg5 : 'OrgItemTypeTyp', _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.coeff = _arg3
         res.acronym = _arg4
@@ -757,33 +759,33 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new1989(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp') -> 'OrgItemTypeTermin':
+    def _new1993(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.coeff = _arg3
         res.typ = _arg4
         return res
     
     @staticmethod
-    def _new1994(_arg1 : str, _arg2 : 'OrgItemTypeTyp') -> 'OrgItemTypeTermin':
+    def _new1998(_arg1 : str, _arg2 : 'OrgItemTypeTyp') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         return res
     
     @staticmethod
-    def _new1995(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp') -> 'OrgItemTypeTermin':
+    def _new1999(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new1997(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new2001(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.is_doubt_word = _arg4
         return res
     
     @staticmethod
-    def _new2002(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new2006(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.is_doubt_word = _arg3
@@ -791,7 +793,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2003(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new2007(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.is_doubt_word = _arg4
@@ -799,7 +801,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2004(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : float, _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new2008(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : float, _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.coeff = _arg3
@@ -808,7 +810,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2006(_arg1 : str, _arg2 : str, _arg3 : 'OrgItemTypeTyp', _arg4 : float, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2010(_arg1 : str, _arg2 : str, _arg3 : 'OrgItemTypeTyp', _arg4 : float, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.acronym = _arg2
         res.typ = _arg3
@@ -818,7 +820,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2007(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : float, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2011(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : float, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.coeff = _arg4
@@ -827,7 +829,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2008(_arg1 : str, _arg2 : str, _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new2012(_arg1 : str, _arg2 : str, _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.acronym = _arg2
         res.typ = _arg3
@@ -835,7 +837,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2010(_arg1 : str, _arg2 : 'MorphLang', _arg3 : str, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new2014(_arg1 : str, _arg2 : 'MorphLang', _arg3 : str, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.acronym = _arg3
         res.typ = _arg4
@@ -843,21 +845,21 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2015(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool) -> 'OrgItemTypeTermin':
+    def _new2019(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.can_be_normal_dep = _arg3
         return res
     
     @staticmethod
-    def _new2016(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new2020(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.can_be_normal_dep = _arg4
         return res
     
     @staticmethod
-    def _new2022(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new2026(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.can_be_normal_dep = _arg3
@@ -865,7 +867,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2023(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new2027(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.can_be_normal_dep = _arg4
@@ -873,7 +875,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2027(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new2031(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.can_has_number = _arg3
@@ -881,7 +883,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2028(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2032(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.can_has_number = _arg3
@@ -891,7 +893,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2029(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
+    def _new2033(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.can_has_number = _arg4
@@ -901,21 +903,21 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2036(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool) -> 'OrgItemTypeTermin':
+    def _new2040(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.can_has_number = _arg3
         return res
     
     @staticmethod
-    def _new2037(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new2041(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.can_has_number = _arg4
         return res
     
     @staticmethod
-    def _new2038(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : 'OrgProfile', _arg4 : str) -> 'OrgItemTypeTermin':
+    def _new2042(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : 'OrgProfile', _arg4 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res._profile = _arg3
@@ -923,7 +925,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2039(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile', _arg5 : str) -> 'OrgItemTypeTermin':
+    def _new2043(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : 'OrgProfile', _arg5 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res._profile = _arg4
@@ -931,7 +933,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2044(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str, _arg4 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new2048(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str, _arg4 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.acronym = _arg3
@@ -939,7 +941,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2045(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new2049(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.acronym = _arg4
@@ -947,28 +949,28 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2049(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new2053(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res._profile = _arg3
         return res
     
     @staticmethod
-    def _new2066(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str) -> 'OrgItemTypeTermin':
+    def _new2070(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.acronym = _arg3
         return res
     
     @staticmethod
-    def _new2068(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : str) -> 'OrgItemTypeTermin':
+    def _new2072(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.acronym = _arg4
         return res
     
     @staticmethod
-    def _new2158(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str, _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new2162(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str, _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.acronym = _arg3
@@ -977,7 +979,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2159(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str, _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new2163(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str, _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.acronym = _arg3
@@ -985,7 +987,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2160(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : str) -> 'OrgItemTypeTermin':
+    def _new2164(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.can_has_latin_name = _arg3
@@ -993,7 +995,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2161(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : str) -> 'OrgItemTypeTermin':
+    def _new2165(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.can_has_latin_name = _arg4
@@ -1001,14 +1003,14 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2164(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool) -> 'OrgItemTypeTermin':
+    def _new2168(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.can_has_latin_name = _arg3
         return res
     
     @staticmethod
-    def _new2166(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : str, _arg5 : str) -> 'OrgItemTypeTermin':
+    def _new2170(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : str, _arg5 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.can_has_latin_name = _arg3
@@ -1017,7 +1019,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2177(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : str, _arg6 : str) -> 'OrgItemTypeTermin':
+    def _new2181(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : str, _arg6 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.can_has_latin_name = _arg4
@@ -1026,7 +1028,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2195(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str, _arg4 : str) -> 'OrgItemTypeTermin':
+    def _new2199(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str, _arg4 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.acronym = _arg3
@@ -1034,14 +1036,14 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2203(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new2207(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.can_has_latin_name = _arg4
         return res
     
     @staticmethod
-    def _new2209(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new2213(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.acronym = _arg4
@@ -1049,7 +1051,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2212(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool, _arg5 : str) -> 'OrgItemTypeTermin':
+    def _new2216(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool, _arg5 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.can_has_latin_name = _arg3
@@ -1058,7 +1060,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2213(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : str) -> 'OrgItemTypeTermin':
+    def _new2217(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.can_has_latin_name = _arg4
@@ -1067,7 +1069,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2218(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str, _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new2222(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : str, _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.acronym = _arg3
@@ -1076,7 +1078,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2229(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2233(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.acronym = _arg4
@@ -1085,7 +1087,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2230(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2234(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.acronym = _arg4
@@ -1094,7 +1096,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2231(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : 'OrgProfile', _arg4 : bool, _arg5 : float) -> 'OrgItemTypeTermin':
+    def _new2235(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : 'OrgProfile', _arg4 : bool, _arg5 : float) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res._profile = _arg3
@@ -1103,7 +1105,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2232(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new2236(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -1112,7 +1114,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2233(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2237(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.coeff = _arg3
         res.typ = _arg4
@@ -1121,7 +1123,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2234(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2238(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -1131,7 +1133,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2235(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
+    def _new2239(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.coeff = _arg3
         res.typ = _arg4
@@ -1141,7 +1143,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2238(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new2242(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -1150,7 +1152,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2240(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new2244(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.coeff = _arg3
         res.typ = _arg4
@@ -1159,7 +1161,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2241(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new2245(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.can_has_single_name = _arg3
@@ -1168,7 +1170,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2243(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new2247(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -1179,7 +1181,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2244(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool, _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new2248(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool, _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.can_has_single_name = _arg3
@@ -1189,7 +1191,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2245(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new2249(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool, _arg5 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.can_has_single_name = _arg3
@@ -1198,7 +1200,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2246(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2250(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.can_has_single_name = _arg4
@@ -1207,7 +1209,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2247(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : float, _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new2251(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : float, _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.coeff = _arg3
@@ -1215,7 +1217,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2248(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : float, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new2252(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : float, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.coeff = _arg4
@@ -1223,7 +1225,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2258(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new2262(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -1232,7 +1234,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2259(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2263(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.coeff = _arg3
         res.typ = _arg4
@@ -1241,7 +1243,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2260(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
+    def _new2264(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -1252,7 +1254,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2261(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : str, _arg6 : bool, _arg7 : bool, _arg8 : bool) -> 'OrgItemTypeTermin':
+    def _new2265(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : str, _arg6 : bool, _arg7 : bool, _arg8 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.coeff = _arg3
         res.typ = _arg4
@@ -1263,7 +1265,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2268(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2272(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -1273,7 +1275,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2269(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2273(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.can_has_latin_name = _arg4
@@ -1282,7 +1284,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2270(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : float, _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new2274(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : float, _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.typ = _arg3
         res.coeff = _arg4
@@ -1290,7 +1292,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2271(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgProfile', _arg4 : 'OrgItemTypeTyp', _arg5 : float, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2275(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgProfile', _arg4 : 'OrgItemTypeTyp', _arg5 : float, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2, _arg3)
         res.typ = _arg4
         res.coeff = _arg5
@@ -1298,7 +1300,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2276(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgProfile', _arg4 : 'OrgItemTypeTyp', _arg5 : float, _arg6 : bool, _arg7 : str) -> 'OrgItemTypeTermin':
+    def _new2280(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgProfile', _arg4 : 'OrgItemTypeTyp', _arg5 : float, _arg6 : bool, _arg7 : str) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2, _arg3)
         res.typ = _arg4
         res.coeff = _arg5
@@ -1307,7 +1309,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2277(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2281(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : bool, _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.can_has_latin_name = _arg3
@@ -1317,7 +1319,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2278(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
+    def _new2282(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.typ = _arg3
@@ -1328,7 +1330,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2279(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new2283(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -1339,7 +1341,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2280(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool, _arg8 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new2284(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool, _arg8 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -1351,7 +1353,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2284(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
+    def _new2288(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.lang = _arg2
         res.coeff = _arg3
@@ -1362,7 +1364,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2285(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
+    def _new2289(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : str, _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -1373,7 +1375,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2287(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
+    def _new2291(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -1384,7 +1386,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2288(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool, _arg8 : bool) -> 'OrgItemTypeTermin':
+    def _new2292(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool, _arg8 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.coeff = _arg3
         res.typ = _arg4
@@ -1395,7 +1397,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2291(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2295(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -1405,7 +1407,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2292(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
+    def _new2296(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.coeff = _arg3
         res.typ = _arg4
@@ -1415,7 +1417,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2298(_arg1 : str, _arg2 : float, _arg3 : str, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
+    def _new2302(_arg1 : str, _arg2 : float, _arg3 : str, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool, _arg7 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.acronym = _arg3
@@ -1426,7 +1428,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2303(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
+    def _new2307(_arg1 : str, _arg2 : 'MorphLang', _arg3 : float, _arg4 : 'OrgItemTypeTyp', _arg5 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2)
         res.coeff = _arg3
         res.typ = _arg4
@@ -1434,7 +1436,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2304(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
+    def _new2308(_arg1 : str, _arg2 : float, _arg3 : 'OrgItemTypeTyp', _arg4 : bool, _arg5 : bool, _arg6 : 'OrgProfile') -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.typ = _arg3
@@ -1444,7 +1446,7 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2308(_arg1 : str, _arg2 : float, _arg3 : bool, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
+    def _new2312(_arg1 : str, _arg2 : float, _arg3 : bool, _arg4 : 'OrgItemTypeTyp', _arg5 : bool, _arg6 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.coeff = _arg2
         res.can_be_normal_dep = _arg3
@@ -1454,21 +1456,21 @@ class OrgItemTypeTermin(Termin):
         return res
     
     @staticmethod
-    def _new2321(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgProfile', _arg4 : bool, _arg5 : float) -> 'OrgItemTypeTermin':
+    def _new2325(_arg1 : str, _arg2 : 'MorphLang', _arg3 : 'OrgProfile', _arg4 : bool, _arg5 : float) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1, _arg2, _arg3)
         res.can_has_latin_name = _arg4
         res.coeff = _arg5
         return res
     
     @staticmethod
-    def _new2326(_arg1 : str, _arg2 : bool, _arg3 : float) -> 'OrgItemTypeTermin':
+    def _new2330(_arg1 : str, _arg2 : bool, _arg3 : float) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.can_has_latin_name = _arg2
         res.coeff = _arg3
         return res
     
     @staticmethod
-    def _new2330(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : float, _arg4 : bool) -> 'OrgItemTypeTermin':
+    def _new2334(_arg1 : str, _arg2 : 'OrgItemTypeTyp', _arg3 : float, _arg4 : bool) -> 'OrgItemTypeTermin':
         res = OrgItemTypeTermin(_arg1)
         res.typ = _arg2
         res.coeff = _arg3

@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -41,9 +43,9 @@ class DenominationReferent(Referent):
     def _add_value(self, begin : 'Token', end : 'Token') -> None:
         tmp = io.StringIO()
         t = begin
-        first_pass3642 = True
+        first_pass3149 = True
         while True:
-            if first_pass3642: first_pass3642 = False
+            if first_pass3149: first_pass3149 = False
             else: t = t.next0_
             if (not (t is not None and t.previous != end)): break
             if (isinstance(t, NumberToken)): 
@@ -87,6 +89,7 @@ class DenominationReferent(Referent):
             return self.__m_names
         self.__m_names.append(nam)
         items = list()
+        i = 0
         ty0 = 0
         i0 = 0
         i = 0
@@ -147,9 +150,11 @@ class DenominationReferent(Referent):
     def __add_vars(str0_ : str, vars0_ : typing.List[str]) -> None:
         vars0_.append(str0_)
         for k in range(2):
+            i = 0
             tmp = io.StringIO()
             i = 0
             while i < len(str0_): 
+                v = None
                 wrapv1123 = RefOutArgWrapper(None)
                 inoutres1124 = Utils.tryGetValue(DenominationReferent.__m_var_chars, str0_[i], wrapv1123)
                 v = wrapv1123.value

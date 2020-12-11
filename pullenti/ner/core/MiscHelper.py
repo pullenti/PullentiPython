@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -101,6 +103,7 @@ class MiscHelper:
             return True
         if (len(test) == (len(pattern) - 1)): 
             i = 0
+            i = 0
             while i < len(test): 
                 if (pattern[i] != test[i]): 
                     break
@@ -115,6 +118,7 @@ class MiscHelper:
                 i += 1
             return True
         if (not tmp and (len(test) - 1) == len(pattern)): 
+            i = 0
             i = 0
             while i < len(pattern): 
                 if (pattern[i] != test[i]): 
@@ -147,6 +151,7 @@ class MiscHelper:
         if (t1 is None): 
             return None
         i = 0
+        j = 0
         while t1 is not None: 
             s = t1.term
             j = 0
@@ -437,7 +442,7 @@ class MiscHelper:
                 return None
         if (((s == "НОМЕР" or s == "№" or s == "N") or s == "NO" or s == "NN") or s == "НР"): 
             t1 = t.next0_
-            if (t1 is not None and ((t1.is_char_of("°№") or t1.is_value("О", None)))): 
+            if (t1 is not None and ((t1.is_char_of("°№") or ((t1.is_value("О", None) and not t1.is_newline_before))))): 
                 t1 = t1.next0_
             if (t1 is not None and t1.is_char('.')): 
                 t1 = t1.next0_
@@ -486,6 +491,7 @@ class MiscHelper:
             return str0_
         fstr_tmp = io.StringIO()
         print(str0_.lower(), end="", file=fstr_tmp)
+        i = 0
         up = True
         Utils.replaceStringIO(fstr_tmp, " .", ".")
         i = 0
@@ -513,6 +519,8 @@ class MiscHelper:
         """
         abbr = io.StringIO()
         i = 0
+        j = 0
+        i = 0
         while i < len(name): 
             if (str.isdigit(name[i])): 
                 break
@@ -535,6 +543,7 @@ class MiscHelper:
     @staticmethod
     def get_tail_abbreviation(name : str) -> str:
         # Получить аббревиатуру (уже не помню, какую именно...)
+        i = 0
         j = 0
         i = 0
         while i < len(name): 
@@ -654,6 +663,8 @@ class MiscHelper:
         str0_ = str0_.upper()
         res = list()
         vars0_ = list()
+        i = 0
+        j = 0
         i = 0
         while i < len(str0_): 
             v = list()
@@ -1106,9 +1117,9 @@ class MiscHelper:
         if (begin is None or begin.end_char > end.end_char): 
             return Utils.toStringStringIO(res)
         t = begin
-        first_pass3553 = True
+        first_pass3060 = True
         while True:
-            if first_pass3553: first_pass3553 = False
+            if first_pass3060: first_pass3060 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= end.end_char)): break
             last = (Utils.getCharAtStringIO(res, res.tell() - 1) if res.tell() > 0 else ' ')
@@ -1347,6 +1358,7 @@ class MiscHelper:
                     ww = MorphologyService.get_wordform(word, bi)
                     if (ww is not None): 
                         word = ww
+                ci = None
                 if (use_register_sample and t0 is not None): 
                     ci = t0.chars
                 else: 
@@ -1545,6 +1557,8 @@ class MiscHelper:
                 elif (str0_ == "стул"): 
                     year = "стульев"
         res = io.StringIO()
+        norm = None
+        val = None
         for a in npt.adjectives: 
             norm = a.get_normal_case_text(MorphClass.ADJECTIVE, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False)
             val = MorphologyService.get_wordform(norm, adj_bi)

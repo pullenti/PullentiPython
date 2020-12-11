@@ -1,9 +1,11 @@
 
 fetch:
-	wget http://www.pullenti.ru/DownloadFile.aspx?file=PullentiPython.zip -O PullentiPython.zip
-	rm -r demo pullenti
+	wget http://pullenti.ru/assets/docs/PullentiPython.zip -O PullentiPython.zip
+	rm -rf PullentiPython demo pullenti
 	unzip PullentiPython.zip
 	rm PullentiPython.zip
+	mv PullentiPython/* .
+	rmdir PullentiPython
 
 wheel:
 	python setup.py bdist_wheel

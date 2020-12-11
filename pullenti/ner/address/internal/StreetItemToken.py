@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -641,6 +643,7 @@ class StreetItemToken(MetaToken):
         if (t is None): 
             return None
         res = None
+        sit = None
         if (isinstance(t.get_referent(), DateReferent)): 
             dr = Utils.asObjectOrNull(t.get_referent(), DateReferent)
             if (not (isinstance(t.begin_token, NumberToken))): 
@@ -720,9 +723,9 @@ class StreetItemToken(MetaToken):
                 pass
             else: 
                 return None
-        first_pass3497 = True
+        first_pass3004 = True
         while True:
-            if first_pass3497: first_pass3497 = False
+            if first_pass3004: first_pass3004 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_count > 0 and len(res) >= max_count): 
@@ -795,9 +798,9 @@ class StreetItemToken(MetaToken):
                     if (not sit.is_in_dictionary): 
                         tt = sit.end_token.next0_
                         has_house = False
-                        first_pass3498 = True
+                        first_pass3005 = True
                         while True:
-                            if first_pass3498: first_pass3498 = False
+                            if first_pass3005: first_pass3005 = False
                             else: tt = tt.next0_
                             if (not (tt is not None)): break
                             if (tt.is_newline_before): 
@@ -892,6 +895,7 @@ class StreetItemToken(MetaToken):
                 res.append(sit)
                 if (sit.typ == StreetItemType.NAME): 
                     cou = 0
+                    jj = 0
                     for jj in range(len(res) - 1, -1, -1):
                         if (sit.typ == StreetItemType.NAME): 
                             cou += 1
@@ -905,9 +909,9 @@ class StreetItemToken(MetaToken):
                         break
             t = sit.end_token
         i = 0
-        first_pass3499 = True
+        first_pass3006 = True
         while True:
-            if first_pass3499: first_pass3499 = False
+            if first_pass3006: first_pass3006 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].typ == StreetItemType.NAME and res[i + 1].typ == StreetItemType.NAME and (res[i].whitespaces_after_count < 3)): 
@@ -970,9 +974,9 @@ class StreetItemToken(MetaToken):
                         break
             i += 1
         i = 0
-        first_pass3500 = True
+        first_pass3007 = True
         while True:
-            if first_pass3500: first_pass3500 = False
+            if first_pass3007: first_pass3007 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].typ == StreetItemType.NAME or res[i].typ == StreetItemType.STDNAME or res[i].typ == StreetItemType.STDADJECTIVE): 
@@ -1144,6 +1148,7 @@ class StreetItemToken(MetaToken):
             return
         StreetItemToken.__m_ontology = TerminCollection()
         StreetItemToken.__m_std_ont_misc = TerminCollection()
+        t = None
         t = Termin._new241("УЛИЦА", StreetItemType.NOUN, MorphGender.FEMINIE)
         t.add_abridge("УЛ.")
         StreetItemToken.__m_ontology.add(t)

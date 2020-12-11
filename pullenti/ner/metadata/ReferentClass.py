@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -43,7 +45,7 @@ class ReferentClass:
             up_bound(int): 
         
         """
-        res = Feature._new1743(attr_name, attr_caption, low_bound, up_bound)
+        res = Feature._new1747(attr_name, attr_caption, low_bound, up_bound)
         ind = len(self.__m_features)
         self.__m_features.append(res)
         if (not attr_name in self.__m_hash): 
@@ -59,10 +61,11 @@ class ReferentClass:
             name_(str): 
         
         """
-        wrapind1744 = RefOutArgWrapper(0)
-        inoutres1745 = Utils.tryGetValue(self.__m_hash, name_, wrapind1744)
-        ind = wrapind1744.value
-        if (not inoutres1745): 
+        ind = 0
+        wrapind1748 = RefOutArgWrapper(0)
+        inoutres1749 = Utils.tryGetValue(self.__m_hash, name_, wrapind1748)
+        ind = wrapind1748.value
+        if (not inoutres1749): 
             return None
         else: 
             return self.__m_features[ind]

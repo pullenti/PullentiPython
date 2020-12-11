@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -103,9 +105,9 @@ class OrgItemEngItem(MetaToken):
         tok = None
         geo_ = None
         add_typ = None
-        first_pass3804 = True
+        first_pass3312 = True
         while True:
-            if first_pass3804: first_pass3804 = False
+            if first_pass3312: first_pass3312 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t != t0 and t.whitespaces_before_count > 1): 
@@ -262,6 +264,7 @@ class OrgItemEngItem(MetaToken):
         if (OrgItemEngItem.__m_ontology is not None): 
             return
         OrgItemEngItem.__m_ontology = TerminCollection()
+        t = None
         t = Termin("BANK")
         OrgItemEngItem.__m_ontology.add(t)
         t = Termin._new95("Public Limited Company".upper(), "PLC")

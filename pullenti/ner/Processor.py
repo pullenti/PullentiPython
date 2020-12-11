@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import threading
 import typing
@@ -104,10 +106,11 @@ class Processor(object):
             name(str): 
         
         """
-        wrapa2834 = RefOutArgWrapper(None)
-        inoutres2835 = Utils.tryGetValue(self.__m_analyzers_hash, Utils.ifNotNull(name, ""), wrapa2834)
-        a = wrapa2834.value
-        if (not inoutres2835): 
+        a = None
+        wrapa2838 = RefOutArgWrapper(None)
+        inoutres2839 = Utils.tryGetValue(self.__m_analyzers_hash, Utils.ifNotNull(name, ""), wrapa2838)
+        a = wrapa2838.value
+        if (not inoutres2839): 
             return None
         else: 
             return a
@@ -134,7 +137,7 @@ class Processor(object):
         """
         if (ar is None): 
             return
-        kit = AnalysisKit._new2836(self, ar.ontology)
+        kit = AnalysisKit._new2840(self, ar.ontology)
         kit._init_from(ar)
         self.__process2(kit, ar, False)
         self._create_res(kit, ar, ar.ontology, False)
@@ -147,9 +150,10 @@ class Processor(object):
         self.manage_referent_links()
         if (not no_log): 
             self._on_progress_handler(self, ProgressEventArgs(0, "Морфологический анализ"))
-        kit = AnalysisKit._new2837(text, False, lang, self.__progress_changed_event_handler_on_progress_handler, ext_ontology, self, onto_regine)
+        kit = AnalysisKit._new2841(text, False, lang, self.__progress_changed_event_handler_on_progress_handler, ext_ontology, self, onto_regine)
         ar = AnalysisResult()
         sw0.stop()
+        msg = None
         self._on_progress_handler(self, ProgressEventArgs(100, "Морфологический анализ завершён"))
         k = 0
         t = kit.first_token
@@ -193,13 +197,14 @@ class Processor(object):
         return ar
     
     def __process2(self, kit : 'AnalysisKit', ar : 'AnalysisResult', no_log : bool) -> None:
+        msg = None
         sw = Stopwatch()
         stop_by_timeout = False
         anals = list(self.__m_analyzers)
         ii = 0
-        first_pass3926 = True
+        first_pass3434 = True
         while True:
-            if first_pass3926: first_pass3926 = False
+            if first_pass3434: first_pass3434 = False
             else: ii += 1
             if (not (ii < len(anals))): break
             c = anals[ii]
@@ -302,24 +307,25 @@ class Processor(object):
             self.__m_progress_peaces.clear()
             max0_ = co * 100
             max0_ /= (total)
-            self.__m_progress_peaces[self] = ProgressPeace._new2838(0, max0_)
+            self.__m_progress_peaces[self] = ProgressPeace._new2842(0, max0_)
             for wf in self.analyzers: 
                 min0_ = max0_
                 co += (wf.progress_weight if wf.progress_weight > 0 else 1)
                 max0_ = (co * 100)
                 max0_ /= (total)
                 if (not wf in self.__m_progress_peaces): 
-                    self.__m_progress_peaces[wf] = ProgressPeace._new2838(min0_, max0_)
+                    self.__m_progress_peaces[wf] = ProgressPeace._new2842(min0_, max0_)
     
     def _on_progress_handler(self, sender : object, e0_ : ProgressEventArgs) -> None:
         if (len(self.progress) == 0): 
             return
         if (e0_.progressPercentage >= 0): 
+            pi0_ = None
             with self.__m_progress_peaces_lock: 
-                wrappi2840 = RefOutArgWrapper(None)
-                inoutres2841 = Utils.tryGetValue(self.__m_progress_peaces, Utils.ifNotNull(sender, self), wrappi2840)
-                pi0_ = wrappi2840.value
-                if (inoutres2841): 
+                wrappi2844 = RefOutArgWrapper(None)
+                inoutres2845 = Utils.tryGetValue(self.__m_progress_peaces, Utils.ifNotNull(sender, self), wrappi2844)
+                pi0_ = wrappi2844.value
+                if (inoutres2845): 
                     p = ((e0_.progressPercentage) * ((pi0_.max0_ - pi0_.min0_))) / (100)
                     p += pi0_.min0_
                     pers = math.floor(p)
@@ -343,16 +349,17 @@ class Processor(object):
     def manage_referent_links(self) -> None:
         if (self.__m_refs is not None): 
             for pr in self.__m_refs: 
-                wrapr2844 = RefOutArgWrapper(None)
-                inoutres2845 = Utils.tryGetValue(self.__m_links2, pr.identity, wrapr2844)
-                r = wrapr2844.value
-                if (pr.identity is not None and self.__m_links2 is not None and inoutres2845): 
+                r = None
+                wrapr2848 = RefOutArgWrapper(None)
+                inoutres2849 = Utils.tryGetValue(self.__m_links2, pr.identity, wrapr2848)
+                r = wrapr2848.value
+                if (pr.identity is not None and self.__m_links2 is not None and inoutres2849): 
                     pr.owner_referent.upload_slot(pr.owner_slot, r)
                 else: 
-                    wrapr2842 = RefOutArgWrapper(None)
-                    inoutres2843 = Utils.tryGetValue(self.__m_links, pr.value, wrapr2842)
-                    r = wrapr2842.value
-                    if (self.__m_links is not None and inoutres2843): 
+                    wrapr2846 = RefOutArgWrapper(None)
+                    inoutres2847 = Utils.tryGetValue(self.__m_links, pr.value, wrapr2846)
+                    r = wrapr2846.value
+                    if (self.__m_links is not None and inoutres2847): 
                         pr.owner_referent.upload_slot(pr.owner_slot, r)
                     else: 
                         pass
@@ -390,21 +397,21 @@ class Processor(object):
         try: 
             res = None
             for a in self.analyzers: 
-                res = a.create_referent(xml0_.tag)
+                res = a.create_referent(Utils.getXmlName(xml0_))
                 if ((res) is not None): 
                     break
             if (res is None): 
                 return None
             for x in xml0_: 
-                if (x.tag == "#text"): 
+                if (Utils.getXmlLocalName(x) == "#text"): 
                     continue
-                nam = x.tag
+                nam = Utils.getXmlName(x)
                 if (nam.startswith("ATCOM_")): 
                     nam = ("@" + nam[6:])
                 att = Utils.getXmlAttrByName(x.attrib, "ref")
                 slot = None
                 if (att is not None and att[1] == "true"): 
-                    pr = ProxyReferent._new2846(Utils.getXmlInnerText(x), res)
+                    pr = ProxyReferent._new2850(Utils.getXmlInnerText(x), res)
                     pr.owner_slot = res.add_slot(nam, pr, False, 0)
                     slot = pr.owner_slot
                     att = Utils.getXmlAttrByName(x.attrib, "id")
@@ -417,10 +424,11 @@ class Processor(object):
                     slot = res.add_slot(nam, Utils.getXmlInnerText(x), False, 0)
                 att = Utils.getXmlAttrByName(x.attrib, "count")
                 if ((att) is not None): 
-                    wrapcou2847 = RefOutArgWrapper(0)
-                    inoutres2848 = Utils.tryParseInt(att[1], wrapcou2847)
-                    cou = wrapcou2847.value
-                    if (inoutres2848): 
+                    cou = 0
+                    wrapcou2851 = RefOutArgWrapper(0)
+                    inoutres2852 = Utils.tryParseInt(att[1], wrapcou2851)
+                    cou = wrapcou2851.value
+                    if (inoutres2852): 
                         slot.count = cou
             if (self.__m_links is None): 
                 self.__m_links = dict()

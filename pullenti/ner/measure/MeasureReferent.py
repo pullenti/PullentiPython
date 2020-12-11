@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -59,10 +61,11 @@ class MeasureReferent(Referent):
         res = list()
         for s in self.slots: 
             if (s.type_name == MeasureReferent.ATTR_VALUE and (isinstance(s.value, str))): 
-                wrapd1740 = RefOutArgWrapper(0)
-                inoutres1741 = MeasureHelper.try_parse_double(Utils.asObjectOrNull(s.value, str), wrapd1740)
-                d = wrapd1740.value
-                if (inoutres1741): 
+                d = 0
+                wrapd1744 = RefOutArgWrapper(0)
+                inoutres1745 = MeasureHelper.try_parse_double(Utils.asObjectOrNull(s.value, str), wrapd1744)
+                d = wrapd1744.value
+                if (inoutres1745): 
                     res.append(d)
         return res
     
@@ -86,7 +89,7 @@ class MeasureReferent(Referent):
             return MeasureKind.UNDEFINED
         try: 
             return Utils.valToEnum(str0_, MeasureKind)
-        except Exception as ex1742: 
+        except Exception as ex1746: 
             pass
         return MeasureKind.UNDEFINED
     @kind.setter

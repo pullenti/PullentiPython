@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import datetime
@@ -33,11 +35,9 @@ class DateExToken(MetaToken):
         WEEK = 5
         DAY = 6
         DAYOFWEEK = 7
-        """ День недели """
         HOUR = 8
         MINUTE = 9
         WEEKEND = 10
-        """ Выходные """
         
         @classmethod
         def has_value(cls, value):
@@ -110,6 +110,7 @@ class DateExToken(MetaToken):
                     break
                 j += 1
             res = DateExToken.DateValues()
+            it = None
             i = 0
             has_rel = False
             if ((i < len(list0_)) and list0_[i].typ == DateExToken.DateExItemTokenType.YEAR): 
@@ -548,16 +549,6 @@ class DateExToken(MetaToken):
         return Utils.toStringStringIO(tmp)
     
     def get_date(self, now : datetime.datetime, tense : int=0) -> datetime.datetime:
-        """ Получить дату-время (одну)
-        
-        Args:
-            now(datetime.datetime): текущая дата (для относительных вычислений)
-            tense(int): время (-1 - прошлое, 0 - любое, 1 - будущее) - испрользуется
-        при неоднозначных случаях
-        
-        Returns:
-            datetime.datetime: дата-время или null
-        """
         dvl = DateExToken.DateValues.try_create((self.items_from if len(self.items_from) > 0 else self.items_to), now, tense)
         try: 
             dt = dvl.generate_date(now, False)
@@ -567,19 +558,6 @@ class DateExToken(MetaToken):
             return None
     
     def get_dates(self, now : datetime.datetime, from0_ : datetime.datetime, to : datetime.datetime, tense : int=0) -> bool:
-        """ Получить диапазон (если не диапазон, то from = to)
-        
-        Args:
-            now(datetime.datetime): текущая дата-время
-            from0_(datetime.datetime): начало диапазона
-            to(datetime.datetime): конец диапазона
-            tense(int): время (-1 - прошлое, 0 - любое, 1 - будущее) - испрользуется
-        при неоднозначных случаях
-        Например, 7 сентября, а сейчас лето, то какой это год? При true - этот, при false - предыдущий
-        
-        Returns:
-            bool: признак корректности
-        """
         from0_.value = datetime.datetime.min
         to.value = datetime.datetime.min
         has_hours = False
@@ -688,12 +666,6 @@ class DateExToken(MetaToken):
     
     @staticmethod
     def try_parse(t : 'Token') -> 'DateExToken':
-        """ Выделить в тексте дату с указанной позиции
-        
-        Args:
-            t(Token): 
-        
-        """
         if (t is None): 
             return None
         if (t.is_value("ЗА", None) and t.next0_ is not None and t.next0_.is_value("ПЕРИОД", None)): 
@@ -706,9 +678,9 @@ class DateExToken(MetaToken):
         from_regime = False
         t0 = None
         tt = t
-        first_pass3564 = True
+        first_pass3071 = True
         while True:
-            if first_pass3564: first_pass3564 = False
+            if first_pass3071: first_pass3071 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             drr = Utils.asObjectOrNull(tt.get_referent(), DateRangeReferent)

@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
@@ -27,9 +29,9 @@ class StatisticCollection:
         prev = None
         prevt = None
         t = first
-        first_pass3558 = True
+        first_pass3065 = True
         while True:
-            if first_pass3558: first_pass3558 = False
+            if first_pass3065: first_pass3065 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_hiphen): 
@@ -104,6 +106,7 @@ class StatisticCollection:
     def __find_item(self, tt : 'TextToken', do_absolute : bool=True) -> 'StatisticWordInfo':
         if (tt is None): 
             return None
+        res = None
         wrapres546 = RefOutArgWrapper(None)
         inoutres547 = Utils.tryGetValue(self.__m_items, tt.term, wrapres546)
         res = wrapres546.value
@@ -134,6 +137,7 @@ class StatisticCollection:
         return None
     
     def __add_bigramm(self, b1 : 'StatisticWordInfo', b2 : 'StatisticWordInfo') -> None:
+        di = None
         wrapdi550 = RefOutArgWrapper(None)
         inoutres551 = Utils.tryGetValue(self.__m_bigramms, b1.normal, wrapdi550)
         di = wrapdi550.value

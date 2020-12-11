@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -116,9 +118,9 @@ class GoodAttrToken(MetaToken):
         key = None
         next_seq = False
         tt = t
-        first_pass3670 = True
+        first_pass3177 = True
         while True:
-            if first_pass3670: first_pass3670 = False
+            if first_pass3177: first_pass3177 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt != t and tt.is_newline_before): 
@@ -211,6 +213,7 @@ class GoodAttrToken(MetaToken):
             return None
         if (t.is_value("ПРЕДНАЗНАЧЕН", None)): 
             pass
+        res = None
         r = t.get_referent()
         if (r is not None): 
             if (r.type_name == "ORGANIZATION" or r.type_name == "GEO"): 
@@ -236,6 +239,7 @@ class GoodAttrToken(MetaToken):
                 res.typ = li[0].item.referent.typ
                 res.ref = li[0].item.referent.clone()
                 return res
+        tok = None
         tok = GoodAttrToken.__m_std_abbrs.try_parse(t, TerminParseAttr.NO)
         if ((tok) is not None): 
             ty = Utils.valToEnum(tok.termin.tag, GoodAttrType)
@@ -264,9 +268,9 @@ class GoodAttrToken(MetaToken):
                 return res
             if (ty == GoodAttrType.REFERENT): 
                 tt = tok.end_token.next0_
-                first_pass3671 = True
+                first_pass3178 = True
                 while True:
-                    if first_pass3671: first_pass3671 = False
+                    if first_pass3178: first_pass3178 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_newline_before): 
@@ -510,6 +514,7 @@ class GoodAttrToken(MetaToken):
         if ((t.chars.is_cyrillic_letter and pref is None and (isinstance(t, TextToken))) and t.morph.class0_.is_adjective): 
             if (t.morph.contains_attr("к.ф.", None) and t.next0_ is not None and t.next0_.is_hiphen): 
                 val = t.term
+                tt = None
                 tt = t.next0_.next0_
                 while tt is not None: 
                     if (((isinstance(tt, TextToken)) and tt.next0_ is not None and tt.next0_.is_hiphen) and (isinstance(tt.next0_.next0_, TextToken))): 
@@ -619,9 +624,9 @@ class GoodAttrToken(MetaToken):
         res = GoodAttrToken._new1277(t, t, GoodAttrType.MODEL)
         tmp = io.StringIO()
         tt = t
-        first_pass3672 = True
+        first_pass3179 = True
         while True:
-            if first_pass3672: first_pass3672 = False
+            if first_pass3179: first_pass3179 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_whitespace_before and tt != t): 
@@ -778,6 +783,7 @@ class GoodAttrToken(MetaToken):
         if (GoodAttrToken.__m_inited): 
             return
         GoodAttrToken.__m_inited = True
+        t = None
         t = Termin("ПР")
         t.add_variant("ПРЕДМЕТ", False)
         GoodAttrToken.__m_num_suff.add(t)

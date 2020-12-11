@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import math
@@ -77,9 +79,9 @@ class MeasureToken(MetaToken):
                 mr.add_slot(MeasureReferent.ATTR_NAME, self.name, False, 0)
             ints = list()
             k = 0
-            first_pass3796 = True
+            first_pass3304 = True
             while True:
-                if first_pass3796: first_pass3796 = False
+                if first_pass3304: first_pass3304 = False
                 else: k += 1
                 if (not (k < len(self.internals))): break
                 ii = self.internals[k]
@@ -111,6 +113,7 @@ class MeasureToken(MetaToken):
                 templ = "[{0} ±{1}%]".format(templ, len(self.internals) + 1)
                 mr.add_value(self.nums.single_val)
             mr.template = templ
+            i = 0
             has_length = False
             uref = None
             i = 0
@@ -165,13 +168,14 @@ class MeasureToken(MetaToken):
             return None
         if ((len(mt) == 1 and len(mt[0].units) == 1 and mt[0].units[0].is_doubt) and not mt[0].is_newline_before): 
             return None
+        res = None
         if (len(mt) == 1): 
-            res = MeasureToken._new1608(mt[0].begin_token, mt[len(mt) - 1].end_token, mt[0])
+            res = MeasureToken._new1612(mt[0].begin_token, mt[len(mt) - 1].end_token, mt[0])
             res.__parse_internals(add_units)
             return res
         res = MeasureToken(mt[0].begin_token, mt[len(mt) - 1].end_token)
         for m in mt: 
-            res.internals.append(MeasureToken._new1608(m.begin_token, m.end_token, m))
+            res.internals.append(MeasureToken._new1612(m.begin_token, m.end_token, m))
         return res
     
     def __parse_internals(self, add_units : 'TerminCollection') -> None:
@@ -183,17 +187,11 @@ class MeasureToken(MetaToken):
             else: 
                 mt = NumbersWithUnitToken.try_parse(self.end_token.next0_.next0_, add_units, False, False, False, False)
                 if (mt is not None and len(mt.units) > 0 and not UnitToken.can_be_equals(self.nums.units, mt.units)): 
-                    self.internals.append(MeasureToken._new1608(mt.begin_token, mt.end_token, mt))
+                    self.internals.append(MeasureToken._new1612(mt.begin_token, mt.end_token, mt))
                     self.end_token = mt.end_token
     
     @staticmethod
     def try_parse(t : 'Token', add_units : 'TerminCollection', can_be_set : bool=True, can_units_absent : bool=False, is_resctriction : bool=False, is_subval : bool=False) -> 'MeasureToken':
-        """ Выделение вместе с наименованием
-        
-        Args:
-            t(Token): 
-        
-        """
         if (not (isinstance(t, TextToken))): 
             return None
         if (t.is_table_control_char): 
@@ -201,9 +199,9 @@ class MeasureToken(MetaToken):
         t0 = t
         whd = None
         minmax = 0
-        wrapminmax1621 = RefOutArgWrapper(minmax)
-        tt = NumbersWithUnitToken._is_min_or_max(t0, wrapminmax1621)
-        minmax = wrapminmax1621.value
+        wrapminmax1625 = RefOutArgWrapper(minmax)
+        tt = NumbersWithUnitToken._is_min_or_max(t0, wrapminmax1625)
+        minmax = wrapminmax1625.value
         if (tt is not None): 
             t = tt.next0_
         npt = NounPhraseHelper.try_parse(t, Utils.valToEnum((NounPhraseParseAttr.PARSEPREPOSITION) | (NounPhraseParseAttr.IGNOREBRACKETS), NounPhraseParseAttr), 0, None)
@@ -258,18 +256,18 @@ class MeasureToken(MetaToken):
         internals_ = list()
         not0_ = False
         tt = t1.next0_
-        first_pass3797 = True
+        first_pass3305 = True
         while True:
-            if first_pass3797: first_pass3797 = False
+            if first_pass3305: first_pass3305 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_newline_before): 
                 break
             if (tt.is_table_control_char): 
                 break
-            wrapminmax1613 = RefOutArgWrapper(minmax)
-            tt2 = NumbersWithUnitToken._is_min_or_max(tt, wrapminmax1613)
-            minmax = wrapminmax1613.value
+            wrapminmax1617 = RefOutArgWrapper(minmax)
+            tt2 = NumbersWithUnitToken._is_min_or_max(tt, wrapminmax1617)
+            minmax = wrapminmax1617.value
             if (tt2 is not None): 
                 tt = tt2
                 t = tt
@@ -298,7 +296,7 @@ class MeasureToken(MetaToken):
                     continue
                 n1 = NumbersWithUnitToken.try_parse(tt.next0_, add_units, False, False, False, False)
                 if (n1 is not None and len(n1.units) > 0): 
-                    mt1 = MeasureToken._new1608(n1.begin_token, n1.end_token, n1)
+                    mt1 = MeasureToken._new1612(n1.begin_token, n1.end_token, n1)
                     internals_.append(mt1)
                     tt = mt1.end_token
                     t = tt
@@ -490,9 +488,9 @@ class MeasureToken(MetaToken):
                 name_.end_token = t1
         t11 = t1
         t1 = t1.next0_
-        first_pass3798 = True
+        first_pass3306 = True
         while True:
-            if first_pass3798: first_pass3798 = False
+            if first_pass3306: first_pass3306 = False
             else: t1 = t1.next0_
             if (not (t1 is not None)): break
             if (t1.is_table_control_char): 
@@ -516,9 +514,9 @@ class MeasureToken(MetaToken):
                 if (t1.is_char(':')): 
                     li = list()
                     ttt = t1.next0_
-                    first_pass3799 = True
+                    first_pass3307 = True
                     while True:
-                        if first_pass3799: first_pass3799 = False
+                        if first_pass3307: first_pass3307 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_hiphen or ttt.is_table_control_char): 
@@ -539,7 +537,7 @@ class MeasureToken(MetaToken):
                         else: 
                             break
                     if (len(li) > 1): 
-                        res0 = MeasureToken._new1614(t0, li[len(li) - 1].end_token, li, True)
+                        res0 = MeasureToken._new1618(t0, li[len(li) - 1].end_token, li, True)
                         if (internals_ is not None and len(internals_) > 0): 
                             res0.internal_ex = internals_[0]
                         nam = MiscHelper.get_text_value_of_meta_token(name_, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
@@ -569,7 +567,7 @@ class MeasureToken(MetaToken):
                             t1 = t1.next0_
                     else: 
                         t1 = t1.previous
-                    mts.append(NumbersWithUnitToken._new1615(t0, t1, math.nan))
+                    mts.append(NumbersWithUnitToken._new1619(t0, t1, math.nan))
             if (mts is None): 
                 return None
         mt = mts[0]
@@ -593,11 +591,11 @@ class MeasureToken(MetaToken):
                 if (units is not None): 
                     for m in mts: 
                         m.units = units
-            res1 = MeasureToken._new1616(t0, mts[len(mts) - 1].end_token, name_.morph, True)
+            res1 = MeasureToken._new1620(t0, mts[len(mts) - 1].end_token, name_.morph, True)
             res1.name = MiscHelper.get_text_value_of_meta_token(name_, GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE)
             k = 0
             while k < len(mts): 
-                ttt = MeasureToken._new1608(mts[k].begin_token, mts[k].end_token, mts[k])
+                ttt = MeasureToken._new1612(mts[k].begin_token, mts[k].end_token, mts[k])
                 if (whd is not None): 
                     nams = Utils.asObjectOrNull(whd.tag, list)
                     if (k < len(nams)): 
@@ -654,7 +652,7 @@ class MeasureToken(MetaToken):
                     return None
             else: 
                 mt.units = units
-        res = MeasureToken._new1618(t0, mt.end_token, name_.morph, internals_)
+        res = MeasureToken._new1622(t0, mt.end_token, name_.morph, internals_)
         if (((not t0.is_whitespace_before and t0.previous is not None and t0 == name_.begin_token) and t0.previous.is_hiphen and not t0.previous.is_whitespace_before) and (isinstance(t0.previous.previous, TextToken))): 
             name_.begin_token = res.begin_token = name_.begin_token.previous.previous
         res.name = MiscHelper.get_text_value_of_meta_token(name_, (GetTextAttr.FIRSTNOUNGROUPTONOMINATIVE if not is_subval else GetTextAttr.NO))
@@ -673,33 +671,33 @@ class MeasureToken(MetaToken):
         if ((mts1 is not None and len(mts1) == 1 and (t1.whitespaces_before_count < 3)) and len(mts1[0].units) > 0 and not UnitToken.can_be_equals(mts[0].units, mts1[0].units)): 
             res.is_set = True
             res.nums = (None)
-            res.internals.append(MeasureToken._new1608(mt.begin_token, mt.end_token, mt))
-            res.internals.append(MeasureToken._new1608(mts1[0].begin_token, mts1[0].end_token, mts1[0]))
+            res.internals.append(MeasureToken._new1612(mt.begin_token, mt.end_token, mt))
+            res.internals.append(MeasureToken._new1612(mts1[0].begin_token, mts1[0].end_token, mts1[0]))
             res.end_token = mts1[0].end_token
         return res
     
     @staticmethod
-    def _new1608(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'NumbersWithUnitToken') -> 'MeasureToken':
+    def _new1612(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'NumbersWithUnitToken') -> 'MeasureToken':
         res = MeasureToken(_arg1, _arg2)
         res.nums = _arg3
         return res
     
     @staticmethod
-    def _new1614(_arg1 : 'Token', _arg2 : 'Token', _arg3 : typing.List['MeasureToken'], _arg4 : bool) -> 'MeasureToken':
+    def _new1618(_arg1 : 'Token', _arg2 : 'Token', _arg3 : typing.List['MeasureToken'], _arg4 : bool) -> 'MeasureToken':
         res = MeasureToken(_arg1, _arg2)
         res.internals = _arg3
         res.is_empty = _arg4
         return res
     
     @staticmethod
-    def _new1616(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : bool) -> 'MeasureToken':
+    def _new1620(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : bool) -> 'MeasureToken':
         res = MeasureToken(_arg1, _arg2)
         res.morph = _arg3
         res.reliable = _arg4
         return res
     
     @staticmethod
-    def _new1618(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : typing.List['MeasureToken']) -> 'MeasureToken':
+    def _new1622(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'MorphCollection', _arg4 : typing.List['MeasureToken']) -> 'MeasureToken':
         res = MeasureToken(_arg1, _arg2)
         res.morph = _arg3
         res.internals = _arg4

@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
@@ -208,21 +210,21 @@ class ControlModelQuestion:
                 j += 1
             i += 1
         ControlModelQuestion.__m_base_nominative_ind = 0
-        ControlModelQuestion.ITEMS.insert(ControlModelQuestion.__m_base_nominative_ind, ControlModelQuestion._new2953(None, MorphCase.NOMINATIVE, True))
+        ControlModelQuestion.ITEMS.insert(ControlModelQuestion.__m_base_nominative_ind, ControlModelQuestion._new2957(None, MorphCase.NOMINATIVE, True))
         ControlModelQuestion.__m_base_genetive_ind = 1
-        ControlModelQuestion.ITEMS.insert(ControlModelQuestion.__m_base_genetive_ind, ControlModelQuestion._new2953(None, MorphCase.GENITIVE, True))
+        ControlModelQuestion.ITEMS.insert(ControlModelQuestion.__m_base_genetive_ind, ControlModelQuestion._new2957(None, MorphCase.GENITIVE, True))
         ControlModelQuestion.__m_base_accusative_ind = 2
-        ControlModelQuestion.ITEMS.insert(ControlModelQuestion.__m_base_accusative_ind, ControlModelQuestion._new2953(None, MorphCase.ACCUSATIVE, True))
+        ControlModelQuestion.ITEMS.insert(ControlModelQuestion.__m_base_accusative_ind, ControlModelQuestion._new2957(None, MorphCase.ACCUSATIVE, True))
         ControlModelQuestion.__m_base_instrumental_ind = 3
-        ControlModelQuestion.ITEMS.insert(ControlModelQuestion.__m_base_instrumental_ind, ControlModelQuestion._new2953(None, MorphCase.INSTRUMENTAL, True))
+        ControlModelQuestion.ITEMS.insert(ControlModelQuestion.__m_base_instrumental_ind, ControlModelQuestion._new2957(None, MorphCase.INSTRUMENTAL, True))
         ControlModelQuestion.__m_base_dative_ind = 4
-        ControlModelQuestion.ITEMS.insert(ControlModelQuestion.__m_base_dative_ind, ControlModelQuestion._new2953(None, MorphCase.DATIVE, True))
+        ControlModelQuestion.ITEMS.insert(ControlModelQuestion.__m_base_dative_ind, ControlModelQuestion._new2957(None, MorphCase.DATIVE, True))
         ControlModelQuestion.__m_base_to_do_ind = 5
         ControlModelQuestion.ITEMS.insert(ControlModelQuestion.__m_base_to_do_ind, ControlModelQuestion(None, None, QuestionType.WHATTODO))
-        ControlModelQuestion.ITEMS.insert(6, ControlModelQuestion._new2958(None, None, QuestionType.WHERE, True))
-        ControlModelQuestion.ITEMS.insert(7, ControlModelQuestion._new2958(None, None, QuestionType.WHERETO, True))
-        ControlModelQuestion.ITEMS.insert(8, ControlModelQuestion._new2958(None, None, QuestionType.WHEREFROM, True))
-        ControlModelQuestion.ITEMS.insert(9, ControlModelQuestion._new2958(None, None, QuestionType.WHEN, True))
+        ControlModelQuestion.ITEMS.insert(6, ControlModelQuestion._new2962(None, None, QuestionType.WHERE, True))
+        ControlModelQuestion.ITEMS.insert(7, ControlModelQuestion._new2962(None, None, QuestionType.WHERETO, True))
+        ControlModelQuestion.ITEMS.insert(8, ControlModelQuestion._new2962(None, None, QuestionType.WHEREFROM, True))
+        ControlModelQuestion.ITEMS.insert(9, ControlModelQuestion._new2962(None, None, QuestionType.WHEN, True))
         ControlModelQuestion.__m_hash_by_spel = dict()
         i = 0
         while i < len(ControlModelQuestion.ITEMS): 
@@ -262,21 +264,22 @@ class ControlModelQuestion:
     
     @staticmethod
     def find_by_spel(spel : str) -> 'ControlModelQuestion':
-        wrapind2962 = RefOutArgWrapper(0)
-        inoutres2963 = Utils.tryGetValue(ControlModelQuestion.__m_hash_by_spel, spel, wrapind2962)
-        ind = wrapind2962.value
-        if (not inoutres2963): 
+        ind = 0
+        wrapind2966 = RefOutArgWrapper(0)
+        inoutres2967 = Utils.tryGetValue(ControlModelQuestion.__m_hash_by_spel, spel, wrapind2966)
+        ind = wrapind2966.value
+        if (not inoutres2967): 
             return None
         return ControlModelQuestion.ITEMS[ind]
     
     @staticmethod
-    def _new2953(_arg1 : str, _arg2 : 'MorphCase', _arg3 : bool) -> 'ControlModelQuestion':
+    def _new2957(_arg1 : str, _arg2 : 'MorphCase', _arg3 : bool) -> 'ControlModelQuestion':
         res = ControlModelQuestion(_arg1, _arg2)
         res.is_base = _arg3
         return res
     
     @staticmethod
-    def _new2958(_arg1 : str, _arg2 : 'MorphCase', _arg3 : 'QuestionType', _arg4 : bool) -> 'ControlModelQuestion':
+    def _new2962(_arg1 : str, _arg2 : 'MorphCase', _arg3 : 'QuestionType', _arg4 : bool) -> 'ControlModelQuestion':
         res = ControlModelQuestion(_arg1, _arg2, _arg3)
         res.is_abstract = _arg4
         return res

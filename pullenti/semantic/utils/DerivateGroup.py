@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -60,11 +62,11 @@ class DerivateGroup:
         return res
     
     def create_by_prefix(self, pref : str, lang : 'MorphLang') -> 'DerivateGroup':
-        res = DerivateGroup._new2964(True, pref)
+        res = DerivateGroup._new2968(True, pref)
         for w in self.words: 
             if (lang is not None and not lang.is_undefined and ((w.lang) & lang).is_undefined): 
                 continue
-            rw = DerivateWord._new2965(pref + w.spelling, w.lang, w.class0_, w.aspect, w.reflexive, w.tense, w.voice, w.attrs)
+            rw = DerivateWord._new2969(pref + w.spelling, w.lang, w.class0_, w.aspect, w.reflexive, w.tense, w.voice, w.attrs)
             res.words.append(rw)
         return res
     
@@ -109,7 +111,7 @@ class DerivateGroup:
             cou -= 1
     
     @staticmethod
-    def _new2964(_arg1 : bool, _arg2 : str) -> 'DerivateGroup':
+    def _new2968(_arg1 : bool, _arg2 : str) -> 'DerivateGroup':
         res = DerivateGroup()
         res.is_generated = _arg1
         res.prefix = _arg2

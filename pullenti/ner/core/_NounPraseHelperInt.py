@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
@@ -78,9 +80,9 @@ class _NounPraseHelperInt:
         internal_noun_prase = None
         conj_before = False
         t = t0
-        first_pass3534 = True
+        first_pass3041 = True
         while True:
-            if first_pass3534: first_pass3534 = False
+            if first_pass3041: first_pass3041 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char_pos > 0 and t.begin_char > max_char_pos): 
@@ -185,12 +187,13 @@ class _NounPraseHelperInt:
                     break
         if (items is None): 
             return None
+        tt1 = None
         if (len(items) == 1 and items[0].can_be_adj): 
             and0_ = False
             tt1 = items[0].end_token.next0_
-            first_pass3535 = True
+            first_pass3042 = True
             while True:
-                if first_pass3535: first_pass3535 = False
+                if first_pass3042: first_pass3042 = False
                 else: tt1 = tt1.next0_
                 if (not (tt1 is not None)): break
                 if (tt1.is_and or tt1.is_or): 
@@ -240,9 +243,9 @@ class _NounPraseHelperInt:
                 if (npt1 is not None): 
                     ok = True
                     ii = 0
-                    first_pass3536 = True
+                    first_pass3043 = True
                     while True:
-                        if first_pass3536: first_pass3536 = False
+                        if first_pass3043: first_pass3043 = False
                         else: ii += 1
                         if (not (ii < len(items))): break
                         it = items[ii]
@@ -284,9 +287,9 @@ class _NounPraseHelperInt:
                         inp.begin_token = items[0].end_token.next0_
                         items.append(it)
         i = 0
-        first_pass3537 = True
+        first_pass3044 = True
         while True:
-            if first_pass3537: first_pass3537 = False
+            if first_pass3044: first_pass3044 = False
             else: i += 1
             if (not (i < len(items))): break
             if (items[i].can_be_adj and items[i].begin_token.morph.class0_.is_verb): 
@@ -428,6 +431,7 @@ class _NounPraseHelperInt:
             ok_list = list()
             is_num_not = False
             for vv in noun.noun_morph: 
+                i = 0
                 v = vv
                 i = 0
                 while i < len(items): 
@@ -461,9 +465,9 @@ class _NounPraseHelperInt:
                 if (not is_num_not): 
                     noun.morph = res.morph
         i = 0
-        first_pass3538 = True
+        first_pass3045 = True
         while True:
-            if first_pass3538: first_pass3538 = False
+            if first_pass3045: first_pass3045 = False
             else: i += 1
             if (not (i < len(items))): break
             for av in items[i].adj_morph: 
@@ -511,9 +515,9 @@ class _NounPraseHelperInt:
             if (items[i].end_char > res.end_char): 
                 res.end_token = items[i].end_token
         i = 0
-        first_pass3539 = True
+        first_pass3046 = True
         while True:
-            if first_pass3539: first_pass3539 = False
+            if first_pass3046: first_pass3046 = False
             else: i += 1
             if (not (i < (len(res.adjectives) - 1))): break
             if (res.adjectives[i].whitespaces_after_count > 5): 
@@ -604,9 +608,9 @@ class _NounPraseHelperInt:
             else: 
                 comma = False
                 tt = res.begin_token.previous
-                first_pass3540 = True
+                first_pass3047 = True
                 while True:
-                    if first_pass3540: first_pass3540 = False
+                    if first_pass3047: first_pass3047 = False
                     else: tt = tt.previous
                     if (not (tt is not None and tt.end_char <= res.end_char)): break
                     if (tt.morph.class0_.is_adverb): 
@@ -651,9 +655,9 @@ class _NounPraseHelperInt:
         if (first.previous is not None and first.previous.morph.class0_.is_preposition and (first.whitespaces_before_count < 3)): 
             has_prop = True
         t = first
-        first_pass3541 = True
+        first_pass3048 = True
         while True:
-            if first_pass3541: first_pass3541 = False
+            if first_pass3048: first_pass3048 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (max_char_pos > 0 and t.begin_char > max_char_pos): 

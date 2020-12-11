@@ -1,21 +1,17 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
-import io
 from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Streams import Stream
 
 class PullentiNerCoreInternalResourceHelper:
     # Это для поддержки получения встроенных ресурсов
     
     @staticmethod
     def get_bytes(name : str) -> bytearray:
-        """ Получить встроенный ресурс
         
-        Args:
-            name(str): имя, на который оканчивается ресурс
-        
-        """
-        # ignored: assembly = PullentiNerCoreInternalResourceHelper.
         names = Utils.getResourcesNames('pullenti.ner.core.properties', '.csv;.png')
         for n in names: 
             if (Utils.endsWithString(n, name, True)): 
@@ -27,8 +23,8 @@ class PullentiNerCoreInternalResourceHelper:
                     if (inf is None): 
                         continue
                     with Utils.getResourceStream('pullenti.ner.core.properties', n) as stream: 
-                        buf = Utils.newArrayOfBytes(Utils.getLengthIO(stream), 0)
-                        Utils.readIO(stream, buf, 0, len(buf))
+                        buf = Utils.newArrayOfBytes(stream.length, 0)
+                        stream.read(buf, 0, len(buf))
                         return buf
                 except Exception as ex: 
                     pass

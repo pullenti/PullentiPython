@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 from pullenti.unisharp.Utils import Utils
@@ -71,9 +73,9 @@ class GeoAnalyzer(Analyzer):
                             elif (LanguageHelper.ends_with_ex(typ, "область", "территория", None, None)): 
                                 gen = (Utils.valToEnum((gen) | (MorphGender.FEMINIE), MorphGender))
                     i = 0
-                    first_pass3655 = True
+                    first_pass3162 = True
                     while True:
-                        if first_pass3655: first_pass3655 = False
+                        if first_pass3162: first_pass3162 = False
                         else: i += 1
                         if (not (i < len(names))): break
                         n = names[i]
@@ -175,9 +177,9 @@ class GeoAnalyzer(Analyzer):
         non_registered = list()
         for step in range(2):
             t = kit.first_token
-            first_pass3656 = True
+            first_pass3163 = True
             while True:
-                if first_pass3656: first_pass3656 = False
+                if first_pass3163: first_pass3163 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (len(ad.referents) >= 2000): 
@@ -308,9 +310,9 @@ class GeoAnalyzer(Analyzer):
                 if (len(ad.referents) == 0 and len(non_registered) == 0): 
                     break
         t = kit.first_token
-        first_pass3657 = True
+        first_pass3164 = True
         while True:
-            if first_pass3657: first_pass3657 = False
+            if first_pass3164: first_pass3164 = False
             else: t = (None if t is None else t.next0_)
             if (not (t is not None)): break
             g = Utils.asObjectOrNull(t.get_referent(), GeoReferent)
@@ -338,9 +340,9 @@ class GeoAnalyzer(Analyzer):
             t1 = t
             i = 1
             t = t.next0_
-            first_pass3658 = True
+            first_pass3165 = True
             while True:
-                if first_pass3658: first_pass3658 = False
+                if first_pass3165: first_pass3165 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_comma_and): 
@@ -364,15 +366,16 @@ class GeoAnalyzer(Analyzer):
         new_cities = False
         is_city_before = False
         t = kit.first_token
-        first_pass3659 = True
+        first_pass3166 = True
         while True:
-            if first_pass3659: first_pass3659 = False
+            if first_pass3166: first_pass3166 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char_of(".,")): 
                 continue
             li = None
             li = CityItemToken.try_parse_list(t, ad.local_ontology, 5)
+            rt = None
             if (li is not None): 
                 rt = CityAttachHelper.try_attach_city(li, ad, False)
                 if ((rt) is not None): 
@@ -431,9 +434,9 @@ class GeoAnalyzer(Analyzer):
             is_city_before = False
         if (new_cities and len(ad.local_ontology.items) > 0): 
             t = kit.first_token
-            first_pass3660 = True
+            first_pass3167 = True
             while True:
-                if first_pass3660: first_pass3660 = False
+                if first_pass3167: first_pass3167 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (not (isinstance(t, TextToken))): 
@@ -463,9 +466,9 @@ class GeoAnalyzer(Analyzer):
                     t = li[0].end_token
         go_back = False
         t = kit.first_token
-        first_pass3661 = True
+        first_pass3168 = True
         while True:
-            if first_pass3661: first_pass3661 = False
+            if first_pass3168: first_pass3168 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (go_back): 
@@ -482,9 +485,9 @@ class GeoAnalyzer(Analyzer):
             comma2 = False
             inp = False
             adj = False
-            first_pass3662 = True
+            first_pass3169 = True
             while True:
-                if first_pass3662: first_pass3662 = False
+                if first_pass3169: first_pass3169 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_char_of(",")): 
@@ -517,9 +520,9 @@ class GeoAnalyzer(Analyzer):
                 continue
             ttt = tt.next0_
             geo2 = None
-            first_pass3663 = True
+            first_pass3170 = True
             while True:
-                if first_pass3663: first_pass3663 = False
+                if first_pass3170: first_pass3170 = False
                 else: ttt = ttt.next0_
                 if (not (ttt is not None)): break
                 if (ttt.is_comma_and): 
@@ -639,9 +642,9 @@ class GeoAnalyzer(Analyzer):
                 oc.occurence_of = rg
                 rg.add_occurence(oc)
         t = kit.first_token
-        first_pass3664 = True
+        first_pass3171 = True
         while True:
-            if first_pass3664: first_pass3664 = False
+            if first_pass3171: first_pass3171 = False
             else: t = t.next0_
             if (not (t is not None)): break
             geo_ = Utils.asObjectOrNull(t.get_referent(), GeoReferent)
@@ -730,9 +733,9 @@ class GeoAnalyzer(Analyzer):
         i = 0
         res = None
         tt = t
-        first_pass3665 = True
+        first_pass3172 = True
         while True:
-            if first_pass3665: first_pass3665 = False
+            if first_pass3172: first_pass3172 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             i += 1
@@ -882,9 +885,9 @@ class GeoAnalyzer(Analyzer):
             if ((ctoks is not None and len(ctoks) == 1 and ctoks[0].typ == CityItemToken.ItemType.NOUN) and ctoks[0].value == "ГОРОД"): 
                 cou = 0
                 t = begin.previous
-                first_pass3666 = True
+                first_pass3173 = True
                 while True:
-                    if first_pass3666: first_pass3666 = False
+                    if first_pass3173: first_pass3173 = False
                     else: t = t.previous
                     if (not (t is not None)): break
                     cou += 1
@@ -986,9 +989,9 @@ class GeoAnalyzer(Analyzer):
                 return None
             city = Utils.asObjectOrNull(rt.referent, GeoReferent)
             t = rt.end_token.next0_
-            first_pass3667 = True
+            first_pass3174 = True
             while True:
-                if first_pass3667: first_pass3667 = False
+                if first_pass3174: first_pass3174 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (not t.is_char(';')): 
@@ -1022,9 +1025,9 @@ class GeoAnalyzer(Analyzer):
         terr = None
         te = None
         t = begin
-        first_pass3668 = True
+        first_pass3175 = True
         while True:
-            if first_pass3668: first_pass3668 = False
+            if first_pass3175: first_pass3175 = False
             else: t = t.next0_
             if (not (t is not None)): break
             t0 = t
@@ -1032,9 +1035,9 @@ class GeoAnalyzer(Analyzer):
             tn0 = None
             tn1 = None
             tt = t0
-            first_pass3669 = True
+            first_pass3176 = True
             while True:
-                if first_pass3669: first_pass3669 = False
+                if first_pass3176: first_pass3176 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_char_of(";")): 

@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import datetime
 import io
@@ -8,6 +10,7 @@ import math
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
 from pullenti.unisharp.Misc import EventHandler
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 from pullenti.ner.SourceOfAnalysis import SourceOfAnalysis
@@ -61,6 +64,7 @@ class AnalysisKit:
                     pass
                 tt = TextToken(mt, self)
                 if (sofa_.correction_dict is not None): 
+                    corw = None
                     wrapcorw471 = RefOutArgWrapper(None)
                     inoutres472 = Utils.tryGetValue(sofa_.correction_dict, mt.term, wrapcorw471)
                     corw = wrapcorw471.value
@@ -89,9 +93,9 @@ class AnalysisKit:
         self.__define_base_language()
         if (sofa_.create_number_tokens): 
             t = self.first_token
-            first_pass3542 = True
+            first_pass3049 = True
             while True:
-                if first_pass3542: first_pass3542 = False
+                if first_pass3049: first_pass3049 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 nt = NumberHelper._try_parse_number(t)
@@ -102,9 +106,9 @@ class AnalysisKit:
         if (only_tokenizing): 
             return
         t = self.first_token
-        first_pass3543 = True
+        first_pass3050 = True
         while True:
-            if first_pass3543: first_pass3543 = False
+            if first_pass3050: first_pass3050 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.morph.class0_.is_preposition): 
@@ -141,9 +145,9 @@ class AnalysisKit:
     
     def __clear_dust(self) -> None:
         t = self.first_token
-        first_pass3544 = True
+        first_pass3051 = True
         while True:
-            if first_pass3544: first_pass3544 = False
+            if first_pass3051: first_pass3051 = False
             else: t = t.next0_
             if (not (t is not None)): break
             cou = AnalysisKit.__calc_abnormal_coef(t)
@@ -152,9 +156,9 @@ class AnalysisKit:
                 continue
             t1 = t
             tt = t
-            first_pass3545 = True
+            first_pass3052 = True
             while True:
-                if first_pass3545: first_pass3545 = False
+                if first_pass3052: first_pass3052 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 co = AnalysisKit.__calc_abnormal_coef(tt)
@@ -208,9 +212,9 @@ class AnalysisKit:
     
     def __correct_words_by_merging(self, lang : 'MorphLang') -> None:
         t = self.first_token
-        first_pass3546 = True
+        first_pass3053 = True
         while True:
-            if first_pass3546: first_pass3546 = False
+            if first_pass3053: first_pass3053 = False
             else: t = t.next0_
             if (not (t is not None and t.next0_ is not None)): break
             if (not t.chars.is_letter or (t.length_char < 2)): 
@@ -258,9 +262,9 @@ class AnalysisKit:
     
     def __correct_words_by_morph(self, lang : 'MorphLang') -> None:
         tt = self.first_token
-        first_pass3547 = True
+        first_pass3054 = True
         while True:
-            if first_pass3547: first_pass3547 = False
+            if first_pass3054: first_pass3054 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (not (isinstance(tt, TextToken))): 
@@ -298,9 +302,9 @@ class AnalysisKit:
         before_word = False
         tmp = io.StringIO()
         t = self.first_token
-        first_pass3548 = True
+        first_pass3055 = True
         while True:
-            if first_pass3548: first_pass3548 = False
+            if first_pass3055: first_pass3055 = False
             else: t = t.next0_
             if (not (t is not None)): break
             tt = Utils.asObjectOrNull(t, TextToken)
@@ -314,6 +318,7 @@ class AnalysisKit:
                 before_word = False
                 continue
             i = 0
+            t1 = None
             Utils.setLengthStringIO(tmp, 0)
             print(tt.get_source_text(), end="", file=tmp)
             t1 = t
@@ -450,6 +455,7 @@ class AnalysisKit:
         # Получить данные, полученные в настоящий момент конкретным анализатором
         if (analyzer is None or analyzer.name is None): 
             return None
+        d = None
         wrapd475 = RefOutArgWrapper(None)
         inoutres476 = Utils.tryGetValue(self.__m_datas, analyzer.name, wrapd475)
         d = wrapd475.value
@@ -477,9 +483,9 @@ class AnalysisKit:
         stat = dict()
         total = 0
         t = self.first_token
-        first_pass3549 = True
+        first_pass3056 = True
         while True:
-            if first_pass3549: first_pass3549 = False
+            if first_pass3056: first_pass3056 = False
             else: t = t.next0_
             if (not (t is not None)): break
             tt = Utils.asObjectOrNull(t, TextToken)
@@ -566,9 +572,9 @@ class AnalysisKit:
     def is_recurce_overflow(self) -> bool:
         return self.recurse_level > 5
     
-    def serialize(self, stream : io.IOBase) -> None:
-        Utils.writeByteIO(stream, 0xAA)
-        Utils.writeByteIO(stream, 1)
+    def serialize(self, stream : Stream) -> None:
+        stream.writebyte(0xAA)
+        stream.writebyte(1)
         self.__m_sofa.serialize(stream)
         SerializerHelper.serialize_int(stream, self.base_language.value)
         if (len(self.__m_entities) == 0): 
@@ -584,14 +590,14 @@ class AnalysisKit:
             e0_.serialize(stream)
         SerializerHelper.serialize_tokens(stream, self.first_token, 0)
     
-    def deserialize(self, stream : io.IOBase) -> bool:
+    def deserialize(self, stream : Stream) -> bool:
         vers = 0
-        b = Utils.readByteIO(stream)
+        b = stream.readbyte()
         if (b == (0xAA)): 
-            b = (Utils.readByteIO(stream))
+            b = (stream.readbyte())
             vers = (b)
         else: 
-            stream.seek(stream.tell() - (1), io.SEEK_SET)
+            stream.position = stream.position - (1)
         self.__m_sofa = SourceOfAnalysis(None)
         self.__m_sofa.deserialize(stream)
         self.base_language = MorphLang._new56(SerializerHelper.deserialize_int(stream))
@@ -614,14 +620,14 @@ class AnalysisKit:
         return True
     
     @staticmethod
-    def _new2836(_arg1 : 'Processor', _arg2 : 'ExtOntology') -> 'AnalysisKit':
+    def _new2840(_arg1 : 'Processor', _arg2 : 'ExtOntology') -> 'AnalysisKit':
         res = AnalysisKit()
         res.processor = _arg1
         res.ontology = _arg2
         return res
     
     @staticmethod
-    def _new2837(_arg1 : 'SourceOfAnalysis', _arg2 : bool, _arg3 : 'MorphLang', _arg4 : EventHandler, _arg5 : 'ExtOntology', _arg6 : 'Processor', _arg7 : bool) -> 'AnalysisKit':
+    def _new2841(_arg1 : 'SourceOfAnalysis', _arg2 : bool, _arg3 : 'MorphLang', _arg4 : EventHandler, _arg5 : 'ExtOntology', _arg6 : 'Processor', _arg7 : bool) -> 'AnalysisKit':
         res = AnalysisKit(_arg1, _arg2, _arg3, _arg4)
         res.ontology = _arg5
         res.processor = _arg6

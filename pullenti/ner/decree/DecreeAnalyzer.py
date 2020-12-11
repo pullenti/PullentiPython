@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import datetime
@@ -71,9 +73,9 @@ class DecreeAnalyzer(Analyzer):
                 return None
             ukaz = None
             tt = t
-            first_pass3604 = True
+            first_pass3111 = True
             while True:
-                if first_pass3604: first_pass3604 = False
+                if first_pass3111: first_pass3111 = False
                 else: tt = tt.previous
                 if (not (tt is not None)): break
                 if (tt.is_char_of(",") or tt.morph.class0_.is_preposition or tt.morph.class0_.is_conjunction): 
@@ -210,6 +212,8 @@ class DecreeAnalyzer(Analyzer):
         from pullenti.ner.instrument.internal.InstrToken1 import InstrToken1
         if (parts is None or len(parts) == 0): 
             return None
+        i = 0
+        j = 0
         tt = parts[len(parts) - 1].end_token.next0_
         if (_def_owner is not None and tt is not None): 
             if (BracketHelper.is_bracket(tt, False)): 
@@ -329,9 +333,9 @@ class DecreeAnalyzer(Analyzer):
                 parts[i].has_terminator = False
                 i += 1
         i = 0
-        first_pass3605 = True
+        first_pass3112 = True
         while True:
-            if first_pass3605: first_pass3605 = False
+            if first_pass3112: first_pass3112 = False
             else: i += 1
             if (not (i < len(parts))): break
             if (parts[i].typ == PartToken.ItemType.PREFIX): 
@@ -521,9 +525,9 @@ class DecreeAnalyzer(Analyzer):
                         if (owner is not None and DecreeAnalyzer._get_decree(parts[0].begin_token.previous.previous) is not None): 
                             owner = (None)
             tt = parts[0].begin_token.previous
-            first_pass3606 = True
+            first_pass3113 = True
             while True:
-                if first_pass3606: first_pass3606 = False
+                if first_pass3113: first_pass3113 = False
                 else: tt = tt.previous; coef_before += 1
                 if (not (tt is not None)): break
                 if (tt.is_newline_after): 
@@ -637,9 +641,9 @@ class DecreeAnalyzer(Analyzer):
                     has_newline = True
                 ttt = ttt.next0_
             tt = tt0
-            first_pass3607 = True
+            first_pass3114 = True
             while True:
-                if first_pass3607: first_pass3607 = False
+                if first_pass3114: first_pass3114 = False
                 else: tt = tt.next0_; coef_after += 1
                 if (not (tt is not None)): break
                 if (owner is not None and coef_after > 0): 
@@ -894,6 +898,7 @@ class DecreeAnalyzer(Analyzer):
                 else: 
                     li.append(Utils.asObjectOrNull(res[j].referent, DecreePartReferent))
                 j += 1
+            et = None
             if (j < len(res)): 
                 et = res[j].begin_token.previous
             else: 
@@ -940,9 +945,9 @@ class DecreeAnalyzer(Analyzer):
         kodeks = False
         max_empty = 30
         t = dts[0].begin_token.previous
-        first_pass3608 = True
+        first_pass3115 = True
         while True:
-            if first_pass3608: first_pass3608 = False
+            if first_pass3115: first_pass3115 = False
             else: t = t.previous
             if (not (t is not None)): break
             if (t.is_comma_and): 
@@ -979,9 +984,9 @@ class DecreeAnalyzer(Analyzer):
         is_noun_doubt = False
         num_tok = None
         i = 0
-        first_pass3609 = True
+        first_pass3116 = True
         while True:
-            if first_pass3609: first_pass3609 = False
+            if first_pass3116: first_pass3116 = False
             else: i += 1
             if (not (i < len(dts))): break
             if (dts[i].typ == DecreeToken.ItemType.TYP): 
@@ -1225,6 +1230,7 @@ class DecreeAnalyzer(Analyzer):
                     dec.add_slot(DecreeReferent.ATTR_GEO, dec0.get_string_value(DecreeReferent.ATTR_GEO), False, 0)
                 if (dec.find_slot(DecreeReferent.ATTR_DATE, None, True) is None and dec0.date is not None): 
                     dec.add_slot(DecreeReferent.ATTR_DATE, dec0.get_slot_value(DecreeReferent.ATTR_DATE), False, 0)
+                sl = None
                 if (dec.find_slot(DecreeReferent.ATTR_SOURCE, None, True) is None): 
                     sl = dec0.find_slot(DecreeReferent.ATTR_SOURCE, None, True)
                     if ((sl) is not None): 
@@ -1302,9 +1308,9 @@ class DecreeAnalyzer(Analyzer):
                         else: 
                             break
                         tt1 = tt1.previous
-                        first_pass3610 = True
+                        first_pass3117 = True
                         while True:
-                            if first_pass3610: first_pass3610 = False
+                            if first_pass3117: first_pass3117 = False
                             else: tt1 = (None if tt1 is None else tt1.previous)
                             if (not (tt1 is not None and tt1.begin_char > dn.begin_char)): break
                             if (tt1.morph.class0_.is_conjunction or tt1.morph.class0_.is_preposition): 
@@ -1326,9 +1332,9 @@ class DecreeAnalyzer(Analyzer):
                 et = dn.end_token
                 br = False
                 tt = et.next0_
-                first_pass3611 = True
+                first_pass3118 = True
                 while True:
-                    if first_pass3611: first_pass3611 = False
+                    if first_pass3118: first_pass3118 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_char('(')): 
@@ -1473,9 +1479,9 @@ class DecreeAnalyzer(Analyzer):
             if (rt.begin_token.previous is not None and rt.begin_token.previous.is_value("ПАСПОРТ", None)): 
                 cou = 0
                 tt = rt.end_token.next0_
-                first_pass3612 = True
+                first_pass3119 = True
                 while True:
-                    if first_pass3612: first_pass3612 = False
+                    if first_pass3119: first_pass3119 = False
                     else: tt = (None if tt is None else tt.next0_)
                     if (not (tt is not None and (cou < 1000))): break
                     if (tt.is_value("СРОК", "ТЕРМІН") and tt.next0_ is not None and tt.next0_.is_value("РЕАЛИЗАЦИЯ", "РЕАЛІЗАЦІЯ")): 
@@ -1501,9 +1507,9 @@ class DecreeAnalyzer(Analyzer):
         if (rt.end_token.next0_ is not None and rt.end_token.next0_.is_char('(')): 
             dt = None
             tt = rt.end_token.next0_.next0_
-            first_pass3613 = True
+            first_pass3120 = True
             while True:
-                if first_pass3613: first_pass3613 = False
+                if first_pass3120: first_pass3120 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 r = tt.get_referent()
@@ -1650,9 +1656,9 @@ class DecreeAnalyzer(Analyzer):
         ref0 = None
         aliases = TerminCollection()
         t = kit.first_token
-        first_pass3614 = True
+        first_pass3121 = True
         while True:
-            if first_pass3614: first_pass3614 = False
+            if first_pass3121: first_pass3121 = False
             else: t = t.next0_
             if (not (t is not None)): break
             r = t.get_referent()
@@ -1675,9 +1681,9 @@ class DecreeAnalyzer(Analyzer):
             t = kit.debed_token(rt)
         last_dec_dist = 0
         t = kit.first_token
-        first_pass3615 = True
+        first_pass3122 = True
         while True:
-            if first_pass3615: first_pass3615 = False
+            if first_pass3122: first_pass3122 = False
             else: t = t.next0_; last_dec_dist += 1
             if (not (t is not None)): break
             dts = DecreeToken.try_attach_list(t, None, 10, last_dec_dist > 1000)
@@ -1771,9 +1777,9 @@ class DecreeAnalyzer(Analyzer):
                     mt = DecreeAnalyzer._check_alias_after(t.next0_)
                     if (mt is not None): 
                         tt = dts[0].begin_token.previous
-                        first_pass3616 = True
+                        first_pass3123 = True
                         while True:
-                            if first_pass3616: first_pass3616 = False
+                            if first_pass3123: first_pass3123 = False
                             else: tt = tt.previous
                             if (not (tt is not None)): break
                             if (tt.is_comma): 
@@ -1836,9 +1842,9 @@ class DecreeAnalyzer(Analyzer):
                         rt.tag = (rt0.referent)
         if (len(ad.referents) > 0): 
             t = kit.first_token
-            first_pass3617 = True
+            first_pass3124 = True
             while True:
-                if first_pass3617: first_pass3617 = False
+                if first_pass3124: first_pass3124 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 dr = Utils.asObjectOrNull(t.get_referent(), DecreeReferent)
@@ -1867,6 +1873,7 @@ class DecreeAnalyzer(Analyzer):
                     tt = tt.next0_
                 if (li is None): 
                     continue
+                i = 0
                 for i in range(len(li) - 1, 0, -1):
                     if (li[i].typ == li[i - 1].typ): 
                         if (li[i].date is not None and li[i].tag is not None and li[i - 1].date is None): 
@@ -1896,9 +1903,9 @@ class DecreeAnalyzer(Analyzer):
         expire_regime = False
         has_start_change = 0
         t = kit.first_token
-        first_pass3618 = True
+        first_pass3125 = True
         while True:
-            if first_pass3618: first_pass3618 = False
+            if first_pass3125: first_pass3125 = False
             else: t = t.next0_
             if (not (t is not None)): break
             dts = None
@@ -1996,6 +2003,7 @@ class DecreeAnalyzer(Analyzer):
                         if (dprs is None): 
                             dprs = list()
                         dprs.append(dr)
+                        rt = None
                         if (i == 0): 
                             rt = ReferentToken(dr, kp.begin_token, kp.end_token)
                         else: 
@@ -2100,9 +2108,9 @@ class DecreeAnalyzer(Analyzer):
                     dcr.add_slot(DecreeChangeReferent.ATTR_OWNER, dcht.decree, False, 0)
                     chrt.append(ReferentToken(dcr, dcht.begin_token, dcht.end_token))
                     tt = dcht.end_token.next0_
-                    first_pass3619 = True
+                    first_pass3126 = True
                     while True:
-                        if first_pass3619: first_pass3619 = False
+                        if first_pass3126: first_pass3126 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.next0_ is None): 
@@ -2134,6 +2142,7 @@ class DecreeAnalyzer(Analyzer):
                         if (isinstance(rt.referent, DecreeChangeReferent)): 
                             last_change = (Utils.asObjectOrNull(rt.referent, DecreeChangeReferent))
                             if (dprs is not None): 
+                                ii = 0
                                 ii = 0
                                 while ii < (len(dprs) - 1): 
                                     last_change.add_slot(DecreeChangeReferent.ATTR_OWNER, dprs[ii], False, 0)
@@ -2239,9 +2248,9 @@ class DecreeAnalyzer(Analyzer):
         alias = None
         aliast0 = None
         tt = tt.next0_
-        first_pass3620 = True
+        first_pass3127 = True
         while True:
-            if first_pass3620: first_pass3620 = False
+            if first_pass3127: first_pass3127 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             cou += 1
@@ -2303,9 +2312,9 @@ class DecreeAnalyzer(Analyzer):
         else: 
             t = t.next0_
         ok = False
-        first_pass3621 = True
+        first_pass3128 = True
         while True:
-            if first_pass3621: first_pass3621 = False
+            if first_pass3128: first_pass3128 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_comma_and or t.morph.class0_.is_preposition): 
@@ -2349,6 +2358,7 @@ class DecreeAnalyzer(Analyzer):
                 has_num = 0
                 has_own = 0
                 has_typ = 0
+                ii = 0
                 ii = 0
                 while ii < len(dts): 
                     if (dts[ii].typ == DecreeToken.ItemType.NUMBER): 
@@ -2476,9 +2486,9 @@ class DecreeAnalyzer(Analyzer):
                 t0 = t0.previous
         pub0 = None
         pub_part0 = None
-        first_pass3622 = True
+        first_pass3129 = True
         while True:
-            if first_pass3622: first_pass3622 = False
+            if first_pass3129: first_pass3129 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_char_of(",;.") or t.is_and): 

@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -46,6 +48,7 @@ class AdverbToken(MetaToken):
                 nn.begin_token = t
                 return nn
         t0 = t
+        t1 = None
         if (t.next0_ is not None and t.morph.class0_.is_preposition): 
             t = t.next0_
         if (t.is_value("ДРУГ", None) or t.is_value("САМ", None)): 
@@ -54,12 +57,12 @@ class AdverbToken(MetaToken):
                 t1 = t1.next0_
             if (t1 is not None): 
                 if (t1.is_value("ДРУГ", None) and t.is_value("ДРУГ", None)): 
-                    return AdverbToken._new2882(t0, t1, SemAttributeType.EACHOTHER)
+                    return AdverbToken._new2886(t0, t1, SemAttributeType.EACHOTHER)
                 if (t1.is_value("СЕБЯ", None) and t.is_value("САМ", None)): 
-                    return AdverbToken._new2882(t0, t1, SemAttributeType.HIMELF)
+                    return AdverbToken._new2886(t0, t1, SemAttributeType.HIMELF)
         tok = AdverbToken.__m_termins.try_parse(t, TerminParseAttr.NO)
         if (tok is not None): 
-            res = AdverbToken._new2882(t0, tok.end_token, Utils.valToEnum(tok.termin.tag, SemAttributeType))
+            res = AdverbToken._new2886(t0, tok.end_token, Utils.valToEnum(tok.termin.tag, SemAttributeType))
             t = res.end_token.next0_
             if (t is not None and t.is_comma): 
                 t = t.next0_
@@ -83,6 +86,7 @@ class AdverbToken(MetaToken):
         if (AdverbToken.__m_termins is not None): 
             return
         AdverbToken.__m_termins = TerminCollection()
+        t = None
         t = Termin._new100("ЕЩЕ", SemAttributeType.STILL)
         AdverbToken.__m_termins.add(t)
         t = Termin._new100("УЖЕ", SemAttributeType.ALREADY)
@@ -118,7 +122,7 @@ class AdverbToken(MetaToken):
         AdverbToken.__m_termins.add(t)
     
     @staticmethod
-    def _new2882(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'SemAttributeType') -> 'AdverbToken':
+    def _new2886(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'SemAttributeType') -> 'AdverbToken':
         res = AdverbToken(_arg1, _arg2)
         res.typ = _arg3
         return res

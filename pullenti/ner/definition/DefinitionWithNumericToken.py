@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -32,20 +34,14 @@ class DefinitionWithNumericToken(MetaToken):
     
     @staticmethod
     def try_parse(t : 'Token') -> 'DefinitionWithNumericToken':
-        """ Выделить определение с указанного токена
-        
-        Args:
-            t(Token): токен
-        
-        """
         if (not MiscHelper.can_be_start_of_sentence(t)): 
             return None
         tt = t
         noun_ = None
         num = None
-        first_pass3639 = True
+        first_pass3146 = True
         while True:
-            if first_pass3639: first_pass3639 = False
+            if first_pass3146: first_pass3146 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt != t and MiscHelper.can_be_start_of_sentence(tt)): 

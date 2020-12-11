@@ -1,10 +1,12 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
-import io
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.ner.core.internal.TextsCompareType import TextsCompareType
 from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
@@ -222,10 +224,11 @@ class Referent:
         str0_ = self.get_string_value(attr_name)
         if (Utils.isNullOrEmpty(str0_)): 
             return def_value
-        wrapres2854 = RefOutArgWrapper(0)
-        inoutres2855 = Utils.tryParseInt(str0_, wrapres2854)
-        res = wrapres2854.value
-        if (not inoutres2855): 
+        res = 0
+        wrapres2858 = RefOutArgWrapper(0)
+        inoutres2859 = Utils.tryParseInt(str0_, wrapres2858)
+        res = wrapres2858.value
+        if (not inoutres2859): 
             return def_value
         return res
     
@@ -278,7 +281,7 @@ class Referent:
                 l_._merge(anno)
                 return
         if (anno.occurence_of != self and anno.occurence_of is not None): 
-            anno = TextAnnotation._new2857(anno.begin_char, anno.end_char, anno.sofa)
+            anno = TextAnnotation._new2861(anno.begin_char, anno.end_char, anno.sofa)
         if (self.__m_occurrence is None): 
             self.__m_occurrence = list()
         anno.occurence_of = self
@@ -333,7 +336,7 @@ class Referent:
         res.occurrence.extend(self.occurrence)
         res.ontology_items = self.ontology_items
         for r in self.slots: 
-            rr = Slot._new2858(r.type_name, r.value, r.count)
+            rr = Slot._new2862(r.type_name, r.value, r.count)
             rr.owner = res
             res.slots.append(rr)
         return res
@@ -460,7 +463,7 @@ class Referent:
             for rt in obj._m_ext_referents: 
                 self.add_ext_referent(rt)
     
-    def serialize(self, stream : io.IOBase) -> None:
+    def serialize(self, stream : Stream) -> None:
         SerializerHelper.serialize_string(stream, self.type_name)
         SerializerHelper.serialize_int(stream, len(self.__m_slots))
         for s in self.__m_slots: 
@@ -486,7 +489,7 @@ class Referent:
                     attr = 1
                 SerializerHelper.serialize_int(stream, attr)
     
-    def deserialize(self, stream : io.IOBase, all0_ : typing.List['Referent'], sofa : 'SourceOfAnalysis') -> None:
+    def deserialize(self, stream : Stream, all0_ : typing.List['Referent'], sofa : 'SourceOfAnalysis') -> None:
         typ = SerializerHelper.deserialize_string(stream)
         cou = SerializerHelper.deserialize_int(stream)
         i = 0
@@ -500,7 +503,7 @@ class Referent:
                 if (id1 < len(all0_)): 
                     val = (all0_[id1])
             elif (id0_ > 0): 
-                stream.seek(stream.tell() - (4), io.SEEK_SET)
+                stream.position = stream.position - (4)
                 val = (SerializerHelper.deserialize_string(stream))
             self.add_slot(typ, val, False, c)
             i += 1
@@ -508,7 +511,7 @@ class Referent:
         self.__m_occurrence = list()
         i = 0
         while i < cou: 
-            a = TextAnnotation._new2859(sofa, self)
+            a = TextAnnotation._new2863(sofa, self)
             self.__m_occurrence.append(a)
             a.begin_char = SerializerHelper.deserialize_int(stream)
             a.end_char = SerializerHelper.deserialize_int(stream)

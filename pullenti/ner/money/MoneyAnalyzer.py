@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import math
@@ -67,9 +69,9 @@ class MoneyAnalyzer(Analyzer):
     def process(self, kit : 'AnalysisKit') -> None:
         ad = kit.get_analyzer_data(self)
         t = kit.first_token
-        first_pass3802 = True
+        first_pass3310 = True
         while True:
-            if first_pass3802: first_pass3802 = False
+            if first_pass3310: first_pass3310 = False
             else: t = t.next0_
             if (not (t is not None)): break
             mon = MoneyAnalyzer.try_parse(t)

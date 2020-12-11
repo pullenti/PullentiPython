@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -145,7 +147,7 @@ class TransportReferent(Referent):
             res = Utils.valToEnum(s, TransportKind)
             if (isinstance(res, TransportKind)): 
                 return Utils.valToEnum(res, TransportKind)
-        except Exception as ex2701: 
+        except Exception as ex2705: 
             pass
         return TransportKind.UNDEFINED
     

@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -113,7 +115,7 @@ class SemObject(object):
         return None
     
     @staticmethod
-    def _new2929(_arg1 : 'SemGraph', _arg2 : 'SemObjectType') -> 'SemObject':
+    def _new2933(_arg1 : 'SemGraph', _arg2 : 'SemObjectType') -> 'SemObject':
         res = SemObject(_arg1)
         res.typ = _arg2
         return res

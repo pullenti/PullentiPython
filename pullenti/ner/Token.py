@@ -1,9 +1,11 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
-import io
 from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.morph.CharsInfo import CharsInfo
 from pullenti.morph.MorphGender import MorphGender
@@ -95,6 +97,7 @@ class Token:
         return self.kit.sofa.text[self.begin_char:self.begin_char+(self.end_char + 1) - self.begin_char]
     
     def __get_attr(self, i : int) -> bool:
+        ch = '\x00'
         if ((((self.__m_attrs) & 1)) == 0): 
             self.__m_attrs = (1)
             if (self._m_previous is None): 
@@ -386,7 +389,7 @@ class Token:
         """
         return self.morph.class0_
     
-    def _serialize(self, stream : io.IOBase) -> None:
+    def _serialize(self, stream : Stream) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         SerializerHelper.serialize_int(stream, self.begin_char)
         SerializerHelper.serialize_int(stream, self.end_char)
@@ -396,12 +399,12 @@ class Token:
             self.__m_morph = MorphCollection()
         self.__m_morph._serialize(stream)
     
-    def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit', vers : int) -> None:
+    def _deserialize(self, stream : Stream, kit_ : 'AnalysisKit', vers : int) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         self.kit = kit_
         self.__m_begin_char = SerializerHelper.deserialize_int(stream)
         self.__m_end_char = SerializerHelper.deserialize_int(stream)
         self.__m_attrs = (SerializerHelper.deserialize_int(stream))
-        self.chars = CharsInfo._new2557(SerializerHelper.deserialize_int(stream))
+        self.chars = CharsInfo._new2561(SerializerHelper.deserialize_int(stream))
         self.__m_morph = MorphCollection()
         self.__m_morph._deserialize(stream)

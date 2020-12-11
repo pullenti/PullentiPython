@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -128,6 +130,8 @@ class BookLinkRefReferent(Referent):
         num2 = r2.get_string_value(BookLinkRefReferent.ATTR_NUMBER)
         if (num1 is None or num2 is None): 
             return None
+        n1 = 0
+        n2 = 0
         wrapn1381 = RefOutArgWrapper(0)
         inoutres382 = Utils.tryParseInt(num1, wrapn1381)
         wrapn2383 = RefOutArgWrapper(0)

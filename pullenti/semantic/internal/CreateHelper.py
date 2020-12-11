@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -117,9 +119,9 @@ class CreateHelper:
         sem.typ = SemObjectType.NOUN
         sem.measure = mr.kind
         i = 0
-        first_pass3930 = True
+        first_pass3438 = True
         while True:
-            if first_pass3930: first_pass3930 = False
+            if first_pass3438: first_pass3438 = False
             else: i += 1
             if (not (i < len(sem.morph.normal_case))): break
             ch = sem.morph.normal_case[i]
@@ -196,9 +198,9 @@ class CreateHelper:
         attrs = list()
         adverbs = list()
         i = 0
-        first_pass3931 = True
+        first_pass3439 = True
         while True:
-            if first_pass3931: first_pass3931 = False
+            if first_pass3439: first_pass3439 = False
             else: i += 1
             if (not (i < len(vpt.items))): break
             v = vpt.items[i]
@@ -207,7 +209,7 @@ class CreateHelper:
                 if (adv is None): 
                     continue
                 if (adv.typ != SemAttributeType.UNDEFINED): 
-                    attrs.append(SemAttribute._new2908(adv.not0_, adv.typ, adv.spelling))
+                    attrs.append(SemAttribute._new2912(adv.not0_, adv.typ, adv.spelling))
                     continue
                 adverb = CreateHelper.create_adverb(gr, adv)
                 if (len(attrs) > 0): 
@@ -216,6 +218,7 @@ class CreateHelper:
                 adverbs.append(adverb)
                 continue
             if (v.normal == "БЫТЬ"): 
+                j = 0
                 j = (i + 1)
                 while j < len(vpt.items): 
                     if (not vpt.items[j].is_adverb): 

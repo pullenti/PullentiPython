@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 import io
@@ -701,9 +703,9 @@ class PersonReferent(Referent):
                 v = str(self.slots[i].value)
                 if (not v in vars0_): 
                     j = 0
-                    first_pass3879 = True
+                    first_pass3387 = True
                     while True:
-                        if first_pass3879: first_pass3879 = False
+                        if first_pass3387: first_pass3387 = False
                         else: j += 1
                         if (not (j < len(self.slots))): break
                         if (j != i and self.slots[j].type_name == self.slots[i].type_name): 
@@ -763,7 +765,7 @@ class PersonReferent(Referent):
         tit = self.__find_shortest_king_titul(False)
         for a in self.slots: 
             if (a.type_name == PersonReferent.ATTR_IDENTITY): 
-                oi.termins.append(Termin._new2616(str(a.value), True))
+                oi.termins.append(Termin._new2620(str(a.value), True))
             elif (a.type_name == PersonReferent.ATTR_LASTNAME): 
                 t = Termin(str(a.value))
                 if (len(t.terms) > 20): 

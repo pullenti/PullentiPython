@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
 
@@ -21,9 +23,9 @@ class TableCellToken(MetaToken):
         while t is not None and t.end_char <= self.end_char: 
             t0 = t
             t1 = t
-            first_pass3559 = True
+            first_pass3066 = True
             while True:
-                if first_pass3559: first_pass3559 = False
+                if first_pass3066: first_pass3066 = False
                 else: t = t.next0_
                 if (not (t is not None and t.end_char <= self.end_char)): break
                 t1 = t

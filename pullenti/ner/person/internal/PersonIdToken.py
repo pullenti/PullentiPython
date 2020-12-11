@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from enum import IntEnum
@@ -53,9 +55,9 @@ class PersonIdToken(MetaToken):
             return None
         li = list()
         t = noun.end_token.next0_
-        first_pass3863 = True
+        first_pass3371 = True
         while True:
-            if first_pass3863: first_pass3863 = False
+            if first_pass3371: first_pass3371 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_table_control_char): 
@@ -122,9 +124,9 @@ class PersonIdToken(MetaToken):
             ip = False
             reg = False
             tt = t.next0_
-            first_pass3864 = True
+            first_pass3372 = True
             while True:
-                if first_pass3864: first_pass3864 = False
+                if first_pass3372: first_pass3372 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_comma_and or tt.morph.class0_.is_preposition): 
@@ -142,18 +144,18 @@ class PersonIdToken(MetaToken):
                 else: 
                     break
             if (reg and ip): 
-                return PersonIdToken._new2501(t, tt1, PersonIdToken.Typs.KEYWORD, "СВИДЕТЕЛЬСТВО О ГОСУДАРСТВЕННОЙ РЕГИСТРАЦИИ ФИЗИЧЕСКОГО ЛИЦА В КАЧЕСТВЕ ИНДИВИДУАЛЬНОГО ПРЕДПРИНИМАТЕЛЯ")
+                return PersonIdToken._new2505(t, tt1, PersonIdToken.Typs.KEYWORD, "СВИДЕТЕЛЬСТВО О ГОСУДАРСТВЕННОЙ РЕГИСТРАЦИИ ФИЗИЧЕСКОГО ЛИЦА В КАЧЕСТВЕ ИНДИВИДУАЛЬНОГО ПРЕДПРИНИМАТЕЛЯ")
         tok = PersonIdToken.M_ONTOLOGY.try_parse(t, TerminParseAttr.NO)
         if (tok is not None): 
             ty = Utils.valToEnum(tok.termin.tag, PersonIdToken.Typs)
-            res = PersonIdToken._new2501(tok.begin_token, tok.end_token, ty, tok.termin.canonic_text)
+            res = PersonIdToken._new2505(tok.begin_token, tok.end_token, ty, tok.termin.canonic_text)
             if (prev is None): 
                 if (ty != PersonIdToken.Typs.KEYWORD): 
                     return None
                 t = tok.end_token.next0_
-                first_pass3865 = True
+                first_pass3373 = True
                 while True:
-                    if first_pass3865: first_pass3865 = False
+                    if first_pass3373: first_pass3373 = False
                     else: t = t.next0_
                     if (not (t is not None)): break
                     r = t.get_referent()
@@ -207,9 +209,9 @@ class PersonIdToken(MetaToken):
                 if (tt is not None and tt.is_char(':')): 
                     tt = tt.next0_
                 next_num = False
-                first_pass3866 = True
+                first_pass3374 = True
                 while True:
-                    if first_pass3866: first_pass3866 = False
+                    if first_pass3374: first_pass3374 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_newline_before): 
@@ -254,9 +256,9 @@ class PersonIdToken(MetaToken):
                 return res
             if (ty == PersonIdToken.Typs.CODE): 
                 tt = res.end_token.next0_
-                first_pass3867 = True
+                first_pass3375 = True
                 while True:
-                    if first_pass3867: first_pass3867 = False
+                    if first_pass3375: first_pass3375 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_char_of(":") or tt.is_hiphen): 
@@ -271,9 +273,9 @@ class PersonIdToken(MetaToken):
                     res.end_token = t
                     return res
                 tt = res.end_token.next0_
-                first_pass3868 = True
+                first_pass3376 = True
                 while True:
-                    if first_pass3868: first_pass3868 = False
+                    if first_pass3376: first_pass3376 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_char_of(":") or tt.is_hiphen or tt.morph.class0_.is_preposition): 
@@ -293,7 +295,7 @@ class PersonIdToken(MetaToken):
             t = t1
         if (isinstance(t, NumberToken)): 
             tmp = io.StringIO()
-            res = PersonIdToken._new2503(t0, t, PersonIdToken.Typs.NUMBER)
+            res = PersonIdToken._new2507(t0, t, PersonIdToken.Typs.NUMBER)
             tt = t
             while tt is not None: 
                 if (tt.is_newline_before or not (isinstance(tt, NumberToken))): 
@@ -319,17 +321,17 @@ class PersonIdToken(MetaToken):
             r = t.get_referent()
             if (r is not None): 
                 if (r.type_name == "DATE"): 
-                    return PersonIdToken._new2504(t, t, PersonIdToken.Typs.DATE, r)
+                    return PersonIdToken._new2508(t, t, PersonIdToken.Typs.DATE, r)
                 if (r.type_name == "ORGANIZATION"): 
-                    return PersonIdToken._new2504(t, t, PersonIdToken.Typs.ORG, r)
+                    return PersonIdToken._new2508(t, t, PersonIdToken.Typs.ORG, r)
                 if (r.type_name == "ADDRESS"): 
-                    return PersonIdToken._new2504(t, t, PersonIdToken.Typs.ADDRESS, r)
+                    return PersonIdToken._new2508(t, t, PersonIdToken.Typs.ADDRESS, r)
         if ((prev is not None and prev.typ == PersonIdToken.Typs.KEYWORD and (isinstance(t, TextToken))) and not t.chars.is_all_lower and t.chars.is_letter): 
             rr = PersonIdToken.__try_parse(t.next0_, prev)
             if (rr is not None and rr.typ == PersonIdToken.Typs.NUMBER): 
-                return PersonIdToken._new2501(t, t, PersonIdToken.Typs.SERIA, t.term)
+                return PersonIdToken._new2505(t, t, PersonIdToken.Typs.SERIA, t.term)
         if ((t is not None and t.is_value("ОТ", "ВІД") and (isinstance(t.next0_, ReferentToken))) and t.next0_.get_referent().type_name == "DATE"): 
-            return PersonIdToken._new2504(t, t.next0_, PersonIdToken.Typs.DATE, t.next0_.get_referent())
+            return PersonIdToken._new2508(t, t.next0_, PersonIdToken.Typs.DATE, t.next0_.get_referent())
         return None
     
     M_ONTOLOGY = None
@@ -339,6 +341,7 @@ class PersonIdToken(MetaToken):
         if (PersonIdToken.M_ONTOLOGY is not None): 
             return
         PersonIdToken.M_ONTOLOGY = TerminCollection()
+        t = None
         t = Termin._new100("ПАСПОРТ", PersonIdToken.Typs.KEYWORD)
         t.add_variant("ПАССПОРТ", False)
         t.add_variant("ПАСПОРТНЫЕ ДАННЫЕ", False)
@@ -389,20 +392,20 @@ class PersonIdToken(MetaToken):
         PersonIdToken.M_ONTOLOGY.add(t)
     
     @staticmethod
-    def _new2501(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str) -> 'PersonIdToken':
+    def _new2505(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : str) -> 'PersonIdToken':
         res = PersonIdToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new2503(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs') -> 'PersonIdToken':
+    def _new2507(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs') -> 'PersonIdToken':
         res = PersonIdToken(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new2504(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent') -> 'PersonIdToken':
+    def _new2508(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'Typs', _arg4 : 'Referent') -> 'PersonIdToken':
         res = PersonIdToken(_arg1, _arg2)
         res.typ = _arg3
         res.referent = _arg4

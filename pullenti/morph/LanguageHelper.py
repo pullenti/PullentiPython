@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -25,22 +27,16 @@ class LanguageHelper:
     
     @staticmethod
     def get_language_for_text(text : str) -> str:
-        """ Определить язык для неструктурированного ткста
-        
-        Args:
-            text(str): текст
-        
-        Returns:
-            str: код языка или null при ненахождении
-        """
         if (Utils.isNullOrEmpty(text)): 
             return None
+        i = 0
+        j = 0
         ru_chars = 0
         en_chars = 0
         i = 0
-        first_pass3482 = True
+        first_pass2989 = True
         while True:
-            if first_pass3482: first_pass3482 = False
+            if first_pass2989: first_pass2989 = False
             else: i += 1
             if (not (i < len(text))): break
             ch = text[i]
@@ -61,12 +57,6 @@ class LanguageHelper:
     
     @staticmethod
     def _get_word_lang(word : str) -> 'MorphLang':
-        """ Определение языка для одного слова
-        
-        Args:
-            word(str): слово (в верхнем регистре)
-        
-        """
         cyr = 0
         lat = 0
         undef = 0
@@ -159,37 +149,16 @@ class LanguageHelper:
     
     @staticmethod
     def is_cyrillic_vowel(ch : 'char') -> bool:
-        """ Проверка, что это гласная на кириллице
-        
-        Args:
-            ch('char'): 
-        
-        """
         ui = UnicodeInfo.ALL_CHARS[ord(ch)]
         return ui.is_cyrillic and ui.is_vowel
     
     @staticmethod
     def is_latin_vowel(ch : 'char') -> bool:
-        """ Проверка, что это гласная на латинице
-        
-        Args:
-            ch('char'): 
-        
-        """
         ui = UnicodeInfo.ALL_CHARS[ord(ch)]
         return ui.is_latin and ui.is_vowel
     
     @staticmethod
     def get_cyr_for_lat(lat : 'char') -> 'char':
-        """ Получить для латинской буквы её возможный графический эквивалент на кириллице
-        (для тексто-графических замен)
-        
-        Args:
-            lat('char'): 
-        
-        Returns:
-            'char': 0 - нет эквивалента
-        """
         i = LanguageHelper._m_lat_chars.find(lat)
         if (i >= 0 and (i < len(LanguageHelper._m_cyr_chars))): 
             return LanguageHelper._m_cyr_chars[i]
@@ -200,15 +169,6 @@ class LanguageHelper:
     
     @staticmethod
     def get_lat_for_cyr(cyr : 'char') -> 'char':
-        """ Получить для кириллической буквы её возможный графический эквивалент на латинице
-        (для тексто-графических замен)
-        
-        Args:
-            lat: 
-        
-        Returns:
-            'char': 0 - нет эквивалента
-        """
         i = LanguageHelper._m_cyr_chars.find(cyr)
         if ((i < 0) or i >= len(LanguageHelper._m_lat_chars)): 
             return chr(0)
@@ -217,14 +177,6 @@ class LanguageHelper:
     
     @staticmethod
     def transliteral_correction(value : str, prev_value : str, always : bool=False) -> str:
-        """ Транслитеральная корректировка
-        
-        Args:
-            value(str): 
-            prev_value(str): 
-            always(bool): 
-        
-        """
         pure_cyr = 0
         pure_lat = 0
         ques_cyr = 0
@@ -233,9 +185,9 @@ class LanguageHelper:
         y = False
         udaren = False
         i = 0
-        first_pass3483 = True
+        first_pass2990 = True
         while True:
-            if first_pass3483: first_pass3483 = False
+            if first_pass2990: first_pass2990 = False
             else: i += 1
             if (not (i < len(value))): break
             ch = value[i]
@@ -288,9 +240,9 @@ class LanguageHelper:
                 return value
         tmp = Utils.newStringIO(value)
         i = 0
-        first_pass3484 = True
+        first_pass2991 = True
         while True:
-            if first_pass3484: first_pass3484 = False
+            if first_pass2991: first_pass2991 = False
             else: i += 1
             if (not (i < tmp.tell())): break
             if (Utils.getCharAtStringIO(tmp, i) == 'Ь' and ((i + 1) < tmp.tell()) and Utils.getCharAtStringIO(tmp, i + 1) == 'I'): 
@@ -349,12 +301,7 @@ class LanguageHelper:
     
     @staticmethod
     def get_case_after_preposition(prep : str) -> 'MorphCase':
-        """ Получить возможные падежи существительных после предлогов
-        
-        Args:
-            prep(str): предлог
-        
-        """
+        mc = None
         wrapmc25 = RefOutArgWrapper(None)
         inoutres26 = Utils.tryGetValue(LanguageHelper.__m_prep_cases, prep, wrapmc25)
         mc = wrapmc25.value
@@ -369,6 +316,7 @@ class LanguageHelper:
     
     @staticmethod
     def normalize_preposition(prep : str) -> str:
+        res = None
         wrapres27 = RefOutArgWrapper(None)
         inoutres28 = Utils.tryGetValue(LanguageHelper.__m_prep_norms, prep, wrapres27)
         res = wrapres27.value
@@ -379,13 +327,6 @@ class LanguageHelper:
     
     @staticmethod
     def ends_with(str0_ : str, substr : str) -> bool:
-        """ Замена стандартной функции string.EndsWith, которая относительно медленная
-        
-        Args:
-            str0_(str): 
-            substr(str): 
-        
-        """
         if (str0_ is None or substr is None): 
             return False
         i = len(str0_) - 1
@@ -400,16 +341,6 @@ class LanguageHelper:
     
     @staticmethod
     def ends_with_ex(str0_ : str, substr : str, substr2 : str, substr3 : str=None, substr4 : str=None) -> bool:
-        """ Проверка окончания строки на одну из заданных подстрок
-        
-        Args:
-            str0_(str): 
-            substr(str): 
-            substr2(str): 
-            substr3(str): 
-            substr4(str): 
-        
-        """
         if (str0_ is None): 
             return False
         for k in range(4):
@@ -553,14 +484,6 @@ class LanguageHelper:
     
     @staticmethod
     def correct_word(w : str) -> str:
-        """ Откорректировать слово (перевод в верхний регистр и замена некоторых букв типа Ё->Е)
-        
-        Args:
-            w(str): исходное слово
-        
-        Returns:
-            str: откорректированное слово
-        """
         if (w is None): 
             return None
         res = w.upper()

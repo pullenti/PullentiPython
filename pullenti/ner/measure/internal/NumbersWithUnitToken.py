@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -200,7 +202,7 @@ class NumbersWithUnitToken(MetaToken):
             utxt = utxt[0:0+len(utxt) - 1]
             terms = UnitsHelper.TERMINS.find_termins_by_string(utxt, None)
             if (terms is not None and len(terms) > 0): 
-                mt.units.append(UnitToken._new1622(mt.end_token.next0_, mt.end_token.next0_, Utils.asObjectOrNull(terms[0].tag, Unit)))
+                mt.units.append(UnitToken._new1626(mt.end_token.next0_, mt.end_token.next0_, Utils.asObjectOrNull(terms[0].tag, Unit)))
                 mt.end_token = mt.end_token.next0_
                 res1 = NumbersWithUnitToken.try_parse_multi(mt.end_token.next0_, add_units, False, False, False, False)
                 if (res1 is not None): 
@@ -211,12 +213,6 @@ class NumbersWithUnitToken(MetaToken):
     
     @staticmethod
     def try_parse(t : 'Token', add_units : 'TerminCollection', can_omit_number : bool=False, not0__ : bool=False, can_be_nan : bool=False, is_resctriction : bool=False) -> 'NumbersWithUnitToken':
-        """ Попробовать выделить с указанной позиции
-        
-        Args:
-            t(Token): 
-        
-        """
         if (t is None): 
             return None
         res = NumbersWithUnitToken._try_parse(t, add_units, is_resctriction, can_omit_number, can_be_nan)
@@ -265,9 +261,9 @@ class NumbersWithUnitToken(MetaToken):
         has_keyw = False
         is_diap_keyw = False
         min_max = 0
-        wrapmin_max1629 = RefOutArgWrapper(min_max)
-        ttt = NumbersWithUnitToken._is_min_or_max(t, wrapmin_max1629)
-        min_max = wrapmin_max1629.value
+        wrapmin_max1633 = RefOutArgWrapper(min_max)
+        ttt = NumbersWithUnitToken._is_min_or_max(t, wrapmin_max1633)
+        min_max = wrapmin_max1633.value
         if (ttt is not None): 
             t = ttt.next0_
             if (t is None): 
@@ -446,22 +442,22 @@ class NumbersWithUnitToken(MetaToken):
                 for u in UnitsHelper.UNITS: 
                     if (u.fullname_cyr == unam): 
                         uni = list()
-                        uni.append(UnitToken._new1622(t, t, u))
+                        uni.append(UnitToken._new1626(t, t, u))
                         break
                 if (uni is None): 
                     return None
-                res = NumbersWithUnitToken._new1624(t0, tt.end_token, about_)
+                res = NumbersWithUnitToken._new1628(t0, tt.end_token, about_)
                 t = tt.end_token.next0_
             else: 
                 if (not can_omit_number and not has_keyw and not can_be_nan): 
                     return None
                 if ((uni is not None and len(uni) == 1 and uni[0].begin_token == uni[0].end_token) and uni[0].length_char > 3): 
                     rval = (1)
-                    res = NumbersWithUnitToken._new1624(t0, uni[len(uni) - 1].end_token, about_)
+                    res = NumbersWithUnitToken._new1628(t0, uni[len(uni) - 1].end_token, about_)
                     t = res.end_token.next0_
                 elif (has_keyw and can_be_nan): 
                     rval = math.nan
-                    res = NumbersWithUnitToken._new1624(t0, t0, about_)
+                    res = NumbersWithUnitToken._new1628(t0, t0, about_)
                     if (t is not None): 
                         res.end_token = t.previous
                     else: 
@@ -488,7 +484,7 @@ class NumbersWithUnitToken(MetaToken):
                     if (mi.class0_.is_adjective): 
                         return None
             t = num.end_token.next0_
-            res = NumbersWithUnitToken._new1624(t0, num.end_token, about_)
+            res = NumbersWithUnitToken._new1628(t0, num.end_token, about_)
             rval = num.real_value
         if (uni is None): 
             uni = UnitToken.try_parse_list(t, add_units, False)
@@ -532,9 +528,9 @@ class NumbersWithUnitToken(MetaToken):
         is_second_max = False
         if (not second): 
             iii = 0
-            wrapiii1628 = RefOutArgWrapper(iii)
-            ttt = NumbersWithUnitToken._is_min_or_max(t, wrapiii1628)
-            iii = wrapiii1628.value
+            wrapiii1632 = RefOutArgWrapper(iii)
+            ttt = NumbersWithUnitToken._is_min_or_max(t, wrapiii1632)
+            iii = wrapiii1632.value
             if (ttt is not None and iii > 0): 
                 is_second_max = True
                 t = ttt.next0_
@@ -619,12 +615,6 @@ class NumbersWithUnitToken(MetaToken):
     
     @staticmethod
     def _try_parsewhl(t : 'Token') -> 'MetaToken':
-        """ Это распознавание написаний ГхШхВ
-        
-        Args:
-            t(Token): 
-        
-        """
         if (not (isinstance(t, TextToken))): 
             return None
         if (t.is_char_of(":-")): 
@@ -775,13 +765,13 @@ class NumbersWithUnitToken(MetaToken):
         NumbersWithUnitToken.M_SPEC.add(t)
     
     @staticmethod
-    def _new1615(_arg1 : 'Token', _arg2 : 'Token', _arg3 : float) -> 'NumbersWithUnitToken':
+    def _new1619(_arg1 : 'Token', _arg2 : 'Token', _arg3 : float) -> 'NumbersWithUnitToken':
         res = NumbersWithUnitToken(_arg1, _arg2)
         res.single_val = _arg3
         return res
     
     @staticmethod
-    def _new1624(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'NumbersWithUnitToken':
+    def _new1628(_arg1 : 'Token', _arg2 : 'Token', _arg3 : bool) -> 'NumbersWithUnitToken':
         res = NumbersWithUnitToken(_arg1, _arg2)
         res.about = _arg3
         return res

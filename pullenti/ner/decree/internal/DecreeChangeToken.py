@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -90,9 +92,9 @@ class DecreeChangeToken(MetaToken):
         tt = t
         if (t.is_newline_before and not ignore_newlines): 
             tt = t
-            first_pass3575 = True
+            first_pass3082 = True
             while True:
-                if first_pass3575: first_pass3575 = False
+                if first_pass3082: first_pass3082 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt == t and BracketHelper.is_bracket(tt, False) and not tt.is_char('(')): 
@@ -129,9 +131,9 @@ class DecreeChangeToken(MetaToken):
                 res.end_token = tt
             has_change = False
             tt = tt.next0_
-            first_pass3576 = True
+            first_pass3083 = True
             while True:
-                if first_pass3576: first_pass3576 = False
+                if first_pass3083: first_pass3083 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_newline_before): 
@@ -191,9 +193,9 @@ class DecreeChangeToken(MetaToken):
         if (((not ignore_newlines and t.is_newline_before and ((tt.is_value("ПРИЗНАТЬ", "ВИЗНАТИ") or tt.is_value("СЧИТАТЬ", "ВВАЖАТИ")))) and tt.next0_ is not None and tt.next0_.is_value("УТРАТИТЬ", "ВТРАТИТИ")) and tt.next0_.next0_ is not None and tt.next0_.next0_.is_value("СИЛА", "ЧИННІСТЬ")): 
             res = DecreeChangeToken._new794(tt, tt.next0_.next0_, DecreeChangeTokenTyp.ACTION, DecreeChangeKind.EXPIRE)
             tt = tt.next0_.next0_.next0_
-            first_pass3577 = True
+            first_pass3084 = True
             while True:
-                if first_pass3577: first_pass3577 = False
+                if first_pass3084: first_pass3084 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt.is_char(':')): 
@@ -237,9 +239,9 @@ class DecreeChangeToken(MetaToken):
             if (tt.is_value("СЛОВО", None)): 
                 pass
             res = DecreeChangeToken._new793(tt, tt, DecreeChangeTokenTyp.STARTSINGLE)
-            first_pass3578 = True
+            first_pass3085 = True
             while True:
-                if first_pass3578: first_pass3578 = False
+                if first_pass3085: first_pass3085 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (tt != t and tt.is_newline_before): 
@@ -536,9 +538,9 @@ class DecreeChangeToken(MetaToken):
                         can_be_start = True
                 if (can_be_start): 
                     ttt = (tt.next0_ if BracketHelper.can_be_start_of_sequence(tt, True, False) else tt)
-                    first_pass3579 = True
+                    first_pass3086 = True
                     while True:
-                        if first_pass3579: first_pass3579 = False
+                        if first_pass3086: first_pass3086 = False
                         else: ttt = ttt.next0_
                         if (not (ttt is not None)): break
                         if (ttt.is_char_of(".;") and ttt.is_newline_after): 
@@ -604,9 +606,9 @@ class DecreeChangeToken(MetaToken):
             doubt1 = None
             clause_last = None
             tt = t.next0_
-            first_pass3580 = True
+            first_pass3087 = True
             while True:
-                if first_pass3580: first_pass3580 = False
+                if first_pass3087: first_pass3087 = False
                 else: tt = tt.next0_
                 if (not (tt is not None)): break
                 if (not tt.is_newline_after): 
@@ -680,9 +682,9 @@ class DecreeChangeToken(MetaToken):
         res = list()
         res.append(d0)
         t = d0.end_token.next0_
-        first_pass3581 = True
+        first_pass3088 = True
         while True:
-            if first_pass3581: first_pass3581 = False
+            if first_pass3088: first_pass3088 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before): 
@@ -731,6 +733,7 @@ class DecreeChangeToken(MetaToken):
         if (DecreeChangeToken.__m_terms is not None): 
             return
         DecreeChangeToken.__m_terms = TerminCollection()
+        t = None
         t = Termin._new100("ИЗЛОЖИТЬ В СЛЕДУЮЩЕЙ РЕДАКЦИИ", DecreeChangeKind.NEW)
         t.add_variant("ИЗЛОЖИВ ЕГО В СЛЕДУЮЩЕЙ РЕДАКЦИИ", False)
         t.add_variant("ИЗЛОЖИТЬ В РЕДАКЦИИ", False)
@@ -822,9 +825,9 @@ class DecreeChangeToken(MetaToken):
         new_items = None
         while True:
             i = 0
-            first_pass3582 = True
+            first_pass3089 = True
             while True:
-                if first_pass3582: first_pass3582 = False
+                if first_pass3089: first_pass3089 = False
                 else: i += 1
                 if (not (i < len(toks))): break
                 tok = toks[i]
@@ -895,6 +898,7 @@ class DecreeChangeToken(MetaToken):
                             if (eq_lev_val is None): 
                                 new_items.append(nam)
                             else: 
+                                n = 0
                                 wrapn826 = RefOutArgWrapper(0)
                                 inoutres827 = Utils.tryParseInt(eq_lev_val, wrapn826)
                                 n = wrapn826.value

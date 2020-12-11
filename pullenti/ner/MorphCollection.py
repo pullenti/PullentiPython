@@ -1,9 +1,11 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import typing
-import io
 from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.morph.MorphGender import MorphGender
 from pullenti.morph.MorphVoice import MorphVoice
@@ -471,7 +473,7 @@ class MorphCollection(MorphBaseInfo):
             return it
         return res
     
-    def _serialize(self, stream : io.IOBase) -> None:
+    def _serialize(self, stream : Stream) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         SerializerHelper.serialize_short(stream, self.__m_class.value)
         SerializerHelper.serialize_short(stream, self.__m_case.value)
@@ -485,7 +487,7 @@ class MorphCollection(MorphBaseInfo):
         for it in self.__m_items: 
             self.__serialize_item(stream, it)
     
-    def _deserialize(self, stream : io.IOBase) -> None:
+    def _deserialize(self, stream : Stream) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         self.__m_class = MorphClass._new53(SerializerHelper.deserialize_short(stream))
         self.__m_case = MorphCase._new29(SerializerHelper.deserialize_short(stream))
@@ -503,12 +505,12 @@ class MorphCollection(MorphBaseInfo):
             i += 1
         self.__m_need_recalc = False
     
-    def __serialize_item(self, stream : io.IOBase, bi : 'MorphBaseInfo') -> None:
+    def __serialize_item(self, stream : Stream, bi : 'MorphBaseInfo') -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         ty = 0
         if (isinstance(bi, MorphWordForm)): 
             ty = (1)
-        Utils.writeByteIO(stream, ty)
+        stream.writebyte(ty)
         SerializerHelper.serialize_short(stream, bi.class0_.value)
         SerializerHelper.serialize_short(stream, bi.case_.value)
         SerializerHelper.serialize_short(stream, bi.gender)
@@ -525,9 +527,9 @@ class MorphCollection(MorphBaseInfo):
             for a in wf.misc.attrs: 
                 SerializerHelper.serialize_string(stream, a)
     
-    def __deserialize_item(self, stream : io.IOBase) -> 'MorphBaseInfo':
+    def __deserialize_item(self, stream : Stream) -> 'MorphBaseInfo':
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
-        ty = Utils.readByteIO(stream)
+        ty = stream.readbyte()
         res = (MorphBaseInfo() if ty == 0 else MorphWordForm())
         res.class0_ = MorphClass._new53(SerializerHelper.deserialize_short(stream))
         res.case_ = MorphCase._new29(SerializerHelper.deserialize_short(stream))
@@ -556,13 +558,13 @@ class MorphCollection(MorphBaseInfo):
         return res
     
     @staticmethod
-    def _new2365(_arg1 : 'MorphGender') -> 'MorphCollection':
+    def _new2369(_arg1 : 'MorphGender') -> 'MorphCollection':
         res = MorphCollection()
         res.gender = _arg1
         return res
     
     @staticmethod
-    def _new2446(_arg1 : 'MorphCase') -> 'MorphCollection':
+    def _new2450(_arg1 : 'MorphCase') -> 'MorphCollection':
         res = MorphCollection()
         res.case_ = _arg1
         return res

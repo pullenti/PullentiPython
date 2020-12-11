@@ -1,15 +1,19 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
 
-from pullenti.morph.MorphNumber import MorphNumber
+from pullenti.morph.MorphPerson import MorphPerson
 from pullenti.morph.MorphGender import MorphGender
-from pullenti.morph.MorphCase import MorphCase
 from pullenti.morph.MorphBaseInfo import MorphBaseInfo
+from pullenti.morph.MorphNumber import MorphNumber
 from pullenti.morph.LanguageHelper import LanguageHelper
+from pullenti.morph.MorphCase import MorphCase
+from pullenti.morph.MorphMiscInfo import MorphMiscInfo
 
 class MorphWordForm(MorphBaseInfo):
     """ Словоформа (вариант морфанализа лексемы)
@@ -35,6 +39,7 @@ class MorphWordForm(MorphBaseInfo):
         self.normal_case = None;
         self.misc = None;
         self.undef_coef = 0
+        self.tag = None;
         if (v is None): 
             return
         self.copy_from(v)
@@ -84,6 +89,12 @@ class MorphWordForm(MorphBaseInfo):
         for mr in list0_: 
             if ((self.class0_ == mr.class0_ and self.number == mr.number and self.gender == mr.gender) and self.normal_case == mr.normal_case and self.normal_full == mr.normal_full): 
                 mr.case_ = (mr.case_) | self.case_
+                p = self.misc.person
+                if (p != MorphPerson.UNDEFINED and p != mr.misc.person): 
+                    mi = MorphMiscInfo()
+                    mi.copy_from(mr.misc)
+                    mi.person = Utils.valToEnum((mr.misc.person) | (self.misc.person), MorphPerson)
+                    mr.misc = mi
                 return True
         for mr in list0_: 
             if ((self.class0_ == mr.class0_ and self.number == mr.number and self.case_ == mr.case_) and self.normal_case == mr.normal_case and self.normal_full == mr.normal_full): 
@@ -119,7 +130,7 @@ class MorphWordForm(MorphBaseInfo):
         return res
     
     @staticmethod
-    def _new2930(_arg1 : 'MorphClass', _arg2 : 'MorphNumber', _arg3 : 'MorphGender', _arg4 : 'MorphCase') -> 'MorphWordForm':
+    def _new2934(_arg1 : 'MorphClass', _arg2 : 'MorphNumber', _arg3 : 'MorphGender', _arg4 : 'MorphCase') -> 'MorphWordForm':
         res = MorphWordForm()
         res.class0_ = _arg1
         res.number = _arg2

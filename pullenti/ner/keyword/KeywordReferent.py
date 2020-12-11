@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -176,7 +178,7 @@ class KeywordReferent(Referent):
         return res
     
     @staticmethod
-    def _new1591(_arg1 : 'KeywordType') -> 'KeywordReferent':
+    def _new1595(_arg1 : 'KeywordType') -> 'KeywordReferent':
         res = KeywordReferent()
         res.typ = _arg1
         return res

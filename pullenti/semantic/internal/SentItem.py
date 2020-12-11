@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -131,10 +133,10 @@ class SentItem:
         return value
     
     def add_attr(self, adv : 'AdverbToken') -> None:
-        sa = SemAttribute._new2940(adv.spelling, adv.typ, adv.not0_)
+        sa = SemAttribute._new2944(adv.spelling, adv.typ, adv.not0_)
         if (self.attrs is None): 
             self.attrs = list()
-        self.attrs.append(SemAttributeEx._new2941(adv, sa))
+        self.attrs.append(SemAttributeEx._new2945(adv, sa))
     
     @property
     def begin_token(self) -> 'Token':
@@ -239,8 +241,8 @@ class SentItem:
                     nn = str(num)
                     si1 = SentItem(npt1)
                     if (nn == "1" and (isinstance(num.end_token, NumberToken)) and num.end_token.end_token.is_value("ОДИН", None)): 
-                        a = SemAttribute._new2942(SemAttributeType.ONEOF, num.end_token.end_token.get_normal_case_text(None, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False))
-                        aex = SemAttributeEx._new2941(num, a)
+                        a = SemAttribute._new2946(SemAttributeType.ONEOF, num.end_token.end_token.get_normal_case_text(None, MorphNumber.SINGULAR, MorphGender.UNDEFINED, False))
+                        aex = SemAttributeEx._new2945(num, a)
                         si1.attrs = list()
                         si1.attrs.append(aex)
                     else: 
@@ -250,7 +252,7 @@ class SentItem:
                     res.append(si1)
                     return res
                 if (npt1 is not None): 
-                    si1 = SentItem._new2944(npt1, SemQuantity(str(num), num.begin_token, num.end_token))
+                    si1 = SentItem._new2948(npt1, SemQuantity(str(num), num.begin_token, num.end_token))
                     if (prep_ is not None): 
                         si1.prep = prep_.normal
                     if (npt1.end_token.is_value("РАЗ", None)): 
@@ -362,8 +364,8 @@ class SentItem:
                 npt1 = NounPhraseHelper.try_parse(adv.end_token.next0_, SentItem.__m_npt_attrs, 0, None)
                 if (npt1 is not None and npt1.end_token.is_value("ОНИ", None) and npt1.preposition is not None): 
                     si1 = SentItem(npt1)
-                    a = SemAttribute._new2942(SemAttributeType.OTHER, adv.end_token.get_normal_case_text(None, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False))
-                    aex = SemAttributeEx._new2941(num, a)
+                    a = SemAttribute._new2946(SemAttributeType.OTHER, adv.end_token.get_normal_case_text(None, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False))
+                    aex = SemAttributeEx._new2945(num, a)
                     si1.attrs = list()
                     si1.attrs.append(aex)
                     if (prep_ is not None): 
@@ -375,8 +377,8 @@ class SentItem:
                         for a in prev[i].attrs: 
                             if (a.attr.typ == SemAttributeType.ONEOF): 
                                 si1 = SentItem(prev[i].source)
-                                aa = SemAttribute._new2942(SemAttributeType.OTHER, adv.end_token.get_normal_case_text(None, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False))
-                                aex = SemAttributeEx._new2941(adv, aa)
+                                aa = SemAttribute._new2946(SemAttributeType.OTHER, adv.end_token.get_normal_case_text(None, MorphNumber.UNDEFINED, MorphGender.UNDEFINED, False))
+                                aex = SemAttributeEx._new2945(adv, aa)
                                 si1.attrs = list()
                                 si1.attrs.append(aex)
                                 if (prep_ is not None): 
@@ -388,7 +390,7 @@ class SentItem:
             res.append(SentItem(adv))
             return res
         if (mc.is_adjective): 
-            npt = NounPhraseToken._new2949(t, t, MorphCollection(t.morph))
+            npt = NounPhraseToken._new2953(t, t, MorphCollection(t.morph))
             npt.noun = MetaToken(t, t)
             res.append(SentItem(npt))
             return res
@@ -443,9 +445,9 @@ class SentItem:
             if (vb.first_verb.is_dee_participle): 
                 break
             i = 0
-            first_pass3960 = True
+            first_pass3468 = True
             while True:
-                if first_pass3960: first_pass3960 = False
+                if first_pass3468: first_pass3468 = False
                 else: i += 1
                 if (not (i < len(s.items))): break
                 it = s.items[i]
@@ -455,13 +457,13 @@ class SentItem:
                     continue
                 if (it.typ == SentItemType.PARTBEFORE or it.typ == SentItemType.PARTAFTER): 
                     continue
-                li = NGLink._new2951(typ_, NGItem._new2922(it), vb)
+                li = NGLink._new2955(typ_, NGItem._new2926(it), vb)
                 li.calc_coef(True)
                 if (li.coef < 0): 
                     continue
                 if (it.end_token.end_char in endpos): 
                     continue
-                ss = Sentence._new2952(typ_)
+                ss = Sentence._new2956(typ_)
                 ss.items.append(SentItem(vb))
                 j = 0
                 while j <= i: 
@@ -513,7 +515,7 @@ class SentItem:
     __m_npt_attrs = Utils.valToEnum(((((NounPhraseParseAttr.ADJECTIVECANBELAST) | (NounPhraseParseAttr.IGNOREBRACKETS) | (NounPhraseParseAttr.PARSEADVERBS)) | (NounPhraseParseAttr.PARSENUMERICASADJECTIVE) | (NounPhraseParseAttr.PARSEPREPOSITION)) | (NounPhraseParseAttr.PARSEPRONOUNS) | (NounPhraseParseAttr.PARSEVERBS)) | (NounPhraseParseAttr.REFERENTCANBENOUN) | (NounPhraseParseAttr.MULTINOUNS), NounPhraseParseAttr)
     
     @staticmethod
-    def _new2944(_arg1 : 'MetaToken', _arg2 : 'SemQuantity') -> 'SentItem':
+    def _new2948(_arg1 : 'MetaToken', _arg2 : 'SemQuantity') -> 'SentItem':
         res = SentItem(_arg1)
         res.quant = _arg2
         return res

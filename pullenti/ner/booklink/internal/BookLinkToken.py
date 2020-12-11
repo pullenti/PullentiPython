@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import datetime
 from pullenti.unisharp.Utils import Utils
@@ -50,15 +52,16 @@ class BookLinkToken(MetaToken):
             return None
         rtp = PersonItemToken.try_parse_person(t, prev_pers_template)
         if (rtp is not None): 
+            re = None
             if (rtp.data is None): 
                 re = BookLinkToken._new326(t, (t if rtp == t else rtp.end_token), BookLinkTyp.PERSON, rtp.referent)
             else: 
                 re = BookLinkToken._new327(t, rtp.end_token, BookLinkTyp.PERSON, rtp)
             re.person_template = (Utils.valToEnum(rtp.misc_attrs, FioTemplateType))
             tt = rtp.begin_token
-            first_pass3511 = True
+            first_pass3018 = True
             while True:
-                if first_pass3511: first_pass3511 = False
+                if first_pass3018: first_pass3018 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= rtp.end_char)): break
                 if (not (isinstance(tt.get_referent(), PersonPropertyReferent))): 
@@ -157,9 +160,9 @@ class BookLinkToken(MetaToken):
                 return BookLinkToken._new329(t, tok_.end_token, typ_, tok_.termin.canonic_text)
             if (typ_ == BookLinkTyp.ELECTRONRES): 
                 tt = tok_.end_token.next0_
-                first_pass3512 = True
+                first_pass3019 = True
                 while True:
-                    if first_pass3512: first_pass3512 = False
+                    if first_pass3019: first_pass3019 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if ((isinstance(tt, TextToken)) and not tt.chars.is_letter): 
@@ -215,9 +218,9 @@ class BookLinkToken(MetaToken):
                     tt0 = tt
                     tt1 = tt
                     tt = tt.next0_
-                    first_pass3513 = True
+                    first_pass3020 = True
                     while True:
-                        if first_pass3513: first_pass3513 = False
+                        if first_pass3020: first_pass3020 = False
                         else: tt = tt.next0_
                         if (not (tt is not None)): break
                         if (tt.is_char_of(",") or tt.is_hiphen): 
@@ -262,9 +265,9 @@ class BookLinkToken(MetaToken):
             if (((term == "СМ" or term == "CM" or term == "НАПР") or term == "НАПРИМЕР" or term == "SEE") or term == "ПОДРОБНЕЕ" or term == "ПОДРОБНО"): 
                 res = BookLinkToken._new328(t, t, BookLinkTyp.SEE)
                 t = t.next0_
-                first_pass3514 = True
+                first_pass3021 = True
                 while True:
-                    if first_pass3514: first_pass3514 = False
+                    if first_pass3021: first_pass3021 = False
                     else: t = t.next0_
                     if (not (t is not None)): break
                     if (t.is_char_of(".:") or t.is_value("ALSO", None)): 
@@ -307,6 +310,7 @@ class BookLinkToken(MetaToken):
     def check_link_before(t0 : 'Token', num : str) -> bool:
         if (num is None or t0 is None): 
             return False
+        nn = 0
         if (t0.previous is not None and (isinstance(t0.previous.get_referent(), BookLinkRefReferent))): 
             wrapnn349 = RefOutArgWrapper(0)
             inoutres350 = Utils.tryParseInt(Utils.ifNotNull(t0.previous.get_referent().number, ""), wrapnn349)
@@ -322,6 +326,7 @@ class BookLinkToken(MetaToken):
             return False
         if (t1.is_newline_after): 
             bbb = BookLinkToken.try_parse(t1.next0_, 0)
+            nn = 0
             if (bbb is not None and bbb.typ == BookLinkTyp.NUMBER): 
                 wrapnn351 = RefOutArgWrapper(0)
                 inoutres352 = Utils.tryParseInt(Utils.ifNotNull(bbb.value, ""), wrapnn351)
@@ -336,6 +341,7 @@ class BookLinkToken(MetaToken):
         if (BookLinkToken.__m_termins is not None): 
             return
         BookLinkToken.__m_termins = TerminCollection()
+        tt = None
         tt = Termin._new100("ТЕКСТ", BookLinkTyp.NAMETAIL)
         BookLinkToken.__m_termins.add(tt)
         tt = Termin._new100("ЭЛЕКТРОННЫЙ РЕСУРС", BookLinkTyp.ELECTRONRES)

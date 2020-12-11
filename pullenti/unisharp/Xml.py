@@ -15,6 +15,7 @@ class XmlWriter:
         self.__m_file_name = None
         self.__m_nodes = list()
         self.__m_elem_not_ended = False
+        self.__m_elem_has_child = False
     
     def __enter__(self): return self
     def __exit__(self, typ, val, traceback): self.close()
@@ -62,14 +63,14 @@ class XmlWriter:
         if (self.__m_str_build is not None): 
             print(str0_, end="", file=self.__m_str_build)
         elif (self.__m_stream is not None): 
-            if (self.__m_stream.tell() == (0)): 
+            if (self.__m_stream.position == 0): 
                 arr = bytearray()
                 arr.append(0xEF)
                 arr.append(0xBB)
                 arr.append(0xBF)
-                self.__m_stream.write(arr)
+                self.__m_stream.write(arr, 0, 3)
             dat = str0_.encode('utf-8', 'ignore')
-            self.__m_stream.write(dat)
+            self.__m_stream.write(dat, 0, len(dat))
     
     def write_start_document(self) -> None:
         self.__out("<?xml version=\"1.0\" encoding=\"utf-8\"?>")
@@ -88,9 +89,10 @@ class XmlWriter:
                 i = 0
                 while i < (len(self.__m_nodes) - 1): 
                     self.__out(self.settings.indentChars)
-                    i -= 1
+                    i += 1
         self.__out("<{0}".format(local_name))
         self.__m_elem_not_ended = True
+        self.__m_elem_has_child = False
     
     def write_start_element2(self, local_name : str, ns : str) -> None:
         if(ns is None):
@@ -110,20 +112,23 @@ class XmlWriter:
     
     def write_end_element(self) -> None:
         if (self.__m_elem_not_ended): 
-            self.__out("/>")
+            self.__out(" />")
             self.__m_elem_not_ended = False
             del self.__m_nodes[len(self.__m_nodes) - 1]
+            self.__m_elem_has_child = True
             return
-        if (self.settings.indent): 
+        if (self.settings.indent and self.__m_elem_has_child): 
             self.__out("\r\n")
             if (self.settings.indentChars is not None): 
                 i = 0
                 while i < (len(self.__m_nodes) - 1): 
                     self.__out(self.settings.indentChars)
-                    i -= 1
+                    i += 1
         if (len(self.__m_nodes) > 0): 
             self.__out("</{0}>".format(self.__m_nodes[len(self.__m_nodes) - 1]))
             del self.__m_nodes[len(self.__m_nodes) - 1]
+            self.__m_elem_has_child = True
+           
     
     def __correct_value(self, val : str, is_attr : bool) -> str:
         tmp = io.StringIO()

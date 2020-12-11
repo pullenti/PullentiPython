@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -7,6 +9,8 @@ import math
 import xml.etree
 from enum import IntEnum
 from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Streams import MemoryStream
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.morph.LanguageHelper import LanguageHelper
 from pullenti.morph.MorphWordForm import MorphWordForm
@@ -120,9 +124,9 @@ class CityItemToken(MetaToken):
         li = list()
         li.append(ci)
         t = ci.end_token.next0_
-        first_pass3645 = True
+        first_pass3152 = True
         while True:
-            if first_pass3645: first_pass3645 = False
+            if first_pass3152: first_pass3152 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before): 
@@ -446,9 +450,9 @@ class CityItemToken(MetaToken):
             if (ooo): 
                 tt = t
                 ttt = tt
-                first_pass3646 = True
+                first_pass3153 = True
                 while True:
-                    if first_pass3646: first_pass3646 = False
+                    if first_pass3153: first_pass3153 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if (ttt.is_char_of(",.")): 
@@ -523,7 +527,10 @@ class CityItemToken(MetaToken):
                                     ok = False
                         elif (prev is None): 
                             if (MiscLocationHelper.check_geo_object_before(tt.previous)): 
-                                ok = True
+                                if (tt1.is_newline_after): 
+                                    pass
+                                else: 
+                                    ok = True
                             elif (geo_after is not None or has_geo_after): 
                                 ok = True
                         if (tt.previous is not None and tt.previous.is_hiphen and not tt.is_whitespace_before): 
@@ -698,9 +705,9 @@ class CityItemToken(MetaToken):
                             res.doubtful = False
             if ((res.begin_token == res.end_token and res.typ == CityItemToken.ItemType.CITY and res.onto_item is not None) and res.onto_item.canonic_text == "САНКТ - ПЕТЕРБУРГ"): 
                 tt = res.begin_token.previous
-                first_pass3647 = True
+                first_pass3154 = True
                 while True:
-                    if first_pass3647: first_pass3647 = False
+                    if first_pass3154: first_pass3154 = False
                     else: tt = tt.previous
                     if (not (tt is not None)): break
                     if (tt.is_hiphen or tt.is_char('.')): 
@@ -1027,9 +1034,9 @@ class CityItemToken(MetaToken):
             return None
         cou = 0
         tt = t
-        first_pass3648 = True
+        first_pass3155 = True
         while True:
-            if first_pass3648: first_pass3648 = False
+            if first_pass3155: first_pass3155 = False
             else: tt = tt.previous
             if (not (tt is not None)): break
             if (not (isinstance(tt, TextToken))): 
@@ -1078,6 +1085,7 @@ class CityItemToken(MetaToken):
             return
         CityItemToken.M_ONTOLOGY = IntOntologyCollection()
         CityItemToken.M_CITY_ADJECTIVES = TerminCollection()
+        t = None
         t = Termin("ГОРОД")
         t.add_abridge("ГОР.")
         t.add_abridge("Г.")
@@ -1373,14 +1381,14 @@ class CityItemToken(MetaToken):
         dat = PullentiNerAddressInternalResourceHelper.get_bytes("c.dat")
         if (dat is None): 
             raise Utils.newException("Not found resource file c.dat in Analyzer.Location", None)
-        with io.BytesIO(MiscLocationHelper._deflate(dat)) as tmp: 
-            tmp.seek(0, io.SEEK_SET)
+        with MemoryStream(MiscLocationHelper._deflate(dat)) as tmp: 
+            tmp.position = 0
             xml0_ = None # new XmlDocument
-            xml0_ = xml.etree.ElementTree.parse(tmp)
+            xml0_ = Utils.parseXmlFromStream(tmp)
             for x in xml0_.getroot(): 
-                if (x.tag == "bigcity"): 
+                if (Utils.getXmlName(x) == "bigcity"): 
                     CityItemToken.__load_big_city(x)
-                elif (x.tag == "city"): 
+                elif (Utils.getXmlName(x) == "city"): 
                     CityItemToken.__load_city(x)
     
     @staticmethod
@@ -1391,7 +1399,7 @@ class CityItemToken(MetaToken):
         if (Utils.getXmlAttrByName(xml0_.attrib, "l") is not None and Utils.getXmlAttrByName(xml0_.attrib, "l")[1] == "ua"): 
             lang = MorphLang.UA
         for x in xml0_: 
-            if (x.tag == "n"): 
+            if (Utils.getXmlName(x) == "n"): 
                 v = Utils.getXmlInnerText(x)
                 t = Termin()
                 t.init_by_normal_text(v, lang)
@@ -1418,7 +1426,7 @@ class CityItemToken(MetaToken):
             elif (la == "en"): 
                 lang = MorphLang.EN
         for x in xml0_: 
-            if (x.tag == "n"): 
+            if (Utils.getXmlName(x) == "n"): 
                 v = Utils.getXmlInnerText(x)
                 if (Utils.isNullOrEmpty(v)): 
                     continue
@@ -1436,7 +1444,7 @@ class CityItemToken(MetaToken):
                     t.add_abridge("ST. " + v[6:])
                 elif (v.startswith("SAITNE ")): 
                     t.add_abridge("STE. " + v[7:])
-            elif (x.tag == "a"): 
+            elif (Utils.getXmlName(x) == "a"): 
                 adj = Utils.getXmlInnerText(x)
         onto.add_item(ci)
         if (not Utils.isNullOrEmpty(adj)): 

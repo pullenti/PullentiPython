@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -190,7 +192,7 @@ class ExplanWordAttr:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return ExplanWordAttr._new2966(((val1) & (val2)))
+        return ExplanWordAttr._new2970(((val1) & (val2)))
     
     def __or__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> 'ExplanWordAttr':
         """ Моделирование побитного "OR"
@@ -208,7 +210,7 @@ class ExplanWordAttr:
             val1 = self.value
         if (arg2 is not None): 
             val2 = arg2.value
-        return ExplanWordAttr._new2966(((val1) | (val2)))
+        return ExplanWordAttr._new2970(((val1) | (val2)))
     
     def __eq__(self : 'ExplanWordAttr', arg2 : 'ExplanWordAttr') -> bool:
         """ Моделирование сравнения ==
@@ -250,7 +252,7 @@ class ExplanWordAttr:
     """ Неопределённое """
     
     @staticmethod
-    def _new2966(_arg1 : int) -> 'ExplanWordAttr':
+    def _new2970(_arg1 : int) -> 'ExplanWordAttr':
         res = ExplanWordAttr()
         res.value = _arg1
         return res

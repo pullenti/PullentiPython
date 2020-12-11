@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -74,6 +76,7 @@ class PartToken(MetaToken):
         def int_value(self) -> int:
             if (Utils.isNullOrEmpty(self.value)): 
                 return 0
+            num = 0
             wrapnum1034 = RefOutArgWrapper(0)
             inoutres1035 = Utils.tryParseInt(self.value, wrapnum1034)
             num = wrapnum1034.value
@@ -100,9 +103,9 @@ class PartToken(MetaToken):
                 self.value = "{0}.{1}".format(self.value, self.end_token.next0_.next0_.term)
                 self.end_token = self.end_token.next0_.next0_.next0_
             t = self.end_token.next0_
-            first_pass3601 = True
+            first_pass3108 = True
             while True:
-                if first_pass3601: first_pass3601 = False
+                if first_pass3108: first_pass3108 = False
                 else: t = t.next0_
                 if (not (t is not None)): break
                 if (t.is_whitespace_before): 
@@ -124,6 +127,7 @@ class PartToken(MetaToken):
                         self.end_token = t.next0_.next0_.next0_
                         continue
                 if ((t.is_hiphen and not t.is_whitespace_after and (isinstance(t.next0_, NumberToken))) and t.next0_.int_value is not None): 
+                    n1 = 0
                     wrapn11036 = RefOutArgWrapper(0)
                     inoutres1037 = Utils.tryParseInt(self.value, wrapn11036)
                     n1 = wrapn11036.value
@@ -200,9 +204,6 @@ class PartToken(MetaToken):
     
     @staticmethod
     def try_attach(t : 'Token', prev : 'PartToken', in_bracket : bool=False, ignore_number : bool=False) -> 'PartToken':
-        """ Привязать с указанной позиции один примитив
-        
-        """
         from pullenti.ner.decree.internal.DecreeToken import DecreeToken
         if (t is None): 
             return None
@@ -374,9 +375,9 @@ class PartToken(MetaToken):
                 ok = True
                 newp = None
                 ttt = t1.next0_
-                first_pass3602 = True
+                first_pass3109 = True
                 while True:
-                    if first_pass3602: first_pass3602 = False
+                    if first_pass3109: first_pass3109 = False
                     else: ttt = ttt.next0_
                     if (not (ttt is not None)): break
                     if (ttt.end_char > br.end_token.previous.end_char): 
@@ -540,6 +541,7 @@ class PartToken(MetaToken):
     
     @staticmethod
     def __create_part_typ0(t1 : 'Token', prev : 'PartToken') -> 'PartToken':
+        is_short = False
         wrapis_short1060 = RefOutArgWrapper(False)
         pt = PartToken.__create_part_typ(t1, prev, wrapis_short1060)
         is_short = wrapis_short1060.value
@@ -620,11 +622,6 @@ class PartToken(MetaToken):
     
     @staticmethod
     def try_attach_list(t : 'Token', in_bracket : bool=False, max_count : int=40) -> typing.List['PartToken']:
-        """ Привязать примитивы в контейнере с указанной позиции
-        
-        Returns:
-            typing.List[PartToken]: Список примитивов
-        """
         p = PartToken.try_attach(t, None, in_bracket, False)
         if (p is None): 
             return None
@@ -751,9 +748,9 @@ class PartToken(MetaToken):
             res.append(p)
             tt = p.end_token.next0_
         i = 0
-        first_pass3603 = True
+        first_pass3110 = True
         while True:
-            if first_pass3603: first_pass3603 = False
+            if first_pass3110: first_pass3110 = False
             else: i += 1
             if (not (i < (len(res) - 1))): break
             if (res[i].typ == PartToken.ItemType.PART and res[i + 1].typ == PartToken.ItemType.PART and len(res[i].values) > 1): 
@@ -1006,6 +1003,7 @@ class PartToken(MetaToken):
     def get_number(str0_ : str) -> int:
         if (Utils.isNullOrEmpty(str0_)): 
             return 0
+        i = 0
         wrapi1095 = RefOutArgWrapper(0)
         inoutres1096 = Utils.tryParseInt(str0_, wrapi1095)
         i = wrapi1095.value
@@ -1017,6 +1015,7 @@ class PartToken(MetaToken):
         if ((ord(ch)) < 0x80): 
             i = (((ord(ch)) - (ord('A'))) + 1)
             if ((ch == 'Z' and len(str0_) > 2 and str0_[1] == '.') and str.isdigit(str0_[2])): 
+                n = 0
                 wrapn1091 = RefOutArgWrapper(0)
                 inoutres1092 = Utils.tryParseInt(str0_[2:], wrapn1091)
                 n = wrapn1091.value
@@ -1028,6 +1027,7 @@ class PartToken(MetaToken):
                 return 0
             i += 1
             if ((ch == 'Я' and len(str0_) > 2 and str0_[1] == '.') and str.isdigit(str0_[2])): 
+                n = 0
                 wrapn1093 = RefOutArgWrapper(0)
                 inoutres1094 = Utils.tryParseInt(str0_[2:], wrapn1093)
                 n = wrapn1093.value

@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import datetime
 import math
@@ -32,6 +34,7 @@ class DecreeHelper:
             return None
         try: 
             prts = Utils.splitString(str0_, '.', False)
+            y = 0
             wrapy831 = RefOutArgWrapper(0)
             inoutres832 = Utils.tryParseInt(prts[0], wrapy831)
             y = wrapy831.value
@@ -61,16 +64,10 @@ class DecreeHelper:
     
     @staticmethod
     def try_create_canonic_decree_ref_uri(t : 'Token') -> 'CanonicDecreeRefUri':
-        """ Это для оформления ссылок по некоторым стандартам (когда гиперссылкой нужно выделить не всю сущность,
-        а лишь некоторую её часть)
-        
-        Args:
-            t(Token): 
-        
-        """
         if (not (isinstance(t, ReferentToken))): 
             return None
         dr = Utils.asObjectOrNull(t.get_referent(), DecreeReferent)
+        res = None
         if (dr is not None): 
             if (dr.kind == DecreeKind.PUBLISHER): 
                 return None
@@ -96,9 +93,9 @@ class DecreeHelper:
             was_typ = False
             was_num = False
             tt = t.begin_token
-            first_pass3583 = True
+            first_pass3090 = True
             while True:
-                if first_pass3583: first_pass3583 = False
+                if first_pass3090: first_pass3090 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= t.end_char)): break
                 if (tt.begin_char == t.begin_char and tt.is_char('(') and tt.next0_ is not None): 
@@ -125,6 +122,7 @@ class DecreeHelper:
                     if ((next_decree_items is not None and len(next_decree_items) > 1 and (len(next_decree_items) < len(li))) and next_decree_items[0].typ != DecreeToken.ItemType.TYP): 
                         d = len(li) - len(next_decree_items)
                         j = 0
+                        j = 0
                         while j < len(next_decree_items): 
                             if (next_decree_items[j].typ != li[d + j].typ): 
                                 break
@@ -140,9 +138,9 @@ class DecreeHelper:
                         res.begin_char = li[len(li) - 1].begin_char
                         res.end_char = li[len(li) - 1].end_char
                     i = 0
-                    first_pass3584 = True
+                    first_pass3091 = True
                     while True:
-                        if first_pass3584: first_pass3584 = False
+                        if first_pass3091: first_pass3091 = False
                         else: i += 1
                         if (not (i < len(li))): break
                         l_ = li[i]
@@ -290,9 +288,9 @@ class DecreeHelper:
                 return res
         if (((has_same_before or has_same_after)) and ptmin != PartToken.ItemType.PREFIX): 
             tt = t.begin_token
-            first_pass3585 = True
+            first_pass3092 = True
             while True:
-                if first_pass3585: first_pass3585 = False
+                if first_pass3092: first_pass3092 = False
                 else: tt = tt.next0_
                 if (not (tt is not None and tt.end_char <= res.end_char)): break
                 if (tt.begin_char >= res.begin_char): 
@@ -395,13 +393,6 @@ class DecreeHelper:
     
     @staticmethod
     def check_nds(t : 'Token', nds : float=18, nds_mustbe_money : bool=False) -> 'MetaToken':
-        """ Проверка корректности НДС для суммы
-        
-        Args:
-            t(Token): Указывает на значение, для которой должно далее следовать НДС
-            nds(float): 
-        
-        """
         if (t is None or nds <= 0): 
             return None
         m = Utils.asObjectOrNull(t.get_referent(), MoneyReferent)
@@ -411,13 +402,14 @@ class DecreeHelper:
         has_nds_perc = False
         has_all = False
         incl = False
+        tt = None
         m1 = None
         ndst0 = None
         ndst1 = None
         tt = t.next0_
-        first_pass3586 = True
+        first_pass3093 = True
         while True:
-            if first_pass3586: first_pass3586 = False
+            if first_pass3093: first_pass3093 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (tt.is_value("НДС", None)): 
@@ -489,9 +481,9 @@ class DecreeHelper:
         m2 = None
         has_all = False
         tt = tt.next0_
-        first_pass3587 = True
+        first_pass3094 = True
         while True:
-            if first_pass3587: first_pass3587 = False
+            if first_pass3094: first_pass3094 = False
             else: tt = tt.next0_
             if (not (tt is not None)): break
             if (isinstance(tt, ReferentToken)): 

@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 from pullenti.unisharp.Utils import Utils
 
@@ -74,14 +76,14 @@ class UriReferent(Referent):
         return Utils.compareStrings(self.value, uri_.value, True) == 0
     
     @staticmethod
-    def _new2710(_arg1 : str, _arg2 : str) -> 'UriReferent':
+    def _new2714(_arg1 : str, _arg2 : str) -> 'UriReferent':
         res = UriReferent()
         res.scheme = _arg1
         res.value = _arg2
         return res
     
     @staticmethod
-    def _new2713(_arg1 : str, _arg2 : str) -> 'UriReferent':
+    def _new2717(_arg1 : str, _arg2 : str) -> 'UriReferent':
         res = UriReferent()
         res.value = _arg1
         res.scheme = _arg2

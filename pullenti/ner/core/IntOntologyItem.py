@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -21,7 +23,6 @@ class IntOntologyItem:
     
     @property
     def canonic_text(self) -> str:
-        """ Каноноический текст """
         if (self.__m_canonic_text is None and len(self.termins) > 0): 
             self.__m_canonic_text = self.termins[0].canonic_text
         return Utils.ifNotNull(self.__m_canonic_text, "?")
@@ -31,11 +32,6 @@ class IntOntologyItem:
         return value
     
     def set_shortest_canonical_text(self, ignore_termins_with_notnull_tags : bool=False) -> None:
-        """ В качестве канонического текста установить самый короткий среди терминов
-        
-        Args:
-            ignore_termins_with_notnull_tags(bool): 
-        """
         self.__m_canonic_text = (None)
         for t in self.termins: 
             if (ignore_termins_with_notnull_tags and t.tag is not None): 

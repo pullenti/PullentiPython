@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -111,9 +113,9 @@ class Subsent:
         ss = Subsent()
         has_verb = False
         i = 0
-        first_pass3961 = True
+        first_pass3469 = True
         while True:
-            if first_pass3961: first_pass3961 = False
+            if first_pass3469: first_pass3469 = False
             else: i += 1
             if (not (i < len(sent.items))): break
             it = sent.items[i]
@@ -141,12 +143,13 @@ class Subsent:
         if (len(ss.items) > 0): 
             res.append(ss)
         i = 0
-        first_pass3962 = True
+        first_pass3470 = True
         while True:
-            if first_pass3962: first_pass3962 = False
+            if first_pass3470: first_pass3470 = False
             else: i += 1
             if (not (i < len(res))): break
             r = res[i]
+            j = 0
             if (r.check(DelimType.IF)): 
                 has_then = False
                 has_else = False
@@ -245,9 +248,9 @@ class Subsent:
                         res[i - 1].typ = SemFraglinkType.FOR
                         continue
         i = 1
-        first_pass3963 = True
+        first_pass3471 = True
         while True:
-            if first_pass3963: first_pass3963 = False
+            if first_pass3471: first_pass3471 = False
             else: i += 1
             if (not (i < len(res))): break
             r = res[i]

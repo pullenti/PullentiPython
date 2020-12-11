@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
@@ -53,6 +55,7 @@ class InstrToken(MetaToken):
         if (InstrToken.__m_ontology is not None): 
             return
         InstrToken.__m_ontology = TerminCollection()
+        t = None
         t = Termin("МЕСТО ПЕЧАТИ")
         t.add_abridge("М.П.")
         t.add_abridge("M.П.")
@@ -68,7 +71,7 @@ class InstrToken(MetaToken):
         t = Termin._new95("ФАМИЛИЯ ИМЯ ОТЧЕСТВО", "ФИО")
         t.add_abridge("Ф.И.О.")
         InstrToken.__m_ontology.add(t)
-        t = Termin._new1506("ПРІЗВИЩЕ ІМЯ ПО БАТЬКОВІ", MorphLang.UA, "ФИО")
+        t = Termin._new1510("ПРІЗВИЩЕ ІМЯ ПО БАТЬКОВІ", MorphLang.UA, "ФИО")
         InstrToken.__m_ontology.add(t)
         t = Termin("ФАМИЛИЯ")
         t.add_abridge("ФАМ.")
@@ -186,9 +189,9 @@ class InstrToken(MetaToken):
             res.typ = ILTypes.UNDEFINED
             return res
         t = res.end_token.next0_
-        first_pass3746 = True
+        first_pass3254 = True
         while True:
-            if first_pass3746: first_pass3746 = False
+            if first_pass3254: first_pass3254 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if ((isinstance(t, ReferentToken)) and (isinstance(res.ref, ReferentToken))): 
@@ -278,9 +281,9 @@ class InstrToken(MetaToken):
         t0 = t
         t1 = None
         has_word = False
-        first_pass3747 = True
+        first_pass3255 = True
         while True:
-            if first_pass3747: first_pass3747 = False
+            if first_pass3255: first_pass3255 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.is_newline_before and t != t0): 
@@ -295,7 +298,7 @@ class InstrToken(MetaToken):
                         return next0__
                 tt = None
                 if ((isinstance(t.get_referent(), PersonReferent)) or (isinstance(t.get_referent(), PersonPropertyReferent)) or (isinstance(t.get_referent(), InstrumentParticipantReferent))): 
-                    return InstrToken.__correct_person(InstrToken._new1507(t00, t, ILTypes.PERSON, t))
+                    return InstrToken.__correct_person(InstrToken._new1511(t00, t, ILTypes.PERSON, t))
                 is_ref = False
                 if (isinstance(t.get_referent(), PersonPropertyReferent)): 
                     tt = t.next0_
@@ -304,20 +307,20 @@ class InstrToken(MetaToken):
                     rt = t.kit.process_referent(PersonAnalyzer.ANALYZER_NAME, t)
                     if (rt is not None): 
                         if (isinstance(rt.referent, PersonReferent)): 
-                            return InstrToken._new1508(t00, rt.end_token, ILTypes.PERSON)
+                            return InstrToken._new1512(t00, rt.end_token, ILTypes.PERSON)
                         tt = rt.end_token.next0_
                 cou = 0
                 t11 = (None if tt is None else tt.previous)
-                first_pass3748 = True
+                first_pass3256 = True
                 while True:
-                    if first_pass3748: first_pass3748 = False
+                    if first_pass3256: first_pass3256 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_table_control_char): 
                         continue
                     re = tt.get_referent()
                     if (isinstance(re, PersonReferent)): 
-                        return InstrToken._new1507(t00, tt, ILTypes.PERSON, tt)
+                        return InstrToken._new1511(t00, tt, ILTypes.PERSON, tt)
                     if (isinstance(re, GeoReferent)): 
                         t11 = tt
                         continue
@@ -330,7 +333,7 @@ class InstrToken(MetaToken):
                         if (cou > 4): 
                             break
                 if (tt is None and is_ref): 
-                    return InstrToken._new1507(t00, Utils.ifNotNull(t11, t), ILTypes.PERSON, t)
+                    return InstrToken._new1511(t00, Utils.ifNotNull(t11, t), ILTypes.PERSON, t)
             dt = DecreeToken.try_attach(t, None, False)
             if (dt is not None): 
                 if (dt.typ == DecreeToken.ItemType.TYP and not t.chars.is_all_lower): 
@@ -346,7 +349,7 @@ class InstrToken(MetaToken):
                             break
                         tt = tt.next0_
                     if (not has_verb_): 
-                        res2 = InstrToken._new1511(t0, dt.end_token, ILTypes.TYP, Utils.ifNotNull(dt.full_value, dt.value))
+                        res2 = InstrToken._new1515(t0, dt.end_token, ILTypes.TYP, Utils.ifNotNull(dt.full_value, dt.value))
                         if (res2.value == "ДОПОЛНИТЕЛЬНОЕ СОГЛАШЕНИЕ" or res2.value == "ДОДАТКОВА УГОДА"): 
                             if (res2.begin_char > 500 and res2.newlines_before_count > 1): 
                                 res2.typ = ILTypes.APPENDIX
@@ -354,15 +357,15 @@ class InstrToken(MetaToken):
                 if (dt.typ == DecreeToken.ItemType.NUMBER): 
                     if (t != t0): 
                         break
-                    return InstrToken._new1511(t0, dt.end_token, ILTypes.REGNUMBER, dt.value)
+                    return InstrToken._new1515(t0, dt.end_token, ILTypes.REGNUMBER, dt.value)
                 if (dt.typ == DecreeToken.ItemType.ORG): 
                     if (t != t0): 
                         break
-                    return InstrToken._new1513(t0, dt.end_token, ILTypes.ORGANIZATION, dt.ref, dt.value)
+                    return InstrToken._new1517(t0, dt.end_token, ILTypes.ORGANIZATION, dt.ref, dt.value)
                 if (dt.typ == DecreeToken.ItemType.TERR): 
                     if (t != t0): 
                         break
-                    re = InstrToken._new1513(t0, dt.end_token, ILTypes.GEO, dt.ref, dt.value)
+                    re = InstrToken._new1517(t0, dt.end_token, ILTypes.GEO, dt.ref, dt.value)
                     t1 = re.end_token.next0_
                     if (t1 is not None and t1.is_char(',')): 
                         t1 = t1.next0_
@@ -379,7 +382,7 @@ class InstrToken(MetaToken):
                     if (dt.ref is not None and str(dt.ref.referent).startswith("агент")): 
                         dt = (None)
                     if (dt is not None): 
-                        res1 = InstrToken._new1513(t0, dt.end_token, ILTypes.PERSON, dt.ref, dt.value)
+                        res1 = InstrToken._new1517(t0, dt.end_token, ILTypes.PERSON, dt.ref, dt.value)
                         return InstrToken.__correct_person(res1)
             if (BracketHelper.can_be_start_of_sequence(t, False, False)): 
                 br = BracketHelper.try_parse(t, BracketParseAttr.NO, 100)
@@ -404,15 +407,15 @@ class InstrToken(MetaToken):
                     t1 = tt
                     continue
                 if (not has_word): 
-                    return InstrToken._new1507(t, tt, ILTypes.DATE, t)
+                    return InstrToken._new1511(t, tt, ILTypes.DATE, t)
                 if (t != t0): 
                     break
             has_word = True
             if (isinstance(r, InstrumentParticipantReferent)): 
                 tt = t.begin_token
-                first_pass3749 = True
+                first_pass3257 = True
                 while True:
-                    if first_pass3749: first_pass3749 = False
+                    if first_pass3257: first_pass3257 = False
                     else: tt = tt.next0_
                     if (not (tt is not None and (tt.end_char < t.end_char))): break
                     rr = tt.get_referent()
@@ -426,23 +429,23 @@ class InstrToken(MetaToken):
                     break
                 if (isinstance(r, InstrumentParticipantReferent)): 
                     pass
-                res1 = InstrToken._new1507(t, t, ILTypes.PERSON, t)
+                res1 = InstrToken._new1511(t, t, ILTypes.PERSON, t)
                 return InstrToken.__correct_person(res1)
             if (isinstance(r, OrganizationReferent)): 
                 if (t != t0): 
                     break
-                return InstrToken._new1507(t, t, ILTypes.ORGANIZATION, t)
+                return InstrToken._new1511(t, t, ILTypes.ORGANIZATION, t)
             if (isinstance(r, DecreePartReferent)): 
                 dpr = Utils.asObjectOrNull(r, DecreePartReferent)
                 if (dpr.appendix is not None): 
                     if (t.is_newline_before or is_start_of_line): 
                         if (t.is_newline_after or t.whitespaces_before_count > 30): 
-                            return InstrToken._new1511(t, t, ILTypes.APPENDIX, "ПРИЛОЖЕНИЕ")
+                            return InstrToken._new1515(t, t, ILTypes.APPENDIX, "ПРИЛОЖЕНИЕ")
                         ok = True
                         tt = t.next0_
-                        first_pass3750 = True
+                        first_pass3258 = True
                         while True:
-                            if first_pass3750: first_pass3750 = False
+                            if first_pass3258: first_pass3258 = False
                             else: tt = tt.next0_
                             if (not (tt is not None)): break
                             if (tt.is_newline_before): 
@@ -454,13 +457,13 @@ class InstrToken(MetaToken):
                             ok = False
                             break
                         if (ok): 
-                            return InstrToken._new1511(t, t, ILTypes.APPENDIX, "ПРИЛОЖЕНИЕ")
+                            return InstrToken._new1515(t, t, ILTypes.APPENDIX, "ПРИЛОЖЕНИЕ")
             if ((isinstance(r, DecreeReferent)) and r.kind == DecreeKind.PUBLISHER and t == t0): 
-                res1 = InstrToken._new1508(t, t, ILTypes.APPROVED)
+                res1 = InstrToken._new1512(t, t, ILTypes.APPROVED)
                 tt = t.next0_
-                first_pass3751 = True
+                first_pass3259 = True
                 while True:
-                    if first_pass3751: first_pass3751 = False
+                    if first_pass3259: first_pass3259 = False
                     else: tt = tt.next0_
                     if (not (tt is not None)): break
                     if (tt.is_char_of(",;")): 
@@ -475,7 +478,7 @@ class InstrToken(MetaToken):
                 if ((isinstance(rr, PersonReferent)) or (isinstance(rr, PersonPropertyReferent)) or (isinstance(rr, InstrumentParticipantReferent))): 
                     if (t != t0): 
                         break
-                    res1 = InstrToken._new1507(t, t.next0_, ILTypes.PERSON, t.next0_)
+                    res1 = InstrToken._new1511(t, t.next0_, ILTypes.PERSON, t.next0_)
                     t = t.next0_.next0_
                     if ((isinstance(rr, InstrumentParticipantReferent)) and t is not None): 
                         r = t.get_referent()
@@ -496,14 +499,14 @@ class InstrToken(MetaToken):
                             ok = True
                             t11 = t11.next0_
                         if (ok): 
-                            return InstrToken._new1511(t, t11, ILTypes.DIRECTIVE, InstrToken._m_directives_norm[ii])
+                            return InstrToken._new1515(t, t11, ILTypes.DIRECTIVE, InstrToken._m_directives_norm[ii])
                     if (t.is_newline_after or ((t.next0_ is not None and t.next0_.is_char(':') and t.next0_.is_newline_after))): 
                         if (t != t0): 
                             break
                         if (not t.is_newline_before): 
                             if ((InstrToken._m_directives_norm[ii] != "ПРИКАЗ" and InstrToken._m_directives_norm[ii] != "ПОСТАНОВЛЕНИЕ" and InstrToken._m_directives_norm[ii] != "НАКАЗ") and InstrToken._m_directives_norm[ii] != "ПОСТАНОВУ"): 
                                 break
-                        return InstrToken._new1511(t, (t if t.is_newline_after else t.next0_), ILTypes.DIRECTIVE, InstrToken._m_directives_norm[ii])
+                        return InstrToken._new1515(t, (t if t.is_newline_after else t.next0_), ILTypes.DIRECTIVE, InstrToken._m_directives_norm[ii])
                     break
                 ii += 1
             if (t.is_newline_before and t.chars.is_letter and t.length_char == 1): 
@@ -512,7 +515,7 @@ class InstrToken(MetaToken):
                     if (t11 is not None): 
                         if (t11.next0_ is not None and t11.next0_.is_char(':')): 
                             t11 = t11.next0_
-                        return InstrToken._new1508(t, t11, ILTypes.DIRECTIVE)
+                        return InstrToken._new1512(t, t11, ILTypes.DIRECTIVE)
             tte = (t.begin_token if isinstance(t, MetaToken) else t)
             term = (tte.term if isinstance(tte, TextToken) else None)
             if (is_start_of_line and not tte.chars.is_all_lower and t == t0): 
@@ -537,7 +540,7 @@ class InstrToken(MetaToken):
                         elif (tt1.is_value("В", "У")): 
                             ok = False
                         elif (tt1.is_value("К", None) and tt1.is_newline_before): 
-                            return InstrToken._new1511(t, t, ILTypes.APPENDIX, term1)
+                            return InstrToken._new1515(t, t, ILTypes.APPENDIX, term1)
                         elif (not tt1.is_newline_before and InstrToken._check_entered(tt1) is not None): 
                             ok = False
                         elif (tt1 == t.next0_ and ((tt1.is_char(':') or ((tt1.is_value("НА", None) and term1 != "ЗАЯВКА"))))): 
@@ -571,9 +574,9 @@ class InstrToken(MetaToken):
                                     ok = False
                         if (ok and t.previous is not None): 
                             ttp = t.previous
-                            first_pass3752 = True
+                            first_pass3260 = True
                             while True:
-                                if first_pass3752: first_pass3752 = False
+                                if first_pass3260: first_pass3260 = False
                                 else: ttp = ttp.previous
                                 if (not (ttp is not None)): break
                                 if (ttp.is_table_control_char and not ttp.is_char(chr(0x1F))): 
@@ -586,9 +589,9 @@ class InstrToken(MetaToken):
                         if ((ok and t.previous is not None and (t.newlines_before_count < 3)) and not t.is_newline_after): 
                             lines = 0
                             ttp = t.previous
-                            first_pass3753 = True
+                            first_pass3261 = True
                             while True:
-                                if first_pass3753: first_pass3753 = False
+                                if first_pass3261: first_pass3261 = False
                                 else: ttp = ttp.previous
                                 if (not (ttp is not None)): break
                                 if (not ttp.is_newline_before): 
@@ -610,7 +613,7 @@ class InstrToken(MetaToken):
                             if (t.newlines_before_count < 3): 
                                 ok = False
                         if (ok): 
-                            return InstrToken._new1511(t, t, ILTypes.APPENDIX, term1)
+                            return InstrToken._new1515(t, t, ILTypes.APPENDIX, term1)
             app = False
             if ((((term == "ОСОБОЕ" or term == "ОСОБЛИВЕ")) and t.next0_ is not None and t.next0_.is_value("МНЕНИЕ", "ДУМКА")) and t == t0 and is_start_of_line): 
                 app = True
@@ -626,25 +629,25 @@ class InstrToken(MetaToken):
                         break
                     tt = tt.next0_
                 if (app): 
-                    return InstrToken._new1508(t, t.next0_, ILTypes.APPENDIX)
+                    return InstrToken._new1512(t, t.next0_, ILTypes.APPENDIX)
             if (not t.chars.is_all_lower and t == t0): 
                 tt = InstrToken._check_approved(t)
                 if (tt is not None): 
                     if (tt.next0_ is not None and (isinstance(tt.next0_.get_referent(), DecreeReferent))): 
-                        return InstrToken._new1507(t, tt, ILTypes.APPROVED, tt.next0_.get_referent())
+                        return InstrToken._new1511(t, tt, ILTypes.APPROVED, tt.next0_.get_referent())
                     dt1 = DecreeToken.try_attach(tt.next0_, None, False)
                     if (dt1 is not None and dt1.typ == DecreeToken.ItemType.TYP): 
-                        return InstrToken._new1508(t, tt, ILTypes.APPROVED)
+                        return InstrToken._new1512(t, tt, ILTypes.APPROVED)
             t1 = t
             is_start_of_line = False
         if (t1 is None): 
             return None
-        res = InstrToken._new1508(t00, t1, ILTypes.UNDEFINED)
+        res = InstrToken._new1512(t00, t1, ILTypes.UNDEFINED)
         res.no_words = True
         t = t0
-        first_pass3754 = True
+        first_pass3262 = True
         while True:
-            if first_pass3754: first_pass3754 = False
+            if first_pass3262: first_pass3262 = False
             else: t = t.next0_
             if (not (t is not None and t.end_char <= t1.end_char)): break
             if (not (isinstance(t, TextToken))): 
@@ -673,9 +676,9 @@ class InstrToken(MetaToken):
         t0 = t
         t1 = t
         t = t.next0_
-        first_pass3755 = True
+        first_pass3263 = True
         while True:
-            if first_pass3755: first_pass3755 = False
+            if first_pass3263: first_pass3263 = False
             else: t = t.next0_
             if (not (t is not None)): break
             if (t.morph.class0_.is_preposition or t.morph.class0_.is_conjunction): 
@@ -724,27 +727,27 @@ class InstrToken(MetaToken):
     _m_directives_norm = None
     
     @staticmethod
-    def _new1507(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ILTypes', _arg4 : object) -> 'InstrToken':
+    def _new1511(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ILTypes', _arg4 : object) -> 'InstrToken':
         res = InstrToken(_arg1, _arg2)
         res.typ = _arg3
         res.ref = _arg4
         return res
     
     @staticmethod
-    def _new1508(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ILTypes') -> 'InstrToken':
+    def _new1512(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ILTypes') -> 'InstrToken':
         res = InstrToken(_arg1, _arg2)
         res.typ = _arg3
         return res
     
     @staticmethod
-    def _new1511(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ILTypes', _arg4 : str) -> 'InstrToken':
+    def _new1515(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ILTypes', _arg4 : str) -> 'InstrToken':
         res = InstrToken(_arg1, _arg2)
         res.typ = _arg3
         res.value = _arg4
         return res
     
     @staticmethod
-    def _new1513(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ILTypes', _arg4 : object, _arg5 : str) -> 'InstrToken':
+    def _new1517(_arg1 : 'Token', _arg2 : 'Token', _arg3 : 'ILTypes', _arg4 : object, _arg5 : str) -> 'InstrToken':
         res = InstrToken(_arg1, _arg2)
         res.typ = _arg3
         res.ref = _arg4

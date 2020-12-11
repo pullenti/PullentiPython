@@ -1,10 +1,13 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 import typing
 from pullenti.unisharp.Utils import Utils
 from pullenti.unisharp.Misc import RefOutArgWrapper
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.morph.MorphClass import MorphClass
 from pullenti.morph.MorphGender import MorphGender
@@ -46,6 +49,7 @@ class TextToken(Token):
         while i < len(self.term): 
             ch = self.term[i]
             j = 0
+            j = 0
             while j < self.morph.items_count: 
                 wf = Utils.asObjectOrNull(self.morph.get_indexer_item(j), MorphWordForm)
                 if (wf.normal_case is not None): 
@@ -81,26 +85,27 @@ class TextToken(Token):
         """
         if (dict0_ is None): 
             return None
-        wrapres2864 = RefOutArgWrapper(None)
-        inoutres2865 = Utils.tryGetValue(dict0_, self.term, wrapres2864)
-        res = wrapres2864.value
-        if (inoutres2865): 
+        res = None
+        wrapres2868 = RefOutArgWrapper(None)
+        inoutres2869 = Utils.tryGetValue(dict0_, self.term, wrapres2868)
+        res = wrapres2868.value
+        if (inoutres2869): 
             return res
         if (self.morph is not None): 
             for it in self.morph.items: 
                 mf = Utils.asObjectOrNull(it, MorphWordForm)
                 if (mf is not None): 
                     if (mf.normal_case is not None): 
-                        wrapres2860 = RefOutArgWrapper(None)
-                        inoutres2861 = Utils.tryGetValue(dict0_, mf.normal_case, wrapres2860)
-                        res = wrapres2860.value
-                        if (inoutres2861): 
+                        wrapres2864 = RefOutArgWrapper(None)
+                        inoutres2865 = Utils.tryGetValue(dict0_, mf.normal_case, wrapres2864)
+                        res = wrapres2864.value
+                        if (inoutres2865): 
                             return res
                     if (mf.normal_full is not None and mf.normal_case != mf.normal_full): 
-                        wrapres2862 = RefOutArgWrapper(None)
-                        inoutres2863 = Utils.tryGetValue(dict0_, mf.normal_full, wrapres2862)
-                        res = wrapres2862.value
-                        if (inoutres2863): 
+                        wrapres2866 = RefOutArgWrapper(None)
+                        inoutres2867 = Utils.tryGetValue(dict0_, mf.normal_full, wrapres2866)
+                        res = wrapres2866.value
+                        if (inoutres2867): 
                             return res
         return None
     
@@ -188,6 +193,7 @@ class TextToken(Token):
             if (not it.case_.is_undefined): 
                 empty = False
             if (wf is not None): 
+                res = None
                 if (num == MorphNumber.SINGULAR and it.number == MorphNumber.PLURAL and wf.normal_full is not None): 
                     le = len(wf.normal_case)
                     if ((le == (len(wf.normal_full) + 2) and le > 4 and wf.normal_case[le - 2] == 'С') and wf.normal_case[le - 1] == 'Я'): 
@@ -263,7 +269,7 @@ class TextToken(Token):
             return True
         return False
     
-    def _serialize(self, stream : io.IOBase) -> None:
+    def _serialize(self, stream : Stream) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         super()._serialize(stream)
         SerializerHelper.serialize_string(stream, self.term)
@@ -271,7 +277,7 @@ class TextToken(Token):
         SerializerHelper.serialize_short(stream, self.invariant_prefix_length_of_morph_vars)
         SerializerHelper.serialize_short(stream, self.max_length_of_morph_vars)
     
-    def _deserialize(self, stream : io.IOBase, kit_ : 'AnalysisKit', vers : int) -> None:
+    def _deserialize(self, stream : Stream, kit_ : 'AnalysisKit', vers : int) -> None:
         from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
         super()._deserialize(stream, kit_, vers)
         self.term = SerializerHelper.deserialize_string(stream)

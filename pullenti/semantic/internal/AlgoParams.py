@@ -1,5 +1,7 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import io
 from pullenti.unisharp.Utils import Utils
@@ -60,12 +62,12 @@ class AlgoParams:
     @staticmethod
     def _static_ctor():
         AlgoParams.PARAMS = list()
-        AlgoParams.PARAMS.append(AlgoParam._new2895("TransitiveCoef", 1, 4, 1))
-        AlgoParams.PARAMS.append(AlgoParam._new2895("NextModel", 1, 4, 1))
-        AlgoParams.PARAMS.append(AlgoParam._new2895("NgLink", 1, 3, 1))
-        AlgoParams.PARAMS.append(AlgoParam._new2895("List", 1, 4, 1))
-        AlgoParams.PARAMS.append(AlgoParam._new2895("VerbPlural", 1, 4, 1))
-        AlgoParams.PARAMS.append(AlgoParam._new2895("CaseAccord", 1, 3, 1))
-        AlgoParams.PARAMS.append(AlgoParam._new2895("MorphAccord", 1, 3, 1))
+        AlgoParams.PARAMS.append(AlgoParam._new2899("TransitiveCoef", 1, 4, 1))
+        AlgoParams.PARAMS.append(AlgoParam._new2899("NextModel", 1, 4, 1))
+        AlgoParams.PARAMS.append(AlgoParam._new2899("NgLink", 1, 3, 1))
+        AlgoParams.PARAMS.append(AlgoParam._new2899("List", 1, 4, 1))
+        AlgoParams.PARAMS.append(AlgoParam._new2899("VerbPlural", 1, 4, 1))
+        AlgoParams.PARAMS.append(AlgoParam._new2899("CaseAccord", 1, 3, 1))
+        AlgoParams.PARAMS.append(AlgoParam._new2899("MorphAccord", 1, 3, 1))
 
 AlgoParams._static_ctor()

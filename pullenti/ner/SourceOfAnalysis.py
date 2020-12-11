@@ -1,9 +1,12 @@
-﻿# Copyright (c) 2013, Pullenti. All rights reserved. Non-Commercial Freeware.
-# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project. The latest version of the code is available on the site www.pullenti.ru
+﻿# Copyright (c) 2013, Pullenti. All rights reserved.
+# Non-Commercial Freeware and Commercial Software.
+# This class is generated using the converter UniSharping (www.unisharping.ru) from Pullenti C#.NET project.
+# The latest version of the code is available on the site www.pullenti.ru
 
 import math
 import io
 from pullenti.unisharp.Utils import Utils
+from pullenti.unisharp.Streams import Stream
 
 from pullenti.ner.core.internal.SerializerHelper import SerializerHelper
 
@@ -54,12 +57,14 @@ class SourceOfAnalysis:
     
     def __do_cr_lf_correction(self, txt : str) -> str:
         # Это анализ случаев принудительно отформатированного текста
+        i = 0
+        j = 0
         cou = 0
         total_len = 0
         i = 0
-        first_pass3928 = True
+        first_pass3436 = True
         while True:
-            if first_pass3928: first_pass3928 = False
+            if first_pass3436: first_pass3436 = False
             else: i += 1
             if (not (i < len(txt))): break
             ch = txt[i]
@@ -104,6 +109,7 @@ class SourceOfAnalysis:
         i = 0
         while i < tmp.tell(): 
             ch = Utils.getCharAtStringIO(tmp, i)
+            jj = 0
             len0_ = 0
             last_char = ch
             j = (i + 1)
@@ -151,6 +157,9 @@ class SourceOfAnalysis:
     @staticmethod
     def __do_transliteral_correction(txt : io.StringIO, info : io.StringIO) -> int:
         # Произвести транслитеральную коррекцию
+        i = 0
+        j = 0
+        k = 0
         stat = 0
         pref_rus_word = False
         i = 0
@@ -254,10 +263,10 @@ class SourceOfAnalysis:
             i += 1
         return res
     
-    def serialize(self, stream : io.IOBase) -> None:
+    def serialize(self, stream : Stream) -> None:
         SerializerHelper.serialize_string(stream, self.text)
     
-    def deserialize(self, stream : io.IOBase) -> None:
+    def deserialize(self, stream : Stream) -> None:
         self.text = SerializerHelper.deserialize_string(stream)
     
     @staticmethod
